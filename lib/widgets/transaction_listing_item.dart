@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:solaris_structure_1/src/widgets/atoms/text_currency_value.dart';
+
+import 'text_currency_value.dart';
 
 class TransactionListItem extends StatelessWidget {
   final String vendor;
