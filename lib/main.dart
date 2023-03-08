@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'package:solaris_structure_1/router.dart';
-
 import 'cubits/login_cubit/login_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:solaris_structure_1/router/router.dart';
 
 void main() {
   runApp(const MyApp());
@@ -52,7 +50,7 @@ class _AppScaffoldState extends State<AppScaffold> {
       body: widget.child,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: AppRouter.calculateSelectedIndex(context),
-        onTap: (value) => AppRouter.onTap(value, context),
+        onTap: (pageIndex) => AppRouter.navigateToPage(pageIndex, context),
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Transfer'),
