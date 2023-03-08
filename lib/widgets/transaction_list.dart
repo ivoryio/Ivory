@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'transaction_listing_item.dart';
+import 'package:solaris_structure_1/widgets/transaction_listing_item.dart';
 
 class TransactionList extends StatelessWidget {
   const TransactionList({super.key});
