@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:solaris_structure_1/main.dart';
+import 'package:solaris_structure_1/router/routing_constants.dart';
 import 'package:solaris_structure_1/screens/hub/hub_screen.dart';
 import 'package:solaris_structure_1/screens/home/home_screen.dart';
 import 'package:solaris_structure_1/screens/login/login_screen.dart';
 import 'package:solaris_structure_1/screens/transfer/transfer_screen.dart';
 
-import 'cubits/login_cubit/login_cubit.dart';
+import '../cubits/login_cubit/login_cubit.dart';
 
 class AppRouter {
   final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -20,11 +21,11 @@ class AppRouter {
 
   late final router = GoRouter(
       navigatorKey: _rootNavigatorKey,
-      initialLocation: '/home',
+      initialLocation: homePageRoutePath,
       debugLogDiagnostics: true,
       routes: [
         GoRoute(
-          path: '/login',
+          path: loginPageRoutePath,
           builder: (BuildContext context, GoRouterState state) {
             return const LoginScreen();
           },
@@ -36,22 +37,22 @@ class AppRouter {
           },
           routes: [
             GoRoute(
-              path: '/home',
-              name: 'home',
+              path: homePageRoutePath,
+              name: homePageRouteName,
               builder: (BuildContext context, GoRouterState state) {
                 return const HomeScreen();
               },
             ),
             GoRoute(
-              path: '/transfer',
-              name: 'transfer',
+              path: transferPageRoutePath,
+              name: transferPageRouteName,
               builder: (BuildContext context, GoRouterState state) {
                 return const TransferScreen();
               },
             ),
             GoRoute(
-              path: '/hub',
-              name: 'hub',
+              path: hubPageRoutePath,
+              name: hubPageRouteName,
               builder: (BuildContext context, GoRouterState state) {
                 return const HubScreen();
               },
@@ -62,13 +63,13 @@ class AppRouter {
       redirect: (BuildContext context, GoRouterState state) {
         final bool loggedIn =
             loginCubit.state.status == AuthStatus.authenticated;
-        final bool logginIn = state.subloc == '/login';
+        final bool logginIn = state.subloc == loginPageRoutePath;
 
         if (!loggedIn) {
-          return logginIn ? null : '/login';
+          return logginIn ? null : loginPageRoutePath;
         }
         if (logginIn) {
-          return '/home';
+          return homePageRoutePath;
         }
         return null;
       },
@@ -77,31 +78,31 @@ class AppRouter {
   static int calculateSelectedIndex(BuildContext context) {
     final GoRouter route = GoRouter.of(context);
     final String location = route.location;
-    if (location.startsWith('/home')) {
+    if (location.startsWith(homePageRoutePath)) {
       return 0;
     }
-    if (location.startsWith('/transfer')) {
+    if (location.startsWith(transferPageRoutePath)) {
       return 1;
     }
-    if (location.startsWith('/hub')) {
+    if (location.startsWith(hubPageRoutePath)) {
       return 2;
     }
     return 0;
   }
 
-  static void onTap(int value, BuildContext context) {
-    switch (value) {
+  static void navigateToPage(int pageIndex, BuildContext context) {
+    switch (pageIndex) {
       case 0:
-        context.push('/home');
+        context.push(homePageRoutePath);
         break;
       case 1:
-        context.push('/transfer');
+        context.push(transferPageRoutePath);
         break;
       case 2:
-        context.push('/hub');
+        context.push(hubPageRoutePath);
         break;
       default:
-        context.push('/home');
+        context.push(homePageRouteName);
     }
   }
 }
