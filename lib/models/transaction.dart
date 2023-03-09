@@ -42,7 +42,7 @@ class Transaction {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['booking_type'] = bookingType;
     if (amount != null) {
@@ -69,13 +69,13 @@ class Amount {
   Amount({this.value, this.unit, this.currency});
 
   Amount.fromJson(Map<String, dynamic> json) {
-    value = json['value'];
+    value = json['value'] != null ? json['value'].toDouble() : 0;
     unit = json['unit'];
     currency = json['currency'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['value'] = value;
     data['unit'] = unit;
     data['currency'] = currency;

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:solaris_structure_1/widgets/button_centered.dart';
 import 'package:solaris_structure_1/widgets/text_currency_value.dart';
 import 'package:solaris_structure_1/widgets/transaction_list.dart';
 

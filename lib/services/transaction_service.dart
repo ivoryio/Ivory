@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:http/http.dart' as http;
 
 import 'package:solaris_structure_1/models/transaction.dart';
@@ -11,8 +10,7 @@ class TransactionService {
       const String accountId = '817b55aa12212e748e8cc2af91544ea2kcom';
       const String queryFilters =
           'page[size]=5&page[number]=1&filter[booking_date][min]=2000-10-10&filter[booking_date][max]=2030-10-10';
-      // const String accessToken = 'MTY3ODM0ODgyMTgyODo4MzQ';
-      const String accessToken = 'MTY3ODM1NDM2NzY5NDo2MjQ';
+      const String accessToken = 'MTY3ODM1NzE0ODE5NDo1Mzk';
 
       const url = '$baseUrl/v1/accounts/$accountId/bookings?$queryFilters';
       Map<String, String> headers = {"Authorization": "Bearer $accessToken"};
@@ -27,7 +25,6 @@ class TransactionService {
         throw Exception('Failed to load transactions');
       }
     } catch (e) {
-      print(e);
       return null;
     }
   }

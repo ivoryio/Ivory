@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:solaris_structure_1/models/transaction.dart';
 import 'package:solaris_structure_1/services/transaction_service.dart';
@@ -13,6 +11,10 @@ class TransactionList extends StatelessWidget {
     return FutureBuilder(
       future: TransactionService().getTransactions(),
       builder: (context, snapshot) {
+        if (snapshot.data == null) {
+          return const Text("Transactions could not be loaded");
+        }
+
         if (snapshot.hasData) {
           var transactions = snapshot.data as List<Transaction>;
 
@@ -28,7 +30,7 @@ class TransactionList extends StatelessWidget {
                 return TransactionListItem(
                   vendor: transactions[index].recipientName ?? "Unknown Vendor",
                   date: transactions[index].bookingDate ?? "Unknown Date",
-                  amount: transactions[index].amount?.value ?? 0,
+                  amount: transactions[index].amount?.value ?? 0.0,
                 );
               });
         }
