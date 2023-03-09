@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../router/routing_constants.dart';
+
 class TransferScreen extends StatelessWidget {
   const TransferScreen({super.key});
 
@@ -9,7 +11,7 @@ class TransferScreen extends StatelessWidget {
     return Column(children: [
       const Center(child: Text('Search for a transfer')),
       ElevatedButton(
-        onPressed: () => context.push('/home'),
+        onPressed: () => context.push(homePageRoutePath),
         child: const Text('Go home'),
       ),
     ]);
