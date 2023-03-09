@@ -1,11 +1,10 @@
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:solaris_structure_1/services/api_service.dart';
+import 'package:solaris_structure_1/services/auth_service.dart';
 
-import '../../cubits/login_cubit/login_cubit.dart';
+import '../../cubits/auth_cubit/auth_cubit.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -94,9 +93,11 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
+                      String phoneNumber = phoneController.text;
 
-                      log("Phone number: ${phoneController.text}");
-                      // context.read<LoginCubit>().login();
+                      log("Phone number: $phoneNumber");
+
+                      context.read<AuthCubit>().login(phoneNumber);
                     }
                   },
                   child: const Text('Login'),

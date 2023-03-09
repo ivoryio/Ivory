@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:solaris_structure_1/cubits/auth_cubit/auth_cubit.dart';
 
 import 'package:solaris_structure_1/main.dart';
 import 'package:solaris_structure_1/router/routing_constants.dart';
@@ -10,13 +11,11 @@ import 'package:solaris_structure_1/screens/home/home_screen.dart';
 import 'package:solaris_structure_1/screens/login/login_screen.dart';
 import 'package:solaris_structure_1/screens/transfer/transfer_screen.dart';
 
-import '../cubits/login_cubit/login_cubit.dart';
-
 class AppRouter {
   final _rootNavigatorKey = GlobalKey<NavigatorState>();
   final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
-  final LoginCubit loginCubit;
+  final AuthCubit loginCubit;
   AppRouter(this.loginCubit);
 
   late final router = GoRouter(
