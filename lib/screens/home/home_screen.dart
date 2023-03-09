@@ -28,13 +28,12 @@ class HomeScreen extends StatelessWidget {
               child: Padding(
                   padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
                   child: Column(
-                    children: [
-                      const HomeAccountBalance(
+                    children: const [
+                      HomeAccountBalance(
                         balance: 5,
                       ),
-                      const HomeTransactionListHeader(),
-                      const TransactionList(),
-                      ButtonCentered(action: () {}, label: "See all")
+                      HomeTransactionListHeader(),
+                      TransactionList()
                     ],
                   )))
         ],
