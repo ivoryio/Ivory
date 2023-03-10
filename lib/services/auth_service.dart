@@ -44,6 +44,7 @@ class AuthService {
       }
       throw Exception('Failed to get access token');
     } catch (e) {
+      log("[AuthService::getAccessToken] $e");
       return null;
     }
   }
