@@ -152,11 +152,12 @@ class Person {
     workCountry = json['work_country'];
     workProvince = json['work_province'];
     selfDeclaredAsPep = json['self_declared_as_pep'];
-    // check how to solve this
     internationalOperativityExpectation =
-        (jsonDecode(json['international_operativity_expectation'])
-                as List<dynamic>)
-            .cast<String>();
+        json['international_operativity_expectation'] != null
+            ? (jsonDecode(json['international_operativity_expectation'])
+                    as List<dynamic>)
+                .cast<String>()
+            : null;
 
     riskClassificationStatus = json['risk_classification_status'];
     customerVettingStatus = json['customer_vetting_status'];
