@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:solaris_structure_1/services/auth_service.dart';
 
 import '../../cubits/auth_cubit/auth_cubit.dart';
 

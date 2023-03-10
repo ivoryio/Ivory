@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:solaris_structure_1/router/router.dart';
 
-import 'cubits/auth_cubit/auth_cubit.dart';
+import 'router/router.dart';
 import 'services/auth_service.dart';
+import 'cubits/auth_cubit/auth_cubit.dart';
 
 void main() {
   runApp(const MyApp());

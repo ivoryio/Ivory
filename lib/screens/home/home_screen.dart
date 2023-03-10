@@ -1,19 +1,13 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:solaris_structure_1/cubits/auth_cubit/auth_cubit.dart';
 
-import 'package:solaris_structure_1/widgets/text_currency_value.dart';
-import 'package:solaris_structure_1/widgets/transaction_list.dart';
+import '../../widgets/text_currency_value.dart';
+import '../../widgets/transaction_list.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // String token = context.read<AuthCubit>().state.oauthModel!.accessToken;
-
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Column(

@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:solaris_structure_1/services/transaction_service.dart';
 
-import '../../models/transaction.dart';
+import '../../models/transaction_model.dart';
+import '../../services/transaction_service.dart';
 
 part 'transaction_list_state.dart';
 

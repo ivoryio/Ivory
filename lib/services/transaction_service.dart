@@ -1,12 +1,10 @@
 import 'dart:convert';
-import 'dart:developer';
 
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import '../models/oauth_model.dart';
-import '../models/transaction.dart';
 import 'service_constants.dart';
+import '../models/oauth_model.dart';
+import '../models/transaction_model.dart';
 
 class TransactionService {
   final OauthModel oauthModel;

@@ -2,29 +2,14 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
-import 'package:solaris_structure_1/models/oauth_model.dart';
-import 'package:solaris_structure_1/services/service_constants.dart';
 
-import '../cubits/auth_cubit/auth_cubit.dart';
+import 'service_constants.dart';
+import '../models/oauth_model.dart';
 
 class AuthService {
   BuildContext context;
   AuthService({required this.context});
-
-  Future<void> login(String phoneNumber) async {
-    try {
-      OauthModel? oauthModel = await getAccessToken();
-    } catch (e) {
-      log(e.toString());
-    }
-    // get accessToken from API
-    // save accessToken to LoginCubit.accessToken
-    // login to app (change page to /home)
-
-    // context.read<AuthCubit>().login();
-  }
 
   Future<OauthModel?> getAccessToken() async {
     try {

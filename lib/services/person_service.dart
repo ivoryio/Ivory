@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import 'service_constants.dart';
 import '../models/oauth_model.dart';
 import '../models/person_model.dart';
-import 'service_constants.dart';
 
 class PersonService {
   late final OauthModel oauth;

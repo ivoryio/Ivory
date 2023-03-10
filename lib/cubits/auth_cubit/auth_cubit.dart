@@ -1,8 +1,7 @@
-import 'dart:developer';
-
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:solaris_structure_1/models/oauth_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../models/oauth_model.dart';
 import 'package:solaris_structure_1/services/auth_service.dart';
 
 part 'auth_state.dart';
