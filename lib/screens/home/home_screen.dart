@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:solaris_structure_1/widgets/button_centered.dart';
-import 'package:solaris_structure_1/widgets/text_currency_value.dart';
-import 'package:solaris_structure_1/widgets/transaction_list.dart';
+
+import '../../widgets/text_currency_value.dart';
+import '../../widgets/transaction_list.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -28,13 +28,12 @@ class HomeScreen extends StatelessWidget {
               child: Padding(
                   padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
                   child: Column(
-                    children: [
-                      const HomeAccountBalance(
+                    children: const [
+                      HomeAccountBalance(
                         balance: 5,
                       ),
-                      const HomeTransactionListHeader(),
-                      const TransactionList(),
-                      ButtonCentered(action: () {}, label: "See all")
+                      HomeTransactionListHeader(),
+                      TransactionList()
                     ],
                   )))
         ],

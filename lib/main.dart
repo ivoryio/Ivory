@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'cubits/login_cubit/login_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:solaris_structure_1/router/router.dart';
+
+import 'router/router.dart';
+import 'services/auth_service.dart';
+import 'cubits/auth_cubit/auth_cubit.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,10 +15,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => LoginCubit(),
+      create: (context) => AuthCubit(
+        authService: AuthService(context: context),
+      ),
       child: Builder(builder: (context) {
         return MaterialApp.router(
-          routerConfig: AppRouter(context.read<LoginCubit>()).router,
+          routerConfig: AppRouter(context.read<AuthCubit>()).router,
         );
       }),
     );
@@ -42,7 +46,7 @@ class _AppScaffoldState extends State<AppScaffold> {
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () {
-              context.read<LoginCubit>().logout();
+              context.read<AuthCubit>().logout();
             },
           )
         ],

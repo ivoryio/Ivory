@@ -21,14 +21,12 @@ class TransactionListItem extends StatelessWidget {
         Row(
           children: [
             const Icon(Icons.article, size: 40),
-            Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text("Amazon",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                  Text("Yesterday, 22:30"),
-                ]),
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(vendor,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 16)),
+              Text(date),
+            ]),
           ],
         ),
         TextCurrencyValue(value: amount)
