@@ -6,6 +6,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'router/router.dart';
 import 'services/auth_service.dart';
 import 'cubits/auth_cubit/auth_cubit.dart';
+import 'themes/default_theme.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final materialTheme = ThemeData();
+    final materialTheme = defaultMaterialTheme;
 
     final cupertinoTheme =
         MaterialBasedCupertinoThemeData(materialTheme: materialTheme);
