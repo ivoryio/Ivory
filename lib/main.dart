@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 import 'router/router.dart';
 import 'services/auth_service.dart';
@@ -14,13 +16,29 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final materialTheme = ThemeData();
+
+    final cupertinoTheme =
+        MaterialBasedCupertinoThemeData(materialTheme: materialTheme);
+
     return BlocProvider(
       create: (context) => AuthCubit(
         authService: AuthService(context: context),
       ),
       child: Builder(builder: (context) {
-        return MaterialApp.router(
+        return PlatformApp.router(
           routerConfig: AppRouter(context.read<AuthCubit>()).router,
+          material: (context, platform) => MaterialAppRouterData(
+            theme: materialTheme,
+          ),
+          cupertino: (context, platform) => CupertinoAppRouterData(
+            theme: cupertinoTheme,
+          ),
+          localizationsDelegates: const [
+            DefaultMaterialLocalizations.delegate,
+            DefaultWidgetsLocalizations.delegate,
+            DefaultCupertinoLocalizations.delegate,
+          ],
         );
       }),
     );
@@ -39,11 +57,13 @@ class AppScaffold extends StatefulWidget {
 class _AppScaffoldState extends State<AppScaffold> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
+    return PlatformScaffold(
+      iosContentBottomPadding: true,
+      iosContentPadding: true,
+      appBar: PlatformAppBar(
         title: const Text('Solaris'),
-        actions: [
-          IconButton(
+        trailingActions: [
+          PlatformIconButton(
             icon: const Icon(Icons.logout),
             onPressed: () {
               context.read<AuthCubit>().logout();
@@ -52,15 +72,6 @@ class _AppScaffoldState extends State<AppScaffold> {
         ],
       ),
       body: widget.child,
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: AppRouter.calculateSelectedIndex(context),
-        onTap: (pageIndex) => AppRouter.navigateToPage(pageIndex, context),
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Transfer'),
-          BottomNavigationBarItem(icon: Icon(Icons.account_box), label: 'Hub'),
-        ],
-      ),
     );
   }
 }

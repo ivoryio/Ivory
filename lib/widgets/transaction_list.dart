@@ -38,6 +38,7 @@ class TransactionList extends StatelessWidget {
                   itemCount: transactions.length,
                   shrinkWrap: true,
                   physics: const ClampingScrollPhysics(),
+                  padding: EdgeInsets.zero,
                   itemBuilder: (context, index) {
                     return TransactionListItem(
                       vendor:

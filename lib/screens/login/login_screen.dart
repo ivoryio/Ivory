@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 import '../../cubits/auth_cubit/auth_cubit.dart';
 
@@ -10,31 +11,76 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      initialIndex: 0,
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
+    return PlatformScaffold(
+        iosContentPadding: true,
+        iosContentBottomPadding: true,
+        appBar: PlatformAppBar(
           title: const Text('Login'),
-          bottom: const TabBar(
-            tabs: <Widget>[
-              Tab(
-                text: "Phone number",
-              ),
-              Tab(
-                text: "Email",
-              )
-            ],
-          ),
         ),
-        body: const TabBarView(
-          children: <Widget>[
-            PhoneNumberLoginForm(),
-            Center(
-              child: Text("Email login form"),
+        body: const LoginOptions());
+  }
+}
+
+class LoginOptions extends StatefulWidget {
+  const LoginOptions({super.key});
+
+  @override
+  State<LoginOptions> createState() => _LoginOptionsState();
+}
+
+class _LoginOptionsState extends State<LoginOptions> {
+  int _selectedIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    Widget page = _selectedIndex == 0
+        ? const PhoneNumberLoginForm()
+        : const EmailLoginForm();
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(10, 10, 10, 50),
+      child: Column(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
             ),
-          ],
-        ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: PlatformElevatedButton(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    alignment: Alignment.centerLeft,
+                    child: const Text(
+                      "Phone Number",
+                      softWrap: false,
+                      maxLines: 1,
+                      textAlign: TextAlign.left,
+                    ),
+                    onPressed: () => setState(() => _selectedIndex = 0),
+                  ),
+                ),
+                Expanded(
+                  child: PlatformElevatedButton(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    alignment: Alignment.centerLeft,
+                    child: const Text(
+                      "Email",
+                      softWrap: false,
+                      maxLines: 1,
+                      textAlign: TextAlign.left,
+                    ),
+                    onPressed: () => setState(() => _selectedIndex = 1),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: page,
+          ),
+        ],
       ),
     );
   }
@@ -54,58 +100,73 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
   Widget build(BuildContext context) {
     TextEditingController phoneController = TextEditingController();
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 50),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            TextFormField(
-              controller: phoneController,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              decoration: const InputDecoration(
-                labelText: "Phone number",
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10))),
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text("Label"),
+              PlatformTextFormField(
+                controller: phoneController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your phone number';
+                  }
+                  return null;
+                },
+                cupertino: (context, platform) => CupertinoTextFormFieldData(
+                    placeholder: 'Phone number',
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: const Color.fromARGB(255, 66, 66, 66),
+                      ),
+                    )),
               ),
-              validator: (String? value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter your phone number';
-                }
-                return null;
-              },
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 20),
-                  child: Text("Forgot your phone number?"),
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text("Forgot your phone number?"),
+              ElevatedButton(
+                style: ButtonStyle(
+                  minimumSize: MaterialStateProperty.all<Size>(
+                      const Size.fromHeight(40)),
                 ),
-                ElevatedButton(
-                  style: ButtonStyle(
-                    minimumSize: MaterialStateProperty.all<Size>(
-                        const Size.fromHeight(40)),
-                  ),
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      _formKey.currentState!.save();
-                      String phoneNumber = phoneController.text;
+                onPressed: () async {
+                  if (_formKey.currentState!.validate()) {
+                    _formKey.currentState!.save();
+                    String phoneNumber = phoneController.text;
 
-                      log("Phone number: $phoneNumber");
+                    log("Phone number: $phoneNumber");
 
-                      context.read<AuthCubit>().login(phoneNumber);
-                    }
-                  },
-                  child: const Text('Login'),
-                ),
-              ],
-            ),
-          ],
-        ),
+                    context.read<AuthCubit>().login(phoneNumber);
+                  }
+                },
+                child: const Text('Login'),
+              ),
+            ],
+          ),
+        ],
       ),
     );
+  }
+}
+
+class EmailLoginForm extends StatefulWidget {
+  const EmailLoginForm({super.key});
+
+  @override
+  State<EmailLoginForm> createState() => _EmailLoginFormState();
+}
+
+class _EmailLoginFormState extends State<EmailLoginForm> {
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
   }
 }

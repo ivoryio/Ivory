@@ -13,16 +13,6 @@ class HomeScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              ElevatedButton(onPressed: () {}, child: const Text("Accounts")),
-              Padding(
-                padding: const EdgeInsets.only(left: 10.0),
-                child: ElevatedButton(
-                    onPressed: () {}, child: const Text("Cards")),
-              ),
-            ],
-          ),
           Card(
               elevation: 10,
               child: Padding(
@@ -85,18 +75,15 @@ class HomeTransactionListHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const Text("Transactions", style: TextStyle(fontSize: 16)),
-          ElevatedButton(
-            onPressed: () {},
-            child: const Icon(Icons.add),
-          )
-        ],
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Text("Transactions", style: TextStyle(fontSize: 16)),
+        ElevatedButton(
+          onPressed: () {},
+          child: const Icon(Icons.add),
+        )
+      ],
     );
   }
 }
