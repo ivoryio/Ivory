@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../main.dart';
+import '../screens/splash/splash_screen.dart';
 import 'routing_constants.dart';
 import '../cubits/auth_cubit/auth_cubit.dart';
 import '../screens/home/home_screen.dart';
@@ -20,11 +21,19 @@ class AppRouter {
 
   late final router = GoRouter(
       navigatorKey: _rootNavigatorKey,
-      initialLocation: homePageRoutePath,
+      initialLocation: splashScreenRoutePath,
       debugLogDiagnostics: true,
       routes: [
         GoRoute(
+          path: splashScreenRoutePath,
+          name: splashScreenRouteName,
+          builder: (BuildContext context, GoRouterState state) {
+            return const SplashScreen();
+          },
+        ),
+        GoRoute(
           path: loginPageRoutePath,
+          name: loginPageRouteName,
           builder: (BuildContext context, GoRouterState state) {
             return const LoginScreen();
           },
@@ -63,8 +72,9 @@ class AppRouter {
         final bool loggedIn =
             loginCubit.state.status == AuthStatus.authenticated;
         final bool logginIn = state.subloc == loginPageRoutePath;
+        final bool splashScreen = state.subloc == splashScreenRoutePath;
 
-        if (!loggedIn) {
+        if (!loggedIn && !splashScreen) {
           return logginIn ? null : loginPageRoutePath;
         }
         if (logginIn) {
@@ -101,7 +111,7 @@ class AppRouter {
         context.push(hubPageRoutePath);
         break;
       default:
-        context.push(homePageRouteName);
+        context.push(homePageRoutePath);
     }
   }
 }
