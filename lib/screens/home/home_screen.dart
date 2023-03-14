@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 import '../../widgets/text_currency_value.dart';
 import '../../widgets/transaction_list.dart';
@@ -57,10 +58,15 @@ class HomeAccountBalance extends StatelessWidget {
         ]),
         Row(
           children: [
-            ElevatedButton.icon(
+            PlatformElevatedButton(
               onPressed: () {},
-              icon: const Icon(Icons.add),
-              label: const Text("Add money"),
+              cupertino: (context, platform) => CupertinoElevatedButtonData(
+                borderRadius: const BorderRadius.all(Radius.circular(7)),
+              ),
+              child: Row(children: const [
+                Icon(Icons.add),
+                Text("Add money"),
+              ]),
             ),
           ],
         ),

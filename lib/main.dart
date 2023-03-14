@@ -17,11 +17,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final materialTheme = defaultMaterialTheme;
-
-    final cupertinoTheme =
-        MaterialBasedCupertinoThemeData(materialTheme: materialTheme);
-
     return BlocProvider(
       create: (context) => AuthCubit(
         authService: AuthService(context: context),
@@ -30,14 +25,10 @@ class MyApp extends StatelessWidget {
         return PlatformApp.router(
           routerConfig: AppRouter(context.read<AuthCubit>()).router,
           material: (context, platform) => MaterialAppRouterData(
-            theme: materialTheme,
+            theme: defaultMaterialTheme,
           ),
           cupertino: (context, platform) => CupertinoAppRouterData(
-            theme: cupertinoTheme.copyWith(
-                textTheme: const CupertinoTextThemeData(
-                    textStyle: TextStyle(
-              fontFamily: 'Proxima Nova',
-            ))),
+            theme: cupertinoTheme,
           ),
           localizationsDelegates: const [
             DefaultMaterialLocalizations.delegate,

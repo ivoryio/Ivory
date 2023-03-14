@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 const ColorScheme defaultColorScheme = ColorScheme(
@@ -25,5 +26,20 @@ final ThemeData defaultMaterialTheme = ThemeData(
   buttonTheme: ButtonThemeData(
     buttonColor: defaultColorScheme.secondary,
     textTheme: ButtonTextTheme.primary,
+  ),
+);
+
+final cupertinoTheme = CupertinoThemeData(
+  primaryColor: defaultColorScheme.primary,
+  scaffoldBackgroundColor: defaultColorScheme.background,
+  barBackgroundColor: defaultColorScheme.surface,
+  primaryContrastingColor: defaultColorScheme.onPrimary,
+  brightness: Brightness.light,
+  textTheme: CupertinoTextThemeData(
+    primaryColor: defaultColorScheme.primary,
+    textStyle: const TextStyle(
+      fontFamily: 'Proxima Nova',
+      color: Colors.black,
+    ),
   ),
 );

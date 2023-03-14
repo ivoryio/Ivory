@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -127,23 +128,24 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Text("Forgot your phone number?"),
-              ElevatedButton(
-                style: ButtonStyle(
-                  minimumSize: MaterialStateProperty.all<Size>(
-                      const Size.fromHeight(40)),
+              PlatformText("Forgot your phone number?"),
+              SizedBox(
+                width: double.infinity,
+                child: PlatformElevatedButton(
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      _formKey.currentState!.save();
+                      String phoneNumber = phoneController.text;
+
+                      log("Phone number: $phoneNumber");
+
+                      context.read<AuthCubit>().login(phoneNumber);
+                    }
+                  },
+                  child: const Text('Login'),
+                  cupertino: (context, platform) =>
+                      CupertinoElevatedButtonData(),
                 ),
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    _formKey.currentState!.save();
-                    String phoneNumber = phoneController.text;
-
-                    log("Phone number: $phoneNumber");
-
-                    context.read<AuthCubit>().login(phoneNumber);
-                  }
-                },
-                child: const Text('Login'),
               ),
             ],
           ),
