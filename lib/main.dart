@@ -33,7 +33,11 @@ class MyApp extends StatelessWidget {
             theme: materialTheme,
           ),
           cupertino: (context, platform) => CupertinoAppRouterData(
-            theme: cupertinoTheme,
+            theme: cupertinoTheme.copyWith(
+                textTheme: const CupertinoTextThemeData(
+                    textStyle: TextStyle(
+              fontFamily: 'Proxima Nova',
+            ))),
           ),
           localizationsDelegates: const [
             DefaultMaterialLocalizations.delegate,

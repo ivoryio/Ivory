@@ -15,22 +15,19 @@ class TransactionListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5.0),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Row(
-          children: [
-            const Icon(Icons.article, size: 40),
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(vendor,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 16)),
-              Text(date),
-            ]),
-          ],
-        ),
-        TextCurrencyValue(value: amount)
-      ]),
-    );
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      Row(
+        children: [
+          const Icon(Icons.article, size: 40),
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(vendor,
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            Text(date),
+          ]),
+        ],
+      ),
+      TextCurrencyValue(value: amount)
+    ]);
   }
 }

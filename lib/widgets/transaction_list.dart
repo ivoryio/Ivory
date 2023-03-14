@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 import '../models/oauth_model.dart';
 import 'transaction_listing_item.dart';
@@ -34,19 +35,34 @@ class TransactionList extends StatelessWidget {
                 return const Text("Transaction list is empty");
               }
 
-              return ListView.builder(
-                  itemCount: transactions.length,
-                  shrinkWrap: true,
-                  physics: const ClampingScrollPhysics(),
-                  padding: EdgeInsets.zero,
-                  itemBuilder: (context, index) {
-                    return TransactionListItem(
-                      vendor:
-                          transactions[index].recipientName ?? "Unknown Vendor",
-                      date: transactions[index].bookingDate ?? "Unknown Date",
-                      amount: transactions[index].amount?.value ?? 0.0,
-                    );
-                  });
+              return Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text("Transactions:"),
+                      PlatformTextButton(
+                        child: const Text("See all"),
+                        onPressed: () {},
+                      )
+                    ],
+                  ),
+                  ListView.builder(
+                      itemCount: transactions.length,
+                      shrinkWrap: true,
+                      physics: const ClampingScrollPhysics(),
+                      padding: EdgeInsets.zero,
+                      itemBuilder: (context, index) {
+                        return TransactionListItem(
+                          vendor: transactions[index].recipientName ??
+                              "Unknown Vendor",
+                          date:
+                              transactions[index].bookingDate ?? "Unknown Date",
+                          amount: transactions[index].amount?.value ?? 0.0,
+                        );
+                      }),
+                ],
+              );
             default:
               return const Text("Transactions could not be loaded");
           }

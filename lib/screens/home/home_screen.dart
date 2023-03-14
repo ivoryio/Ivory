@@ -22,7 +22,6 @@ class HomeScreen extends StatelessWidget {
                       HomeAccountBalance(
                         balance: 5,
                       ),
-                      HomeTransactionListHeader(),
                       TransactionList()
                     ],
                   )))

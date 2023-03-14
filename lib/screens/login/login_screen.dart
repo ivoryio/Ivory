@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 import '../../cubits/auth_cubit/auth_cubit.dart';
+import '../../widgets/platform_text_input.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -42,35 +43,51 @@ class _LoginOptionsState extends State<LoginOptions> {
       child: Column(
         children: [
           Container(
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(10.0)),
-            ),
+            height: 40,
+            padding: const EdgeInsets.all(2),
+            decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(9.0)),
+                border: Border.all(width: 2)),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Expanded(
                   child: PlatformElevatedButton(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     alignment: Alignment.centerLeft,
-                    child: const Text(
-                      "Phone Number",
-                      softWrap: false,
-                      maxLines: 1,
-                      textAlign: TextAlign.left,
-                    ),
+                    child: const Text("Phone Number",
+                        softWrap: false,
+                        maxLines: 1,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        )),
+                    cupertino: (context, platform) =>
+                        CupertinoElevatedButtonData(
+                            pressedOpacity: 0.75,
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(7))),
                     onPressed: () => setState(() => _selectedIndex = 0),
                   ),
                 ),
                 Expanded(
                   child: PlatformElevatedButton(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     alignment: Alignment.centerLeft,
-                    child: const Text(
-                      "Email",
-                      softWrap: false,
-                      maxLines: 1,
-                      textAlign: TextAlign.left,
-                    ),
+                    child: const Text("Email",
+                        softWrap: false,
+                        maxLines: 1,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        )),
+                    cupertino: (context, platform) =>
+                        CupertinoElevatedButtonData(
+                            pressedOpacity: 0.75,
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(7))),
                     onPressed: () => setState(() => _selectedIndex = 1),
                   ),
                 ),
@@ -106,32 +123,11 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text("Label"),
-              PlatformTextFormField(
-                controller: phoneController,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your phone number';
-                  }
-                  return null;
-                },
-                cupertino: (context, platform) => CupertinoTextFormFieldData(
-                    placeholder: 'Phone number',
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: const Color.fromARGB(255, 66, 66, 66),
-                      ),
-                    )),
-              ),
-            ],
-          ),
+          PlatformTextInput(controller: phoneController),
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text("Forgot your phone number?"),
+              const Text("Forgot your phone number?"),
               ElevatedButton(
                 style: ButtonStyle(
                   minimumSize: MaterialStateProperty.all<Size>(
