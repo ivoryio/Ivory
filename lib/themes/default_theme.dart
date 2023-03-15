@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 const ColorScheme defaultColorScheme = ColorScheme(
   primary: Colors.black,
   secondary: Color(0xFF1C1A28),
-  surface: Colors.white,
+  surface: Colors.black,
   background: Colors.white,
   error: Colors.red,
   onPrimary: Colors.white,
-  onSecondary: Colors.white,
+  onSecondary: Colors.black,
   onSurface: Colors.black,
-  onBackground: Colors.black,
+  onBackground: Colors.white,
   onError: Colors.white,
   brightness: Brightness.light,
 );

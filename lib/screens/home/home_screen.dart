@@ -6,8 +6,8 @@ import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../cubits/person_cubit/person_cubit.dart';
 import '../../models/oauth_model.dart';
 import '../../models/person_model.dart';
-import '../../router/router.dart';
 import '../../services/person_service.dart';
+import '../../widgets/bottom_navbar.dart';
 import '../../widgets/transaction_list.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -35,55 +35,43 @@ class HomeScreen extends StatelessWidget {
             var person = state.person!;
 
             return PlatformScaffold(
-                iosContentBottomPadding: true,
-                iosContentPadding: true,
-                appBar: PlatformAppBar(
-                  title: Text(
-                    'Hello, ${person.firstName}!',
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                  backgroundColor: const Color(0xFF1C1A28),
-                  trailingActions: [
-                    PlatformIconButton(
-                      padding: EdgeInsets.zero,
-                      icon: const Icon(
-                        Icons.bar_chart,
-                        color: Colors.white,
-                      ),
-                      onPressed: () {},
-                    ),
-                    PlatformIconButton(
-                      padding: EdgeInsets.zero,
-                      icon: const Icon(Icons.notifications_none,
-                          color: Colors.white),
-                      onPressed: () {},
-                    )
-                  ],
+              iosContentBottomPadding: true,
+              iosContentPadding: true,
+              appBar: PlatformAppBar(
+                title: Text(
+                  'Hello, ${person.firstName}!',
+                  style: const TextStyle(color: Colors.white),
                 ),
-                body: HomePageContent(person: person),
-                bottomNavBar: PlatformNavBar(
-                  currentIndex: AppRouter.calculateSelectedIndex(context),
-                  itemChanged: (pageIndex) =>
-                      AppRouter.navigateToPage(pageIndex, context),
-                  items: const [
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.home),
-                      label: 'Home',
+                backgroundColor: const Color(0xFF1C1A28),
+                cupertino: (context, platform) => CupertinoNavigationBarData(
+                  automaticallyImplyLeading: false,
+                ),
+                material: (context, platform) => MaterialAppBarData(
+                  automaticallyImplyLeading: false,
+                  elevation: 0,
+                ),
+                trailingActions: [
+                  PlatformIconButton(
+                    padding: EdgeInsets.zero,
+                    icon: const Icon(
+                      Icons.bar_chart,
+                      color: Colors.white,
                     ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.add_card),
-                      label: 'Wallet',
+                    onPressed: () {},
+                  ),
+                  PlatformIconButton(
+                    padding: EdgeInsets.zero,
+                    icon: const Icon(
+                      Icons.notifications_none,
+                      color: Colors.white,
                     ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.payments),
-                      label: 'Transactions',
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.person),
-                      label: 'Profile',
-                    ),
-                  ],
-                ));
+                    onPressed: () {},
+                  )
+                ],
+              ),
+              body: HomePageContent(person: person),
+              bottomNavBar: createBottomNavbar(context),
+            );
           }
 
           return PlatformScaffold(
