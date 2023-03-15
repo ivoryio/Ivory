@@ -38,19 +38,19 @@ class AppRouter {
             return const LoginScreen();
           },
         ),
+        GoRoute(
+          path: homePageRoutePath,
+          name: homePageRouteName,
+          builder: (BuildContext context, GoRouterState state) {
+            return const HomeScreen();
+          },
+        ),
         ShellRoute(
           navigatorKey: _shellNavigatorKey,
           builder: (context, state, child) {
             return AppScaffold(child: child);
           },
           routes: [
-            GoRoute(
-              path: homePageRoutePath,
-              name: homePageRouteName,
-              builder: (BuildContext context, GoRouterState state) {
-                return const HomeScreen();
-              },
-            ),
             GoRoute(
               path: transferPageRoutePath,
               name: transferPageRouteName,

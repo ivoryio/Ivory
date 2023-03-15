@@ -57,13 +57,15 @@ class _AppScaffoldState extends State<AppScaffold> {
       iosContentBottomPadding: true,
       iosContentPadding: true,
       appBar: PlatformAppBar(
-        title: const Text('Solaris'),
+        title: const Text('Page Title'),
         trailingActions: [
           PlatformIconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () {
-              context.read<AuthCubit>().logout();
-            },
+            icon: const Icon(Icons.bar_chart),
+            onPressed: () {},
+          ),
+          PlatformIconButton(
+            icon: const Icon(Icons.notifications_none),
+            onPressed: () {},
           )
         ],
       ),
