@@ -10,9 +10,11 @@ PlatformNavBar createBottomNavbar(BuildContext context) {
     material: (context, platform) => MaterialNavBarData(
       type: BottomNavigationBarType.fixed,
       showUnselectedLabels: true,
+      selectedItemColor: Colors.black,
     ),
     cupertino: (context, platform) => CupertinoTabBarData(
       backgroundColor: Colors.white,
+      activeColor: Colors.black,
     ),
     currentIndex: pageIndex,
     itemChanged: (pageIndex) => AppRouter.navigateToPage(pageIndex, context),

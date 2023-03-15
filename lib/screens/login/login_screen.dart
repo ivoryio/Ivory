@@ -48,18 +48,17 @@ class _LoginOptionsState extends State<LoginOptions> {
             padding: const EdgeInsets.all(2),
             decoration: BoxDecoration(
                 borderRadius: const BorderRadius.all(Radius.circular(9.0)),
-                border: Border.all(width: 2)),
+                border: Border.all(width: 1)),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Expanded(
                   child: PlatformElevatedButton(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
-                    alignment: Alignment.centerLeft,
                     child: const Text("Phone Number",
                         softWrap: false,
                         maxLines: 1,
-                        textAlign: TextAlign.left,
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -75,7 +74,7 @@ class _LoginOptionsState extends State<LoginOptions> {
                 Expanded(
                   child: PlatformElevatedButton(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
-                    alignment: Alignment.centerLeft,
+                    color: Colors.black,
                     child: const Text("Email",
                         softWrap: false,
                         maxLines: 1,
@@ -84,6 +83,12 @@ class _LoginOptionsState extends State<LoginOptions> {
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
                         )),
+                    material: (context, platform) => MaterialElevatedButtonData(
+                      style: ButtonStyle(
+                        foregroundColor:
+                            MaterialStateProperty.all(Colors.black),
+                      ),
+                    ),
                     cupertino: (context, platform) =>
                         CupertinoElevatedButtonData(
                             pressedOpacity: 0.75,
@@ -143,6 +148,7 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
                     }
                   },
                   child: const Text('Login'),
+                  color: Colors.blue,
                   cupertino: (context, platform) =>
                       CupertinoElevatedButtonData(),
                 ),

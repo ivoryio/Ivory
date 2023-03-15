@@ -106,208 +106,187 @@ class HomePageContent extends StatelessWidget {
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(8)),
-                  color: Color(0xFF272735),
-                ),
-                child: Column(
-                  children: [
-                    Container(
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(8),
-                          topRight: Radius.circular(8),
-                        ),
-                        color: Colors.black,
-                      ),
-                      width: MediaQuery.of(context).size.width,
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: Column(
-                        children: [
-                          Text(
-                            "Total Balance",
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  "€ 20,000",
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  ".00",
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Text(
-                            "IBAN: ABCD EFGH IJKL MNOP",
-                            style: const TextStyle(color: Colors.white),
-                          )
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 15, horizontal: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Text("Income",
-                                  style: const TextStyle(color: Colors.white)),
-                              const SizedBox(width: 5),
-                              Text("€ 12,503.00",
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold)),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                "Spending",
-                                style: const TextStyle(color: Colors.white),
-                              ),
-                              const SizedBox(width: 5),
-                              Text("€ 2,503.00",
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold)),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFF272735),
-                            fixedSize: const Size(50, 50),
-                            shape: const CircleBorder(),
-                            splashFactory: NoSplash.splashFactory,
-                          ),
-                          child: const Icon(Icons.add_card),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10),
-                          child: Text(
-                            "Top up",
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFF272735),
-                            fixedSize: const Size(50, 50),
-                            shape: const CircleBorder(),
-                            splashFactory: NoSplash.splashFactory,
-                          ),
-                          child: const Icon(Icons.compare_arrows),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10),
-                          child: Text(
-                            "Send",
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFF272735),
-                            fixedSize: const Size(50, 50),
-                            shape: const CircleBorder(),
-                            splashFactory: NoSplash.splashFactory,
-                          ),
-                          child: const Icon(Icons.receipt_long),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10),
-                          child: Text(
-                            "Request",
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFF272735),
-                            fixedSize: const Size(50, 50),
-                            shape: const CircleBorder(),
-                            splashFactory: NoSplash.splashFactory,
-                          ),
-                          child: const Icon(Icons.info),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10),
-                          child: Text(
-                            "Acc. details",
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-              )
+            children: const [
+              AccountBalance(),
+              AccountOptions(),
             ],
           ),
         ),
-        TransactionList()
+        const TransactionList()
+      ],
+    );
+  }
+}
+
+class AccountBalance extends StatelessWidget {
+  const AccountBalance({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(8)),
+        color: Color(0xFF272735),
+      ),
+      child: Column(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(8),
+                topRight: Radius.circular(8),
+              ),
+              color: Colors.black,
+            ),
+            width: MediaQuery.of(context).size.width,
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Column(
+              children: [
+                const Text(
+                  "Total Balance",
+                  style: TextStyle(color: Colors.white),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: const [
+                      Text(
+                        "€ 20,000",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        ".00",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                ),
+                const Text(
+                  "IBAN: ABCD EFGH IJKL MNOP",
+                  style: TextStyle(color: Colors.white),
+                )
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: const [
+                    Text("Income",
+                        style: TextStyle(
+                          color: Colors.white,
+                        )),
+                    SizedBox(width: 5),
+                    Text("€ 12,503.00",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        )),
+                  ],
+                ),
+                Row(
+                  children: const [
+                    Text(
+                      "Spending",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    SizedBox(width: 5),
+                    Text(
+                      "€ 2,503.00",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class AccountOptions extends StatelessWidget {
+  const AccountOptions({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: const [
+          AccountOptionsButton(
+            textLabel: "Top up",
+            icon: Icons.add_card,
+          ),
+          AccountOptionsButton(
+            textLabel: "Send",
+            icon: Icons.compare_arrows,
+          ),
+          AccountOptionsButton(
+            textLabel: "Request",
+            icon: Icons.receipt_long,
+          ),
+          AccountOptionsButton(
+            textLabel: "Acc. details",
+            icon: Icons.info,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class AccountOptionsButton extends StatelessWidget {
+  final String textLabel;
+  final IconData icon;
+
+  const AccountOptionsButton({
+    super.key,
+    required this.textLabel,
+    required this.icon,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ElevatedButton(
+          onPressed: () {},
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF272735),
+            fixedSize: const Size(50, 50),
+            shape: const CircleBorder(),
+            splashFactory: NoSplash.splashFactory,
+          ),
+          child: Icon(icon, color: Colors.white),
+        ),
+        const Padding(
+          padding: EdgeInsets.only(top: 10),
+          child: Text(
+            "Top up",
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 12,
+            ),
+          ),
+        )
       ],
     );
   }

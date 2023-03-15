@@ -25,7 +25,6 @@ class Screen extends StatelessWidget {
           style: const TextStyle(color: Colors.white),
         ),
         backgroundColor: const Color(0xFF1C1A28),
-        cupertino: (context, platform) => CupertinoNavigationBarData(),
       ),
       bottomNavBar: createBottomNavbar(context),
       body: child,
