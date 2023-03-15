@@ -43,7 +43,7 @@ class TransactionList extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        PlatformText(
+                        Text(
                           "Transactions",
                           style: const TextStyle(
                             fontSize: 24,
@@ -52,7 +52,7 @@ class TransactionList extends StatelessWidget {
                         ),
                         PlatformTextButton(
                           padding: EdgeInsets.zero,
-                          child: PlatformText(
+                          child: Text(
                             "See all",
                             textAlign: TextAlign.right,
                             style: const TextStyle(

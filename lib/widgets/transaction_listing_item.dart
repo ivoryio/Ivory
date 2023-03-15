@@ -37,12 +37,12 @@ class TransactionListItem extends StatelessWidget {
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          PlatformText(description,
+                          Text(description,
                               style: const TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 16,
                               )),
-                          PlatformText(
+                          Text(
                             date,
                             style: TextStyle(
                               color: Color(0xFF667085),

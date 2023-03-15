@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
@@ -24,7 +25,9 @@ class _PlatformTextInputState extends State<PlatformTextInput> {
               style: TextStyle(color: Color(0xFF414D63), fontSize: 18)),
         ),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          padding: EdgeInsets.symmetric(
+              horizontal: 14,
+              vertical: defaultTargetPlatform == TargetPlatform.iOS ? 10 : 0),
           decoration: BoxDecoration(
             border: Border.all(color: const Color(0xFFAEC1CC), width: 1),
             borderRadius: BorderRadius.circular(8),
@@ -34,8 +37,23 @@ class _PlatformTextInputState extends State<PlatformTextInput> {
             validator: (value) {
               return null;
             },
+            material: (context, platform) => MaterialTextFormFieldData(
+              decoration: const InputDecoration(
+                contentPadding: EdgeInsets.all(0),
+                border: InputBorder.none,
+                hintText: 'Phone number',
+                hintStyle: TextStyle(
+                  color: Color(0xFF414D63),
+                  fontSize: 18,
+                ),
+              ),
+            ),
             cupertino: (context, platform) => CupertinoTextFormFieldData(
               placeholder: 'Phone number',
+              style: const TextStyle(
+                color: Color(0xFF414D63),
+                fontSize: 18,
+              ),
               placeholderStyle: const TextStyle(
                 color: Color(0xFF414D63),
                 fontSize: 18,

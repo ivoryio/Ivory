@@ -128,7 +128,7 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              PlatformText("Forgot your phone number?"),
+              Text("Forgot your phone number?"),
               SizedBox(
                 width: double.infinity,
                 child: PlatformElevatedButton(

@@ -17,7 +17,7 @@ class TransactionService {
       const String queryFilters =
           'page[size]=5&page[number]=1&filter[booking_date][min]=2000-10-10&filter[booking_date][max]=2030-10-10';
 
-      const url = '$apiBaseUrl/v1/accounts/$accountId/bookings?$queryFilters';
+      String url = '$apiBaseUrl/v1/accounts/$accountId/bookings?$queryFilters';
 
       final response = await http.get(Uri.parse(url),
           headers: {"Authorization": "Bearer ${oauthModel.accessToken}"});

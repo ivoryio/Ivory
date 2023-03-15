@@ -14,7 +14,7 @@ class PersonService {
     try {
       const String personId = 'mockpersonkontistgmbh';
 
-      const String url = '$apiBaseUrl/v1/persons/$personId';
+      String url = '$apiBaseUrl/v1/persons/$personId';
 
       final response = await http.get(Uri.parse(url),
           headers: {"Authorization": "Bearer ${oauth.accessToken}"});

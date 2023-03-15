@@ -98,13 +98,13 @@ class AppRouter {
   static void navigateToPage(int pageIndex, BuildContext context) {
     switch (pageIndex) {
       case 0:
-        context.push(homePageRoutePath);
+        context.go(homePageRoutePath);
         break;
       case 2:
-        context.push(transferPageRoutePath);
+        context.go(transferPageRoutePath);
         break;
       default:
-        context.push(homePageRoutePath);
+        context.go(homePageRoutePath);
     }
   }
 }

@@ -22,6 +22,6 @@ class TextCurrencyValue extends StatelessWidget {
         ? "-$currency${((value * -1) / 1000).toStringAsFixed(0)}"
         : "+$currency${(value / 1000).toStringAsFixed(0)}";
 
-    return PlatformText(output, style: style);
+    return Text(output, style: style);
   }
 }

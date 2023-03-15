@@ -138,7 +138,7 @@ class HomePageContent extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       child: Column(
                         children: [
-                          PlatformText(
+                          Text(
                             "Total Balance",
                             style: const TextStyle(color: Colors.white),
                           ),
@@ -148,14 +148,14 @@ class HomePageContent extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                PlatformText(
+                                Text(
                                   "€ 20,000",
                                   style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                PlatformText(
+                                Text(
                                   ".00",
                                   style: const TextStyle(
                                       color: Colors.white,
@@ -165,7 +165,7 @@ class HomePageContent extends StatelessWidget {
                               ],
                             ),
                           ),
-                          PlatformText(
+                          Text(
                             "IBAN: ABCD EFGH IJKL MNOP",
                             style: const TextStyle(color: Colors.white),
                           )
@@ -180,10 +180,10 @@ class HomePageContent extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              PlatformText("Income",
+                              Text("Income",
                                   style: const TextStyle(color: Colors.white)),
                               const SizedBox(width: 5),
-                              PlatformText("€ 12,503.00",
+                              Text("€ 12,503.00",
                                   style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold)),
@@ -191,12 +191,12 @@ class HomePageContent extends StatelessWidget {
                           ),
                           Row(
                             children: [
-                              PlatformText(
+                              Text(
                                 "Spending",
                                 style: const TextStyle(color: Colors.white),
                               ),
                               const SizedBox(width: 5),
-                              PlatformText("€ 2,503.00",
+                              Text("€ 2,503.00",
                                   style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold)),
@@ -227,7 +227,7 @@ class HomePageContent extends StatelessWidget {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 10),
-                          child: PlatformText(
+                          child: Text(
                             "Top up",
                             style: const TextStyle(
                               color: Colors.white,
@@ -252,7 +252,7 @@ class HomePageContent extends StatelessWidget {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 10),
-                          child: PlatformText(
+                          child: Text(
                             "Send",
                             style: const TextStyle(
                               color: Colors.white,
@@ -277,7 +277,7 @@ class HomePageContent extends StatelessWidget {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 10),
-                          child: PlatformText(
+                          child: Text(
                             "Request",
                             style: const TextStyle(
                               color: Colors.white,
@@ -302,7 +302,7 @@ class HomePageContent extends StatelessWidget {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 10),
-                          child: PlatformText(
+                          child: Text(
                             "Acc. details",
                             style: const TextStyle(
                               color: Colors.white,
