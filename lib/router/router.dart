@@ -13,8 +13,10 @@ import '../screens/login/login_screen.dart';
 import '../screens/transfer/transfer_screen.dart';
 
 class AppRouter {
-  final _rootNavigatorKey = GlobalKey<NavigatorState>();
-  final _shellNavigatorKey = GlobalKey<NavigatorState>();
+  final _rootNavigatorKey =
+      GlobalKey<NavigatorState>(debugLabel: 'rootNavigatorKey');
+  final _shellNavigatorKey =
+      GlobalKey<NavigatorState>(debugLabel: 'shellNavigatorKey');
 
   final AuthCubit loginCubit;
   AppRouter(this.loginCubit);

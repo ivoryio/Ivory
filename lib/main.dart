@@ -54,6 +54,7 @@ class _AppScaffoldState extends State<AppScaffold> {
   @override
   Widget build(BuildContext context) {
     return PlatformScaffold(
+      key: GlobalKey(debugLabel: "ShellRoutePlatformScaffold"),
       iosContentBottomPadding: true,
       iosContentPadding: true,
       appBar: PlatformAppBar(

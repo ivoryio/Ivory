@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:go_router/go_router.dart';
-import 'package:solaris_structure_1/themes/default_theme.dart';
 
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../cubits/person_cubit/person_cubit.dart';
@@ -47,6 +45,7 @@ class HomeScreen extends StatelessWidget {
                   backgroundColor: const Color(0xFF1C1A28),
                   trailingActions: [
                     PlatformIconButton(
+                      padding: EdgeInsets.zero,
                       icon: const Icon(
                         Icons.bar_chart,
                         color: Colors.white,
@@ -54,6 +53,7 @@ class HomeScreen extends StatelessWidget {
                       onPressed: () {},
                     ),
                     PlatformIconButton(
+                      padding: EdgeInsets.zero,
                       icon: const Icon(Icons.notifications_none,
                           color: Colors.white),
                       onPressed: () {},
