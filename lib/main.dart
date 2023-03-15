@@ -58,15 +58,28 @@ class _AppScaffoldState extends State<AppScaffold> {
       iosContentPadding: true,
       appBar: PlatformAppBar(
         title: const Text('Page Title'),
-        trailingActions: [
-          PlatformIconButton(
-            icon: const Icon(Icons.bar_chart),
-            onPressed: () {},
+      ),
+      bottomNavBar: PlatformNavBar(
+        currentIndex: AppRouter.calculateSelectedIndex(context),
+        itemChanged: (pageIndex) =>
+            AppRouter.navigateToPage(pageIndex, context),
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
           ),
-          PlatformIconButton(
-            icon: const Icon(Icons.notifications_none),
-            onPressed: () {},
-          )
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add_card),
+            label: 'Wallet',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.payments),
+            label: 'Transactions',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
         ],
       ),
       body: widget.child,

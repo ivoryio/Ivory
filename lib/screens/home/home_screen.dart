@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:solaris_structure_1/themes/default_theme.dart';
 
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../cubits/person_cubit/person_cubit.dart';
 import '../../models/oauth_model.dart';
 import '../../models/person_model.dart';
+import '../../router/router.dart';
 import '../../services/person_service.dart';
+import '../../widgets/transaction_list.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -15,6 +18,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     OauthModel oAuth = context.read<AuthCubit>().state.oauthModel!;
+
     return BlocProvider(
       create: (context) => PersonCubit(
         personService: PersonService(oauth: oAuth),
@@ -33,31 +37,53 @@ class HomeScreen extends StatelessWidget {
             var person = state.person!;
 
             return PlatformScaffold(
-              iosContentBottomPadding: true,
-              iosContentPadding: true,
-              appBar: PlatformAppBar(
-                title: Text(
-                  'Hello, ${person.firstName}!',
-                  style: const TextStyle(color: Colors.white),
-                ),
-                backgroundColor: const Color(0xFF1C1A28),
-                trailingActions: [
-                  PlatformIconButton(
-                    icon: const Icon(
-                      Icons.bar_chart,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {},
+                iosContentBottomPadding: true,
+                iosContentPadding: true,
+                appBar: PlatformAppBar(
+                  title: Text(
+                    'Hello, ${person.firstName}!',
+                    style: const TextStyle(color: Colors.white),
                   ),
-                  PlatformIconButton(
-                    icon: const Icon(Icons.notifications_none,
-                        color: Colors.white),
-                    onPressed: () {},
-                  )
-                ],
-              ),
-              body: HomePageContent(person: person),
-            );
+                  backgroundColor: const Color(0xFF1C1A28),
+                  trailingActions: [
+                    PlatformIconButton(
+                      icon: const Icon(
+                        Icons.bar_chart,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {},
+                    ),
+                    PlatformIconButton(
+                      icon: const Icon(Icons.notifications_none,
+                          color: Colors.white),
+                      onPressed: () {},
+                    )
+                  ],
+                ),
+                body: HomePageContent(person: person),
+                bottomNavBar: PlatformNavBar(
+                  currentIndex: AppRouter.calculateSelectedIndex(context),
+                  itemChanged: (pageIndex) =>
+                      AppRouter.navigateToPage(pageIndex, context),
+                  items: const [
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.home),
+                      label: 'Home',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.add_card),
+                      label: 'Wallet',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.payments),
+                      label: 'Transactions',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.person),
+                      label: 'Profile',
+                    ),
+                  ],
+                ));
           }
 
           return PlatformScaffold(
@@ -78,6 +104,7 @@ class HomePageContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
@@ -198,11 +225,15 @@ class HomePageContent extends StatelessWidget {
                           ),
                           child: const Icon(Icons.add_card),
                         ),
-                        PlatformText(
-                          "Top up",
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10),
+                          child: PlatformText(
+                            "Top up",
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
                           ),
                         )
                       ],
@@ -217,13 +248,17 @@ class HomePageContent extends StatelessWidget {
                             shape: const CircleBorder(),
                             splashFactory: NoSplash.splashFactory,
                           ),
-                          child: const Icon(Icons.add_card),
+                          child: const Icon(Icons.compare_arrows),
                         ),
-                        PlatformText(
-                          "Top up",
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10),
+                          child: PlatformText(
+                            "Send",
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
                           ),
                         )
                       ],
@@ -238,13 +273,17 @@ class HomePageContent extends StatelessWidget {
                             shape: const CircleBorder(),
                             splashFactory: NoSplash.splashFactory,
                           ),
-                          child: const Icon(Icons.add_card),
+                          child: const Icon(Icons.receipt_long),
                         ),
-                        PlatformText(
-                          "Top up",
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10),
+                          child: PlatformText(
+                            "Request",
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
                           ),
                         )
                       ],
@@ -259,13 +298,17 @@ class HomePageContent extends StatelessWidget {
                             shape: const CircleBorder(),
                             splashFactory: NoSplash.splashFactory,
                           ),
-                          child: const Icon(Icons.add_card),
+                          child: const Icon(Icons.info),
                         ),
-                        PlatformText(
-                          "Top up",
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10),
+                          child: PlatformText(
+                            "Acc. details",
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
                           ),
                         )
                       ],
@@ -276,6 +319,7 @@ class HomePageContent extends StatelessWidget {
             ],
           ),
         ),
+        TransactionList()
       ],
     );
   }

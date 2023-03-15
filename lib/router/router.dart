@@ -87,15 +87,11 @@ class AppRouter {
   static int calculateSelectedIndex(BuildContext context) {
     final GoRouter route = GoRouter.of(context);
     final String location = route.location;
-    if (location.startsWith(homePageRoutePath)) {
-      return 0;
-    }
+
     if (location.startsWith(transferPageRoutePath)) {
-      return 1;
-    }
-    if (location.startsWith(hubPageRoutePath)) {
       return 2;
     }
+
     return 0;
   }
 
@@ -104,11 +100,8 @@ class AppRouter {
       case 0:
         context.push(homePageRoutePath);
         break;
-      case 1:
-        context.push(transferPageRoutePath);
-        break;
       case 2:
-        context.push(hubPageRoutePath);
+        context.push(transferPageRoutePath);
         break;
       default:
         context.push(homePageRoutePath);
