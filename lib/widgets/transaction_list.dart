@@ -75,11 +75,7 @@ class TransactionList extends StatelessWidget {
                         padding: EdgeInsets.zero,
                         itemBuilder: (context, index) {
                           return TransactionListItem(
-                            description: transactions[index].description ??
-                                "Unknown Description",
-                            date: transactions[index].bookingDate ??
-                                "Unknown Date",
-                            amount: transactions[index].amount?.value ?? 0.0,
+                            transaction: transactions[index],
                           );
                         }),
                   ],
