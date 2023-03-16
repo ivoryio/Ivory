@@ -52,50 +52,23 @@ class _LoginOptionsState extends State<LoginOptions> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Expanded(
-                  child: PlatformElevatedButton(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: const Text("Phone Number",
-                        softWrap: false,
-                        maxLines: 1,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        )),
-                    cupertino: (context, platform) =>
-                        CupertinoElevatedButtonData(
-                            pressedOpacity: 0.75,
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(7))),
-                    onPressed: () => setState(() => _selectedIndex = 0),
-                  ),
+                ExpandedButton(
+                  active: _selectedIndex == 0,
+                  text: "Phone Number",
+                  onPressed: () {
+                    setState(() {
+                      _selectedIndex = 0;
+                    });
+                  },
                 ),
-                Expanded(
-                  child: PlatformElevatedButton(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    color: Colors.black,
-                    child: const Text("Email",
-                        softWrap: false,
-                        maxLines: 1,
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        )),
-                    material: (context, platform) => MaterialElevatedButtonData(
-                      style: ButtonStyle(
-                        foregroundColor:
-                            MaterialStateProperty.all(Colors.black),
-                      ),
-                    ),
-                    cupertino: (context, platform) =>
-                        CupertinoElevatedButtonData(
-                            pressedOpacity: 0.75,
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(7))),
-                    onPressed: () => setState(() => _selectedIndex = 1),
-                  ),
+                ExpandedButton(
+                  active: _selectedIndex == 1,
+                  text: "Phone Number",
+                  onPressed: () {
+                    setState(() {
+                      _selectedIndex = 1;
+                    });
+                  },
                 ),
               ],
             ),
@@ -105,6 +78,43 @@ class _LoginOptionsState extends State<LoginOptions> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class ExpandedButton extends StatelessWidget {
+  final String text;
+  final bool active;
+  final Function onPressed;
+
+  const ExpandedButton(
+      {super.key,
+      required this.onPressed,
+      required this.text,
+      required this.active});
+
+  @override
+  Widget build(BuildContext context) {
+    final Color textColor = active ? Colors.white : Colors.black;
+    final Color backgroundColor = active ? Colors.black : Colors.white;
+
+    return Expanded(
+      child: PlatformElevatedButton(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          color: backgroundColor,
+          child: Text(text,
+              softWrap: false,
+              maxLines: 1,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: textColor,
+              )),
+          cupertino: (context, platform) => CupertinoElevatedButtonData(
+              pressedOpacity: 0.75,
+              borderRadius: const BorderRadius.all(Radius.circular(7))),
+          onPressed: () => onPressed()),
     );
   }
 }
@@ -137,6 +147,7 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
               SizedBox(
                 width: double.infinity,
                 child: PlatformElevatedButton(
+                  color: Colors.black,
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
@@ -147,10 +158,10 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
                       context.read<AuthCubit>().login(phoneNumber);
                     }
                   },
-                  child: const Text('Login'),
-                  color: Colors.blue,
-                  cupertino: (context, platform) =>
-                      CupertinoElevatedButtonData(),
+                  child: const Text(
+                    'Login',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
             ],
