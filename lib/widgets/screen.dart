@@ -22,9 +22,7 @@ class Screen extends StatelessWidget {
       appBar: PlatformAppBar(
         title: Text(
           title,
-          style: const TextStyle(color: Colors.white),
         ),
-        backgroundColor: const Color(0xFF1C1A28),
       ),
       bottomNavBar: createBottomNavbar(context),
       body: child,

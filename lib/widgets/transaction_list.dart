@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:go_router/go_router.dart';
+import 'package:solaris_structure_1/router/routing_constants.dart';
 
 import '../models/oauth_model.dart';
 import 'transaction_listing_item.dart';
@@ -43,24 +45,26 @@ class TransactionList extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                        const Text(
                           "Transactions",
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         PlatformTextButton(
                           padding: EdgeInsets.zero,
-                          child: Text(
+                          child: const Text(
                             "See all",
                             textAlign: TextAlign.right,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            context.push(transactionsRoute.path);
+                          },
                         )
                       ],
                     ),

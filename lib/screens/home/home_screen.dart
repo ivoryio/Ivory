@@ -229,22 +229,26 @@ class AccountOptions extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: const [
+        children: [
           AccountOptionsButton(
             textLabel: "Top up",
             icon: Icons.add_card,
+            onPressed: () => print("Top up"),
           ),
           AccountOptionsButton(
             textLabel: "Send",
             icon: Icons.compare_arrows,
+            onPressed: () => print("Send"),
           ),
           AccountOptionsButton(
             textLabel: "Request",
             icon: Icons.receipt_long,
+            onPressed: () => print("Request"),
           ),
           AccountOptionsButton(
             textLabel: "Acc. details",
             icon: Icons.info,
+            onPressed: () => print("Acc. details"),
           ),
         ],
       ),
@@ -255,19 +259,20 @@ class AccountOptions extends StatelessWidget {
 class AccountOptionsButton extends StatelessWidget {
   final String textLabel;
   final IconData icon;
+  final Function onPressed;
 
-  const AccountOptionsButton({
-    super.key,
-    required this.textLabel,
-    required this.icon,
-  });
+  const AccountOptionsButton(
+      {super.key,
+      required this.textLabel,
+      required this.icon,
+      required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () => onPressed(),
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFF272735),
             fixedSize: const Size(50, 50),
@@ -276,11 +281,11 @@ class AccountOptionsButton extends StatelessWidget {
           ),
           child: Icon(icon, color: Colors.white),
         ),
-        const Padding(
-          padding: EdgeInsets.only(top: 10),
+        Padding(
+          padding: const EdgeInsets.only(top: 10),
           child: Text(
-            "Top up",
-            style: TextStyle(
+            textLabel,
+            style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
               fontSize: 12,

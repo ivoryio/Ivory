@@ -10,17 +10,14 @@ class TextCurrencyValue extends StatelessWidget {
     super.key,
     required this.value,
     this.currency = "\u20AC", // euro symbol
-    this.style = const TextStyle(
-      fontWeight: FontWeight.w600,
-      fontSize: 16,
-    ),
+    this.style = const TextStyle(),
   });
 
   @override
   Widget build(BuildContext context) {
     String output = value < 0
-        ? "-$currency${((value * -1) / 1000).toStringAsFixed(0)}"
-        : "+$currency${(value / 1000).toStringAsFixed(0)}";
+        ? "- $currency ${((value * -1) / 1000).toStringAsFixed(0)}"
+        : "+ $currency ${(value / 1000).toStringAsFixed(0)}";
 
     return Text(output, style: style);
   }

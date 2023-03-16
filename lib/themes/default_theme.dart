@@ -31,8 +31,10 @@ final ThemeData defaultMaterialTheme = ThemeData(
     cupertinoOverrideTheme: CupertinoThemeData(
       primaryColor: defaultColorScheme.primary,
       brightness: Brightness.light,
+      barBackgroundColor: defaultColorScheme.surface,
+      scaffoldBackgroundColor: defaultColorScheme.surface,
       textTheme: CupertinoTextThemeData(
-        primaryColor: Colors.white,
+        primaryColor: defaultColorScheme.primary,
         textStyle: TextStyle(
           fontFamily: 'Proxima Nova',
           color: defaultColorScheme.primary,
