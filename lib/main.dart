@@ -18,25 +18,26 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => AuthCubit(
-        authService: AuthService(context: context),
-      ),
-      child: Builder(builder: (context) {
-        return PlatformApp.router(
-          routerConfig: AppRouter(context.read<AuthCubit>()).router,
-          material: (context, platform) => MaterialAppRouterData(
-            theme: defaultMaterialTheme,
-          ),
-          cupertino: (context, platform) => CupertinoAppRouterData(
-            theme: cupertinoTheme,
-          ),
-          localizationsDelegates: const [
-            DefaultMaterialLocalizations.delegate,
-            DefaultWidgetsLocalizations.delegate,
-            DefaultCupertinoLocalizations.delegate,
-          ],
-        );
-      }),
-    );
+        create: (context) => AuthCubit(
+              authService: AuthService(context: context),
+            ),
+        child: Theme(
+            data: defaultMaterialTheme,
+            child: PlatformProvider(
+              builder: (context) => PlatformApp.router(
+                routerConfig: AppRouter(context.read<AuthCubit>()).router,
+                material: (context, platform) => MaterialAppRouterData(
+                  theme: defaultMaterialTheme,
+                ),
+                cupertino: (context, platform) => CupertinoAppRouterData(
+                  theme: cupertinoTheme,
+                ),
+                localizationsDelegates: const [
+                  DefaultMaterialLocalizations.delegate,
+                  DefaultWidgetsLocalizations.delegate,
+                  DefaultCupertinoLocalizations.delegate,
+                ],
+              ),
+            )));
   }
 }
