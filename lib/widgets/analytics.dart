@@ -2,6 +2,8 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
+import '../utilities/format.dart';
+
 class Analytics extends StatefulWidget {
   const Analytics({super.key});
 
@@ -42,46 +44,55 @@ class AnalyticsState extends State {
               )
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.all(24),
-            child: AspectRatio(
-              aspectRatio: 1,
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: AspectRatio(
-                      aspectRatio: 1,
-                      child: PieChart(
-                        PieChartData(
-                          pieTouchData: PieTouchData(
-                            touchCallback:
-                                (FlTouchEvent event, pieTouchResponse) {
-                              setState(() {
-                                if (!event.isInterestedForInteractions ||
-                                    pieTouchResponse == null ||
-                                    pieTouchResponse.touchedSection == null) {
-                                  touchedIndex = -1;
-                                  return;
-                                }
-                                touchedIndex = pieTouchResponse
-                                    .touchedSection!.touchedSectionIndex;
-                              });
-                            },
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(24),
+                child: AspectRatio(
+                  aspectRatio: 1,
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: AspectRatio(
+                          aspectRatio: 1,
+                          child: PieChart(
+                            PieChartData(
+                              borderData: FlBorderData(
+                                show: false,
+                              ),
+                              sectionsSpace: 0,
+                              centerSpaceRadius: double.infinity,
+                              sections: showingSections(),
+                              startDegreeOffset: -30,
+                            ),
+                            swapAnimationDuration:
+                                const Duration(milliseconds: 150), // Optional
+                            swapAnimationCurve: Curves.linear, // Optional
                           ),
-                          borderData: FlBorderData(
-                            show: false,
-                          ),
-                          sectionsSpace: 0,
-                          centerSpaceRadius: double.infinity,
-                          sections: showingSections(),
-                          startDegreeOffset: -30,
                         ),
                       ),
-                    ),
+                    ],
+                  ),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    Format.euroFromCents(245800),
+                    style: const TextStyle(
+                        fontSize: 24, fontWeight: FontWeight.w600),
+                  ),
+                  Text(
+                    ".${Format.cents(245800)}",
+                    style: const TextStyle(
+                        fontSize: 21, fontWeight: FontWeight.w600),
                   ),
                 ],
               ),
-            ),
+            ],
           ),
         ],
       ),
@@ -91,6 +102,7 @@ class AnalyticsState extends State {
   List<PieChartSectionData> showingSections() {
     return List.generate(6, (i) {
       final radius = (MediaQuery.of(context).size.width / 4.2) - 24;
+
       switch (i) {
         case 0:
           return PieChartSectionData(
@@ -101,6 +113,7 @@ class AnalyticsState extends State {
             badgeWidget: const Icon(
               Icons.fastfood,
               color: Colors.white,
+              size: 15,
             ),
           );
         case 1:
