@@ -10,6 +10,7 @@ import '../../models/oauth_model.dart';
 import '../../models/person_account.dart';
 import '../../models/person_model.dart';
 import '../../services/person_service.dart';
+import '../../widgets/analytics.dart';
 import '../../widgets/bottom_navbar.dart';
 import '../../widgets/transaction_list.dart';
 
@@ -95,12 +96,15 @@ class HomePageContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: const [
-        HomePageHeader(),
-        TransactionList(),
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: const [
+          HomePageHeader(),
+          TransactionList(),
+          Analytics(),
+        ],
+      ),
     );
   }
 }
