@@ -4,7 +4,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import '../router/router.dart';
 
 PlatformNavBar createBottomNavbar(BuildContext context) {
-  final pageIndex = AppRouter.calculateSelectedIndex(context);
+  final currentPageIndex = AppRouter.calculateSelectedIndex(context);
 
   return PlatformNavBar(
     material: (context, platform) => MaterialNavBarData(
@@ -16,8 +16,14 @@ PlatformNavBar createBottomNavbar(BuildContext context) {
       backgroundColor: Colors.white,
       activeColor: Colors.black,
     ),
-    currentIndex: pageIndex,
-    itemChanged: (pageIndex) => AppRouter.navigateToPage(pageIndex, context),
+    currentIndex: currentPageIndex,
+    itemChanged: (pageIndex) {
+      if (pageIndex == currentPageIndex) {
+        return;
+      }
+
+      AppRouter.navigateToPage(pageIndex, context);
+    },
     items: const [
       BottomNavigationBarItem(
         icon: Icon(Icons.home),
