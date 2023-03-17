@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class TextCurrencyValue extends StatelessWidget {
   final double value;
@@ -16,8 +15,8 @@ class TextCurrencyValue extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String output = value < 0
-        ? "- $currency ${((value * -1) / 1000).toStringAsFixed(0)}"
-        : "+ $currency ${(value / 1000).toStringAsFixed(0)}";
+        ? "- $currency ${((value * -1) / 100).toStringAsFixed(0)}"
+        : "+ $currency ${(value / 100).toStringAsFixed(0)}";
 
     return Text(output, style: style);
   }

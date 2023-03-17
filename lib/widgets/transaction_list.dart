@@ -27,7 +27,7 @@ class TransactionList extends StatelessWidget {
             case TransactionListInitial:
               return const Text("No transactions found");
             case TransactionListLoading:
-              return const CircularProgressIndicator();
+              return const Center(child: CircularProgressIndicator());
             case TransactionListError:
               return const Text("Transactions could not be loaded");
             case TransactionListLoaded:

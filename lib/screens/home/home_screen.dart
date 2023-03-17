@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:solaris_structure_1/cubits/person_account/person_account_cubit.dart';
+import 'package:solaris_structure_1/utilities/format.dart';
 
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../cubits/person_cubit/person_cubit.dart';
 import '../../models/oauth_model.dart';
+import '../../models/person_account.dart';
 import '../../models/person_model.dart';
 import '../../services/person_service.dart';
 import '../../widgets/bottom_navbar.dart';
@@ -16,10 +19,11 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     OauthModel oAuth = context.read<AuthCubit>().state.oauthModel!;
+    PersonService personService = PersonService(oauth: oAuth);
 
     return BlocProvider(
       create: (context) => PersonCubit(
-        personService: PersonService(oauth: oAuth),
+        personService: personService,
       )..getPerson(),
       child: BlocBuilder<PersonCubit, PersonCubitState>(
         builder: (context, state) {
@@ -93,126 +97,198 @@ class HomePageContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-          width: MediaQuery.of(context).size.width,
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(30),
-              bottomRight: Radius.circular(30),
-            ),
-            color: Color(0xFF1C1A28),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              AccountBalance(),
-              AccountOptions(),
-            ],
-          ),
-        ),
-        const TransactionList()
+      children: const [
+        HomePageHeader(),
+        TransactionList(),
       ],
     );
   }
 }
 
+class HomePageHeader extends StatelessWidget {
+  const HomePageHeader({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+      width: MediaQuery.of(context).size.width,
+      decoration: const BoxDecoration(
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(30),
+          bottomRight: Radius.circular(30),
+        ),
+        color: Color(0xFF1C1A28),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: const [
+          AccountSummary(),
+          AccountOptions(),
+        ],
+      ),
+    );
+  }
+}
+
+class AccountSummary extends StatelessWidget {
+  const AccountSummary({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    OauthModel oAuth = context.read<AuthCubit>().state.oauthModel!;
+    PersonService personService = PersonService(oauth: oAuth);
+
+    return BlocProvider(
+      create: (context) =>
+          PersonAccountCubit(personService: personService)..getPersonAccounts(),
+      child: BlocBuilder<PersonAccountCubit, PersonAccountState>(
+        builder: (context, state) {
+          if (state is PersonAccountInitial || state is PersonAccountLoading) {
+            return const Center(
+              child: CircularProgressIndicator(color: Colors.white),
+            );
+          }
+
+          if (state is PersonAccountLoaded) {
+            PersonAccount account = state.personAccount!;
+
+            return Container(
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+                color: Color(0xFF272735),
+              ),
+              child: Column(
+                children: [
+                  AccountBalance(
+                    iban: account.iban!,
+                    cents: account.balance?.value ?? 0.0,
+                  ),
+                  const AccountStats(
+                    income: 1234.56,
+                    spending: 78.91,
+                  ),
+                ],
+              ),
+            );
+          }
+
+          return const Center(
+            child: Text("Account could not be loaded"),
+          );
+        },
+      ),
+    );
+  }
+}
+
 class AccountBalance extends StatelessWidget {
-  const AccountBalance({super.key});
+  final String iban;
+  final num cents;
+
+  const AccountBalance({
+    super.key,
+    required this.cents,
+    required this.iban,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(8)),
-        color: Color(0xFF272735),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(8),
+          topRight: Radius.circular(8),
+        ),
+        color: Colors.black,
       ),
+      width: MediaQuery.of(context).size.width,
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Column(
         children: [
-          Container(
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(8),
-                topRight: Radius.circular(8),
-              ),
-              color: Colors.black,
-            ),
-            width: MediaQuery.of(context).size.width,
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: Column(
+          const Text(
+            "Total Balance",
+            style: TextStyle(color: Colors.white),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                const Text(
-                  "Total Balance",
-                  style: TextStyle(color: Colors.white),
+                Text(
+                  Format.euroFromCents(cents),
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: const [
-                      Text(
-                        "€ 20,000",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        ".00",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 13,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
+                Text(
+                  Format.cents(cents),
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold),
                 ),
-                const Text(
-                  "IBAN: ABCD EFGH IJKL MNOP",
-                  style: TextStyle(color: Colors.white),
-                )
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: const [
-                    Text("Income",
-                        style: TextStyle(
-                          color: Colors.white,
-                        )),
-                    SizedBox(width: 5),
-                    Text("€ 12,503.00",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        )),
-                  ],
+          Text(
+            "IBAN: ${Format.iban(iban)}",
+            style: const TextStyle(color: Colors.white),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class AccountStats extends StatelessWidget {
+  final double income;
+  final double spending;
+
+  const AccountStats({
+    super.key,
+    required this.income,
+    required this.spending,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              const Text("Income",
+                  style: TextStyle(
+                    color: Colors.white,
+                  )),
+              const SizedBox(width: 5),
+              Text(Format.euro(income),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  )),
+            ],
+          ),
+          Row(
+            children: [
+              const Text(
+                "Spending",
+                style: TextStyle(color: Colors.white),
+              ),
+              const SizedBox(width: 5),
+              Text(
+                Format.euro(spending),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
                 ),
-                Row(
-                  children: const [
-                    Text(
-                      "Spending",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    SizedBox(width: 5),
-                    Text(
-                      "€ 2,503.00",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),
