@@ -15,7 +15,7 @@ class AnalyticsState extends State {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 35.0, vertical: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20),
       child: Column(
         children: [
           Row(
@@ -31,7 +31,7 @@ class AnalyticsState extends State {
               PlatformTextButton(
                 padding: EdgeInsets.zero,
                 child: const Text(
-                  "See all",
+                  "See all expenses",
                   textAlign: TextAlign.right,
                   style: TextStyle(
                     fontSize: 16,
@@ -42,41 +42,45 @@ class AnalyticsState extends State {
               )
             ],
           ),
-          AspectRatio(
-            aspectRatio: 1,
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: AspectRatio(
-                    aspectRatio: 1,
-                    child: PieChart(
-                      PieChartData(
-                        pieTouchData: PieTouchData(
-                          touchCallback:
-                              (FlTouchEvent event, pieTouchResponse) {
-                            setState(() {
-                              if (!event.isInterestedForInteractions ||
-                                  pieTouchResponse == null ||
-                                  pieTouchResponse.touchedSection == null) {
-                                touchedIndex = -1;
-                                return;
-                              }
-                              touchedIndex = pieTouchResponse
-                                  .touchedSection!.touchedSectionIndex;
-                            });
-                          },
+          Padding(
+            padding: const EdgeInsets.all(24),
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: AspectRatio(
+                      aspectRatio: 1,
+                      child: PieChart(
+                        PieChartData(
+                          pieTouchData: PieTouchData(
+                            touchCallback:
+                                (FlTouchEvent event, pieTouchResponse) {
+                              setState(() {
+                                if (!event.isInterestedForInteractions ||
+                                    pieTouchResponse == null ||
+                                    pieTouchResponse.touchedSection == null) {
+                                  touchedIndex = -1;
+                                  return;
+                                }
+                                touchedIndex = pieTouchResponse
+                                    .touchedSection!.touchedSectionIndex;
+                              });
+                            },
+                          ),
+                          borderData: FlBorderData(
+                            show: false,
+                          ),
+                          sectionsSpace: 0,
+                          centerSpaceRadius: double.infinity,
+                          sections: showingSections(),
+                          startDegreeOffset: -30,
                         ),
-                        borderData: FlBorderData(
-                          show: false,
-                        ),
-                        sectionsSpace: 0,
-                        centerSpaceRadius: 50,
-                        sections: showingSections(),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],
@@ -86,10 +90,7 @@ class AnalyticsState extends State {
 
   List<PieChartSectionData> showingSections() {
     return List.generate(6, (i) {
-      final isTouched = i == touchedIndex;
-      final fontSize = isTouched ? 25.0 : 16.0;
-      final radius = isTouched ? 60.0 : 50.0;
-      const shadows = [Shadow(color: Colors.black, blurRadius: 2)];
+      final radius = (MediaQuery.of(context).size.width / 4.2) - 24;
       switch (i) {
         case 0:
           return PieChartSectionData(
