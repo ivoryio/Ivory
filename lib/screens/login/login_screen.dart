@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:solaris_structure_1/widgets/screen.dart';
 
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../widgets/platform_text_input.dart';
@@ -13,13 +14,11 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PlatformScaffold(
-        iosContentPadding: true,
-        iosContentBottomPadding: true,
-        appBar: PlatformAppBar(
-          title: const Text('Login'),
-        ),
-        body: const LoginOptions());
+    return const Screen(
+      title: "Login",
+      hideBottomNavbar: true,
+      child: LoginOptions(),
+    );
   }
 }
 
@@ -47,8 +46,9 @@ class _LoginOptionsState extends State<LoginOptions> {
             height: 40,
             padding: const EdgeInsets.all(2),
             decoration: BoxDecoration(
+                color: Color(0xfff5f5f5),
                 borderRadius: const BorderRadius.all(Radius.circular(9.0)),
-                border: Border.all(width: 1)),
+                border: Border.all(width: 1, color: Color(0xffB9B9B9))),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -95,26 +95,34 @@ class ExpandedButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color textColor = active ? Colors.white : Colors.black;
-    final Color backgroundColor = active ? Colors.black : Colors.white;
+    final Color textColor = Color(0xff020202);
+    final Color buttonColor = active ? Colors.white : Colors.transparent;
+    final Color borderColor = active ? Color(0xffB9B9B9) : Colors.transparent;
 
     return Expanded(
-      child: PlatformElevatedButton(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          color: backgroundColor,
-          child: Text(text,
-              softWrap: false,
-              maxLines: 1,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: textColor,
-              )),
-          cupertino: (context, platform) => CupertinoElevatedButtonData(
-              pressedOpacity: 0.75,
-              borderRadius: const BorderRadius.all(Radius.circular(7))),
-          onPressed: () => onPressed()),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(9.0)),
+          color: buttonColor,
+          border: Border.all(width: 1, color: borderColor),
+        ),
+        child: PlatformElevatedButton(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            color: Colors.transparent,
+            child: Text(text,
+                softWrap: false,
+                maxLines: 1,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: textColor,
+                )),
+            cupertino: (context, platform) => CupertinoElevatedButtonData(
+                  pressedOpacity: 0.75,
+                ),
+            onPressed: () => onPressed()),
+      ),
     );
   }
 }
@@ -139,7 +147,10 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          PlatformTextInput(controller: phoneController),
+          PlatformTextInput(
+            controller: phoneController,
+            textLabel: "Phone number",
+          ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [

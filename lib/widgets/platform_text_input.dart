@@ -4,8 +4,10 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class PlatformTextInput extends StatefulWidget {
   final TextEditingController controller;
+  final String textLabel;
 
-  const PlatformTextInput({super.key, required this.controller});
+  const PlatformTextInput(
+      {super.key, required this.controller, required this.textLabel});
 
   @override
   State<PlatformTextInput> createState() => _PlatformTextInputState();
@@ -19,10 +21,15 @@ class _PlatformTextInputState extends State<PlatformTextInput> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(vertical: 10),
-          child: Text("Label",
-              style: TextStyle(color: Color(0xFF414D63), fontSize: 18)),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 7),
+          child: Text(
+            widget.textLabel,
+            style: const TextStyle(
+              color: Color(0xFF414D63),
+              fontSize: 16,
+            ),
+          ),
         ),
         Container(
           padding: EdgeInsets.symmetric(
@@ -37,26 +44,25 @@ class _PlatformTextInputState extends State<PlatformTextInput> {
             validator: (value) {
               return null;
             },
+            hintText: "Phone number",
             material: (context, platform) => MaterialTextFormFieldData(
               decoration: const InputDecoration(
                 contentPadding: EdgeInsets.all(0),
                 border: InputBorder.none,
-                hintText: 'Phone number',
                 hintStyle: TextStyle(
                   color: Color(0xFF414D63),
-                  fontSize: 18,
+                  fontSize: 16,
                 ),
               ),
             ),
             cupertino: (context, platform) => CupertinoTextFormFieldData(
-              placeholder: 'Phone number',
               style: const TextStyle(
                 color: Color(0xFF414D63),
-                fontSize: 18,
+                fontSize: 16,
               ),
               placeholderStyle: const TextStyle(
                 color: Color(0xFF414D63),
-                fontSize: 18,
+                fontSize: 16,
               ),
               padding: const EdgeInsets.all(0),
             ),
