@@ -12,11 +12,12 @@ class Analytics extends StatefulWidget {
 
 class AnalyticsState extends State {
   int touchedIndex = -1;
+  final double _analyticsPadding = 24;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20),
+      padding: const EdgeInsets.only(top: 30, bottom: 60, left: 20, right: 20),
       child: Column(
         children: [
           Row(
@@ -47,7 +48,7 @@ class AnalyticsState extends State {
             alignment: Alignment.center,
             children: [
               Padding(
-                padding: const EdgeInsets.all(24),
+                padding: EdgeInsets.all(_analyticsPadding),
                 child: AspectRatio(
                   aspectRatio: 1,
                   child: Row(
@@ -85,7 +86,8 @@ class AnalyticsState extends State {
 
   List<PieChartSectionData> showingSections() {
     return List.generate(6, (i) {
-      final radius = (MediaQuery.of(context).size.width / 4.2) - 24;
+      final pieChartItemRadius =
+          (MediaQuery.of(context).size.width / 4.2) - _analyticsPadding;
 
       switch (i) {
         case 0:
@@ -93,7 +95,7 @@ class AnalyticsState extends State {
             showTitle: false,
             color: const Color(0xFF272735),
             value: 60,
-            radius: radius,
+            radius: pieChartItemRadius,
             badgeWidget: const Icon(
               Icons.fastfood,
               color: Colors.white,
@@ -105,7 +107,7 @@ class AnalyticsState extends State {
             showTitle: false,
             color: const Color(0xFF464658),
             value: 20,
-            radius: radius,
+            radius: pieChartItemRadius,
             badgeWidget: const Icon(
               Icons.airport_shuttle,
               color: Colors.white,
@@ -116,7 +118,7 @@ class AnalyticsState extends State {
             showTitle: false,
             color: const Color(0xFF666670),
             value: 25,
-            radius: radius,
+            radius: pieChartItemRadius,
             badgeWidget: const Icon(
               Icons.payments,
               color: Colors.white,
@@ -127,7 +129,7 @@ class AnalyticsState extends State {
             showTitle: false,
             color: const Color(0xFF757578),
             value: 35,
-            radius: radius,
+            radius: pieChartItemRadius,
             badgeWidget: const Icon(
               Icons.shopping_bag,
               color: Colors.white,
@@ -138,7 +140,7 @@ class AnalyticsState extends State {
             showTitle: false,
             color: const Color(0xFF848484),
             value: 15,
-            radius: radius,
+            radius: pieChartItemRadius,
             badgeWidget: const Icon(
               Icons.sports_esports,
               color: Colors.white,
@@ -149,7 +151,7 @@ class AnalyticsState extends State {
             showTitle: false,
             color: const Color(0xFF1C1A28),
             value: 35,
-            radius: radius,
+            radius: pieChartItemRadius,
             badgeWidget: const Icon(
               Icons.flight_takeoff,
               color: Colors.white,

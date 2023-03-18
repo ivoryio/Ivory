@@ -4,6 +4,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:solaris_structure_1/cubits/person_account/person_account_cubit.dart';
 import 'package:solaris_structure_1/utilities/format.dart';
 import 'package:solaris_structure_1/widgets/account_balance_text.dart';
+import 'package:solaris_structure_1/widgets/refer_a_friend.dart';
 
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../cubits/person_cubit/person_cubit.dart';
@@ -98,13 +99,17 @@ class HomePageContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          HomePageHeader(),
-          TransactionList(),
-          Analytics(),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 44),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: const [
+            HomePageHeader(),
+            TransactionList(),
+            Analytics(),
+            ReferAFriend(),
+          ],
+        ),
       ),
     );
   }
