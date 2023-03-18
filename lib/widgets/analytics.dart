@@ -1,8 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-
-import '../utilities/format.dart';
+import 'package:solaris_structure_1/widgets/account_balance_text.dart';
 
 class Analytics extends StatefulWidget {
   const Analytics({super.key});
@@ -76,22 +75,7 @@ class AnalyticsState extends State {
                   ),
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    Format.euroFromCents(245800),
-                    style: const TextStyle(
-                        fontSize: 24, fontWeight: FontWeight.w600),
-                  ),
-                  Text(
-                    ".${Format.cents(245800)}",
-                    style: const TextStyle(
-                        fontSize: 21, fontWeight: FontWeight.w600),
-                  ),
-                ],
-              ),
+              Center(child: const AccountBalanceText())
             ],
           ),
         ],

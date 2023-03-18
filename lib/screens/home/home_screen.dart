@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:solaris_structure_1/cubits/person_account/person_account_cubit.dart';
 import 'package:solaris_structure_1/utilities/format.dart';
+import 'package:solaris_structure_1/widgets/account_balance_text.dart';
 
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../cubits/person_cubit/person_cubit.dart';
@@ -219,20 +220,10 @@ class AccountBalance extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  Format.euroFromCents(cents),
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  Format.cents(cents),
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold),
+              children: const [
+                AccountBalanceText(
+                  numberStyle: TextStyle(color: Colors.white),
+                  centsStyle: TextStyle(color: Colors.white),
                 ),
               ],
             ),

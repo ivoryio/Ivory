@@ -11,7 +11,8 @@ import '../services/transaction_service.dart';
 import '../cubits/transaction_list_cubit/transaction_list_cubit.dart';
 
 class TransactionList extends StatelessWidget {
-  const TransactionList({super.key});
+  final bool displayShowAllButton;
+  const TransactionList({super.key, this.displayShowAllButton = true});
 
   @override
   Widget build(BuildContext context) {
@@ -52,20 +53,21 @@ class TransactionList extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        PlatformTextButton(
-                          padding: EdgeInsets.zero,
-                          child: const Text(
-                            "See all",
-                            textAlign: TextAlign.right,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                        if (displayShowAllButton)
+                          PlatformTextButton(
+                            padding: EdgeInsets.zero,
+                            child: const Text(
+                              "See all",
+                              textAlign: TextAlign.right,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          onPressed: () {
-                            context.push(transactionsRoute.path);
-                          },
-                        )
+                            onPressed: () {
+                              context.push(transactionsRoute.path);
+                            },
+                          )
                       ],
                     ),
                     ListView.builder(

@@ -12,7 +12,9 @@ class TransactionsScreen extends StatelessWidget {
         title: "Transactions",
         child: Column(
           children: const [
-            TransactionList(),
+            TransactionList(
+              displayShowAllButton: false,
+            ),
           ],
         ));
   }
