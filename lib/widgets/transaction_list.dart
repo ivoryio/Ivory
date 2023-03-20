@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:go_router/go_router.dart';
+import 'package:solaris_structure_1/router/routing_constants.dart';
 
 import '../models/oauth_model.dart';
 import 'transaction_listing_item.dart';
@@ -8,7 +11,8 @@ import '../services/transaction_service.dart';
 import '../cubits/transaction_list_cubit/transaction_list_cubit.dart';
 
 class TransactionList extends StatelessWidget {
-  const TransactionList({super.key});
+  final bool displayShowAllButton;
+  const TransactionList({super.key, this.displayShowAllButton = true});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +28,7 @@ class TransactionList extends StatelessWidget {
             case TransactionListInitial:
               return const Text("No transactions found");
             case TransactionListLoading:
-              return const CircularProgressIndicator();
+              return const Center(child: CircularProgressIndicator());
             case TransactionListError:
               return const Text("Transactions could not be loaded");
             case TransactionListLoaded:
@@ -34,18 +38,51 @@ class TransactionList extends StatelessWidget {
                 return const Text("Transaction list is empty");
               }
 
-              return ListView.builder(
-                  itemCount: transactions.length,
-                  shrinkWrap: true,
-                  physics: const ClampingScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return TransactionListItem(
-                      vendor:
-                          transactions[index].recipientName ?? "Unknown Vendor",
-                      date: transactions[index].bookingDate ?? "Unknown Date",
-                      amount: transactions[index].amount?.value ?? 0.0,
-                    );
-                  });
+              return Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Transactions",
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        if (displayShowAllButton)
+                          PlatformTextButton(
+                            padding: EdgeInsets.zero,
+                            child: const Text(
+                              "See all",
+                              textAlign: TextAlign.right,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            onPressed: () {
+                              context.push(transactionsRoute.path);
+                            },
+                          )
+                      ],
+                    ),
+                    ListView.builder(
+                        itemCount: transactions.length,
+                        shrinkWrap: true,
+                        physics: const ClampingScrollPhysics(),
+                        padding: EdgeInsets.zero,
+                        itemBuilder: (context, index) {
+                          return TransactionListItem(
+                            transaction: transactions[index],
+                          );
+                        }),
+                  ],
+                ),
+              );
             default:
               return const Text("Transactions could not be loaded");
           }

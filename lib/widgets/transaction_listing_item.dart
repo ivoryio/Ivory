@@ -1,36 +1,176 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:intl/intl.dart';
 
+import '../models/transaction_model.dart';
 import 'text_currency_value.dart';
 
 class TransactionListItem extends StatelessWidget {
-  final String vendor;
-  final String date;
-  final double amount;
+  final Transaction transaction;
 
-  const TransactionListItem(
-      {super.key,
-      required this.vendor,
-      required this.date,
-      required this.amount});
+  const TransactionListItem({super.key, required this.transaction});
+
+  @override
+  Widget build(BuildContext context) {
+    final date = transaction.bookingDate!;
+    final description = transaction.description!;
+    final amount = transaction.amount?.value ?? 0;
+
+    final DateFormat dateFormatter = DateFormat('d MMMM, HH:Hm ');
+    final String formattedDate = dateFormatter.format(DateTime.parse(date));
+
+    return GestureDetector(
+      onTap: () => showPlatformModalSheet(
+        context: context,
+        builder: (_) => TransactionPopup(
+          transaction: transaction,
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Card(
+          elevation: 6,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4.0),
+          ),
+          shadowColor: const Color.fromRGBO(0, 0, 0, 0.40),
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.add_card, size: 30),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(description,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16,
+                                )),
+                            Text(
+                              formattedDate,
+                              style: const TextStyle(
+                                color: Color(0xFF667085),
+                              ),
+                            ),
+                          ]),
+                    ),
+                  ],
+                ),
+                TextCurrencyValue(
+                    value: amount,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                    )),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class TransactionPopup extends StatelessWidget {
+  final Transaction transaction;
+
+  const TransactionPopup({super.key, required this.transaction});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 300,
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+      ),
+      width: double.infinity,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const TransactionPopupHeader(),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            child: SizedBox(
+              width: double.infinity,
+              child: Wrap(
+                alignment: WrapAlignment.spaceBetween,
+                children: [
+                  const Text("Transaction ID"),
+                  Text(transaction.id!),
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            child: SizedBox(
+              width: double.infinity,
+              child: Wrap(
+                alignment: WrapAlignment.spaceBetween,
+                children: [
+                  const Text("Booking Date"),
+                  Text(transaction.bookingDate!),
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            child: SizedBox(
+              width: double.infinity,
+              child: Wrap(
+                alignment: WrapAlignment.spaceBetween,
+                children: [
+                  const Text("Amount"),
+                  TextCurrencyValue(value: transaction.amount?.value ?? 0),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class TransactionPopupHeader extends StatelessWidget {
+  const TransactionPopupHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5.0),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Row(
-          children: [
-            const Icon(Icons.article, size: 40),
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(vendor,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 16)),
-              Text(date),
-            ]),
-          ],
-        ),
-        TextCurrencyValue(value: amount)
-      ]),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Container(
+            width: double.infinity,
+            alignment: Alignment.center,
+            child: const Text("Transaction Details",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                )),
+          ),
+          Container(
+              alignment: Alignment.centerRight,
+              child: PlatformIconButton(
+                padding: EdgeInsets.zero,
+                icon: const Icon(Icons.close),
+                onPressed: () => Navigator.pop(context),
+              ))
+        ],
+      ),
     );
   }
 }
