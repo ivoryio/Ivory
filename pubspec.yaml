@@ -43,6 +43,7 @@ dependencies:
   intl: ^0.18.0
   fl_chart: ^0.61.0
   dotted_border: ^2.0.0+3
+  amazon_cognito_identity_dart_2: ^3.3.0
 
 dev_dependencies:
   flutter_test:

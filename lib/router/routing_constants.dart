@@ -24,6 +24,24 @@ class _Route {
   });
 }
 
+const splashScreenRoute = _Route(
+  name: 'splash',
+  path: '/splash',
+  title: 'Splash',
+);
+
+const landingRoute = _Route(
+  name: 'landing',
+  path: '/',
+  title: 'Landing',
+);
+
+const loginRoute = _Route(
+  name: 'login',
+  path: '/login',
+  title: 'Login',
+);
+
 const homeRoute = _Route(
   name: 'home',
   path: '/home',

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../main.dart';
+import '../screens/landing/landing_screen.dart';
 import '../screens/profile/profile_screen.dart';
 import 'routing_constants.dart';
 import '../screens/home/home_screen.dart';
@@ -26,12 +27,18 @@ class AppRouter {
       debugLogDiagnostics: true,
       routes: [
         GoRoute(
-          path: splashScreenRoutePath,
+          path: splashScreenRoute.path,
           name: splashScreenRouteName,
           builder: (BuildContext context, GoRouterState state) {
             return const SplashScreen();
           },
         ),
+        GoRoute(
+            path: landingRoute.path,
+            name: landingRoute.name,
+            builder: (BuildContext context, GoRouterState state) {
+              return const LandingScreen();
+            }),
         GoRoute(
           path: loginPageRoutePath,
           name: loginPageRouteName,
@@ -75,7 +82,7 @@ class AppRouter {
         final bool splashScreen = state.subloc == splashScreenRoutePath;
 
         if (!loggedIn && !splashScreen) {
-          return logginIn ? null : loginPageRoutePath;
+          return logginIn ? null : landingRoute.path;
         }
         if (logginIn) {
           return homePageRoutePath;
