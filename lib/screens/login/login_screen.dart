@@ -64,7 +64,7 @@ class _LoginOptionsState extends State<LoginOptions> {
                 ),
                 ExpandedButton(
                   active: _selectedIndex == 1,
-                  text: "Phone Number",
+                  text: "Email",
                   onPressed: () {
                     setState(() {
                       _selectedIndex = 1;
@@ -110,11 +110,20 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text("Forgot your phone number?"),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 20),
+                child: Text(
+                  "Forgot your phone number?",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
               SizedBox(
                 width: double.infinity,
                 child: PlatformElevatedButton(
-                  color: Colors.black,
+                  color: Color(0xff747474),
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
@@ -126,8 +135,12 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
                     }
                   },
                   child: const Text(
-                    'Login',
-                    style: TextStyle(color: Colors.white),
+                    'Continue',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),

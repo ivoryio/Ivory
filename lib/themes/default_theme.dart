@@ -5,7 +5,7 @@ const ColorScheme defaultColorScheme = ColorScheme(
   primary: Colors.black,
   secondary: Color(0xffD9D9D9),
   surface: Colors.white,
-  background: Color(0xffF5F5F5),
+  background: Colors.white,
   error: Colors.red,
   onPrimary: Colors.black,
   onSecondary: Colors.black,

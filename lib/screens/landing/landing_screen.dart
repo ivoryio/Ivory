@@ -97,7 +97,9 @@ class LandingScreenContent extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      context.push(signupRoute.path);
+                    },
                   ),
                 ),
               ],

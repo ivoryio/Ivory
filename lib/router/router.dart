@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:solaris_structure_1/screens/signup/signup_screen.dart';
 
 import '../main.dart';
 import '../screens/landing/landing_screen.dart';
@@ -23,12 +24,12 @@ class AppRouter {
 
   late final router = GoRouter(
       navigatorKey: _rootNavigatorKey,
-      initialLocation: splashScreenRoutePath,
+      initialLocation: splashScreenRoute.path,
       debugLogDiagnostics: true,
       routes: [
         GoRoute(
           path: splashScreenRoute.path,
-          name: splashScreenRouteName,
+          name: splashScreenRoute.name,
           builder: (BuildContext context, GoRouterState state) {
             return const SplashScreen();
           },
@@ -40,15 +41,22 @@ class AppRouter {
               return const LandingScreen();
             }),
         GoRoute(
-          path: loginPageRoutePath,
-          name: loginPageRouteName,
+          path: loginRoute.path,
+          name: loginRoute.name,
           builder: (BuildContext context, GoRouterState state) {
             return const LoginScreen();
           },
         ),
         GoRoute(
-          path: homePageRoutePath,
-          name: homePageRouteName,
+          path: signupRoute.path,
+          name: signupRoute.name,
+          builder: (BuildContext context, GoRouterState state) {
+            return const SignupScreen();
+          },
+        ),
+        GoRoute(
+          path: homeRoute.path,
+          name: homeRoute.name,
           builder: (BuildContext context, GoRouterState state) {
             return const HomeScreen();
           },
@@ -76,17 +84,14 @@ class AppRouter {
         ),
       ],
       redirect: (BuildContext context, GoRouterState state) {
-        final bool loggedIn =
+        final bool isAuthenticated =
             loginCubit.state.status == AuthStatus.authenticated;
-        final bool logginIn = state.subloc == loginPageRoutePath;
-        final bool splashScreen = state.subloc == splashScreenRoutePath;
+        final bool isOnLoginPage = state.subloc == loginRoute.path;
 
-        if (!loggedIn && !splashScreen) {
-          return logginIn ? null : landingRoute.path;
+        if (isAuthenticated && isOnLoginPage) {
+          return homeRoute.path;
         }
-        if (logginIn) {
-          return homePageRoutePath;
-        }
+
         return null;
       },
       refreshListenable: GoRouterRefreshStream(loginCubit.stream));
