@@ -142,7 +142,7 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
                       String phoneNumber = phoneController.text;
 
                       String route = loginPasscodeRoute.path
-                          .replaceAll(":user", phoneNumber);
+                          .replaceAll(":username", phoneNumber);
 
                       context.push(route);
                     }

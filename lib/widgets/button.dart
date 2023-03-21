@@ -47,6 +47,7 @@ class Button extends StatelessWidget {
       ),
       cupertino: (context, platform) => CupertinoElevatedButtonData(
         borderRadius: BorderRadius.all(Radius.circular(borderRadius!)),
+        padding: padding,
       ),
       material: (context, platform) => MaterialElevatedButtonData(
         style: ElevatedButton.styleFrom(

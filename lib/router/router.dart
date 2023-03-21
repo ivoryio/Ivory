@@ -52,9 +52,9 @@ class AppRouter {
           path: loginPasscodeRoute.path,
           name: loginPasscodeRoute.name,
           builder: (BuildContext context, GoRouterState state) {
-            final String? user = state.params['user'];
+            final String username = state.params['username']!;
 
-            return const LoginPasscodeScreen();
+            return LoginPasscodeScreen(username: username);
           },
         ),
         GoRoute(
