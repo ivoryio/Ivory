@@ -3,6 +3,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:solaris_structure_1/router/routing_constants.dart';
 
+import '../../widgets/button.dart';
 import '../../widgets/expanded_button.dart';
 import '../../widgets/screen.dart';
 
@@ -70,15 +71,8 @@ class LandingScreenContent extends StatelessWidget {
               children: [
                 SizedBox(
                   width: double.infinity,
-                  child: PlatformElevatedButton(
-                    child: const Text(
-                      "Login",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                  child: PrimaryButton(
+                    text: "Login",
                     onPressed: () {
                       context.push(loginRoute.path);
                     },
@@ -87,16 +81,10 @@ class LandingScreenContent extends StatelessWidget {
                 const SizedBox(height: 10),
                 SizedBox(
                   width: double.infinity,
-                  child: PlatformElevatedButton(
-                    color: Color(0xffD9D9D9),
-                    child: const Text(
-                      "Signup",
-                      style: TextStyle(
-                        color: Color(0xff747474),
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                  child: Button(
+                    text: "Signup",
+                    color: const Color(0xffD9D9D9),
+                    textColor: const Color(0xff747474),
                     onPressed: () {
                       context.push(signupRoute.path);
                     },
@@ -126,7 +114,7 @@ class HeroImage extends StatelessWidget {
           bottomRight: Radius.circular(24),
         ),
       ),
-      child: Icon(
+      child: const Icon(
         Icons.image_outlined,
         size: 100,
         color: Color(0xff747474),
