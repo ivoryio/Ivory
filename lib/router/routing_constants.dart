@@ -16,6 +16,12 @@ const loginRoute = _Route(
   title: 'Login',
 );
 
+const loginPasscodeRoute = _Route(
+  name: 'loginPasscode',
+  path: '/login/:user',
+  title: 'Login',
+);
+
 const signupRoute = _Route(
   name: 'signup',
   path: '/signup',

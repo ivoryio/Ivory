@@ -3,11 +3,15 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:go_router/go_router.dart';
+import 'package:solaris_structure_1/router/routing_constants.dart';
 import 'package:solaris_structure_1/widgets/button.dart';
 import 'package:solaris_structure_1/widgets/screen.dart';
 
 import '../../cubits/auth_cubit/auth_cubit.dart';
+import '../../widgets/overlay_loading.dart';
 import '../../widgets/platform_text_input.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -15,6 +19,8 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AuthCubit authCubit = context.read<AuthCubit>();
+
     return const Screen(
       title: "Login",
       hideBottomNavbar: true,
@@ -47,9 +53,9 @@ class _LoginOptionsState extends State<LoginOptions> {
             height: 40,
             padding: const EdgeInsets.all(2),
             decoration: BoxDecoration(
-                color: Color(0xfff5f5f5),
+                color: const Color(0xfff5f5f5),
                 borderRadius: const BorderRadius.all(Radius.circular(9.0)),
-                border: Border.all(width: 1, color: Color(0xffB9B9B9))),
+                border: Border.all(width: 1, color: const Color(0xffB9B9B9))),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -106,11 +112,17 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
           PlatformTextInput(
             controller: phoneController,
             textLabel: "Phone number",
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your phone number';
+              }
+              return null;
+            },
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Padding(
+              const Padding(
                 padding: EdgeInsets.symmetric(vertical: 20),
                 child: Text(
                   "Forgot your phone number?",
@@ -124,14 +136,15 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
                 width: double.infinity,
                 child: SecondaryButton(
                   text: "Continue",
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
                       String phoneNumber = phoneController.text;
 
-                      log("Phone number: $phoneNumber");
+                      String route = loginPasscodeRoute.path
+                          .replaceAll(":user", phoneNumber);
 
-                      context.read<AuthCubit>().login(phoneNumber);
+                      context.push(route);
                     }
                   },
                 ),

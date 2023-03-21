@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:solaris_structure_1/screens/login/login_passcode.dart';
 import 'package:solaris_structure_1/screens/signup/signup_screen.dart';
 
 import '../main.dart';
@@ -45,6 +46,15 @@ class AppRouter {
           name: loginRoute.name,
           builder: (BuildContext context, GoRouterState state) {
             return const LoginScreen();
+          },
+        ),
+        GoRoute(
+          path: loginPasscodeRoute.path,
+          name: loginPasscodeRoute.name,
+          builder: (BuildContext context, GoRouterState state) {
+            final String? user = state.params['user'];
+
+            return const LoginPasscodeScreen();
           },
         ),
         GoRoute(

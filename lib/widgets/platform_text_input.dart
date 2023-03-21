@@ -5,9 +5,14 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 class PlatformTextInput extends StatefulWidget {
   final TextEditingController controller;
   final String textLabel;
+  final Function validator;
 
-  const PlatformTextInput(
-      {super.key, required this.controller, required this.textLabel});
+  const PlatformTextInput({
+    super.key,
+    required this.controller,
+    required this.textLabel,
+    required this.validator,
+  });
 
   @override
   State<PlatformTextInput> createState() => _PlatformTextInputState();
@@ -42,7 +47,7 @@ class _PlatformTextInputState extends State<PlatformTextInput> {
           child: PlatformTextFormField(
             controller: widget.controller,
             validator: (value) {
-              return null;
+              return widget.validator(value);
             },
             hintText: "Phone number",
             material: (context, platform) => MaterialTextFormFieldData(

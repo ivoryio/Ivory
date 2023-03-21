@@ -28,6 +28,9 @@ class Screen extends StatelessWidget {
               title: Text(
                 title,
               ),
+              material: (context, platform) => MaterialAppBarData(
+                elevation: 0,
+              ),
               cupertino: (context, platform) => CupertinoNavigationBarData(
                 border: Border.all(color: Colors.transparent),
               ),

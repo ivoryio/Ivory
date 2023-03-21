@@ -4,16 +4,27 @@ enum AuthStatus { unknown, authenticated, unauthenticated }
 
 class AuthState extends Equatable {
   final AuthStatus status;
-  final String? phoneNumber = null;
+  final String? phoneNumber;
+
   final bool loading;
+
   final OauthModel? oauthModel;
 
-  const AuthState._(
-      {this.status = AuthStatus.unknown,
-      this.loading = false,
-      this.oauthModel});
+  const AuthState._({
+    this.status = AuthStatus.unknown,
+    this.loading = false,
+    this.phoneNumber,
+    this.oauthModel,
+  });
 
   const AuthState.loading() : this._(loading: true, status: AuthStatus.unknown);
+
+  const AuthState.setPhoneNumber(String phoneNumber)
+      : this._(
+          status: AuthStatus.unknown,
+          loading: false,
+          phoneNumber: phoneNumber,
+        );
 
   const AuthState.authenticated(OauthModel oauthModel)
       : this._(
