@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:solaris_structure_1/router/routing_constants.dart';
 
 import '../../widgets/button.dart';
-import '../../widgets/expanded_button.dart';
 import '../../widgets/screen.dart';
+import '../../router/routing_constants.dart';
 
 class LandingScreen extends StatelessWidget {
   const LandingScreen({super.key});

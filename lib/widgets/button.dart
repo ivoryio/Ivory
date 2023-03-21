@@ -128,3 +128,34 @@ class SecondaryButton extends StatelessWidget {
     );
   }
 }
+
+class TabExpandedButton extends StatelessWidget {
+  final String text;
+  final bool active;
+  final Function onPressed;
+  final TextStyle? textStyle;
+
+  const TabExpandedButton({
+    super.key,
+    this.textStyle,
+    required this.active,
+    required this.text,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Button(
+        text: text,
+        padding: EdgeInsets.zero,
+        color: active ? Colors.white : Colors.transparent,
+        textColor: Color(0xff020202),
+        border: active ? Border.all(width: 1, color: Color(0xffB9B9B9)) : null,
+        onPressed: () {
+          onPressed();
+        },
+      ),
+    );
+  }
+}

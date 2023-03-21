@@ -8,7 +8,6 @@ import 'package:solaris_structure_1/widgets/button.dart';
 import 'package:solaris_structure_1/widgets/screen.dart';
 
 import '../../cubits/auth_cubit/auth_cubit.dart';
-import '../../widgets/expanded_button.dart';
 import '../../widgets/platform_text_input.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -54,16 +53,16 @@ class _LoginOptionsState extends State<LoginOptions> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ExpandedButton(
+                TabExpandedButton(
                   active: _selectedIndex == 0,
-                  text: "Phone Number",
+                  text: "Phone number",
                   onPressed: () {
                     setState(() {
                       _selectedIndex = 0;
                     });
                   },
                 ),
-                ExpandedButton(
+                TabExpandedButton(
                   active: _selectedIndex == 1,
                   text: "Email",
                   onPressed: () {
@@ -71,7 +70,7 @@ class _LoginOptionsState extends State<LoginOptions> {
                       _selectedIndex = 1;
                     });
                   },
-                ),
+                )
               ],
             ),
           ),
