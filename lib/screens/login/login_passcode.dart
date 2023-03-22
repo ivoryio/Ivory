@@ -159,7 +159,11 @@ class InputCodeBox extends StatelessWidget {
         focusNode: focusNode,
         controller: controller,
         textAlign: TextAlign.center,
-        maxLength: 1,
+        keyboardType: TextInputType.number,
+        inputFormatters: [
+          FilteringTextInputFormatter.digitsOnly,
+          LengthLimitingTextInputFormatter(1),
+        ],
       ),
     );
   }
