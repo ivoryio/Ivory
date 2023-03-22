@@ -18,9 +18,8 @@ class AuthService {
         "client_id": "1234567890",
         "client_secret": "1234567890"
       };
-
+      throw Exception("test");
       final response = await http.post(Uri.parse(oauthEndpointUrl), body: body);
-
       if (response.statusCode == 201) {
         var data = jsonDecode(response.body) as Map<String, dynamic>;
         var oauthModel = OauthModel.fromJson(data);

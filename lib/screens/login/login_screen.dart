@@ -46,7 +46,7 @@ class _LoginOptionsState extends State<LoginOptions> {
         : const EmailLoginForm();
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(10, 10, 10, 50),
+      padding: const EdgeInsets.fromLTRB(30, 10, 30, 50),
       child: Column(
         children: [
           Container(
@@ -105,53 +105,58 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
 
     return Form(
       key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          PlatformTextInput(
-            controller: phoneController,
-            textLabel: "Phone number",
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your phone number';
-              }
-              return null;
-            },
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 20),
-                child: Text(
-                  "Forgot your phone number?",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            PlatformTextInput(
+              controller: phoneController,
+              textLabel: "Phone number",
+              hintText: "e.g 555 555 555",
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your phone number';
+                }
+                return null;
+              },
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20),
+                  child: Text(
+                    "Forgot your phone number?",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(
-                width: double.infinity,
-                child: SecondaryButton(
-                  text: "Continue",
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      _formKey.currentState!.save();
-                      String phoneNumber = phoneController.text;
+                SizedBox(
+                  width: double.infinity,
+                  child: SecondaryButton(
+                    text: "Continue",
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        _formKey.currentState!.save();
+                        String phoneNumber = phoneController.text;
 
-                      String route = loginPasscodeRoute.path
-                          .replaceAll(":username", phoneNumber);
+                        String route = loginPasscodeRoute.path
+                            .replaceAll(":username", phoneNumber);
 
-                      context.push(route);
-                    }
-                  },
+                        context.push(route);
+                        // context.read<AuthCubit>().login(phoneNumber);
+                      }
+                    },
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -165,8 +170,67 @@ class EmailLoginForm extends StatefulWidget {
 }
 
 class _EmailLoginFormState extends State<EmailLoginForm> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    TextEditingController emailInputController = TextEditingController();
+
+    return Form(
+      key: _formKey,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            PlatformTextInput(
+              controller: emailInputController,
+              textLabel: "Email Address",
+              hintText: "e.g john.doe@gmail.com",
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your email address';
+                }
+                return null;
+              },
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20),
+                  child: Text(
+                    "Forgot your email address?",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: SecondaryButton(
+                    text: "Continue",
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        _formKey.currentState!.save();
+                        String emailAddress = emailInputController.text;
+
+                        String route = loginPasscodeRoute.path
+                            .replaceAll(":username", emailAddress);
+
+                        context.push(route);
+                        // context.read<AuthCubit>().login(phoneNumber);
+                      }
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

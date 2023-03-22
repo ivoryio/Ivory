@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:solaris_structure_1/widgets/button.dart';
 import 'package:solaris_structure_1/widgets/platform_text_input.dart';
 
+import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../widgets/overlay_loading.dart';
 import '../../widgets/screen.dart';
 
@@ -94,30 +96,12 @@ class LoginPasscodeFooter extends StatelessWidget {
     return PlatformTextButton(
         child: const Text("Forgot your passcode?"),
         onPressed: () {
-          print("Resend code");
+          OverlayLoadingProgress.start(context, barrierDismissible: false);
+          context.read<AuthCubit>().login("test");
         });
   }
 }
 
-class LoginPasscodeContent extends StatelessWidget {
-  const LoginPasscodeContent({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Text("LoginPasscodeContent"),
-        PrimaryButton(
-            text: "Login",
-            onPressed: () async {
-              OverlayLoadingProgress.start(context, barrierDismissible: false);
-              await Future.delayed(const Duration(seconds: 2));
-              OverlayLoadingProgress.stop();
-            })
-      ],
-    );
-  }
-}
 
 // final userPool = CognitoUserPool(
 //   'eu-west-1_Z7d8UgNEM',

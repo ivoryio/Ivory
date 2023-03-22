@@ -5,6 +5,7 @@ enum AuthStatus { unknown, authenticated, unauthenticated }
 class AuthState extends Equatable {
   final AuthStatus status;
   final String? phoneNumber;
+  final String? authenticationError;
 
   final bool loading;
 
@@ -15,7 +16,14 @@ class AuthState extends Equatable {
     this.loading = false,
     this.phoneNumber,
     this.oauthModel,
+    this.authenticationError,
   });
+
+  const AuthState.setAuthenticationError(String error)
+      : this._(
+            authenticationError: error,
+            status: AuthStatus.unknown,
+            loading: false);
 
   const AuthState.loading() : this._(loading: true, status: AuthStatus.unknown);
 
@@ -36,5 +44,5 @@ class AuthState extends Equatable {
       : this._(status: AuthStatus.unauthenticated, loading: false);
 
   @override
-  List<dynamic> get props => [status, phoneNumber];
+  List<dynamic> get props => [status, phoneNumber, authenticationError];
 }

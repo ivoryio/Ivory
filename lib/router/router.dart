@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -8,6 +9,7 @@ import 'package:solaris_structure_1/screens/signup/signup_screen.dart';
 import '../main.dart';
 import '../screens/landing/landing_screen.dart';
 import '../screens/profile/profile_screen.dart';
+import '../widgets/overlay_loading.dart';
 import 'routing_constants.dart';
 import '../screens/home/home_screen.dart';
 import '../screens/login/login_screen.dart';
@@ -96,7 +98,10 @@ class AppRouter {
       redirect: (BuildContext context, GoRouterState state) {
         final bool isAuthenticated =
             loginCubit.state.status == AuthStatus.authenticated;
-        final bool isOnLoginPage = state.subloc == loginRoute.path;
+        final bool isOnLoginPage = state.subloc.startsWith(loginRoute.path);
+
+        inspect(loginCubit.state);
+        print('current route ${state.subloc}');
 
         if (isAuthenticated && isOnLoginPage) {
           return homeRoute.path;
