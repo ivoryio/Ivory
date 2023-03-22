@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:solaris_structure_1/screens/login/login_passcode.dart';
+import 'package:solaris_structure_1/screens/login/login_passcode_error.dart';
 import 'package:solaris_structure_1/screens/signup/signup_screen.dart';
 
 import '../main.dart';
@@ -54,9 +55,14 @@ class AppRouter {
           path: loginPasscodeRoute.path,
           name: loginPasscodeRoute.name,
           builder: (BuildContext context, GoRouterState state) {
-            final String username = state.params['username']!;
-
-            return LoginPasscodeScreen(username: username);
+            return const LoginPasscodeScreen();
+          },
+        ),
+        GoRoute(
+          path: loginPasscodeErrorRoute.path,
+          name: loginPasscodeErrorRoute.name,
+          builder: (BuildContext context, GoRouterState state) {
+            return LoginPasscodeErrorScreen();
           },
         ),
         GoRoute(
@@ -100,11 +106,23 @@ class AppRouter {
             loginCubit.state.status == AuthStatus.authenticated;
         final bool isOnLoginPage = state.subloc.startsWith(loginRoute.path);
 
-        inspect(loginCubit.state);
-        print('current route ${state.subloc}');
-
         if (isAuthenticated && isOnLoginPage) {
           return homeRoute.path;
+        }
+
+        if (loginCubit.state.authenticationError != null) {
+          if (state.subloc == "/") {
+            return landingRoute.path;
+          }
+          return loginPasscodeErrorRoute.path;
+        }
+
+        if (loginCubit.state.loginInputEmail != null ||
+            loginCubit.state.loginInputPhoneNumber != null) {
+          return loginPasscodeRoute.withParams({
+            'username': loginCubit.state.loginInputEmail ??
+                loginCubit.state.loginInputPhoneNumber!
+          });
         }
 
         return null;

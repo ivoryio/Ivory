@@ -4,45 +4,63 @@ enum AuthStatus { unknown, authenticated, unauthenticated }
 
 class AuthState extends Equatable {
   final AuthStatus status;
-  final String? phoneNumber;
-  final String? authenticationError;
-
-  final bool loading;
+  final String? loginInputEmail;
+  final String? loginInputPhoneNumber;
+  final AuthenticationError? authenticationError;
 
   final OauthModel? oauthModel;
+  final User? user;
 
   const AuthState._({
     this.status = AuthStatus.unknown,
-    this.loading = false,
-    this.phoneNumber,
+    this.loginInputPhoneNumber,
+    this.loginInputEmail,
     this.oauthModel,
     this.authenticationError,
+    this.user,
   });
 
-  const AuthState.setAuthenticationError(String error)
-      : this._(
-            authenticationError: error,
-            status: AuthStatus.unknown,
-            loading: false);
+  const AuthState.reset() : this._(status: AuthStatus.unknown);
 
-  const AuthState.loading() : this._(loading: true, status: AuthStatus.unknown);
+  AuthState.setAuthenticationError(String username, String error)
+      : this._(
+            authenticationError: AuthenticationError(
+              username: username,
+              error: error,
+            ),
+            status: AuthStatus.unknown);
 
   const AuthState.setPhoneNumber(String phoneNumber)
       : this._(
           status: AuthStatus.unknown,
-          loading: false,
-          phoneNumber: phoneNumber,
+          loginInputPhoneNumber: phoneNumber,
+          loginInputEmail: null,
         );
 
-  const AuthState.authenticated(OauthModel oauthModel)
+  const AuthState.setEmail(String email)
       : this._(
-            status: AuthStatus.authenticated,
-            oauthModel: oauthModel,
-            loading: false);
+          status: AuthStatus.unknown,
+          loginInputEmail: email,
+          loginInputPhoneNumber: null,
+        );
+
+  const AuthState.authenticated(User user)
+      : this._(status: AuthStatus.authenticated, user: user);
 
   const AuthState.unauthenticated()
-      : this._(status: AuthStatus.unauthenticated, loading: false);
+      : this._(status: AuthStatus.unauthenticated);
 
   @override
-  List<dynamic> get props => [status, phoneNumber, authenticationError];
+  List<dynamic> get props =>
+      [status, loginInputPhoneNumber, loginInputEmail, authenticationError];
+}
+
+class AuthenticationError {
+  final String username;
+  final String error;
+
+  AuthenticationError({
+    required this.username,
+    required this.error,
+  });
 }

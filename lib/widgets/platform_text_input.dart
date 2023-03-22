@@ -1,11 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class PlatformTextInput extends StatefulWidget {
   final TextEditingController controller;
   final String textLabel;
   final String? hintText;
+  final TextInputType? keyboardType;
   final Function validator;
 
   const PlatformTextInput({
@@ -14,6 +16,7 @@ class PlatformTextInput extends StatefulWidget {
     required this.textLabel,
     required this.validator,
     this.hintText,
+    this.keyboardType,
   });
 
   @override
@@ -52,6 +55,11 @@ class _PlatformTextInputState extends State<PlatformTextInput> {
               return widget.validator(value);
             },
             hintText: widget.hintText ?? "",
+            keyboardType: widget.keyboardType,
+            inputFormatters: [
+              if (widget.keyboardType == TextInputType.phone)
+                FilteringTextInputFormatter.digitsOnly
+            ],
             material: (context, platform) => MaterialTextFormFieldData(
               decoration: const InputDecoration(
                 contentPadding: EdgeInsets.all(0),

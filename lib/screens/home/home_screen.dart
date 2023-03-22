@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -11,9 +13,11 @@ import '../../cubits/person_cubit/person_cubit.dart';
 import '../../models/oauth_model.dart';
 import '../../models/person_account.dart';
 import '../../models/person_model.dart';
+import '../../services/auth_service.dart';
 import '../../services/person_service.dart';
 import '../../widgets/analytics.dart';
 import '../../widgets/bottom_navbar.dart';
+import '../../widgets/screen.dart';
 import '../../widgets/transaction_list.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -21,74 +25,83 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    OauthModel oAuth = context.read<AuthCubit>().state.oauthModel!;
-    PersonService personService = PersonService(oauth: oAuth);
+    // OauthModel oAuth = context.read<AuthCubit>().state.oauthModel!;
+    // PersonService personService = PersonService(oauth: oAuth);
+    User user = context.read<AuthCubit>().state.user!;
+    inspect(user);
 
-    return BlocProvider(
-      create: (context) => PersonCubit(
-        personService: personService,
-      )..getPerson(),
-      child: BlocBuilder<PersonCubit, PersonCubitState>(
-        builder: (context, state) {
-          if (state is PersonCubitInitial || state is PersonCubitLoading) {
-            return PlatformScaffold(
-              body: const Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
-          }
-
-          if (state is PersonCubitLoaded) {
-            var person = state.person!;
-
-            return PlatformScaffold(
-              iosContentBottomPadding: true,
-              iosContentPadding: true,
-              appBar: PlatformAppBar(
-                title: Text(
-                  'Hello, ${person.firstName}!',
-                  style: const TextStyle(color: Colors.white),
-                ),
-                backgroundColor: const Color(0xFF1C1A28),
-                cupertino: (context, platform) => CupertinoNavigationBarData(
-                  automaticallyImplyLeading: false,
-                ),
-                material: (context, platform) => MaterialAppBarData(
-                  automaticallyImplyLeading: false,
-                  elevation: 0,
-                ),
-                trailingActions: [
-                  PlatformIconButton(
-                    padding: EdgeInsets.zero,
-                    icon: const Icon(
-                      Icons.bar_chart,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {},
-                  ),
-                  PlatformIconButton(
-                    padding: EdgeInsets.zero,
-                    icon: const Icon(
-                      Icons.notifications_none,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {},
-                  )
-                ],
-              ),
-              body: HomePageContent(person: person),
-              bottomNavBar: createBottomNavbar(context),
-            );
-          }
-
-          return PlatformScaffold(
-            body: const Center(
-              child: Text("Person could not be loaded"),
-            ),
-          );
-        },
+    return Screen(
+      title: "Home",
+      child: Center(
+        child: Text("home"),
       ),
     );
+
+    // return BlocProvider(
+    //   create: (context) => PersonCubit(
+    //     personService: personService,
+    //   )..getPerson(),
+    //   child: BlocBuilder<PersonCubit, PersonCubitState>(
+    //     builder: (context, state) {
+    //       if (state is PersonCubitInitial || state is PersonCubitLoading) {
+    //         return PlatformScaffold(
+    //           body: const Center(
+    //             child: CircularProgressIndicator(),
+    //           ),
+    //         );
+    //       }
+
+    //       if (state is PersonCubitLoaded) {
+    //         var person = state.person!;
+
+    //         return PlatformScaffold(
+    //           iosContentBottomPadding: true,
+    //           iosContentPadding: true,
+    //           appBar: PlatformAppBar(
+    //             title: Text(
+    //               'Hello, ${person.firstName}!',
+    //               style: const TextStyle(color: Colors.white),
+    //             ),
+    //             backgroundColor: const Color(0xFF1C1A28),
+    //             cupertino: (context, platform) => CupertinoNavigationBarData(
+    //               automaticallyImplyLeading: false,
+    //             ),
+    //             material: (context, platform) => MaterialAppBarData(
+    //               automaticallyImplyLeading: false,
+    //               elevation: 0,
+    //             ),
+    //             trailingActions: [
+    //               PlatformIconButton(
+    //                 padding: EdgeInsets.zero,
+    //                 icon: const Icon(
+    //                   Icons.bar_chart,
+    //                   color: Colors.white,
+    //                 ),
+    //                 onPressed: () {},
+    //               ),
+    //               PlatformIconButton(
+    //                 padding: EdgeInsets.zero,
+    //                 icon: const Icon(
+    //                   Icons.notifications_none,
+    //                   color: Colors.white,
+    //                 ),
+    //                 onPressed: () {},
+    //               )
+    //             ],
+    //           ),
+    //           body: HomePageContent(person: person),
+    //           bottomNavBar: createBottomNavbar(context),
+    //         );
+    //       }
+
+    //       return PlatformScaffold(
+    //         body: const Center(
+    //           child: Text("Person could not be loaded"),
+    //         ),
+    //       );
+    //     },
+    //   ),
+    // );
   }
 }
 

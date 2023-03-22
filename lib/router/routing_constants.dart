@@ -22,6 +22,12 @@ const loginPasscodeRoute = _Route(
   title: 'Login',
 );
 
+const loginPasscodeErrorRoute = _Route(
+  name: 'loginPasscodeError',
+  path: '/login/:username/error',
+  title: 'Login',
+);
+
 const signupRoute = _Route(
   name: 'signup',
   path: '/signup',
@@ -68,4 +74,13 @@ class _Route {
     required this.title,
     this.navbarIndex,
   });
+
+  String withParams(Map<String, String> params) {
+    var path = this.path;
+    params.forEach((key, value) {
+      path = path.replaceAll(':$key', value);
+    });
+
+    return path;
+  }
 }

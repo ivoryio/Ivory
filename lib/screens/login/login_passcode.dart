@@ -1,19 +1,21 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:solaris_structure_1/widgets/button.dart';
-import 'package:solaris_structure_1/widgets/platform_text_input.dart';
 
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../widgets/overlay_loading.dart';
 import '../../widgets/screen.dart';
 
 class LoginPasscodeScreen extends StatelessWidget {
-  final String username;
-  const LoginPasscodeScreen({super.key, required this.username});
+  const LoginPasscodeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final AuthCubit authCubit = context.read<AuthCubit>();
+
     return Screen(
       title: "Login",
       hideBottomNavbar: true,
@@ -35,11 +37,31 @@ class LoginPasscodeScreen extends StatelessWidget {
   }
 }
 
-class LoginPasscodeBody extends StatelessWidget {
+class LoginPasscodeBody extends StatefulWidget {
   const LoginPasscodeBody({super.key});
 
   @override
+  State<LoginPasscodeBody> createState() => _LoginPasscodeBodyState();
+}
+
+class _LoginPasscodeBodyState extends State<LoginPasscodeBody> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  @override
   Widget build(BuildContext context) {
+    TextEditingController inputBox1 = TextEditingController();
+    FocusNode inputBox1Focus = FocusNode();
+    TextEditingController inputBox2 = TextEditingController();
+    FocusNode inputBox2Focus = FocusNode();
+    TextEditingController inputBox3 = TextEditingController();
+    FocusNode inputBox3Focus = FocusNode();
+    TextEditingController inputBox4 = TextEditingController();
+    FocusNode inputBox4Focus = FocusNode();
+    TextEditingController inputBox5 = TextEditingController();
+    FocusNode inputBox5Focus = FocusNode();
+    TextEditingController inputBox6 = TextEditingController();
+    FocusNode inputBox6Focus = FocusNode();
+
     return Column(
       children: [
         const Text(
@@ -51,14 +73,60 @@ class LoginPasscodeBody extends StatelessWidget {
         ),
         const SizedBox(height: 40),
         Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              InputCodeBox(),
-              InputCodeBox(),
-              InputCodeBox(),
-              InputCodeBox(),
-            ],
+          child: Form(
+            key: _formKey,
+            onChanged: () {
+              String passcode = inputBox1.text +
+                  inputBox2.text +
+                  inputBox3.text +
+                  inputBox4.text +
+                  inputBox5.text +
+                  inputBox6.text;
+
+              if (inputBox1.text.isNotEmpty) {
+                FocusScope.of(context).unfocus(
+                    disposition: UnfocusDisposition.previouslyFocusedChild);
+                FocusScope.of(context).requestFocus(inputBox2Focus);
+              }
+              if (inputBox2.text.isNotEmpty) {
+                FocusScope.of(context).unfocus(
+                    disposition: UnfocusDisposition.previouslyFocusedChild);
+                FocusScope.of(context).requestFocus(inputBox3Focus);
+              }
+              if (inputBox3.text.isNotEmpty) {
+                FocusScope.of(context).unfocus(
+                    disposition: UnfocusDisposition.previouslyFocusedChild);
+                FocusScope.of(context).requestFocus(inputBox4Focus);
+              }
+              if (inputBox4.text.isNotEmpty) {
+                FocusScope.of(context).unfocus(
+                    disposition: UnfocusDisposition.previouslyFocusedChild);
+                FocusScope.of(context).requestFocus(inputBox5Focus);
+              }
+              if (inputBox5.text.isNotEmpty) {
+                FocusScope.of(context).unfocus(
+                    disposition: UnfocusDisposition.previouslyFocusedChild);
+                FocusScope.of(context).requestFocus(inputBox6Focus);
+              }
+
+              if (passcode.length == 6) {
+                OverlayLoadingProgress.start(context,
+                    barrierDismissible: false);
+
+                context.read<AuthCubit>().login(passcode);
+              }
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                InputCodeBox(controller: inputBox1, focusNode: inputBox1Focus),
+                InputCodeBox(controller: inputBox2, focusNode: inputBox2Focus),
+                InputCodeBox(controller: inputBox3, focusNode: inputBox3Focus),
+                InputCodeBox(controller: inputBox4, focusNode: inputBox4Focus),
+                InputCodeBox(controller: inputBox5, focusNode: inputBox5Focus),
+                InputCodeBox(controller: inputBox6, focusNode: inputBox6Focus),
+              ],
+            ),
           ),
         )
       ],
@@ -67,12 +135,19 @@ class LoginPasscodeBody extends StatelessWidget {
 }
 
 class InputCodeBox extends StatelessWidget {
-  const InputCodeBox({super.key});
+  final FocusNode? focusNode;
+  final TextEditingController? controller;
+
+  const InputCodeBox({
+    super.key,
+    this.controller,
+    this.focusNode,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 75,
+      width: 50,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4),
         border: Border.all(
@@ -80,7 +155,9 @@ class InputCodeBox extends StatelessWidget {
           color: const Color(0xffC4C4C4),
         ),
       ),
-      child: const PlatformTextFormField(
+      child: PlatformTextFormField(
+        focusNode: focusNode,
+        controller: controller,
         textAlign: TextAlign.center,
         maxLength: 1,
       ),
@@ -103,26 +180,7 @@ class LoginPasscodeFooter extends StatelessWidget {
 }
 
 
-// final userPool = CognitoUserPool(
-//   'eu-west-1_Z7d8UgNEM',
-//   '2iccudrlh0j2m4pd3tii9d8p13',
-// );
-// final userAttributes = [
-//   AttributeArg(name: 'given_name', value: 'Ilie'),
-//   AttributeArg(name: 'family_name', value: 'Lupu'),
-// ];
 
-// try {
-//   CognitoUserPoolData data = await userPool.signUp(
-//     'ilie.lupu@thinslices.com',
-//     '123456',
-//     userAttributes: userAttributes,
-//   );
-
-//   inspect(data);
-// } catch (e) {
-//   print(e);
-// }
 
 // if (_formKey.currentState!.validate()) {
 //   _formKey.currentState!.save();

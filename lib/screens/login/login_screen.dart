@@ -115,6 +115,7 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
               controller: phoneController,
               textLabel: "Phone number",
               hintText: "e.g 555 555 555",
+              keyboardType: TextInputType.phone,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter your phone number';
@@ -144,11 +145,9 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
                         _formKey.currentState!.save();
                         String phoneNumber = phoneController.text;
 
-                        String route = loginPasscodeRoute.path
-                            .replaceAll(":username", phoneNumber);
-
-                        context.push(route);
-                        // context.read<AuthCubit>().login(phoneNumber);
+                        context
+                            .read<AuthCubit>()
+                            .loginWithPhoneNumber(phoneNumber);
                       }
                     },
                   ),
@@ -188,6 +187,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
               controller: emailInputController,
               textLabel: "Email Address",
               hintText: "e.g john.doe@gmail.com",
+              keyboardType: TextInputType.emailAddress,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter your email address';
@@ -217,11 +217,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                         _formKey.currentState!.save();
                         String emailAddress = emailInputController.text;
 
-                        String route = loginPasscodeRoute.path
-                            .replaceAll(":username", emailAddress);
-
-                        context.push(route);
-                        // context.read<AuthCubit>().login(phoneNumber);
+                        context.read<AuthCubit>().loginWithEmail(emailAddress);
                       }
                     },
                   ),

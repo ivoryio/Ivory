@@ -15,20 +15,36 @@ class AuthCubit extends Cubit<AuthState> {
   AuthCubit({required this.authService})
       : super(const AuthState.unauthenticated());
 
-  void login(String phoneNumber) async {
-    OauthModel? oauthAccessToken = await authService.getAccessToken();
-    await Future.delayed(const Duration(seconds: 2));
+  void login(String passcode) async {
+    String username = state.loginInputEmail ?? state.loginInputPhoneNumber!;
 
-    if (oauthAccessToken is OauthModel) {
-      emit(AuthState.authenticated(oauthAccessToken));
-    } else {
-      emit(const AuthState.setAuthenticationError("test error"));
+    try {
+      User? user = await authService.login(username, passcode);
+      if (user != null) {
+        emit(AuthState.authenticated(user));
+      } else {
+        // emit(AuthState.setAuthenticationError(username, 'Invalid passcode'));
+      }
+    } catch (e) {
+      emit(AuthState.setAuthenticationError(username, e.toString()));
     }
-
     OverlayLoadingProgress.stop();
   }
 
   void logout() {
     emit(const AuthState.unauthenticated());
+  }
+
+  void loginWithEmail(String email) async {
+    emit(AuthState.setEmail(email));
+  }
+
+  void loginWithPhoneNumber(String phoneNumber) async {
+    emit(AuthState.setPhoneNumber(phoneNumber));
+  }
+
+  void reset() {
+    print("reset");
+    emit(const AuthState.reset());
   }
 }
