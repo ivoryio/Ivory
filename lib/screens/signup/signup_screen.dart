@@ -8,6 +8,7 @@ import 'package:solaris_structure_1/screens/signup/confirm_token.dart';
 
 import '../../router/routing_constants.dart';
 import '../../cubits/signup/signup_cubit.dart';
+import '../../utilities/validator.dart';
 import '../../widgets/button.dart';
 import '../../widgets/platform_text_input.dart';
 import '../../widgets/screen.dart';
@@ -145,6 +146,9 @@ class _SignupFormState extends State<SignupForm> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your email address';
+                    }
+                    if (!Validator.isValidEmailAddress(value)) {
+                      return 'Please enter a valid email address';
                     }
                     return null;
                   },
