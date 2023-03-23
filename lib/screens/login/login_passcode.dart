@@ -62,6 +62,54 @@ class _LoginPasscodeBodyState extends State<LoginPasscodeBody> {
     TextEditingController inputBox6 = TextEditingController();
     FocusNode inputBox6Focus = FocusNode();
 
+    void onChange() {
+      String passcode = inputBox1.text +
+          inputBox2.text +
+          inputBox3.text +
+          inputBox4.text +
+          inputBox5.text +
+          inputBox6.text;
+
+      if (inputBox1.text.isNotEmpty) {
+        FocusScope.of(context)
+            .unfocus(disposition: UnfocusDisposition.previouslyFocusedChild);
+        FocusScope.of(context).requestFocus(inputBox2Focus);
+      }
+      if (inputBox2.text.isNotEmpty) {
+        FocusScope.of(context)
+            .unfocus(disposition: UnfocusDisposition.previouslyFocusedChild);
+        FocusScope.of(context).requestFocus(inputBox3Focus);
+      }
+      if (inputBox3.text.isNotEmpty) {
+        FocusScope.of(context)
+            .unfocus(disposition: UnfocusDisposition.previouslyFocusedChild);
+        FocusScope.of(context).requestFocus(inputBox4Focus);
+      }
+      if (inputBox4.text.isNotEmpty) {
+        FocusScope.of(context)
+            .unfocus(disposition: UnfocusDisposition.previouslyFocusedChild);
+        FocusScope.of(context).requestFocus(inputBox5Focus);
+      }
+      if (inputBox5.text.isNotEmpty) {
+        FocusScope.of(context)
+            .unfocus(disposition: UnfocusDisposition.previouslyFocusedChild);
+        FocusScope.of(context).requestFocus(inputBox6Focus);
+      }
+
+      if (passcode.length == 6) {
+        OverlayLoadingProgress.start(context, barrierDismissible: false);
+
+        context.read<AuthCubit>().login(passcode);
+      }
+    }
+
+    inputBox1.addListener(() => onChange());
+    inputBox2.addListener(() => onChange());
+    inputBox3.addListener(() => onChange());
+    inputBox4.addListener(() => onChange());
+    inputBox5.addListener(() => onChange());
+    inputBox6.addListener(() => onChange());
+
     return Column(
       children: [
         const Text(
@@ -75,47 +123,6 @@ class _LoginPasscodeBodyState extends State<LoginPasscodeBody> {
         Center(
           child: Form(
             key: _formKey,
-            onChanged: () {
-              String passcode = inputBox1.text +
-                  inputBox2.text +
-                  inputBox3.text +
-                  inputBox4.text +
-                  inputBox5.text +
-                  inputBox6.text;
-
-              if (inputBox1.text.isNotEmpty) {
-                FocusScope.of(context).unfocus(
-                    disposition: UnfocusDisposition.previouslyFocusedChild);
-                FocusScope.of(context).requestFocus(inputBox2Focus);
-              }
-              if (inputBox2.text.isNotEmpty) {
-                FocusScope.of(context).unfocus(
-                    disposition: UnfocusDisposition.previouslyFocusedChild);
-                FocusScope.of(context).requestFocus(inputBox3Focus);
-              }
-              if (inputBox3.text.isNotEmpty) {
-                FocusScope.of(context).unfocus(
-                    disposition: UnfocusDisposition.previouslyFocusedChild);
-                FocusScope.of(context).requestFocus(inputBox4Focus);
-              }
-              if (inputBox4.text.isNotEmpty) {
-                FocusScope.of(context).unfocus(
-                    disposition: UnfocusDisposition.previouslyFocusedChild);
-                FocusScope.of(context).requestFocus(inputBox5Focus);
-              }
-              if (inputBox5.text.isNotEmpty) {
-                FocusScope.of(context).unfocus(
-                    disposition: UnfocusDisposition.previouslyFocusedChild);
-                FocusScope.of(context).requestFocus(inputBox6Focus);
-              }
-
-              if (passcode.length == 6) {
-                OverlayLoadingProgress.start(context,
-                    barrierDismissible: false);
-
-                context.read<AuthCubit>().login(passcode);
-              }
-            },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

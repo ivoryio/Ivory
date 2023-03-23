@@ -42,3 +42,63 @@ class Screen extends StatelessWidget {
     );
   }
 }
+
+class LoadingScreen extends StatelessWidget {
+  final String? title;
+  const LoadingScreen({super.key, this.title = "Loading"});
+
+  @override
+  Widget build(BuildContext context) {
+    return PlatformScaffold(
+      iosContentBottomPadding: true,
+      iosContentPadding: true,
+      appBar: PlatformAppBar(
+        title: Text(
+          title!,
+        ),
+        material: (context, platform) => MaterialAppBarData(
+          elevation: 0,
+        ),
+        cupertino: (context, platform) => CupertinoNavigationBarData(
+          border: Border.all(color: Colors.transparent),
+        ),
+        backgroundColor: Colors.white,
+      ),
+      body: Center(
+        child: PlatformCircularProgressIndicator(),
+      ),
+    );
+  }
+}
+
+class ErrorScreen extends StatelessWidget {
+  final String? title;
+  final String? message;
+  const ErrorScreen(
+      {super.key,
+      this.title = "Error",
+      this.message = "An unexpected error has occured"});
+
+  @override
+  Widget build(BuildContext context) {
+    return PlatformScaffold(
+      iosContentBottomPadding: true,
+      iosContentPadding: true,
+      appBar: PlatformAppBar(
+        title: Text(
+          title!,
+        ),
+        material: (context, platform) => MaterialAppBarData(
+          elevation: 0,
+        ),
+        cupertino: (context, platform) => CupertinoNavigationBarData(
+          border: Border.all(color: Colors.transparent),
+        ),
+        backgroundColor: Colors.white,
+      ),
+      body: Center(
+        child: Text(message!),
+      ),
+    );
+  }
+}

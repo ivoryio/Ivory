@@ -44,7 +44,6 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   void reset() {
-    print("reset");
     emit(const AuthState.reset());
   }
 }

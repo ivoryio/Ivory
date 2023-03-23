@@ -28,7 +28,6 @@ class HomeScreen extends StatelessWidget {
     // OauthModel oAuth = context.read<AuthCubit>().state.oauthModel!;
     // PersonService personService = PersonService(oauth: oAuth);
     User user = context.read<AuthCubit>().state.user!;
-    inspect(user);
 
     return Screen(
       title: "Home",

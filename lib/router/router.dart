@@ -10,6 +10,7 @@ import 'package:solaris_structure_1/screens/signup/signup_screen.dart';
 import '../main.dart';
 import '../screens/landing/landing_screen.dart';
 import '../screens/profile/profile_screen.dart';
+import '../screens/signup/setup_passcode.dart';
 import '../widgets/overlay_loading.dart';
 import 'routing_constants.dart';
 import '../screens/home/home_screen.dart';
@@ -62,7 +63,7 @@ class AppRouter {
           path: loginPasscodeErrorRoute.path,
           name: loginPasscodeErrorRoute.name,
           builder: (BuildContext context, GoRouterState state) {
-            return LoginPasscodeErrorScreen();
+            return const LoginPasscodeErrorScreen();
           },
         ),
         GoRoute(

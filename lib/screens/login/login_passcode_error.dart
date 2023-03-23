@@ -17,10 +17,10 @@ class LoginPasscodeErrorScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     var authenticationError =
         context.read<AuthCubit>().state.authenticationError;
-    inspect(authenticationError);
 
     return Screen(
       title: "Login",
+      hideBottomNavbar: true,
       child: Column(
         children: [
           Text(

@@ -10,11 +10,14 @@ class AuthService {
 
   Future<User?> login(String username, String passcode) async {
     final userPool = CognitoUserPool(
-      'eu-west-1_Z7d8UgNEM',
-      '2iccudrlh0j2m4pd3tii9d8p13',
+      'eu-west-1_nWKwWD6Jf',
+      '5g6agaurmihi1g3u8f6sa21l20',
     );
 
     try {
+      // debug only - simulate network delay
+      await Future.delayed(const Duration(seconds: 2));
+
       final cognitoUser = CognitoUser(username, userPool);
       final authDetails = AuthenticationDetails(
         username: username,
@@ -27,12 +30,21 @@ class AuthService {
       List<CognitoUserAttribute>? attributes =
           await cognitoUser.getUserAttributes();
 
+      // debug only
+      log("access_token: ${session!.getAccessToken().getJwtToken()}");
+
       return User(session: session!, attributes: attributes!);
     } catch (e) {
       log("[AuthService::login] $e");
       rethrow;
     }
   }
+
+  signupWithEmail({
+    required String firstName,
+    required String lastName,
+    required String emailAddress,
+  }) {}
 }
 
 class User {
