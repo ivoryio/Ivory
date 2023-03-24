@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:solaris_structure_1/widgets/transaction_list.dart';
+import '../../widgets/transaction_list.dart';
 
 import '../../widgets/screen.dart';
 

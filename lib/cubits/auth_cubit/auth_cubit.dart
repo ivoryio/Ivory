@@ -3,10 +3,10 @@ import 'dart:developer';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:solaris_structure_1/widgets/overlay_loading.dart';
+import '../../widgets/overlay_loading.dart';
 
 import '../../models/oauth_model.dart';
-import 'package:solaris_structure_1/services/auth_service.dart';
+import '../../services/auth_service.dart';
 
 part 'auth_state.dart';
 

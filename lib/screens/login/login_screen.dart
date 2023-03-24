@@ -3,8 +3,8 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:solaris_structure_1/widgets/button.dart';
-import 'package:solaris_structure_1/widgets/screen.dart';
+import '../../widgets/button.dart';
+import '../../widgets/screen.dart';
 
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../widgets/platform_text_input.dart';

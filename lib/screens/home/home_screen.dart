@@ -1,22 +1,17 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:solaris_structure_1/cubits/person_account/person_account_cubit.dart';
-import 'package:solaris_structure_1/utilities/format.dart';
-import 'package:solaris_structure_1/widgets/account_balance_text.dart';
-import 'package:solaris_structure_1/widgets/refer_a_friend.dart';
+import '../../cubits/person_account/person_account_cubit.dart';
+import '../../utilities/format.dart';
+import '../../widgets/account_balance_text.dart';
+import '../../widgets/refer_a_friend.dart';
 
 import '../../cubits/auth_cubit/auth_cubit.dart';
-import '../../cubits/person_cubit/person_cubit.dart';
 import '../../models/oauth_model.dart';
 import '../../models/person_account.dart';
 import '../../models/person_model.dart';
 import '../../services/auth_service.dart';
 import '../../services/person_service.dart';
 import '../../widgets/analytics.dart';
-import '../../widgets/bottom_navbar.dart';
 import '../../widgets/screen.dart';
 import '../../widgets/transaction_list.dart';
 

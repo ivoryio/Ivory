@@ -1,17 +1,13 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:solaris_structure_1/screens/login/login_passcode.dart';
-import 'package:solaris_structure_1/screens/login/login_passcode_error.dart';
-import 'package:solaris_structure_1/screens/signup/signup_screen.dart';
+import '../screens/login/login_passcode.dart';
+import '../screens/login/login_passcode_error.dart';
+import '../screens/signup/signup_screen.dart';
 
-import '../main.dart';
 import '../screens/landing/landing_screen.dart';
 import '../screens/profile/profile_screen.dart';
-import '../screens/signup/setup_passcode.dart';
-import '../widgets/overlay_loading.dart';
 import 'routing_constants.dart';
 import '../screens/home/home_screen.dart';
 import '../screens/login/login_screen.dart';

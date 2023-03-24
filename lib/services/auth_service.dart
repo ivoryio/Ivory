@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
 import '../config.dart';
 
@@ -35,7 +34,7 @@ class AuthService {
       // debug only
       log("access_token: ${session!.getAccessToken().getJwtToken()}");
 
-      return User(session: session!, attributes: attributes!);
+      return User(session: session, attributes: attributes!);
     } catch (e) {
       log("[AuthService::login] $e");
       rethrow;

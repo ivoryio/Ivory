@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "solaris_structure_1" "\0"
+            VALUE "FileDescription", "solarisdemo" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "solaris_structure_1" "\0"
+            VALUE "InternalName", "solarisdemo" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2023 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "solaris_structure_1.exe" "\0"
-            VALUE "ProductName", "solaris_structure_1" "\0"
+            VALUE "OriginalFilename", "solarisdemo.exe" "\0"
+            VALUE "ProductName", "solarisdemo" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

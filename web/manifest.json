@@ -1,6 +1,6 @@
 {
-    "name": "solaris_structure_1",
-    "short_name": "solaris_structure_1",
+    "name": "solarisdemo",
+    "short_name": "solarisdemo",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
