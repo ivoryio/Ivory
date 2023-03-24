@@ -65,8 +65,8 @@ class BasicInfoScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(30, 10, 30, 50),
           child: Column(
-            children: [
-              const Expanded(
+            children: const [
+              Expanded(
                 child: SignupForm(),
               )
             ],

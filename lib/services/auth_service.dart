@@ -4,14 +4,16 @@ import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import '../config.dart';
+
 class AuthService {
   BuildContext context;
   AuthService({required this.context});
 
   Future<User?> login(String username, String passcode) async {
     final userPool = CognitoUserPool(
-      'eu-west-1_nWKwWD6Jf',
-      '5g6agaurmihi1g3u8f6sa21l20',
+      Config.cognitoUserPoolId,
+      Config.cognitoClientId,
     );
 
     try {
@@ -39,12 +41,6 @@ class AuthService {
       rethrow;
     }
   }
-
-  signupWithEmail({
-    required String firstName,
-    required String lastName,
-    required String emailAddress,
-  }) {}
 }
 
 class User {

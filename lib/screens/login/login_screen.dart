@@ -3,15 +3,10 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:amazon_cognito_identity_dart_2/cognito.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:go_router/go_router.dart';
-import 'package:solaris_structure_1/router/routing_constants.dart';
 import 'package:solaris_structure_1/widgets/button.dart';
 import 'package:solaris_structure_1/widgets/screen.dart';
 
 import '../../cubits/auth_cubit/auth_cubit.dart';
-import '../../widgets/overlay_loading.dart';
 import '../../widgets/platform_text_input.dart';
 
 class LoginScreen extends StatelessWidget {

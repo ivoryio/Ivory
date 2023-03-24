@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 
+import '../config.dart';
+
 class SignupService {
   SignupService();
 
@@ -13,8 +15,8 @@ class SignupService {
   }) async {
     try {
       final userPool = CognitoUserPool(
-        'eu-west-1_nWKwWD6Jf',
-        '5g6agaurmihi1g3u8f6sa21l20',
+        Config.cognitoUserPoolId,
+        Config.cognitoClientId,
       );
       final userAttributes = [
         AttributeArg(name: 'given_name', value: firstName),
@@ -39,8 +41,8 @@ class SignupService {
   }) async {
     try {
       final userPool = CognitoUserPool(
-        'eu-west-1_nWKwWD6Jf',
-        '5g6agaurmihi1g3u8f6sa21l20',
+        Config.cognitoUserPoolId,
+        Config.cognitoClientId,
       );
 
       CognitoUser user = CognitoUser(email, userPool);
