@@ -1,4 +1,4 @@
-package com.example.solarisdemo
+package com.thinslices.solarisdemo
 
 import io.flutter.embedding.android.FlutterActivity
 
