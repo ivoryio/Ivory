@@ -1,34 +1,24 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:solarisdemo/services/api_service.dart';
 
-import 'service_constants.dart';
+import '../config.dart';
 import '../models/oauth_model.dart';
 import '../models/transaction_model.dart';
 
-class TransactionService {
-  final OauthModel oauthModel;
-
-  TransactionService({required this.oauthModel});
+class TransactionService extends ApiService {
+  TransactionService({required super.user});
 
   Future<List<Transaction>?> getTransactions() async {
     try {
-      const String accountId = 'solarisKontistAccountId';
-      const String queryFilters =
-          'page[size]=5&page[number]=1&filter[booking_date][min]=2000-10-10&filter[booking_date][max]=2030-10-10';
+      var data = await get('/transactions');
 
-      String url = '$apiBaseUrl/v1/accounts/$accountId/bookings?$queryFilters';
+      List<Transaction>? transactions = (data as List)
+          .map((transaction) => Transaction.fromJson(transaction))
+          .toList();
 
-      final response = await http.get(Uri.parse(url),
-          headers: {"Authorization": "Bearer ${oauthModel.accessToken}"});
-
-      if (response.statusCode == 200) {
-        var data = jsonDecode(response.body) as List<dynamic>;
-        var transactions = data.map((e) => Transaction.fromJson(e)).toList();
-
-        return transactions;
-      }
-      throw Exception('Failed to load transactions');
+      return transactions;
     } catch (e) {
       throw Exception("Failed to load transactions");
     }

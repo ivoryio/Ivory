@@ -2,8 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../screens/login/login_passcode.dart';
+import '../screens/login/login_passcode_error.dart';
+import '../screens/signup/signup_screen.dart';
 
-import '../main.dart';
+import '../screens/landing/landing_screen.dart';
 import '../screens/profile/profile_screen.dart';
 import 'routing_constants.dart';
 import '../screens/home/home_screen.dart';
@@ -22,26 +25,53 @@ class AppRouter {
 
   late final router = GoRouter(
       navigatorKey: _rootNavigatorKey,
-      initialLocation: splashScreenRoutePath,
+      initialLocation: splashScreenRoute.path,
       debugLogDiagnostics: true,
       routes: [
         GoRoute(
-          path: splashScreenRoutePath,
-          name: splashScreenRouteName,
+          path: splashScreenRoute.path,
+          name: splashScreenRoute.name,
           builder: (BuildContext context, GoRouterState state) {
             return const SplashScreen();
           },
         ),
         GoRoute(
-          path: loginPageRoutePath,
-          name: loginPageRouteName,
+            path: landingRoute.path,
+            name: landingRoute.name,
+            builder: (BuildContext context, GoRouterState state) {
+              return const LandingScreen();
+            }),
+        GoRoute(
+          path: loginRoute.path,
+          name: loginRoute.name,
           builder: (BuildContext context, GoRouterState state) {
             return const LoginScreen();
           },
         ),
         GoRoute(
-          path: homePageRoutePath,
-          name: homePageRouteName,
+          path: loginPasscodeRoute.path,
+          name: loginPasscodeRoute.name,
+          builder: (BuildContext context, GoRouterState state) {
+            return const LoginPasscodeScreen();
+          },
+        ),
+        GoRoute(
+          path: loginPasscodeErrorRoute.path,
+          name: loginPasscodeErrorRoute.name,
+          builder: (BuildContext context, GoRouterState state) {
+            return const LoginPasscodeErrorScreen();
+          },
+        ),
+        GoRoute(
+          path: signupRoute.path,
+          name: signupRoute.name,
+          builder: (BuildContext context, GoRouterState state) {
+            return const SignupScreen();
+          },
+        ),
+        GoRoute(
+          path: homeRoute.path,
+          name: homeRoute.name,
           builder: (BuildContext context, GoRouterState state) {
             return const HomeScreen();
           },
@@ -69,17 +99,29 @@ class AppRouter {
         ),
       ],
       redirect: (BuildContext context, GoRouterState state) {
-        final bool loggedIn =
+        final bool isAuthenticated =
             loginCubit.state.status == AuthStatus.authenticated;
-        final bool logginIn = state.subloc == loginPageRoutePath;
-        final bool splashScreen = state.subloc == splashScreenRoutePath;
+        final bool isOnLoginPage = state.subloc.startsWith(loginRoute.path);
 
-        if (!loggedIn && !splashScreen) {
-          return logginIn ? null : loginPageRoutePath;
+        if (isAuthenticated && isOnLoginPage) {
+          return homeRoute.path;
         }
-        if (logginIn) {
-          return homePageRoutePath;
+
+        if (loginCubit.state.authenticationError != null) {
+          if (state.subloc == "/") {
+            return landingRoute.path;
+          }
+          return loginPasscodeErrorRoute.path;
         }
+
+        if (loginCubit.state.loginInputEmail != null ||
+            loginCubit.state.loginInputPhoneNumber != null) {
+          return loginPasscodeRoute.withParams({
+            'username': loginCubit.state.loginInputEmail ??
+                loginCubit.state.loginInputPhoneNumber!
+          });
+        }
+
         return null;
       },
       refreshListenable: GoRouterRefreshStream(loginCubit.stream));

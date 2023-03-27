@@ -1,51 +1,20 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'dart:developer';
 
-import 'service_constants.dart';
+import 'package:solarisdemo/models/person_account_summary.dart';
 
-import '../models/oauth_model.dart';
-import '../models/person_model.dart';
-import '../models/person_account.dart';
+import 'api_service.dart';
 
-class PersonService {
-  late final OauthModel oauth;
+class PersonService extends ApiService {
+  PersonService({required super.user});
 
-  PersonService({required this.oauth});
-
-  Future<Person>? getPerson() async {
+  Future<PersonAccountSummary>? getPersonAccountSummary() async {
     try {
-      const String personId = 'mockpersonkontistgmbh';
+      String path = 'account/summary';
 
-      String url = '$apiBaseUrl/v1/persons/$personId';
-
-      final response = await http.get(Uri.parse(url),
-          headers: {"Authorization": "Bearer ${oauth.accessToken}"});
-
-      if (response.statusCode == 200) {
-        return Person.fromJson(jsonDecode(response.body));
-      }
-      throw Exception('Failed to load people');
+      var data = await get(path);
+      return PersonAccountSummary.fromJson(data);
     } catch (e) {
-      throw Exception("Failed to load people");
-    }
-  }
-
-  Future<List<PersonAccount>?> getPersonAccounts(
-      {required String personId}) async {
-    try {
-      String url = '$apiBaseUrl/v1/persons/$personId/accounts';
-
-      final response = await http.get(Uri.parse(url),
-          headers: {"Authorization": "Bearer ${oauth.accessToken}"});
-
-      if (response.statusCode == 200) {
-        return (jsonDecode(response.body) as List)
-            .map((e) => PersonAccount.fromJson(e))
-            .toList();
-      }
-      throw Exception('Failed to load people');
-    } catch (e) {
-      throw Exception("Failed to load people");
+      throw Exception("Failed to load account summary");
     }
   }
 }

@@ -1,100 +1,71 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:solarisdemo/models/person_account_summary.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:solaris_structure_1/cubits/person_account/person_account_cubit.dart';
-import 'package:solaris_structure_1/utilities/format.dart';
-import 'package:solaris_structure_1/widgets/account_balance_text.dart';
-import 'package:solaris_structure_1/widgets/refer_a_friend.dart';
 
-import '../../cubits/auth_cubit/auth_cubit.dart';
-import '../../cubits/person_cubit/person_cubit.dart';
-import '../../models/oauth_model.dart';
-import '../../models/person_account.dart';
-import '../../models/person_model.dart';
-import '../../services/person_service.dart';
+import '../../models/user.dart';
+import '../../utilities/format.dart';
 import '../../widgets/analytics.dart';
 import '../../widgets/bottom_navbar.dart';
+import '../../widgets/refer_a_friend.dart';
+import '../../services/person_service.dart';
 import '../../widgets/transaction_list.dart';
+import '../../widgets/account_balance_text.dart';
+import '../../cubits/auth_cubit/auth_cubit.dart';
+import '../../cubits/account_summary_cubit/account_summary_cubit.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    OauthModel oAuth = context.read<AuthCubit>().state.oauthModel!;
-    PersonService personService = PersonService(oauth: oAuth);
+    User user = context.read<AuthCubit>().state.user!;
 
-    return BlocProvider(
-      create: (context) => PersonCubit(
-        personService: personService,
-      )..getPerson(),
-      child: BlocBuilder<PersonCubit, PersonCubitState>(
-        builder: (context, state) {
-          if (state is PersonCubitInitial || state is PersonCubitLoading) {
-            return PlatformScaffold(
-              body: const Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
-          }
-
-          if (state is PersonCubitLoaded) {
-            var person = state.person!;
-
-            return PlatformScaffold(
-              iosContentBottomPadding: true,
-              iosContentPadding: true,
-              appBar: PlatformAppBar(
-                title: Text(
-                  'Hello, ${person.firstName}!',
-                  style: const TextStyle(color: Colors.white),
-                ),
-                backgroundColor: const Color(0xFF1C1A28),
-                cupertino: (context, platform) => CupertinoNavigationBarData(
-                  automaticallyImplyLeading: false,
-                ),
-                material: (context, platform) => MaterialAppBarData(
-                  automaticallyImplyLeading: false,
-                  elevation: 0,
-                ),
-                trailingActions: [
-                  PlatformIconButton(
-                    padding: EdgeInsets.zero,
-                    icon: const Icon(
-                      Icons.bar_chart,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {},
-                  ),
-                  PlatformIconButton(
-                    padding: EdgeInsets.zero,
-                    icon: const Icon(
-                      Icons.notifications_none,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {},
-                  )
-                ],
-              ),
-              body: HomePageContent(person: person),
-              bottomNavBar: createBottomNavbar(context),
-            );
-          }
-
-          return PlatformScaffold(
-            body: const Center(
-              child: Text("Person could not be loaded"),
+    return PlatformScaffold(
+      iosContentBottomPadding: true,
+      iosContentPadding: true,
+      appBar: PlatformAppBar(
+        title: Text(
+          'Hello, ${user.firstName}!',
+          style: const TextStyle(color: Colors.white),
+        ),
+        backgroundColor: const Color(0xFF1C1A28),
+        cupertino: (context, platform) => CupertinoNavigationBarData(
+          automaticallyImplyLeading: false,
+        ),
+        material: (context, platform) => MaterialAppBarData(
+          automaticallyImplyLeading: false,
+          elevation: 0,
+        ),
+        trailingActions: [
+          PlatformIconButton(
+            padding: EdgeInsets.zero,
+            icon: const Icon(
+              Icons.bar_chart,
+              color: Colors.white,
             ),
-          );
-        },
+            onPressed: () {},
+          ),
+          PlatformIconButton(
+            padding: EdgeInsets.zero,
+            icon: const Icon(
+              Icons.notifications_none,
+              color: Colors.white,
+            ),
+            onPressed: () {},
+          )
+        ],
       ),
+      body: const HomePageContent(),
+      bottomNavBar: createBottomNavbar(context),
     );
   }
 }
 
 class HomePageContent extends StatelessWidget {
-  final Person person;
-  const HomePageContent({super.key, required this.person});
+  const HomePageContent({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -120,73 +91,94 @@ class HomePageHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-      width: MediaQuery.of(context).size.width,
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(30),
-          bottomRight: Radius.circular(30),
-        ),
-        color: Color(0xFF1C1A28),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          AccountSummary(),
-          AccountOptions(),
-        ],
+    User user = context.read<AuthCubit>().state.user!;
+    return BlocProvider(
+      create: (context) =>
+          AccountSummaryCubit(personService: PersonService(user: user))
+            ..getAccountSummary(),
+      child: BlocBuilder<AccountSummaryCubit, AccountSummaryCubitState>(
+        builder: (context, state) {
+          if (state is AccountSummaryCubitLoading) {
+            return Container(
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+              width: MediaQuery.of(context).size.width,
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(30),
+                  bottomRight: Radius.circular(30),
+                ),
+                color: Color(0xFF1C1A28),
+              ),
+              child: const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(20.0),
+                  child: CircularProgressIndicator(color: Colors.white),
+                ),
+              ),
+            );
+          }
+
+          if (state is AccountSummaryCubitLoaded) {
+            return Container(
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+              width: MediaQuery.of(context).size.width,
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(30),
+                  bottomRight: Radius.circular(30),
+                ),
+                color: Color(0xFF1C1A28),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AccountSummary(
+                    account: state.data?.account,
+                    income: state.data?.income,
+                    spending: state.data?.spending,
+                  ),
+                  AccountOptions(),
+                ],
+              ),
+            );
+          }
+
+          return Text("Could not load account summary");
+        },
       ),
     );
   }
 }
 
 class AccountSummary extends StatelessWidget {
-  const AccountSummary({super.key});
+  final Account? account;
+  final num? income;
+  final num? spending;
+
+  const AccountSummary(
+      {super.key,
+      required this.account,
+      required this.income,
+      required this.spending});
 
   @override
   Widget build(BuildContext context) {
-    OauthModel oAuth = context.read<AuthCubit>().state.oauthModel!;
-    PersonService personService = PersonService(oauth: oAuth);
-
-    return BlocProvider(
-      create: (context) =>
-          PersonAccountCubit(personService: personService)..getPersonAccounts(),
-      child: BlocBuilder<PersonAccountCubit, PersonAccountState>(
-        builder: (context, state) {
-          if (state is PersonAccountInitial || state is PersonAccountLoading) {
-            return const Center(
-              child: CircularProgressIndicator(color: Colors.white),
-            );
-          }
-
-          if (state is PersonAccountLoaded) {
-            PersonAccount account = state.personAccount!;
-
-            return Container(
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(8)),
-                color: Color(0xFF272735),
-              ),
-              child: Column(
-                children: [
-                  AccountBalance(
-                    iban: account.iban!,
-                    cents: account.balance?.value ?? 0.0,
-                  ),
-                  const AccountStats(
-                    income: 1234.56,
-                    spending: 78.91,
-                  ),
-                ],
-              ),
-            );
-          }
-
-          return const Center(
-            child: Text("Account could not be loaded"),
-          );
-        },
+    return Container(
+      decoration: const BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(8)),
+        color: Color(0xFF272735),
+      ),
+      child: Column(
+        children: [
+          AccountBalance(
+            iban: account?.iban ?? "",
+            value: (account?.balance.value ?? 0).toDouble(),
+          ),
+          AccountStats(
+            income: income ?? 0,
+            spending: spending ?? 0,
+          ),
+        ],
       ),
     );
   }
@@ -194,11 +186,11 @@ class AccountSummary extends StatelessWidget {
 
 class AccountBalance extends StatelessWidget {
   final String iban;
-  final num cents;
+  final num value;
 
   const AccountBalance({
     super.key,
-    required this.cents,
+    required this.value,
     required this.iban,
   });
 
@@ -225,10 +217,11 @@ class AccountBalance extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.end,
-              children: const [
+              children: [
                 AccountBalanceText(
-                  numberStyle: TextStyle(color: Colors.white),
-                  centsStyle: TextStyle(color: Colors.white),
+                  value: value,
+                  numberStyle: const TextStyle(color: Colors.white),
+                  centsStyle: const TextStyle(color: Colors.white),
                 ),
               ],
             ),
@@ -244,8 +237,8 @@ class AccountBalance extends StatelessWidget {
 }
 
 class AccountStats extends StatelessWidget {
-  final double income;
-  final double spending;
+  final num income;
+  final num spending;
 
   const AccountStats({
     super.key,

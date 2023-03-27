@@ -13,8 +13,8 @@ class Format {
     return euro(cents / 100, digits: 0);
   }
 
-  static String cents(num cents) {
-    return (cents % 100).toString().padLeft(2, "0");
+  static String cents(num value) {
+    return (value.toDouble() % 1).toStringAsFixed(2).substring(2);
   }
 
   static String iban(String iban) {

@@ -1,28 +1,38 @@
-const String loginPageRouteName = 'login';
-const String homePageRouteName = 'home';
-const String transferPageRouteName = 'transfer';
-const String hubPageRouteName = 'hub';
-const String splashScreenRouteName = 'splash';
+const splashScreenRoute = _Route(
+  name: 'splash',
+  path: '/splash',
+  title: 'Splash',
+);
 
-const String loginPageRoutePath = '/login';
-const String homePageRoutePath = '/home';
-const String transferPageRoutePath = '/transfer';
-const String hubPageRoutePath = '/hub';
-const String splashScreenRoutePath = '/splash';
+const landingRoute = _Route(
+  name: 'landing',
+  path: '/',
+  title: 'Landing',
+);
 
-class _Route {
-  final String name;
-  final String path;
-  final String title;
-  final int? navbarIndex;
+const loginRoute = _Route(
+  name: 'login',
+  path: '/login',
+  title: 'Login',
+);
 
-  const _Route({
-    required this.name,
-    required this.path,
-    required this.title,
-    this.navbarIndex,
-  });
-}
+const loginPasscodeRoute = _Route(
+  name: 'loginPasscode',
+  path: '/login/:username',
+  title: 'Login',
+);
+
+const loginPasscodeErrorRoute = _Route(
+  name: 'loginPasscodeError',
+  path: '/login/:username/error',
+  title: 'Login',
+);
+
+const signupRoute = _Route(
+  name: 'signup',
+  path: '/signup',
+  title: 'Signup',
+);
 
 const homeRoute = _Route(
   name: 'home',
@@ -51,3 +61,26 @@ const profileRoute = _Route(
   title: 'Profile',
   navbarIndex: 3,
 );
+
+class _Route {
+  final String name;
+  final String path;
+  final String title;
+  final int? navbarIndex;
+
+  const _Route({
+    required this.name,
+    required this.path,
+    required this.title,
+    this.navbarIndex,
+  });
+
+  String withParams(Map<String, String> params) {
+    var path = this.path;
+    params.forEach((key, value) {
+      path = path.replaceAll(':$key', value);
+    });
+
+    return path;
+  }
+}

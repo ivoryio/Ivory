@@ -6,6 +6,8 @@ class AccountBalanceText extends StatelessWidget {
   final TextStyle? numberStyle;
   final TextStyle? centsStyle;
 
+  final num value;
+
   final TextStyle defaultNumberStyle = const TextStyle(
     color: Colors.black,
     fontSize: 24,
@@ -16,7 +18,12 @@ class AccountBalanceText extends StatelessWidget {
     fontSize: 16,
     fontWeight: FontWeight.w600,
   );
-  const AccountBalanceText({super.key, this.numberStyle, this.centsStyle});
+  const AccountBalanceText({
+    super.key,
+    required this.value,
+    this.numberStyle,
+    this.centsStyle,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,11 +31,11 @@ class AccountBalanceText extends StatelessWidget {
       text: TextSpan(
         children: [
           TextSpan(
-            text: Format.euroFromCents(245800),
+            text: Format.euro(value, digits: 0),
             style: defaultNumberStyle.merge(numberStyle),
           ),
           TextSpan(
-            text: ".${Format.cents(245800)}",
+            text: ".${Format.cents(value)}",
             style: defaultCentsStyle.merge(centsStyle),
           ),
         ],

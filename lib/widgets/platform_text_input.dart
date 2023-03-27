@@ -1,13 +1,25 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class PlatformTextInput extends StatefulWidget {
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final String textLabel;
+  final String? hintText;
+  final TextInputType? keyboardType;
+  final Function validator;
+  final Function? onChanged;
 
-  const PlatformTextInput(
-      {super.key, required this.controller, required this.textLabel});
+  const PlatformTextInput({
+    super.key,
+    this.controller,
+    required this.textLabel,
+    required this.validator,
+    this.hintText,
+    this.keyboardType,
+    this.onChanged,
+  });
 
   @override
   State<PlatformTextInput> createState() => _PlatformTextInputState();
@@ -42,9 +54,16 @@ class _PlatformTextInputState extends State<PlatformTextInput> {
           child: PlatformTextFormField(
             controller: widget.controller,
             validator: (value) {
-              return null;
+              return widget.validator(value);
             },
-            hintText: "Phone number",
+            hintText: widget.hintText ?? "",
+            keyboardType: widget.keyboardType,
+            inputFormatters: [
+              if (widget.keyboardType == TextInputType.phone)
+                FilteringTextInputFormatter.digitsOnly
+            ],
+            onChanged: (value) =>
+                {if (widget.onChanged != null) widget.onChanged!(value)},
             material: (context, platform) => MaterialTextFormFieldData(
               decoration: const InputDecoration(
                 contentPadding: EdgeInsets.all(0),

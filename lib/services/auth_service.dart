@@ -1,36 +1,44 @@
-import 'dart:convert';
 import 'dart:developer';
 
+import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
-import 'service_constants.dart';
-import '../models/oauth_model.dart';
+import '../config.dart';
+import '../models/user.dart';
 
 class AuthService {
   BuildContext context;
   AuthService({required this.context});
 
-  Future<OauthModel?> getAccessToken() async {
+  Future<User?> login(String username, String passcode) async {
+    final userPool = CognitoUserPool(
+      Config.cognitoUserPoolId,
+      Config.cognitoClientId,
+    );
+
     try {
-      Object body = {
-        "grant_type": "client_credentials",
-        "client_id": "1234567890",
-        "client_secret": "1234567890"
-      };
+      // debug only - simulate network delay
+      await Future.delayed(const Duration(seconds: 2));
 
-      final response = await http.post(Uri.parse(oauthEndpointUrl), body: body);
+      final cognitoUser = CognitoUser(username, userPool);
+      final authDetails = AuthenticationDetails(
+        username: username,
+        password: passcode,
+      );
 
-      if (response.statusCode == 201) {
-        var data = jsonDecode(response.body) as Map<String, dynamic>;
-        var oauthModel = OauthModel.fromJson(data);
+      CognitoUserSession? session =
+          await cognitoUser.authenticateUser(authDetails);
 
-        return oauthModel;
-      }
-      throw Exception('Failed to get access token');
+      List<CognitoUserAttribute>? attributes =
+          await cognitoUser.getUserAttributes();
+
+      // debug only
+      log("access_token: ${session!.getAccessToken().getJwtToken()}");
+
+      return User.fromCognitoUser(session, attributes!);
     } catch (e) {
-      log("[AuthService::getAccessToken] $e");
-      return null;
+      log("[AuthService::login] $e");
+      rethrow;
     }
   }
 }
