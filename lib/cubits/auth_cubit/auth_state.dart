@@ -8,14 +8,12 @@ class AuthState extends Equatable {
   final String? loginInputPhoneNumber;
   final AuthenticationError? authenticationError;
 
-  final OauthModel? oauthModel;
   final User? user;
 
   const AuthState._({
     this.status = AuthStatus.unknown,
     this.loginInputPhoneNumber,
     this.loginInputEmail,
-    this.oauthModel,
     this.authenticationError,
     this.user,
   });

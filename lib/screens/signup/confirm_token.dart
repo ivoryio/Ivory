@@ -14,7 +14,7 @@ class SignupConfirmTokenScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var previousState = context.read<SignupCubit>().state;
-    inspect(previousState);
+
     String passcode = previousState.passcode!;
     String email = previousState.email!;
     String firstName = previousState.firstName!;

@@ -4,6 +4,7 @@ import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 import 'package:flutter/material.dart';
 
 import '../config.dart';
+import '../models/user.dart';
 
 class AuthService {
   BuildContext context;
@@ -34,17 +35,10 @@ class AuthService {
       // debug only
       log("access_token: ${session!.getAccessToken().getJwtToken()}");
 
-      return User(session: session, attributes: attributes!);
+      return User.fromCognitoUser(session, attributes!);
     } catch (e) {
       log("[AuthService::login] $e");
       rethrow;
     }
   }
-}
-
-class User {
-  final CognitoUserSession session;
-  final List<CognitoUserAttribute> attributes;
-
-  User({required this.session, required this.attributes});
 }

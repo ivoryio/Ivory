@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
-import '../router/routing_constants.dart';
+import 'package:solarisdemo/models/user.dart';
 
-import '../models/oauth_model.dart';
 import 'transaction_listing_item.dart';
+import '../router/routing_constants.dart';
 import '../cubits/auth_cubit/auth_cubit.dart';
 import '../services/transaction_service.dart';
 import '../cubits/transaction_list_cubit/transaction_list_cubit.dart';
@@ -16,11 +16,11 @@ class TransactionList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    OauthModel oauthModel = context.read<AuthCubit>().state.oauthModel!;
+    User user = context.read<AuthCubit>().state.user!;
 
     return BlocProvider(
       create: (context) => TransactionListCubit(
-        transactionService: TransactionService(oauthModel: oauthModel),
+        transactionService: TransactionService(user: user),
       )..getTransactions(),
       child: BlocBuilder<TransactionListCubit, TransactionListState>(
         builder: (context, state) {

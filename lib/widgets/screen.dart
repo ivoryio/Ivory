@@ -19,25 +19,29 @@ class Screen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    PlatformNavBar? bottomNavBar =
+        hideBottomNavbar == true ? null : createBottomNavbar(context);
+
+    PlatformAppBar? appBar = hideAppBar == true
+        ? null
+        : PlatformAppBar(
+            title: Text(
+              title,
+            ),
+            material: (context, platform) => MaterialAppBarData(
+              elevation: 0,
+            ),
+            cupertino: (context, platform) => CupertinoNavigationBarData(
+              border: Border.all(color: Colors.transparent),
+            ),
+            backgroundColor: Colors.white,
+          );
+
     return PlatformScaffold(
       iosContentBottomPadding: true,
       iosContentPadding: true,
-      appBar: hideAppBar == true
-          ? null
-          : PlatformAppBar(
-              title: Text(
-                title,
-              ),
-              material: (context, platform) => MaterialAppBarData(
-                elevation: 0,
-              ),
-              cupertino: (context, platform) => CupertinoNavigationBarData(
-                border: Border.all(color: Colors.transparent),
-              ),
-              backgroundColor: Colors.white,
-            ),
-      bottomNavBar:
-          hideBottomNavbar == true ? null : createBottomNavbar(context),
+      appBar: appBar,
+      bottomNavBar: bottomNavBar,
       body: child,
     );
   }

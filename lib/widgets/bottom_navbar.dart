@@ -4,7 +4,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import '../router/router.dart';
 
 PlatformNavBar createBottomNavbar(BuildContext context) {
-  final currentPageIndex = AppRouter.calculateSelectedIndex(context);
+  var currentPageIndex = AppRouter.calculateSelectedIndex(context);
 
   return PlatformNavBar(
     material: (context, platform) => MaterialNavBarData(

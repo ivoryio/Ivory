@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import '../../models/user.dart';
 import '../../widgets/overlay_loading.dart';
 
 import '../../models/oauth_model.dart';
@@ -12,7 +13,6 @@ part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   final AuthService authService;
-  late final OauthModel oauthAccessToken;
 
   AuthCubit({required this.authService})
       : super(const AuthState.unauthenticated());
@@ -30,6 +30,7 @@ class AuthCubit extends Cubit<AuthState> {
     } catch (e) {
       emit(AuthState.setAuthenticationError(username, e.toString()));
     }
+
     OverlayLoadingProgress.stop();
   }
 

@@ -184,8 +184,7 @@ class LoginPasscodeFooter extends StatelessWidget {
     return PlatformTextButton(
         child: const Text("Forgot your passcode?"),
         onPressed: () {
-          OverlayLoadingProgress.start(context, barrierDismissible: false);
-          context.read<AuthCubit>().login("test");
+          print("Forgot your passcode?");
         });
   }
 }
