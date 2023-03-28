@@ -1,7 +1,7 @@
 class Config {
-  static String cognitoUserPoolId = 'eu-west-1_nWKwWD6Jf';
-  static String cognitoClientId = '5g6agaurmihi1g3u8f6sa21l20';
+  static String cognitoUserPoolId = 'eu-west-1_qy1q4kreP';
+  static String cognitoClientId = '37pa10mkkkbqr62q66916jdma0';
 
   static String apiBaseUrl =
-      'https://41zgzw73a3.execute-api.eu-west-1.amazonaws.com';
+      'https://5d539cp0yi.execute-api.eu-west-1.amazonaws.com/';
 }
