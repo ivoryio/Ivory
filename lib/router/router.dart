@@ -99,21 +99,6 @@ class AppRouter {
           return homeRoute.path;
         }
 
-        if (loginCubit.state.authenticationError != null) {
-          if (state.subloc == "/") {
-            return landingRoute.path;
-          }
-          return loginPasscodeErrorRoute.path;
-        }
-
-        if (loginCubit.state.loginInputEmail != null ||
-            loginCubit.state.loginInputPhoneNumber != null) {
-          return loginPasscodeRoute.withParams({
-            'username': loginCubit.state.loginInputEmail ??
-                loginCubit.state.loginInputPhoneNumber!
-          });
-        }
-
         return null;
       },
       refreshListenable: GoRouterRefreshStream(loginCubit.stream));

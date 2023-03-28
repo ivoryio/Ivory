@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solarisdemo/models/person_account_summary.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:solarisdemo/widgets/screen.dart';
 
 import '../../models/user.dart';
 import '../../utilities/format.dart';
@@ -23,43 +24,30 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     User user = context.read<AuthCubit>().state.user!;
 
-    return PlatformScaffold(
-      iosContentBottomPadding: true,
-      iosContentPadding: true,
-      appBar: PlatformAppBar(
-        title: Text(
-          'Hello, ${user.firstName}!',
-          style: const TextStyle(color: Colors.white),
-        ),
-        backgroundColor: const Color(0xFF1C1A28),
-        cupertino: (context, platform) => CupertinoNavigationBarData(
-          automaticallyImplyLeading: false,
-        ),
-        material: (context, platform) => MaterialAppBarData(
-          automaticallyImplyLeading: false,
-          elevation: 0,
-        ),
-        trailingActions: [
-          PlatformIconButton(
-            padding: EdgeInsets.zero,
-            icon: const Icon(
-              Icons.bar_chart,
-              color: Colors.white,
-            ),
-            onPressed: () {},
+    return Screen(
+      title: 'Hello, ${user.firstName}!',
+      hideBackButton: true,
+      appBarColor: const Color(0xFF1C1A28),
+      trailingActions: [
+        PlatformIconButton(
+          padding: EdgeInsets.zero,
+          icon: const Icon(
+            Icons.bar_chart,
+            color: Colors.white,
           ),
-          PlatformIconButton(
-            padding: EdgeInsets.zero,
-            icon: const Icon(
-              Icons.notifications_none,
-              color: Colors.white,
-            ),
-            onPressed: () {},
-          )
-        ],
-      ),
-      body: const HomePageContent(),
-      bottomNavBar: createBottomNavbar(context),
+          onPressed: () {},
+        ),
+        PlatformIconButton(
+          padding: EdgeInsets.zero,
+          icon: const Icon(
+            Icons.notifications_none,
+            color: Colors.white,
+          ),
+          onPressed: () {},
+        )
+      ],
+      titleTextStyle: const TextStyle(color: Colors.white),
+      child: const HomePageContent(),
     );
   }
 }

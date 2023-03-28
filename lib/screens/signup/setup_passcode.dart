@@ -13,7 +13,7 @@ class SignupSetupPasscodeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var previousState = context.read<SignupCubit>().state;
+    SignupState previousState = context.read<SignupCubit>().state;
     String email = previousState.email!;
     String firstName = previousState.firstName!;
     String lastName = previousState.lastName!;

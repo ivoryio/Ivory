@@ -5,8 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
-import '../../cubits/auth_cubit/auth_cubit.dart';
-import '../../widgets/overlay_loading.dart';
+import '../../cubits/login_cubit/login_cubit.dart';
 import '../../widgets/screen.dart';
 
 class LoginPasscodeScreen extends StatelessWidget {
@@ -14,8 +13,6 @@ class LoginPasscodeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AuthCubit authCubit = context.read<AuthCubit>();
-
     return Screen(
       title: "Login",
       hideBottomNavbar: true,
@@ -97,9 +94,11 @@ class _LoginPasscodeBodyState extends State<LoginPasscodeBody> {
       }
 
       if (passcode.length == 6) {
-        OverlayLoadingProgress.start(context, barrierDismissible: false);
+        // OverlayLoadingProgress.start(context, barrierDismissible: false);
+        final LoginCubit loginCubit = context.read<LoginCubit>();
 
-        context.read<AuthCubit>().login(passcode);
+        loginCubit.login(passcode);
+        // context.read<AuthCubit>().login(passcode);
       }
     }
 
@@ -209,15 +208,3 @@ class LoginPasscodeFooter extends StatelessWidget {
         });
   }
 }
-
-
-
-
-// if (_formKey.currentState!.validate()) {
-//   _formKey.currentState!.save();
-//   String phoneNumber = phoneController.text;
-
-//   log("Phone number: $phoneNumber");
-
-//   context.read<AuthCubit>().login(phoneNumber);
-// }

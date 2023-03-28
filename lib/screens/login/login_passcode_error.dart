@@ -15,16 +15,12 @@ class LoginPasscodeErrorScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var authenticationError =
-        context.read<AuthCubit>().state.authenticationError;
-
     return Screen(
       title: "Login",
       hideBottomNavbar: true,
       child: Column(
         children: [
-          Text(
-              "Error: ${authenticationError?.error} for username ${authenticationError?.username}"),
+          Text("Error:  for username "),
           PlatformTextButton(
             child: const Text("Go to landing page"),
             onPressed: () {

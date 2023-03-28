@@ -3,6 +3,9 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:solarisdemo/cubits/login_cubit/login_cubit.dart';
+import 'package:solarisdemo/screens/login/login_passcode.dart';
+import 'package:solarisdemo/services/auth_service.dart';
 import '../../widgets/button.dart';
 import '../../widgets/screen.dart';
 
@@ -15,12 +18,40 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AuthCubit authCubit = context.read<AuthCubit>();
+    final AuthService authService = AuthService(context: context);
 
-    return const Screen(
+    Screen loginOptionsScreen = const Screen(
       title: "Login",
       hideBottomNavbar: true,
       child: LoginOptions(),
     );
+
+    return BlocProvider(
+        create: (context) => LoginCubit(
+              authCubit: authCubit,
+              authService: authService,
+            ),
+        child: BlocBuilder<LoginCubit, LoginState>(
+          builder: (context, state) {
+            if (state is LoginInitial) {
+              return loginOptionsScreen;
+            }
+
+            if (state is LoginLoading) {
+              return const LoadingScreen(title: "Login");
+            }
+
+            if (state is LoginError) {
+              return ErrorScreen(message: state.message);
+            }
+
+            if (state is LoginEmail || state is LoginPhoneNumber) {
+              return const LoginPasscodeScreen();
+            }
+
+            return const ErrorScreen();
+          },
+        ));
   }
 }
 
@@ -140,9 +171,7 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
                         _formKey.currentState!.save();
                         String phoneNumber = phoneController.text;
 
-                        context
-                            .read<AuthCubit>()
-                            .loginWithPhoneNumber(phoneNumber);
+                        context.read<LoginCubit>().setPhoneNumber(phoneNumber);
                       }
                     },
                   ),
@@ -212,7 +241,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                         _formKey.currentState!.save();
                         String emailAddress = emailInputController.text;
 
-                        context.read<AuthCubit>().loginWithEmail(emailAddress);
+                        context.read<LoginCubit>().setEmail(emailAddress);
                       }
                     },
                   ),
