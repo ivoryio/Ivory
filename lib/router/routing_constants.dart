@@ -1,9 +1,3 @@
-const splashScreenRoute = _Route(
-  name: 'splash',
-  path: '/splash',
-  title: 'Splash',
-);
-
 const landingRoute = _Route(
   name: 'landing',
   path: '/',

@@ -12,7 +12,6 @@ import 'routing_constants.dart';
 import '../screens/home/home_screen.dart';
 import '../screens/login/login_screen.dart';
 import '../cubits/auth_cubit/auth_cubit.dart';
-import '../screens/splash/splash_screen.dart';
 import '../screens/wallet_screen/wallet_screen.dart';
 import '../screens/transactions/transactions_screen.dart';
 
@@ -25,16 +24,9 @@ class AppRouter {
 
   late final router = GoRouter(
       navigatorKey: _rootNavigatorKey,
-      initialLocation: splashScreenRoute.path,
+      initialLocation: landingRoute.path,
       debugLogDiagnostics: true,
       routes: [
-        GoRoute(
-          path: splashScreenRoute.path,
-          name: splashScreenRoute.name,
-          builder: (BuildContext context, GoRouterState state) {
-            return const SplashScreen();
-          },
-        ),
         GoRoute(
             path: landingRoute.path,
             name: landingRoute.name,
