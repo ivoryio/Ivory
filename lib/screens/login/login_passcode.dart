@@ -126,12 +126,30 @@ class _LoginPasscodeBodyState extends State<LoginPasscodeBody> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                InputCodeBox(controller: inputBox1, focusNode: inputBox1Focus),
-                InputCodeBox(controller: inputBox2, focusNode: inputBox2Focus),
-                InputCodeBox(controller: inputBox3, focusNode: inputBox3Focus),
-                InputCodeBox(controller: inputBox4, focusNode: inputBox4Focus),
-                InputCodeBox(controller: inputBox5, focusNode: inputBox5Focus),
-                InputCodeBox(controller: inputBox6, focusNode: inputBox6Focus),
+                InputCodeBox(
+                    controller: inputBox1,
+                    focusNode: inputBox1Focus,
+                    obscureText: true),
+                InputCodeBox(
+                    controller: inputBox2,
+                    focusNode: inputBox2Focus,
+                    obscureText: true),
+                InputCodeBox(
+                    controller: inputBox3,
+                    focusNode: inputBox3Focus,
+                    obscureText: true),
+                InputCodeBox(
+                    controller: inputBox4,
+                    focusNode: inputBox4Focus,
+                    obscureText: true),
+                InputCodeBox(
+                    controller: inputBox5,
+                    focusNode: inputBox5Focus,
+                    obscureText: true),
+                InputCodeBox(
+                    controller: inputBox6,
+                    focusNode: inputBox6Focus,
+                    obscureText: true),
               ],
             ),
           ),
@@ -142,6 +160,7 @@ class _LoginPasscodeBodyState extends State<LoginPasscodeBody> {
 }
 
 class InputCodeBox extends StatelessWidget {
+  final bool? obscureText;
   final FocusNode? focusNode;
   final TextEditingController? controller;
 
@@ -149,6 +168,7 @@ class InputCodeBox extends StatelessWidget {
     super.key,
     this.controller,
     this.focusNode,
+    this.obscureText = false,
   });
 
   @override
@@ -166,6 +186,7 @@ class InputCodeBox extends StatelessWidget {
         focusNode: focusNode,
         controller: controller,
         textAlign: TextAlign.center,
+        obscureText: obscureText,
         keyboardType: TextInputType.number,
         inputFormatters: [
           FilteringTextInputFormatter.digitsOnly,
