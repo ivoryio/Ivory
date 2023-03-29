@@ -18,8 +18,8 @@ class TransactionList extends StatelessWidget {
   Widget build(BuildContext context) {
     User user = context.read<AuthCubit>().state.user!;
 
-    return BlocProvider(
-      create: (context) => TransactionListCubit(
+    return BlocProvider<TransactionListCubit>.value(
+      value: TransactionListCubit(
         transactionService: TransactionService(user: user),
       )..getTransactions(),
       child: BlocBuilder<TransactionListCubit, TransactionListState>(

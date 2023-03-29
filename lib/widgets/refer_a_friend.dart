@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -85,7 +87,7 @@ class ReferAFriend extends StatelessWidget {
                         children: [
                           PlatformIconButton(
                               onPressed: () {
-                                print("copy refer a friend code");
+                                log("copy refer a friend code");
                               },
                               padding: EdgeInsets.zero,
                               icon: const Icon(

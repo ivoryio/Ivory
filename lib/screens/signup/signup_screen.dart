@@ -1,18 +1,16 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
-import '../../screens/signup/confirm_token.dart';
 
+import 'setup_passcode.dart';
+import '../../widgets/button.dart';
+import '../../widgets/screen.dart';
+import '../../utilities/validator.dart';
 import '../../router/routing_constants.dart';
 import '../../cubits/signup/signup_cubit.dart';
-import '../../utilities/validator.dart';
-import '../../widgets/button.dart';
 import '../../widgets/platform_text_input.dart';
-import '../../widgets/screen.dart';
-import 'setup_passcode.dart';
+import '../../screens/signup/confirm_token.dart';
 
 class SignupScreen extends StatelessWidget {
   const SignupScreen({super.key});
@@ -48,7 +46,7 @@ class SignupScreen extends StatelessWidget {
           );
         }
 
-        return ErrorScreen();
+        return const ErrorScreen();
       }),
     );
   }

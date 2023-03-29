@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../widgets/button.dart';
@@ -13,7 +11,7 @@ class SignupSetupPasscodeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var previousState = context.read<SignupCubit>().state;
+    SignupState previousState = context.read<SignupCubit>().state;
     String email = previousState.email!;
     String firstName = previousState.firstName!;
     String lastName = previousState.lastName!;
