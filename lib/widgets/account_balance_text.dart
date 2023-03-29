@@ -12,11 +12,13 @@ class AccountBalanceText extends StatelessWidget {
     color: Colors.black,
     fontSize: 24,
     fontWeight: FontWeight.w600,
+    fontFamily: "Proxima Nova",
   );
   final TextStyle defaultCentsStyle = const TextStyle(
     color: Colors.black,
     fontSize: 16,
     fontWeight: FontWeight.w600,
+    fontFamily: "Proxima Nova",
   );
   const AccountBalanceText({
     super.key,

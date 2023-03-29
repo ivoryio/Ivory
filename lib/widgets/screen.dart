@@ -37,8 +37,10 @@ class Screen extends StatelessWidget {
             trailingActions: trailingActions,
           );
 
+    int currentPageIndex = AppRouter.calculateSelectedIndex(context);
+
     PlatformTabController tabController = PlatformTabController(
-      initialIndex: AppRouter.calculateSelectedIndex(context),
+      initialIndex: currentPageIndex,
     );
 
     if (hideBottomNavbar) {
@@ -55,7 +57,21 @@ class Screen extends StatelessWidget {
       tabController: tabController,
       iosContentBottomPadding: true,
       appBarBuilder: (context, index) => appBar,
-      itemChanged: (pageIndex) => AppRouter.navigateToPage(pageIndex, context),
+      itemChanged: (pageIndex) {
+        if (currentPageIndex != pageIndex) {
+          AppRouter.navigateToPage(pageIndex, context);
+        }
+      },
+      materialTabs: (context, platform) => MaterialNavBarData(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.white,
+        elevation: 0,
+      ),
+      cupertinoTabs: (context, platform) => CupertinoTabBarData(
+        backgroundColor: Colors.white,
+        activeColor: Colors.black,
+        inactiveColor: Colors.grey,
+      ),
       items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
