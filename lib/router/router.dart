@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import 'routing_constants.dart';
 import '../screens/home/home_screen.dart';
 import '../screens/login/login_screen.dart';
-import '../screens/login/login_passcode.dart';
 import '../screens/signup/signup_screen.dart';
 import '../cubits/auth_cubit/auth_cubit.dart';
 import '../screens/landing/landing_screen.dart';
@@ -37,13 +36,6 @@ class AppRouter {
           name: loginRoute.name,
           builder: (BuildContext context, GoRouterState state) {
             return const LoginScreen();
-          },
-        ),
-        GoRoute(
-          path: loginPasscodeRoute.path,
-          name: loginPasscodeRoute.name,
-          builder: (BuildContext context, GoRouterState state) {
-            return const LoginPasscodeScreen();
           },
         ),
         GoRoute(

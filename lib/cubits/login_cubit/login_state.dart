@@ -1,10 +1,19 @@
 part of 'login_cubit.dart';
 
 abstract class LoginState extends Equatable {
+  final User? user;
   final String? email;
+  final String? password;
   final String? phoneNumber;
+  final String? tan;
 
-  const LoginState({this.email, this.phoneNumber});
+  const LoginState({
+    this.tan,
+    this.user,
+    this.email,
+    this.password,
+    this.phoneNumber,
+  });
 
   @override
   List<Object> get props => [];
@@ -13,15 +22,23 @@ abstract class LoginState extends Equatable {
 class LoginInitial extends LoginState {}
 
 class LoginLoading extends LoginState {
-  const LoginLoading({super.email, super.phoneNumber});
+  const LoginLoading({
+    super.tan,
+    super.user,
+    super.email,
+    super.password,
+    super.phoneNumber,
+  });
 }
 
-class LoginEmail extends LoginState {
-  const LoginEmail({super.email});
-}
-
-class LoginPhoneNumber extends LoginState {
-  const LoginPhoneNumber({super.phoneNumber});
+class LoginUserExists extends LoginState {
+  const LoginUserExists({
+    super.tan,
+    super.user,
+    super.email,
+    super.password,
+    super.phoneNumber,
+  });
 }
 
 class LoginError extends LoginState {

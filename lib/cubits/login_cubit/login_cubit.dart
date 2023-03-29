@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -17,23 +19,29 @@ class LoginCubit extends Cubit<LoginState> {
     required this.authService,
   }) : super(LoginInitial());
 
-  void setEmail(String email) {
-    emit(LoginEmail(email: email));
-  }
+  void setCredentials({
+    String? email,
+    String? phoneNumber,
+    required String password,
+  }) async {
+    emit(LoginLoading(
+      email: email,
+      phoneNumber: phoneNumber,
+      password: password,
+    ));
+    log('setCredentials: $email, $phoneNumber, $password');
 
-  void setPhoneNumber(String phoneNumber) {
-    emit(LoginPhoneNumber(phoneNumber: phoneNumber));
-  }
-
-  void login(String passcode) async {
     String username = state.email ?? state.phoneNumber!;
-
-    emit(LoginLoading(email: state.email, phoneNumber: state.phoneNumber));
     try {
-      User? user = await authService.login(username, passcode);
+      User? user = await authService.login(username, password);
 
       if (user != null) {
-        authCubit.login(user);
+        emit(LoginUserExists(
+          email: email,
+          phoneNumber: phoneNumber,
+          password: password,
+          user: user,
+        ));
       }
     } on CognitoUserNewPasswordRequiredException catch (e) {
       // handle New Password challenge
@@ -49,7 +57,7 @@ class LoginCubit extends Cubit<LoginState> {
       // handle CUSTOM_CHALLENGE challenge
     } on CognitoUserConfirmationNecessaryException catch (e) {
       // handle User Confirmation Necessary
-    } on CognitoClientException catch (e) {
+    } on CognitoClientException catch (_) {
       // handle Wrong Username and Password and Cognito Client
       emit(
         const LoginError(message: LoginErrorMessage.wrongUsernameOrPassword),
@@ -58,9 +66,36 @@ class LoginCubit extends Cubit<LoginState> {
       emit(const LoginError(message: LoginErrorMessage.unknownError));
     }
   }
+
+  void login(String tan) async {
+    if (state.user == null) {
+      emit(const LoginError(message: LoginErrorMessage.unknownError));
+    }
+
+    emit(
+      LoginLoading(
+          tan: tan,
+          email: state.email,
+          phoneNumber: state.phoneNumber,
+          password: state.password,
+          user: state.user),
+    );
+
+    // Wait 1s to simulate tan verification
+    await Future.delayed(const Duration(seconds: 1));
+
+    // Simulate wrong tan verification (input '1111')
+    if (tan == '1111') {
+      emit(const LoginError(message: LoginErrorMessage.wrongTan));
+      return;
+    }
+
+    authCubit.login(state.user!);
+  }
 }
 
 class LoginErrorMessage {
-  static const wrongUsernameOrPassword = "Wrong username or password";
+  static const wrongTan = "Wrong TAN";
   static const unknownError = "Unknown error";
+  static const wrongUsernameOrPassword = "Wrong username or password";
 }

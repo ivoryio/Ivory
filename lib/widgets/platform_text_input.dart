@@ -4,21 +4,23 @@ import 'package:flutter/services.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class PlatformTextInput extends StatefulWidget {
-  final TextEditingController? controller;
   final String textLabel;
   final String? hintText;
-  final TextInputType? keyboardType;
+  final bool? obscureText;
   final Function validator;
   final Function? onChanged;
+  final TextInputType? keyboardType;
+  final TextEditingController? controller;
 
   const PlatformTextInput({
     super.key,
+    this.hintText,
+    this.onChanged,
     this.controller,
+    this.keyboardType,
     required this.textLabel,
     required this.validator,
-    this.hintText,
-    this.keyboardType,
-    this.onChanged,
+    this.obscureText = false,
   });
 
   @override
@@ -58,9 +60,10 @@ class _PlatformTextInputState extends State<PlatformTextInput> {
             },
             hintText: widget.hintText ?? "",
             keyboardType: widget.keyboardType,
+            obscureText: widget.obscureText,
             inputFormatters: [
               if (widget.keyboardType == TextInputType.phone)
-                FilteringTextInputFormatter.digitsOnly
+                FilteringTextInputFormatter.digitsOnly,
             ],
             onChanged: (value) =>
                 {if (widget.onChanged != null) widget.onChanged!(value)},

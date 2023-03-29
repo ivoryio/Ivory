@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'login_passcode.dart';
+import 'login_tan_screen.dart';
 import 'login_passcode_error.dart';
 import '../../widgets/button.dart';
 import '../../widgets/screen.dart';
@@ -19,12 +19,6 @@ class LoginScreen extends StatelessWidget {
     final AuthCubit authCubit = context.read<AuthCubit>();
     final AuthService authService = AuthService(context: context);
 
-    Screen loginOptionsScreen = const Screen(
-      title: "Login",
-      hideBottomNavbar: true,
-      child: LoginOptions(),
-    );
-
     return BlocProvider(
         create: (context) => LoginCubit(
               authCubit: authCubit,
@@ -33,7 +27,11 @@ class LoginScreen extends StatelessWidget {
         child: BlocBuilder<LoginCubit, LoginState>(
           builder: (context, state) {
             if (state is LoginInitial) {
-              return loginOptionsScreen;
+              return const Screen(
+                title: "Login",
+                hideBottomNavbar: true,
+                child: LoginOptions(),
+              );
             }
 
             if (state is LoginLoading) {
@@ -44,8 +42,8 @@ class LoginScreen extends StatelessWidget {
               return LoginPasscodeErrorScreen(message: state.message);
             }
 
-            if (state is LoginEmail || state is LoginPhoneNumber) {
-              return const LoginPasscodeScreen();
+            if (state is LoginUserExists) {
+              return const LoginTanScreen();
             }
 
             return const ErrorScreen();
@@ -127,6 +125,7 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
   @override
   Widget build(BuildContext context) {
     TextEditingController phoneController = TextEditingController();
+    TextEditingController passwordInputController = TextEditingController();
 
     return Form(
       key: _formKey,
@@ -136,17 +135,33 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            PlatformTextInput(
-              controller: phoneController,
-              textLabel: "Phone number",
-              hintText: "e.g 555 555 555",
-              keyboardType: TextInputType.phone,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter your phone number';
-                }
-                return null;
-              },
+            Column(
+              children: [
+                PlatformTextInput(
+                  controller: phoneController,
+                  textLabel: "Phone number",
+                  hintText: "e.g 555 555 555",
+                  keyboardType: TextInputType.phone,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your phone number';
+                    }
+                    return null;
+                  },
+                ),
+                PlatformTextInput(
+                  controller: passwordInputController,
+                  textLabel: "Password",
+                  hintText: "",
+                  obscureText: true,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your password';
+                    }
+                    return null;
+                  },
+                ),
+              ],
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -169,8 +184,12 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
                         String phoneNumber = phoneController.text;
+                        String password = passwordInputController.text;
 
-                        context.read<LoginCubit>().setPhoneNumber(phoneNumber);
+                        context.read<LoginCubit>().setCredentials(
+                              phoneNumber: phoneNumber,
+                              password: password,
+                            );
                       }
                     },
                   ),
@@ -197,6 +216,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
   @override
   Widget build(BuildContext context) {
     TextEditingController emailInputController = TextEditingController();
+    TextEditingController passwordInputController = TextEditingController();
 
     return Form(
       key: _formKey,
@@ -206,17 +226,33 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            PlatformTextInput(
-              controller: emailInputController,
-              textLabel: "Email Address",
-              hintText: "e.g john.doe@gmail.com",
-              keyboardType: TextInputType.emailAddress,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter your email address';
-                }
-                return null;
-              },
+            Column(
+              children: [
+                PlatformTextInput(
+                  controller: emailInputController,
+                  textLabel: "Email Address",
+                  hintText: "e.g john.doe@gmail.com",
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your email address';
+                    }
+                    return null;
+                  },
+                ),
+                PlatformTextInput(
+                  controller: passwordInputController,
+                  textLabel: "Password",
+                  hintText: "",
+                  obscureText: true,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your password';
+                    }
+                    return null;
+                  },
+                ),
+              ],
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -239,8 +275,12 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
                         String emailAddress = emailInputController.text;
+                        String password = passwordInputController.text;
 
-                        context.read<LoginCubit>().setEmail(emailAddress);
+                        context.read<LoginCubit>().setCredentials(
+                              email: emailAddress,
+                              password: password,
+                            );
                       }
                     },
                   ),
