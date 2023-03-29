@@ -1,12 +1,7 @@
-import 'dart:developer';
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import '../../models/user.dart';
-import '../../widgets/overlay_loading.dart';
 
-import '../../models/oauth_model.dart';
+import '../../models/user.dart';
 import '../../services/auth_service.dart';
 
 part 'auth_state.dart';
@@ -16,6 +11,10 @@ class AuthCubit extends Cubit<AuthState> {
 
   AuthCubit({required this.authService})
       : super(const AuthState.unauthenticated());
+
+  void login(User user) {
+    emit(AuthState.authenticated(user));
+  }
 
   void logout() {
     emit(const AuthState.unauthenticated());

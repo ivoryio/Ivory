@@ -1,16 +1,15 @@
-import 'dart:developer';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:solarisdemo/cubits/login_cubit/login_cubit.dart';
-import 'package:solarisdemo/screens/login/login_passcode.dart';
-import 'package:solarisdemo/services/auth_service.dart';
+
+import 'login_passcode.dart';
+import 'login_passcode_error.dart';
 import '../../widgets/button.dart';
 import '../../widgets/screen.dart';
-
-import '../../cubits/auth_cubit/auth_cubit.dart';
+import '../../services/auth_service.dart';
 import '../../widgets/platform_text_input.dart';
+import '../../cubits/auth_cubit/auth_cubit.dart';
+import '../../cubits/login_cubit/login_cubit.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -42,7 +41,7 @@ class LoginScreen extends StatelessWidget {
             }
 
             if (state is LoginError) {
-              return ErrorScreen(message: state.message);
+              return LoginPasscodeErrorScreen(message: state.message);
             }
 
             if (state is LoginEmail || state is LoginPhoneNumber) {

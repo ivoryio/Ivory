@@ -48,13 +48,6 @@ class AppRouter {
           },
         ),
         GoRoute(
-          path: loginPasscodeErrorRoute.path,
-          name: loginPasscodeErrorRoute.name,
-          builder: (BuildContext context, GoRouterState state) {
-            return const LoginPasscodeErrorScreen();
-          },
-        ),
-        GoRoute(
           path: signupRoute.path,
           name: signupRoute.name,
           builder: (BuildContext context, GoRouterState state) {

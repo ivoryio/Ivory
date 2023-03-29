@@ -27,5 +27,9 @@ class LoginPhoneNumber extends LoginState {
 class LoginError extends LoginState {
   final String message;
 
-  const LoginError({super.email, super.phoneNumber, required this.message});
+  const LoginError({
+    super.email,
+    super.phoneNumber,
+    required this.message,
+  });
 }

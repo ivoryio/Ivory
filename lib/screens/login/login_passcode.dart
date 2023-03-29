@@ -5,8 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
-import '../../cubits/login_cubit/login_cubit.dart';
 import '../../widgets/screen.dart';
+import '../../cubits/login_cubit/login_cubit.dart';
 
 class LoginPasscodeScreen extends StatelessWidget {
   const LoginPasscodeScreen({super.key});

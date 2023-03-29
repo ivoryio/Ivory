@@ -6,23 +6,23 @@ import 'bottom_navbar.dart';
 class Screen extends StatelessWidget {
   final Widget child;
   final String title;
-  final bool hideBottomNavbar;
   final bool hideAppBar;
-  final List<Widget>? trailingActions;
-  final bool? hideBackButton;
   final Color? appBarColor;
+  final bool? hideBackButton;
+  final bool hideBottomNavbar;
   final TextStyle? titleTextStyle;
+  final List<Widget>? trailingActions;
 
   const Screen({
     super.key,
+    this.appBarColor,
     required this.child,
     required this.title,
-    this.hideBottomNavbar = false,
-    this.hideAppBar = false,
-    this.trailingActions,
-    this.hideBackButton = false,
-    this.appBarColor,
     this.titleTextStyle,
+    this.trailingActions,
+    this.hideAppBar = false,
+    this.hideBackButton = false,
+    this.hideBottomNavbar = false,
   });
 
   @override
@@ -34,17 +34,17 @@ class Screen extends StatelessWidget {
         ? null
         : createAppBar(
             title,
-            trailingActions: trailingActions,
-            hideBackButton: hideBackButton,
             backgroundColor: appBarColor,
+            hideBackButton: hideBackButton,
             titleTextStyle: titleTextStyle,
+            trailingActions: trailingActions,
           );
 
     return PlatformScaffold(
-      iosContentBottomPadding: true,
-      iosContentPadding: true,
       appBar: appBar,
+      iosContentPadding: true,
       bottomNavBar: bottomNavBar,
+      iosContentBottomPadding: true,
       body: child,
     );
   }
@@ -57,9 +57,9 @@ class LoadingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PlatformScaffold(
-      iosContentBottomPadding: true,
       iosContentPadding: true,
       appBar: createAppBar(title!),
+      iosContentBottomPadding: true,
       body: Center(
         child: PlatformCircularProgressIndicator(),
       ),
@@ -78,9 +78,9 @@ class ErrorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PlatformScaffold(
-      iosContentBottomPadding: true,
       iosContentPadding: true,
       appBar: createAppBar(title!),
+      iosContentBottomPadding: true,
       body: Text(message!),
     );
   }
@@ -88,24 +88,24 @@ class ErrorScreen extends StatelessWidget {
 
 PlatformAppBar createAppBar(
   String title, {
-  List<Widget>? trailingActions,
   bool? hideBackButton,
-  Color? backgroundColor = Colors.white,
   TextStyle? titleTextStyle,
+  List<Widget>? trailingActions,
+  Color? backgroundColor = Colors.white,
 }) {
   return PlatformAppBar(
     title: Text(
       title,
       style: titleTextStyle,
     ),
+    backgroundColor: backgroundColor,
+    trailingActions: trailingActions,
     material: (context, platform) => MaterialAppBarData(
       elevation: 0,
     ),
     cupertino: (context, platform) => CupertinoNavigationBarData(
       border: Border.all(color: Colors.transparent),
     ),
-    backgroundColor: backgroundColor,
-    trailingActions: trailingActions,
     automaticallyImplyLeading: hideBackButton == true ? false : true,
   );
 }
