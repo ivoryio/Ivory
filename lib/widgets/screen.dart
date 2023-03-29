@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
-import 'bottom_navbar.dart';
+import '../router/router.dart';
 
 class Screen extends StatelessWidget {
   final Widget child;
@@ -40,12 +40,44 @@ class Screen extends StatelessWidget {
             trailingActions: trailingActions,
           );
 
-    return PlatformScaffold(
-      appBar: appBar,
+    PlatformTabController tabController = PlatformTabController(
+      initialIndex: AppRouter.calculateSelectedIndex(context),
+    );
+
+    if (hideBottomNavbar) {
+      return PlatformScaffold(
+        appBar: appBar,
+        iosContentPadding: true,
+        bottomNavBar: bottomNavBar,
+        iosContentBottomPadding: true,
+        body: child,
+      );
+    }
+
+    return PlatformTabScaffold(
+      tabController: tabController,
       iosContentPadding: true,
-      bottomNavBar: bottomNavBar,
       iosContentBottomPadding: true,
-      body: child,
+      appBarBuilder: (context, index) => appBar,
+      items: const [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          label: 'Home',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.add_card),
+          label: 'Wallet',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.payments),
+          label: 'Transactions',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person),
+          label: 'Profile',
+        ),
+      ],
+      bodyBuilder: (context, index) => child,
     );
   }
 }
@@ -107,5 +139,47 @@ PlatformAppBar createAppBar(
       border: Border.all(color: Colors.transparent),
     ),
     automaticallyImplyLeading: hideBackButton == true ? false : true,
+  );
+}
+
+PlatformNavBar createBottomNavbar(BuildContext context) {
+  var currentPageIndex = AppRouter.calculateSelectedIndex(context);
+
+  return PlatformNavBar(
+    material: (context, platform) => MaterialNavBarData(
+      type: BottomNavigationBarType.fixed,
+      showUnselectedLabels: true,
+      selectedItemColor: Colors.black,
+    ),
+    cupertino: (context, platform) => CupertinoTabBarData(
+      backgroundColor: Colors.white,
+      activeColor: Colors.black,
+    ),
+    currentIndex: currentPageIndex,
+    itemChanged: (pageIndex) {
+      if (pageIndex == currentPageIndex) {
+        return;
+      }
+
+      AppRouter.navigateToPage(pageIndex, context);
+    },
+    items: const [
+      BottomNavigationBarItem(
+        icon: Icon(Icons.home),
+        label: 'Home',
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.add_card),
+        label: 'Wallet',
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.payments),
+        label: 'Transactions',
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.person),
+        label: 'Profile',
+      ),
+    ],
   );
 }
