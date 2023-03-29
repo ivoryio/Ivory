@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';

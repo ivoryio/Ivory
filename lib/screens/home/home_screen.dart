@@ -2,19 +2,18 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:solarisdemo/models/person_account_summary.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:solarisdemo/widgets/screen.dart';
 
 import '../../models/user.dart';
+import '../../widgets/screen.dart';
 import '../../utilities/format.dart';
 import '../../widgets/analytics.dart';
-import '../../widgets/bottom_navbar.dart';
 import '../../widgets/refer_a_friend.dart';
 import '../../services/person_service.dart';
 import '../../widgets/transaction_list.dart';
 import '../../widgets/account_balance_text.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
+import '../../models/person_account_summary.dart';
 import '../../cubits/account_summary_cubit/account_summary_cubit.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -125,13 +124,13 @@ class HomePageHeader extends StatelessWidget {
                     income: state.data?.income,
                     spending: state.data?.spending,
                   ),
-                  AccountOptions(),
+                  const AccountOptions(),
                 ],
               ),
             );
           }
 
-          return Text("Could not load account summary");
+          return const Text("Could not load account summary");
         },
       ),
     );
@@ -290,22 +289,22 @@ class AccountOptions extends StatelessWidget {
           AccountOptionsButton(
             textLabel: "Top up",
             icon: Icons.add_card,
-            onPressed: () => print("Top up"),
+            onPressed: () => log("Top up"),
           ),
           AccountOptionsButton(
             textLabel: "Send",
             icon: Icons.compare_arrows,
-            onPressed: () => print("Send"),
+            onPressed: () => log("Send"),
           ),
           AccountOptionsButton(
             textLabel: "Request",
             icon: Icons.receipt_long,
-            onPressed: () => print("Request"),
+            onPressed: () => log("Request"),
           ),
           AccountOptionsButton(
             textLabel: "Acc. details",
             icon: Icons.info,
-            onPressed: () => print("Acc. details"),
+            onPressed: () => log("Acc. details"),
           ),
         ],
       ),

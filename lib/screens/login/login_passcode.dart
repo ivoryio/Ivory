@@ -204,7 +204,7 @@ class LoginPasscodeFooter extends StatelessWidget {
     return PlatformTextButton(
         child: const Text("Forgot your passcode?"),
         onPressed: () {
-          print("Forgot your passcode?");
+          log("Forgot your passcode?");
         });
   }
 }

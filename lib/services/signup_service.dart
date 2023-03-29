@@ -49,7 +49,7 @@ class SignupService {
 
       bool confirmed = await user.confirmRegistration(token);
 
-      print("Confirmed: $confirmed");
+      log("Confirmed: $confirmed");
     } catch (e) {
       inspect(e);
     }

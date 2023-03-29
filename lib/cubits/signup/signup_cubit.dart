@@ -8,7 +8,7 @@ part 'signup_state.dart';
 class SignupCubit extends Cubit<SignupState> {
   SignupService signupService = SignupService();
 
-  SignupCubit() : super(SignupInitial());
+  SignupCubit() : super(const SignupInitial());
 
   Future<void> setBasicInfo({
     required String email,

@@ -151,8 +151,10 @@ class TabExpandedButton extends StatelessWidget {
         text: text,
         padding: EdgeInsets.zero,
         color: active ? Colors.white : Colors.transparent,
-        textColor: Color(0xff020202),
-        border: active ? Border.all(width: 1, color: Color(0xffB9B9B9)) : null,
+        textColor: const Color(0xff020202),
+        border: active
+            ? Border.all(width: 1, color: const Color(0xffB9B9B9))
+            : null,
         onPressed: () {
           onPressed();
         },

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:solarisdemo/models/person_account_summary.dart';
 
 import 'api_service.dart';
