@@ -27,9 +27,6 @@ class Screen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PlatformNavBar? bottomNavBar =
-        hideBottomNavbar == true ? null : createBottomNavbar(context);
-
     PlatformAppBar? appBar = hideAppBar == true
         ? null
         : createAppBar(
@@ -48,17 +45,17 @@ class Screen extends StatelessWidget {
       return PlatformScaffold(
         appBar: appBar,
         iosContentPadding: true,
-        bottomNavBar: bottomNavBar,
         iosContentBottomPadding: true,
         body: child,
       );
     }
 
     return PlatformTabScaffold(
-      tabController: tabController,
       iosContentPadding: true,
+      tabController: tabController,
       iosContentBottomPadding: true,
       appBarBuilder: (context, index) => appBar,
+      itemChanged: (pageIndex) => AppRouter.navigateToPage(pageIndex, context),
       items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
@@ -139,47 +136,5 @@ PlatformAppBar createAppBar(
       border: Border.all(color: Colors.transparent),
     ),
     automaticallyImplyLeading: hideBackButton == true ? false : true,
-  );
-}
-
-PlatformNavBar createBottomNavbar(BuildContext context) {
-  var currentPageIndex = AppRouter.calculateSelectedIndex(context);
-
-  return PlatformNavBar(
-    material: (context, platform) => MaterialNavBarData(
-      type: BottomNavigationBarType.fixed,
-      showUnselectedLabels: true,
-      selectedItemColor: Colors.black,
-    ),
-    cupertino: (context, platform) => CupertinoTabBarData(
-      backgroundColor: Colors.white,
-      activeColor: Colors.black,
-    ),
-    currentIndex: currentPageIndex,
-    itemChanged: (pageIndex) {
-      if (pageIndex == currentPageIndex) {
-        return;
-      }
-
-      AppRouter.navigateToPage(pageIndex, context);
-    },
-    items: const [
-      BottomNavigationBarItem(
-        icon: Icon(Icons.home),
-        label: 'Home',
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.add_card),
-        label: 'Wallet',
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.payments),
-        label: 'Transactions',
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.person),
-        label: 'Profile',
-      ),
-    ],
   );
 }
