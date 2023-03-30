@@ -4,7 +4,7 @@ class Format {
   static String euro(num number, {int digits = 2}) {
     return NumberFormat.currency(
       locale: "en_US",
-      symbol: "€ ",
+      symbol: " € ",
       decimalDigits: digits,
     ).format(number);
   }

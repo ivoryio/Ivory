@@ -79,10 +79,10 @@ class HomePageHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     User user = context.read<AuthCubit>().state.user!;
-    return BlocProvider(
-      create: (context) =>
-          AccountSummaryCubit(personService: PersonService(user: user))
-            ..getAccountSummary(),
+
+    return BlocProvider<AccountSummaryCubit>.value(
+      value: AccountSummaryCubit(personService: PersonService(user: user))
+        ..getAccountSummary(),
       child: BlocBuilder<AccountSummaryCubit, AccountSummaryCubitState>(
         builder: (context, state) {
           if (state is AccountSummaryCubitLoading) {
@@ -206,7 +206,7 @@ class AccountBalance extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 AccountBalanceText(
-                  value: value,
+                  value: value / 100,
                   numberStyle: const TextStyle(color: Colors.white),
                   centsStyle: const TextStyle(color: Colors.white),
                 ),

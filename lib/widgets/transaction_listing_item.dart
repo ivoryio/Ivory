@@ -47,7 +47,10 @@ class TransactionListItem extends StatelessWidget {
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(description,
+                            Text(
+                                description.isNotEmpty
+                                    ? description
+                                    : 'Transaction',
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 16,
@@ -63,6 +66,7 @@ class TransactionListItem extends StatelessWidget {
                   ],
                 ),
                 TextCurrencyValue(
+                    digits: 0,
                     value: amount,
                     style: const TextStyle(
                       fontWeight: FontWeight.w600,
