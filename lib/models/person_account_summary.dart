@@ -145,7 +145,7 @@ class Balance {
   Balance({
     required this.value,
   });
-  late final int value;
+  late final num value;
 
   Balance.fromJson(Map<String, dynamic> json) {
     value = json['value'];
@@ -162,7 +162,7 @@ class AvailableBalance {
   AvailableBalance({
     required this.value,
   });
-  late final double value;
+  late final num value;
 
   AvailableBalance.fromJson(Map<String, dynamic> json) {
     value = json['value'];
