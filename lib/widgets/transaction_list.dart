@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:solarisdemo/models/user.dart';
 
+import '../models/user.dart';
 import 'transaction_listing_item.dart';
 import '../router/routing_constants.dart';
 import '../cubits/auth_cubit/auth_cubit.dart';
@@ -12,7 +12,13 @@ import '../cubits/transaction_list_cubit/transaction_list_cubit.dart';
 
 class TransactionList extends StatelessWidget {
   final bool displayShowAllButton;
-  const TransactionList({super.key, this.displayShowAllButton = true});
+  final TransactionListFilter? filter;
+
+  const TransactionList({
+    super.key,
+    this.displayShowAllButton = true,
+    this.filter,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +27,7 @@ class TransactionList extends StatelessWidget {
     return BlocProvider<TransactionListCubit>.value(
       value: TransactionListCubit(
         transactionService: TransactionService(user: user),
-      )..getTransactions(),
+      )..getTransactions(filter: filter),
       child: BlocBuilder<TransactionListCubit, TransactionListState>(
         builder: (context, state) {
           switch (state.runtimeType) {

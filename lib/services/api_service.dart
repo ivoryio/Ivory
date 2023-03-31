@@ -10,13 +10,15 @@ class ApiService<T> {
 
   ApiService({required this.user});
 
-  Future<T> get(String path) async {
+  Future<T> get(
+    String path, {
+    Map<String, String> queryParameters = const {},
+  }) async {
     try {
-      String url = '${Config.apiBaseUrl}/$path';
       String? accessToken = user.session.getAccessToken().getJwtToken();
 
       final response = await http.get(
-        Uri.parse(url),
+        ApiService.url(path, queryParameters: queryParameters),
         headers: {
           "Authorization": "Bearer $accessToken",
         },
@@ -33,4 +35,12 @@ class ApiService<T> {
   }
 
   post() {}
+
+  static url(String path, {Map<String, String> queryParameters = const {}}) {
+    return Uri.https(
+      Config.apiBaseUrl,
+      path,
+      queryParameters,
+    );
+  }
 }

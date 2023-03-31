@@ -12,11 +12,13 @@ class TransactionListCubit extends Cubit<TransactionListState> {
   TransactionListCubit({required this.transactionService})
       : super(const TransactionListInitial());
 
-  Future<void> getTransactions() async {
+  Future<void> getTransactions({TransactionListFilter? filter}) async {
     try {
       emit(const TransactionListLoading());
+
       List<Transaction>? transactions =
-          await transactionService.getTransactions();
+          await transactionService.getTransactions(filter: filter);
+
       if (transactions is List<Transaction>) {
         emit(TransactionListLoaded(transactions));
       } else {

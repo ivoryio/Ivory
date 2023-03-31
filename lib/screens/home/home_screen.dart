@@ -11,10 +11,13 @@ import '../../widgets/analytics.dart';
 import '../../widgets/refer_a_friend.dart';
 import '../../services/person_service.dart';
 import '../../widgets/transaction_list.dart';
+import '../../services/transaction_service.dart';
 import '../../widgets/account_balance_text.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../models/person_account_summary.dart';
 import '../../cubits/account_summary_cubit/account_summary_cubit.dart';
+
+const _defaultCountTransactionsDisplayed = 3;
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -61,11 +64,15 @@ class HomePageContent extends StatelessWidget {
         padding: const EdgeInsets.only(bottom: 44),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            HomePageHeader(),
-            TransactionList(),
-            Analytics(),
-            ReferAFriend(),
+          children: [
+            const HomePageHeader(),
+            TransactionList(
+              filter: TransactionListFilter(
+                size: _defaultCountTransactionsDisplayed,
+              ),
+            ),
+            const Analytics(),
+            const ReferAFriend(),
           ],
         ),
       ),
