@@ -9,14 +9,17 @@ import '../router/routing_constants.dart';
 import '../cubits/auth_cubit/auth_cubit.dart';
 import '../services/transaction_service.dart';
 import '../cubits/transaction_list_cubit/transaction_list_cubit.dart';
+import '../../widgets/platform_text_input.dart';
 
 class TransactionList extends StatelessWidget {
   final bool displayShowAllButton;
   final TransactionListFilter? filter;
+  final bool searchEnabled;
 
   const TransactionList({
     super.key,
     this.displayShowAllButton = true,
+    this.searchEnabled = false,
     this.filter,
   });
 
@@ -76,6 +79,49 @@ class TransactionList extends StatelessWidget {
                           )
                       ],
                     ),
+                    if (searchEnabled)
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          top: 16.0,
+                          left: 4.0,
+                          right: 4.0,
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: PlatformTextInput(
+                                textLabel: "",
+                                hintText: "Search here...",
+                                icon: Icons.search,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter a search term';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 6.0),
+                              child: Expanded(
+                                child: Container(
+                                  width: 50,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    color: Colors.black,
+                                  ),
+                                  child: PlatformIconButton(
+                                    icon: const Icon(Icons.filter_alt,
+                                        color: Colors.white),
+                                    onPressed: () {},
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ListView.builder(
                         itemCount: transactions.length,
                         shrinkWrap: true,
