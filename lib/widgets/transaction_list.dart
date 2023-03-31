@@ -105,13 +105,14 @@ class TransactionList extends StatelessWidget {
                               padding: const EdgeInsets.only(left: 6.0),
                               child: Expanded(
                                 child: Container(
-                                  width: 50,
-                                  height: 50,
+                                  width: 55,
+                                  height: 55,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(8.0),
                                     color: Colors.black,
                                   ),
                                   child: PlatformIconButton(
+                                    padding: EdgeInsets.zero,
                                     icon: const Icon(Icons.filter_alt,
                                         color: Colors.white),
                                     onPressed: () {},

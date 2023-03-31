@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 import 'package:http/http.dart' as http;
 
 import '../config.dart';
@@ -15,7 +16,7 @@ class ApiService<T> {
     Map<String, String> queryParameters = const {},
   }) async {
     try {
-      String? accessToken = user.session.getAccessToken().getJwtToken();
+      String? accessToken = await this.getAccessToken();
 
       final response = await http.get(
         ApiService.url(path, queryParameters: queryParameters),
@@ -24,11 +25,8 @@ class ApiService<T> {
         },
       );
 
-      if (response.statusCode == 200) {
-        var data = jsonDecode(response.body);
-        return data;
-      }
-      throw Exception('Could not get data');
+      var data = jsonDecode(response.body);
+      return data;
     } catch (e) {
       throw Exception("Could not get data");
     }
@@ -42,5 +40,14 @@ class ApiService<T> {
       path,
       queryParameters,
     );
+  }
+
+  Future<String> getAccessToken() async {
+    if (!user.session.isValid()) {
+      CognitoUserSession? session = await user.cognitoUser.getSession();
+      user.session = session!;
+    }
+
+    return user.session.getAccessToken().jwtToken!;
   }
 }
