@@ -49,18 +49,7 @@ class TransactionList extends StatelessWidget {
               if (transactions.isEmpty) {
                 return const Text("Transaction list is empty");
               }
-              Widget _buildTransactionListview() {
-                if (groupedByMonths) {
-                  return _buildGroupedByMonthsList(
-                    context,
-                    transactions,
-                    displayShowAllButton: displayShowAllButton,
-                    searchEnabled: searchEnabled,
-                  );
-                } else {
-                  return _buildList(context, transactions);
-                }
-              }
+
               return Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20),
@@ -95,11 +84,7 @@ class TransactionList extends StatelessWidget {
                     ),
                     if (searchEnabled)
                       Padding(
-                        padding: const EdgeInsets.only(
-                          top: 16.0,
-                          left: 4.0,
-                          right: 4.0,
-                        ),
+                        padding: const EdgeInsets.only(top: 16),
                         child: Row(
                           children: [
                             Expanded(
@@ -118,8 +103,6 @@ class TransactionList extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.only(left: 6.0),
                               child: Container(
-                                width: 45,
-                                height: 45,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(8.0),
                                   color: Colors.black,
@@ -135,7 +118,9 @@ class TransactionList extends StatelessWidget {
                           ],
                         ),
                       ),
-                    _buildTransactionListview(),
+                    groupedByMonths
+                        ? _buildGroupedByMonthsList(transactions)
+                        : _buildList(context, transactions)
                   ],
                 ),
               );
@@ -152,45 +137,37 @@ class TransactionList extends StatelessWidget {
 String _formatMonthYear(String monthAndYear) {
   var parts = monthAndYear.split('/');
   var year = DateTime.now().year == int.parse(parts[1]) ? '' : parts[1];
-  var month = parts[0];
-  switch (month) {
-    case '1':
-      return 'January $year';
-    case '2':
-      return 'February $year';
-    case '3':
-      return 'March $year';
-    case '4':
-      return 'April $year';
-    case '5':
-      return 'May $year';
-    case '6':
-      return 'June $year';
-    case '7':
-      return 'July $year';
-    case '8':
-      return 'August $year';
-    case '9':
-      return 'September $year';
-    case '10':
-      return 'October $year';
-    case '11':
-      return 'November $year';
-    case '12':
-      return 'December $year';
-    default:
-      return '';
-  }
+  String months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ][int.parse(parts[0]) - 1];
+
+  return '$months $year';
 }
 
 Widget _buildList(
   BuildContext context,
   List<Transaction> transactions,
 ) {
-  return ListView.builder(
+  return ListView.separated(
       itemCount: transactions.length,
       shrinkWrap: true,
       physics: const ClampingScrollPhysics(),
+      separatorBuilder: (context, index) {
+        return const Divider(
+          height: 10,
+        );
+      },
       padding: EdgeInsets.zero,
       itemBuilder: (context, index) {
         return TransactionListItem(
@@ -199,11 +176,10 @@ Widget _buildList(
       });
 }
 
-Widget _buildGroupedByMonthsList(
-    BuildContext context, List<Transaction> transactions,
-    {bool displayShowAllButton = true, bool searchEnabled = false}) {
-  var groupedTransactions = Map<String, List<Transaction>>();
-  transactions.forEach((transaction) {
+Widget _buildGroupedByMonthsList(List<Transaction> transactions) {
+  var groupedTransactions = <String, List<Transaction>>{};
+
+  for (var transaction in transactions) {
     var transactionDate = DateTime.parse(transaction.bookingDate!);
     var monthAndYear = '${transactionDate.month}/${transactionDate.year}';
     if (groupedTransactions.containsKey(monthAndYear)) {
@@ -211,7 +187,7 @@ Widget _buildGroupedByMonthsList(
     } else {
       groupedTransactions[monthAndYear] = [transaction];
     }
-  });
+  }
 
   var monthAndYearList = groupedTransactions.keys.toList();
   monthAndYearList.sort((a, b) {
@@ -221,6 +197,7 @@ Widget _buildGroupedByMonthsList(
     var yearB = int.parse(partsB[1]);
     var monthA = int.parse(partsA[0]);
     var monthB = int.parse(partsB[0]);
+
     if (yearA > yearB) {
       return -1;
     } else if (yearA < yearB) {
@@ -229,6 +206,7 @@ Widget _buildGroupedByMonthsList(
       return monthA.compareTo(monthB);
     }
   });
+
   return ListView.builder(
     itemCount: monthAndYearList.length,
     shrinkWrap: true,
@@ -238,16 +216,18 @@ Widget _buildGroupedByMonthsList(
       var monthAndYear = monthAndYearList[index];
       var transactions = groupedTransactions[monthAndYear]!;
       var formattedMonthAndYear = _formatMonthYear(monthAndYear);
+
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 20, bottom: 10),
+            padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
             child: Text(
               formattedMonthAndYear,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 18,
+                fontSize: 16,
+                color: Color(0xff414D63),
               ),
             ),
           ),
@@ -255,12 +235,13 @@ Widget _buildGroupedByMonthsList(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: transactions.length,
-            separatorBuilder: (_, __) => const Divider(),
+            separatorBuilder: (_, __) => const Divider(
+              height: 10,
+            ),
             itemBuilder: (context, index) => TransactionListItem(
               transaction: transactions[index],
             ),
           ),
-          const SizedBox(height: 20),
         ],
       );
     },
