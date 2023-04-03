@@ -8,13 +8,14 @@ class TransactionsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Screen(
+    return const Screen(
         title: "Transactions",
         child: Column(
-          children: const [
+          children: [
             TransactionList(
               displayShowAllButton: false,
               searchEnabled: true,
+              groupedByMonths: true,
             ),
           ],
         ));
