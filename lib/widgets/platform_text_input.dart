@@ -49,9 +49,10 @@ class _PlatformTextInputState extends State<PlatformTextInput> {
             ),
           ),
         Container(
-          padding: EdgeInsets.symmetric(
-              horizontal: 14,
-              vertical: defaultTargetPlatform == TargetPlatform.iOS ? 10 : 0),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 14,
+            vertical: 5,
+          ),
           decoration: BoxDecoration(
             border: Border.all(color: const Color(0xFFAEC1CC), width: 1),
             borderRadius: BorderRadius.circular(8),
@@ -83,26 +84,25 @@ class _PlatformTextInputState extends State<PlatformTextInput> {
                   ],
                   onChanged: (value) =>
                       {if (widget.onChanged != null) widget.onChanged!(value)},
+                  style: const TextStyle(
+                    color: Color(0xFF414D63),
+                    fontSize: 16,
+                    height: 1.5,
+                  ),
                   material: (context, platform) => MaterialTextFormFieldData(
                     decoration: const InputDecoration(
-                      contentPadding: EdgeInsets.all(0),
+                      contentPadding: EdgeInsets.all(5),
+                      isDense: true,
                       border: InputBorder.none,
-                      hintStyle: TextStyle(
-                        color: Color(0xFF414D63),
-                        fontSize: 16,
-                      ),
                     ),
                   ),
                   cupertino: (context, platform) => CupertinoTextFormFieldData(
                     style: const TextStyle(
                       color: Color(0xFF414D63),
                       fontSize: 16,
+                      height: 1.2,
                     ),
-                    placeholderStyle: const TextStyle(
-                      color: Color(0xFF414D63),
-                      fontSize: 16,
-                    ),
-                    padding: const EdgeInsets.all(0),
+                    padding: EdgeInsets.zero,
                   ),
                 ),
               ),

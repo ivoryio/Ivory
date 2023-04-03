@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
 
+import '../models/transaction_model.dart';
 import '../models/user.dart';
 import 'transaction_listing_item.dart';
 import '../router/routing_constants.dart';
@@ -103,20 +104,18 @@ class TransactionList extends StatelessWidget {
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 6.0),
-                              child: Expanded(
-                                child: Container(
-                                  width: 55,
-                                  height: 55,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    color: Colors.black,
-                                  ),
-                                  child: PlatformIconButton(
-                                    padding: EdgeInsets.zero,
-                                    icon: const Icon(Icons.filter_alt,
-                                        color: Colors.white),
-                                    onPressed: () {},
-                                  ),
+                              child: Container(
+                                width: 45,
+                                height: 45,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  color: Colors.black,
+                                ),
+                                child: PlatformIconButton(
+                                  padding: EdgeInsets.zero,
+                                  icon: const Icon(Icons.filter_alt,
+                                      color: Colors.white),
+                                  onPressed: () {},
                                 ),
                               ),
                             ),

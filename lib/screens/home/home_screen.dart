@@ -59,22 +59,20 @@ class HomePageContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 44),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const HomePageHeader(),
-            TransactionList(
-              filter: TransactionListFilter(
-                size: _defaultCountTransactionsDisplayed,
-              ),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 44),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const HomePageHeader(),
+          TransactionList(
+            filter: TransactionListFilter(
+              size: _defaultCountTransactionsDisplayed,
             ),
-            const Analytics(),
-            const ReferAFriend(),
-          ],
-        ),
+          ),
+          const Analytics(),
+          const ReferAFriend(),
+        ],
       ),
     );
   }

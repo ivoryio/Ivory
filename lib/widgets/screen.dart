@@ -48,7 +48,19 @@ class Screen extends StatelessWidget {
         appBar: appBar,
         iosContentPadding: true,
         iosContentBottomPadding: true,
-        body: child,
+        body: LayoutBuilder(builder:
+            (BuildContext context, BoxConstraints viewportConstraints) {
+          return SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: viewportConstraints.maxHeight,
+              ),
+              child: IntrinsicHeight(
+                child: child,
+              ),
+            ),
+          );
+        }),
       );
     }
 
@@ -90,7 +102,17 @@ class Screen extends StatelessWidget {
           label: 'Profile',
         ),
       ],
-      bodyBuilder: (context, index) => child,
+      bodyBuilder: (context, index) => LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints viewportConstraints) {
+        return SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: viewportConstraints.maxHeight,
+            ),
+            child: child,
+          ),
+        );
+      }),
     );
   }
 }
