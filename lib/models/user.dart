@@ -7,12 +7,14 @@ class User {
   late String? firstName;
   late String? accountId;
 
-  final CognitoUserSession session;
+  final CognitoUser cognitoUser;
+  late CognitoUserSession session;
   final List<CognitoUserAttribute> attributes;
 
   User({
     required this.session,
     required this.attributes,
+    required this.cognitoUser,
     this.email,
     this.lastName,
     this.personId,
@@ -20,11 +22,15 @@ class User {
     this.accountId,
   });
 
-  factory User.fromCognitoUser(
-      CognitoUserSession session, List<CognitoUserAttribute> attributes) {
+  factory User.fromCognitoUser({
+    required CognitoUser cognitoUser,
+    required CognitoUserSession session,
+    required List<CognitoUserAttribute> attributes,
+  }) {
     User user = User(
       session: session,
       attributes: attributes,
+      cognitoUser: cognitoUser,
     );
 
     for (CognitoUserAttribute attribute in attributes) {

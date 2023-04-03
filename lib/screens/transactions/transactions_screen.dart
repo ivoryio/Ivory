@@ -14,6 +14,8 @@ class TransactionsScreen extends StatelessWidget {
           children: const [
             TransactionList(
               displayShowAllButton: false,
+              searchEnabled: true,
+              groupedByMonths: true,
             ),
           ],
         ));

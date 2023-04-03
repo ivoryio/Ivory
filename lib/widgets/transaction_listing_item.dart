@@ -26,54 +26,51 @@ class TransactionListItem extends StatelessWidget {
           transaction: transaction,
         ),
       ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4),
-        child: Card(
-          elevation: 6,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4.0),
-          ),
-          shadowColor: const Color.fromRGBO(0, 0, 0, 0.40),
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    const Icon(Icons.add_card, size: 30),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                                description.isNotEmpty
-                                    ? description
-                                    : 'Transaction',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16,
-                                )),
-                            Text(
-                              formattedDate,
+      child: Card(
+        elevation: 6,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4.0),
+        ),
+        shadowColor: const Color.fromRGBO(0, 0, 0, 0.80),
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.add_card, size: 30),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                              description.isNotEmpty
+                                  ? description
+                                  : 'Transaction',
                               style: const TextStyle(
-                                color: Color(0xFF667085),
-                              ),
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
+                              )),
+                          Text(
+                            formattedDate,
+                            style: const TextStyle(
+                              color: Color(0xFF667085),
                             ),
-                          ]),
-                    ),
-                  ],
-                ),
-                TextCurrencyValue(
-                    digits: 0,
-                    value: amount,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                    )),
-              ],
-            ),
+                          ),
+                        ]),
+                  ),
+                ],
+              ),
+              TextCurrencyValue(
+                  digits: 0,
+                  value: amount,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                  )),
+            ],
           ),
         ),
       ),

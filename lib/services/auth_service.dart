@@ -32,7 +32,11 @@ class AuthService {
       // debug only
       log("access_token: ${session!.getAccessToken().getJwtToken()}");
 
-      return User.fromCognitoUser(session, attributes!);
+      return User.fromCognitoUser(
+        session: session,
+        attributes: attributes!,
+        cognitoUser: cognitoUser,
+      );
     } catch (e) {
       log("[AuthService::login] $e");
       rethrow;
