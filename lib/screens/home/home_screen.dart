@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 import '../../models/user.dart';
+import '../../widgets/popup_header.dart';
 import '../../widgets/screen.dart';
 import '../../utilities/format.dart';
 import '../../widgets/analytics.dart';
@@ -299,7 +300,10 @@ class AccountOptions extends StatelessWidget {
           AccountOptionsButton(
             textLabel: "Send",
             icon: Icons.compare_arrows,
-            onPressed: () => log("Send"),
+            onPressed: () => showPlatformModalSheet(
+              context: context,
+              builder: (_) => const NewTransferPopup(),
+            ),
           ),
           AccountOptionsButton(
             textLabel: "Request",
@@ -354,6 +358,156 @@ class AccountOptionsButton extends StatelessWidget {
           ),
         )
       ],
+    );
+  }
+}
+
+class NewTransferPopup extends StatefulWidget {
+  const NewTransferPopup({Key? key}) : super(key: key);
+
+  @override
+  _NewTransferPopupState createState() => _NewTransferPopupState();
+}
+
+class _NewTransferPopupState extends State<NewTransferPopup> {
+  final List<bool> _isSelected = [true, true];
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 500,
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 22.0, horizontal: 24.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const BottomPopupHeader(title: 'New Transfer'),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 24),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    "Who are you sending to?",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: _isSelected[0]
+                          ? Colors.black
+                          : const Color(0xFFEAECF0),
+                    ),
+                  ),
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        _isSelected[0] = !_isSelected[0];
+                        _isSelected[1] = false;
+                      });
+                    },
+                    child: Row(
+                      children: [
+                        const Icon(Icons.person),
+                        const SizedBox(width: 11.3),
+                        const Text("Person"),
+                        const Spacer(),
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: _isSelected[0] ? Colors.black : null,
+                            border: Border.all(
+                              color: Colors.grey,
+                            ),
+                          ),
+                          child: Icon(
+                            _isSelected[0]
+                                ? Icons.check
+                                : Icons.radio_button_unchecked,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 26),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: _isSelected[1]
+                          ? Colors.black
+                          : const Color(0xFFEAECF0),
+                    ),
+                  ),
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        _isSelected[1] = !_isSelected[1];
+                        _isSelected[0] = false;
+                      });
+                    },
+                    child: Row(
+                      children: [
+                        const Icon(Icons.work),
+                        const SizedBox(width: 10),
+                        const Text("Business/Organization"),
+                        const Spacer(),
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: _isSelected[1] ? Colors.black : null,
+                            border: Border.all(
+                              color: Colors.grey,
+                            ),
+                          ),
+                          child: Icon(
+                            _isSelected[1]
+                                ? Icons.check
+                                : Icons.radio_button_unchecked,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 32),
+              child: SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  child: const Text("Continue"),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

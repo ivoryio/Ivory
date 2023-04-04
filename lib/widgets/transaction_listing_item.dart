@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:solarisdemo/widgets/popup_header.dart';
 
 import '../models/transaction_model.dart';
 import 'text_currency_value.dart';
@@ -98,7 +99,7 @@ class TransactionPopup extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const TransactionPopupHeader(),
+          const BottomPopupHeader(title: "Transaction Details"),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             child: SizedBox(
@@ -138,38 +139,6 @@ class TransactionPopup extends StatelessWidget {
               ),
             ),
           ),
-        ],
-      ),
-    );
-  }
-}
-
-class TransactionPopupHeader extends StatelessWidget {
-  const TransactionPopupHeader({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Container(
-            width: double.infinity,
-            alignment: Alignment.center,
-            child: const Text("Transaction Details",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                )),
-          ),
-          Container(
-              alignment: Alignment.centerRight,
-              child: PlatformIconButton(
-                padding: EdgeInsets.zero,
-                icon: const Icon(Icons.close),
-                onPressed: () => Navigator.pop(context),
-              ))
         ],
       ),
     );
