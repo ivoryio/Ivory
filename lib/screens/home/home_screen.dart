@@ -166,7 +166,7 @@ class AccountSummary extends StatelessWidget {
         children: [
           AccountBalance(
             iban: account?.iban ?? "",
-            value: (account?.balance.value ?? 0).toDouble(),
+            value: (account?.balance?.value ?? 0).toDouble(),
           ),
           AccountStats(
             income: income ?? 0,
@@ -303,6 +303,14 @@ class AccountOptions extends StatelessWidget {
             icon: Icons.compare_arrows,
             onPressed: () => showPlatformModalSheet(
               context: context,
+              material: MaterialModalSheetData(
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
+                  ),
+                ),
+              ),
               builder: (_) => const NewTransferPopup(),
             ),
           ),

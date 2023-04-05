@@ -166,6 +166,7 @@ Widget _buildList(
       separatorBuilder: (context, index) {
         return const Divider(
           height: 10,
+          color: Colors.transparent,
         );
       },
       padding: EdgeInsets.zero,
@@ -203,7 +204,7 @@ Widget _buildGroupedByMonthsList(List<Transaction> transactions) {
     } else if (yearA < yearB) {
       return 1;
     } else {
-      return monthA.compareTo(monthB);
+      return monthB.compareTo(monthA);
     }
   });
 
@@ -237,6 +238,7 @@ Widget _buildGroupedByMonthsList(List<Transaction> transactions) {
             itemCount: transactions.length,
             separatorBuilder: (_, __) => const Divider(
               height: 10,
+              color: Colors.transparent,
             ),
             itemBuilder: (context, index) => TransactionListItem(
               transaction: transactions[index],
