@@ -4,10 +4,12 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class BottomPopupHeader extends StatelessWidget {
   final String title;
+  final bool? showCloseButton;
 
   const BottomPopupHeader({
     super.key,
     required this.title,
+    this.showCloseButton = true,
   });
 
   @override
@@ -26,13 +28,14 @@ class BottomPopupHeader extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                 )),
           ),
-          Container(
-              alignment: Alignment.centerRight,
-              child: PlatformIconButton(
-                padding: EdgeInsets.zero,
-                icon: const Icon(Icons.close),
-                onPressed: () => Navigator.pop(context),
-              ))
+          if (showCloseButton!)
+            Container(
+                alignment: Alignment.centerRight,
+                child: PlatformIconButton(
+                  padding: EdgeInsets.zero,
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Navigator.pop(context),
+                ))
         ],
       ),
     );

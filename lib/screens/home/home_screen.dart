@@ -389,7 +389,10 @@ class _NewTransferPopupState extends State<NewTransferPopup> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const BottomPopupHeader(title: 'New Transfer'),
+            const BottomPopupHeader(
+              title: 'New Transfer',
+              showCloseButton: false,
+            ),
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 24),
               child: Row(
