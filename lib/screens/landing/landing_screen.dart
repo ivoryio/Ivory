@@ -14,8 +14,8 @@ class LandingScreen extends StatelessWidget {
       title: landingRoute.title,
       hideBottomNavbar: true,
       hideAppBar: true,
-      child: const Column(
-        children: [
+      child: Column(
+        children: const [
           HeroImage(),
           LandingScreenContent(),
         ],
@@ -35,9 +35,9 @@ class LandingScreenContent extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Column(children: [
+            Column(children: [
               Row(
-                children: [
+                children: const [
                   Flexible(
                     child: Text(
                       "Manage your finances and expenses easily, with Solaris",
@@ -49,9 +49,9 @@ class LandingScreenContent extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Row(
-                children: [
+                children: const [
                   Flexible(
                     child: Text(
                       "Manage finances, your wallet, make payments and receipts of finances easily and simply",

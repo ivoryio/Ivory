@@ -367,10 +367,10 @@ class NewTransferPopup extends StatefulWidget {
   const NewTransferPopup({Key? key}) : super(key: key);
 
   @override
-  _NewTransferPopupState createState() => _NewTransferPopupState();
+  NewTransferPopupState createState() => NewTransferPopupState();
 }
 
-class _NewTransferPopupState extends State<NewTransferPopup> {
+class NewTransferPopupState extends State<NewTransferPopup> {
   final List<bool> _isSelected = [true, false];
 
   @override
@@ -393,11 +393,11 @@ class _NewTransferPopupState extends State<NewTransferPopup> {
               title: 'New Transfer',
               showCloseButton: false,
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 24),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 24),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: [
+                children: const [
                   Text(
                     "Who are you sending to?",
                     style: TextStyle(
@@ -411,30 +411,30 @@ class _NewTransferPopupState extends State<NewTransferPopup> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  height: 68,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: _isSelected[0]
-                          ? Colors.black
-                          : const Color(0xFFEAECF0),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _isSelected[0] = !_isSelected[0];
+                      _isSelected[1] = false;
+                    });
+                  },
+                  child: Container(
+                    height: 68,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: _isSelected[0]
+                            ? Colors.black
+                            : const Color(0xFFEAECF0),
+                      ),
                     ),
-                  ),
-                  child: InkWell(
-                    onTap: () {
-                      setState(() {
-                        _isSelected[0] = !_isSelected[0];
-                        _isSelected[1] = false;
-                      });
-                    },
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Row(
-                            children: [
+                          Row(
+                            children: const [
                               Icon(Icons.person),
                               SizedBox(width: 11.3),
                               Text(
@@ -473,30 +473,30 @@ class _NewTransferPopupState extends State<NewTransferPopup> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                Container(
-                  height: 68,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: _isSelected[1]
-                          ? Colors.black
-                          : const Color(0xFFEAECF0),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _isSelected[1] = !_isSelected[1];
+                      _isSelected[0] = false;
+                    });
+                  },
+                  child: Container(
+                    height: 68,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: _isSelected[1]
+                            ? Colors.black
+                            : const Color(0xFFEAECF0),
+                      ),
                     ),
-                  ),
-                  child: InkWell(
-                    onTap: () {
-                      setState(() {
-                        _isSelected[1] = !_isSelected[1];
-                        _isSelected[0] = false;
-                      });
-                    },
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Row(
-                            children: [
+                          Row(
+                            children: const [
                               Icon(Icons.work),
                               SizedBox(width: 10),
                               Text(
