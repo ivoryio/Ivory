@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 import '../../models/user.dart';
+import '../../widgets/button.dart';
 import '../../widgets/popup_header.dart';
 import '../../widgets/screen.dart';
 import '../../utilities/format.dart';
@@ -370,12 +371,12 @@ class NewTransferPopup extends StatefulWidget {
 }
 
 class _NewTransferPopupState extends State<NewTransferPopup> {
-  final List<bool> _isSelected = [true, true];
+  final List<bool> _isSelected = [true, false];
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 500,
+      height: 440,
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
@@ -397,7 +398,7 @@ class _NewTransferPopupState extends State<NewTransferPopup> {
                   Text(
                     "Who are you sending to?",
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                       fontSize: 16,
                     ),
                   ),
@@ -408,6 +409,7 @@ class _NewTransferPopupState extends State<NewTransferPopup> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
+                  height: 68,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
@@ -423,34 +425,53 @@ class _NewTransferPopupState extends State<NewTransferPopup> {
                         _isSelected[1] = false;
                       });
                     },
-                    child: Row(
-                      children: [
-                        const Icon(Icons.person),
-                        const SizedBox(width: 11.3),
-                        const Text("Person"),
-                        const Spacer(),
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: _isSelected[0] ? Colors.black : null,
-                            border: Border.all(
-                              color: Colors.grey,
-                            ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Row(
+                            children: [
+                              Icon(Icons.person),
+                              SizedBox(width: 11.3),
+                              Text(
+                                "Person",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ],
                           ),
-                          child: Icon(
-                            _isSelected[0]
-                                ? Icons.check
-                                : Icons.radio_button_unchecked,
-                            color: Colors.white,
+                          Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: _isSelected[0] ? Colors.black : null,
+                                  border: Border.all(
+                                    color: const Color(0xFFEAECF0),
+                                  ),
+                                ),
+                                child: Icon(
+                                  _isSelected[0]
+                                      ? Icons.check
+                                      : Icons.radio_button_unchecked,
+                                  color: Colors.white,
+                                  size: 10,
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 26),
+                const SizedBox(height: 8),
                 Container(
+                  height: 68,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
@@ -466,29 +487,43 @@ class _NewTransferPopupState extends State<NewTransferPopup> {
                         _isSelected[0] = false;
                       });
                     },
-                    child: Row(
-                      children: [
-                        const Icon(Icons.work),
-                        const SizedBox(width: 10),
-                        const Text("Business/Organization"),
-                        const Spacer(),
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: _isSelected[1] ? Colors.black : null,
-                            border: Border.all(
-                              color: Colors.grey,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Row(
+                            children: [
+                              Icon(Icons.work),
+                              SizedBox(width: 10),
+                              Text(
+                                "Business/Organization",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: _isSelected[1] ? Colors.black : null,
+                              border: Border.all(
+                                color: const Color(0xFFEAECF0),
+                              ),
+                            ),
+                            child: Icon(
+                              _isSelected[1]
+                                  ? Icons.check
+                                  : Icons.radio_button_unchecked,
+                              color: Colors.white,
+                              size: 10,
                             ),
                           ),
-                          child: Icon(
-                            _isSelected[1]
-                                ? Icons.check
-                                : Icons.radio_button_unchecked,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -499,9 +534,9 @@ class _NewTransferPopupState extends State<NewTransferPopup> {
               child: SizedBox(
                 width: double.infinity,
                 height: 48,
-                child: ElevatedButton(
+                child: PrimaryButton(
+                  text: "Continue",
                   onPressed: () {},
-                  child: const Text("Continue"),
                 ),
               ),
             ),
