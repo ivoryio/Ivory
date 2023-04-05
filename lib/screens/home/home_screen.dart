@@ -371,7 +371,8 @@ class NewTransferPopup extends StatefulWidget {
 }
 
 class NewTransferPopupState extends State<NewTransferPopup> {
-  final List<bool> _isSelected = [true, false];
+  bool _isPersonSelected = true;
+  bool _isBusinessSelected = false;
 
   @override
   Widget build(BuildContext context) {
@@ -414,8 +415,8 @@ class NewTransferPopupState extends State<NewTransferPopup> {
                 GestureDetector(
                   onTap: () {
                     setState(() {
-                      _isSelected[0] = !_isSelected[0];
-                      _isSelected[1] = false;
+                      _isPersonSelected = true;
+                      _isBusinessSelected = false;
                     });
                   },
                   child: Container(
@@ -423,7 +424,7 @@ class NewTransferPopupState extends State<NewTransferPopup> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
-                        color: _isSelected[0]
+                        color: _isPersonSelected
                             ? Colors.black
                             : const Color(0xFFEAECF0),
                       ),
@@ -452,13 +453,14 @@ class NewTransferPopupState extends State<NewTransferPopup> {
                                 padding: const EdgeInsets.all(4),
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  color: _isSelected[0] ? Colors.black : null,
+                                  color:
+                                      _isPersonSelected ? Colors.black : null,
                                   border: Border.all(
                                     color: const Color(0xFFEAECF0),
                                   ),
                                 ),
                                 child: Icon(
-                                  _isSelected[0]
+                                  _isPersonSelected
                                       ? Icons.check
                                       : Icons.radio_button_unchecked,
                                   color: Colors.white,
@@ -476,8 +478,8 @@ class NewTransferPopupState extends State<NewTransferPopup> {
                 GestureDetector(
                   onTap: () {
                     setState(() {
-                      _isSelected[1] = !_isSelected[1];
-                      _isSelected[0] = false;
+                      _isBusinessSelected = true;
+                      _isPersonSelected = false;
                     });
                   },
                   child: Container(
@@ -485,7 +487,7 @@ class NewTransferPopupState extends State<NewTransferPopup> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
-                        color: _isSelected[1]
+                        color: _isBusinessSelected
                             ? Colors.black
                             : const Color(0xFFEAECF0),
                       ),
@@ -512,13 +514,13 @@ class NewTransferPopupState extends State<NewTransferPopup> {
                             padding: const EdgeInsets.all(4),
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: _isSelected[1] ? Colors.black : null,
+                              color: _isBusinessSelected ? Colors.black : null,
                               border: Border.all(
                                 color: const Color(0xFFEAECF0),
                               ),
                             ),
                             child: Icon(
-                              _isSelected[1]
+                              _isBusinessSelected
                                   ? Icons.check
                                   : Icons.radio_button_unchecked,
                               color: Colors.white,
