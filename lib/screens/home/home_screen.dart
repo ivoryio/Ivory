@@ -3,13 +3,16 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:go_router/go_router.dart';
+import 'package:solarisdemo/router/routing_constants.dart';
 
 import '../../models/user.dart';
+import '../../widgets/modal.dart';
 import '../../widgets/button.dart';
-import '../../widgets/popup_header.dart';
 import '../../widgets/screen.dart';
 import '../../utilities/format.dart';
 import '../../widgets/analytics.dart';
+import '../../widgets/popup_header.dart';
 import '../../widgets/refer_a_friend.dart';
 import '../../services/person_service.dart';
 import '../../widgets/transaction_list.dart';
@@ -301,17 +304,9 @@ class AccountOptions extends StatelessWidget {
           AccountOptionsButton(
             textLabel: "Send",
             icon: Icons.compare_arrows,
-            onPressed: () => showPlatformModalSheet(
+            onPressed: () => showModal(
               context: context,
-              material: MaterialModalSheetData(
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
-                  ),
-                ),
-              ),
-              builder: (_) => const NewTransferPopup(),
+              child: const NewTransferPopup(),
             ),
           ),
           AccountOptionsButton(
@@ -549,7 +544,9 @@ class NewTransferPopupState extends State<NewTransferPopup> {
                 height: 48,
                 child: PrimaryButton(
                   text: "Continue",
-                  onPressed: () {},
+                  onPressed: () {
+                    context.push(transferRoute.path);
+                  },
                 ),
               ),
             ),

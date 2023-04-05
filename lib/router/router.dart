@@ -10,6 +10,7 @@ import '../screens/signup/signup_screen.dart';
 import '../cubits/auth_cubit/auth_cubit.dart';
 import '../screens/landing/landing_screen.dart';
 import '../screens/profile/profile_screen.dart';
+import '../screens/transfer/transfer_screen.dart';
 import '../screens/wallet_screen/wallet_screen.dart';
 import '../screens/transactions/transactions_screen.dart';
 
@@ -71,6 +72,13 @@ class AppRouter {
           name: profileRoute.name,
           builder: (BuildContext context, GoRouterState state) {
             return const ProfileScreen();
+          },
+        ),
+        GoRoute(
+          path: transferRoute.path,
+          name: transferRoute.name,
+          builder: (BuildContext context, GoRouterState state) {
+            return const TransferScreen();
           },
         ),
       ],

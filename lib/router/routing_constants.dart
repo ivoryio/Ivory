@@ -56,6 +56,12 @@ const profileRoute = _Route(
   navbarIndex: 3,
 );
 
+const transferRoute = _Route(
+  name: 'transfer',
+  path: '/transfer',
+  title: 'Transfer',
+);
+
 class _Route {
   final String name;
   final String path;

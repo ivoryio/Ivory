@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/popup_header.dart';
 
 import '../models/transaction_model.dart';
@@ -21,9 +22,9 @@ class TransactionListItem extends StatelessWidget {
     final String formattedDate = dateFormatter.format(DateTime.parse(date));
 
     return GestureDetector(
-      onTap: () => showPlatformModalSheet(
+      onTap: () => showModal(
         context: context,
-        builder: (_) => TransactionPopup(
+        child: TransactionPopup(
           transaction: transaction,
         ),
       ),
