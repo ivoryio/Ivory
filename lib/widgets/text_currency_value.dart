@@ -15,7 +15,7 @@ class TextCurrencyValue extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String output = Format.euroFromCents(value);
+    String output = Format.euroFromCents(value, digits: digits);
 
     return Text(output, style: style);
   }

@@ -9,8 +9,8 @@ class Format {
     ).format(number);
   }
 
-  static String euroFromCents(num cents) {
-    return euro(cents / 100, digits: 0);
+  static String euroFromCents(num cents, {int digits = 0}) {
+    return euro(cents / 100, digits: digits);
   }
 
   static String cents(num value) {

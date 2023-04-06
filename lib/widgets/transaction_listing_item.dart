@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/popup_header.dart';
 
 import '../models/transaction_model.dart';
 import 'text_currency_value.dart';
+
+const String defaultTransactionDescription = 'Transaction';
 
 class TransactionListItem extends StatelessWidget {
   final Transaction transaction;
@@ -22,68 +23,89 @@ class TransactionListItem extends StatelessWidget {
     final String formattedDate = dateFormatter.format(DateTime.parse(date));
 
     return GestureDetector(
-      onTap: () => showModal(
-        context: context,
-        child: TransactionPopup(
-          transaction: transaction,
-        ),
-      ),
-      child: Card(
-        elevation: 6,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4.0),
-        ),
-        shadowColor: const Color.fromRGBO(0, 0, 0, 0.80),
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  const Icon(Icons.add_card, size: 30),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                              description.isNotEmpty
-                                  ? description
-                                  : 'Transaction',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16,
-                              )),
-                          Text(
-                            formattedDate,
-                            style: const TextStyle(
-                              color: Color(0xFF667085),
-                            ),
-                          ),
-                        ]),
-                  ),
-                ],
+        onTap: () => showBottomModal(
+              context: context,
+              child: TransactionBottomPopup(
+                transaction: transaction,
               ),
-              TextCurrencyValue(
-                  digits: 0,
-                  value: amount,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
-                  )),
-            ],
-          ),
+            ),
+        child: TransactionCard(
+          amount: amount,
+          description: description,
+          formattedDate: formattedDate,
+        ));
+  }
+}
+
+class TransactionCard extends StatelessWidget {
+  final String description;
+  final String formattedDate;
+  final double amount;
+
+  const TransactionCard({
+    super.key,
+    required this.description,
+    required this.formattedDate,
+    required this.amount,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 6,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(4.0),
+      ),
+      shadowColor: const Color.fromRGBO(0, 0, 0, 0.80),
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.add_card, size: 30),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                            description.isNotEmpty
+                                ? description
+                                : defaultTransactionDescription,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                            )),
+                        Text(
+                          formattedDate,
+                          style: const TextStyle(
+                            color: Color(0xFF667085),
+                          ),
+                        ),
+                      ]),
+                ),
+              ],
+            ),
+            TextCurrencyValue(
+                digits: 0,
+                value: amount,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                )),
+          ],
         ),
       ),
     );
   }
 }
 
-class TransactionPopup extends StatelessWidget {
+class TransactionBottomPopup extends StatelessWidget {
   final Transaction transaction;
 
-  const TransactionPopup({super.key, required this.transaction});
+  const TransactionBottomPopup({super.key, required this.transaction});
 
   @override
   Widget build(BuildContext context) {
@@ -135,7 +157,10 @@ class TransactionPopup extends StatelessWidget {
                 alignment: WrapAlignment.spaceBetween,
                 children: [
                   const Text("Amount"),
-                  TextCurrencyValue(value: transaction.amount?.value ?? 0),
+                  TextCurrencyValue(
+                    digits: 2,
+                    value: transaction.amount?.value ?? 0,
+                  ),
                 ],
               ),
             ),

@@ -21,8 +21,18 @@ class TransferScreen extends StatelessWidget {
           return Screen(
             title: transferRoute.title,
             hideBottomNavbar: true,
-            child: const Center(
-              child: Text('Wallet'),
+            child: Column(
+              children: [
+                Text("Send from"),
+                Container(
+                    child: Column(
+                  children: const [
+                    Text("Main account"),
+                    Text("Name"),
+                    Text("IBAN"),
+                  ],
+                ))
+              ],
             ),
           );
         },

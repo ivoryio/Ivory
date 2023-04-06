@@ -304,7 +304,7 @@ class AccountOptions extends StatelessWidget {
           AccountOptionsButton(
             textLabel: "Send",
             icon: Icons.compare_arrows,
-            onPressed: () => showModal(
+            onPressed: () => showBottomModal(
               context: context,
               child: const NewTransferPopup(),
             ),
