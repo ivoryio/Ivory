@@ -54,6 +54,7 @@ class HomeScreen extends StatelessWidget {
         )
       ],
       titleTextStyle: const TextStyle(color: Colors.white),
+      centerTitle: false,
       child: const HomePageContent(),
     );
   }
@@ -395,7 +396,7 @@ class NewTransferPopupState extends State<NewTransferPopup> {
           children: [
             const BottomPopupHeader(
               title: 'New Transfer',
-              showCloseButton: false,
+              showCloseButton: true,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 24),

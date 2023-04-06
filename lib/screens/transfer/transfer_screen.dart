@@ -19,11 +19,15 @@ class TransferScreen extends StatelessWidget {
           log('TransferScreen: $state');
 
           return Screen(
-            title: transferRoute.title,
+            title: "Transfer money",
+            titleTextStyle: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+            ),
             hideBottomNavbar: true,
             child: Column(
               children: [
-                Text("Send from"),
+                const Text("Send from"),
                 Container(
                     child: Column(
                   children: const [

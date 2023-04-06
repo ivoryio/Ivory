@@ -12,6 +12,7 @@ class Screen extends StatelessWidget {
   final bool hideBottomNavbar;
   final TextStyle? titleTextStyle;
   final List<Widget>? trailingActions;
+  final bool? centerTitle;
 
   const Screen({
     super.key,
@@ -23,6 +24,7 @@ class Screen extends StatelessWidget {
     this.hideAppBar = false,
     this.hideBackButton = false,
     this.hideBottomNavbar = false,
+    this.centerTitle = true,
   });
 
   @override
@@ -35,6 +37,7 @@ class Screen extends StatelessWidget {
             hideBackButton: hideBackButton,
             titleTextStyle: titleTextStyle,
             trailingActions: trailingActions,
+            centerTitle: centerTitle,
           );
 
     int currentPageIndex = AppRouter.calculateSelectedIndex(context);
@@ -159,6 +162,7 @@ PlatformAppBar createAppBar(
   TextStyle? titleTextStyle,
   List<Widget>? trailingActions,
   Color? backgroundColor = Colors.white,
+  bool? centerTitle = true,
 }) {
   return PlatformAppBar(
     title: Text(
@@ -169,6 +173,7 @@ PlatformAppBar createAppBar(
     trailingActions: trailingActions,
     material: (context, platform) => MaterialAppBarData(
       elevation: 0,
+      centerTitle: centerTitle,
     ),
     cupertino: (context, platform) => CupertinoNavigationBarData(
       border: Border.all(color: Colors.transparent),
