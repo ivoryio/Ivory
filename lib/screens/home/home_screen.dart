@@ -29,10 +29,10 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    User user = context.read<AuthCubit>().state.user!;
+    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
 
     return Screen(
-      title: 'Hello, ${user.firstName}!',
+      title: 'Hello, ${user.cognito.firstName}!',
       hideBackButton: true,
       appBarColor: const Color(0xFF1C1A28),
       trailingActions: [
@@ -89,11 +89,12 @@ class HomePageHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    User user = context.read<AuthCubit>().state.user!;
+    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
 
     return BlocProvider<AccountSummaryCubit>.value(
-      value: AccountSummaryCubit(personService: PersonService(user: user))
-        ..getAccountSummary(),
+      value:
+          AccountSummaryCubit(personService: PersonService(user: user.cognito))
+            ..getAccountSummary(),
       child: BlocBuilder<AccountSummaryCubit, AccountSummaryCubitState>(
         builder: (context, state) {
           if (state is AccountSummaryCubitLoading) {

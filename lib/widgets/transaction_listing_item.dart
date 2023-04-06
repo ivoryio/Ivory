@@ -91,6 +91,7 @@ class TransactionCard extends StatelessWidget {
             TextCurrencyValue(
                 digits: 0,
                 value: amount,
+                maxDigits: 2,
                 style: const TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: 16,

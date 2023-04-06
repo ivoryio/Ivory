@@ -3,7 +3,9 @@ import 'dart:developer';
 import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:solarisdemo/services/person_service.dart';
 
+import '../../models/person_model.dart';
 import '../../models/user.dart';
 import '../auth_cubit/auth_cubit.dart';
 import '../../services/auth_service.dart';
@@ -68,29 +70,38 @@ class LoginCubit extends Cubit<LoginState> {
   }
 
   void login(String tan) async {
-    if (state.user == null) {
+    try {
+      if (state.user == null) {
+        throw Exception("User is null");
+      }
+
+      PersonService personService = PersonService(user: state.user!);
+
+      emit(
+        LoginLoading(
+            tan: tan,
+            email: state.email,
+            phoneNumber: state.phoneNumber,
+            password: state.password,
+            user: state.user),
+      );
+
+      Person? person = await personService.getPerson();
+
+      // Simulate wrong tan verification (input '1111')
+      if (tan == '1111') {
+        emit(const LoginError(message: LoginErrorMessage.wrongTan));
+        return;
+      }
+
+      if (state.user == null || person == null) {
+        emit(const LoginError(message: LoginErrorMessage.unknownError));
+      }
+
+      authCubit.login(AuthenticatedUser(person: person!, cognito: state.user!));
+    } catch (e) {
       emit(const LoginError(message: LoginErrorMessage.unknownError));
     }
-
-    emit(
-      LoginLoading(
-          tan: tan,
-          email: state.email,
-          phoneNumber: state.phoneNumber,
-          password: state.password,
-          user: state.user),
-    );
-
-    // Wait 1s to simulate tan verification
-    await Future.delayed(const Duration(seconds: 1));
-
-    // Simulate wrong tan verification (input '1111')
-    if (tan == '1111') {
-      emit(const LoginError(message: LoginErrorMessage.wrongTan));
-      return;
-    }
-
-    authCubit.login(state.user!);
   }
 }
 

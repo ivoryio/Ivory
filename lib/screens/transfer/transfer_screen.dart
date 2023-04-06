@@ -2,8 +2,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:solarisdemo/themes/default_theme.dart';
+import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 
+import '../../models/person_model.dart';
 import '../../widgets/screen.dart';
 import '../../cubits/transfer/transfer_cubit.dart';
 
@@ -12,6 +13,8 @@ class TransferScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Person? person = context.read<AuthCubit>().state.user?.person;
+    inspect(person);
     return BlocProvider.value(
       value: TransferCubit(),
       child: BlocBuilder<TransferCubit, TransferState>(

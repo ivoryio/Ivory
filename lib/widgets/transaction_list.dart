@@ -28,11 +28,11 @@ class TransactionList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    User user = context.read<AuthCubit>().state.user!;
+    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
 
     return BlocProvider<TransactionListCubit>.value(
       value: TransactionListCubit(
-        transactionService: TransactionService(user: user),
+        transactionService: TransactionService(user: user.cognito),
       )..getTransactions(filter: filter),
       child: BlocBuilder<TransactionListCubit, TransactionListState>(
         builder: (context, state) {
