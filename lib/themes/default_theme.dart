@@ -23,6 +23,12 @@ final ThemeData defaultMaterialTheme = ThemeData(
     appBarTheme: AppBarTheme(
       color: defaultColorScheme.surface,
       iconTheme: IconThemeData(color: defaultColorScheme.onSurface),
+      titleTextStyle: const TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.w600,
+        color: Colors.black,
+        fontFamily: 'Proxima Nova',
+      ),
     ),
     buttonTheme: ButtonThemeData(
       buttonColor: defaultColorScheme.primary,

@@ -2,9 +2,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:solarisdemo/themes/default_theme.dart';
 
 import '../../widgets/screen.dart';
-import '../../router/routing_constants.dart';
 import '../../cubits/transfer/transfer_cubit.dart';
 
 class TransferScreen extends StatelessWidget {
@@ -20,10 +20,6 @@ class TransferScreen extends StatelessWidget {
 
           return Screen(
             title: "Transfer money",
-            titleTextStyle: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-            ),
             hideBottomNavbar: true,
             child: Column(
               children: [
