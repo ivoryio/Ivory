@@ -4,6 +4,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class PlatformTextInput extends StatefulWidget {
   final String textLabel;
+  final TextStyle? textLabelStyle;
   final String? hintText;
   final bool? obscureText;
   final Function validator;
@@ -20,6 +21,7 @@ class PlatformTextInput extends StatefulWidget {
     this.keyboardType,
     required this.textLabel,
     required this.validator,
+    this.textLabelStyle,
     this.obscureText = false,
     this.icon,
   });
@@ -39,13 +41,11 @@ class _PlatformTextInputState extends State<PlatformTextInput> {
         if (widget.textLabel.isNotEmpty)
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 7),
-            child: Text(
-              widget.textLabel,
-              style: const TextStyle(
-                color: Color(0xFF414D63),
-                fontSize: 16,
-              ),
-            ),
+            child: Text(widget.textLabel,
+                style: const TextStyle(
+                  color: Color(0xFF414D63),
+                  fontSize: 16,
+                ).merge(widget.textLabelStyle)),
           ),
         Container(
           padding: const EdgeInsets.symmetric(

@@ -138,6 +138,11 @@ class PayeeInformation extends StatelessWidget {
         ),
         PlatformTextInput(
           textLabel: "Name of the person/business",
+          textLabelStyle: const TextStyle(
+            color: Color(0xFF344054),
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+          ),
           hintText: "e.g Solaris",
           keyboardType: TextInputType.text,
           validator: (value) {
@@ -149,6 +154,11 @@ class PayeeInformation extends StatelessWidget {
         ),
         PlatformTextInput(
           textLabel: "IBAN",
+          textLabelStyle: const TextStyle(
+            color: Color(0xFF344054),
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+          ),
           hintText: "e.g DE84 1101 0101 4735 3658 36",
           keyboardType: TextInputType.text,
           validator: (value) {
