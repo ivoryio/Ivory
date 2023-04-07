@@ -73,7 +73,6 @@ class _LoginOptionsState extends State<LoginOptions> {
       child: Column(
         children: [
           Container(
-            height: 40,
             padding: const EdgeInsets.all(2),
             decoration: BoxDecoration(
                 color: const Color(0xfff5f5f5),

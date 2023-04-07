@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:solarisdemo/themes/default_theme.dart';
 
 import '../router/router.dart';
 
@@ -13,6 +14,8 @@ class Screen extends StatelessWidget {
   final TextStyle? titleTextStyle;
   final List<Widget>? trailingActions;
   final bool? centerTitle;
+  final Widget? bottomStickyWidget;
+  final num bottomStickyWidgetHeight;
 
   const Screen({
     super.key,
@@ -25,6 +28,8 @@ class Screen extends StatelessWidget {
     this.hideBackButton = false,
     this.hideBottomNavbar = false,
     this.centerTitle = true,
+    this.bottomStickyWidget,
+    this.bottomStickyWidgetHeight = 120,
   });
 
   @override
@@ -53,16 +58,43 @@ class Screen extends StatelessWidget {
         iosContentBottomPadding: true,
         body: LayoutBuilder(builder:
             (BuildContext context, BoxConstraints viewportConstraints) {
-          return SingleChildScrollView(
+          num heightToSubstract =
+              (bottomStickyWidget != null) ? bottomStickyWidgetHeight : 0;
+
+          Widget screenContent = SingleChildScrollView(
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                minHeight: viewportConstraints.maxHeight,
+                minHeight: viewportConstraints.maxHeight - heightToSubstract,
               ),
               child: IntrinsicHeight(
                 child: child,
               ),
             ),
           );
+
+          return Column(children: [
+            Expanded(child: screenContent),
+            if (bottomStickyWidget != null)
+              Container(
+                height: bottomStickyWidgetHeight.toDouble(),
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.25),
+                      spreadRadius: 0,
+                      blurRadius: 12,
+                      offset: const Offset(0, -4), // changes position of shadow
+                    ),
+                  ],
+                ),
+                child: Container(
+                  alignment: Alignment.topLeft,
+                  child: bottomStickyWidget,
+                ),
+              )
+          ]);
         }),
       );
     }

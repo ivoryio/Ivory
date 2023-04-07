@@ -6,6 +6,7 @@ import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/router/routing_constants.dart';
 import 'package:solarisdemo/screens/home/modals/new_transfer_popup.dart';
 import 'package:solarisdemo/themes/default_theme.dart';
+import 'package:solarisdemo/widgets/button.dart';
 
 import '../../widgets/checkbox.dart';
 import '../../widgets/platform_text_input.dart';
@@ -27,6 +28,7 @@ class TransferScreen extends StatelessWidget {
           return Screen(
             title: transferRoute.title,
             hideBottomNavbar: true,
+            bottomStickyWidget: const StickyBottomContent(),
             child: Padding(
               padding: defaultScreenPadding,
               child: Column(
@@ -39,6 +41,29 @@ class TransferScreen extends StatelessWidget {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class StickyBottomContent extends StatelessWidget {
+  const StickyBottomContent({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: defaultScreenPadding,
+      child: Row(
+        children: [
+          Expanded(
+            child: PrimaryButton(
+              text: "Continue",
+              onPressed: () {
+                log("Continue pressed");
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

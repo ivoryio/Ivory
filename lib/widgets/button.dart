@@ -47,6 +47,7 @@ class Button extends StatelessWidget {
       ),
       cupertino: (context, platform) => CupertinoElevatedButtonData(
         borderRadius: BorderRadius.all(Radius.circular(borderRadius!)),
+        minSize: 0,
         padding: padding,
       ),
       material: (context, platform) => MaterialElevatedButtonData(
@@ -55,6 +56,9 @@ class Button extends StatelessWidget {
           padding: padding,
           backgroundColor: color,
           foregroundColor: textColor,
+          minimumSize: const Size(0, 0),
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(borderRadius!)),
           ),
@@ -78,56 +82,40 @@ class Button extends StatelessWidget {
   }
 }
 
-class PrimaryButton extends StatelessWidget {
-  final String text;
-  final Function onPressed;
-  final TextStyle? textStyle;
-
+class PrimaryButton extends Button {
   const PrimaryButton({
     super.key,
-    this.textStyle,
-    required this.text,
-    required this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Button(
-      text: text,
-      textStyle: textStyle,
-      color: Colors.black,
-      textColor: Colors.white,
-      onPressed: () {
-        onPressed();
-      },
-    );
-  }
+    super.border,
+    super.padding,
+    super.fontSize,
+    super.borderRadius,
+    required String text,
+    required super.onPressed,
+    TextStyle? textStyle,
+  }) : super(
+          text: text,
+          textStyle: textStyle,
+          color: Colors.black,
+          textColor: Colors.white,
+        );
 }
 
-class SecondaryButton extends StatelessWidget {
-  final String text;
-  final Function onPressed;
-  final TextStyle? textStyle;
-
+class SecondaryButton extends Button {
   const SecondaryButton({
     super.key,
-    this.textStyle,
-    required this.text,
-    required this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Button(
-      text: text,
-      textStyle: textStyle,
-      color: const Color(0xff747474),
-      textColor: Colors.white,
-      onPressed: () {
-        onPressed();
-      },
-    );
-  }
+    super.border,
+    super.padding,
+    super.fontSize,
+    super.borderRadius,
+    required String text,
+    required super.onPressed,
+    TextStyle? textStyle,
+  }) : super(
+          text: text,
+          textStyle: textStyle,
+          color: const Color(0xff747474),
+          textColor: Colors.white,
+        );
 }
 
 class TabExpandedButton extends StatelessWidget {
@@ -149,7 +137,7 @@ class TabExpandedButton extends StatelessWidget {
     return Expanded(
       child: Button(
         text: text,
-        padding: EdgeInsets.zero,
+        padding: const EdgeInsets.symmetric(vertical: 6),
         color: active ? Colors.white : Colors.transparent,
         textColor: const Color(0xff020202),
         border: active
