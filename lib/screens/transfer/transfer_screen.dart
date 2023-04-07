@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 
-import '../../models/person_model.dart';
 import '../../widgets/platform_text_input.dart';
 import '../../widgets/screen.dart';
 import '../../cubits/transfer/transfer_cubit.dart';
+import '../../widgets/spaced_column.dart';
 
 class TransferScreen extends StatelessWidget {
   const TransferScreen({Key? key}) : super(key: key);
@@ -73,7 +73,8 @@ class TransferScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 32),
-                  Column(
+                  SpacedColumn(
+                    space: 16,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
@@ -83,7 +84,6 @@ class TransferScreen extends StatelessWidget {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      const SizedBox(height: 16),
                       PlatformTextInput(
                         textLabel: "Name of the person/business",
                         hintText: "e.g Solaris",
@@ -95,7 +95,6 @@ class TransferScreen extends StatelessWidget {
                           return null;
                         },
                       ),
-                      const SizedBox(height: 16),
                       PlatformTextInput(
                         textLabel: "IBAN",
                         hintText: "e.g DE84 1101 0101 4735 3658 36",
