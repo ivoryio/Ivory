@@ -59,7 +59,7 @@ const profileRoute = _Route(
 const transferRoute = _Route(
   name: 'transfer',
   path: '/transfer',
-  title: 'Transfer',
+  title: 'Transfer money',
 );
 
 class _Route {

@@ -15,13 +15,14 @@ class SpacedColumn extends Column {
   }) : super(
           key: key,
           children: [
-            for (final child in children)
+            for (var i = 0; i < children.length - 1; i++)
               Column(
                 children: [
-                  child,
+                  children[i],
                   SizedBox(height: space),
                 ],
               ),
+            children.last,
           ],
         );
 }
