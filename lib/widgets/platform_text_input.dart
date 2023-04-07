@@ -40,7 +40,7 @@ class _PlatformTextInputState extends State<PlatformTextInput> {
       children: [
         if (widget.textLabel.isNotEmpty)
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 7),
+            padding: const EdgeInsets.only(bottom: 7),
             child: Text(widget.textLabel,
                 style: const TextStyle(
                   color: Color(0xFF414D63),

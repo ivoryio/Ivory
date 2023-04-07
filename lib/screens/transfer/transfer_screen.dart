@@ -7,6 +7,7 @@ import 'package:solarisdemo/router/routing_constants.dart';
 import 'package:solarisdemo/screens/home/modals/new_transfer_popup.dart';
 import 'package:solarisdemo/themes/default_theme.dart';
 
+import '../../widgets/checkbox.dart';
 import '../../widgets/platform_text_input.dart';
 import '../../widgets/screen.dart';
 import '../../cubits/transfer/transfer_cubit.dart';
@@ -120,8 +121,15 @@ class AccountSelect extends StatelessWidget {
   }
 }
 
-class PayeeInformation extends StatelessWidget {
+class PayeeInformation extends StatefulWidget {
   const PayeeInformation({super.key});
+
+  @override
+  State<PayeeInformation> createState() => _PayeeInformationState();
+}
+
+class _PayeeInformationState extends State<PayeeInformation> {
+  bool _isSavePayee = false;
 
   @override
   Widget build(BuildContext context) {
@@ -167,6 +175,26 @@ class PayeeInformation extends StatelessWidget {
             }
             return null;
           },
+        ),
+        Row(
+          children: [
+            CheckboxWidget(
+              isChecked: _isSavePayee,
+              onChanged: (bool checked) {
+                setState(() {
+                  _isSavePayee = checked;
+                });
+              },
+            ),
+            const SizedBox(width: 12),
+            const Text(
+              "Save the payee for future transfers",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ],
         ),
       ],
     );
