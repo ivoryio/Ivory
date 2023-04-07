@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:solarisdemo/router/routing_constants.dart';
+import 'package:solarisdemo/themes/default_theme.dart';
 
 import '../../models/user.dart';
 import '../../widgets/modal.dart';
@@ -72,13 +73,22 @@ class HomePageContent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const HomePageHeader(),
-          TransactionList(
-            filter: TransactionListFilter(
-              size: _defaultCountTransactionsDisplayed,
+          Padding(
+            padding: defaultScreenPadding,
+            child: TransactionList(
+              filter: TransactionListFilter(
+                size: _defaultCountTransactionsDisplayed,
+              ),
             ),
           ),
-          const Analytics(),
-          const ReferAFriend(),
+          const Padding(
+            padding: defaultScreenPadding,
+            child: Analytics(),
+          ),
+          const Padding(
+            padding: defaultScreenPadding,
+            child: ReferAFriend(),
+          ),
         ],
       ),
     );

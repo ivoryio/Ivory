@@ -50,3 +50,11 @@ final ThemeData defaultMaterialTheme = ThemeData(
 
 final cupertinoTheme =
     MaterialBasedCupertinoThemeData(materialTheme: defaultMaterialTheme);
+
+const double defaultScreenHorizontalPadding = 24;
+const double defaultScreenVerticalPadding = 20;
+
+const EdgeInsets defaultScreenPadding = EdgeInsets.symmetric(
+  horizontal: defaultScreenHorizontalPadding,
+  vertical: defaultScreenVerticalPadding,
+);

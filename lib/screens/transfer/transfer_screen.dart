@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
+import 'package:solarisdemo/screens/home/modals/new_transfer_popup.dart';
+import 'package:solarisdemo/themes/default_theme.dart';
 
 import '../../widgets/platform_text_input.dart';
 import '../../widgets/screen.dart';
@@ -24,7 +26,7 @@ class TransferScreen extends StatelessWidget {
             title: "Transfer money",
             hideBottomNavbar: true,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
+              padding: defaultScreenPadding,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -48,26 +50,50 @@ class TransferScreen extends StatelessWidget {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
-                        vertical: 25.0,
+                        vertical: 24,
                         horizontal: 16,
                       ),
-                      child: Column(
+                      child: SpacedColumn(
+                        space: 4,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            children: const [
-                              Text("asd"),
-                            ],
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              color: const Color(0xffE6E6E6),
+                            ),
+                            child: const Text("Main account",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                )),
                           ),
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: const [
-                              Text("asd"),
+                              Text(
+                                "Alexander-Matheus Braun",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  height: 20 / 16,
+                                ),
+                              ),
+                              RadioButton(
+                                checked: true,
+                              )
                             ],
                           ),
-                          Row(
-                            children: const [
-                              Text("asd"),
-                            ],
-                          ),
+                          const Text("DE84 1101 0101 4735 3658 36",
+                              style: TextStyle(
+                                fontSize: 14,
+                                height: 17 / 14,
+                                color: Color(0xff667085),
+                              )),
                         ],
                       ),
                     ),

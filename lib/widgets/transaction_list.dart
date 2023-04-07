@@ -50,79 +50,75 @@ class TransactionList extends StatelessWidget {
                 return const Text("Transaction list is empty");
               }
 
-              return Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Transactions",
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        if (displayShowAllButton)
-                          PlatformTextButton(
-                            padding: EdgeInsets.zero,
-                            child: const Text(
-                              "See all",
-                              textAlign: TextAlign.right,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            onPressed: () {
-                              context.push(transactionsRoute.path);
-                            },
-                          )
-                      ],
-                    ),
-                    if (searchEnabled)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 16),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: PlatformTextInput(
-                                textLabel: "",
-                                hintText: "Search here...",
-                                icon: Icons.search,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter a search term';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 6.0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  color: Colors.black,
-                                ),
-                                child: PlatformIconButton(
-                                  padding: EdgeInsets.zero,
-                                  icon: const Icon(Icons.filter_alt,
-                                      color: Colors.white),
-                                  onPressed: () {},
-                                ),
-                              ),
-                            ),
-                          ],
+              return Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "Transactions",
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    groupedByMonths
-                        ? _buildGroupedByMonthsList(transactions)
-                        : _buildList(context, transactions)
-                  ],
-                ),
+                      if (displayShowAllButton)
+                        PlatformTextButton(
+                          padding: EdgeInsets.zero,
+                          child: const Text(
+                            "See all",
+                            textAlign: TextAlign.right,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          onPressed: () {
+                            context.push(transactionsRoute.path);
+                          },
+                        )
+                    ],
+                  ),
+                  if (searchEnabled)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: PlatformTextInput(
+                              textLabel: "",
+                              hintText: "Search here...",
+                              icon: Icons.search,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter a search term';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 6.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8.0),
+                                color: Colors.black,
+                              ),
+                              child: PlatformIconButton(
+                                padding: EdgeInsets.zero,
+                                icon: const Icon(Icons.filter_alt,
+                                    color: Colors.white),
+                                onPressed: () {},
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  groupedByMonths
+                      ? _buildGroupedByMonthsList(transactions)
+                      : _buildList(context, transactions)
+                ],
               );
 
             default:

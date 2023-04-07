@@ -16,75 +16,72 @@ class AnalyticsState extends State {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 30, bottom: 60, left: 20, right: 20),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                "Analytics",
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              "Analytics",
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            PlatformTextButton(
+              padding: EdgeInsets.zero,
+              child: const Text(
+                "See all expenses",
+                textAlign: TextAlign.right,
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              PlatformTextButton(
-                padding: EdgeInsets.zero,
-                child: const Text(
-                  "See all expenses",
-                  textAlign: TextAlign.right,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                onPressed: () {},
-              )
-            ],
-          ),
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              Padding(
-                padding: EdgeInsets.all(_analyticsPadding),
-                child: AspectRatio(
-                  aspectRatio: 1,
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: AspectRatio(
-                          aspectRatio: 1,
-                          child: PieChart(
-                            PieChartData(
-                              borderData: FlBorderData(
-                                show: false,
-                              ),
-                              sectionsSpace: 0,
-                              centerSpaceRadius: double.infinity,
-                              sections: showingSections(),
-                              startDegreeOffset: -30,
+              onPressed: () {},
+            )
+          ],
+        ),
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(_analyticsPadding),
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: AspectRatio(
+                        aspectRatio: 1,
+                        child: PieChart(
+                          PieChartData(
+                            borderData: FlBorderData(
+                              show: false,
                             ),
-                            swapAnimationDuration:
-                                const Duration(milliseconds: 150), // Optional
-                            swapAnimationCurve: Curves.linear, // Optional
+                            sectionsSpace: 0,
+                            centerSpaceRadius: double.infinity,
+                            sections: showingSections(),
+                            startDegreeOffset: -30,
                           ),
+                          swapAnimationDuration:
+                              const Duration(milliseconds: 150), // Optional
+                          swapAnimationCurve: Curves.linear, // Optional
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-              const Center(
-                child: AccountBalanceText(
-                  value: 1234.56,
-                ),
-              )
-            ],
-          ),
-        ],
-      ),
+            ),
+            const Center(
+              child: AccountBalanceText(
+                value: 1234.56,
+              ),
+            )
+          ],
+        ),
+      ],
     );
   }
 
