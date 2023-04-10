@@ -2,20 +2,25 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
-import 'package:solarisdemo/router/routing_constants.dart';
-import 'package:solarisdemo/screens/home/modals/new_transfer_popup.dart';
-import 'package:solarisdemo/themes/default_theme.dart';
-import 'package:solarisdemo/widgets/button.dart';
 
-import '../../widgets/checkbox.dart';
-import '../../widgets/platform_text_input.dart';
+import '../../widgets/button.dart';
 import '../../widgets/screen.dart';
-import '../../cubits/transfer/transfer_cubit.dart';
+import '../../widgets/checkbox.dart';
+import '../../themes/default_theme.dart';
 import '../../widgets/spaced_column.dart';
+import '../../router/routing_constants.dart';
+import '../home/modals/new_transfer_popup.dart';
+import '../../widgets/platform_text_input.dart';
+import '../../cubits/auth_cubit/auth_cubit.dart';
+import '../../cubits/transfer/transfer_cubit.dart';
 
 class TransferScreen extends StatelessWidget {
-  const TransferScreen({Key? key}) : super(key: key);
+  final TransferScreenParams transferScreenParams;
+
+  const TransferScreen({
+    super.key,
+    required this.transferScreenParams,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +51,16 @@ class TransferScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+enum TransferType { person, business }
+
+class TransferScreenParams {
+  final TransferType transferType;
+
+  const TransferScreenParams({
+    required this.transferType,
+  });
 }
 
 class StickyBottomContent extends StatelessWidget {

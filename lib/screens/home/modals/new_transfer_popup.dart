@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../widgets/button.dart';
 import '../../../widgets/popup_header.dart';
+import '../../transfer/transfer_screen.dart';
 import '../../../router/routing_constants.dart';
 
 class NewTransferPopup extends StatefulWidget {
@@ -129,7 +130,11 @@ class NewTransferPopupState extends State<NewTransferPopup> {
                 child: PrimaryButton(
                   text: "Continue",
                   onPressed: () {
-                    context.push(transferRoute.path);
+                    context.push(transferRoute.path,
+                        extra: TransferScreenParams(
+                            transferType: _isPersonSelected
+                                ? TransferType.person
+                                : TransferType.business));
                   },
                 ),
               ),

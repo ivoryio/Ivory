@@ -78,7 +78,12 @@ class AppRouter {
           path: transferRoute.path,
           name: transferRoute.name,
           builder: (BuildContext context, GoRouterState state) {
-            return const TransferScreen();
+            TransferScreenParams transferScreenParams = state.extra
+                    is TransferScreenParams
+                ? state.extra as TransferScreenParams
+                : const TransferScreenParams(transferType: TransferType.person);
+
+            return TransferScreen(transferScreenParams: transferScreenParams);
           },
         ),
       ],
