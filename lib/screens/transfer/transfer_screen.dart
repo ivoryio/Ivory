@@ -28,7 +28,9 @@ class TransferScreen extends StatelessWidget {
           return Screen(
             title: transferRoute.title,
             hideBottomNavbar: true,
-            bottomStickyWidget: const StickyBottomContent(),
+            bottomStickyWidget: const BottomStickyWidget(
+              child: StickyBottomContent(),
+            ),
             child: Padding(
               padding: defaultScreenPadding,
               child: Column(
