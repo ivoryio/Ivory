@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:solarisdemo/models/person_account.dart';
+import 'package:solarisdemo/models/person_account_summary.dart';
 import 'package:solarisdemo/services/person_service.dart';
 
 import '../../models/person_model.dart';
@@ -87,6 +89,7 @@ class LoginCubit extends Cubit<LoginState> {
       );
 
       Person? person = await personService.getPerson();
+      // PersonAccount? personAccount = await personService.getAccount();
 
       // Simulate wrong tan verification (input '1111')
       if (tan == '1111') {
@@ -98,7 +101,11 @@ class LoginCubit extends Cubit<LoginState> {
         emit(const LoginError(message: LoginErrorMessage.unknownError));
       }
 
-      authCubit.login(AuthenticatedUser(person: person!, cognito: state.user!));
+      authCubit.login(AuthenticatedUser(
+        person: person!,
+        cognito: state.user!,
+        personAccount: PersonAccount.fromJson({}),
+      ));
     } catch (e) {
       emit(const LoginError(message: LoginErrorMessage.unknownError));
     }

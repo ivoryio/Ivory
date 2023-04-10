@@ -24,6 +24,9 @@ class ApiService<T> {
           "Authorization": "Bearer $accessToken",
         },
       );
+      if (response.statusCode != 200) {
+        throw Exception("Could not get data");
+      }
 
       var data = jsonDecode(response.body);
       return data;

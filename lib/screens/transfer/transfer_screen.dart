@@ -2,7 +2,11 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
+import 'package:solarisdemo/models/person_account.dart';
+import 'package:solarisdemo/models/user.dart';
 
+import '../../utilities/format.dart';
 import '../../widgets/button.dart';
 import '../../widgets/screen.dart';
 import '../../widgets/checkbox.dart';
@@ -11,7 +15,6 @@ import '../../widgets/spaced_column.dart';
 import '../../router/routing_constants.dart';
 import '../home/modals/new_transfer_popup.dart';
 import '../../widgets/platform_text_input.dart';
-import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../cubits/transfer/transfer_cubit.dart';
 
 class TransferScreen extends StatelessWidget {
@@ -24,8 +27,6 @@ class TransferScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final person = context.read<AuthCubit>().state.user?.person;
-
     return BlocProvider.value(
       value: TransferCubit(),
       child: BlocBuilder<TransferCubit, TransferState>(
@@ -91,6 +92,12 @@ class AccountSelect extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AuthenticatedUser? user = context.read<AuthCubit>().state.user;
+
+    String fullName =
+        '${user?.person.firstName ?? ""} ${user?.person.lastName ?? ""}';
+    String iban = Format.iban(user?.personAccount.iban ?? "");
+
     return SpacedColumn(
       space: 16,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -134,22 +141,22 @@ class AccountSelect extends StatelessWidget {
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
+                children: [
                   Text(
-                    "Alexander-Matheus Braun",
-                    style: TextStyle(
+                    fullName,
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                       height: 20 / 16,
                     ),
                   ),
-                  RadioButton(
+                  const RadioButton(
                     checked: true,
                   )
                 ],
               ),
-              const Text("DE84 1101 0101 4735 3658 36",
-                  style: TextStyle(
+              Text(iban,
+                  style: const TextStyle(
                     fontSize: 14,
                     height: 17 / 14,
                     color: Color(0xff667085),
