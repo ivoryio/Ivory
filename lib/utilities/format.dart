@@ -1,12 +1,18 @@
 import 'package:intl/intl.dart';
 
 class Format {
-  static String euro(num number, {int digits = 2}) {
+  static String currency(
+    num number, {
+    int digits = 2,
+    String symbol = " € ",
+    String locale = "en_US",
+  }) {
     NumberFormat formatter = NumberFormat.currency(
-      locale: "en_US",
-      symbol: " € ",
+      locale: locale,
+      symbol: symbol,
       decimalDigits: digits,
     );
+
     if (number % 1 != 0 && digits == 0) {
       return formatter
           .format(number.isNegative ? number.ceil() : number.floor());
@@ -15,17 +21,16 @@ class Format {
     return formatter.format(number);
   }
 
-  static String euroFromCents(
-    num cents, {
+  static String euro(
+    num value, {
     int digits = 0,
     int maxDigits = 2,
   }) {
-    num value = cents / 100;
     if (digits == 0 && maxDigits > 0 && value % 1 != 0) {
-      return euro(value, digits: maxDigits);
+      return Format.currency(value, digits: maxDigits);
     }
 
-    return euro(value, digits: digits);
+    return Format.currency(value, digits: digits);
   }
 
   static String cents(num value) {

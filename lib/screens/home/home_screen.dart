@@ -3,26 +3,21 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:go_router/go_router.dart';
-import 'package:solarisdemo/router/routing_constants.dart';
 import 'package:solarisdemo/themes/default_theme.dart';
 
 import '../../models/user.dart';
 import '../../widgets/modal.dart';
-import '../../widgets/button.dart';
 import '../../widgets/screen.dart';
 import '../../utilities/format.dart';
 import '../../widgets/analytics.dart';
-import '../../widgets/popup_header.dart';
+import 'modals/new_transfer_popup.dart';
 import '../../widgets/refer_a_friend.dart';
 import '../../services/person_service.dart';
 import '../../widgets/transaction_list.dart';
 import '../../services/transaction_service.dart';
 import '../../widgets/account_balance_text.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
-import '../../models/person_account_summary.dart';
 import '../../cubits/account_summary_cubit/account_summary_cubit.dart';
-import 'modals/new_transfer_popup.dart';
 
 const _defaultCountTransactionsDisplayed = 3;
 
@@ -143,9 +138,10 @@ class HomePageHeader extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AccountSummary(
-                    account: state.data?.account,
-                    income: state.data?.income,
-                    spending: state.data?.spending,
+                    iban: state.data?.iban ?? "",
+                    income: state.data?.income ?? 0,
+                    spending: state.data?.spending ?? 0,
+                    balance: state.data?.balance?.value ?? 0,
                   ),
                   const AccountOptions(),
                 ],
@@ -161,15 +157,18 @@ class HomePageHeader extends StatelessWidget {
 }
 
 class AccountSummary extends StatelessWidget {
-  final Account? account;
-  final num? income;
-  final num? spending;
+  final String iban;
+  final num balance;
+  final num income;
+  final num spending;
 
-  const AccountSummary(
-      {super.key,
-      required this.account,
-      required this.income,
-      required this.spending});
+  const AccountSummary({
+    super.key,
+    required this.iban,
+    required this.income,
+    required this.balance,
+    required this.spending,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -181,12 +180,12 @@ class AccountSummary extends StatelessWidget {
       child: Column(
         children: [
           AccountBalance(
-            iban: account?.iban ?? "",
-            value: (account?.balance?.value ?? 0).toDouble(),
+            iban: iban,
+            value: balance,
           ),
           AccountStats(
-            income: income ?? 0,
-            spending: spending ?? 0,
+            income: income,
+            spending: spending,
           ),
         ],
       ),
@@ -229,7 +228,7 @@ class AccountBalance extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 AccountBalanceText(
-                  value: value / 100,
+                  value: value,
                   numberStyle: const TextStyle(color: Colors.white),
                   centsStyle: const TextStyle(color: Colors.white),
                 ),

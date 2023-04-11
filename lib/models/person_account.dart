@@ -111,12 +111,14 @@ class PersonAccount {
 
 class PersonAccountCurrencyValue {
   PersonAccountCurrencyValue({
+    this.unit,
     this.value,
     this.currency,
   });
 
-  double? value;
+  num? value;
   String? currency;
+  String? unit;
 
   factory PersonAccountCurrencyValue.fromRawJson(String str) =>
       PersonAccountCurrencyValue.fromJson(json.decode(str));
@@ -127,9 +129,11 @@ class PersonAccountCurrencyValue {
       PersonAccountCurrencyValue(
         value: json["value"]?.toDouble(),
         currency: json["currency"],
+        unit: json["unit"],
       );
 
   Map<String, dynamic> toJson() => {
+        "unit": unit,
         "value": value,
         "currency": currency,
       };

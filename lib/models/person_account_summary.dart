@@ -1,17 +1,21 @@
 import 'dart:convert';
 
+import 'package:solarisdemo/utilities/constants.dart';
+
 class PersonAccountSummary {
   PersonAccountSummary({
     this.id,
-    this.account,
     this.income,
     this.spending,
+    this.iban,
+    this.balance,
   });
 
-  dynamic id;
-  Account? account;
+  String? id;
   double? income;
   double? spending;
+  String? iban;
+  Balance? balance;
 
   factory PersonAccountSummary.fromRawJson(String str) =>
       PersonAccountSummary.fromJson(json.decode(str));
@@ -20,77 +24,32 @@ class PersonAccountSummary {
 
   factory PersonAccountSummary.fromJson(Map<String, dynamic> json) =>
       PersonAccountSummary(
-        id: json["id"],
-        account:
-            json["account"] == null ? null : Account.fromJson(json["account"]),
-        income: json["income"]?.toDouble(),
-        spending: json["spending"]?.toDouble(),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "account": account?.toJson(),
-        "income": income,
-        "spending": spending,
-      };
-}
-
-class Account {
-  Account({
-    this.id,
-    this.iban,
-    this.bic,
-    this.type,
-    this.balance,
-    this.availableBalance,
-    this.lockingStatus,
-    this.personId,
-  });
-
-  String? id;
-  String? iban;
-  String? bic;
-  String? type;
-  Balance? balance;
-  Balance? availableBalance;
-  String? lockingStatus;
-  String? personId;
-
-  factory Account.fromRawJson(String str) => Account.fromJson(json.decode(str));
-
-  String toRawJson() => json.encode(toJson());
-
-  factory Account.fromJson(Map<String, dynamic> json) => Account(
-        id: json["id"],
-        iban: json["iban"],
-        bic: json["bic"],
-        type: json["type"],
+        id: json["id"] ?? emptyStringValue,
+        income: json["income"]?.toDouble() ?? zeroValue,
+        spending: json["spending"]?.toDouble() ?? zeroValue,
+        iban: json["iban"] ?? emptyStringValue,
         balance:
             json["balance"] == null ? null : Balance.fromJson(json["balance"]),
-        availableBalance: json["available_balance"] == null
-            ? null
-            : Balance.fromJson(json["available_balance"]),
-        lockingStatus: json["locking_status"],
-        personId: json["person_id"],
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
+        "income": income,
+        "spending": spending,
         "iban": iban,
-        "bic": bic,
-        "type": type,
         "balance": balance?.toJson(),
-        "available_balance": availableBalance?.toJson(),
-        "locking_status": lockingStatus,
-        "person_id": personId,
       };
 }
 
 class Balance {
   Balance({
+    this.currency,
     this.value,
+    this.unit,
   });
 
+  String? currency;
+  String? unit;
   num? value;
 
   factory Balance.fromRawJson(String str) => Balance.fromJson(json.decode(str));
@@ -98,10 +57,14 @@ class Balance {
   String toRawJson() => json.encode(toJson());
 
   factory Balance.fromJson(Map<String, dynamic> json) => Balance(
-        value: json["value"],
+        currency: json["currency"] ?? defaultCurrency,
+        value: json["value"]?.toDouble() ?? zeroValue,
+        unit: json["unit"] ?? zeroValue,
       );
 
   Map<String, dynamic> toJson() => {
+        "currency": currency,
         "value": value,
+        "unit": unit,
       };
 }
