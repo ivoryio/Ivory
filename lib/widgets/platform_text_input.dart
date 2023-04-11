@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
-class PlatformTextInput extends StatefulWidget {
+class PlatformTextInput extends StatelessWidget {
   final IconData? icon;
   final String textLabel;
   final String? hintText;
@@ -27,26 +27,19 @@ class PlatformTextInput extends StatefulWidget {
   });
 
   @override
-  State<PlatformTextInput> createState() => _PlatformTextInputState();
-}
-
-class _PlatformTextInputState extends State<PlatformTextInput> {
-  TextEditingController? controller;
-
-  @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (widget.textLabel.isNotEmpty)
+        if (textLabel.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(bottom: 7),
             child: Text(
-              widget.textLabel,
+              textLabel,
               style: const TextStyle(
                 color: Color(0xFF414D63),
                 fontSize: 16,
-              ).merge(widget.textLabelStyle),
+              ).merge(textLabelStyle),
             ),
           ),
         Container(
@@ -61,30 +54,30 @@ class _PlatformTextInputState extends State<PlatformTextInput> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (widget.icon != null)
+              if (icon != null)
                 Padding(
                   padding: const EdgeInsets.only(right: 8),
                   child: Icon(
-                    widget.icon,
+                    icon,
                     color: const Color(0xFF667085),
                     size: 20.0,
                   ),
                 ),
               Expanded(
                 child: PlatformTextFormField(
-                  controller: widget.controller,
+                  controller: controller,
                   validator: (value) {
-                    return widget.validator(value);
+                    return validator(value);
                   },
-                  hintText: widget.hintText ?? "",
-                  keyboardType: widget.keyboardType,
-                  obscureText: widget.obscureText,
+                  hintText: hintText ?? "",
+                  keyboardType: keyboardType,
+                  obscureText: obscureText,
                   inputFormatters: [
-                    if (widget.keyboardType == TextInputType.phone)
+                    if (keyboardType == TextInputType.phone)
                       FilteringTextInputFormatter.digitsOnly,
                   ],
                   onChanged: (value) =>
-                      {if (widget.onChanged != null) widget.onChanged!(value)},
+                      {if (onChanged != null) onChanged!(value)},
                   style: const TextStyle(
                     color: Color(0xFF414D63),
                     fontSize: 16,
