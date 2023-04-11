@@ -130,6 +130,7 @@ class NewTransferPopupState extends State<NewTransferPopup> {
                 child: PrimaryButton(
                   text: "Continue",
                   onPressed: () {
+                    context.pop();
                     context.push(transferRoute.path,
                         extra: TransferScreenParams(
                             transferType: _isPersonSelected
