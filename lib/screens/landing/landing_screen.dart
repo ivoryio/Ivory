@@ -79,10 +79,8 @@ class LandingScreenContent extends StatelessWidget {
                 const SizedBox(height: 10),
                 SizedBox(
                   width: double.infinity,
-                  child: Button(
+                  child: SecondaryButton(
                     text: "Signup",
-                    color: const Color(0xffD9D9D9),
-                    textColor: const Color(0xff747474),
                     onPressed: () {
                       context.push(signupRoute.path);
                     },

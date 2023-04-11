@@ -3,27 +3,27 @@ import 'package:flutter/services.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class PlatformTextInput extends StatefulWidget {
+  final IconData? icon;
   final String textLabel;
-  final TextStyle? textLabelStyle;
   final String? hintText;
   final bool? obscureText;
   final Function validator;
-  final Function? onChanged;
+  final TextStyle? textLabelStyle;
   final TextInputType? keyboardType;
+  final Function(String value)? onChanged;
   final TextEditingController? controller;
-  final IconData? icon;
 
   const PlatformTextInput({
     super.key,
+    this.icon,
     this.hintText,
     this.onChanged,
     this.controller,
     this.keyboardType,
+    this.textLabelStyle,
     required this.textLabel,
     required this.validator,
-    this.textLabelStyle,
     this.obscureText = false,
-    this.icon,
   });
 
   @override
@@ -41,11 +41,13 @@ class _PlatformTextInputState extends State<PlatformTextInput> {
         if (widget.textLabel.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(bottom: 7),
-            child: Text(widget.textLabel,
-                style: const TextStyle(
-                  color: Color(0xFF414D63),
-                  fontSize: 16,
-                ).merge(widget.textLabelStyle)),
+            child: Text(
+              widget.textLabel,
+              style: const TextStyle(
+                color: Color(0xFF414D63),
+                fontSize: 16,
+              ).merge(widget.textLabelStyle),
+            ),
           ),
         Container(
           padding: const EdgeInsets.symmetric(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../utilities/validator.dart';
 import 'login_tan_screen.dart';
 import 'login_passcode_error.dart';
 import '../../widgets/button.dart';
@@ -119,13 +120,30 @@ class PhoneNumberLoginForm extends StatefulWidget {
 }
 
 class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
+  bool isLoginEnabled = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController passwordInputController = TextEditingController();
+
+  void onChanged() {
+    bool isInputValid = phoneController.text.isNotEmpty &&
+        passwordInputController.text.isNotEmpty;
+
+    if (isInputValid && !isLoginEnabled) {
+      setState(() {
+        isLoginEnabled = true;
+      });
+    }
+
+    if (!isInputValid && isLoginEnabled) {
+      setState(() {
+        isLoginEnabled = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController phoneController = TextEditingController();
-    TextEditingController passwordInputController = TextEditingController();
-
     return Form(
       key: _formKey,
       child: Padding(
@@ -145,8 +163,10 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your phone number';
                     }
+
                     return null;
                   },
+                  onChanged: (value) => onChanged(),
                 ),
                 PlatformTextInput(
                   controller: passwordInputController,
@@ -159,6 +179,7 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
                     }
                     return null;
                   },
+                  onChanged: (value) => onChanged(),
                 ),
               ],
             ),
@@ -177,20 +198,22 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
                 ),
                 SizedBox(
                   width: double.infinity,
-                  child: SecondaryButton(
+                  child: PrimaryButton(
                     text: "Continue",
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        _formKey.currentState!.save();
-                        String phoneNumber = phoneController.text;
-                        String password = passwordInputController.text;
+                    onPressed: isLoginEnabled
+                        ? () async {
+                            if (_formKey.currentState!.validate()) {
+                              _formKey.currentState!.save();
+                              String phoneNumber = phoneController.text;
+                              String password = passwordInputController.text;
 
-                        context.read<LoginCubit>().setCredentials(
-                              phoneNumber: phoneNumber,
-                              password: password,
-                            );
-                      }
-                    },
+                              context.read<LoginCubit>().setCredentials(
+                                    phoneNumber: phoneNumber,
+                                    password: password,
+                                  );
+                            }
+                          }
+                        : null,
                   ),
                 ),
               ],
@@ -210,13 +233,30 @@ class EmailLoginForm extends StatefulWidget {
 }
 
 class _EmailLoginFormState extends State<EmailLoginForm> {
+  bool isLoginEnabled = false;
+  TextEditingController emailInputController = TextEditingController();
+  TextEditingController passwordInputController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  void onChange() {
+    bool isInputValid = emailInputController.text.isNotEmpty &&
+        passwordInputController.text.isNotEmpty;
+
+    if (isInputValid && !isLoginEnabled) {
+      setState(() {
+        isLoginEnabled = true;
+      });
+    }
+
+    if (!isInputValid && isLoginEnabled) {
+      setState(() {
+        isLoginEnabled = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController emailInputController = TextEditingController();
-    TextEditingController passwordInputController = TextEditingController();
-
     return Form(
       key: _formKey,
       child: Padding(
@@ -236,8 +276,12 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your email address';
                     }
+                    if (!Validator.isValidEmailAddress(value)) {
+                      return 'Please enter a valid email address';
+                    }
                     return null;
                   },
+                  onChanged: (value) => onChange(),
                 ),
                 PlatformTextInput(
                   controller: passwordInputController,
@@ -250,6 +294,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                     }
                     return null;
                   },
+                  onChanged: (value) => onChange(),
                 ),
               ],
             ),
@@ -268,20 +313,22 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                 ),
                 SizedBox(
                   width: double.infinity,
-                  child: SecondaryButton(
+                  child: PrimaryButton(
                     text: "Continue",
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        _formKey.currentState!.save();
-                        String emailAddress = emailInputController.text;
-                        String password = passwordInputController.text;
+                    onPressed: isLoginEnabled
+                        ? () async {
+                            if (_formKey.currentState!.validate()) {
+                              _formKey.currentState!.save();
+                              String emailAddress = emailInputController.text;
+                              String password = passwordInputController.text;
 
-                        context.read<LoginCubit>().setCredentials(
-                              email: emailAddress,
-                              password: password,
-                            );
-                      }
-                    },
+                              context.read<LoginCubit>().setCredentials(
+                                    email: emailAddress,
+                                    password: password,
+                                  );
+                            }
+                          }
+                        : null,
                   ),
                 ),
               ],
