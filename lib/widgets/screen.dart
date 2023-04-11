@@ -194,22 +194,29 @@ PlatformAppBar createAppBar(
     ]),
   );
 
+  PlatformIconButton backButton = PlatformIconButton(
+    icon: Icon(
+      PlatformIcons(context).back,
+      color: Colors.black,
+    ),
+    padding: EdgeInsets.zero,
+    material: (context, platform) => MaterialIconButtonData(
+      alignment: Alignment.centerLeft,
+    ),
+    cupertino: (context, platform) => CupertinoIconButtonData(
+      alignment: Alignment.centerLeft,
+    ),
+    onPressed: () {
+      if (customBackButtonCallback != null) {
+        customBackButtonCallback();
+      } else {
+        context.pop(context);
+      }
+    },
+  );
+
   return PlatformAppBar(
-    leading: hideBackButton == true
-        ? null
-        : PlatformIconButton(
-            icon: Icon(
-              PlatformIcons(context).back,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              if (customBackButtonCallback != null) {
-                customBackButtonCallback();
-              } else {
-                context.pop(context);
-              }
-            },
-          ),
+    leading: hideBackButton == true ? null : backButton,
     title: centerTitle == true ? titleText : leftAlignedTitle,
     backgroundColor: backgroundColor,
     trailingActions: trailingActions,
@@ -219,6 +226,9 @@ PlatformAppBar createAppBar(
     ),
     cupertino: (context, platform) => CupertinoNavigationBarData(
       border: Border.all(color: Colors.transparent),
+      padding: const EdgeInsetsDirectional.symmetric(
+        horizontal: defaultScreenHorizontalPadding,
+      ),
     ),
     automaticallyImplyLeading: hideBackButton == true ? false : true,
   );
