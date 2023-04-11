@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
-import 'package:solarisdemo/models/person_account.dart';
 import 'package:solarisdemo/models/user.dart';
 
 import '../../utilities/format.dart';
@@ -19,8 +19,10 @@ import '../../cubits/transfer/transfer_cubit.dart';
 
 class TransferScreen extends StatelessWidget {
   final TransferScreenParams transferScreenParams;
+  final GlobalKey<PayeeInformationState> payeeInformationKey = GlobalKey();
+  final GlobalKey<AmountInformationState> amountInformationKey = GlobalKey();
 
-  const TransferScreen({
+  TransferScreen({
     super.key,
     required this.transferScreenParams,
   });
@@ -31,23 +33,137 @@ class TransferScreen extends StatelessWidget {
       value: TransferCubit(),
       child: BlocBuilder<TransferCubit, TransferState>(
         builder: (context, state) {
-          return Screen(
-            title: transferRoute.title,
-            hideBottomNavbar: true,
-            bottomStickyWidget: const BottomStickyWidget(
-              child: StickyBottomContent(),
-            ),
-            child: Padding(
-              padding: defaultScreenPadding,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  AccountSelect(),
-                  PayeeInformation(),
-                ],
-              ),
-            ),
-          );
+          TransferCubit transferCubit = context.read<TransferCubit>();
+
+          switch (transferCubit.state.runtimeType) {
+            case TransferInitialState:
+              return Screen(
+                title: transferRoute.title,
+                hideBottomNavbar: true,
+                bottomStickyWidget: BottomStickyWidget(
+                  child: StickyBottomContent(
+                    onContinueCallback: () {
+                      context.read<TransferCubit>().setBasicData(
+                            iban: payeeInformationKey
+                                .currentState!.ibanController.text,
+                            name: payeeInformationKey
+                                .currentState!.nameController.text,
+                            savePayee:
+                                payeeInformationKey.currentState!.savePayee,
+                          );
+                    },
+                  ),
+                ),
+                child: Padding(
+                  padding: defaultScreenPadding,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const AccountSelect(),
+                      PayeeInformation(
+                        key: payeeInformationKey,
+                        iban: state.iban,
+                        name: state.name,
+                        savePayee: state.savePayee,
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            case TransferStateSetAmount:
+              return Screen(
+                customBackButtonCallback: () {
+                  context.read<TransferCubit>().setInitState(
+                        name: state.name,
+                        iban: state.iban,
+                        savePayee: state.savePayee,
+                      );
+                },
+                title: transferRoute.title,
+                hideBottomNavbar: true,
+                bottomStickyWidget: BottomStickyWidget(
+                  child: StickyBottomContent(
+                    buttonText: "Send money",
+                    onContinueCallback: () {
+                      final amount = double.tryParse(amountInformationKey
+                          .currentState!._amountController.text);
+                      if (amount != null) {
+                        context.read<TransferCubit>().setAmount(amount: amount);
+                      }
+                    },
+                  ),
+                ),
+                child: Padding(
+                  padding: defaultScreenPadding,
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AmountInformation(
+                          key: amountInformationKey,
+                          amount: state.amount,
+                        )
+                      ]),
+                ),
+              );
+            case TransferStateConfirm:
+              return Screen(
+                customBackButtonCallback: () {
+                  context.read<TransferCubit>().setBasicData(
+                        name: state.name,
+                        iban: state.iban,
+                        savePayee: state.savePayee,
+                        amount: state.amount,
+                      );
+                },
+                title: "Transaction confirmation",
+                hideBottomNavbar: true,
+                bottomStickyWidget: BottomStickyWidget(
+                  child: StickyBottomContent(
+                    buttonText: "Confirm and send",
+                    onContinueCallback: () {
+                      context.read<TransferCubit>().confirmTransfer(
+                            name: state.name,
+                            iban: state.iban,
+                            savePayee: state.savePayee,
+                            amount: state.amount,
+                          );
+                    },
+                  ),
+                ),
+                child: Padding(
+                  padding: defaultScreenPadding,
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        Text('TransferStateConfirm'),
+                      ]),
+                ),
+              );
+            case TransactionStateConfirmed:
+              return Screen(
+                title: '',
+                hideBackButton: true,
+                hideBottomNavbar: true,
+                bottomStickyWidget: BottomStickyWidget(
+                  child: StickyBottomContent(
+                    buttonText: "OK, got it",
+                    onContinueCallback: () {
+                      context.go(homeRoute.path);
+                    },
+                  ),
+                ),
+                child: Padding(
+                  padding: defaultScreenPadding,
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        Text('TransactionStateConfirmed'),
+                      ]),
+                ),
+              );
+            default:
+              return const Text('Unknown state');
+          }
         },
       ),
     );
@@ -65,7 +181,12 @@ class TransferScreenParams {
 }
 
 class StickyBottomContent extends StatelessWidget {
-  const StickyBottomContent({super.key});
+  final Function onContinueCallback;
+  final String? buttonText;
+  const StickyBottomContent(
+      {super.key,
+      required this.onContinueCallback,
+      this.buttonText = "Continue"});
 
   @override
   Widget build(BuildContext context) {
@@ -75,10 +196,8 @@ class StickyBottomContent extends StatelessWidget {
         children: [
           Expanded(
             child: PrimaryButton(
-              text: "Continue",
-              onPressed: () {
-                log("Continue pressed");
-              },
+              text: buttonText!,
+              onPressed: onContinueCallback,
             ),
           ),
         ],
@@ -171,14 +290,28 @@ class AccountSelect extends StatelessWidget {
 }
 
 class PayeeInformation extends StatefulWidget {
-  const PayeeInformation({super.key});
+  final String? iban;
+  final String? name;
+  final bool? savePayee;
+
+  const PayeeInformation({super.key, this.iban, this.name, this.savePayee});
 
   @override
-  State<PayeeInformation> createState() => _PayeeInformationState();
+  State<PayeeInformation> createState() => PayeeInformationState();
 }
 
-class _PayeeInformationState extends State<PayeeInformation> {
-  bool _isSavePayee = false;
+class PayeeInformationState extends State<PayeeInformation> {
+  bool savePayee = false;
+  TextEditingController ibanController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    ibanController.text = widget.iban ?? '';
+    nameController.text = widget.name ?? '';
+    savePayee = widget.savePayee ?? false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -194,6 +327,7 @@ class _PayeeInformationState extends State<PayeeInformation> {
           ),
         ),
         PlatformTextInput(
+          controller: nameController,
           textLabel: "Name of the person/business",
           textLabelStyle: const TextStyle(
             color: Color(0xFF344054),
@@ -210,6 +344,7 @@ class _PayeeInformationState extends State<PayeeInformation> {
           },
         ),
         PlatformTextInput(
+          controller: ibanController,
           textLabel: "IBAN",
           textLabelStyle: const TextStyle(
             color: Color(0xFF344054),
@@ -228,10 +363,10 @@ class _PayeeInformationState extends State<PayeeInformation> {
         Row(
           children: [
             CheckboxWidget(
-              isChecked: _isSavePayee,
+              isChecked: savePayee,
               onChanged: (bool checked) {
                 setState(() {
-                  _isSavePayee = checked;
+                  savePayee = checked;
                 });
               },
             ),
@@ -244,6 +379,44 @@ class _PayeeInformationState extends State<PayeeInformation> {
               ),
             ),
           ],
+        ),
+      ],
+    );
+  }
+}
+
+class AmountInformation extends StatefulWidget {
+  final double? amount;
+
+  const AmountInformation({super.key, this.amount});
+
+  @override
+  State<AmountInformation> createState() => AmountInformationState();
+}
+
+class AmountInformationState extends State<AmountInformation> {
+  final _amountController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _amountController.text = widget.amount?.toString() ?? '';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('Enter Amount:'),
+        const SizedBox(height: 8),
+        TextField(
+          controller: _amountController,
+          keyboardType: TextInputType.number,
+          decoration: const InputDecoration(
+            hintText: 'Amount',
+            border: OutlineInputBorder(),
+          ),
         ),
       ],
     );

@@ -16,6 +16,7 @@ class Screen extends StatelessWidget {
   final TextStyle? titleTextStyle;
   final List<Widget>? trailingActions;
   final BottomStickyWidget? bottomStickyWidget;
+  final Function? customBackButtonCallback;
 
   const Screen({
     super.key,
@@ -29,6 +30,7 @@ class Screen extends StatelessWidget {
     this.bottomStickyWidget,
     this.hideBackButton = false,
     this.hideBottomNavbar = false,
+    this.customBackButtonCallback,
   });
 
   @override
@@ -43,6 +45,7 @@ class Screen extends StatelessWidget {
             hideBackButton: hideBackButton,
             titleTextStyle: titleTextStyle,
             trailingActions: trailingActions,
+            customBackButtonCallback: customBackButtonCallback,
           );
 
     int currentPageIndex = AppRouter.calculateSelectedIndex(context);
@@ -177,6 +180,7 @@ PlatformAppBar createAppBar(
   List<Widget>? trailingActions,
   Color? backgroundColor = Colors.white,
   bool? centerTitle = true,
+  Function? customBackButtonCallback,
 }) {
   Text titleText = Text(
     title,
@@ -191,6 +195,21 @@ PlatformAppBar createAppBar(
   );
 
   return PlatformAppBar(
+    leading: hideBackButton == true
+        ? null
+        : PlatformIconButton(
+            icon: Icon(
+              PlatformIcons(context).back,
+              color: Colors.black,
+            ),
+            onPressed: () {
+              if (customBackButtonCallback != null) {
+                customBackButtonCallback();
+              } else {
+                context.pop(context);
+              }
+            },
+          ),
     title: centerTitle == true ? titleText : leftAlignedTitle,
     backgroundColor: backgroundColor,
     trailingActions: trailingActions,
