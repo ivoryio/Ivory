@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/widgets/platform_currency_input.dart';
+import 'package:solarisdemo/widgets/text_currency_value.dart';
 
 import '../../utilities/format.dart';
 import '../../widgets/button.dart';
@@ -60,7 +61,7 @@ class TransferScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const AccountSelect(),
+                      const AccountSelect(title: "Send from"),
                       PayeeInformation(
                         key: payeeInformationKey,
                         iban: state.iban,
@@ -136,8 +137,13 @@ class TransferScreen extends StatelessWidget {
                   padding: defaultScreenPadding,
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text('TransferStateConfirm'),
+                      children: [
+                        const AccountSelect(),
+                        TransferDetails(
+                          iban: state.iban!,
+                          amount: state.amount!,
+                          name: state.name!,
+                        ),
                       ]),
                 ),
               );
@@ -209,7 +215,8 @@ class StickyBottomContent extends StatelessWidget {
 }
 
 class AccountSelect extends StatelessWidget {
-  const AccountSelect({super.key});
+  final String? title;
+  const AccountSelect({super.key, this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -223,13 +230,14 @@ class AccountSelect extends StatelessWidget {
       space: 16,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "Send from",
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
+        if (title != null)
+          const Text(
+            "Send from",
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
           ),
-        ),
         Container(
           padding: const EdgeInsets.symmetric(
             vertical: 24,
@@ -420,6 +428,105 @@ class AmountInformationState extends State<AmountInformation> {
               return null;
             },
             controller: _amountController),
+      ],
+    );
+  }
+}
+
+class TransferDetails extends StatelessWidget {
+  final String iban;
+  final String name;
+  final double amount;
+  const TransferDetails(
+      {super.key,
+      required this.iban,
+      required this.name,
+      required this.amount});
+
+  @override
+  Widget build(BuildContext context) {
+    return SpacedColumn(
+      space: 24,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "Transfer details",
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        SpacedColumn(
+          space: 8,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "Payee",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+                color: Color(0xFF667085),
+              ),
+            ),
+            Text(
+              name,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            Text(
+              iban,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+                color: Color(0xFF667085),
+              ),
+            ),
+          ],
+        ),
+        SpacedColumn(
+          space: 8,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "Amount",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+                color: Color(0xFF667085),
+              ),
+            ),
+            TextCurrencyValue(
+              value: amount,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+        SpacedColumn(
+          space: 8,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: const [
+            Text(
+              "Fee",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+                color: Color(0xFF667085),
+              ),
+            ),
+            TextCurrencyValue(
+              value: 0,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            )
+          ],
+        ),
       ],
     );
   }
