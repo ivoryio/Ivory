@@ -18,6 +18,7 @@ class InputCodeBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 50,
+      height: 50,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4),
         border: Border.all(

@@ -44,6 +44,15 @@ class TransferStateConfirm extends TransferState {
   });
 }
 
+class TransferStateConfirmTan extends TransferState {
+  const TransferStateConfirmTan({
+    super.iban,
+    super.name,
+    super.amount,
+    super.savePayee,
+  });
+}
+
 class TransactionStateConfirmed extends TransferState {
   const TransactionStateConfirmed({
     super.iban,
