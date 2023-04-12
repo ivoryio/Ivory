@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/models/user.dart';
+import 'package:solarisdemo/widgets/platform_currency_input.dart';
 
 import '../../utilities/format.dart';
 import '../../widgets/button.dart';
@@ -97,6 +98,7 @@ class TransferScreen extends StatelessWidget {
                   padding: defaultScreenPadding,
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         AmountInformation(
                           key: amountInformationKey,
@@ -406,18 +408,18 @@ class AmountInformationState extends State<AmountInformation> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         const Text('Enter Amount:'),
         const SizedBox(height: 8),
-        TextField(
-          controller: _amountController,
-          keyboardType: TextInputType.number,
-          decoration: const InputDecoration(
-            hintText: 'Amount',
-            border: OutlineInputBorder(),
-          ),
-        ),
+        PlatformCurrencyInput(
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your phone number';
+              }
+              return null;
+            },
+            controller: _amountController),
       ],
     );
   }
