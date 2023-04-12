@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
+import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/screens/transfer/transfer_confirm_screen.dart';
+import 'package:solarisdemo/services/change_request_service.dart';
+import 'package:solarisdemo/services/transaction_service.dart';
 
 import '../../widgets/screen.dart';
 import '../../cubits/transfer/transfer_cubit.dart';
@@ -20,8 +24,13 @@ class TransferScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
+
     return BlocProvider.value(
-      value: TransferCubit(),
+      value: TransferCubit(
+        transactionService: TransactionService(user: user.cognito),
+        changeRequestService: ChangeRequestService(user: user.cognito),
+      ),
       child: BlocBuilder<TransferCubit, TransferState>(
         builder: (context, state) {
           if (state is TransferLoadingState) {
@@ -30,9 +39,10 @@ class TransferScreen extends StatelessWidget {
             );
           }
 
-          if (state is TransferInitialState) {
-            return TransferInitialScreen(
-              state: state,
+          if (state is TransferErrorState) {
+            return ErrorScreen(
+              title: "",
+              message: state.message,
             );
           }
 
@@ -58,7 +68,9 @@ class TransferScreen extends StatelessWidget {
             return const TransferConfirmedScreen();
           }
 
-          return const Text('Unknown state');
+          return TransferInitialScreen(
+            state: state,
+          );
         },
       ),
     );

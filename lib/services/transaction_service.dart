@@ -1,8 +1,25 @@
+import 'dart:developer';
+
+import 'api_service.dart';
+import '../models/transfer.dart';
 import '../models/transaction_model.dart';
-import 'package:solarisdemo/services/api_service.dart';
+import '../models/authorization_request.dart';
 
 class TransactionService extends ApiService {
   TransactionService({required super.user});
+
+  Future<AuthorizationRequest> createTransfer(Transfer transfer) async {
+    try {
+      String path = 'transactions';
+
+      var data = await post(path, body: transfer.toJson());
+
+      return AuthorizationRequest.fromJson(data);
+    } catch (e) {
+      log(e.toString());
+      throw Exception("Failed to create transfer");
+    }
+  }
 
   Future<List<Transaction>?> getTransactions({
     TransactionListFilter? filter,

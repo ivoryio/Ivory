@@ -5,12 +5,14 @@ abstract class TransferState extends Equatable {
   final String? name;
   final double? amount;
   final bool? savePayee;
+  final String? changeRequestId;
 
   const TransferState({
     this.iban,
     this.name,
     this.amount,
     this.savePayee,
+    this.changeRequestId,
   });
 
   @override
@@ -50,6 +52,7 @@ class TransferConfirmTanState extends TransferState {
     super.name,
     super.amount,
     super.savePayee,
+    super.changeRequestId,
   });
 }
 
@@ -68,5 +71,18 @@ class TransferLoadingState extends TransferState {
     super.name,
     super.amount,
     super.savePayee,
+    super.changeRequestId,
+  });
+}
+
+class TransferErrorState extends TransferState {
+  final String message;
+
+  const TransferErrorState({
+    super.iban,
+    super.name,
+    super.amount,
+    super.savePayee,
+    required this.message,
   });
 }

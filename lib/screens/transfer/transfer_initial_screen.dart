@@ -12,7 +12,7 @@ import '../../widgets/screen.dart';
 import '../../widgets/sticky_bottom_content.dart';
 
 class TransferInitialScreen extends StatelessWidget {
-  final TransferInitialState state;
+  final TransferState state;
 
   const TransferInitialScreen({
     super.key,
