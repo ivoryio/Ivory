@@ -25,7 +25,7 @@ class TransferCubit extends Cubit<TransferState> {
     bool? savePayee,
     double? amount,
   }) {
-    emit(TransferStateSetAmount(
+    emit(TransferSetAmountState(
       iban: iban,
       name: name,
       savePayee: savePayee,
@@ -36,7 +36,7 @@ class TransferCubit extends Cubit<TransferState> {
   void setAmount({
     double? amount,
   }) {
-    emit(TransferStateConfirm(
+    emit(TransferConfirmState(
       name: state.name,
       iban: state.iban,
       amount: amount,
@@ -57,7 +57,7 @@ class TransferCubit extends Cubit<TransferState> {
       savePayee: savePayee,
     ));
     await Future.delayed(const Duration(seconds: 1));
-    emit(TransferStateConfirmTan(
+    emit(TransferConfirmTanState(
       iban: iban,
       name: name,
       amount: amount,
@@ -75,7 +75,7 @@ class TransferCubit extends Cubit<TransferState> {
 
     await Future.delayed(const Duration(seconds: 1));
 
-    emit(TransactionStateConfirmed(
+    emit(TransferConfirmedState(
       iban: state.iban,
       name: state.name,
       amount: state.amount,

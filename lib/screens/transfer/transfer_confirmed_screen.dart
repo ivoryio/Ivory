@@ -1,4 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../router/routing_constants.dart';
+import '../../themes/default_theme.dart';
+import '../../widgets/screen.dart';
+import '../../widgets/sticky_bottom_content.dart';
+
+class TransferConfirmedScreen extends StatelessWidget {
+  const TransferConfirmedScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Screen(
+      title: '',
+      hideBackButton: true,
+      hideBottomNavbar: true,
+      bottomStickyWidget: BottomStickyWidget(
+        child: StickyBottomContent(
+          buttonText: "OK, got it",
+          onContinueCallback: () {
+            context.go(homeRoute.path);
+          },
+        ),
+      ),
+      child: Padding(
+        padding: defaultScreenPadding,
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              TransferSuccessful(),
+            ]),
+      ),
+    );
+  }
+}
 
 class TransferSuccessful extends StatelessWidget {
   const TransferSuccessful({super.key});
@@ -50,3 +86,4 @@ class TransferSuccessful extends StatelessWidget {
     );
   }
 }
+

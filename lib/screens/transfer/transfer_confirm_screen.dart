@@ -1,7 +1,65 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:solarisdemo/widgets/spaced_column.dart';
 
-import 'spaced_column.dart';
-import 'text_currency_value.dart';
+import '../../cubits/transfer/transfer_cubit.dart';
+import '../../themes/default_theme.dart';
+import '../../widgets/account_select.dart';
+import '../../widgets/screen.dart';
+import '../../widgets/sticky_bottom_content.dart';
+import '../../widgets/text_currency_value.dart';
+
+class TransferConfirmScreen extends StatelessWidget {
+  final TransferConfirmState state;
+  const TransferConfirmScreen({
+    super.key,
+    required this.state,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Screen(
+      customBackButtonCallback: () {
+        context.read<TransferCubit>().setBasicData(
+              name: state.name,
+              iban: state.iban,
+              savePayee: state.savePayee,
+              amount: state.amount,
+            );
+      },
+      title: "Transaction confirmation",
+      hideBottomNavbar: true,
+      bottomStickyWidget: BottomStickyWidget(
+        child: StickyBottomContent(
+          buttonText: "Confirm and send",
+          onContinueCallback: () {
+            context.read<TransferCubit>().confirmTransfer(
+                  name: state.name,
+                  iban: state.iban,
+                  savePayee: state.savePayee,
+                  amount: state.amount,
+                );
+          },
+        ),
+      ),
+      child: Padding(
+        padding: defaultScreenPadding,
+        child: SpacedColumn(
+          space: 32,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const AccountSelect(),
+            TransferDetails(
+              iban: state.iban!,
+              amount: state.amount!,
+              name: state.name!,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 class TransferDetails extends StatelessWidget {
   final String iban;

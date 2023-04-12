@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-
 import '../cubits/auth_cubit/auth_cubit.dart';
 import '../models/user.dart';
 import '../screens/home/modals/new_transfer_popup.dart';
@@ -87,7 +86,6 @@ class AccountSelect extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 32),
       ],
     );
   }

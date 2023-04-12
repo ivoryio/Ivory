@@ -26,8 +26,8 @@ class TransferInitialState extends TransferState {
   });
 }
 
-class TransferStateSetAmount extends TransferState {
-  const TransferStateSetAmount({
+class TransferSetAmountState extends TransferState {
+  const TransferSetAmountState({
     super.iban,
     super.name,
     super.savePayee,
@@ -35,8 +35,8 @@ class TransferStateSetAmount extends TransferState {
   });
 }
 
-class TransferStateConfirm extends TransferState {
-  const TransferStateConfirm({
+class TransferConfirmState extends TransferState {
+  const TransferConfirmState({
     super.iban,
     super.name,
     super.amount,
@@ -44,8 +44,8 @@ class TransferStateConfirm extends TransferState {
   });
 }
 
-class TransferStateConfirmTan extends TransferState {
-  const TransferStateConfirmTan({
+class TransferConfirmTanState extends TransferState {
+  const TransferConfirmTanState({
     super.iban,
     super.name,
     super.amount,
@@ -53,8 +53,8 @@ class TransferStateConfirmTan extends TransferState {
   });
 }
 
-class TransactionStateConfirmed extends TransferState {
-  const TransactionStateConfirmed({
+class TransferConfirmedState extends TransferState {
+  const TransferConfirmedState({
     super.iban,
     super.name,
     super.amount,
