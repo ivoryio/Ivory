@@ -86,7 +86,6 @@ class TransactionList extends StatelessWidget {
                         children: [
                           Expanded(
                             child: PlatformTextInput(
-                              textLabel: "",
                               hintText: "Search here...",
                               icon: Icons.search,
                               validator: (value) {

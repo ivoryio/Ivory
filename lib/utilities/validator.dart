@@ -5,3 +5,7 @@ class Validator {
         .hasMatch(email);
   }
 }
+
+class RegexValidator {
+  static RegExp digitsWithTwoDecimals = RegExp(r'^\d+\.?\d{0,2}');
+}

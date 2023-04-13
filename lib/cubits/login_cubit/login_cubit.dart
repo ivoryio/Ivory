@@ -3,14 +3,13 @@ import 'dart:developer';
 import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:solarisdemo/models/person_account.dart';
-import 'package:solarisdemo/models/person_account_summary.dart';
-import 'package:solarisdemo/services/person_service.dart';
 
-import '../../models/person_model.dart';
 import '../../models/user.dart';
 import '../auth_cubit/auth_cubit.dart';
+import '../../models/person_model.dart';
+import '../../models/person_account.dart';
 import '../../services/auth_service.dart';
+import '../../services/person_service.dart';
 
 part 'login_state.dart';
 

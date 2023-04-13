@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:solarisdemo/themes/default_theme.dart';
 
 import '../router/router.dart';
+import '../themes/default_theme.dart';
 
 class Screen extends StatelessWidget {
   final Widget child;
@@ -188,15 +188,14 @@ PlatformAppBar createAppBar(
   );
 
   Widget leftAlignedTitle = Container(
-    padding: const EdgeInsets.only(left: defaultScreenHorizontalPadding),
-    child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
-      titleText,
-    ]),
+    width: double.infinity,
+    padding: const EdgeInsets.only(left: 16),
+    child: titleText,
   );
 
   PlatformIconButton backButton = PlatformIconButton(
-    icon: Icon(
-      PlatformIcons(context).back,
+    icon: const Icon(
+      Icons.arrow_back_ios,
       color: Colors.black,
     ),
     padding: EdgeInsets.zero,
@@ -240,7 +239,7 @@ class BottomStickyWidget extends StatelessWidget {
 
   const BottomStickyWidget({
     super.key,
-    this.height = 120,
+    this.height = 100,
     required this.child,
   });
 

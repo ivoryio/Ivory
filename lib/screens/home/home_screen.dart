@@ -105,7 +105,10 @@ class HomePageHeader extends StatelessWidget {
         builder: (context, state) {
           if (state is AccountSummaryCubitLoading) {
             return Container(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+              padding: const EdgeInsets.symmetric(
+                vertical: 10,
+                horizontal: defaultScreenHorizontalPadding,
+              ),
               width: MediaQuery.of(context).size.width,
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.only(
@@ -125,7 +128,10 @@ class HomePageHeader extends StatelessWidget {
 
           if (state is AccountSummaryCubitLoaded) {
             return Container(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+              padding: const EdgeInsets.symmetric(
+                vertical: 10,
+                horizontal: defaultScreenHorizontalPadding,
+              ),
               width: MediaQuery.of(context).size.width,
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.only(

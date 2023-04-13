@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
+import '../utilities/validator.dart';
+
 const String _defaultHintText = '';
 const double _defaultFontSize = 16;
 const bool _defaultObscureText = false;
@@ -96,6 +98,9 @@ class PlatformTextInput extends StatelessWidget {
                   inputFormatters: [
                     if (keyboardType == TextInputType.phone)
                       FilteringTextInputFormatter.digitsOnly,
+                    if (keyboardType == TextInputType.number)
+                      FilteringTextInputFormatter.allow(
+                          RegexValidator.digitsWithTwoDecimals),
                   ],
                   onChanged: (value) => {
                     if (onChanged != null) onChanged!(value),

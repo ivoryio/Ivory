@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:solarisdemo/widgets/platform_text_input.dart';
+
+import 'platform_text_input.dart';
 
 const double _defaultFontSize = 28;
 const String _defaultHintText = '0.00';
@@ -14,7 +15,6 @@ class PlatformCurrencyInput extends PlatformTextInput {
     super.textLabel,
     super.textLabelStyle,
     super.padding,
-    super.keyboardType,
     super.borderRadius,
     required super.validator,
     super.disableBorderRadius = true,
@@ -24,5 +24,5 @@ class PlatformCurrencyInput extends PlatformTextInput {
     super.border = const Border(
       bottom: BorderSide(color: Color(0xffD9D9D9), width: 1),
     ),
-  });
+  }) : super(keyboardType: TextInputType.number);
 }

@@ -18,8 +18,10 @@ class TransferSetAmountScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
     final TextEditingController amountController = TextEditingController(
         text: state.amount != null ? state.amount.toString() : "");
+
     return Screen(
       customBackButtonCallback: () {
         context.read<TransferCubit>().setInitState(
@@ -35,7 +37,7 @@ class TransferSetAmountScreen extends StatelessWidget {
           buttonText: "Send money",
           onContinueCallback: () {
             final amount = double.tryParse(amountController.text);
-            if (amount != null) {
+            if (formKey.currentState!.validate()) {
               context.read<TransferCubit>().setAmount(amount: amount);
             }
           },
@@ -48,6 +50,7 @@ class TransferSetAmountScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               AmountInformation(
+                formKey: formKey,
                 amountController: amountController,
               )
             ]),
@@ -57,30 +60,36 @@ class TransferSetAmountScreen extends StatelessWidget {
 }
 
 class AmountInformation extends StatelessWidget {
-  final TextEditingController? amountController;
+  final GlobalKey<FormState> formKey;
+  final TextEditingController amountController;
 
   const AmountInformation({
     super.key,
-    this.amountController,
+    required this.formKey,
+    required this.amountController,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const Text('Enter Amount:'),
-        const SizedBox(height: 8),
-        PlatformCurrencyInput(
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter your phone number';
-            }
-            return null;
-          },
-          controller: amountController,
-        ),
-      ],
+    return Form(
+      key: formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Text('Enter Amount:'),
+          const SizedBox(height: 8),
+          PlatformCurrencyInput(
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                print("error");
+                return 'Please enter an amount';
+              }
+              return null;
+            },
+            controller: amountController,
+          ),
+        ],
+      ),
     );
   }
 }
