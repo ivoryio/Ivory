@@ -84,12 +84,19 @@ class TransferCubit extends Cubit<TransferState> {
         amount: Amount(value: amount!, currency: 'EUR'),
       ));
 
+      await Future.delayed(const Duration(seconds: 1));
+
+      String token = (await changeRequestService.getChangeRequestToken(
+              authorizationRequest.authorizationRequest.id))
+          .token;
+
       emit(TransferConfirmTanState(
         iban: iban,
         name: name,
         amount: amount,
         savePayee: savePayee,
         changeRequestId: authorizationRequest.authorizationRequest.id,
+        token: token,
       ));
     } catch (error) {
       emit(TransferErrorState(message: error.toString()));
@@ -104,11 +111,11 @@ class TransferCubit extends Cubit<TransferState> {
         amount: state.amount,
         savePayee: state.savePayee,
         changeRequestId: state.changeRequestId,
+        token: state.token,
       ));
       if (state.changeRequestId == null) {
         throw Exception("Change request id is null");
       }
-
       await changeRequestService.confirmChangeRequest(
           state.changeRequestId!, tan);
 

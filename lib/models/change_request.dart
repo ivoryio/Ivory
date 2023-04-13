@@ -22,6 +22,29 @@ class ChangeRequestConfirm {
       };
 }
 
+ChangeRequestToken changeRequestTokenFromJson(String str) =>
+    ChangeRequestToken.fromJson(json.decode(str));
+
+String changeRequestTokenToJson(ChangeRequestToken data) =>
+    json.encode(data.toJson());
+
+class ChangeRequestToken {
+  ChangeRequestToken({
+    required this.token,
+  });
+
+  String token;
+
+  factory ChangeRequestToken.fromJson(Map<String, dynamic> json) =>
+      ChangeRequestToken(
+        token: json["token"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "token": token,
+      };
+}
+
 class ChangeRequestConfirmed {
   ChangeRequestConfirmed({
     this.success,
