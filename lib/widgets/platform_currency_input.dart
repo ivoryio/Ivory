@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:solarisdemo/utilities/validator.dart';
 
 import 'platform_text_input.dart';
 
@@ -7,7 +9,7 @@ const String _defaultHintText = '0.00';
 const TextAlign _defaultTextAlign = TextAlign.center;
 
 class PlatformCurrencyInput extends PlatformTextInput {
-  const PlatformCurrencyInput({
+  PlatformCurrencyInput({
     super.key,
     super.controller,
     super.onChanged,
@@ -24,5 +26,12 @@ class PlatformCurrencyInput extends PlatformTextInput {
     super.border = const Border(
       bottom: BorderSide(color: Color(0xffD9D9D9), width: 1),
     ),
-  }) : super(keyboardType: TextInputType.number);
+  }) : super(
+          keyboardType: TextInputType.number,
+          inputFormatters: [
+            FilteringTextInputFormatter.allow(
+              RegexValidator.digitsWithTwoDecimals,
+            )
+          ],
+        );
 }

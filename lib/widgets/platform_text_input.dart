@@ -32,6 +32,7 @@ class PlatformTextInput extends StatelessWidget {
   final TextInputType? keyboardType;
   final Function(String value)? onChanged;
   final TextEditingController? controller;
+  final List<TextInputFormatter>? inputFormatters;
 
   const PlatformTextInput({
     super.key,
@@ -44,6 +45,7 @@ class PlatformTextInput extends StatelessWidget {
     this.borderRadius,
     this.textLabelStyle,
     required this.validator,
+    this.inputFormatters,
     this.padding = _defaultPadding,
     this.hintText = _defaultHintText,
     this.fontSize = _defaultFontSize,
@@ -98,9 +100,7 @@ class PlatformTextInput extends StatelessWidget {
                   inputFormatters: [
                     if (keyboardType == TextInputType.phone)
                       FilteringTextInputFormatter.digitsOnly,
-                    if (keyboardType == TextInputType.number)
-                      FilteringTextInputFormatter.allow(
-                          RegexValidator.digitsWithTwoDecimals),
+                    if (inputFormatters != null) ...inputFormatters!,
                   ],
                   onChanged: (value) => {
                     if (onChanged != null) onChanged!(value),
