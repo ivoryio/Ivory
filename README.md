@@ -28,6 +28,12 @@ The application already includes the following features:
 - Transactions list
 - Send money to a person
 
+| <img src="https://user-images.githubusercontent.com/16261042/232440439-f297a8e0-9e81-40af-b62a-1395da311c4b.jpg" width="150" /> 
+| <img src="https://user-images.githubusercontent.com/16261042/232440449-8b31d943-2112-495d-b478-2c11c2576638.jpg" width="150" /> 
+| <img src="https://user-images.githubusercontent.com/16261042/232440452-341be72a-9e10-4c22-8176-ebc1e5842145.jpg" width="150" /> 
+| <img src="https://user-images.githubusercontent.com/16261042/232440454-f47425ec-49fe-431a-94fe-937d1d5c55cd.jpg" width="150" /> 
+| <img src="https://user-images.githubusercontent.com/16261042/232441790-9763ba80-9af6-410b-a62b-34babc2c6ac8.jpg" width="150" /> |
+
 The following features are planned to be implemented:
 1. Physical card details
 1. Filter & sort transactions
@@ -40,6 +46,7 @@ The following features are planned to be implemented:
 1. Physical card - Freeze / Unfreeze
 1. Send money to a saved payee
 1. Sign UP
+
 
 ## Contact
 
