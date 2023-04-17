@@ -1,6 +1,10 @@
-class Config {
-  static String cognitoUserPoolId = 'eu-west-1_qy1q4kreP';
-  static String cognitoClientId = '37pa10mkkkbqr62q66916jdma0';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-  static String apiBaseUrl = 'jsxhc7emf3.execute-api.eu-west-1.amazonaws.com';
+class Config {
+  static String cognitoUserPoolId =
+      dotenv.env['COGNITO_USER_POOL_ID'] ?? 'NO_COGNITO_USER_POOL_ID';
+  static String cognitoClientId =
+      dotenv.env['COGNITO_CLIENT_ID'] ?? 'NO_COGNITO_CLIENT_ID';
+
+  static String apiBaseUrl = dotenv.env['API_BASE_URL'] ?? 'NO_API_BASE_URL';
 }
