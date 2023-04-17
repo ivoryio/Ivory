@@ -44,6 +44,7 @@ dependencies:
   fl_chart: ^0.61.0
   dotted_border: ^2.0.0+3
   amazon_cognito_identity_dart_2: ^3.3.0
+  flutter_dotenv: ^5.0.2
 
 dev_dependencies:
   flutter_test:
@@ -73,6 +74,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

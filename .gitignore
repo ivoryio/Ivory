@@ -10,6 +10,7 @@
 .history
 .svn/
 /keys
+.env
 
 # IntelliJ related
 *.iml
