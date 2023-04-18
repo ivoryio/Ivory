@@ -33,7 +33,7 @@ class AccountBalanceText extends StatelessWidget {
       text: TextSpan(
         children: [
           TextSpan(
-            text: Format.euro(value, digits: 0),
+            text: Format.euro(value, digits: 0, maxDigits: 0),
             style: defaultNumberStyle.merge(numberStyle),
           ),
           TextSpan(

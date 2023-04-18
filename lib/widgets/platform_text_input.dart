@@ -1,92 +1,116 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
-class PlatformTextInput extends StatefulWidget {
-  final String textLabel;
+import '../utilities/validator.dart';
+
+const String _defaultHintText = '';
+const double _defaultFontSize = 16;
+const bool _defaultObscureText = false;
+const bool _defaultDisableBorderRadius = false;
+const TextAlign _defaultTextAlign = TextAlign.start;
+BorderRadius _defaultBorderRadius = BorderRadius.circular(8);
+Border _defaultBorder = Border.all(color: const Color(0xFFAEC1CC), width: 1);
+const EdgeInsets _defaultPadding = EdgeInsets.symmetric(
+  vertical: 5,
+  horizontal: 14,
+);
+
+class PlatformTextInput extends StatelessWidget {
+  final IconData? icon;
+  final Border? border;
   final String? hintText;
+  final double? fontSize;
+  final String? textLabel;
   final bool? obscureText;
   final Function validator;
-  final Function? onChanged;
+  final EdgeInsets? padding;
+  final TextAlign? textAlign;
+  final TextStyle? textLabelStyle;
+  final bool? disableBorderRadius;
+  final BorderRadius? borderRadius;
   final TextInputType? keyboardType;
+  final Function(String value)? onChanged;
   final TextEditingController? controller;
-  final IconData? icon;
+  final List<TextInputFormatter>? inputFormatters;
 
   const PlatformTextInput({
     super.key,
-    this.hintText,
+    this.icon,
+    this.border,
+    this.textLabel,
     this.onChanged,
     this.controller,
     this.keyboardType,
-    required this.textLabel,
+    this.borderRadius,
+    this.textLabelStyle,
     required this.validator,
-    this.obscureText = false,
-    this.icon,
+    this.inputFormatters,
+    this.padding = _defaultPadding,
+    this.hintText = _defaultHintText,
+    this.fontSize = _defaultFontSize,
+    this.textAlign = _defaultTextAlign,
+    this.obscureText = _defaultObscureText,
+    this.disableBorderRadius = _defaultDisableBorderRadius,
   });
-
-  @override
-  State<PlatformTextInput> createState() => _PlatformTextInputState();
-}
-
-class _PlatformTextInputState extends State<PlatformTextInput> {
-  TextEditingController? controller;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (widget.textLabel.isNotEmpty)
+        if (textLabel != null)
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 7),
+            padding: const EdgeInsets.only(bottom: 7),
             child: Text(
-              widget.textLabel,
+              textLabel!,
               style: const TextStyle(
                 color: Color(0xFF414D63),
                 fontSize: 16,
-              ),
+              ).merge(textLabelStyle),
             ),
           ),
         Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 14,
-            vertical: 5,
-          ),
+          padding: padding,
           decoration: BoxDecoration(
-            border: Border.all(color: const Color(0xFFAEC1CC), width: 1),
-            borderRadius: BorderRadius.circular(8),
+            border: border ?? _defaultBorder,
+            borderRadius: disableBorderRadius!
+                ? null
+                : borderRadius ?? _defaultBorderRadius,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (widget.icon != null)
+              if (icon != null)
                 Padding(
                   padding: const EdgeInsets.only(right: 8),
                   child: Icon(
-                    widget.icon,
+                    icon,
                     color: const Color(0xFF667085),
                     size: 20.0,
                   ),
                 ),
               Expanded(
                 child: PlatformTextFormField(
-                  controller: widget.controller,
-                  validator: (value) {
-                    return widget.validator(value);
-                  },
-                  hintText: widget.hintText ?? "",
-                  keyboardType: widget.keyboardType,
-                  obscureText: widget.obscureText,
+                  textAlign: textAlign,
+                  controller: controller,
+                  hintText: hintText,
+                  obscureText: obscureText,
+                  keyboardType: keyboardType,
                   inputFormatters: [
-                    if (widget.keyboardType == TextInputType.phone)
+                    if (keyboardType == TextInputType.phone)
                       FilteringTextInputFormatter.digitsOnly,
+                    if (inputFormatters != null) ...inputFormatters!,
                   ],
-                  onChanged: (value) =>
-                      {if (widget.onChanged != null) widget.onChanged!(value)},
-                  style: const TextStyle(
-                    color: Color(0xFF414D63),
-                    fontSize: 16,
+                  onChanged: (value) => {
+                    if (onChanged != null) onChanged!(value),
+                  },
+                  validator: (value) {
+                    return validator(value);
+                  },
+                  style: TextStyle(
+                    color: const Color(0xFF414D63),
+                    fontSize: fontSize,
                     height: 1.5,
                   ),
                   material: (context, platform) => MaterialTextFormFieldData(
@@ -97,9 +121,9 @@ class _PlatformTextInputState extends State<PlatformTextInput> {
                     ),
                   ),
                   cupertino: (context, platform) => CupertinoTextFormFieldData(
-                    style: const TextStyle(
-                      color: Color(0xFF414D63),
-                      fontSize: 16,
+                    style: TextStyle(
+                      color: const Color(0xFF414D63),
+                      fontSize: fontSize,
                       height: 1.2,
                     ),
                     padding: EdgeInsets.zero,

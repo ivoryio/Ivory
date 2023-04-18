@@ -3,18 +3,20 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:solarisdemo/themes/default_theme.dart';
 
 import '../../models/user.dart';
+import '../../widgets/modal.dart';
 import '../../widgets/screen.dart';
 import '../../utilities/format.dart';
 import '../../widgets/analytics.dart';
+import 'modals/new_transfer_popup.dart';
 import '../../widgets/refer_a_friend.dart';
 import '../../services/person_service.dart';
 import '../../widgets/transaction_list.dart';
 import '../../services/transaction_service.dart';
 import '../../widgets/account_balance_text.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
-import '../../models/person_account_summary.dart';
 import '../../cubits/account_summary_cubit/account_summary_cubit.dart';
 
 const _defaultCountTransactionsDisplayed = 3;
@@ -24,10 +26,10 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    User user = context.read<AuthCubit>().state.user!;
+    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
 
     return Screen(
-      title: 'Hello, ${user.firstName}!',
+      title: 'Hello, ${user.cognito.firstName}!',
       hideBackButton: true,
       appBarColor: const Color(0xFF1C1A28),
       trailingActions: [
@@ -49,6 +51,7 @@ class HomeScreen extends StatelessWidget {
         )
       ],
       titleTextStyle: const TextStyle(color: Colors.white),
+      centerTitle: false,
       child: const HomePageContent(),
     );
   }
@@ -65,13 +68,22 @@ class HomePageContent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const HomePageHeader(),
-          TransactionList(
-            filter: TransactionListFilter(
-              size: _defaultCountTransactionsDisplayed,
+          Padding(
+            padding: defaultScreenPadding,
+            child: TransactionList(
+              filter: TransactionListFilter(
+                size: _defaultCountTransactionsDisplayed,
+              ),
             ),
           ),
-          const Analytics(),
-          const ReferAFriend(),
+          const Padding(
+            padding: defaultScreenPadding,
+            child: Analytics(),
+          ),
+          const Padding(
+            padding: defaultScreenPadding,
+            child: ReferAFriend(),
+          ),
         ],
       ),
     );
@@ -83,16 +95,20 @@ class HomePageHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    User user = context.read<AuthCubit>().state.user!;
+    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
 
     return BlocProvider<AccountSummaryCubit>.value(
-      value: AccountSummaryCubit(personService: PersonService(user: user))
-        ..getAccountSummary(),
+      value:
+          AccountSummaryCubit(personService: PersonService(user: user.cognito))
+            ..getAccountSummary(),
       child: BlocBuilder<AccountSummaryCubit, AccountSummaryCubitState>(
         builder: (context, state) {
           if (state is AccountSummaryCubitLoading) {
             return Container(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+              padding: const EdgeInsets.symmetric(
+                vertical: 10,
+                horizontal: defaultScreenHorizontalPadding,
+              ),
               width: MediaQuery.of(context).size.width,
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.only(
@@ -112,7 +128,10 @@ class HomePageHeader extends StatelessWidget {
 
           if (state is AccountSummaryCubitLoaded) {
             return Container(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+              padding: const EdgeInsets.symmetric(
+                vertical: 10,
+                horizontal: defaultScreenHorizontalPadding,
+              ),
               width: MediaQuery.of(context).size.width,
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.only(
@@ -125,9 +144,10 @@ class HomePageHeader extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AccountSummary(
-                    account: state.data?.account,
-                    income: state.data?.income,
-                    spending: state.data?.spending,
+                    iban: state.data?.iban ?? "",
+                    income: state.data?.income ?? 0,
+                    spending: state.data?.spending ?? 0,
+                    balance: state.data?.balance?.value ?? 0,
                   ),
                   const AccountOptions(),
                 ],
@@ -143,15 +163,18 @@ class HomePageHeader extends StatelessWidget {
 }
 
 class AccountSummary extends StatelessWidget {
-  final Account? account;
-  final num? income;
-  final num? spending;
+  final String iban;
+  final num balance;
+  final num income;
+  final num spending;
 
-  const AccountSummary(
-      {super.key,
-      required this.account,
-      required this.income,
-      required this.spending});
+  const AccountSummary({
+    super.key,
+    required this.iban,
+    required this.income,
+    required this.balance,
+    required this.spending,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -163,12 +186,12 @@ class AccountSummary extends StatelessWidget {
       child: Column(
         children: [
           AccountBalance(
-            iban: account?.iban ?? "",
-            value: (account?.balance.value ?? 0).toDouble(),
+            iban: iban,
+            value: balance,
           ),
           AccountStats(
-            income: income ?? 0,
-            spending: spending ?? 0,
+            income: income,
+            spending: spending,
           ),
         ],
       ),
@@ -211,7 +234,7 @@ class AccountBalance extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 AccountBalanceText(
-                  value: value / 100,
+                  value: value,
                   numberStyle: const TextStyle(color: Colors.white),
                   centsStyle: const TextStyle(color: Colors.white),
                 ),
@@ -299,7 +322,10 @@ class AccountOptions extends StatelessWidget {
           AccountOptionsButton(
             textLabel: "Send",
             icon: Icons.compare_arrows,
-            onPressed: () => log("Send"),
+            onPressed: () => showBottomModal(
+              context: context,
+              child: const NewTransferPopup(),
+            ),
           ),
           AccountOptionsButton(
             textLabel: "Request",

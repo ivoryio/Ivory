@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => AuthCubit(
-        authService: AuthService(context: context),
+        authService: AuthService(),
       ),
       child: Theme(
         data: defaultMaterialTheme,

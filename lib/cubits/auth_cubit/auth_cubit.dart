@@ -12,7 +12,7 @@ class AuthCubit extends Cubit<AuthState> {
   AuthCubit({required this.authService})
       : super(const AuthState.unauthenticated());
 
-  void login(User user) {
+  void login(AuthenticatedUser user) {
     emit(AuthState.authenticated(user));
   }
 

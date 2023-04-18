@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../widgets/checkbox.dart';
+import '../../widgets/spaced_column.dart';
 import 'setup_passcode.dart';
 import '../../widgets/button.dart';
 import '../../widgets/screen.dart';
@@ -98,7 +100,8 @@ class _SignupFormState extends State<SignupForm> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Column(
+            SpacedColumn(
+              space: 16,
               children: [
                 PlatformTextInput(
                   textLabel: "First name",
@@ -155,22 +158,17 @@ class _SignupFormState extends State<SignupForm> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Material(
-                      child: SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: Checkbox(
-                            value: _agreementAccepted,
-                            onChanged: (checked) {
-                              setState(() {
-                                _agreementAccepted = checked!;
-                              });
-                            }),
-                      ),
+                    CheckboxWidget(
+                      isChecked: _agreementAccepted,
+                      onChanged: (bool checked) {
+                        setState(() {
+                          _agreementAccepted = checked;
+                        });
+                      },
                     ),
                     const Expanded(
                       child: Padding(
-                        padding: EdgeInsets.only(left: 5),
+                        padding: EdgeInsets.only(left: 8),
                         child: Text(
                             "I agree with Solaris Terms and Conditions and Privacy Policy",
                             style: TextStyle(

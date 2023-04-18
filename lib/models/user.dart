@@ -1,5 +1,8 @@
 import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 
+import 'person_account.dart';
+import 'person_model.dart';
+
 class User {
   late String? email;
   late String? personId;
@@ -55,4 +58,16 @@ class User {
 
     return user;
   }
+}
+
+class AuthenticatedUser {
+  final User cognito;
+  final Person person;
+  final PersonAccount personAccount;
+
+  AuthenticatedUser({
+    required this.person,
+    required this.cognito,
+    required this.personAccount,
+  });
 }

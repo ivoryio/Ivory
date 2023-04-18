@@ -1,6 +1,8 @@
-import 'package:solarisdemo/models/person_account_summary.dart';
+import 'package:solarisdemo/models/person_account.dart';
 
 import 'api_service.dart';
+import '../models/person_model.dart';
+import '../models/person_account_summary.dart';
 
 class PersonService extends ApiService {
   PersonService({required super.user});
@@ -13,6 +15,29 @@ class PersonService extends ApiService {
       return PersonAccountSummary.fromJson(data);
     } catch (e) {
       throw Exception("Failed to load account summary");
+    }
+  }
+
+  Future<Person>? getPerson() async {
+    try {
+      String path = 'person';
+
+      var data = await get(path);
+      return Person.fromJson(data);
+    } catch (e) {
+      throw Exception("Failed to load person");
+    }
+  }
+
+  Future<PersonAccount>? getAccount() async {
+    try {
+      String path = 'account';
+
+      var data = await get(path);
+
+      return PersonAccount.fromJson(data);
+    } catch (e) {
+      throw Exception("Failed to load account");
     }
   }
 }

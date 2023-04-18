@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:go_router/go_router.dart';
 
 import '../router/router.dart';
+import '../themes/default_theme.dart';
 
 class Screen extends StatelessWidget {
   final Widget child;
   final String title;
   final bool hideAppBar;
+  final bool? centerTitle;
   final Color? appBarColor;
   final bool? hideBackButton;
   final bool hideBottomNavbar;
   final TextStyle? titleTextStyle;
   final List<Widget>? trailingActions;
+  final BottomStickyWidget? bottomStickyWidget;
+  final Function? customBackButtonCallback;
 
   const Screen({
     super.key,
@@ -21,8 +26,11 @@ class Screen extends StatelessWidget {
     this.titleTextStyle,
     this.trailingActions,
     this.hideAppBar = false,
+    this.centerTitle = true,
+    this.bottomStickyWidget,
     this.hideBackButton = false,
     this.hideBottomNavbar = false,
+    this.customBackButtonCallback,
   });
 
   @override
@@ -30,11 +38,14 @@ class Screen extends StatelessWidget {
     PlatformAppBar? appBar = hideAppBar == true
         ? null
         : createAppBar(
-            title,
+            context,
+            title: title,
+            centerTitle: centerTitle,
             backgroundColor: appBarColor,
             hideBackButton: hideBackButton,
             titleTextStyle: titleTextStyle,
             trailingActions: trailingActions,
+            customBackButtonCallback: customBackButtonCallback,
           );
 
     int currentPageIndex = AppRouter.calculateSelectedIndex(context);
@@ -50,16 +61,24 @@ class Screen extends StatelessWidget {
         iosContentBottomPadding: true,
         body: LayoutBuilder(builder:
             (BuildContext context, BoxConstraints viewportConstraints) {
-          return SingleChildScrollView(
+          num bottomStickyWidgetHeight = bottomStickyWidget?.height ?? 0;
+
+          Widget screenContent = SingleChildScrollView(
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                minHeight: viewportConstraints.maxHeight,
+                minHeight:
+                    viewportConstraints.maxHeight - bottomStickyWidgetHeight,
               ),
               child: IntrinsicHeight(
                 child: child,
               ),
             ),
           );
+
+          return Column(children: [
+            Expanded(child: screenContent),
+            if (bottomStickyWidget != null) bottomStickyWidget!.build(context)
+          ]);
         }),
       );
     }
@@ -125,7 +144,7 @@ class LoadingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return PlatformScaffold(
       iosContentPadding: true,
-      appBar: createAppBar(title!),
+      appBar: createAppBar(context, title: title!),
       iosContentBottomPadding: true,
       body: Center(
         child: PlatformCircularProgressIndicator(),
@@ -146,7 +165,7 @@ class ErrorScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return PlatformScaffold(
       iosContentPadding: true,
-      appBar: createAppBar(title!),
+      appBar: createAppBar(context, title: title!),
       iosContentBottomPadding: true,
       body: Text(message!),
     );
@@ -154,25 +173,97 @@ class ErrorScreen extends StatelessWidget {
 }
 
 PlatformAppBar createAppBar(
-  String title, {
+  BuildContext context, {
+  required String title,
   bool? hideBackButton,
   TextStyle? titleTextStyle,
   List<Widget>? trailingActions,
   Color? backgroundColor = Colors.white,
+  bool? centerTitle = true,
+  Function? customBackButtonCallback,
 }) {
-  return PlatformAppBar(
-    title: Text(
-      title,
-      style: titleTextStyle,
+  Text titleText = Text(
+    title,
+    style: titleTextStyle,
+  );
+
+  Widget leftAlignedTitle = Container(
+    width: double.infinity,
+    padding: const EdgeInsets.only(left: 16),
+    child: titleText,
+  );
+
+  PlatformIconButton backButton = PlatformIconButton(
+    icon: const Icon(
+      Icons.arrow_back_ios,
+      color: Colors.black,
     ),
+    padding: EdgeInsets.zero,
+    material: (context, platform) => MaterialIconButtonData(
+      alignment: Alignment.centerLeft,
+      padding: const EdgeInsets.only(left: defaultScreenHorizontalPadding),
+    ),
+    cupertino: (context, platform) => CupertinoIconButtonData(
+      alignment: Alignment.centerLeft,
+    ),
+    onPressed: () {
+      if (customBackButtonCallback != null) {
+        customBackButtonCallback();
+      } else {
+        context.pop(context);
+      }
+    },
+  );
+
+  return PlatformAppBar(
+    leading: hideBackButton == true ? null : backButton,
+    title: centerTitle == true ? titleText : leftAlignedTitle,
     backgroundColor: backgroundColor,
     trailingActions: trailingActions,
     material: (context, platform) => MaterialAppBarData(
       elevation: 0,
+      centerTitle: centerTitle,
     ),
     cupertino: (context, platform) => CupertinoNavigationBarData(
       border: Border.all(color: Colors.transparent),
+      padding: const EdgeInsetsDirectional.symmetric(
+        horizontal: defaultScreenHorizontalPadding,
+      ),
     ),
     automaticallyImplyLeading: hideBackButton == true ? false : true,
   );
+}
+
+class BottomStickyWidget extends StatelessWidget {
+  final Widget child;
+  final num height;
+
+  const BottomStickyWidget({
+    super.key,
+    this.height = 100,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: height.toDouble(),
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            blurRadius: 12,
+            spreadRadius: 0,
+            offset: const Offset(0, -4),
+            color: Colors.black.withOpacity(0.25),
+          ),
+        ],
+      ),
+      child: Container(
+        alignment: Alignment.topLeft,
+        child: child,
+      ),
+    );
+  }
 }

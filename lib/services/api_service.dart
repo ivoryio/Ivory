@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 import 'package:http/http.dart' as http;
+import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 
 import '../config.dart';
 import '../models/user.dart';
@@ -24,15 +24,40 @@ class ApiService<T> {
           "Authorization": "Bearer $accessToken",
         },
       );
+      if (response.statusCode != 200) {
+        throw Exception("GET request response code: ${response.statusCode}");
+      }
 
-      var data = jsonDecode(response.body);
-      return data;
+      return jsonDecode(response.body);
     } catch (e) {
       throw Exception("Could not get data");
     }
   }
 
-  post() {}
+  Future<T> post(
+    String path, {
+    Map<String, String> queryParameters = const {},
+    Map<String, dynamic> body = const {},
+  }) async {
+    try {
+      String? accessToken = await this.getAccessToken();
+
+      final response = await http.post(
+        ApiService.url(path, queryParameters: queryParameters),
+        headers: {
+          "Authorization": "Bearer $accessToken",
+        },
+        body: jsonEncode(body),
+      );
+      if (response.statusCode != 200) {
+        throw Exception("POST request response code: ${response.statusCode}");
+      }
+
+      return jsonDecode(response.body);
+    } catch (e) {
+      throw Exception("Could not post data");
+    }
+  }
 
   static url(String path, {Map<String, String> queryParameters = const {}}) {
     return Uri.https(
