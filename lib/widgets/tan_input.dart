@@ -6,19 +6,20 @@ class InputCodeBox extends StatelessWidget {
   final bool? obscureText;
   final FocusNode? focusNode;
   final TextEditingController? controller;
+  final Function(String value)? onChanged;
 
   const InputCodeBox({
     super.key,
     this.controller,
     this.focusNode,
     this.obscureText = false,
+    this.onChanged,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: 50,
-      height: 50,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4),
         border: Border.all(
@@ -32,6 +33,7 @@ class InputCodeBox extends StatelessWidget {
         textAlign: TextAlign.center,
         obscureText: obscureText,
         keyboardType: TextInputType.number,
+        onChanged: onChanged,
         inputFormatters: [
           FilteringTextInputFormatter.digitsOnly,
           LengthLimitingTextInputFormatter(1),
@@ -61,14 +63,22 @@ class TanInput extends StatelessWidget {
     List<FocusNode> focusNodes =
         List.from([for (var i = 0; i < length; i++) FocusNode()]);
 
-    void onChange() {
+    void onChange(int inputIndex) {
       String tan = controllers.map((controller) => controller.text).join("");
+
+      if (controllers[inputIndex].text.isEmpty) {
+        return;
+      }
 
       for (var i = 0; i < controllers.length - 1; i++) {
         if (controllers[i].text.isNotEmpty) {
-          FocusScope.of(context)
-              .unfocus(disposition: UnfocusDisposition.previouslyFocusedChild);
-          FocusScope.of(context).requestFocus(focusNodes[i + 1]);
+          int nextIndex =
+              controllers.indexWhere((controller) => controller.text.isEmpty);
+          if (nextIndex != -1) {
+            FocusScope.of(context).unfocus(
+                disposition: UnfocusDisposition.previouslyFocusedChild);
+            FocusScope.of(context).requestFocus(focusNodes[nextIndex]);
+          }
         }
       }
 
@@ -77,19 +87,16 @@ class TanInput extends StatelessWidget {
       }
     }
 
-    for (TextEditingController controller in controllers) {
-      controller.addListener(() => onChange());
-    }
-
     return Form(
       key: formKey,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          for (var i = 0; i < length; i++)
+          for (var inputIndex = 0; inputIndex < length; inputIndex++)
             InputCodeBox(
-              controller: controllers[i],
-              focusNode: focusNodes[i],
+              controller: controllers[inputIndex],
+              focusNode: focusNodes[inputIndex],
+              onChanged: (value) => onChange(inputIndex),
             )
         ],
       ),
