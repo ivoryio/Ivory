@@ -11,10 +11,10 @@ abstract class TransferState extends Equatable {
   const TransferState({
     this.iban,
     this.name,
+    this.token,
     this.amount,
     this.savePayee,
     this.changeRequestId,
-    this.token,
   });
 
   @override
@@ -25,8 +25,8 @@ class TransferInitialState extends TransferState {
   const TransferInitialState({
     super.iban,
     super.name,
-    super.savePayee,
     super.amount,
+    super.savePayee,
   });
 }
 
@@ -34,8 +34,8 @@ class TransferSetAmountState extends TransferState {
   const TransferSetAmountState({
     super.iban,
     super.name,
-    super.savePayee,
     super.amount,
+    super.savePayee,
   });
 }
 
@@ -72,10 +72,10 @@ class TransferLoadingState extends TransferState {
   const TransferLoadingState({
     super.iban,
     super.name,
+    super.token,
     super.amount,
     super.savePayee,
     super.changeRequestId,
-    super.token,
   });
 }
 

@@ -1,12 +1,16 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../cubits/transfer/transfer_cubit.dart';
-import '../../router/routing_constants.dart';
-import '../../themes/default_theme.dart';
-import '../../widgets/platform_currency_input.dart';
+import '../../utilities/format.dart';
 import '../../widgets/screen.dart';
+import '../../utilities/constants.dart';
+import '../../themes/default_theme.dart';
+import '../../router/routing_constants.dart';
+import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../widgets/sticky_bottom_content.dart';
+import '../../cubits/transfer/transfer_cubit.dart';
+import '../../widgets/platform_currency_input.dart';
+import '../../utilities/currency_text_field_controller.dart';
 
 class TransferSetAmountScreen extends StatelessWidget {
   final TransferSetAmountState state;
@@ -18,9 +22,16 @@ class TransferSetAmountScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String currency =
+        context.read<AuthCubit>().state.user?.personAccount.balance?.currency ??
+            defaultCurrency;
+
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-    final TextEditingController amountController = TextEditingController(
-        text: state.amount != null ? state.amount.toString() : "");
+    final CurrencyTextFieldController amountController =
+        CurrencyTextFieldController(
+      currencySymbol: Format.getCurrenySymbol(currency),
+      initDoubleValue: state.amount,
+    );
 
     return Screen(
       customBackButtonCallback: () {
@@ -36,7 +47,7 @@ class TransferSetAmountScreen extends StatelessWidget {
         child: StickyBottomContent(
           buttonText: "Send money",
           onContinueCallback: () {
-            final amount = double.tryParse(amountController.text);
+            final amount = amountController.doubleValue;
             if (formKey.currentState!.validate()) {
               context.read<TransferCubit>().setAmount(amount: amount);
             }
@@ -61,7 +72,7 @@ class TransferSetAmountScreen extends StatelessWidget {
 
 class AmountInformation extends StatelessWidget {
   final GlobalKey<FormState> formKey;
-  final TextEditingController amountController;
+  final CurrencyTextFieldController amountController;
 
   const AmountInformation({
     super.key,
@@ -81,13 +92,11 @@ class AmountInformation extends StatelessWidget {
           PlatformCurrencyInput(
             validator: (value) {
               if (value == null || value.isEmpty) {
-                print("error");
                 return 'Please enter an amount';
               }
               return null;
             },
             controller: amountController,
-            currency: 'EUR',
           ),
         ],
       ),

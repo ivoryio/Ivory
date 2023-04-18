@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:solarisdemo/models/person_account.dart';
 
 import '../cubits/auth_cubit/auth_cubit.dart';
 import '../models/user.dart';
@@ -7,9 +8,27 @@ import '../screens/home/modals/new_transfer_popup.dart';
 import '../utilities/format.dart';
 import 'spaced_column.dart';
 
-class AccountSelect extends StatelessWidget {
+class AccountSelect extends StatefulWidget {
   final String? title;
-  const AccountSelect({super.key, this.title});
+
+  const AccountSelect({
+    super.key,
+    this.title,
+  });
+
+  @override
+  State<AccountSelect> createState() => AccountSelectState();
+}
+
+class AccountSelectState extends State<AccountSelect> {
+  PersonAccount? selectedAccount;
+
+  @override
+  void initState() {
+    selectedAccount = context.read<AuthCubit>().state.user?.personAccount;
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +42,7 @@ class AccountSelect extends StatelessWidget {
       space: 16,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (title != null)
+        if (widget.title != null)
           const Text(
             "Send from",
             style: TextStyle(

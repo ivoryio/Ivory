@@ -22,7 +22,9 @@ class TransferInitialScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final GlobalKey<PayeeInformationState> payeeInformationKey = GlobalKey();
+    final GlobalKey<AccountSelectState> accountSelectKey = GlobalKey();
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
     final TextEditingController ibanController = TextEditingController(
       text: state.iban,
     );
@@ -36,11 +38,14 @@ class TransferInitialScreen extends StatelessWidget {
       bottomStickyWidget: BottomStickyWidget(
         child: StickyBottomContent(
           onContinueCallback: () {
-            if (formKey.currentState!.validate()) {
+            if (formKey.currentState!.validate() &&
+                accountSelectKey.currentState?.selectedAccount != null) {
               context.read<TransferCubit>().setBasicData(
                     iban: ibanController.text,
                     name: nameController.text,
                     savePayee: payeeInformationKey.currentState!.savePayee,
+                    personAccount:
+                        accountSelectKey.currentState!.selectedAccount,
                   );
             }
           },
@@ -54,7 +59,10 @@ class TransferInitialScreen extends StatelessWidget {
             SpacedColumn(
               space: 32,
               children: [
-                const AccountSelect(title: "Send from"),
+                AccountSelect(
+                  key: accountSelectKey,
+                  title: "Send from",
+                ),
                 PayeeInformation(
                   formKey: formKey,
                   key: payeeInformationKey,

@@ -48,4 +48,17 @@ class Format {
     }
     return formattedIban;
   }
+
+  static String getCurrenySymbol(String currency) {
+    switch (currency) {
+      case "EUR":
+        return "€";
+      case "USD":
+        return "\$";
+      case "GBP":
+        return "£";
+      default:
+        throw Exception("currency not supported: $currency");
+    }
+  }
 }
