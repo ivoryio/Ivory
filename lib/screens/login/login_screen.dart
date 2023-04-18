@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../utilities/validator.dart';
+import '../../widgets/tab_view.dart';
 import 'login_tan_screen.dart';
 import 'login_passcode_error.dart';
 import '../../widgets/button.dart';
@@ -53,59 +54,17 @@ class LoginScreen extends StatelessWidget {
   }
 }
 
-class LoginOptions extends StatefulWidget {
+class LoginOptions extends StatelessWidget {
   const LoginOptions({super.key});
 
   @override
-  State<LoginOptions> createState() => _LoginOptionsState();
-}
-
-class _LoginOptionsState extends State<LoginOptions> {
-  int _selectedIndex = 0;
-
-  @override
   Widget build(BuildContext context) {
-    Widget page = _selectedIndex == 0
-        ? const PhoneNumberLoginForm()
-        : const EmailLoginForm();
-
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(30, 10, 30, 50),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(2),
-            decoration: BoxDecoration(
-                color: const Color(0xfff5f5f5),
-                borderRadius: const BorderRadius.all(Radius.circular(9.0)),
-                border: Border.all(width: 1, color: const Color(0xffB9B9B9))),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TabExpandedButton(
-                  active: _selectedIndex == 0,
-                  text: "Phone number",
-                  onPressed: () {
-                    setState(() {
-                      _selectedIndex = 0;
-                    });
-                  },
-                ),
-                TabExpandedButton(
-                  active: _selectedIndex == 1,
-                  text: "Email",
-                  onPressed: () {
-                    setState(() {
-                      _selectedIndex = 1;
-                    });
-                  },
-                )
-              ],
-            ),
-          ),
-          Expanded(
-            child: page,
-          ),
+    return const Padding(
+      padding: EdgeInsets.fromLTRB(30, 10, 30, 50),
+      child: TabView(
+        tabs: [
+          TabViewItem(text: "Phone number", child: PhoneNumberLoginForm()),
+          TabViewItem(text: "Email", child: EmailLoginForm()),
         ],
       ),
     );
