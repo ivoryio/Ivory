@@ -87,6 +87,7 @@ class AmountInformation extends StatelessWidget {
               return null;
             },
             controller: amountController,
+            currency: 'EUR',
           ),
         ],
       ),

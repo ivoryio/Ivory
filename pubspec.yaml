@@ -45,6 +45,7 @@ dependencies:
   dotted_border: ^2.0.0+3
   amazon_cognito_identity_dart_2: ^3.3.0
   flutter_dotenv: ^5.0.2
+  currency_text_input_formatter: ^2.1.9
 
 dev_dependencies:
   flutter_test:

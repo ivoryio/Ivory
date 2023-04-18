@@ -1,3 +1,4 @@
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:solarisdemo/utilities/validator.dart';
@@ -5,11 +6,26 @@ import 'package:solarisdemo/utilities/validator.dart';
 import 'platform_text_input.dart';
 
 const double _defaultFontSize = 28;
-const String _defaultHintText = '0.00';
 const TextAlign _defaultTextAlign = TextAlign.center;
 
+String getCurrencySymbol(String currency) {
+  switch (currency) {
+    case 'EUR':
+      return '€';
+    case 'USD':
+      return '\$';
+    case 'GBP':
+      return '£';
+    default:
+      return '';
+  }
+}
+
 class PlatformCurrencyInput extends PlatformTextInput {
+  final String currency;
+
   PlatformCurrencyInput({
+    required this.currency,
     super.key,
     super.controller,
     super.onChanged,
@@ -20,7 +36,6 @@ class PlatformCurrencyInput extends PlatformTextInput {
     super.borderRadius,
     required super.validator,
     super.disableBorderRadius = true,
-    super.hintText = _defaultHintText,
     super.fontSize = _defaultFontSize,
     super.textAlign = _defaultTextAlign,
     super.border = const Border(
@@ -29,9 +44,14 @@ class PlatformCurrencyInput extends PlatformTextInput {
   }) : super(
           keyboardType: TextInputType.number,
           inputFormatters: [
-            FilteringTextInputFormatter.allow(
-              RegexValidator.digitsWithTwoDecimals,
-            )
+            CurrencyTextInputFormatter(
+              symbol: getCurrencySymbol(currency),
+              decimalDigits: 2,
+            ),
           ],
+          hintText: CurrencyTextInputFormatter(
+            symbol: getCurrencySymbol(currency),
+            decimalDigits: 2,
+          ).format('0'),
         );
 }
