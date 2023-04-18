@@ -201,6 +201,7 @@ PlatformAppBar createAppBar(
     padding: EdgeInsets.zero,
     material: (context, platform) => MaterialIconButtonData(
       alignment: Alignment.centerLeft,
+      padding: const EdgeInsets.only(left: defaultScreenHorizontalPadding),
     ),
     cupertino: (context, platform) => CupertinoIconButtonData(
       alignment: Alignment.centerLeft,
