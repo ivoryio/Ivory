@@ -39,10 +39,11 @@ class Format {
 
   static String iban(String iban) {
     String formattedIban = "";
+    String ibanWithoutSpaces = iban.replaceAll(" ", "");
 
-    for (int i = 0; i < iban.length; i++) {
-      formattedIban += iban[i];
-      if ((i + 1) % 4 == 0 && i != iban.length - 1) {
+    for (int i = 0; i < ibanWithoutSpaces.length; i++) {
+      formattedIban += ibanWithoutSpaces[i];
+      if ((i + 1) % 4 == 0 && i != ibanWithoutSpaces.length - 1) {
         formattedIban += " ";
       }
     }

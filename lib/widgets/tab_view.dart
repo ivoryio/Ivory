@@ -53,7 +53,7 @@ class _TabViewState extends State<TabView> {
             ],
           ),
         ),
-        Expanded(child: widget.tabs[selectedTab].child)
+        widget.tabs[selectedTab].child,
       ],
     );
   }
