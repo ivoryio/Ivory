@@ -1,11 +1,11 @@
 // To parse this JSON data, do
 //
-//     final creditCard = creditCardFromJson(jsonString);
+//     final debitCard = debitCardFromJson(jsonString);
 
 import 'dart:convert';
 
-class CreditCard {
-  CreditCard({
+class DebitCard {
+  DebitCard({
     this.id,
     this.accountId,
     this.status,
@@ -17,21 +17,21 @@ class CreditCard {
   final String? accountId;
   final String? status;
   final String? type;
-  final CreditCardRepresentation? representation;
+  final DebitCardRepresentation? representation;
 
-  factory CreditCard.fromRawJson(String str) =>
-      CreditCard.fromJson(json.decode(str));
+  factory DebitCard.fromRawJson(String str) =>
+      DebitCard.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory CreditCard.fromJson(Map<String, dynamic> json) => CreditCard(
+  factory DebitCard.fromJson(Map<String, dynamic> json) => DebitCard(
         id: json["id"],
         accountId: json["account_id"],
         status: json["status"],
         type: json["type"],
         representation: json["representation"] == null
             ? null
-            : CreditCardRepresentation.fromJson(json["representation"]),
+            : DebitCardRepresentation.fromJson(json["representation"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -43,8 +43,8 @@ class CreditCard {
       };
 }
 
-class CreditCardRepresentation {
-  CreditCardRepresentation({
+class DebitCardRepresentation {
+  DebitCardRepresentation({
     this.line1,
     this.maskedPan,
     this.formattedExpirationDate,
@@ -54,13 +54,13 @@ class CreditCardRepresentation {
   final String? maskedPan;
   final String? formattedExpirationDate;
 
-  factory CreditCardRepresentation.fromRawJson(String str) =>
-      CreditCardRepresentation.fromJson(json.decode(str));
+  factory DebitCardRepresentation.fromRawJson(String str) =>
+      DebitCardRepresentation.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory CreditCardRepresentation.fromJson(Map<String, dynamic> json) =>
-      CreditCardRepresentation(
+  factory DebitCardRepresentation.fromJson(Map<String, dynamic> json) =>
+      DebitCardRepresentation(
         line1: json["line_1"],
         maskedPan: json["masked_pan"],
         formattedExpirationDate: json["formatted_expiration_date"],

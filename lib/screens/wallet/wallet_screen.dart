@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:solarisdemo/cubits/cubit/credit_cards_cubit.dart';
+import 'package:solarisdemo/cubits/cubit/debit_cards_cubit.dart';
 import 'package:solarisdemo/widgets/empty_list_message.dart';
 
-import '../../models/credit_card.dart';
+import '../../models/debit_card.dart';
 import '../../widgets/button.dart';
 import '../../widgets/screen.dart';
 import '../../widgets/tab_view.dart';
 import '../../themes/default_theme.dart';
 import '../../widgets/spaced_column.dart';
-import '../../widgets/credit_card_widget.dart';
+import '../../widgets/debit_card_widget.dart';
 
 class WalletScreen extends StatelessWidget {
   const WalletScreen({super.key});
@@ -17,14 +17,14 @@ class WalletScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
-      value: CreditCardsCubit()..getCreditsCards(),
-      child: BlocBuilder<CreditCardsCubit, CreditCardsState>(
+      value: DebitCardsCubit()..getDebitCards(),
+      child: BlocBuilder<DebitCardsCubit, DebitCardsState>(
         builder: (context, state) {
-          if (state is CreditCardsLoading) {
+          if (state is DebitCardsLoading) {
             return const LoadingScreen(title: "Wallet");
           }
 
-          if (state is CreditCardsLoaded) {
+          if (state is DebitCardsLoaded) {
             return Screen(
               title: "Wallet",
               child: WalletScreenBody(
@@ -34,7 +34,7 @@ class WalletScreen extends StatelessWidget {
             );
           }
 
-          if (state is CreditCardsError) {
+          if (state is DebitCardsError) {
             return ErrorScreen(
               title: "Wallet",
               message: state.message,
@@ -43,7 +43,7 @@ class WalletScreen extends StatelessWidget {
 
           return const ErrorScreen(
             title: "Wallet",
-            message: "Credit cards could not be loaded",
+            message: "Debit cards could not be loaded",
           );
         },
       ),
@@ -52,8 +52,8 @@ class WalletScreen extends StatelessWidget {
 }
 
 class WalletScreenBody extends StatelessWidget {
-  final List<CreditCard> physicalCards;
-  final List<CreditCard> virtualCards;
+  final List<DebitCard> physicalCards;
+  final List<DebitCard> virtualCards;
 
   const WalletScreenBody({
     super.key,
@@ -84,7 +84,7 @@ class WalletScreenBody extends StatelessWidget {
 }
 
 class PhysicalCardsList extends StatelessWidget {
-  final List<CreditCard> cards;
+  final List<DebitCard> cards;
 
   const PhysicalCardsList({
     super.key,
@@ -113,14 +113,14 @@ class PhysicalCardsList extends StatelessWidget {
               physics: const ClampingScrollPhysics(),
               separatorBuilder: (context, index) => const SizedBox(height: 10),
               itemBuilder: (context, index) {
-                CreditCard card = cards[index];
+                DebitCard card = cards[index];
 
                 String cardNumber = card.representation?.maskedPan ?? "";
                 String cardHolder = card.representation?.line1 ?? "";
                 String cardExpiry =
                     card.representation?.formattedExpirationDate ?? "";
 
-                return CreditCardWidget(
+                return DebitCardWidget(
                   cardNumber: cardNumber,
                   cardHolder: cardHolder,
                   cardExpiry: cardExpiry,
