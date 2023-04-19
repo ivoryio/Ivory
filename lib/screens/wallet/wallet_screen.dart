@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solarisdemo/cubits/cubit/debit_cards_cubit.dart';
+import 'package:solarisdemo/utilities/constants.dart';
 import 'package:solarisdemo/widgets/empty_list_message.dart';
 
 import '../../models/debit_card.dart';
@@ -71,11 +72,11 @@ class WalletScreenBody extends StatelessWidget {
         tabs: [
           TabViewItem(
             text: "Physical",
-            child: PhysicalCardsList(cards: physicalCards),
+            child: CardList(cards: physicalCards),
           ),
-          const TabViewItem(
+          TabViewItem(
             text: "Virtual",
-            child: VirtualCardsList(),
+            child: CardList(cards: virtualCards),
           ),
         ],
       ),
@@ -83,10 +84,10 @@ class WalletScreenBody extends StatelessWidget {
   }
 }
 
-class PhysicalCardsList extends StatelessWidget {
+class CardList extends StatelessWidget {
   final List<DebitCard> cards;
 
-  const PhysicalCardsList({
+  const CardList({
     super.key,
     required this.cards,
   });
@@ -115,10 +116,13 @@ class PhysicalCardsList extends StatelessWidget {
               itemBuilder: (context, index) {
                 DebitCard card = cards[index];
 
-                String cardNumber = card.representation?.maskedPan ?? "";
-                String cardHolder = card.representation?.line1 ?? "";
+                String cardNumber =
+                    card.representation?.maskedPan ?? emptyStringValue;
+                String cardHolder =
+                    card.representation?.line1 ?? emptyStringValue;
                 String cardExpiry =
-                    card.representation?.formattedExpirationDate ?? "";
+                    card.representation?.formattedExpirationDate ??
+                        emptyStringValue;
 
                 return DebitCardWidget(
                   cardNumber: cardNumber,
@@ -142,19 +146,6 @@ class PhysicalCardsList extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class VirtualCardsList extends StatelessWidget {
-  const VirtualCardsList({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: const [
-        Text("Virtual Card"),
-      ],
     );
   }
 }
