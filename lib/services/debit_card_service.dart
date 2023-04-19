@@ -1,11 +1,11 @@
 import 'package:solarisdemo/models/debit_card.dart';
 import 'package:solarisdemo/services/api_service.dart';
 
-class CardService extends ApiService {
-  CardService({required super.user});
+class DebitCardsService extends ApiService {
+  DebitCardsService({required super.user});
 
-  Future<List<DebitCard>?> getCards({
-    CardsListFilter? filter,
+  Future<List<DebitCard>?> getDebitCards({
+    DebitCardsListFilter? filter,
   }) async {
     try {
       var data =
@@ -21,11 +21,11 @@ class CardService extends ApiService {
   }
 }
 
-class CardsListFilter {
+class DebitCardsListFilter {
   final int? page;
   final int? size;
 
-  CardsListFilter({
+  DebitCardsListFilter({
     this.page,
     this.size,
   });

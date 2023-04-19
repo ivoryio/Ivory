@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:solarisdemo/cubits/cubit/debit_cards_cubit.dart';
-import 'package:solarisdemo/utilities/constants.dart';
-import 'package:solarisdemo/widgets/empty_list_message.dart';
 
+import '../../cubits/auth_cubit/auth_cubit.dart';
+import '../../cubits/debit_cards_cubit/debit_cards_cubit.dart';
 import '../../models/debit_card.dart';
+import '../../models/user.dart';
+import '../../services/debit_card_service.dart';
+import '../../utilities/constants.dart';
 import '../../widgets/button.dart';
+import '../../widgets/empty_list_message.dart';
 import '../../widgets/screen.dart';
 import '../../widgets/tab_view.dart';
 import '../../themes/default_theme.dart';
@@ -17,8 +20,11 @@ class WalletScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
     return BlocProvider.value(
-      value: DebitCardsCubit()..getDebitCards(),
+      value: DebitCardsCubit(
+          debitCardsService: DebitCardsService(user: user.cognito))
+        ..getDebitCards(),
       child: BlocBuilder<DebitCardsCubit, DebitCardsState>(
         builder: (context, state) {
           if (state is DebitCardsLoading) {
