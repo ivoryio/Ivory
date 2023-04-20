@@ -3,27 +3,31 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
 
-import '../models/transaction_model.dart';
 import '../models/user.dart';
 import 'transaction_listing_item.dart';
+import '../models/transaction_model.dart';
 import '../router/routing_constants.dart';
 import '../cubits/auth_cubit/auth_cubit.dart';
 import '../services/transaction_service.dart';
-import '../cubits/transaction_list_cubit/transaction_list_cubit.dart';
 import '../../widgets/platform_text_input.dart';
+import '../cubits/transaction_list_cubit/transaction_list_cubit.dart';
 
 class TransactionList extends StatelessWidget {
-  final bool displayShowAllButton;
-  final TransactionListFilter? filter;
   final bool searchEnabled;
   final bool groupedByMonths;
+  final bool displayShowAllButton;
+  final TransactionListFilter? filter;
+  final void Function()? onPressedFilterButton;
+  final TextEditingController? searchController;
 
   const TransactionList({
     super.key,
-    this.displayShowAllButton = true,
-    this.searchEnabled = false,
     this.filter,
+    this.searchController,
+    this.searchEnabled = false,
+    this.onPressedFilterButton,
     this.groupedByMonths = false,
+    this.displayShowAllButton = true,
   });
 
   @override
@@ -107,7 +111,7 @@ class TransactionList extends StatelessWidget {
                                 padding: EdgeInsets.zero,
                                 icon: const Icon(Icons.filter_alt,
                                     color: Colors.white),
-                                onPressed: () {},
+                                onPressed: onPressedFilterButton,
                               ),
                             ),
                           ),
