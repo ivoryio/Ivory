@@ -47,6 +47,7 @@ dependencies:
   flutter_dotenv: ^5.0.2
   currency_text_input_formatter: ^2.1.9
   flutter_svg: ^2.0.5
+  syncfusion_flutter_datepicker: ^21.1.41
 
 dev_dependencies:
   flutter_test:
