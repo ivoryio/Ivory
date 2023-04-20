@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../utilities/validator.dart';
+import '../../widgets/tab_view.dart';
 import 'login_tan_screen.dart';
 import 'login_passcode_error.dart';
 import '../../widgets/button.dart';
@@ -53,59 +54,17 @@ class LoginScreen extends StatelessWidget {
   }
 }
 
-class LoginOptions extends StatefulWidget {
+class LoginOptions extends StatelessWidget {
   const LoginOptions({super.key});
 
   @override
-  State<LoginOptions> createState() => _LoginOptionsState();
-}
-
-class _LoginOptionsState extends State<LoginOptions> {
-  int _selectedIndex = 0;
-
-  @override
   Widget build(BuildContext context) {
-    Widget page = _selectedIndex == 0
-        ? const PhoneNumberLoginForm()
-        : const EmailLoginForm();
-
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(30, 10, 30, 50),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(2),
-            decoration: BoxDecoration(
-                color: const Color(0xfff5f5f5),
-                borderRadius: const BorderRadius.all(Radius.circular(9.0)),
-                border: Border.all(width: 1, color: const Color(0xffB9B9B9))),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TabExpandedButton(
-                  active: _selectedIndex == 0,
-                  text: "Phone number",
-                  onPressed: () {
-                    setState(() {
-                      _selectedIndex = 0;
-                    });
-                  },
-                ),
-                TabExpandedButton(
-                  active: _selectedIndex == 1,
-                  text: "Email",
-                  onPressed: () {
-                    setState(() {
-                      _selectedIndex = 1;
-                    });
-                  },
-                )
-              ],
-            ),
-          ),
-          Expanded(
-            child: page,
-          ),
+    return const Padding(
+      padding: EdgeInsets.fromLTRB(30, 10, 30, 50),
+      child: TabView(
+        tabs: [
+          TabViewItem(text: "Phone number", child: PhoneNumberLoginForm()),
+          TabViewItem(text: "Email", child: EmailLoginForm()),
         ],
       ),
     );
@@ -144,81 +103,83 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Padding(
-        padding: const EdgeInsets.only(top: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Column(
-              children: [
-                PlatformTextInput(
-                  controller: phoneController,
-                  textLabel: "Phone number",
-                  hintText: "e.g 555 555 555",
-                  keyboardType: TextInputType.phone,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your phone number';
-                    }
+    return Expanded(
+      child: Form(
+        key: _formKey,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Column(
+                children: [
+                  PlatformTextInput(
+                    controller: phoneController,
+                    textLabel: "Phone number",
+                    hintText: "e.g 555 555 555",
+                    keyboardType: TextInputType.phone,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your phone number';
+                      }
 
-                    return null;
-                  },
-                  onChanged: (value) => onChanged(),
-                ),
-                PlatformTextInput(
-                  controller: passwordInputController,
-                  textLabel: "Password",
-                  hintText: "",
-                  obscureText: true,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your password';
-                    }
-                    return null;
-                  },
-                  onChanged: (value) => onChanged(),
-                ),
-              ],
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 20),
-                  child: Text(
-                    "Forgot your phone number?",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
+                      return null;
+                    },
+                    onChanged: (value) => onChanged(),
+                  ),
+                  PlatformTextInput(
+                    controller: passwordInputController,
+                    textLabel: "Password",
+                    hintText: "",
+                    obscureText: true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your password';
+                      }
+                      return null;
+                    },
+                    onChanged: (value) => onChanged(),
+                  ),
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 20),
+                    child: Text(
+                      "Forgot your phone number?",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  child: PrimaryButton(
-                    text: "Continue",
-                    onPressed: isLoginEnabled
-                        ? () async {
-                            if (_formKey.currentState!.validate()) {
-                              _formKey.currentState!.save();
-                              String phoneNumber = phoneController.text;
-                              String password = passwordInputController.text;
+                  SizedBox(
+                    width: double.infinity,
+                    child: PrimaryButton(
+                      text: "Continue",
+                      onPressed: isLoginEnabled
+                          ? () async {
+                              if (_formKey.currentState!.validate()) {
+                                _formKey.currentState!.save();
+                                String phoneNumber = phoneController.text;
+                                String password = passwordInputController.text;
 
-                              context.read<LoginCubit>().setCredentials(
-                                    phoneNumber: phoneNumber,
-                                    password: password,
-                                  );
+                                context.read<LoginCubit>().setCredentials(
+                                      phoneNumber: phoneNumber,
+                                      password: password,
+                                    );
+                              }
                             }
-                          }
-                        : null,
+                          : null,
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -257,83 +218,85 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Padding(
-        padding: const EdgeInsets.only(top: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Column(
-              children: [
-                PlatformTextInput(
-                  controller: emailInputController,
-                  textLabel: "Email Address",
-                  hintText: "e.g john.doe@gmail.com",
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your email address';
-                    }
-                    if (!Validator.isValidEmailAddress(value)) {
-                      return 'Please enter a valid email address';
-                    }
-                    return null;
-                  },
-                  onChanged: (value) => onChange(),
-                ),
-                PlatformTextInput(
-                  controller: passwordInputController,
-                  textLabel: "Password",
-                  hintText: "",
-                  obscureText: true,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your password';
-                    }
-                    return null;
-                  },
-                  onChanged: (value) => onChange(),
-                ),
-              ],
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 20),
-                  child: Text(
-                    "Forgot your email address?",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
+    return Expanded(
+      child: Form(
+        key: _formKey,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Column(
+                children: [
+                  PlatformTextInput(
+                    controller: emailInputController,
+                    textLabel: "Email Address",
+                    hintText: "e.g john.doe@gmail.com",
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your email address';
+                      }
+                      if (!Validator.isValidEmailAddress(value)) {
+                        return 'Please enter a valid email address';
+                      }
+                      return null;
+                    },
+                    onChanged: (value) => onChange(),
+                  ),
+                  PlatformTextInput(
+                    controller: passwordInputController,
+                    textLabel: "Password",
+                    hintText: "",
+                    obscureText: true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your password';
+                      }
+                      return null;
+                    },
+                    onChanged: (value) => onChange(),
+                  ),
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 20),
+                    child: Text(
+                      "Forgot your email address?",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  child: PrimaryButton(
-                    text: "Continue",
-                    onPressed: isLoginEnabled
-                        ? () async {
-                            if (_formKey.currentState!.validate()) {
-                              _formKey.currentState!.save();
-                              String emailAddress = emailInputController.text;
-                              String password = passwordInputController.text;
+                  SizedBox(
+                    width: double.infinity,
+                    child: PrimaryButton(
+                      text: "Continue",
+                      onPressed: isLoginEnabled
+                          ? () async {
+                              if (_formKey.currentState!.validate()) {
+                                _formKey.currentState!.save();
+                                String emailAddress = emailInputController.text;
+                                String password = passwordInputController.text;
 
-                              context.read<LoginCubit>().setCredentials(
-                                    email: emailAddress,
-                                    password: password,
-                                  );
+                                context.read<LoginCubit>().setCredentials(
+                                      email: emailAddress,
+                                      password: password,
+                                    );
+                              }
                             }
-                          }
-                        : null,
+                          : null,
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

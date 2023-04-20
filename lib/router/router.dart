@@ -8,10 +8,10 @@ import '../screens/home/home_screen.dart';
 import '../screens/login/login_screen.dart';
 import '../screens/signup/signup_screen.dart';
 import '../cubits/auth_cubit/auth_cubit.dart';
+import '../screens/wallet/wallet_screen.dart';
 import '../screens/landing/landing_screen.dart';
 import '../screens/profile/profile_screen.dart';
 import '../screens/transfer/transfer_screen.dart';
-import '../screens/wallet_screen/wallet_screen.dart';
 import '../screens/transactions/transactions_screen.dart';
 
 class AppRouter {
