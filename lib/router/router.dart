@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:solarisdemo/screens/transactions/transactions_filtering_screen.dart';
 
+import '../services/transaction_service.dart';
 import 'routing_constants.dart';
 import '../screens/home/home_screen.dart';
 import '../screens/login/login_screen.dart';
@@ -64,7 +66,21 @@ class AppRouter {
           path: transactionsRoute.path,
           name: transactionsRoute.name,
           builder: (BuildContext context, GoRouterState state) {
-            return const TransactionsScreen();
+            TransactionListFilter transactionListFilter =
+                state.extra is TransactionListFilter
+                    ? state.extra as TransactionListFilter
+                    : TransactionListFilter();
+
+            return TransactionsScreen(
+              transactionListFilter: transactionListFilter,
+            );
+          },
+        ),
+        GoRoute(
+          path: transactionsFilteringRoute.path,
+          name: transactionsFilteringRoute.name,
+          builder: (BuildContext context, GoRouterState state) {
+            return const TransactionsFilteringScreen();
           },
         ),
         GoRoute(

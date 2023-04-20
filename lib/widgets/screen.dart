@@ -12,15 +12,17 @@ class Screen extends StatelessWidget {
   final bool? centerTitle;
   final Color? appBarColor;
   final bool? hideBackButton;
+  final Icon? backButtonIcon;
   final bool hideBottomNavbar;
   final TextStyle? titleTextStyle;
   final List<Widget>? trailingActions;
-  final BottomStickyWidget? bottomStickyWidget;
   final Function? customBackButtonCallback;
+  final BottomStickyWidget? bottomStickyWidget;
 
   const Screen({
     super.key,
     this.appBarColor,
+    this.backButtonIcon,
     required this.child,
     required this.title,
     this.titleTextStyle,
@@ -44,6 +46,7 @@ class Screen extends StatelessWidget {
             backgroundColor: appBarColor,
             hideBackButton: hideBackButton,
             titleTextStyle: titleTextStyle,
+            backButtonIcon: backButtonIcon,
             trailingActions: trailingActions,
             customBackButtonCallback: customBackButtonCallback,
           );
@@ -174,17 +177,23 @@ class ErrorScreen extends StatelessWidget {
 
 PlatformAppBar createAppBar(
   BuildContext context, {
-  required String title,
   bool? hideBackButton,
+  Icon? backButtonIcon,
+  required String title,
+  bool? centerTitle = true,
   TextStyle? titleTextStyle,
   List<Widget>? trailingActions,
-  Color? backgroundColor = Colors.white,
-  bool? centerTitle = true,
   Function? customBackButtonCallback,
+  Color? backgroundColor = Colors.white,
 }) {
   Text titleText = Text(
     title,
     style: titleTextStyle,
+  );
+
+  Icon defaultBackButtonIcon = const Icon(
+    Icons.arrow_back_ios,
+    color: Colors.black,
   );
 
   Widget leftAlignedTitle = Container(
@@ -194,11 +203,8 @@ PlatformAppBar createAppBar(
   );
 
   PlatformIconButton backButton = PlatformIconButton(
-    icon: const Icon(
-      Icons.arrow_back_ios,
-      color: Colors.black,
-    ),
     padding: EdgeInsets.zero,
+    icon: backButtonIcon ?? defaultBackButtonIcon,
     material: (context, platform) => MaterialIconButtonData(
       alignment: Alignment.centerLeft,
       padding: const EdgeInsets.only(left: defaultScreenHorizontalPadding),
