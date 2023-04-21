@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'api_service.dart';
 import '../models/transfer.dart';
+import '../utilities/format.dart';
 import '../models/transaction_model.dart';
 import '../models/authorization_request.dart';
 
@@ -42,12 +43,12 @@ class TransactionService extends ApiService {
 }
 
 class TransactionListFilter {
-  final String? bookingDateMin;
-  final String? bookingDateMax;
+  final DateTime? bookingDateMin;
+  final DateTime? bookingDateMax;
   final int? page;
   final int? size;
 
-  TransactionListFilter({
+  const TransactionListFilter({
     this.bookingDateMin,
     this.bookingDateMax,
     this.page,
@@ -58,11 +59,11 @@ class TransactionListFilter {
     Map<String, String> map = {};
 
     if (bookingDateMin != null) {
-      map["filter[booking_date][min]"] = bookingDateMin!;
+      map["filter[booking_date][min]"] = Format.date(bookingDateMin!);
     }
 
     if (bookingDateMax != null) {
-      map["filter[booking_date][max]"] = bookingDateMax!;
+      map["filter[booking_date][max]"] = Format.date(bookingDateMax!);
     }
 
     if (page != null) {

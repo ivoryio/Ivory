@@ -49,6 +49,12 @@ const transactionsRoute = _Route(
   navbarIndex: 2,
 );
 
+const transactionsFilteringRoute = _Route(
+  name: 'transactionsFiltering',
+  path: '/transactions/filtering',
+  title: 'Filter',
+);
+
 const profileRoute = _Route(
   name: 'profile',
   path: '/profile',

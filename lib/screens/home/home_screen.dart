@@ -3,9 +3,11 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:solarisdemo/themes/default_theme.dart';
 
 import '../../models/user.dart';
+import '../../router/routing_constants.dart';
 import '../../widgets/modal.dart';
 import '../../widgets/screen.dart';
 import '../../utilities/format.dart';
@@ -70,10 +72,17 @@ class HomePageContent extends StatelessWidget {
           const HomePageHeader(),
           Padding(
             padding: defaultScreenPadding,
-            child: TransactionList(
-              filter: TransactionListFilter(
-                size: _defaultCountTransactionsDisplayed,
-              ),
+            child: Column(
+              children: const [
+                TransactionList(
+                  header: TransactionListTitle(
+                    displayShowAllButton: true,
+                  ),
+                  filter: TransactionListFilter(
+                    size: _defaultCountTransactionsDisplayed,
+                  ),
+                ),
+              ],
             ),
           ),
           const Padding(
@@ -379,6 +388,46 @@ class AccountOptionsButton extends StatelessWidget {
             ),
           ),
         )
+      ],
+    );
+  }
+}
+
+class TransactionListTitle extends StatelessWidget {
+  final bool displayShowAllButton;
+
+  const TransactionListTitle({
+    super.key,
+    this.displayShowAllButton = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Text(
+          "Transactions",
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        if (displayShowAllButton)
+          PlatformTextButton(
+            padding: EdgeInsets.zero,
+            child: const Text(
+              "See all",
+              textAlign: TextAlign.right,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            onPressed: () {
+              context.push(transactionsRoute.path);
+            },
+          )
       ],
     );
   }

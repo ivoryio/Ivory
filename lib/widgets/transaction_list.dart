@@ -1,28 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:go_router/go_router.dart';
 
-import '../models/transaction_model.dart';
 import '../models/user.dart';
+import 'empty_list_message.dart';
 import 'transaction_listing_item.dart';
-import '../router/routing_constants.dart';
+import '../models/transaction_model.dart';
 import '../cubits/auth_cubit/auth_cubit.dart';
 import '../services/transaction_service.dart';
 import '../cubits/transaction_list_cubit/transaction_list_cubit.dart';
-import '../../widgets/platform_text_input.dart';
 
 class TransactionList extends StatelessWidget {
-  final bool displayShowAllButton;
-  final TransactionListFilter? filter;
-  final bool searchEnabled;
+  final Widget? header;
   final bool groupedByMonths;
+  final TransactionListFilter? filter;
 
   const TransactionList({
     super.key,
-    this.displayShowAllButton = true,
-    this.searchEnabled = false,
     this.filter,
+    this.header,
     this.groupedByMonths = false,
   });
 
@@ -36,84 +31,43 @@ class TransactionList extends StatelessWidget {
       )..getTransactions(filter: filter),
       child: BlocBuilder<TransactionListCubit, TransactionListState>(
         builder: (context, state) {
+          Widget emptyListWidget = const EmptyListMessage(
+            title: "No transactions yet",
+            message:
+                "There are no transactions yet. Your future transactions will be displayed here.",
+          );
+
           switch (state.runtimeType) {
             case TransactionListInitial:
-              return const Text("No transactions found");
+              return emptyListWidget;
             case TransactionListLoading:
               return const Center(child: CircularProgressIndicator());
             case TransactionListError:
               return const Text("Transactions could not be loaded");
             case TransactionListLoaded:
               var transactions = state.transactions;
+              bool isFilteringActive = filter?.bookingDateMin != null &&
+                  filter?.bookingDateMax != null;
 
-              if (transactions.isEmpty) {
-                return const Text("Transaction list is empty");
+              if (transactions.isEmpty && !isFilteringActive) {
+                return emptyListWidget;
+              }
+
+              if (transactions.isEmpty && isFilteringActive) {
+                return const Text(
+                  "We couldn't find any results. Please try again by searching for other transactions.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xff667085),
+                  ),
+                );
               }
 
               return Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        "Transactions",
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      if (displayShowAllButton)
-                        PlatformTextButton(
-                          padding: EdgeInsets.zero,
-                          child: const Text(
-                            "See all",
-                            textAlign: TextAlign.right,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          onPressed: () {
-                            context.push(transactionsRoute.path);
-                          },
-                        )
-                    ],
-                  ),
-                  if (searchEnabled)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 16),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: PlatformTextInput(
-                              hintText: "Search here...",
-                              icon: Icons.search,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter a search term';
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 6.0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8.0),
-                                color: Colors.black,
-                              ),
-                              child: PlatformIconButton(
-                                padding: EdgeInsets.zero,
-                                icon: const Icon(Icons.filter_alt,
-                                    color: Colors.white),
-                                onPressed: () {},
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                  if (header != null) header!,
                   groupedByMonths
                       ? _buildGroupedByMonthsList(transactions)
                       : _buildList(context, transactions)
@@ -203,8 +157,12 @@ Widget _buildGroupedByMonthsList(List<Transaction> transactions) {
     }
   });
 
-  return ListView.builder(
+  return ListView.separated(
     itemCount: monthAndYearList.length,
+    separatorBuilder: (context, index) => const Divider(
+      height: 10,
+      color: Colors.transparent,
+    ),
     shrinkWrap: true,
     physics: const ClampingScrollPhysics(),
     padding: EdgeInsets.zero,
@@ -217,7 +175,7 @@ Widget _buildGroupedByMonthsList(List<Transaction> transactions) {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
+            padding: const EdgeInsets.only(bottom: 10.0),
             child: Text(
               formattedMonthAndYear,
               style: const TextStyle(
