@@ -74,10 +74,10 @@ class HomePageContent extends StatelessWidget {
             padding: defaultScreenPadding,
             child: Column(
               children: const [
-                TransactionListTitle(
-                  displayShowAllButton: true,
-                ),
                 TransactionList(
+                  header: TransactionListTitle(
+                    displayShowAllButton: true,
+                  ),
                   filter: TransactionListFilter(
                     size: _defaultCountTransactionsDisplayed,
                   ),

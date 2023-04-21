@@ -48,11 +48,11 @@ class _TransactionDatePickerPopupState
             children: [
               DateRangePicker(
                 onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
-                  if (args.value is PickerDateRange &&
-                      args.value.startDate != null &&
-                      args.value.endDate != null) {
-                    final DateTime rangeStartDate = args.value.startDate;
-                    final DateTime rangeEndDate = args.value.endDate;
+                  if (args.value is PickerDateRange) {
+                    final DateTime rangeStartDate =
+                        args.value.startDate ?? args.value.endDate;
+                    final DateTime rangeEndDate =
+                        args.value.endDate ?? args.value.startDate;
 
                     setState(() {
                       _dateRange = DateTimeRange(
@@ -69,7 +69,6 @@ class _TransactionDatePickerPopupState
                     child: PrimaryButton(
                       text: "Apply date",
                       onPressed: () {
-                        print(_dateRange);
                         widget.onDateRangeSelected(_dateRange);
                         Navigator.of(context).pop();
                       },

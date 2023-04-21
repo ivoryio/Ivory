@@ -10,12 +10,14 @@ import '../services/transaction_service.dart';
 import '../cubits/transaction_list_cubit/transaction_list_cubit.dart';
 
 class TransactionList extends StatelessWidget {
+  final Widget? header;
   final bool groupedByMonths;
   final TransactionListFilter? filter;
 
   const TransactionList({
     super.key,
     this.filter,
+    this.header,
     this.groupedByMonths = false,
   });
 
@@ -44,13 +46,28 @@ class TransactionList extends StatelessWidget {
               return const Text("Transactions could not be loaded");
             case TransactionListLoaded:
               var transactions = state.transactions;
+              bool isFilteringActive = filter?.bookingDateMin != null &&
+                  filter?.bookingDateMax != null;
 
-              if (transactions.isEmpty) {
+              if (transactions.isEmpty && !isFilteringActive) {
                 return emptyListWidget;
+              }
+
+              if (transactions.isEmpty && isFilteringActive) {
+                return const Text(
+                  "We couldn't find any results. Please try again by searching for other transactions.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xff667085),
+                  ),
+                );
               }
 
               return Column(
                 children: [
+                  if (header != null) header!,
                   groupedByMonths
                       ? _buildGroupedByMonthsList(transactions)
                       : _buildList(context, transactions)

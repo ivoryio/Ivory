@@ -42,7 +42,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       title: "Transactions",
       child: Padding(
         padding: defaultScreenPadding,
-        child: Column(
+        child: SpacedColumn(
+          space: 36,
           children: [
             SpacedColumn(
               space: 16,
@@ -77,11 +78,11 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       ),
                     ],
                   ),
-                TransactionList(
-                  groupedByMonths: true,
-                  filter: transactionListFilter,
-                ),
               ],
+            ),
+            TransactionList(
+              groupedByMonths: true,
+              filter: transactionListFilter,
             ),
           ],
         ),
