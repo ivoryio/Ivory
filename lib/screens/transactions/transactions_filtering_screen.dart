@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
+import 'package:solarisdemo/widgets/pill_button.dart';
 
 import '../../themes/default_theme.dart';
 import '../../utilities/format.dart';
@@ -58,49 +59,31 @@ class TransactionsFilteringScreen extends StatelessWidget {
                       Row(
                         children: [
                           const Icon(Icons.calendar_today),
-                          SizedBox(
-                            // height: 25,
-                            child: PlatformTextButton(
-                              padding: EdgeInsets.zero,
-                              color: Colors.grey,
-                              child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      _getFormattedDate(
-                                          date: state.transactionListFilter
-                                              .bookingDateMin,
-                                          text: "Start date"),
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    const Text(" - "),
-                                    Text(
-                                        _getFormattedDate(
-                                            date: state.transactionListFilter
-                                                .bookingDateMax,
-                                            text: "End date"),
-                                        style: const TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600,
-                                        )),
-                                    const Icon(Icons.close, size: 14),
-                                  ]),
-                              onPressed: () {
-                                showBottomModal(
-                                  context: context,
-                                  child: TransactionDatePickerPopup(
-                                    onDateRangeSelected: (DateTimeRange range) {
-                                      context
-                                          .read<TransactionsFilteringCubit>()
-                                          .setDateRange(range);
-                                    },
-                                  ),
-                                );
-                              },
-                            ),
+                          PillButton(
+                            buttonText:
+                                '${_getFormattedDate(date: state.transactionListFilter.bookingDateMin, text: "Start date")} - ${_getFormattedDate(date: state.transactionListFilter.bookingDateMax, text: "End date")}',
+                            buttonCallback: () {
+                              showBottomModal(
+                                context: context,
+                                child: TransactionDatePickerPopup(
+                                  onDateRangeSelected: (DateTimeRange range) {
+                                    context
+                                        .read<TransactionsFilteringCubit>()
+                                        .setDateRange(range);
+                                  },
+                                ),
+                              );
+                            },
+                            icon: (state.transactionListFilter.bookingDateMin !=
+                                        null ||
+                                    state.transactionListFilter
+                                            .bookingDateMax !=
+                                        null)
+                                ? const Icon(
+                                    Icons.close_rounded,
+                                    size: 16,
+                                  )
+                                : null,
                           ),
                         ],
                       ),
