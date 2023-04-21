@@ -61,7 +61,7 @@ class TransactionsFilteringScreen extends StatelessWidget {
                           const Icon(Icons.calendar_today),
                           PillButton(
                             buttonText:
-                                '${_getFormattedDate(date: state.transactionListFilter.bookingDateMin, text: "Start date")} - ${_getFormattedDate(date: state.transactionListFilter.bookingDateMax, text: "End date")}',
+                                '${getFormattedDate(date: state.transactionListFilter.bookingDateMin, text: "Start date")} - ${getFormattedDate(date: state.transactionListFilter.bookingDateMax, text: "End date")}',
                             buttonCallback: () {
                               showBottomModal(
                                 context: context,
@@ -80,7 +80,7 @@ class TransactionsFilteringScreen extends StatelessWidget {
                                             .bookingDateMax !=
                                         null)
                                 ? const Icon(
-                                    Icons.close_rounded,
+                                    Icons.close,
                                     size: 16,
                                   )
                                 : null,
@@ -111,7 +111,7 @@ class TransactionsFilteringScreen extends StatelessWidget {
   }
 }
 
-String _getFormattedDate({
+String getFormattedDate({
   DateTime? date,
   String text = "Date not set",
 }) {

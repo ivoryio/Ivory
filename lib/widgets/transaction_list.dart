@@ -1,33 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:go_router/go_router.dart';
 
 import '../models/user.dart';
 import 'transaction_listing_item.dart';
 import '../models/transaction_model.dart';
-import '../router/routing_constants.dart';
 import '../cubits/auth_cubit/auth_cubit.dart';
 import '../services/transaction_service.dart';
-import '../../widgets/platform_text_input.dart';
 import '../cubits/transaction_list_cubit/transaction_list_cubit.dart';
 
 class TransactionList extends StatelessWidget {
-  final bool searchEnabled;
   final bool groupedByMonths;
-  final bool displayShowAllButton;
   final TransactionListFilter? filter;
-  final void Function()? onPressedFilterButton;
-  final TextEditingController? searchController;
 
   const TransactionList({
     super.key,
     this.filter,
-    this.searchController,
-    this.searchEnabled = false,
-    this.onPressedFilterButton,
     this.groupedByMonths = false,
-    this.displayShowAllButton = true,
   });
 
   @override
@@ -56,83 +44,6 @@ class TransactionList extends StatelessWidget {
 
               return Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        "Transactions",
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      if (displayShowAllButton)
-                        PlatformTextButton(
-                          padding: EdgeInsets.zero,
-                          child: const Text(
-                            "See all",
-                            textAlign: TextAlign.right,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          onPressed: () {
-                            context.push(transactionsRoute.path);
-                          },
-                        )
-                    ],
-                  ),
-                  if (searchEnabled)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 16),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: PlatformTextInput(
-                              hintText: "Search here...",
-                              icon: Icons.search,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter a search term';
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 6.0),
-                            child: Stack(children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  color: Colors.black,
-                                ),
-                                child: PlatformIconButton(
-                                  padding: EdgeInsets.zero,
-                                  icon: const Icon(Icons.filter_alt,
-                                      color: Colors.white),
-                                  onPressed: onPressedFilterButton,
-                                ),
-                              ),
-                              if (filter != null)
-                                Positioned(
-                                  right: 10,
-                                  top: 10,
-                                  child: Container(
-                                    height: 6,
-                                    width: 6,
-                                    decoration: BoxDecoration(
-                                        color: const Color(0xff2BCCFF),
-                                        borderRadius:
-                                            BorderRadius.circular(100)),
-                                  ),
-                                )
-                            ]),
-                          ),
-                        ],
-                      ),
-                    ),
                   groupedByMonths
                       ? _buildGroupedByMonthsList(transactions)
                       : _buildList(context, transactions)
