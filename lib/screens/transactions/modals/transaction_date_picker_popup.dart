@@ -8,10 +8,12 @@ import 'package:solarisdemo/widgets/date_range_picker.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class TransactionDatePickerPopup extends StatefulWidget {
+  final DateTimeRange? initialSelectedRange;
   final Function(DateTimeRange) onDateRangeSelected;
   const TransactionDatePickerPopup({
     super.key,
     required this.onDateRangeSelected,
+    this.initialSelectedRange,
   });
 
   @override
@@ -47,6 +49,7 @@ class _TransactionDatePickerPopupState
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               DateRangePicker(
+                initialSelectedRange: widget.initialSelectedRange,
                 onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
                   if (args.value is PickerDateRange) {
                     final DateTime rangeStartDate =

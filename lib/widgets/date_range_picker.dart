@@ -2,15 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class DateRangePicker extends StatelessWidget {
+  final DateTimeRange? initialSelectedRange;
   final void Function(DateRangePickerSelectionChangedArgs)? onSelectionChanged;
 
   const DateRangePicker({
     super.key,
     this.onSelectionChanged,
+    this.initialSelectedRange,
   });
 
   @override
   Widget build(BuildContext context) {
+    final selectedRange = initialSelectedRange != null
+        ? PickerDateRange(
+            initialSelectedRange?.start, initialSelectedRange?.end)
+        : null;
+
     return SfDateRangePicker(
       monthFormat: 'MMM',
       yearCellStyle: const DateRangePickerYearCellStyle(
@@ -89,6 +96,7 @@ class DateRangePicker extends StatelessWidget {
       selectionMode: DateRangePickerSelectionMode.range,
       selectionShape: DateRangePickerSelectionShape.rectangle,
       selectionTextStyle: const TextStyle(color: Colors.white),
+      initialSelectedRange: selectedRange,
       rangeTextStyle: const TextStyle(
         color: Colors.white,
       ),

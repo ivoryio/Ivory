@@ -32,6 +32,10 @@ class TransactionsFilteringScreen extends StatelessWidget {
       child:
           BlocBuilder<TransactionsFilteringCubit, TransactionsFilteringState>(
         builder: (context, state) {
+          final isFilterSelected =
+              state.transactionListFilter.bookingDateMin != null ||
+                  state.transactionListFilter.bookingDateMax != null;
+
           return Screen(
             title: transactionsFilteringRoute.title,
             hideBottomNavbar: true,
@@ -74,6 +78,13 @@ class TransactionsFilteringScreen extends StatelessWidget {
                               showBottomModal(
                                 context: context,
                                 child: TransactionDatePickerPopup(
+                                  initialSelectedRange: isFilterSelected
+                                      ? DateTimeRange(
+                                          start: state.transactionListFilter
+                                              .bookingDateMin!,
+                                          end: state.transactionListFilter
+                                              .bookingDateMax!)
+                                      : null,
                                   onDateRangeSelected: (DateTimeRange range) {
                                     context
                                         .read<TransactionsFilteringCubit>()
