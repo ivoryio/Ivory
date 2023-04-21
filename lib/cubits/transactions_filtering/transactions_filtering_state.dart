@@ -1,7 +1,11 @@
 part of 'transactions_filtering_cubit.dart';
 
 abstract class TransactionsFilteringState extends Equatable {
-  const TransactionsFilteringState();
+  final TransactionListFilter transactionListFilter;
+
+  const TransactionsFilteringState({
+    this.transactionListFilter = const TransactionListFilter(),
+  });
 
   @override
   List<Object> get props => [];
@@ -9,4 +13,6 @@ abstract class TransactionsFilteringState extends Equatable {
 
 class TransactionsFilteringInitial extends TransactionsFilteringState {}
 
-class TransactionsSetupFilters extends TransactionsFilteringState {}
+class TransactionsFiltered extends TransactionsFilteringState {
+  const TransactionsFiltered({super.transactionListFilter});
+}

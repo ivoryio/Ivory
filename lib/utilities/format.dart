@@ -62,4 +62,8 @@ class Format {
         throw Exception("currency not supported: $currency");
     }
   }
+
+  static String date(DateTime date, {String? pattern = "yyyy.MM.dd"}) {
+    return DateFormat(pattern).format(date);
+  }
 }

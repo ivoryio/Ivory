@@ -4,6 +4,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../themes/default_theme.dart';
+import '../../utilities/format.dart';
 import '../../widgets/button.dart';
 import '../../widgets/modal.dart';
 import '../../widgets/screen.dart';
@@ -43,16 +44,34 @@ class TransactionsFilteringScreen extends StatelessWidget {
                         padding: EdgeInsets.zero,
                         child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
-                            children: const [
-                              Icon(Icons.calendar_today),
-                              Text("Start date"),
-                              Text("-"),
-                              Text("End date"),
+                            children: [
+                              const Icon(Icons.calendar_today),
+                              Text(state.transactionListFilter.bookingDateMin !=
+                                      null
+                                  ? Format.date(
+                                      state.transactionListFilter
+                                          .bookingDateMin!,
+                                      pattern: "dd MMM yyyy")
+                                  : "Start date"),
+                              const Text(" - "),
+                              Text(state.transactionListFilter.bookingDateMax !=
+                                      null
+                                  ? Format.date(
+                                      state.transactionListFilter
+                                          .bookingDateMax!,
+                                      pattern: "dd MMM yyyy")
+                                  : "End date"),
                             ]),
                         onPressed: () {
                           showBottomModal(
                             context: context,
-                            child: const TransactionDatePickerPopup(),
+                            child: TransactionDatePickerPopup(
+                              onDateRangeSelected: (DateTimeRange range) {
+                                context
+                                    .read<TransactionsFilteringCubit>()
+                                    .setDateRange(range);
+                              },
+                            ),
                           );
                         },
                       ),
@@ -64,13 +83,8 @@ class TransactionsFilteringScreen extends StatelessWidget {
                         child: PrimaryButton(
                             text: "Apply filters",
                             onPressed: () {
-                              TransactionListFilter filter =
-                                  TransactionListFilter(
-                                bookingDateMin: "2022-01-01",
-                              );
-
                               context.push(transactionsRoute.path,
-                                  extra: filter);
+                                  extra: state.transactionListFilter);
                             }),
                       ),
                     ],
