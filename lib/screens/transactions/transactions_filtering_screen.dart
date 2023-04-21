@@ -30,8 +30,6 @@ class TransactionsFilteringScreen extends StatelessWidget {
               Icons.close,
               color: Colors.black,
             ),
-            customBackButtonCallback: () => context.push(transactionsRoute.path,
-                extra: state.transactionListFilter),
             trailingActions: [
               PlatformTextButton(
                   padding: EdgeInsets.zero,
