@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../models/user.dart';
+import 'empty_list_message.dart';
 import 'transaction_listing_item.dart';
 import '../models/transaction_model.dart';
 import '../cubits/auth_cubit/auth_cubit.dart';
@@ -28,9 +29,15 @@ class TransactionList extends StatelessWidget {
       )..getTransactions(filter: filter),
       child: BlocBuilder<TransactionListCubit, TransactionListState>(
         builder: (context, state) {
+          Widget emptyListWidget = const EmptyListMessage(
+            title: "No transactions yet",
+            message:
+                "There are no transactions yet. Your future transactions will be displayed here.",
+          );
+
           switch (state.runtimeType) {
             case TransactionListInitial:
-              return const Text("No transactions found");
+              return emptyListWidget;
             case TransactionListLoading:
               return const Center(child: CircularProgressIndicator());
             case TransactionListError:
@@ -39,7 +46,7 @@ class TransactionList extends StatelessWidget {
               var transactions = state.transactions;
 
               if (transactions.isEmpty) {
-                return const Text("Transaction list is empty");
+                return emptyListWidget;
               }
 
               return Column(

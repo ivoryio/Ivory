@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:solarisdemo/widgets/pill_button.dart';
 
-import '../../themes/default_theme.dart';
-import '../../utilities/format.dart';
-import '../../widgets/button.dart';
 import '../../widgets/modal.dart';
+import '../../widgets/button.dart';
 import '../../widgets/screen.dart';
+import '../../utilities/format.dart';
+import '../../widgets/pill_button.dart';
+import '../../themes/default_theme.dart';
 import '../../router/routing_constants.dart';
-import '../../cubits/transactions_filtering/transactions_filtering_cubit.dart';
 import 'modals/transaction_date_picker_popup.dart';
+import '../../cubits/transactions_filtering/transactions_filtering_cubit.dart';
 
 class TransactionsFilteringScreen extends StatelessWidget {
   const TransactionsFilteringScreen({super.key});
@@ -23,7 +23,6 @@ class TransactionsFilteringScreen extends StatelessWidget {
       child:
           BlocBuilder<TransactionsFilteringCubit, TransactionsFilteringState>(
         builder: (context, state) {
-          print("render");
           return Screen(
             title: transactionsFilteringRoute.title,
             hideBottomNavbar: true,
@@ -31,12 +30,14 @@ class TransactionsFilteringScreen extends StatelessWidget {
               Icons.close,
               color: Colors.black,
             ),
+            customBackButtonCallback: () => context.push(transactionsRoute.path,
+                extra: state.transactionListFilter),
             trailingActions: [
               PlatformTextButton(
                   padding: EdgeInsets.zero,
                   onPressed: () {
                     context.read<TransactionsFilteringCubit>().resetFilters();
-                    context.pop();
+                    context.push(transactionsRoute.path);
                   },
                   child: const Text(
                     "Reset filters",
