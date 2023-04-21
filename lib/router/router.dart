@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -77,7 +78,11 @@ class AppRouter {
           path: transactionsFilteringRoute.path,
           name: transactionsFilteringRoute.name,
           builder: (BuildContext context, GoRouterState state) {
-            return const TransactionsFilteringScreen();
+            return TransactionsFilteringScreen(
+              transactionListFilter: state.extra is TransactionListFilter
+                  ? state.extra as TransactionListFilter
+                  : null,
+            );
           },
         ),
         GoRoute(

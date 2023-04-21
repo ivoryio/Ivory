@@ -53,7 +53,10 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 SearchBar(
                   showButtonIndicator: isFilterActive,
                   onPressedFilterButton: () {
-                    context.push(transactionsFilteringRoute.path);
+                    context.push(
+                      transactionsFilteringRoute.path,
+                      extra: transactionListFilter,
+                    );
                   },
                 ),
                 if (isFilterActive)

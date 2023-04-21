@@ -7,18 +7,24 @@ import '../../services/transaction_service.dart';
 part 'transactions_filtering_state.dart';
 
 class TransactionsFilteringCubit extends Cubit<TransactionsFilteringState> {
-  TransactionsFilteringCubit() : super(TransactionsFilteringInitial());
+  TransactionListFilter transactionListFilter;
+
+  TransactionsFilteringCubit({
+    required this.transactionListFilter,
+  }) : super(TransactionsFilteringInitial(
+          transactionListFilter: transactionListFilter,
+        ));
 
   void setDateRange(DateTimeRange dateRange) {
-    TransactionListFilter transactionListFilter = TransactionListFilter(
+    TransactionListFilter updatedFilter = TransactionListFilter(
       bookingDateMin: dateRange.start,
       bookingDateMax: dateRange.end,
     );
 
-    emit(TransactionsFiltered(transactionListFilter: transactionListFilter));
+    emit(TransactionsFiltered(transactionListFilter: updatedFilter));
   }
 
   void resetFilters() {
-    emit(TransactionsFilteringInitial());
+    emit(const TransactionsFilteringInitial());
   }
 }

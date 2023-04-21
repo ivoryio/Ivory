@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../services/transaction_service.dart';
 import '../../widgets/modal.dart';
 import '../../widgets/button.dart';
 import '../../widgets/screen.dart';
@@ -14,12 +15,20 @@ import 'modals/transaction_date_picker_popup.dart';
 import '../../cubits/transactions_filtering/transactions_filtering_cubit.dart';
 
 class TransactionsFilteringScreen extends StatelessWidget {
-  const TransactionsFilteringScreen({super.key});
+  final TransactionListFilter? transactionListFilter;
+
+  const TransactionsFilteringScreen({
+    super.key,
+    this.transactionListFilter,
+  });
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
-      value: TransactionsFilteringCubit(),
+      value: TransactionsFilteringCubit(
+        transactionListFilter:
+            transactionListFilter ?? const TransactionListFilter(),
+      ),
       child:
           BlocBuilder<TransactionsFilteringCubit, TransactionsFilteringState>(
         builder: (context, state) {
