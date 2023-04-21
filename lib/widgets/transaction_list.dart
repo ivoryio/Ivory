@@ -140,8 +140,12 @@ Widget _buildGroupedByMonthsList(List<Transaction> transactions) {
     }
   });
 
-  return ListView.builder(
+  return ListView.separated(
     itemCount: monthAndYearList.length,
+    separatorBuilder: (context, index) => const Divider(
+      height: 10,
+      color: Colors.transparent,
+    ),
     shrinkWrap: true,
     physics: const ClampingScrollPhysics(),
     padding: EdgeInsets.zero,
@@ -154,7 +158,7 @@ Widget _buildGroupedByMonthsList(List<Transaction> transactions) {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
+            padding: const EdgeInsets.only(bottom: 10.0),
             child: Text(
               formattedMonthAndYear,
               style: const TextStyle(

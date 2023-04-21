@@ -35,6 +35,9 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isFilterActive = transactionListFilter?.bookingDateMax != null ||
+        transactionListFilter?.bookingDateMin != null;
+
     return Screen(
       title: "Transactions",
       child: Padding(
@@ -47,11 +50,13 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 const TransactionListTitle(
                   displayShowAllButton: false,
                 ),
-                SearchBar(onPressedFilterButton: () {
-                  context.go(transactionsFilteringRoute.path);
-                }),
-                if (transactionListFilter?.bookingDateMax != null ||
-                    transactionListFilter?.bookingDateMin != null)
+                SearchBar(
+                  showButtonIndicator: isFilterActive,
+                  onPressedFilterButton: () {
+                    context.go(transactionsFilteringRoute.path);
+                  },
+                ),
+                if (isFilterActive)
                   Row(
                     children: [
                       PillButton(
@@ -69,11 +74,11 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       ),
                     ],
                   ),
+                TransactionList(
+                  groupedByMonths: true,
+                  filter: transactionListFilter,
+                ),
               ],
-            ),
-            TransactionList(
-              groupedByMonths: true,
-              filter: transactionListFilter,
             ),
           ],
         ),
