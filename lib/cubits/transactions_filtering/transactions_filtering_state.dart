@@ -8,11 +8,14 @@ abstract class TransactionsFilteringState extends Equatable {
   });
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [transactionListFilter];
 }
 
 class TransactionsFilteringInitial extends TransactionsFilteringState {}
 
 class TransactionsFiltered extends TransactionsFilteringState {
   const TransactionsFiltered({super.transactionListFilter});
+
+  @override
+  List<Object> get props => [transactionListFilter];
 }

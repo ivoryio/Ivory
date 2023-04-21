@@ -17,4 +17,8 @@ class TransactionsFilteringCubit extends Cubit<TransactionsFilteringState> {
 
     emit(TransactionsFiltered(transactionListFilter: transactionListFilter));
   }
+
+  void resetFilters() {
+    emit(TransactionsFilteringInitial());
+  }
 }

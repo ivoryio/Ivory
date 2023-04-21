@@ -7,8 +7,6 @@ import 'package:solarisdemo/widgets/date_range_picker.dart';
 
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
-import '../../../utilities/format.dart';
-
 class TransactionDatePickerPopup extends StatefulWidget {
   final Function(DateTimeRange) onDateRangeSelected;
   const TransactionDatePickerPopup({
@@ -71,6 +69,7 @@ class _TransactionDatePickerPopupState
                     child: PrimaryButton(
                       text: "Apply date",
                       onPressed: () {
+                        print(_dateRange);
                         widget.onDateRangeSelected(_dateRange);
                         Navigator.of(context).pop();
                       },
