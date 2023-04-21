@@ -20,7 +20,7 @@ class TransactionListCubit extends Cubit<TransactionListState> {
           await transactionService.getTransactions(filter: filter);
 
       if (transactions is List<Transaction>) {
-        emit(TransactionListLoaded([]));
+        emit(TransactionListLoaded(transactions));
       } else {
         emit(const TransactionListInitial());
       }
