@@ -46,8 +46,7 @@ class TransactionsFilteringScreen extends StatelessWidget {
             ),
             trailingActions: [
               PlatformTextButton(
-                  padding: const EdgeInsets.only(
-                      right: defaultScreenHorizontalPadding),
+                  padding: EdgeInsets.zero,
                   onPressed: () {
                     context.read<TransactionsFilteringCubit>().resetFilters();
                     context.push(transactionsRoute.path);

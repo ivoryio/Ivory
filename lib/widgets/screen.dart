@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -226,11 +228,13 @@ PlatformAppBar createAppBar(
     title: centerTitle == true ? titleText : leftAlignedTitle,
     backgroundColor: backgroundColor,
     trailingActions: trailingActions,
-    material: (context, platform) => MaterialAppBarData(
-      elevation: 0,
-      centerTitle: centerTitle
-      ,
-    ),
+    material: (context, platform) =>
+        MaterialAppBarData(elevation: 0, centerTitle: centerTitle, actions: [
+      if (trailingActions != null) ...trailingActions,
+      const SizedBox(
+        width: defaultScreenHorizontalPadding,
+      )
+    ]),
     cupertino: (context, platform) => CupertinoNavigationBarData(
       border: Border.all(color: Colors.transparent),
       padding: const EdgeInsetsDirectional.symmetric(
