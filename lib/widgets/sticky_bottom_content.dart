@@ -24,7 +24,7 @@ class StickyBottomContentState extends State<StickyBottomContent> {
 
   bool get buttonActive => active;
 
-  void setButtonActive() {
+  void setButtonEnabled() {
     setState(() {
       active = true;
     });

@@ -21,8 +21,9 @@ class TransferConfirmTanScreen extends StatelessWidget {
         context.read<TransferCubit>().setBasicData(
               name: state.name,
               iban: state.iban,
-              savePayee: state.savePayee,
               amount: state.amount,
+              savePayee: state.savePayee,
+              description: state.description,
             );
       },
       title: "Transaction confirmation",

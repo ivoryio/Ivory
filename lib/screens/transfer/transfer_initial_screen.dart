@@ -40,17 +40,22 @@ class TransferInitialScreen extends StatelessWidget {
       text: state.description ?? emptyStringValue,
     );
 
-    void changeListener() {
-      bool buttonActive = stickyBottomContentKey.currentState!.buttonActive;
-      bool fieldsNotEmpty = nameController.text.isNotEmpty &&
+    bool inputsNotEmpty() {
+      return nameController.text.isNotEmpty &&
           ibanController.text.isNotEmpty &&
           descriptionController.text.isNotEmpty;
+    }
 
-      if (!buttonActive && fieldsNotEmpty) {
-        stickyBottomContentKey.currentState!.setButtonActive();
-      }
-      if (buttonActive && !fieldsNotEmpty) {
+    void changeListener() {
+      bool buttonActive = stickyBottomContentKey.currentState!.buttonActive;
+      bool isEmpty = !inputsNotEmpty();
+
+      if (buttonActive && isEmpty) {
         stickyBottomContentKey.currentState!.setButtonDisabled();
+      }
+
+      if (!buttonActive && !isEmpty) {
+        stickyBottomContentKey.currentState!.setButtonEnabled();
       }
     }
 
@@ -64,7 +69,7 @@ class TransferInitialScreen extends StatelessWidget {
       bottomStickyWidget: BottomStickyWidget(
         child: StickyBottomContent(
           key: stickyBottomContentKey,
-          buttonActive: false,
+          buttonActive: inputsNotEmpty(),
           onContinueCallback: () {
             if (formKey.currentState!.validate() &&
                 accountSelectKey.currentState?.selectedAccount != null) {

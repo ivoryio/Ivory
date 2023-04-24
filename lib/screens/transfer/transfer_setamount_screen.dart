@@ -39,6 +39,7 @@ class TransferSetAmountScreen extends StatelessWidget {
               name: state.name,
               iban: state.iban,
               savePayee: state.savePayee,
+              description: state.description,
             );
       },
       title: transferRoute.title,
