@@ -228,7 +228,8 @@ PlatformAppBar createAppBar(
     trailingActions: trailingActions,
     material: (context, platform) => MaterialAppBarData(
       elevation: 0,
-      centerTitle: centerTitle,
+      centerTitle: centerTitle
+      ,
     ),
     cupertino: (context, platform) => CupertinoNavigationBarData(
       border: Border.all(color: Colors.transparent),

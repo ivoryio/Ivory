@@ -4,11 +4,14 @@ class PillButton extends StatelessWidget {
   final String buttonText;
   final void Function() buttonCallback;
   final Icon? icon;
-  const PillButton(
-      {super.key,
-      required this.buttonText,
-      required this.buttonCallback,
-      this.icon});
+  final bool active;
+  const PillButton({
+    super.key,
+    required this.buttonText,
+    required this.buttonCallback,
+    this.icon,
+    this.active = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +26,7 @@ class PillButton extends StatelessWidget {
           ),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
-            color: const Color(0xFFE6E6E6),
+            color: active ? const Color(0xFFE6E6E6) : Colors.white,
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
