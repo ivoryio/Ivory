@@ -51,7 +51,7 @@ class Format {
     return formattedIban;
   }
 
-  static String getCurrenySymbol(String currency) {
+  static String getCurrencySymbol(String currency) {
     switch (currency) {
       case "EUR":
         return "€";

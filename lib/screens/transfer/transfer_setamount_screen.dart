@@ -29,7 +29,7 @@ class TransferSetAmountScreen extends StatelessWidget {
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
     final CurrencyTextFieldController amountController =
         CurrencyTextFieldController(
-      currencySymbol: Format.getCurrenySymbol(currency),
+      currencySymbol: Format.getCurrencySymbol(currency),
       initDoubleValue: state.amount,
     );
     final GlobalKey<StickyBottomContentState> stickyBottomContentKey =
@@ -62,7 +62,7 @@ class TransferSetAmountScreen extends StatelessWidget {
       bottomStickyWidget: BottomStickyWidget(
         child: StickyBottomContent(
           key: stickyBottomContentKey,
-          buttonActive: false,
+          buttonActive: state.amount != null,
           buttonText: "Send money",
           onContinueCallback: () {
             final amount = amountController.doubleValue;
