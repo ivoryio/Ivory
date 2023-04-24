@@ -34,11 +34,11 @@ class TransferConfirmScreen extends StatelessWidget {
           buttonText: "Confirm and send",
           onContinueCallback: () {
             context.read<TransferCubit>().confirmTransfer(
-                  name: state.name,
-                  iban: state.iban,
-                  description: state.description,
-                  savePayee: state.savePayee,
-                  amount: state.amount,
+                  name: state.name!,
+                  iban: state.iban!,
+                  savePayee: state.savePayee!,
+                  description: state.description!,
+                  amount: state.amount!,
                 );
           },
         ),

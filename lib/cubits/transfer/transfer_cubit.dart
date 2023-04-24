@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:solarisdemo/utilities/constants.dart';
 
 import '../../models/transfer.dart';
 import '../../models/person_account.dart';
@@ -66,11 +67,11 @@ class TransferCubit extends Cubit<TransferState> {
   }
 
   void confirmTransfer({
-    String? iban,
-    String? name,
-    String? description,
-    double? amount,
-    bool? savePayee,
+    required String iban,
+    required String name,
+    required String description,
+    required double amount,
+    required bool savePayee,
   }) async {
     try {
       emit(TransferLoadingState(
@@ -83,14 +84,14 @@ class TransferCubit extends Cubit<TransferState> {
 
       AuthorizationRequest authorizationRequest =
           await transactionService.createTransfer(Transfer(
-        recipientName: name!,
-        recipientIban: iban!,
+        recipientName: name,
+        recipientIban: iban.replaceAll(emptySpaceString, emptyStringValue),
         reference: '123456789',
-        description: description!,
+        description: description,
         recipientBic: 'TESTBIC',
         endToEndId: '123456789',
         type: TransferType.SEPA_CREDIT_TRANSFER,
-        amount: Amount(value: amount!, currency: 'EUR'),
+        amount: Amount(value: amount, currency: 'EUR'),
       ));
 
       await Future.delayed(const Duration(seconds: 1));

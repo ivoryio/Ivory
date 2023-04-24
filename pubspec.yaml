@@ -45,9 +45,9 @@ dependencies:
   dotted_border: ^2.0.0+3
   amazon_cognito_identity_dart_2: ^3.3.0
   flutter_dotenv: ^5.0.2
-  currency_text_input_formatter: ^2.1.9
   flutter_svg: ^2.0.5
   syncfusion_flutter_datepicker: ^21.1.41
+  mask_text_input_formatter: ^2.4.0
 
 dev_dependencies:
   flutter_test:
