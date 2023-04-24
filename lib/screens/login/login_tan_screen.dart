@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 import '../../widgets/screen.dart';
+import '../../widgets/spaced_column.dart';
 import '../../widgets/tan_input.dart';
 import '../../cubits/login_cubit/login_cubit.dart';
 
@@ -26,22 +27,30 @@ class LoginTanScreen extends StatelessWidget {
             children: [
               Column(
                 children: [
-                  const Text(
-                    "Nice to see you again!",
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 40),
-                  TanInput(
-                      length: 4,
-                      onCompleted: (String tan) {
-                        final LoginCubit loginCubit =
-                            context.read<LoginCubit>();
+                  SpacedColumn(
+                    space: 40,
+                    children: [
+                      const Text(
+                        "Nice to see you again!",
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      TanInput(
+                        length: 4,
+                        onCompleted: (String tan) {
+                          final LoginCubit loginCubit =
+                              context.read<LoginCubit>();
 
-                        loginCubit.login(tan);
-                      }),
+                          loginCubit.login(tan);
+                        },
+                      ),
+                      const Text(
+                        'Please enter your 4-digit PIN to login. (PIN: 1234)',
+                      ),
+                    ],
+                  ),
                 ],
               ),
               const LoginPasscodeFooter(),
