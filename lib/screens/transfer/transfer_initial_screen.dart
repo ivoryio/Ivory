@@ -31,6 +31,9 @@ class TransferInitialScreen extends StatelessWidget {
     final TextEditingController nameController = TextEditingController(
       text: state.name,
     );
+    final TextEditingController descriptionController = TextEditingController(
+      text: state.description,
+    );
 
     return Screen(
       title: transferRoute.title,
@@ -43,6 +46,7 @@ class TransferInitialScreen extends StatelessWidget {
               context.read<TransferCubit>().setBasicData(
                     iban: ibanController.text,
                     name: nameController.text,
+                    description: descriptionController.text,
                     savePayee: payeeInformationKey.currentState!.savePayee,
                     personAccount:
                         accountSelectKey.currentState!.selectedAccount,
@@ -68,6 +72,7 @@ class TransferInitialScreen extends StatelessWidget {
                   key: payeeInformationKey,
                   ibanController: ibanController,
                   nameController: nameController,
+                  descriptionController: descriptionController,
                   savePayee: state.savePayee,
                 ),
               ],
@@ -83,6 +88,7 @@ class PayeeInformation extends StatefulWidget {
   final GlobalKey<FormState> formKey;
   final TextEditingController ibanController;
   final TextEditingController nameController;
+  final TextEditingController descriptionController;
   final bool? savePayee;
 
   const PayeeInformation({
@@ -91,6 +97,7 @@ class PayeeInformation extends StatefulWidget {
     required this.formKey,
     required this.ibanController,
     required this.nameController,
+    required this.descriptionController,
   });
 
   @override
@@ -151,6 +158,23 @@ class PayeeInformationState extends State<PayeeInformation> {
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter the IBAN';
+              }
+              return null;
+            },
+          ),
+          PlatformTextInput(
+            controller: widget.descriptionController,
+            textLabel: "Description",
+            textLabelStyle: const TextStyle(
+              color: Color(0xFF344054),
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
+            hintText: "e.g Rent",
+            keyboardType: TextInputType.text,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter a description';
               }
               return null;
             },

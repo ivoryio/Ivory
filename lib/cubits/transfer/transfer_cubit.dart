@@ -23,6 +23,7 @@ class TransferCubit extends Cubit<TransferState> {
   void setInitState({
     String? iban,
     String? name,
+    String? description,
     double? amount,
     bool? savePayee,
     PersonAccount? personAccount,
@@ -30,6 +31,7 @@ class TransferCubit extends Cubit<TransferState> {
     emit(TransferInitialState(
       iban: iban,
       name: name,
+      description: description,
       savePayee: savePayee,
     ));
   }
@@ -37,6 +39,7 @@ class TransferCubit extends Cubit<TransferState> {
   void setBasicData({
     String? iban,
     String? name,
+    String? description,
     double? amount,
     bool? savePayee,
     PersonAccount? personAccount,
@@ -44,6 +47,7 @@ class TransferCubit extends Cubit<TransferState> {
     emit(TransferSetAmountState(
       iban: iban,
       name: name,
+      description: description,
       amount: amount,
       savePayee: savePayee,
     ));
@@ -56,6 +60,7 @@ class TransferCubit extends Cubit<TransferState> {
       amount: amount,
       name: state.name,
       iban: state.iban,
+      description: state.description,
       savePayee: state.savePayee,
     ));
   }
@@ -63,6 +68,7 @@ class TransferCubit extends Cubit<TransferState> {
   void confirmTransfer({
     String? iban,
     String? name,
+    String? description,
     double? amount,
     bool? savePayee,
   }) async {
@@ -70,6 +76,7 @@ class TransferCubit extends Cubit<TransferState> {
       emit(TransferLoadingState(
         iban: iban,
         name: name,
+        description: description,
         amount: amount,
         savePayee: savePayee,
       ));
@@ -79,7 +86,7 @@ class TransferCubit extends Cubit<TransferState> {
         recipientName: name!,
         recipientIban: iban!,
         reference: '123456789',
-        description: 'Transfer',
+        description: description!,
         recipientBic: 'TESTBIC',
         endToEndId: '123456789',
         type: TransferType.SEPA_CREDIT_TRANSFER,
@@ -95,6 +102,7 @@ class TransferCubit extends Cubit<TransferState> {
       emit(TransferConfirmTanState(
         iban: iban,
         name: name,
+        description: description,
         token: token,
         amount: amount,
         savePayee: savePayee,
@@ -110,6 +118,7 @@ class TransferCubit extends Cubit<TransferState> {
       emit(TransferLoadingState(
         iban: state.iban,
         name: state.name,
+        description: state.description,
         token: state.token,
         amount: state.amount,
         savePayee: state.savePayee,
@@ -124,6 +133,7 @@ class TransferCubit extends Cubit<TransferState> {
       emit(TransferConfirmedState(
         iban: state.iban,
         name: state.name,
+        description: state.description,
         amount: state.amount,
         savePayee: state.savePayee,
       ));
