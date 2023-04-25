@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../cubits/auth_cubit/auth_cubit.dart';
+import '../../cubits/transaction_list_cubit/transaction_list_cubit.dart';
+import '../../models/user.dart';
 import '../../widgets/screen.dart';
 import '../../widgets/search_bar.dart';
 import '../../widgets/pill_button.dart';
@@ -26,11 +30,13 @@ class TransactionsScreen extends StatefulWidget {
 
 class _TransactionsScreenState extends State<TransactionsScreen> {
   TransactionListFilter? transactionListFilter;
+  AuthenticatedUser? user;
 
   @override
   void initState() {
     transactionListFilter = widget.transactionListFilter;
     super.initState();
+    user = context.read<AuthCubit>().state.user!;
   }
 
   @override
@@ -80,9 +86,14 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                   ),
               ],
             ),
-            TransactionList(
-              groupedByMonths: true,
-              filter: transactionListFilter,
+            BlocProvider(
+              create: (context) => TransactionListCubit(
+                transactionService: TransactionService(user: user!.cognito),
+              ),
+              child: TransactionList(
+                groupedByMonths: true,
+                filter: transactionListFilter,
+              ),
             ),
           ],
         ),

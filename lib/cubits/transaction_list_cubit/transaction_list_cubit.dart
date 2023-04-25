@@ -14,6 +14,7 @@ class TransactionListCubit extends Cubit<TransactionListState> {
 
   Future<void> getTransactions({TransactionListFilter? filter}) async {
     try {
+      print('getTransactions');
       emit(const TransactionListLoading());
 
       List<Transaction>? transactions =

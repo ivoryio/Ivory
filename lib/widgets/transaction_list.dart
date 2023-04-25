@@ -9,7 +9,7 @@ import '../cubits/auth_cubit/auth_cubit.dart';
 import '../services/transaction_service.dart';
 import '../cubits/transaction_list_cubit/transaction_list_cubit.dart';
 
-class TransactionList extends StatelessWidget {
+class TransactionList extends StatefulWidget {
   final Widget? header;
   final bool groupedByMonths;
   final TransactionListFilter? filter;
@@ -22,63 +22,68 @@ class TransactionList extends StatelessWidget {
   });
 
   @override
+  State<TransactionList> createState() => _TransactionListState();
+}
+
+class _TransactionListState extends State<TransactionList> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<TransactionListCubit>().getTransactions(filter: widget.filter);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
 
-    return BlocProvider<TransactionListCubit>.value(
-      value: TransactionListCubit(
-        transactionService: TransactionService(user: user.cognito),
-      )..getTransactions(filter: filter),
-      child: BlocBuilder<TransactionListCubit, TransactionListState>(
-        builder: (context, state) {
-          Widget emptyListWidget = const EmptyListMessage(
-            title: "No transactions yet",
-            message:
-                "There are no transactions yet. Your future transactions will be displayed here.",
-          );
+    return BlocBuilder<TransactionListCubit, TransactionListState>(
+      builder: (context, state) {
+        Widget emptyListWidget = const EmptyListMessage(
+          title: "No transactions yet",
+          message:
+              "There are no transactions yet. Your future transactions will be displayed here.",
+        );
 
-          switch (state.runtimeType) {
-            case TransactionListInitial:
+        switch (state.runtimeType) {
+          case TransactionListInitial:
+            return emptyListWidget;
+          case TransactionListLoading:
+            return const Center(child: CircularProgressIndicator());
+          case TransactionListError:
+            return const Text("Transactions could not be loaded");
+          case TransactionListLoaded:
+            var transactions = state.transactions;
+            bool isFilteringActive = widget.filter?.bookingDateMin != null &&
+                widget.filter?.bookingDateMax != null;
+
+            if (transactions.isEmpty && !isFilteringActive) {
               return emptyListWidget;
-            case TransactionListLoading:
-              return const Center(child: CircularProgressIndicator());
-            case TransactionListError:
-              return const Text("Transactions could not be loaded");
-            case TransactionListLoaded:
-              var transactions = state.transactions;
-              bool isFilteringActive = filter?.bookingDateMin != null &&
-                  filter?.bookingDateMax != null;
+            }
 
-              if (transactions.isEmpty && !isFilteringActive) {
-                return emptyListWidget;
-              }
-
-              if (transactions.isEmpty && isFilteringActive) {
-                return const Text(
-                  "We couldn't find any results. Please try again by searching for other transactions.",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    color: Color(0xff667085),
-                  ),
-                );
-              }
-
-              return Column(
-                children: [
-                  if (header != null) header!,
-                  groupedByMonths
-                      ? _buildGroupedByMonthsList(transactions)
-                      : _buildList(context, transactions)
-                ],
+            if (transactions.isEmpty && isFilteringActive) {
+              return const Text(
+                "We couldn't find any results. Please try again by searching for other transactions.",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                  color: Color(0xff667085),
+                ),
               );
+            }
 
-            default:
-              return const Text("Transactions could not be loaded");
-          }
-        },
-      ),
+            return Column(
+              children: [
+                if (widget.header != null) widget.header!,
+                widget.groupedByMonths
+                    ? _buildGroupedByMonthsList(transactions)
+                    : _buildList(context, transactions)
+              ],
+            );
+
+          default:
+            return const Text("Transactions could not be loaded");
+        }
+      },
     );
   }
 }
