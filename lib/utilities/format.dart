@@ -64,7 +64,7 @@ class Format {
     }
   }
 
-  static String date(DateTime date, {String? pattern = "yyyy.MM.dd"}) {
+  static String date(DateTime date, {String? pattern = "yyyy-MM-dd"}) {
     return DateFormat(pattern).format(date);
   }
 }
