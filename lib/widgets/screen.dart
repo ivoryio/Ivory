@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../router/router.dart';
 import '../themes/default_theme.dart';
+import '../router/routing_constants.dart';
 
 class Screen extends StatelessWidget {
   final Widget child;
@@ -242,7 +243,9 @@ PlatformAppBar createAppBar(
       if (customBackButtonCallback != null) {
         customBackButtonCallback();
       } else {
-        context.pop(context);
+        if (context.canPop()) return context.pop();
+
+        context.go(homeRoute.path);
       }
     },
   );

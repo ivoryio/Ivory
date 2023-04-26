@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../models/user.dart';
 import 'empty_list_message.dart';
 import 'transaction_listing_item.dart';
 import '../models/transaction_model.dart';
-import '../cubits/auth_cubit/auth_cubit.dart';
 import '../services/transaction_service.dart';
 import '../cubits/transaction_list_cubit/transaction_list_cubit.dart';
 
@@ -13,22 +11,20 @@ class TransactionList extends StatelessWidget {
   final Widget? header;
   final bool groupedByMonths;
   final TransactionListFilter? filter;
+  final TransactionListCubit transactionListCubit;
 
   const TransactionList({
     super.key,
     this.filter,
     this.header,
     this.groupedByMonths = false,
+    required this.transactionListCubit,
   });
 
   @override
   Widget build(BuildContext context) {
-    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
-
     return BlocProvider<TransactionListCubit>.value(
-      value: TransactionListCubit(
-        transactionService: TransactionService(user: user.cognito),
-      )..getTransactions(filter: filter),
+      value: transactionListCubit,
       child: BlocBuilder<TransactionListCubit, TransactionListState>(
         builder: (context, state) {
           Widget emptyListWidget = const EmptyListMessage(
