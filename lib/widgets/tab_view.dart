@@ -2,22 +2,16 @@ import 'package:flutter/material.dart';
 
 import 'button.dart';
 
-class TabViewItem {
-  final String text;
-  final Widget child;
-
-  const TabViewItem({
-    required this.text,
-    required this.child,
-  });
-}
+const int _defaultSelectedTabIndex = 0;
 
 class TabView extends StatefulWidget {
   final List<TabViewItem> tabs;
+  final int? initialSelectedTabIndex;
 
   const TabView({
     super.key,
     required this.tabs,
+    this.initialSelectedTabIndex,
   });
 
   @override
@@ -25,7 +19,13 @@ class TabView extends StatefulWidget {
 }
 
 class _TabViewState extends State<TabView> {
-  int selectedTab = 0;
+  int selectedTab = _defaultSelectedTabIndex;
+
+  @override
+  void initState() {
+    selectedTab = widget.initialSelectedTabIndex ?? _defaultSelectedTabIndex;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,4 +57,14 @@ class _TabViewState extends State<TabView> {
       ],
     );
   }
+}
+
+class TabViewItem {
+  final String text;
+  final Widget child;
+
+  const TabViewItem({
+    required this.text,
+    required this.child,
+  });
 }

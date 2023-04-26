@@ -1,6 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:solarisdemo/utilities/constants.dart';
+import 'package:solarisdemo/utilities/format.dart';
 
+import '../../utilities/validator.dart';
 import '../../widgets/screen.dart';
 import '../../widgets/checkbox.dart';
 import '../../themes/default_theme.dart';
@@ -24,25 +27,56 @@ class TransferInitialScreen extends StatelessWidget {
     final GlobalKey<PayeeInformationState> payeeInformationKey = GlobalKey();
     final GlobalKey<AccountSelectState> accountSelectKey = GlobalKey();
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+    final GlobalKey<StickyBottomContentState> stickyBottomContentKey =
+        GlobalKey();
 
-    final TextEditingController ibanController = TextEditingController(
-      text: state.iban,
-    );
     final TextEditingController nameController = TextEditingController(
-      text: state.name,
+      text: state.name ?? emptyStringValue,
     );
+    final TextEditingController ibanController = TextEditingController(
+      text: state.iban ?? emptyStringValue,
+    );
+    final TextEditingController descriptionController = TextEditingController(
+      text: state.description ?? emptyStringValue,
+    );
+
+    bool inputsNotEmpty() {
+      return nameController.text.isNotEmpty &&
+          ibanController.text.isNotEmpty &&
+          descriptionController.text.isNotEmpty;
+    }
+
+    void changeListener() {
+      bool buttonActive = stickyBottomContentKey.currentState!.buttonActive;
+      bool isEmpty = !inputsNotEmpty();
+
+      if (buttonActive && isEmpty) {
+        stickyBottomContentKey.currentState!.setButtonDisabled();
+      }
+
+      if (!buttonActive && !isEmpty) {
+        stickyBottomContentKey.currentState!.setButtonEnabled();
+      }
+    }
+
+    nameController.addListener(changeListener);
+    ibanController.addListener(changeListener);
+    descriptionController.addListener(changeListener);
 
     return Screen(
       title: transferRoute.title,
       hideBottomNavbar: true,
       bottomStickyWidget: BottomStickyWidget(
         child: StickyBottomContent(
+          key: stickyBottomContentKey,
+          buttonActive: inputsNotEmpty(),
           onContinueCallback: () {
             if (formKey.currentState!.validate() &&
                 accountSelectKey.currentState?.selectedAccount != null) {
               context.read<TransferCubit>().setBasicData(
                     iban: ibanController.text,
                     name: nameController.text,
+                    description: descriptionController.text,
                     savePayee: payeeInformationKey.currentState!.savePayee,
                     personAccount:
                         accountSelectKey.currentState!.selectedAccount,
@@ -68,6 +102,7 @@ class TransferInitialScreen extends StatelessWidget {
                   key: payeeInformationKey,
                   ibanController: ibanController,
                   nameController: nameController,
+                  descriptionController: descriptionController,
                   savePayee: state.savePayee,
                 ),
               ],
@@ -83,6 +118,7 @@ class PayeeInformation extends StatefulWidget {
   final GlobalKey<FormState> formKey;
   final TextEditingController ibanController;
   final TextEditingController nameController;
+  final TextEditingController descriptionController;
   final bool? savePayee;
 
   const PayeeInformation({
@@ -91,6 +127,7 @@ class PayeeInformation extends StatefulWidget {
     required this.formKey,
     required this.ibanController,
     required this.nameController,
+    required this.descriptionController,
   });
 
   @override
@@ -146,11 +183,32 @@ class PayeeInformationState extends State<PayeeInformation> {
               fontSize: 14,
               fontWeight: FontWeight.w600,
             ),
-            hintText: "e.g DE84 1101 0101 4735 3658 36",
+            hintText: "e.g DE01 1234 1234 1234 1234 12",
+            inputFormatters: [InputFormatter.iban],
             keyboardType: TextInputType.text,
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter the IBAN';
+              }
+              if (!Validator.isValidIban(value)) {
+                return 'Please enter a valid IBAN';
+              }
+              return null;
+            },
+          ),
+          PlatformTextInput(
+            controller: widget.descriptionController,
+            textLabel: "Description",
+            textLabelStyle: const TextStyle(
+              color: Color(0xFF344054),
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
+            hintText: "e.g Rent",
+            keyboardType: TextInputType.text,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter a description';
               }
               return null;
             },

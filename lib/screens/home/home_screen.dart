@@ -4,24 +4,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:solarisdemo/themes/default_theme.dart';
 
 import '../../models/user.dart';
-import '../../router/routing_constants.dart';
 import '../../widgets/modal.dart';
 import '../../widgets/screen.dart';
 import '../../utilities/format.dart';
 import '../../widgets/analytics.dart';
 import 'modals/new_transfer_popup.dart';
+import '../../themes/default_theme.dart';
 import '../../widgets/refer_a_friend.dart';
 import '../../services/person_service.dart';
 import '../../widgets/transaction_list.dart';
+import '../../router/routing_constants.dart';
 import '../../services/transaction_service.dart';
 import '../../widgets/account_balance_text.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../cubits/account_summary_cubit/account_summary_cubit.dart';
+import '../../cubits/transaction_list_cubit/transaction_list_cubit.dart';
 
 const _defaultCountTransactionsDisplayed = 3;
+const _defaultTransactionListFilter = TransactionListFilter(
+  size: _defaultCountTransactionsDisplayed,
+);
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -29,6 +33,14 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AuthenticatedUser user = context.read<AuthCubit>().state.user!;
+
+    AccountSummaryCubit accountSummaryCubit =
+        AccountSummaryCubit(personService: PersonService(user: user.cognito))
+          ..getAccountSummary();
+
+    TransactionListCubit transactionListCubit = TransactionListCubit(
+      transactionService: TransactionService(user: user.cognito),
+    )..getTransactions(filter: _defaultTransactionListFilter);
 
     return Screen(
       title: 'Hello, ${user.cognito.firstName}!',
@@ -54,13 +66,23 @@ class HomeScreen extends StatelessWidget {
       ],
       titleTextStyle: const TextStyle(color: Colors.white),
       centerTitle: false,
-      child: const HomePageContent(),
+      child: HomePageContent(
+        accountSummaryCubit: accountSummaryCubit,
+        transactionListCubit: transactionListCubit,
+      ),
     );
   }
 }
 
 class HomePageContent extends StatelessWidget {
-  const HomePageContent({super.key});
+  final AccountSummaryCubit accountSummaryCubit;
+  final TransactionListCubit transactionListCubit;
+
+  const HomePageContent({
+    super.key,
+    required this.accountSummaryCubit,
+    required this.transactionListCubit,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -69,16 +91,19 @@ class HomePageContent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const HomePageHeader(),
+          HomePageHeader(
+            accountSummaryCubit: accountSummaryCubit,
+          ),
           Padding(
             padding: defaultScreenPadding,
             child: Column(
-              children: const [
+              children: [
                 TransactionList(
-                  header: TransactionListTitle(
+                  transactionListCubit: transactionListCubit,
+                  header: const TransactionListTitle(
                     displayShowAllButton: true,
                   ),
-                  filter: TransactionListFilter(
+                  filter: const TransactionListFilter(
                     size: _defaultCountTransactionsDisplayed,
                   ),
                 ),
@@ -100,16 +125,16 @@ class HomePageContent extends StatelessWidget {
 }
 
 class HomePageHeader extends StatelessWidget {
-  const HomePageHeader({super.key});
+  final AccountSummaryCubit accountSummaryCubit;
+  const HomePageHeader({
+    super.key,
+    required this.accountSummaryCubit,
+  });
 
   @override
   Widget build(BuildContext context) {
-    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
-
     return BlocProvider<AccountSummaryCubit>.value(
-      value:
-          AccountSummaryCubit(personService: PersonService(user: user.cognito))
-            ..getAccountSummary(),
+      value: accountSummaryCubit,
       child: BlocBuilder<AccountSummaryCubit, AccountSummaryCubitState>(
         builder: (context, state) {
           if (state is AccountSummaryCubitLoading) {

@@ -25,6 +25,7 @@ class TransferConfirmScreen extends StatelessWidget {
               iban: state.iban,
               savePayee: state.savePayee,
               amount: state.amount,
+              description: state.description,
             );
       },
       title: "Transaction confirmation",
@@ -34,10 +35,11 @@ class TransferConfirmScreen extends StatelessWidget {
           buttonText: "Confirm and send",
           onContinueCallback: () {
             context.read<TransferCubit>().confirmTransfer(
-                  name: state.name,
-                  iban: state.iban,
-                  savePayee: state.savePayee,
-                  amount: state.amount,
+                  name: state.name!,
+                  iban: state.iban!,
+                  savePayee: state.savePayee!,
+                  description: state.description!,
+                  amount: state.amount!,
                 );
           },
         ),
@@ -53,6 +55,7 @@ class TransferConfirmScreen extends StatelessWidget {
               iban: state.iban!,
               amount: state.amount!,
               name: state.name!,
+              description: state.description!,
             ),
           ],
         ),
@@ -64,12 +67,15 @@ class TransferConfirmScreen extends StatelessWidget {
 class TransferDetails extends StatelessWidget {
   final String iban;
   final String name;
+  final String description;
   final double amount;
-  const TransferDetails(
-      {super.key,
-      required this.iban,
-      required this.name,
-      required this.amount});
+  const TransferDetails({
+    super.key,
+    required this.iban,
+    required this.name,
+    required this.description,
+    required this.amount,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -109,6 +115,27 @@ class TransferDetails extends StatelessWidget {
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
                 color: Color(0xFF667085),
+              ),
+            ),
+          ],
+        ),
+        SpacedColumn(
+          space: 8,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "Description",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+                color: Color(0xFF667085),
+              ),
+            ),
+            Text(
+              description,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ],

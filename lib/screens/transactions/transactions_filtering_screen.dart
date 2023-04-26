@@ -11,6 +11,7 @@ import '../../utilities/format.dart';
 import '../../widgets/pill_button.dart';
 import '../../themes/default_theme.dart';
 import '../../router/routing_constants.dart';
+import '../../widgets/spaced_column.dart';
 import 'modals/transaction_date_picker_popup.dart';
 import '../../cubits/transactions_filtering/transactions_filtering_cubit.dart';
 
@@ -64,14 +65,26 @@ class TransactionsFilteringScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Column(
+                  SpacedColumn(
+                    space: 16.5,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text("By date"),
                       Row(
                         children: [
-                          const Icon(Icons.calendar_today),
+                          const Icon(
+                            Icons.today,
+                            size: 15,
+                          ),
+                          const SizedBox(
+                            width: 8,
+                          ),
                           PillButton(
+                            active: state
+                                        .transactionListFilter.bookingDateMin !=
+                                    null ||
+                                state.transactionListFilter.bookingDateMax !=
+                                    null,
                             buttonText:
                                 '${getFormattedDate(date: state.transactionListFilter.bookingDateMin, text: "Start date")} - ${getFormattedDate(date: state.transactionListFilter.bookingDateMax, text: "End date")}',
                             buttonCallback: () {

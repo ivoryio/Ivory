@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../models/user.dart';
 import '../../widgets/screen.dart';
 import '../../widgets/search_bar.dart';
 import '../../widgets/pill_button.dart';
@@ -9,8 +11,10 @@ import '../../widgets/spaced_column.dart';
 import 'transactions_filtering_screen.dart';
 import '../../router/routing_constants.dart';
 import '../../widgets/transaction_list.dart';
+import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../services/transaction_service.dart';
 import 'package:solarisdemo/screens/home/home_screen.dart';
+import '../../cubits/transaction_list_cubit/transaction_list_cubit.dart';
 
 class TransactionsScreen extends StatefulWidget {
   final TransactionListFilter? transactionListFilter;
@@ -26,10 +30,16 @@ class TransactionsScreen extends StatefulWidget {
 
 class _TransactionsScreenState extends State<TransactionsScreen> {
   TransactionListFilter? transactionListFilter;
+  TransactionListCubit? transactionListCubit;
 
   @override
   void initState() {
+    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
+
     transactionListFilter = widget.transactionListFilter;
+    transactionListCubit = TransactionListCubit(
+      transactionService: TransactionService(user: user.cognito),
+    )..getTransactions(filter: transactionListFilter);
     super.initState();
   }
 
@@ -70,6 +80,9 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                           setState(() {
                             transactionListFilter = null;
                           });
+                          transactionListCubit!.getTransactions(
+                            filter: transactionListFilter,
+                          );
                         },
                         icon: const Icon(
                           Icons.close,
@@ -83,6 +96,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             TransactionList(
               groupedByMonths: true,
               filter: transactionListFilter,
+              transactionListCubit: transactionListCubit!,
             ),
           ],
         ),

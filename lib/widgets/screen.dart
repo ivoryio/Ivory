@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../router/router.dart';
 import '../themes/default_theme.dart';
+import '../router/routing_constants.dart';
 
 class Screen extends StatelessWidget {
   final Widget child;
@@ -16,11 +17,13 @@ class Screen extends StatelessWidget {
   final bool hideBottomNavbar;
   final TextStyle? titleTextStyle;
   final List<Widget>? trailingActions;
+  final Future<void> Function()? onRefresh;
   final Function? customBackButtonCallback;
   final BottomStickyWidget? bottomStickyWidget;
 
   const Screen({
     super.key,
+    this.onRefresh,
     this.appBarColor,
     this.backButtonIcon,
     required this.child,
@@ -57,6 +60,9 @@ class Screen extends StatelessWidget {
       initialIndex: currentPageIndex,
     );
 
+    ScrollPhysics? physics =
+        onRefresh != null ? const AlwaysScrollableScrollPhysics() : null;
+
     if (hideBottomNavbar) {
       return PlatformScaffold(
         appBar: appBar,
@@ -66,22 +72,30 @@ class Screen extends StatelessWidget {
             (BuildContext context, BoxConstraints viewportConstraints) {
           num bottomStickyWidgetHeight = bottomStickyWidget?.height ?? 0;
 
-          Widget screenContent = SingleChildScrollView(
+          Widget body = SingleChildScrollView(
+            physics: physics,
             child: ConstrainedBox(
               constraints: BoxConstraints(
                 minHeight:
                     viewportConstraints.maxHeight - bottomStickyWidgetHeight,
               ),
-              child: IntrinsicHeight(
-                child: child,
-              ),
+              child: IntrinsicHeight(child: child),
             ),
           );
 
-          return Column(children: [
-            Expanded(child: screenContent),
+          Widget screenContent = Column(children: [
+            Expanded(child: body),
             if (bottomStickyWidget != null) bottomStickyWidget!.build(context)
           ]);
+
+          if (onRefresh != null) {
+            return RefreshIndicator(
+              onRefresh: onRefresh!,
+              child: screenContent,
+            );
+          }
+
+          return screenContent;
         }),
       );
     }
@@ -125,16 +139,29 @@ class Screen extends StatelessWidget {
         ),
       ],
       bodyBuilder: (context, index) => LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints viewportConstraints) {
-        return SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: viewportConstraints.maxHeight,
+        builder: (BuildContext context, BoxConstraints viewportConstraints) {
+          Widget screenContent = SingleChildScrollView(
+            physics: physics,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: viewportConstraints.maxHeight,
+              ),
+              child: child,
             ),
-            child: child,
-          ),
-        );
-      }),
+          );
+
+          return LayoutBuilder(builder: (context, constraints) {
+            if (onRefresh != null) {
+              return RefreshIndicator(
+                onRefresh: onRefresh!,
+                child: screenContent,
+              );
+            }
+
+            return screenContent;
+          });
+        },
+      ),
     );
   }
 }
@@ -216,7 +243,9 @@ PlatformAppBar createAppBar(
       if (customBackButtonCallback != null) {
         customBackButtonCallback();
       } else {
-        context.pop(context);
+        if (context.canPop()) return context.pop();
+
+        context.go(homeRoute.path);
       }
     },
   );
@@ -226,10 +255,13 @@ PlatformAppBar createAppBar(
     title: centerTitle == true ? titleText : leftAlignedTitle,
     backgroundColor: backgroundColor,
     trailingActions: trailingActions,
-    material: (context, platform) => MaterialAppBarData(
-      elevation: 0,
-      centerTitle: centerTitle,
-    ),
+    material: (context, platform) =>
+        MaterialAppBarData(elevation: 0, centerTitle: centerTitle, actions: [
+      if (trailingActions != null) ...trailingActions,
+      const SizedBox(
+        width: defaultScreenHorizontalPadding,
+      )
+    ]),
     cupertino: (context, platform) => CupertinoNavigationBarData(
       border: Border.all(color: Colors.transparent),
       padding: const EdgeInsetsDirectional.symmetric(

@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class Format {
   static String currency(
@@ -50,7 +51,7 @@ class Format {
     return formattedIban;
   }
 
-  static String getCurrenySymbol(String currency) {
+  static String getCurrencySymbol(String currency) {
     switch (currency) {
       case "EUR":
         return "€";
@@ -63,7 +64,18 @@ class Format {
     }
   }
 
-  static String date(DateTime date, {String? pattern = "yyyy.MM.dd"}) {
+  static String date(DateTime date, {String? pattern = "yyyy-MM-dd"}) {
     return DateFormat(pattern).format(date);
   }
+}
+
+class InputFormatter {
+  static MaskTextInputFormatter iban = MaskTextInputFormatter(
+    mask: "AA00 BBBB 0000 0000 0000 0000 0000 0",
+    filter: {
+      "A": RegExp(r"[A-Za-z]"),
+      "B": RegExp(r"[A-Za-z0-9]"),
+      "0": RegExp(r"[0-9]"),
+    },
+  );
 }

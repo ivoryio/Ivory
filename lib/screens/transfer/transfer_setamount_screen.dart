@@ -29,9 +29,24 @@ class TransferSetAmountScreen extends StatelessWidget {
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
     final CurrencyTextFieldController amountController =
         CurrencyTextFieldController(
-      currencySymbol: Format.getCurrenySymbol(currency),
+      currencySymbol: Format.getCurrencySymbol(currency),
       initDoubleValue: state.amount,
     );
+    final GlobalKey<StickyBottomContentState> stickyBottomContentKey =
+        GlobalKey();
+
+    void changeListener() {
+      bool buttonActive = stickyBottomContentKey.currentState!.buttonActive;
+
+      if (!buttonActive && amountController.text.isNotEmpty) {
+        stickyBottomContentKey.currentState!.setButtonEnabled();
+      }
+      if (buttonActive && !amountController.text.isNotEmpty) {
+        stickyBottomContentKey.currentState!.setButtonDisabled();
+      }
+    }
+
+    amountController.addListener(changeListener);
 
     return Screen(
       customBackButtonCallback: () {
@@ -39,12 +54,15 @@ class TransferSetAmountScreen extends StatelessWidget {
               name: state.name,
               iban: state.iban,
               savePayee: state.savePayee,
+              description: state.description,
             );
       },
       title: transferRoute.title,
       hideBottomNavbar: true,
       bottomStickyWidget: BottomStickyWidget(
         child: StickyBottomContent(
+          key: stickyBottomContentKey,
+          buttonActive: state.amount != null,
           buttonText: "Send money",
           onContinueCallback: () {
             final amount = amountController.doubleValue;
