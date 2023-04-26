@@ -6,7 +6,6 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:solarisdemo/themes/default_theme.dart';
 
-import '../../cubits/transaction_list_cubit/transaction_list_cubit.dart';
 import '../../models/user.dart';
 import '../../router/routing_constants.dart';
 import '../../widgets/modal.dart';
@@ -65,7 +64,6 @@ class HomePageContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
     return Padding(
       padding: const EdgeInsets.only(bottom: 44),
       child: Column(
@@ -75,18 +73,13 @@ class HomePageContent extends StatelessWidget {
           Padding(
             padding: defaultScreenPadding,
             child: Column(
-              children: [
-                BlocProvider(
-                  create: (context) => TransactionListCubit(
-                    transactionService: TransactionService(user: user.cognito),
+              children: const [
+                TransactionList(
+                  header: TransactionListTitle(
+                    displayShowAllButton: true,
                   ),
-                  child: const TransactionList(
-                    header: TransactionListTitle(
-                      displayShowAllButton: true,
-                    ),
-                    filter: TransactionListFilter(
-                      size: _defaultCountTransactionsDisplayed,
-                    ),
+                  filter: TransactionListFilter(
+                    size: _defaultCountTransactionsDisplayed,
                   ),
                 ),
               ],
