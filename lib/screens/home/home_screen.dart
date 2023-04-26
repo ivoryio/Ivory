@@ -23,6 +23,9 @@ import '../../cubits/account_summary_cubit/account_summary_cubit.dart';
 import '../../cubits/transaction_list_cubit/transaction_list_cubit.dart';
 
 const _defaultCountTransactionsDisplayed = 3;
+const _defaultTransactionListFilter = TransactionListFilter(
+  size: _defaultCountTransactionsDisplayed,
+);
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -37,9 +40,8 @@ class HomeScreen extends StatelessWidget {
 
     TransactionListCubit transactionListCubit = TransactionListCubit(
       transactionService: TransactionService(user: user.cognito),
-    )..getTransactions();
+    )..getTransactions(filter: _defaultTransactionListFilter);
 
-    print("HomeScreen build called");
     return Screen(
       title: 'Hello, ${user.cognito.firstName}!',
       hideBackButton: true,
@@ -75,6 +77,7 @@ class HomeScreen extends StatelessWidget {
 class HomePageContent extends StatelessWidget {
   final AccountSummaryCubit accountSummaryCubit;
   final TransactionListCubit transactionListCubit;
+
   const HomePageContent({
     super.key,
     required this.accountSummaryCubit,
