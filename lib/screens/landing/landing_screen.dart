@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../services/device_info_service.dart';
 import '../../widgets/button.dart';
 import '../../widgets/screen.dart';
 import '../../router/routing_constants.dart';
@@ -29,8 +32,6 @@ class LandingScreen extends StatelessWidget {
 class LandingScreenContent extends StatelessWidget {
   const LandingScreenContent({super.key});
 
-  final MethodChannel platform =
-      const MethodChannel('com.thinslices.solarisdemo/native');
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -93,10 +94,10 @@ class LandingScreenContent extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: PrimaryButton(
-                    text: "Get android device signature",
+                    text: "Get device signature",
                     onPressed: () async {
-                      await _getAndroidDeviceSignature(
-                          'bf50e494417b400480dbfeeb2a94a30e');
+                      await DeviceInfoService.getDeviceSignature(
+                          "bf50e494417b400480dbfeeb2a94a30e");
                     },
                   ),
                 ),
@@ -106,18 +107,6 @@ class LandingScreenContent extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Future<void> _getAndroidDeviceSignature(String deviceConsentId) async {
-    try {
-      final result = await platform.invokeMethod(
-        'getDeviceFingerprint',
-        {'consentId': deviceConsentId},
-      );
-      print('Result from native code: $result');
-    } on PlatformException catch (e) {
-      print('Error: ${e.message}');
-    }
   }
 }
 
