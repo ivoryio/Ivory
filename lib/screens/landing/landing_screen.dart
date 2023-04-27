@@ -119,7 +119,7 @@ class LandingScreenContent extends StatelessWidget {
                     onPressed: () async {
                       await DeviceInfoService.signMessage(
                         "One time password",
-                        "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQggohA256eGnxsWqX+oWUFOJdKBVCIIZoIw9tRq/G9pOahRANCAAQ8GRJgnawSEjHBybW6elAScnNs6OVs3yEZ2U1TO925l45iiNxJJzhRpP5t6AOSGHPnI3r8E4NkicAbL102jc+3",
+                        "BE5MCLS7bsFmC2jAwazBhJfctWA4MOvdYTwB5CZBA3v2Jc8vP949zVapBN35HLqlyjoqkITN9UmpWVhQA4R9SgTucCKdFHB68DLkOp43Juue5725nKW0Oq2JMecYf2ZEUg==",
                       );
                     },
                   ),

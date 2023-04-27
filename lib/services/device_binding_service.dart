@@ -27,9 +27,9 @@ class DeviceInfoService {
 
   static signMessage(String message, String privateKey) {
     if (defaultTargetPlatform == TargetPlatform.android) {
-      _signMessageonAndroid(message, privateKey);
+      _signMessageOnAndroid(message, privateKey);
     } else if (defaultTargetPlatform == TargetPlatform.iOS) {
-      //
+      _signMessageOnIos(message, privateKey);
     }
   }
 }
@@ -89,7 +89,19 @@ Future<void> _getIosECDSAP256KeyPair() async {
   }
 }
 
-Future<void> _signMessageonAndroid(String message, String privateKey) async {
+Future<void> _signMessageOnAndroid(String message, String privateKey) async {
+  try {
+    final signature = await _platform.invokeMethod<String>(
+      'signMessage',
+      {'message': message, 'privateKey': privateKey},
+    );
+    print('Signature: $signature');
+  } on PlatformException catch (e) {
+    print('Error: ${e.message}');
+  }
+}
+
+Future<void> _signMessageOnIos(String message, String privateKey) async {
   try {
     final signature = await _platform.invokeMethod<String>(
       'signMessage',
