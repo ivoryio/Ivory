@@ -3,6 +3,9 @@ import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
+MethodChannel _platform =
+    const MethodChannel('com.thinslices.solarisdemo/native');
+
 class DeviceInfoService {
   static getDeviceSignature(String consentId) {
     if (defaultTargetPlatform == TargetPlatform.android) {
@@ -17,14 +20,11 @@ class DeviceInfoService {
     if (defaultTargetPlatform == TargetPlatform.android) {
       _getAndroidECDSAP256KeyPair();
     } else if (defaultTargetPlatform == TargetPlatform.iOS) {
-      // _getIosECDSAP256KeyPair();
+      _getIosECDSAP256KeyPair();
     }
     return null;
   }
 }
-
-MethodChannel _platform =
-    const MethodChannel('com.thinslices.solarisdemo/native');
 
 Future<void> _getAndroidDeviceSignature(String deviceConsentId) async {
   try {
@@ -61,6 +61,19 @@ Future<void> _getAndroidECDSAP256KeyPair() async {
     );
     log(result);
     // log(result['publicKey']);
+
+    return result;
+  } on PlatformException catch (e) {
+    log('Error: ${e.message}');
+  }
+}
+
+Future<void> _getIosECDSAP256KeyPair() async {
+  try {
+    final result = await _platform.invokeMethod(
+      'generateIosECDSAP256KeyPair',
+    );
+    inspect(result);
 
     return result;
   } on PlatformException catch (e) {

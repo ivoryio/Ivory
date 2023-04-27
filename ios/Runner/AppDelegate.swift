@@ -27,12 +27,45 @@ import SeonSDK
             seonfp.fingerprintBase64 { (seonFingerprint:String?) in
                 result(seonFingerprint)
             }
-          } else {
+          } else if call.method == "generateIosECDSAP256KeyPair" {
+              let keyPair = self.generateECDSAP256KeyPair()
+              result(keyPair)
+          } 
+          else {
               result(FlutterMethodNotImplemented)
           }
       }
       
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+  }
+
+  private func generateECDSAP256KeyPair() -> [String: String] {
+    let attributes: [String: Any] = [
+        kSecAttrKeyType as String: kSecAttrKeyTypeECSECPrimeRandom,
+        kSecAttrKeySizeInBits as String: 256,
+        kSecPrivateKeyAttrs as String: [
+            kSecAttrIsPermanent as String: false,
+        ],
+        kSecPublicKeyAttrs as String: [
+            kSecAttrIsPermanent as String: false,
+        ],
+    ]
+
+    var error: Unmanaged<CFError>?
+    guard let privateKey = SecKeyCreateRandomKey(attributes as CFDictionary, &error) else {
+        print("Error generating key pair: \(error!.takeRetainedValue() as Error)")
+        return [:]
+    }
+
+    let publicKey = SecKeyCopyPublicKey(privateKey)!
+
+    let publicKeyData = SecKeyCopyExternalRepresentation(publicKey, &error)! as Data
+    let privateKeyData = SecKeyCopyExternalRepresentation(privateKey, &error)! as Data
+
+    return [
+        "publicKey": publicKeyData.base64EncodedString(),
+        "privateKey": privateKeyData.base64EncodedString(),
+    ]
   }
 }
