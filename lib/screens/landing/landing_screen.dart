@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../widgets/button.dart';
 import '../../widgets/screen.dart';
 import '../../router/routing_constants.dart';
+import '../../widgets/spaced_column.dart';
 
 class LandingScreen extends StatelessWidget {
   const LandingScreen({super.key});
@@ -27,6 +29,8 @@ class LandingScreen extends StatelessWidget {
 class LandingScreenContent extends StatelessWidget {
   const LandingScreenContent({super.key});
 
+  final MethodChannel platform =
+      const MethodChannel('com.thinslices.solarisdemo/native');
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -65,7 +69,8 @@ class LandingScreenContent extends StatelessWidget {
                 ],
               ),
             ]),
-            Column(
+            SpacedColumn(
+              space: 10,
               children: [
                 SizedBox(
                   width: double.infinity,
@@ -76,7 +81,6 @@ class LandingScreenContent extends StatelessWidget {
                     },
                   ),
                 ),
-                const SizedBox(height: 10),
                 SizedBox(
                   width: double.infinity,
                   child: SecondaryButton(
@@ -86,12 +90,34 @@ class LandingScreenContent extends StatelessWidget {
                     },
                   ),
                 ),
+                SizedBox(
+                  width: double.infinity,
+                  child: PrimaryButton(
+                    text: "Get android device signature",
+                    onPressed: () async {
+                      await _getAndroidDeviceSignature(
+                          'bf50e494417b400480dbfeeb2a94a30e');
+                    },
+                  ),
+                ),
               ],
             )
           ],
         ),
       ),
     );
+  }
+
+  Future<void> _getAndroidDeviceSignature(String deviceConsentId) async {
+    try {
+      final result = await platform.invokeMethod(
+        'getDeviceFingerprint',
+        {'consentId': deviceConsentId},
+      );
+      print('Result from native code: $result');
+    } on PlatformException catch (e) {
+      print('Error: ${e.message}');
+    }
   }
 }
 
