@@ -10,7 +10,15 @@ class DeviceInfoService {
     } else if (defaultTargetPlatform == TargetPlatform.iOS) {
       _getIosDeviceSignature(consentId);
     }
+    return null;
+  }
 
+  static getECDSAP256KeyPair() {
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      _getAndroidECDSAP256KeyPair();
+    } else if (defaultTargetPlatform == TargetPlatform.iOS) {
+      // _getIosECDSAP256KeyPair();
+    }
     return null;
   }
 }
@@ -24,7 +32,7 @@ Future<void> _getAndroidDeviceSignature(String deviceConsentId) async {
       'getDeviceFingerprint',
       {'consentId': deviceConsentId},
     );
-    log("iOS Device Signature: $result");
+    log("Android Device Signature: $result");
 
     return result;
   } on PlatformException catch (e) {
@@ -38,7 +46,21 @@ Future<void> _getIosDeviceSignature(String deviceConsentId) async {
       'getIosDeviceFingerprint',
       {'consentId': deviceConsentId},
     );
-    log("Android Device Signature: $result");
+    log("IOS Device Signature: $result");
+
+    return result;
+  } on PlatformException catch (e) {
+    log('Error: ${e.message}');
+  }
+}
+
+Future<void> _getAndroidECDSAP256KeyPair() async {
+  try {
+    final result = await _platform.invokeMethod(
+      'generateECDSAP256KeyPair',
+    );
+    log(result);
+    // log(result['publicKey']);
 
     return result;
   } on PlatformException catch (e) {

@@ -5,6 +5,9 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import io.seon.androidsdk.exception.SeonException
 import io.seon.androidsdk.service.SeonBuilder
+import java.security.KeyPairGenerator
+import java.security.spec.ECGenParameterSpec
+import java.util.Base64
 import android.util.Log
 
 class MainActivity: FlutterActivity() {
@@ -33,9 +36,27 @@ class MainActivity: FlutterActivity() {
                     e.printStackTrace()
                     result.error("500", "Fingeprint error", e.toString())
                 }
+            } 
+            if (call.method == "generateECDSAP256KeyPair") {
+                val keyPair = generateECDSAP256KeyPair()
+                result.success(keyPair)
             } else {
                 result.notImplemented()
             }
         }
+    }
+
+    private fun generateECDSAP256KeyPair(): Map<String, String> {
+    val keyGen = KeyPairGenerator.getInstance("EC")
+    keyGen.initialize(ECGenParameterSpec("secp256r1"))
+
+    val keyPair = keyGen.generateKeyPair()
+    val publicKey = keyPair.public.encoded
+    val privateKey = keyPair.private.encoded
+
+    return mapOf(
+        "publicKey" to Base64.getEncoder().encodeToString(publicKey),
+        "privateKey" to Base64.getEncoder().encodeToString(privateKey)
+    )
     }
 }

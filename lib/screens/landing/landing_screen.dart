@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../services/device_info_service.dart';
+import '../../services/device_binding_service.dart';
 import '../../widgets/button.dart';
 import '../../widgets/screen.dart';
 import '../../router/routing_constants.dart';
@@ -97,7 +97,17 @@ class LandingScreenContent extends StatelessWidget {
                     text: "Get device signature",
                     onPressed: () async {
                       await DeviceInfoService.getDeviceSignature(
-                          "bf50e494417b400480dbfeeb2a94a30e");
+                        "bf50e494417b400480dbfeeb2a94a30e",
+                      );
+                    },
+                  ),
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: PrimaryButton(
+                    text: "Get key pair",
+                    onPressed: () async {
+                      await DeviceInfoService.getECDSAP256KeyPair();
                     },
                   ),
                 ),
