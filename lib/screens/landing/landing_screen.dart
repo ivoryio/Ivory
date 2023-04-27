@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -108,6 +109,18 @@ class LandingScreenContent extends StatelessWidget {
                     text: "Get key pair",
                     onPressed: () async {
                       await DeviceInfoService.getECDSAP256KeyPair();
+                    },
+                  ),
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: PrimaryButton(
+                    text: "Get signature",
+                    onPressed: () async {
+                      await DeviceInfoService.signMessage(
+                        "One time password",
+                        "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQggohA256eGnxsWqX+oWUFOJdKBVCIIZoIw9tRq/G9pOahRANCAAQ8GRJgnawSEjHBybW6elAScnNs6OVs3yEZ2U1TO925l45iiNxJJzhRpP5t6AOSGHPnI3r8E4NkicAbL102jc+3",
+                      );
                     },
                   ),
                 ),
