@@ -31,6 +31,15 @@ class LoginLoading extends LoginState {
   });
 }
 
+class LoginRequestConsent extends LoginState {
+  const LoginRequestConsent({
+    super.user,
+    super.email,
+    super.password,
+    super.phoneNumber,
+  });
+}
+
 class LoginUserExists extends LoginState {
   const LoginUserExists({
     super.tan,

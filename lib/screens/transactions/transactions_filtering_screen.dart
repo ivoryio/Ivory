@@ -46,18 +46,19 @@ class TransactionsFilteringScreen extends StatelessWidget {
             ),
             trailingActions: [
               PlatformTextButton(
-                  padding: EdgeInsets.zero,
-                  onPressed: () {
-                    context.read<TransactionsFilteringCubit>().resetFilters();
-                    context.push(transactionsRoute.path);
-                  },
-                  child: const Text(
-                    "Reset filters",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                    ),
-                  ))
+                padding: EdgeInsets.zero,
+                onPressed: () {
+                  context.read<TransactionsFilteringCubit>().resetFilters();
+                  context.push(transactionsRoute.path);
+                },
+                child: const Text(
+                  "Reset filters",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
             ],
             child: Padding(
               padding: defaultScreenPadding,

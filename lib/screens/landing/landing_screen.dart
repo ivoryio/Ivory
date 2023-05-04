@@ -1,11 +1,9 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../services/device_binding_service.dart';
+import '../../services/device_service.dart';
 import '../../widgets/button.dart';
 import '../../widgets/screen.dart';
 import '../../router/routing_constants.dart';
@@ -97,7 +95,7 @@ class LandingScreenContent extends StatelessWidget {
                   child: PrimaryButton(
                     text: "Get device signature",
                     onPressed: () async {
-                      await DeviceInfoService.getDeviceSignature(
+                      await DeviceUtilService.getDeviceSignature(
                         "bf50e494417b400480dbfeeb2a94a30e",
                       );
                     },
@@ -108,7 +106,7 @@ class LandingScreenContent extends StatelessWidget {
                   child: PrimaryButton(
                     text: "Get key pair",
                     onPressed: () async {
-                      await DeviceInfoService.getECDSAP256KeyPair();
+                      await DeviceUtilService.getECDSAP256KeyPair();
                     },
                   ),
                 ),
@@ -117,7 +115,7 @@ class LandingScreenContent extends StatelessWidget {
                   child: PrimaryButton(
                     text: "Get signature",
                     onPressed: () async {
-                      await DeviceInfoService.signMessage(
+                      await DeviceUtilService.signMessage(
                         "One time password",
                         "BE5MCLS7bsFmC2jAwazBhJfctWA4MOvdYTwB5CZBA3v2Jc8vP949zVapBN35HLqlyjoqkITN9UmpWVhQA4R9SgTucCKdFHB68DLkOp43Juue5725nKW0Oq2JMecYf2ZEUg==",
                       );

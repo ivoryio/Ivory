@@ -2,8 +2,6 @@
 
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
-
 enum DeviceActivityType {
   APP_START,
   PASSWORD_RESET,
