@@ -90,38 +90,49 @@ class LandingScreenContent extends StatelessWidget {
                     },
                   ),
                 ),
-                SizedBox(
-                  width: double.infinity,
-                  child: PrimaryButton(
-                    text: "Get device signature",
-                    onPressed: () async {
-                      await DeviceUtilService.getDeviceSignature(
-                        "bf50e494417b400480dbfeeb2a94a30e",
-                      );
-                    },
-                  ),
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  child: PrimaryButton(
-                    text: "Get key pair",
-                    onPressed: () async {
-                      await DeviceUtilService.getECDSAP256KeyPair();
-                    },
-                  ),
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  child: PrimaryButton(
-                    text: "Get signature",
-                    onPressed: () async {
-                      await DeviceUtilService.signMessage(
-                        "One time password",
-                        "BE5MCLS7bsFmC2jAwazBhJfctWA4MOvdYTwB5CZBA3v2Jc8vP949zVapBN35HLqlyjoqkITN9UmpWVhQA4R9SgTucCKdFHB68DLkOp43Juue5725nKW0Oq2JMecYf2ZEUg==",
-                      );
-                    },
-                  ),
-                ),
+                // SizedBox(
+                //   width: double.infinity,
+                //   child: PrimaryButton(
+                //     text: "Create device binding",
+                //     onPressed: () async {
+                //       await DeviceUtilService.getDeviceFingerprint(
+                //         "bf50e494417b400480dbfeeb2a94a30e",
+                //       );
+                //     },
+                //   ),
+                // ),
+                // SizedBox(
+                //   width: double.infinity,
+                //   child: PrimaryButton(
+                //     text: "Get device signature",
+                //     onPressed: () async {
+                //       await DeviceUtilService.getDeviceFingerprint(
+                //         "bf50e494417b400480dbfeeb2a94a30e",
+                //       );
+                //     },
+                //   ),
+                // ),
+                // SizedBox(
+                //   width: double.infinity,
+                //   child: PrimaryButton(
+                //     text: "Get key pair",
+                //     onPressed: () async {
+                //       await DeviceUtilService.getECDSAP256KeyPair();
+                //     },
+                //   ),
+                // ),
+                // SizedBox(
+                //   width: double.infinity,
+                //   child: PrimaryButton(
+                //     text: "Get signature",
+                //     onPressed: () async {
+                //       await DeviceUtilService.signMessage(
+                //         "One time password",
+                //         "BE5MCLS7bsFmC2jAwazBhJfctWA4MOvdYTwB5CZBA3v2Jc8vP949zVapBN35HLqlyjoqkITN9UmpWVhQA4R9SgTucCKdFHB68DLkOp43Juue5725nKW0Oq2JMecYf2ZEUg==",
+                //       );
+                //     },
+                //   ),
+                // ),
               ],
             )
           ],
