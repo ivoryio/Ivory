@@ -1,8 +1,13 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:solarisdemo/screens/login/login_consent_screen.dart';
 
+import '../../services/device_service.dart';
 import '../../utilities/validator.dart';
+import '../../widgets/sticky_bottom_content.dart';
 import '../../widgets/tab_view.dart';
 import 'login_tan_screen.dart';
 import 'login_passcode_error.dart';
@@ -43,7 +48,22 @@ class LoginScreen extends StatelessWidget {
             if (state is LoginError) {
               return LoginPasscodeErrorScreen(message: state.message);
             }
-
+            if (state is LoginRequestConsent) {
+              return LoginConsentScreen(
+                bottomStickyWidget: BottomStickyWidget(
+                  child: StickyBottomContent(
+                    buttonText: "I agree",
+                    onContinueCallback: () {
+                      context.read<LoginCubit>().setCredentials(
+                            email: state.email,
+                            phoneNumber: state.phoneNumber,
+                            password: state.password!,
+                          );
+                    },
+                  ),
+                ),
+              );
+            }
             if (state is LoginUserExists) {
               return const LoginTanScreen();
             }
@@ -166,11 +186,21 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
                                 _formKey.currentState!.save();
                                 String phoneNumber = phoneController.text;
                                 String password = passwordInputController.text;
-
-                                context.read<LoginCubit>().setCredentials(
-                                      phoneNumber: phoneNumber,
-                                      password: password,
-                                    );
+                                String? deviceConsentId =
+                                    await DeviceUtilService
+                                        .getDeviceConsentId();
+                                if (deviceConsentId != null &&
+                                    deviceConsentId.isNotEmpty) {
+                                  context.read<LoginCubit>().setCredentials(
+                                        phoneNumber: phoneNumber,
+                                        password: password,
+                                      );
+                                } else {
+                                  context.read<LoginCubit>().requestConsent(
+                                        phoneNumber: phoneNumber,
+                                        password: password,
+                                      );
+                                }
                               }
                             }
                           : null,
@@ -283,11 +313,21 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                                 _formKey.currentState!.save();
                                 String emailAddress = emailInputController.text;
                                 String password = passwordInputController.text;
-
-                                context.read<LoginCubit>().setCredentials(
-                                      email: emailAddress,
-                                      password: password,
-                                    );
+                                String? deviceConsentId =
+                                    await DeviceUtilService
+                                        .getDeviceConsentId();
+                                if (deviceConsentId != null &&
+                                    deviceConsentId.isNotEmpty) {
+                                  context.read<LoginCubit>().setCredentials(
+                                        email: emailAddress,
+                                        password: password,
+                                      );
+                                } else {
+                                  context.read<LoginCubit>().requestConsent(
+                                        email: emailAddress,
+                                        password: password,
+                                      );
+                                }
                               }
                             }
                           : null,

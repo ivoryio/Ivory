@@ -3,6 +3,9 @@ import 'dart:developer';
 import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:solarisdemo/models/device_activity.dart';
+import 'package:solarisdemo/models/device_consent.dart';
+import 'package:solarisdemo/services/device_service.dart';
 
 import '../../models/user.dart';
 import '../auth_cubit/auth_cubit.dart';
@@ -45,6 +48,20 @@ class LoginCubit extends Cubit<LoginState> {
           password: password,
           user: user,
         ));
+
+        String? consentId = await DeviceUtilService.getDeviceConsentId();
+        if (consentId == null || consentId.isEmpty) {
+          log('consentId is null');
+          CreateDeviceConsentResponse? createdConsent =
+              await DeviceService(user: user).createDeviceConsent();
+          if (createdConsent != null) {
+            await DeviceUtilService.saveDeviceConsentId(createdConsent.id);
+          }
+          await DeviceService(user: user)
+              .createDeviceActivity(DeviceActivityType.CONSENT_PROVIDED);
+        }
+        await DeviceService(user: user)
+            .createDeviceActivity(DeviceActivityType.APP_START);
       }
     } on CognitoUserNewPasswordRequiredException catch (e) {
       // handle New Password challenge
@@ -108,6 +125,19 @@ class LoginCubit extends Cubit<LoginState> {
     } catch (e) {
       emit(const LoginError(message: LoginErrorMessage.unknownError));
     }
+  }
+
+  void requestConsent({
+    String? email,
+    String? phoneNumber,
+    required String password,
+  }) {
+    emit(LoginRequestConsent(
+      email: email,
+      phoneNumber: phoneNumber,
+      password: password,
+      user: state.user,
+    ));
   }
 }
 

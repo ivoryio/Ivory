@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:http/http.dart' as http;
 import 'package:amazon_cognito_identity_dart_2/cognito.dart';
@@ -49,7 +50,7 @@ class ApiService<T> {
         },
         body: jsonEncode(body),
       );
-      if (response.statusCode != 200) {
+      if (response.statusCode != 200 && response.statusCode != 201) {
         throw Exception("POST request response code: ${response.statusCode}");
       }
 

@@ -1,9 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../services/device_service.dart';
 import '../../widgets/button.dart';
 import '../../widgets/screen.dart';
 import '../../router/routing_constants.dart';
+import '../../widgets/spaced_column.dart';
 
 class LandingScreen extends StatelessWidget {
   const LandingScreen({super.key});
@@ -65,7 +69,8 @@ class LandingScreenContent extends StatelessWidget {
                 ],
               ),
             ]),
-            Column(
+            SpacedColumn(
+              space: 10,
               children: [
                 SizedBox(
                   width: double.infinity,
@@ -76,7 +81,6 @@ class LandingScreenContent extends StatelessWidget {
                     },
                   ),
                 ),
-                const SizedBox(height: 10),
                 SizedBox(
                   width: double.infinity,
                   child: SecondaryButton(
@@ -86,6 +90,49 @@ class LandingScreenContent extends StatelessWidget {
                     },
                   ),
                 ),
+                // SizedBox(
+                //   width: double.infinity,
+                //   child: PrimaryButton(
+                //     text: "Create device binding",
+                //     onPressed: () async {
+                //       await DeviceUtilService.getDeviceFingerprint(
+                //         "bf50e494417b400480dbfeeb2a94a30e",
+                //       );
+                //     },
+                //   ),
+                // ),
+                // SizedBox(
+                //   width: double.infinity,
+                //   child: PrimaryButton(
+                //     text: "Get device signature",
+                //     onPressed: () async {
+                //       await DeviceUtilService.getDeviceFingerprint(
+                //         "bf50e494417b400480dbfeeb2a94a30e",
+                //       );
+                //     },
+                //   ),
+                // ),
+                // SizedBox(
+                //   width: double.infinity,
+                //   child: PrimaryButton(
+                //     text: "Get key pair",
+                //     onPressed: () async {
+                //       await DeviceUtilService.getECDSAP256KeyPair();
+                //     },
+                //   ),
+                // ),
+                // SizedBox(
+                //   width: double.infinity,
+                //   child: PrimaryButton(
+                //     text: "Get signature",
+                //     onPressed: () async {
+                //       await DeviceUtilService.signMessage(
+                //         "One time password",
+                //         "BE5MCLS7bsFmC2jAwazBhJfctWA4MOvdYTwB5CZBA3v2Jc8vP949zVapBN35HLqlyjoqkITN9UmpWVhQA4R9SgTucCKdFHB68DLkOp43Juue5725nKW0Oq2JMecYf2ZEUg==",
+                //       );
+                //     },
+                //   ),
+                // ),
               ],
             )
           ],
