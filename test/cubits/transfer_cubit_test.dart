@@ -190,9 +190,7 @@ void main() {
 
         expect(cubit.state, isA<TransferLoadingState>());
 
-        await Future.delayed(const Duration(seconds: 2));
-
-        expect(cubit.state, isA<TransferConfirmedState>());
+        expectLater(cubit.stream, emits(isA<TransferConfirmedState>()));
       },
     );
 
