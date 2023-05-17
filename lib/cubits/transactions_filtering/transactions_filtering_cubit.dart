@@ -15,7 +15,7 @@ class TransactionsFilteringCubit extends Cubit<TransactionsFilteringState> {
           transactionListFilter: transactionListFilter,
         ));
 
-  void setDateRange(DateTimeRange dateRange) {
+  Future<void> setDateRange(DateTimeRange dateRange) async {
     TransactionListFilter updatedFilter = TransactionListFilter(
       bookingDateMin: dateRange.start,
       bookingDateMax: dateRange.end,
