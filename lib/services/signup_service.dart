@@ -12,6 +12,7 @@ class SignupService {
     required String firstName,
     required String lastName,
     required String passcode,
+    required String phoneNumber,
   }) async {
     try {
       final userPool = CognitoUserPool(

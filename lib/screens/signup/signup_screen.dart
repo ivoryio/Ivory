@@ -86,6 +86,7 @@ class _SignupFormState extends State<SignupForm> {
   String _inputEmail = "";
   String _inputLastName = "";
   String _inputFirstName = "";
+  String _inputPhoneNumber = "";
   bool _agreementAccepted = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -151,6 +152,27 @@ class _SignupFormState extends State<SignupForm> {
                     if (!Validator.isValidEmailAddress(value)) {
                       return 'Please enter a valid email address';
                     }
+                    return null;
+                  },
+                ),
+                PlatformTextInput(
+                  textLabel: "Phone Number",
+                  hintText: "e.g 0049 123 456 789",
+                  keyboardType: TextInputType.phone,
+                  onChanged: (value) {
+                    setState(() {
+                      _inputPhoneNumber = value;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your phone number';
+                    }
+                    //Todo: Add phone number validation
+
+                    // if (!Validator.isValidPhoneNumber(value)) {
+                    //   return 'Please enter a valid phone number';
+                    // }
                     return null;
                   },
                 ),
@@ -233,6 +255,7 @@ class _SignupFormState extends State<SignupForm> {
                         _formKey.currentState!.save();
 
                         context.read<SignupCubit>().setBasicInfo(
+                              phoneNUmber: _inputPhoneNumber,
                               email: _inputEmail,
                               firstName: _inputFirstName,
                               lastName: _inputLastName,

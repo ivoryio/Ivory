@@ -17,6 +17,7 @@ class SignupConfirmTokenScreen extends StatelessWidget {
     String email = previousState.email!;
     String firstName = previousState.firstName!;
     String lastName = previousState.lastName!;
+    String phoneNumber = previousState.phoneNumber!;
     TextEditingController tokenInputController = TextEditingController();
 
     return Screen(
@@ -34,6 +35,7 @@ class SignupConfirmTokenScreen extends StatelessWidget {
             text: "Confirm token",
             onPressed: () {
               context.read<SignupCubit>().confirmToken(
+                  phoneNumber: phoneNumber,
                   token: tokenInputController.text,
                   passcode: passcode,
                   email: email,

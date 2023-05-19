@@ -14,13 +14,18 @@ class SignupCubit extends Cubit<SignupState> {
     required String email,
     required String firstName,
     required String lastName,
+    required String phoneNUmber,
   }) async {
     emit(const SignupLoading());
     emit(BasicInfoComplete(
-        email: email, firstName: firstName, lastName: lastName));
+        email: email,
+        firstName: firstName,
+        lastName: lastName,
+        phoneNumber: phoneNUmber));
   }
 
   Future<void> setPasscode({
+    required String phoneNumber,
     required String passcode,
     required String email,
     required String firstName,
@@ -29,12 +34,14 @@ class SignupCubit extends Cubit<SignupState> {
     emit(const SignupLoading());
 
     await signupService.signup(
+        phoneNumber: phoneNumber,
         email: email,
         firstName: firstName,
         lastName: lastName,
         passcode: passcode);
 
     emit(SetupPasscode(
+        phoneNumber: phoneNumber,
         passcode: passcode,
         email: email,
         firstName: firstName,
@@ -42,6 +49,7 @@ class SignupCubit extends Cubit<SignupState> {
   }
 
   Future<void> confirmToken({
+    required String phoneNumber,
     required String token,
     required String passcode,
     required String email,
@@ -52,6 +60,7 @@ class SignupCubit extends Cubit<SignupState> {
     await signupService.confirmSignup(email: email, token: token);
 
     emit(ConfirmedUser(
+        phoneNumber: phoneNumber,
         passcode: passcode,
         email: email,
         firstName: firstName,

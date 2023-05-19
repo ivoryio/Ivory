@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:solarisdemo/screens/login/login_screen.dart';
 import '../../widgets/button.dart';
 import '../../widgets/platform_text_input.dart';
 
@@ -13,6 +14,7 @@ class SignupSetupPasscodeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     SignupState previousState = context.read<SignupCubit>().state;
     String email = previousState.email!;
+    String phoneNumber = previousState.phoneNumber!;
     String firstName = previousState.firstName!;
     String lastName = previousState.lastName!;
     TextEditingController passcodeController = TextEditingController();
@@ -32,6 +34,7 @@ class SignupSetupPasscodeScreen extends StatelessWidget {
             text: "Continue to insert token",
             onPressed: () {
               context.read<SignupCubit>().setPasscode(
+                    phoneNumber: phoneNumber,
                     passcode: passcodeController.text,
                     email: email,
                     firstName: firstName,

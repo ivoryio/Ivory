@@ -23,16 +23,23 @@ void main() {
       const email = 'test@example.com';
       const firstName = 'John';
       const lastName = 'Doe';
+      const phoneNumber = '1234567890';
 
       expect(cubit.state, const SignupInitial());
 
       await cubit.setBasicInfo(
-          email: email, firstName: firstName, lastName: lastName);
+          email: email,
+          firstName: firstName,
+          lastName: lastName,
+          phoneNUmber: phoneNumber);
 
       expect(
           cubit.state,
           const BasicInfoComplete(
-              email: email, firstName: firstName, lastName: lastName));
+              email: email,
+              firstName: firstName,
+              lastName: lastName,
+              phoneNumber: phoneNumber));
     });
 
     test('setPasscode emits SetupPasscode on success', () async {
@@ -40,10 +47,12 @@ void main() {
       const email = 'test@example.com';
       const firstName = 'John';
       const lastName = 'Doe';
+      const phoneNumber = '1234567890';
 
       expect(cubit.state, const SignupInitial());
 
       cubit.setPasscode(
+        phoneNumber: phoneNumber,
         passcode: passcode,
         email: email,
         firstName: firstName,
@@ -56,6 +65,7 @@ void main() {
         cubit.stream,
         emits(
           const SetupPasscode(
+            phoneNumber: phoneNumber,
             passcode: passcode,
             email: email,
             firstName: firstName,
@@ -71,10 +81,12 @@ void main() {
       const email = 'test@example.com';
       const firstName = 'John';
       const lastName = 'Doe';
+      const phoneNumber = '1234567890';
 
       expect(cubit.state, const SignupInitial());
 
       cubit.confirmToken(
+        phoneNumber: phoneNumber,
         token: token,
         passcode: passcode,
         email: email,
@@ -88,6 +100,7 @@ void main() {
         cubit.stream,
         emits(
           const ConfirmedUser(
+            phoneNumber: phoneNumber,
             passcode: passcode,
             email: email,
             firstName: firstName,
