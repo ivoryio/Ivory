@@ -313,3 +313,40 @@ class TaxInformation {
         "marital_status": maritalStatus,
       };
 }
+
+CreatePerson createPersonFromJson(String str) =>
+    CreatePerson.fromJson(json.decode(str));
+
+String createPersonToJson(CreatePerson data) => json.encode(data.toJson());
+
+class CreatePerson {
+  String email;
+  String lastName;
+  String firstName;
+  String mobileNumber;
+  String deviceData;
+
+  CreatePerson({
+    required this.email,
+    required this.lastName,
+    required this.firstName,
+    required this.mobileNumber,
+    required this.deviceData,
+  });
+
+  factory CreatePerson.fromJson(Map<String, dynamic> json) => CreatePerson(
+        email: json["email"],
+        lastName: json["last_name"],
+        firstName: json["first_name"],
+        mobileNumber: json["mobile_number"],
+        deviceData: json["device_data"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "email": email,
+        "last_name": lastName,
+        "first_name": firstName,
+        "mobile_number": mobileNumber,
+        "device_data": deviceData,
+      };
+}

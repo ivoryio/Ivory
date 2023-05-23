@@ -40,4 +40,16 @@ class PersonService extends ApiService {
       throw Exception("Failed to load account");
     }
   }
+
+  Future<dynamic>? createPerson(CreatePerson person) async {
+    try {
+      String path = 'person';
+
+      var data = await post(path, body: person.toJson());
+
+      return data;
+    } catch (e) {
+      throw Exception("Failed to create person");
+    }
+  }
 }

@@ -7,7 +7,7 @@ import '../config.dart';
 class SignupService {
   SignupService();
 
-  Future<void> signup({
+  Future<void> createCognitoAccount({
     required String email,
     required String firstName,
     required String lastName,
@@ -36,7 +36,7 @@ class SignupService {
     }
   }
 
-  Future<void> confirmSignup({
+  Future<void> confirmCognitoAccount({
     required String email,
     required String token,
   }) async {

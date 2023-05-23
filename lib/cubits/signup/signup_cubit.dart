@@ -33,7 +33,7 @@ class SignupCubit extends Cubit<SignupState> {
   }) async {
     emit(const SignupLoading());
 
-    await signupService.signup(
+    await signupService.createCognitoAccount(
         phoneNumber: phoneNumber,
         email: email,
         firstName: firstName,
@@ -57,7 +57,7 @@ class SignupCubit extends Cubit<SignupState> {
     required String lastName,
   }) async {
     emit(const SignupLoading());
-    await signupService.confirmSignup(email: email, token: token);
+    await signupService.confirmCognitoAccount(email: email, token: token);
 
     emit(ConfirmedUser(
         phoneNumber: phoneNumber,
