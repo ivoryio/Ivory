@@ -69,6 +69,13 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       extra: transactionListFilter,
                     );
                   },
+                  onChangedSearch: (value) {
+                    if (value.isEmpty) {
+                      transactionListCubit!.clearFilters();
+                    }
+
+                    transactionListCubit!.searchTransactions(value);
+                  },
                 ),
                 if (isFilterActive)
                   Row(
@@ -79,6 +86,9 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                         buttonCallback: () {
                           setState(() {
                             transactionListFilter = null;
+                            transactionListCubit!.getTransactions(
+                              filter: transactionListFilter,
+                            );
                           });
                           transactionListCubit!.getTransactions(
                             filter: transactionListFilter,

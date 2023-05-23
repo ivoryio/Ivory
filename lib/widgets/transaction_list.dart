@@ -41,9 +41,14 @@ class TransactionList extends StatelessWidget {
             case TransactionListError:
               return const Text("Transactions could not be loaded");
             case TransactionListLoaded:
-              var transactions = state.transactions;
-              bool isFilteringActive = filter?.bookingDateMin != null &&
-                  filter?.bookingDateMax != null;
+            case TransactionListSearched:
+              bool isFilteringActive = (filter?.bookingDateMin != null ||
+                  filter?.bookingDateMax != null ||
+                  state is TransactionListSearched);
+
+              final transactions = isFilteringActive
+                  ? state.filteredTransactions
+                  : state.transactions;
 
               if (transactions.isEmpty && !isFilteringActive) {
                 return emptyListWidget;
