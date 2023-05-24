@@ -37,11 +37,14 @@ class BasicInfoComplete extends SignupState {
     required String firstName,
     required String lastName,
     required String phoneNumber,
+    required String passcode,
   }) : super(
-            email: email,
-            firstName: firstName,
-            lastName: lastName,
-            phoneNumber: phoneNumber);
+          email: email,
+          firstName: firstName,
+          lastName: lastName,
+          phoneNumber: phoneNumber,
+          passcode: passcode,
+        );
 }
 
 class SetupPasscode extends SignupState {

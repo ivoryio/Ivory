@@ -87,6 +87,7 @@ class _SignupFormState extends State<SignupForm> {
   String _inputLastName = "";
   String _inputFirstName = "";
   String _inputPhoneNumber = "";
+  String _inputPassword = "";
   bool _agreementAccepted = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -176,6 +177,22 @@ class _SignupFormState extends State<SignupForm> {
                     return null;
                   },
                 ),
+                PlatformTextInput(
+                  textLabel: "Passcode",
+                  hintText: "e.g 123456",
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    setState(() {
+                      _inputPassword = value;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your passcode';
+                    }
+                    return null;
+                  },
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -255,10 +272,11 @@ class _SignupFormState extends State<SignupForm> {
                         _formKey.currentState!.save();
 
                         context.read<SignupCubit>().setBasicInfo(
-                              phoneNUmber: _inputPhoneNumber,
+                              phoneNumber: _inputPhoneNumber,
                               email: _inputEmail,
                               firstName: _inputFirstName,
                               lastName: _inputLastName,
+                              passcode: _inputPassword,
                             );
                       }
                     },

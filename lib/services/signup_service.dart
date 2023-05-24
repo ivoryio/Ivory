@@ -4,8 +4,8 @@ import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 
 import '../config.dart';
 
-class SignupService {
-  SignupService();
+class CognitoSignupService {
+  CognitoSignupService();
 
   Future<void> createCognitoAccount({
     required String email,
@@ -13,6 +13,8 @@ class SignupService {
     required String lastName,
     required String passcode,
     required String phoneNumber,
+    required String personId,
+    required String accountId,
   }) async {
     try {
       final userPool = CognitoUserPool(
@@ -22,6 +24,8 @@ class SignupService {
       final userAttributes = [
         AttributeArg(name: 'given_name', value: firstName),
         AttributeArg(name: 'family_name', value: lastName),
+        AttributeArg(name: 'custom:personId', value: personId),
+        AttributeArg(name: 'custom:accountId', value: accountId),
       ];
 
       CognitoUserPoolData? poolData = await userPool.signUp(

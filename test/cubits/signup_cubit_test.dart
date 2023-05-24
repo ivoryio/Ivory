@@ -3,7 +3,7 @@ import 'package:mockito/mockito.dart';
 import 'package:solarisdemo/cubits/signup/signup_cubit.dart';
 import 'package:solarisdemo/services/signup_service.dart';
 
-class MockSignupService extends Mock implements SignupService {}
+class MockSignupService extends Mock implements CognitoSignupService {}
 
 void main() {
   group('SignupCubit', () {
@@ -28,10 +28,12 @@ void main() {
       expect(cubit.state, const SignupInitial());
 
       await cubit.setBasicInfo(
-          email: email,
-          firstName: firstName,
-          lastName: lastName,
-          phoneNUmber: phoneNumber);
+        email: email,
+        firstName: firstName,
+        lastName: lastName,
+        phoneNumber: phoneNumber,
+        passcode: '',
+      );
 
       expect(
           cubit.state,
@@ -39,7 +41,8 @@ void main() {
               email: email,
               firstName: firstName,
               lastName: lastName,
-              phoneNumber: phoneNumber));
+              phoneNumber: phoneNumber,
+              passcode: ''));
     });
 
     test('setPasscode emits SetupPasscode on success', () async {
@@ -51,7 +54,7 @@ void main() {
 
       expect(cubit.state, const SignupInitial());
 
-      cubit.setPasscode(
+      cubit.setConsent(
         phoneNumber: phoneNumber,
         passcode: passcode,
         email: email,

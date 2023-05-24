@@ -165,29 +165,32 @@ class Challenge {
       };
 }
 
-VerifyDeviceSignatureChallengeRequest verifyDeviceSignatureChallengeRequestFromJson(String str) => VerifyDeviceSignatureChallengeRequest.fromJson(json.decode(str));
+VerifyDeviceSignatureChallengeRequest
+    verifyDeviceSignatureChallengeRequestFromJson(String str) =>
+        VerifyDeviceSignatureChallengeRequest.fromJson(json.decode(str));
 
-String verifyDeviceSignatureChallengeRequestToJson(VerifyDeviceSignatureChallengeRequest data) => json.encode(data.toJson());
+String verifyDeviceSignatureChallengeRequestToJson(
+        VerifyDeviceSignatureChallengeRequest data) =>
+    json.encode(data.toJson());
 
 class VerifyDeviceSignatureChallengeRequest {
-    String signature;
-    String deviceData;
+  String signature;
+  String deviceData;
 
-    VerifyDeviceSignatureChallengeRequest({
-        required this.signature,
-        required this.deviceData,
-    });
+  VerifyDeviceSignatureChallengeRequest({
+    required this.signature,
+    required this.deviceData,
+  });
 
-    factory VerifyDeviceSignatureChallengeRequest.fromJson(Map<String, dynamic> json) => VerifyDeviceSignatureChallengeRequest(
+  factory VerifyDeviceSignatureChallengeRequest.fromJson(
+          Map<String, dynamic> json) =>
+      VerifyDeviceSignatureChallengeRequest(
         signature: json["signature"],
         deviceData: json["device_data"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "signature": signature,
         "device_data": deviceData,
-    };
+      };
 }
-
-
-

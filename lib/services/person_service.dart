@@ -1,11 +1,16 @@
+import 'dart:developer';
+
 import 'package:solarisdemo/models/person_account.dart';
 
+import '../models/device.dart';
 import 'api_service.dart';
 import '../models/person_model.dart';
 import '../models/person_account_summary.dart';
 
 class PersonService extends ApiService {
-  PersonService({required super.user});
+  PersonService({
+    super.user,
+  });
 
   Future<PersonAccountSummary>? getPersonAccountSummary() async {
     try {
@@ -41,15 +46,40 @@ class PersonService extends ApiService {
     }
   }
 
-  Future<dynamic>? createPerson(CreatePerson person) async {
+  Future<dynamic>? createPerson(CreatePersonReqBody createPersonReqBody) async {
     try {
       String path = 'person';
 
-      var data = await post(path, body: person.toJson());
+      var data = await post(
+        path,
+        body: createPersonReqBody.toJson(),
+        authNeeded: false,
+      );
+
+      log("in createSolarisUser");
+      return CreatePersonResponse.fromJson(data);
+    } catch (e) {
+      log('in createSolarisUser catch');
+      inspect(e);
+    }
+  }
+
+  Future<dynamic>? createMobileDevice(CreateDevice createDeviceReqBody) async {
+    try {
+      String path = 'person/device';
+
+      var data = await post(
+        path,
+        body: createDeviceReqBody.toJson(),
+      );
+
+      log('in createSolarisMobileDevice');
+      inspect(data);
 
       return data;
     } catch (e) {
-      throw Exception("Failed to create person");
+      log('in createSolarisMobileDevice catch');
+      inspect(e);
     }
   }
 }

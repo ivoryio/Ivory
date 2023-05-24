@@ -33,7 +33,7 @@ class SignupSetupPasscodeScreen extends StatelessWidget {
           PrimaryButton(
             text: "Continue to insert token",
             onPressed: () {
-              context.read<SignupCubit>().setPasscode(
+              context.read<SignupCubit>().setConsent(
                     phoneNumber: phoneNumber,
                     passcode: passcodeController.text,
                     email: email,

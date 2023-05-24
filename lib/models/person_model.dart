@@ -314,32 +314,31 @@ class TaxInformation {
       };
 }
 
-CreatePerson createPersonFromJson(String str) =>
-    CreatePerson.fromJson(json.decode(str));
+CreatePersonReqBody createPersonFromJson(String str) =>
+    CreatePersonReqBody.fromJson(json.decode(str));
 
-String createPersonToJson(CreatePerson data) => json.encode(data.toJson());
+String createPersonToJson(CreatePersonReqBody data) =>
+    json.encode(data.toJson());
 
-class CreatePerson {
+class CreatePersonReqBody {
   String email;
   String lastName;
   String firstName;
   String mobileNumber;
-  String deviceData;
 
-  CreatePerson({
+  CreatePersonReqBody({
     required this.email,
     required this.lastName,
     required this.firstName,
     required this.mobileNumber,
-    required this.deviceData,
   });
 
-  factory CreatePerson.fromJson(Map<String, dynamic> json) => CreatePerson(
+  factory CreatePersonReqBody.fromJson(Map<String, dynamic> json) =>
+      CreatePersonReqBody(
         email: json["email"],
         lastName: json["last_name"],
         firstName: json["first_name"],
         mobileNumber: json["mobile_number"],
-        deviceData: json["device_data"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -347,6 +346,32 @@ class CreatePerson {
         "last_name": lastName,
         "first_name": firstName,
         "mobile_number": mobileNumber,
-        "device_data": deviceData,
+      };
+}
+
+CreatePersonResponse createDeviceResponseFromJson(String str) =>
+    CreatePersonResponse.fromJson(json.decode(str));
+
+String createDeviceResponseToJson(CreatePersonResponse data) =>
+    json.encode(data.toJson());
+
+class CreatePersonResponse {
+  String personId;
+  String accountId;
+
+  CreatePersonResponse({
+    required this.personId,
+    required this.accountId,
+  });
+
+  factory CreatePersonResponse.fromJson(Map<String, dynamic> json) =>
+      CreatePersonResponse(
+        personId: json["person_id"],
+        accountId: json["account_id"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "person_id": personId,
+        "account_id": accountId,
       };
 }
