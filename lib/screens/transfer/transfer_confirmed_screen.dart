@@ -64,7 +64,7 @@ class TransferSuccessful extends StatelessWidget {
             height: 35,
           ),
           const Text(
-            "Congratulations",
+            "Successful transaction",
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w600,
@@ -86,4 +86,3 @@ class TransferSuccessful extends StatelessWidget {
     );
   }
 }
-
