@@ -73,6 +73,8 @@ class LoginCubit extends Cubit<LoginState> {
           user: user,
         ));
 
+        await DeviceUtilService.saveCredentialsInCache(email!, password);
+
         String? consentId = await DeviceUtilService.getDeviceConsentId();
         if (consentId == null || consentId.isEmpty) {
           log('consentId is null');

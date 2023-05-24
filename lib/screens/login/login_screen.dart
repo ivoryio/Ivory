@@ -33,7 +33,7 @@ class LoginScreen extends StatelessWidget {
       create: (context) => LoginCubit(
         authCubit: authCubit,
         authService: authService,
-      )..getSavedCredentials(),
+      ),
       child: BlocBuilder<LoginCubit, LoginState>(
         builder: (context, state) {
           if (state is LoginInitial) {
@@ -252,6 +252,25 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
     }
   }
 
+  Future<CacheCredentials?> getCredentials() async {
+    CacheCredentials? credentials =
+        await DeviceUtilService.getCredentialsFromCache();
+
+    if (credentials != null) {
+      emailInputController.text = credentials.email!;
+      passwordInputController.text = credentials.password!;
+      setState(() {
+        isLoginEnabled = true;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getCredentials();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -320,8 +339,6 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                                 _formKey.currentState!.save();
                                 String emailAddress = emailInputController.text;
                                 String password = passwordInputController.text;
-                                await DeviceUtilService.saveCredentialsInCache(
-                                    emailAddress, password);
                                 String? deviceConsentId =
                                     await DeviceUtilService
                                         .getDeviceConsentId();

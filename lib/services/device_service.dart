@@ -75,7 +75,7 @@ class DeviceUtilService {
   }
 
   static Future<CacheCredentials?> getCredentialsFromCache() async {
-    return _getCredentialsFromCache();
+    return await _getCredentialsFromCache();
   }
 
   static Future<void> saveCredentialsInCache(
