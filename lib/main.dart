@@ -13,9 +13,10 @@ import 'themes/default_theme.dart';
 Future<void> main() async {
   await dotenv.load();
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations(
-          [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown])
-      .then((_) => runApp(const MyApp()));
+  await SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
