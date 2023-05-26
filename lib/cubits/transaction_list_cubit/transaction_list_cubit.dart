@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -27,5 +29,41 @@ class TransactionListCubit extends Cubit<TransactionListState> {
     } catch (e) {
       emit(const TransactionListError());
     }
+  }
+
+  void searchTransactions(String searchTerm) async {
+    if (state is TransactionListLoaded || state is TransactionListSearched) {
+      List<Transaction> transactions = state.transactions;
+
+      emit(TransactionListLoading(transactions: transactions));
+
+      List<Transaction> filteredTransactions = transactions
+          .where(
+            (transaction) => transaction.description!
+                .toLowerCase()
+                .contains(_checkSearchTerm(searchTerm)),
+          )
+          .toList();
+
+      emit(
+        TransactionListSearched(
+            filteredTransactions: filteredTransactions,
+            transactions: transactions),
+      );
+    }
+  }
+
+  void clearFilters() {
+    if (state is TransactionListSearched) {
+      List<Transaction> transactions = state.transactions;
+
+      emit(TransactionListLoaded(transactions));
+    }
+  }
+
+  String _checkSearchTerm(String searchTerm) {
+    searchTerm = searchTerm.toLowerCase().trim();
+
+    return searchTerm;
   }
 }
