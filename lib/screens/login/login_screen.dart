@@ -257,8 +257,8 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
         await DeviceUtilService.getCredentialsFromCache();
 
     if (credentials != null) {
-      emailInputController.text = credentials.email!;
-      passwordInputController.text = credentials.password!;
+      emailInputController.text = credentials.email ?? "";
+      passwordInputController.text = credentials.password ?? "";
       setState(() {
         isLoginEnabled = true;
       });

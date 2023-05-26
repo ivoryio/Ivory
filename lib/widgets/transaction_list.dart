@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -46,9 +47,14 @@ class TransactionList extends StatelessWidget {
                   filter?.bookingDateMax != null ||
                   state is TransactionListSearched);
 
-              final transactions = isFilteringActive
-                  ? state.filteredTransactions
-                  : state.transactions;
+              final transactions = <Transaction>[];
+              if (isFilteringActive && state is TransactionListSearched) {
+                transactions.addAll(state.filteredTransactions);
+              } else if (state is TransactionListSearched) {
+                transactions.addAll(state.filteredTransactions);
+              } else {
+                transactions.addAll(state.transactions);
+              }
 
               if (transactions.isEmpty && !isFilteringActive) {
                 return emptyListWidget;
