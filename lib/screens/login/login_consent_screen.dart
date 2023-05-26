@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:solarisdemo/widgets/screen.dart';
 
 import '../../widgets/spaced_column.dart';
 
-class LoginConsentScreen extends StatelessWidget {
+class GdprConsentScreen extends StatelessWidget {
   final BottomStickyWidget? bottomStickyWidget;
-  const LoginConsentScreen({super.key, this.bottomStickyWidget});
+  const GdprConsentScreen({super.key, this.bottomStickyWidget});
 
   @override
   Widget build(BuildContext context) {

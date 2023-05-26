@@ -1,20 +1,22 @@
 import 'dart:convert';
 
-CreateDevice createDeviceFromJson(String str) =>
-    CreateDevice.fromJson(json.decode(str));
+CreateDeviceReqBody createDeviceFromJson(String str) =>
+    CreateDeviceReqBody.fromJson(json.decode(str));
 
-String createDeviceToJson(CreateDevice data) => json.encode(data.toJson());
+String createDeviceToJson(CreateDeviceReqBody data) =>
+    json.encode(data.toJson());
 
-class CreateDevice {
+class CreateDeviceReqBody {
   String number;
   String deviceData;
 
-  CreateDevice({
+  CreateDeviceReqBody({
     required this.number,
     required this.deviceData,
   });
 
-  factory CreateDevice.fromJson(Map<String, dynamic> json) => CreateDevice(
+  factory CreateDeviceReqBody.fromJson(Map<String, dynamic> json) =>
+      CreateDeviceReqBody(
         number: json["number"],
         deviceData: json["device_data"],
       );

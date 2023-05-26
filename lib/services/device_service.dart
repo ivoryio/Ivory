@@ -195,7 +195,7 @@ Future<void> _setDeviceConsentId(String deviceConsentId) async {
 }
 
 class DeviceService extends ApiService {
-  DeviceService({required super.user});
+  DeviceService({super.user});
 
   Future<CreateDeviceConsentResponse>? createDeviceConsent() async {
     try {
@@ -214,7 +214,8 @@ class DeviceService extends ApiService {
     }
   }
 
-  Future<dynamic> createDeviceActivity(DeviceActivityType activityType) async {
+  Future<dynamic> createDeviceActivity(
+      String personId, DeviceActivityType activityType) async {
     try {
       String path = 'person/device/activity';
 
@@ -224,6 +225,7 @@ class DeviceService extends ApiService {
       var data = await post(
         path,
         body: CreateDeviceActivityRequest(
+          personId: personId,
           activityType: activityType,
           deviceData: deviceFingerprint,
         ).toJson(),
@@ -266,6 +268,7 @@ class DeviceService extends ApiService {
                 language: _defaultLanguageType,
                 deviceData: deviceData)
             .toJson(),
+        authNeeded: false,
       );
       var response = CreateDeviceBindingResponse.fromJson(data);
       await DeviceUtilService.saveDeviceIdIntoCache(response.id);
@@ -298,11 +301,14 @@ class DeviceService extends ApiService {
       String deviceFingerPrint =
           await DeviceUtilService.getDeviceFingerprint(consentId);
 
-      var data = await post(path,
-          body: VerifyDeviceSignatureChallengeRequest(
-            deviceData: deviceFingerPrint,
-            signature: signature!,
-          ).toJson());
+      var data = await post(
+        path,
+        body: VerifyDeviceSignatureChallengeRequest(
+          deviceData: deviceFingerPrint,
+          signature: signature!,
+        ).toJson(),
+        authNeeded: false,
+      );
     } catch (e) {
       throw Exception('Failed to verify device binding signature - $e');
     }

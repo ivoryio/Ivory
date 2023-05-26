@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class EmptyListMessage extends StatelessWidget {
+class TextMessageWithCircularImage extends StatelessWidget {
   final String title;
   final String message;
 
-  const EmptyListMessage({
+  const TextMessageWithCircularImage({
     super.key,
     required this.title,
     required this.message,

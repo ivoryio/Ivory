@@ -10,7 +10,7 @@ import '../../utilities/validator.dart';
 import '../../widgets/sticky_bottom_content.dart';
 import '../../widgets/tab_view.dart';
 import 'login_tan_screen.dart';
-import 'login_passcode_error.dart';
+import '../../widgets/auth_error.dart';
 import '../../widgets/button.dart';
 import '../../widgets/screen.dart';
 import '../../services/auth_service.dart';
@@ -46,10 +46,10 @@ class LoginScreen extends StatelessWidget {
             }
 
             if (state is LoginError) {
-              return LoginPasscodeErrorScreen(message: state.message);
+              return AuthErrorScreen(message: state.message, title: "Login");
             }
             if (state is LoginRequestConsent) {
-              return LoginConsentScreen(
+              return GdprConsentScreen(
                 bottomStickyWidget: BottomStickyWidget(
                   child: StickyBottomContent(
                     buttonText: "I agree",

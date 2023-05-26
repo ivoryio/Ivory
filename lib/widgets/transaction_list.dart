@@ -27,7 +27,7 @@ class TransactionList extends StatelessWidget {
       value: transactionListCubit,
       child: BlocBuilder<TransactionListCubit, TransactionListState>(
         builder: (context, state) {
-          Widget emptyListWidget = const EmptyListMessage(
+          Widget emptyListWidget = const TextMessageWithCircularImage(
             title: "No transactions yet",
             message:
                 "There are no transactions yet. Your future transactions will be displayed here.",

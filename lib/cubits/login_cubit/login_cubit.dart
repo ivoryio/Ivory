@@ -57,11 +57,11 @@ class LoginCubit extends Cubit<LoginState> {
           if (createdConsent != null) {
             await DeviceUtilService.saveDeviceConsentId(createdConsent.id);
           }
-          await DeviceService(user: user)
-              .createDeviceActivity(DeviceActivityType.CONSENT_PROVIDED);
+          await DeviceService().createDeviceActivity(
+              user.personId!, DeviceActivityType.CONSENT_PROVIDED);
         }
         await DeviceService(user: user)
-            .createDeviceActivity(DeviceActivityType.APP_START);
+            .createDeviceActivity(user.personId!, DeviceActivityType.APP_START);
       }
     } on CognitoUserNewPasswordRequiredException catch (e) {
       // handle New Password challenge

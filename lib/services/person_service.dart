@@ -46,7 +46,8 @@ class PersonService extends ApiService {
     }
   }
 
-  Future<dynamic>? createPerson(CreatePersonReqBody createPersonReqBody) async {
+  Future<CreatePersonResponse>? createPerson(
+      CreatePersonReqBody createPersonReqBody) async {
     try {
       String path = 'person';
 
@@ -61,10 +62,12 @@ class PersonService extends ApiService {
     } catch (e) {
       log('in createSolarisUser catch');
       inspect(e);
+      throw Exception("Failed to create person");
     }
   }
 
-  Future<dynamic>? createMobileDevice(CreateDevice createDeviceReqBody) async {
+  Future<dynamic>? createMobileNumber(
+      CreateDeviceReqBody createDeviceReqBody) async {
     try {
       String path = 'person/device';
 
@@ -80,6 +83,7 @@ class PersonService extends ApiService {
     } catch (e) {
       log('in createSolarisMobileDevice catch');
       inspect(e);
+      throw Exception("Failed to create mobile number");
     }
   }
 }

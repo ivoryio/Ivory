@@ -37,7 +37,8 @@ void main() {
 
       expect(
           cubit.state,
-          const BasicInfoComplete(
+          const SignupBasicInfoComplete(
+              personId: 'asd',
               email: email,
               firstName: firstName,
               lastName: lastName,
@@ -54,7 +55,9 @@ void main() {
 
       expect(cubit.state, const SignupInitial());
 
-      cubit.setConsent(
+      cubit.confirmEmail(
+        emailConfirmationCode: 'asd',
+        personId: 'asd',
         phoneNumber: phoneNumber,
         passcode: passcode,
         email: email,
@@ -67,7 +70,8 @@ void main() {
       await expectLater(
         cubit.stream,
         emits(
-          const SetupPasscode(
+          const SignupGdprConsentComplete(
+            personId: 'asd',
             phoneNumber: phoneNumber,
             passcode: passcode,
             email: email,
@@ -88,9 +92,10 @@ void main() {
 
       expect(cubit.state, const SignupInitial());
 
-      cubit.confirmToken(
+      cubit.confirmEmail(
+        personId: 'asd',
         phoneNumber: phoneNumber,
-        token: token,
+        emailConfirmationCode: token,
         passcode: passcode,
         email: email,
         firstName: firstName,

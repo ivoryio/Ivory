@@ -2,17 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
+import 'package:solarisdemo/screens/login/login_consent_screen.dart';
 
 import '../../widgets/checkbox.dart';
+import '../../widgets/auth_error.dart';
 import '../../widgets/spaced_column.dart';
-import 'setup_passcode.dart';
+import '../../widgets/sticky_bottom_content.dart';
+import 'confirm_mobilenumber_screen.dart';
 import '../../widgets/button.dart';
 import '../../widgets/screen.dart';
 import '../../utilities/validator.dart';
 import '../../router/routing_constants.dart';
 import '../../cubits/signup/signup_cubit.dart';
 import '../../widgets/platform_text_input.dart';
-import '../../screens/signup/confirm_token.dart';
+import 'confirm_email_screen.dart';
+import 'signup_success_screen.dart';
 
 class SignupScreen extends StatelessWidget {
   const SignupScreen({super.key});
@@ -30,24 +34,40 @@ class SignupScreen extends StatelessWidget {
           return const BasicInfoScreen();
         }
 
-        if (state is BasicInfoComplete) {
-          return const SignupSetupPasscodeScreen();
-        }
-
-        if (state is SetupPasscode) {
-          return const SignupConfirmTokenScreen();
-        }
-
-        if (state is ConfirmedUser) {
-          return Screen(
-            title: "Sign Up",
-            child: PrimaryButton(
-              text: "Go to landing page",
-              onPressed: () => context.go(landingRoute.path),
+        if (state is SignupBasicInfoComplete) {
+          return GdprConsentScreen(
+            bottomStickyWidget: BottomStickyWidget(
+              child: StickyBottomContent(
+                buttonText: "I agree",
+                onContinueCallback: () {
+                  context.read<SignupCubit>().setGdprConsent(
+                        personId: state.personId!,
+                        phoneNumber: state.phoneNumber!,
+                        passcode: state.passcode!,
+                        email: state.email!,
+                        firstName: state.firstName!,
+                        lastName: state.lastName!,
+                      );
+                },
+              ),
             ),
           );
         }
 
+        if (state is SignupGdprConsentComplete) {
+          return const SignupConfirmEmailScreen();
+        }
+
+        if (state is SignupEmailConfirmed) {
+          return const SignupConfirmMobilenumberScreen();
+        }
+
+        if (state is SignupMobileNumberConfirmed) {
+          return const SignupSuccessScreen();
+        }
+        if (state is SignupError) {
+          return AuthErrorScreen(message: state.message, title: "Signup");
+        }
         return const ErrorScreen();
       }),
     );

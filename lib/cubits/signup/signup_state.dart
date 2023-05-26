@@ -8,8 +8,12 @@ abstract class SignupState extends Equatable {
   final String? lastName;
   final String? passcode;
   final String? token;
+  final String? personId;
+  final User? user;
 
   const SignupState({
+    this.user,
+    this.personId,
     this.phoneNumber,
     this.loading = false,
     this.email,
@@ -31,36 +35,61 @@ class SignupLoading extends SignupState {
   const SignupLoading() : super(loading: true);
 }
 
-class BasicInfoComplete extends SignupState {
-  const BasicInfoComplete({
+class SignupBasicInfoComplete extends SignupState {
+  const SignupBasicInfoComplete({
     required String email,
     required String firstName,
     required String lastName,
     required String phoneNumber,
     required String passcode,
+    required String personId,
   }) : super(
           email: email,
           firstName: firstName,
           lastName: lastName,
           phoneNumber: phoneNumber,
           passcode: passcode,
+          personId: personId,
         );
 }
 
-class SetupPasscode extends SignupState {
-  const SetupPasscode({
+class SignupEmailConfirmed extends SignupState {
+  const SignupEmailConfirmed({
+    required User user,
+    required String email,
+    required String firstName,
+    required String lastName,
+    required String phoneNumber,
+    required String passcode,
+  }) : super(
+          email: email,
+          firstName: firstName,
+          lastName: lastName,
+          phoneNumber: phoneNumber,
+          passcode: passcode,
+          user: user,
+        );
+}
+
+class SignupMobileNumberConfirmed extends SignupState {
+  const SignupMobileNumberConfirmed() : super();
+}
+
+class SignupGdprConsentComplete extends SignupState {
+  const SignupGdprConsentComplete({
+    required String personId,
     required String phoneNumber,
     required String passcode,
     required String email,
     required String firstName,
     required String lastName,
   }) : super(
-          phoneNumber: phoneNumber,
-          passcode: passcode,
-          email: email,
-          firstName: firstName,
-          lastName: lastName,
-        );
+            phoneNumber: phoneNumber,
+            passcode: passcode,
+            email: email,
+            firstName: firstName,
+            lastName: lastName,
+            personId: personId);
 }
 
 class ConfirmedUser extends SignupState {
@@ -77,4 +106,14 @@ class ConfirmedUser extends SignupState {
           firstName: firstName,
           lastName: lastName,
         );
+}
+
+class SignupError extends SignupState {
+  final String message;
+
+  const SignupError({
+    super.email,
+    super.phoneNumber,
+    required this.message,
+  });
 }

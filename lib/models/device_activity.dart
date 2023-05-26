@@ -15,21 +15,25 @@ String createDeviceActivityRequestToJson(CreateDeviceActivityRequest data) =>
     json.encode(data.toJson());
 
 class CreateDeviceActivityRequest {
+  String personId;
   String deviceData;
   DeviceActivityType activityType;
 
   CreateDeviceActivityRequest({
+    required this.personId,
     required this.deviceData,
     required this.activityType,
   });
 
   factory CreateDeviceActivityRequest.fromJson(Map<String, dynamic> json) =>
       CreateDeviceActivityRequest(
+        personId: json["person_id"],
         deviceData: json["device_data"],
         activityType: getActivityType(json["activity_type"]),
       );
 
   Map<String, dynamic> toJson() => {
+        "person_id": personId,
         "device_data": deviceData,
         "activity_type": activityType.name,
       };

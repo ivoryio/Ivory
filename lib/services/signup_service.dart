@@ -37,12 +37,13 @@ class CognitoSignupService {
       inspect(poolData);
     } catch (e) {
       inspect(e);
+      throw Exception("Failed to create Cognito account");
     }
   }
 
   Future<void> confirmCognitoAccount({
     required String email,
-    required String token,
+    required String emailConfirmationCode,
   }) async {
     try {
       final userPool = CognitoUserPool(
@@ -52,11 +53,13 @@ class CognitoSignupService {
 
       CognitoUser user = CognitoUser(email, userPool);
 
-      bool confirmed = await user.confirmRegistration(token);
+      bool confirmed = await user.confirmRegistration(emailConfirmationCode);
 
       log("Confirmed: $confirmed");
     } catch (e) {
       inspect(e);
+      throw Exception("Failed to confirm Cognito account");
     }
   }
+  
 }
