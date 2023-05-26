@@ -73,6 +73,15 @@ class DeviceUtilService {
   static Future<void> saveDeviceIdIntoCache(String deviceId) async {
     await _setDeviceIdIntoCache(deviceId);
   }
+
+  static Future<CacheCredentials?> getCredentialsFromCache() async {
+    return await _getCredentialsFromCache();
+  }
+
+  static Future<void> saveCredentialsInCache(
+      String email, String password) async {
+    await _setCredentialsInCache(email, password);
+  }
 }
 
 Future<void> _setDeviceIdIntoCache(String deviceId) async {
@@ -84,6 +93,38 @@ Future<String?> _getDeviceIdFromCache() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String? deviceId = prefs.getString('device_id');
   return deviceId ?? '';
+}
+
+Future<void> _setCredentialsInCache(String email, String password) async {
+  final prefs = await SharedPreferences.getInstance();
+  prefs.setString('email', email);
+  prefs.setString('password', password);
+}
+
+Future<CacheCredentials?> _getCredentialsFromCache() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  // prefs.clear();
+  String? email = prefs.getString('email');
+  String? password = prefs.getString('password');
+  String? deviceId = await _getDeviceIdFromCache();
+
+  return CacheCredentials(
+    email: email,
+    password: password,
+    deviceId: deviceId,
+  );
+}
+
+class CacheCredentials {
+  String? email;
+  String? password;
+  String? deviceId;
+
+  CacheCredentials({
+    required this.email,
+    required this.password,
+    required this.deviceId,
+  });
 }
 
 Future<dynamic> _getPublicKeyFromCache() async {
