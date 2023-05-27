@@ -11,11 +11,11 @@ class ReferAFriend extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 24.0),
+        const Padding(
+          padding: EdgeInsets.only(bottom: 24.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
+            children: [
               Text(
                 "Refer a friend",
                 style: TextStyle(
@@ -35,9 +35,9 @@ class ReferAFriend extends StatelessWidget {
           ),
           child: Column(
             children: [
-              Row(
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
+                children: [
                   Flexible(
                     child: Text(
                       textAlign: TextAlign.center,
@@ -51,11 +51,11 @@ class ReferAFriend extends StatelessWidget {
                   ),
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 15.0),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 15.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
+                  children: [
                     Flexible(
                       child: Text(
                         softWrap: true,

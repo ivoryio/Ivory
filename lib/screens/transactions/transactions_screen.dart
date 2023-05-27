@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../widgets/search_bar.dart';
 import '../../models/user.dart';
 import '../../widgets/screen.dart';
-import '../../widgets/search_bar.dart';
 import '../../widgets/pill_button.dart';
 import '../../themes/default_theme.dart';
 import '../../widgets/spaced_column.dart';
@@ -61,7 +61,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 const TransactionListTitle(
                   displayShowAllButton: false,
                 ),
-                SearchBar(
+                CustomSearchBar(
                   showButtonIndicator: isFilterActive,
                   onPressedFilterButton: () {
                     context.push(

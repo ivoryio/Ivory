@@ -1,6 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,7 +15,6 @@ import 'login_passcode_error.dart';
 import '../../widgets/button.dart';
 import '../../widgets/screen.dart';
 import '../../services/auth_service.dart';
-import '../../services/device_service.dart';
 import '../../widgets/platform_text_input.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../cubits/login_cubit/login_cubit.dart';
@@ -263,6 +261,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
         isLoginEnabled = true;
       });
     }
+    return null;
   }
 
   @override
