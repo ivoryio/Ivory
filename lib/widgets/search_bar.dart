@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:solarisdemo/cubits/transaction_list_cubit/transaction_list_cubit.dart';
 
 import 'platform_text_input.dart';
 
-class SearchBar extends StatelessWidget {
+class CustomSearchBar extends StatelessWidget {
   final void Function() onPressedFilterButton;
   final bool showButtonIndicator;
   final void Function(String value)? onChangedSearch;
 
-  const SearchBar({
+  const CustomSearchBar({
     super.key,
     required this.onPressedFilterButton,
     this.showButtonIndicator = false,

@@ -339,7 +339,7 @@ class DeviceService extends ApiService {
       String deviceFingerPrint =
           await DeviceUtilService.getDeviceFingerprint(consentId);
 
-      var data = await post(path,
+      await post(path,
           body: VerifyDeviceSignatureChallengeRequest(
             deviceData: deviceFingerPrint,
             signature: signature!,

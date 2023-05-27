@@ -1,6 +1,5 @@
 import 'package:solarisdemo/models/device_binding.dart';
 import 'package:test/test.dart';
-import 'dart:convert';
 
 void main() {
   group('CreateDeviceBindingRequest', () {

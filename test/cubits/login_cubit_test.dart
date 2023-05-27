@@ -99,7 +99,7 @@ void main() {
         password: 'test_password',
       );
 
-      var user = await mockAuthService.login('test_email', 'test_password');
+      await mockAuthService.login('test_email', 'test_password');
 
       cubit.requestConsent(password: 'test_password');
 

@@ -23,12 +23,12 @@ class TransferConfirmedScreen extends StatelessWidget {
           },
         ),
       ),
-      child: Padding(
+      child: const Padding(
         padding: defaultScreenPadding,
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
+            children: [
               TransferSuccessful(),
             ]),
       ),

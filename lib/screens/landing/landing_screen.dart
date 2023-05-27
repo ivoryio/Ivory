@@ -1,9 +1,7 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../services/device_service.dart';
 import '../../widgets/button.dart';
 import '../../widgets/screen.dart';
 import '../../router/routing_constants.dart';
@@ -18,8 +16,8 @@ class LandingScreen extends StatelessWidget {
       title: landingRoute.title,
       hideBottomNavbar: true,
       hideAppBar: true,
-      child: Column(
-        children: const [
+      child: const Column(
+        children: [
           HeroImage(),
           LandingScreenContent(),
         ],
@@ -39,9 +37,9 @@ class LandingScreenContent extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(children: [
+            const Column(children: [
               Row(
-                children: const [
+                children: [
                   Flexible(
                     child: Text(
                       "Manage your finances and expenses easily, with Solaris",
@@ -53,9 +51,9 @@ class LandingScreenContent extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 10),
+              SizedBox(height: 10),
               Row(
-                children: const [
+                children: [
                   Flexible(
                     child: Text(
                       "Manage finances, your wallet, make payments and receipts of finances easily and simply",

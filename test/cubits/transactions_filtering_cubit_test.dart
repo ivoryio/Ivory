@@ -9,10 +9,8 @@ class MockTransactionService extends Mock implements TransactionService {}
 void main() {
   group('TransactionsFilteringCubit', () {
     late TransactionsFilteringCubit cubit;
-    late MockTransactionService mockTransactionService;
 
     setUp(() {
-      mockTransactionService = MockTransactionService();
       cubit = TransactionsFilteringCubit(
         transactionListFilter: const TransactionListFilter(),
       );
