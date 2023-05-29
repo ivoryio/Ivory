@@ -8,10 +8,8 @@ class MockSignupService extends Mock implements CognitoSignupService {}
 void main() {
   group('SignupCubit', () {
     late SignupCubit cubit;
-    late MockSignupService mockSignupService;
 
     setUp(() {
-      mockSignupService = MockSignupService();
       cubit = SignupCubit();
     });
 

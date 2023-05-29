@@ -27,50 +27,52 @@ class LoginScreen extends StatelessWidget {
     final AuthService authService = AuthService();
 
     return BlocProvider(
-        create: (context) => LoginCubit(
-              authCubit: authCubit,
-              authService: authService,
-            ),
-        child: BlocBuilder<LoginCubit, LoginState>(
-          builder: (context, state) {
-            if (state is LoginInitial) {
-              return const Screen(
-                title: "Login",
-                hideBottomNavbar: true,
-                child: LoginOptions(),
-              );
-            }
+      create: (context) => LoginCubit(
+        authCubit: authCubit,
+        authService: authService,
+      ),
+      child: BlocBuilder<LoginCubit, LoginState>(
+        builder: (context, state) {
+          if (state is LoginInitial) {
+            return const Screen(
+              title: "Login",
+              hideBottomNavbar: true,
+              child: LoginOptions(),
+            );
+          }
 
-            if (state is LoginLoading) {
-              return const LoadingScreen(title: "Login");
-            }
+          if (state is LoginLoading) {
+            return const LoadingScreen(title: "Login");
+          }
 
-            if (state is LoginError) {
-              return AuthErrorScreen(message: state.message, title: "Login");
-            }
-            if (state is LoginRequestConsent) {
-              return GdprConsentScreen(
-                bottomStickyWidget: BottomStickyWidget(
-                  child: StickyBottomContent(
-                    buttonText: "I agree",
-                    onContinueCallback: () {
-                      context.read<LoginCubit>().setCredentials(
-                            email: state.email,
-                            phoneNumber: state.phoneNumber,
-                            password: state.password!,
-                          );
-                    },
-                  ),
+          if (state is LoginError) {
+            return AuthErrorScreen(message: state.message, title: "Login");
+          }
+          if (state is LoginRequestConsent) {
+            return GdprConsentScreen(
+              bottomStickyWidget: BottomStickyWidget(
+                child: StickyBottomContent(
+                  buttonText: "I agree",
+                  onContinueCallback: () {
+                    context.read<LoginCubit>().setCredentials(
+                          email: state.email,
+                          phoneNumber: state.phoneNumber,
+                          password: state.password!,
+                        );
+                  },
                 ),
-              );
-            }
-            if (state is LoginUserExists) {
-              return const LoginTanScreen();
-            }
+              ),
+            );
+          }
 
-            return const ErrorScreen();
-          },
-        ));
+          if (state is LoginUserExists) {
+            return const LoginTanScreen();
+          }
+
+          return const ErrorScreen();
+        },
+      ),
+    );
   }
 }
 
@@ -246,6 +248,26 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
     }
   }
 
+  Future<CacheCredentials?> getCredentials() async {
+    CacheCredentials? credentials =
+        await DeviceUtilService.getCredentialsFromCache();
+
+    if (credentials != null) {
+      emailInputController.text = credentials.email ?? "";
+      passwordInputController.text = credentials.password ?? "";
+      setState(() {
+        isLoginEnabled = true;
+      });
+    }
+    return null;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getCredentials();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -284,6 +306,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your password';
                       }
+
                       return null;
                     },
                     onChanged: (value) => onChange(),

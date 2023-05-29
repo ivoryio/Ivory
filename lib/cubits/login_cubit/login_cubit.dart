@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/rendering.dart';
 import 'package:solarisdemo/models/device_activity.dart';
 import 'package:solarisdemo/models/device_consent.dart';
 import 'package:solarisdemo/services/device_service.dart';
@@ -24,6 +25,29 @@ class LoginCubit extends Cubit<LoginState> {
     required this.authCubit,
     required this.authService,
   }) : super(LoginInitial());
+
+  Future<void> getSavedCredentials() async {
+    final credentials = await DeviceUtilService.getCredentialsFromCache();
+
+    if (credentials?.email != null && credentials?.password != null) {
+      inspect(credentials);
+      debugPrint('$credentials');
+      emit(const LoginLoading());
+
+      User? user = await authService.login(
+        credentials!.email!,
+        credentials.password!,
+      );
+
+      if (user != null) {
+        emit(LoginUserExists(
+          user: user,
+          email: credentials.email,
+          password: credentials.password,
+        ));
+      }
+    }
+  }
 
   void setCredentials({
     String? email,
@@ -48,6 +72,8 @@ class LoginCubit extends Cubit<LoginState> {
           password: password,
           user: user,
         ));
+
+        await DeviceUtilService.saveCredentialsInCache(email!, password);
 
         String? consentId = await DeviceUtilService.getDeviceConsentId();
         if (consentId == null || consentId.isEmpty) {

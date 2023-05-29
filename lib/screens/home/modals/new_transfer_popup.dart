@@ -38,11 +38,11 @@ class NewTransferPopupState extends State<NewTransferPopup> {
               title: 'New Transfer',
               showCloseButton: true,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 24),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 24),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: const [
+                children: [
                   Text(
                     "Who are you sending to?",
                     style: TextStyle(
@@ -70,8 +70,8 @@ class NewTransferPopupState extends State<NewTransferPopup> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: const [
+                      const Row(
+                        children: [
                           Icon(Icons.person),
                           SizedBox(width: 11.3),
                           Text(
@@ -102,8 +102,8 @@ class NewTransferPopupState extends State<NewTransferPopup> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: const [
+                      const Row(
+                        children: [
                           Icon(Icons.work),
                           SizedBox(width: 10),
                           Text(
@@ -156,7 +156,6 @@ class _BorderedContainer extends StatelessWidget {
   final Widget child;
 
   const _BorderedContainer({
-    super.key,
     this.onTap,
     this.borderColor = Colors.black,
     required this.child,

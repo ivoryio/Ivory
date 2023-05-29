@@ -79,13 +79,13 @@ class BasicInfoScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Screen(
+    return const Screen(
         hideBottomNavbar: true,
         title: "Sign Up",
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(30, 10, 30, 50),
+          padding: EdgeInsets.fromLTRB(30, 10, 30, 50),
           child: Column(
-            children: const [
+            children: [
               Expanded(
                 child: SignupForm(),
               )
