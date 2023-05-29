@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:go_router/go_router.dart';
 import 'package:solarisdemo/screens/login/login_consent_screen.dart';
 
 import '../../widgets/checkbox.dart';
@@ -12,7 +11,6 @@ import 'confirm_mobilenumber_screen.dart';
 import '../../widgets/button.dart';
 import '../../widgets/screen.dart';
 import '../../utilities/validator.dart';
-import '../../router/routing_constants.dart';
 import '../../cubits/signup/signup_cubit.dart';
 import '../../widgets/platform_text_input.dart';
 import 'confirm_email_screen.dart';

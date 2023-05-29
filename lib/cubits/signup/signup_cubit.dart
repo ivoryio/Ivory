@@ -1,9 +1,12 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:solarisdemo/services/auth_service.dart';
 import 'package:solarisdemo/services/device_service.dart';
 import 'package:solarisdemo/services/person_service.dart';
 
+import '../../models/device.dart';
 import '../../models/device_activity.dart';
 import '../../models/device_consent.dart';
 import '../../models/person_model.dart';
@@ -14,7 +17,6 @@ part 'signup_state.dart';
 
 class SignupCubit extends Cubit<SignupState> {
   CognitoSignupService signupService = CognitoSignupService();
-  PersonService personService = PersonService();
   AuthService authService = AuthService();
 
   SignupCubit() : super(const SignupInitial());
@@ -30,6 +32,9 @@ class SignupCubit extends Cubit<SignupState> {
     emit(const SignupLoading());
 
     try {
+      PersonService personService =
+          PersonService(); //personService without auth
+
       CreatePersonResponse? createPersonResponse =
           await personService.createPerson(CreatePersonReqBody(
         email: email,
@@ -119,10 +124,8 @@ class SignupCubit extends Cubit<SignupState> {
         await DeviceUtilService.saveDeviceConsentId(createdConsent.id);
       }
 
-      await DeviceService().createDeviceActivity(
-          user.personId!, DeviceActivityType.CONSENT_PROVIDED);
-
-      
+      await DeviceService(user: user)
+          .createDeviceActivity(DeviceActivityType.CONSENT_PROVIDED);
 
       emit(SignupEmailConfirmed(
         user: user,
@@ -148,16 +151,36 @@ class SignupCubit extends Cubit<SignupState> {
     emit(const SignupLoading());
 
     try {
-      //confirm number and create binding
+      String? deviceConsentId = await DeviceUtilService.getDeviceConsentId();
+      if (deviceConsentId == null) {
+        throw Exception("Device consent id not found");
+      }
 
-      // await personService.createMobileNumber(CreateDeviceReqBody(
-      //   personId: personId,
-      //   number: phoneNumber,
-      //   deviceData: 'asdf',
-      // ));
+      String? deviceFingerPrint =
+          await DeviceUtilService.getDeviceFingerprint(deviceConsentId);
+      if (deviceFingerPrint == null) {
+        throw Exception("Device fingerprint not found");
+      }
+
+      PersonService personService =
+          PersonService(user: user); //personService with auth
+
+      await personService.createMobileNumber(CreateDeviceReqBody(
+        number: phoneNumber,
+        deviceData: deviceFingerPrint,
+      ));
+
+      DeviceService deviceService = DeviceService(user: user);
+
+      await deviceService
+          .createDeviceBinding(user.personId!); //create device binding
+
+      await deviceService.verifyDeviceBindingSignature(
+          '123456'); // verify device with random TAN - To be refactored
 
       emit(const SignupMobileNumberConfirmed());
     } catch (e) {
+      log(e.toString());
       emit(SignupError(
         message: e.toString(),
       ));

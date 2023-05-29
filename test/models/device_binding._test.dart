@@ -67,7 +67,6 @@ void main() {
     test('fromJson/toJson - Normal', () {
       final Map<String, dynamic> jsonData = {
         "id": "bind_123",
-        "key_id": "key_123",
         "challenge": {
           "id": "chal_123",
           "type": "SMS",
@@ -79,7 +78,6 @@ void main() {
       // Test fromJson
       final response = CreateDeviceBindingResponse.fromJson(jsonData);
       expect(response.id, "bind_123");
-      expect(response.keyId, "key_123");
       expect(response.challenge.id, "chal_123");
       expect(response.challenge.type, "SMS");
       expect(response.challenge.createdAt,

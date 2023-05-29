@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solarisdemo/themes/default_theme.dart';
-import 'package:solarisdemo/widgets/debit_card_widget.dart';
 import 'package:solarisdemo/widgets/spaced_column.dart';
 
 import '../../cubits/signup/signup_cubit.dart';

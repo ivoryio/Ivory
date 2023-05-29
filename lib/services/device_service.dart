@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,29 +19,31 @@ MethodChannel _platform =
     const MethodChannel('com.thinslices.solarisdemo/native');
 
 class DeviceUtilService {
-  static getDeviceFingerprint(String consentId) async {
+  static Future<String?> getDeviceFingerprint(String consentId) async {
     if (defaultTargetPlatform == TargetPlatform.android) {
       return await _getAndroidDeviceFingerprint(consentId);
     } else if (defaultTargetPlatform == TargetPlatform.iOS) {
       return await _getIosDeviceFingerprint(consentId);
     }
+    return '';
   }
 
-  static getECDSAP256KeyPair() async {
+  static Future<Map<Object?, Object?>> getECDSAP256KeyPair() async {
     if (defaultTargetPlatform == TargetPlatform.android) {
       return await _getAndroidECDSAP256KeyPair();
     } else if (defaultTargetPlatform == TargetPlatform.iOS) {
       return await _getIosECDSAP256KeyPair();
     }
-    return null;
+    return {};
   }
 
-  static signMessage(String message, String privateKey) async {
+  static Future<String?> signMessage(String message, String privateKey) async {
     if (defaultTargetPlatform == TargetPlatform.android) {
       return await _signMessageOnAndroid(message, privateKey);
     } else if (defaultTargetPlatform == TargetPlatform.iOS) {
       return await _signMessageOnIos(message, privateKey);
     }
+    return '';
   }
 
   static Future<String?> getDeviceConsentId() async {
@@ -62,7 +62,8 @@ class DeviceUtilService {
     return await _getPrivateKeyFromCache();
   }
 
-  static Future<void> saveKeyPairIntoCache(dynamic keyPair) async {
+  static Future<void> saveKeyPairIntoCache(
+      Map<Object?, Object?> keyPair) async {
     await _setKeyPairIntoCache(keyPair);
   }
 
@@ -127,100 +128,91 @@ class CacheCredentials {
   });
 }
 
-Future<dynamic> _getPublicKeyFromCache() async {
+Future<String> _getPublicKeyFromCache() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String? publicKey = prefs.getString('publicKey');
-  // log('getDeviceConsentId $deviceConsentId');
   return publicKey ?? '';
 }
 
-Future<dynamic> _getPrivateKeyFromCache() async {
+Future<String> _getPrivateKeyFromCache() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String? privateKey = prefs.getString('privateKey');
-  // log('getDeviceConsentId $deviceConsentId');
   return privateKey ?? '';
 }
 
-Future<void> _setKeyPairIntoCache(dynamic keyPair) async {
+Future<void> _setKeyPairIntoCache(Map<Object?, Object?> keyPair) async {
   final prefs = await SharedPreferences.getInstance();
-  prefs.setString('publicKey', keyPair['publicKey']);
-  prefs.setString('privateKey', keyPair['privateKey']);
+  prefs.setString('publicKey', keyPair['publicKey'] as String);
+  prefs.setString('privateKey', keyPair['privateKey'] as String);
 }
 
-Future<void> _getAndroidDeviceFingerprint(String deviceConsentId) async {
+Future<String>? _getAndroidDeviceFingerprint(String deviceConsentId) async {
   try {
     final result = await _platform.invokeMethod(
       'getDeviceFingerprint',
       {'consentId': deviceConsentId},
     );
-    // log("Android Device Signature: $result");
     return result;
   } on PlatformException catch (e) {
-    log('Error: ${e.message}');
+    throw Exception(e.message);
   }
 }
 
-Future<void> _getIosDeviceFingerprint(String deviceConsentId) async {
+Future<String>? _getIosDeviceFingerprint(String deviceConsentId) async {
   try {
     final result = await _platform.invokeMethod(
       'getIosDeviceFingerprint',
       {'consentId': deviceConsentId},
     );
-    // log("IOS Device Signature: $result");
     return result;
   } on PlatformException catch (e) {
-    log('Error: ${e.message}');
+    throw Exception(e.message);
   }
 }
 
-Future<void> _getAndroidECDSAP256KeyPair() async {
+Future<Map<Object?, Object?>> _getAndroidECDSAP256KeyPair() async {
   try {
     final result = await _platform.invokeMethod(
       'generateECDSAP256KeyPair',
     );
-    log('$result');
-    // log(result['publicKey']);
-
     return result;
   } on PlatformException catch (e) {
-    log('Error: ${e.message}');
+    throw Exception(e.message);
   }
 }
 
-Future<void> _getIosECDSAP256KeyPair() async {
+Future<Map<Object?, Object?>> _getIosECDSAP256KeyPair() async {
   try {
     final result = await _platform.invokeMethod(
       'generateIosECDSAP256KeyPair',
     );
-    inspect(result);
-
     return result;
   } on PlatformException catch (e) {
-    log('Error: ${e.message}');
+    throw Exception(e.message);
   }
 }
 
-Future<void> _signMessageOnAndroid(String message, String privateKey) async {
+Future<String?> _signMessageOnAndroid(String message, String privateKey) async {
   try {
     final signature = await _platform.invokeMethod<String>(
       'signMessage',
       {'message': message, 'privateKey': privateKey},
     );
-    print('Signature: $signature');
+    return signature;
   } on PlatformException catch (e) {
-    print('Error: ${e.message}');
+    throw Exception(e.message);
   }
 }
 
-Future<void> _signMessageOnIos(String message, String privateKey) async {
+Future<String?> _signMessageOnIos(String message, String privateKey) async {
   try {
     final signature = await _platform.invokeMethod<String>(
       'signMessage',
       {'message': message, 'privateKey': privateKey},
     );
-    print('Signature: $signature');
+    return signature;
   } on PlatformException catch (e) {
-    print('Error: ${e.message}');
+    throw Exception(e.message);
   }
 }
 
@@ -236,7 +228,7 @@ Future<void> _setDeviceConsentId(String deviceConsentId) async {
 }
 
 class DeviceService extends ApiService {
-  DeviceService({super.user});
+  DeviceService({required super.user});
 
   Future<CreateDeviceConsentResponse>? createDeviceConsent() async {
     try {
@@ -255,25 +247,28 @@ class DeviceService extends ApiService {
     }
   }
 
-  Future<dynamic> createDeviceActivity(
-      String personId, DeviceActivityType activityType) async {
+  Future<dynamic> createDeviceActivity(DeviceActivityType activityType) async {
     try {
       String path = 'person/device/activity';
 
       String? consentId = await _getDeviceConsentId();
-      String deviceFingerprint =
+      if (consentId.isEmpty) {
+        throw Exception('Consent Id not found');
+      }
+
+      String? deviceFingerprint =
           await DeviceUtilService.getDeviceFingerprint(consentId);
-      var data = await post(
+      if (deviceFingerprint == null || deviceFingerprint.isEmpty) {
+        throw Exception('Device Fingerprint not found');
+      }
+
+      await post(
         path,
         body: CreateDeviceActivityRequest(
-          personId: personId,
           activityType: activityType,
           deviceData: deviceFingerprint,
         ).toJson(),
       );
-      if (data['success'] == true) {
-        log('Activity $activityType.name created successfully');
-      }
       return;
     } catch (e) {
       throw Exception("Failed to load device activity");
@@ -289,13 +284,22 @@ class DeviceService extends ApiService {
       if (consentId.isEmpty) {
         throw Exception('Consent Id not found');
       }
-      //Generate key
-      var keyPair = DeviceUtilService.getECDSAP256KeyPair();
-      DeviceUtilService.saveKeyPairIntoCache(keyPair);
 
-      String publicKey = keyPair['publicKey'];
-      String deviceData =
+      var keyPair = await DeviceUtilService.getECDSAP256KeyPair();
+      if (keyPair.isEmpty) {
+        throw Exception('Key Pair not found');
+      }
+
+      await DeviceUtilService.saveKeyPairIntoCache(keyPair);
+
+      String publicKey = keyPair['publicKey'] as String;
+
+      String? deviceData =
           await DeviceUtilService.getDeviceFingerprint(consentId);
+      if (deviceData == null || deviceData.isEmpty) {
+        throw Exception('Device Fingerprint not found');
+      }
+
       var data = await post(
         path,
         body: CreateDeviceBindingRequest(
@@ -309,7 +313,6 @@ class DeviceService extends ApiService {
                 language: _defaultLanguageType,
                 deviceData: deviceData)
             .toJson(),
-        authNeeded: false,
       );
       var response = CreateDeviceBindingResponse.fromJson(data);
       await DeviceUtilService.saveDeviceIdIntoCache(response.id);
@@ -337,18 +340,27 @@ class DeviceService extends ApiService {
       }
 
       String? signature = await DeviceUtilService.signMessage(tan, privateKey);
+      if (signature == null) {
+        throw Exception('Signature not found');
+      }
 
       String path = 'person/device/verify_signature/$deviceId';
-      String deviceFingerPrint =
-          await DeviceUtilService.getDeviceFingerprint(consentId);
 
-      await post(path,
-          body: VerifyDeviceSignatureChallengeRequest(
-            deviceData: deviceFingerPrint,
-            signature: signature!,
-          ).toJson());
+      String? deviceFingerPrint =
+          await DeviceUtilService.getDeviceFingerprint(consentId);
+      if (deviceFingerPrint == null || deviceFingerPrint.isEmpty) {
+        throw Exception('Device Fingerprint not found');
+      }
+
+      await post(
+        path,
+        body: VerifyDeviceSignatureChallengeRequest(
+          deviceData: deviceFingerPrint,
+          signature: signature,
+        ).toJson(),
+      );
     } catch (e) {
-      throw Exception('Failed to verify device binding signature - $e');
+      throw Exception('Failed to verify device signature - $e');
     }
   }
 }

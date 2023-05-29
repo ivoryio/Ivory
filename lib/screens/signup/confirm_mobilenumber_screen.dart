@@ -1,14 +1,11 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:solarisdemo/cubits/signup/signup_cubit.dart';
 
 import '../../widgets/screen.dart';
 import '../../widgets/spaced_column.dart';
 import '../../widgets/tan_input.dart';
-import '../../cubits/login_cubit/login_cubit.dart';
 
 class SignupConfirmMobilenumberScreen extends StatelessWidget {
   const SignupConfirmMobilenumberScreen({super.key});

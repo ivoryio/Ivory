@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:solarisdemo/models/person_account.dart';
 
 import '../models/device.dart';
@@ -57,11 +55,8 @@ class PersonService extends ApiService {
         authNeeded: false,
       );
 
-      log("in createSolarisUser");
       return CreatePersonResponse.fromJson(data);
     } catch (e) {
-      log('in createSolarisUser catch');
-      inspect(e);
       throw Exception("Failed to create person");
     }
   }
@@ -71,18 +66,11 @@ class PersonService extends ApiService {
     try {
       String path = 'person/device';
 
-      var data = await post(
+      await post(
         path,
         body: createDeviceReqBody.toJson(),
       );
-
-      log('in createSolarisMobileDevice');
-      inspect(data);
-
-      return data;
     } catch (e) {
-      log('in createSolarisMobileDevice catch');
-      inspect(e);
       throw Exception("Failed to create mobile number");
     }
   }

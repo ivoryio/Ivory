@@ -36,7 +36,6 @@ class CognitoSignupService {
 
       inspect(poolData);
     } catch (e) {
-      inspect(e);
       throw Exception("Failed to create Cognito account");
     }
   }
@@ -53,13 +52,9 @@ class CognitoSignupService {
 
       CognitoUser user = CognitoUser(email, userPool);
 
-      bool confirmed = await user.confirmRegistration(emailConfirmationCode);
-
-      log("Confirmed: $confirmed");
+      await user.confirmRegistration(emailConfirmationCode);
     } catch (e) {
-      inspect(e);
       throw Exception("Failed to confirm Cognito account");
     }
   }
-  
 }

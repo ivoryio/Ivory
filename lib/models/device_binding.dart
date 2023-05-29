@@ -112,27 +112,28 @@ CreateDeviceBindingResponse createDeviceBindingResponseFromJson(String str) =>
 String createDeviceBindingResponseToJson(CreateDeviceBindingResponse data) =>
     json.encode(data.toJson());
 
+//commented out keyId is in documentation, mock-solaris doesnt uses it
 class CreateDeviceBindingResponse {
   String id;
-  String keyId;
+  // String keyId;
   Challenge challenge;
 
   CreateDeviceBindingResponse({
     required this.id,
-    required this.keyId,
+    // required this.keyId,
     required this.challenge,
   });
 
   factory CreateDeviceBindingResponse.fromJson(Map<String, dynamic> json) =>
       CreateDeviceBindingResponse(
         id: json["id"],
-        keyId: json["key_id"],
+        // keyId: json["key_id"],
         challenge: Challenge.fromJson(json["challenge"]),
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "key_id": keyId,
+        // "key_id": keyId,
         "challenge": challenge.toJson(),
       };
 }
