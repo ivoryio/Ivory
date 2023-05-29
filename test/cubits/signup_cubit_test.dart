@@ -3,7 +3,7 @@ import 'package:mockito/mockito.dart';
 import 'package:solarisdemo/cubits/signup/signup_cubit.dart';
 import 'package:solarisdemo/services/signup_service.dart';
 
-class MockSignupService extends Mock implements SignupService {}
+class MockSignupService extends Mock implements CognitoSignupService {}
 
 void main() {
   group('SignupCubit', () {
@@ -21,16 +21,27 @@ void main() {
       const email = 'test@example.com';
       const firstName = 'John';
       const lastName = 'Doe';
+      const phoneNumber = '1234567890';
 
       expect(cubit.state, const SignupInitial());
 
       await cubit.setBasicInfo(
-          email: email, firstName: firstName, lastName: lastName);
+        email: email,
+        firstName: firstName,
+        lastName: lastName,
+        phoneNumber: phoneNumber,
+        passcode: '',
+      );
 
       expect(
           cubit.state,
-          const BasicInfoComplete(
-              email: email, firstName: firstName, lastName: lastName));
+          const SignupBasicInfoComplete(
+              personId: 'asd',
+              email: email,
+              firstName: firstName,
+              lastName: lastName,
+              phoneNumber: phoneNumber,
+              passcode: ''));
     });
 
     test('setPasscode emits SetupPasscode on success', () async {
@@ -38,10 +49,14 @@ void main() {
       const email = 'test@example.com';
       const firstName = 'John';
       const lastName = 'Doe';
+      const phoneNumber = '1234567890';
 
       expect(cubit.state, const SignupInitial());
 
-      cubit.setPasscode(
+      cubit.confirmEmail(
+        emailConfirmationCode: 'asd',
+        personId: 'asd',
+        phoneNumber: phoneNumber,
         passcode: passcode,
         email: email,
         firstName: firstName,
@@ -53,7 +68,9 @@ void main() {
       await expectLater(
         cubit.stream,
         emits(
-          const SetupPasscode(
+          const SignupGdprConsentComplete(
+            personId: 'asd',
+            phoneNumber: phoneNumber,
             passcode: passcode,
             email: email,
             firstName: firstName,
@@ -69,11 +86,14 @@ void main() {
       const email = 'test@example.com';
       const firstName = 'John';
       const lastName = 'Doe';
+      const phoneNumber = '1234567890';
 
       expect(cubit.state, const SignupInitial());
 
-      cubit.confirmToken(
-        token: token,
+      cubit.confirmEmail(
+        personId: 'asd',
+        phoneNumber: phoneNumber,
+        emailConfirmationCode: token,
         passcode: passcode,
         email: email,
         firstName: firstName,
@@ -86,6 +106,7 @@ void main() {
         cubit.stream,
         emits(
           const ConfirmedUser(
+            phoneNumber: phoneNumber,
             passcode: passcode,
             email: email,
             firstName: firstName,

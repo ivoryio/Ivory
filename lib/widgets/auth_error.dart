@@ -7,14 +7,15 @@ import '../../widgets/screen.dart';
 import '../../router/routing_constants.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
 
-class LoginPasscodeErrorScreen extends StatelessWidget {
+class AuthErrorScreen extends StatelessWidget {
+  final String title;
   final String message;
-  const LoginPasscodeErrorScreen({super.key, required this.message});
+  const AuthErrorScreen({super.key, required this.message, required this.title});
 
   @override
   Widget build(BuildContext context) {
     return Screen(
-      title: "Login",
+      title: title,
       hideBottomNavbar: true,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,

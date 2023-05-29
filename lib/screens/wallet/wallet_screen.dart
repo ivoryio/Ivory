@@ -108,7 +108,7 @@ class CardList extends StatelessWidget {
           if (cards.isEmpty)
             const Padding(
               padding: EdgeInsets.only(top: 50, bottom: 10),
-              child: EmptyListMessage(
+              child: TextMessageWithCircularImage(
                 title: "No cards added",
                 message: "There are no cards yet. Command a card here.",
               ),

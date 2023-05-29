@@ -4,9 +4,9 @@ import 'package:solarisdemo/widgets/screen.dart';
 
 import '../../widgets/spaced_column.dart';
 
-class LoginConsentScreen extends StatelessWidget {
+class GdprConsentScreen extends StatelessWidget {
   final BottomStickyWidget? bottomStickyWidget;
-  const LoginConsentScreen({super.key, this.bottomStickyWidget});
+  const GdprConsentScreen({super.key, this.bottomStickyWidget});
 
   @override
   Widget build(BuildContext context) {

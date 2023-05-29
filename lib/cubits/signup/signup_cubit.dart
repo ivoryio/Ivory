@@ -1,60 +1,189 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:solarisdemo/services/auth_service.dart';
+import 'package:solarisdemo/services/device_service.dart';
+import 'package:solarisdemo/services/person_service.dart';
 
+import '../../models/device.dart';
+import '../../models/device_activity.dart';
+import '../../models/device_consent.dart';
+import '../../models/person_model.dart';
+import '../../models/user.dart';
 import '../../services/signup_service.dart';
 
 part 'signup_state.dart';
 
 class SignupCubit extends Cubit<SignupState> {
-  SignupService signupService = SignupService();
+  CognitoSignupService signupService = CognitoSignupService();
+  AuthService authService = AuthService();
 
   SignupCubit() : super(const SignupInitial());
 
+  // 1. Create Solaris person and account, create Cognito User and linking the two
   Future<void> setBasicInfo({
     required String email,
     required String firstName,
     required String lastName,
-  }) async {
-    emit(const SignupLoading());
-    emit(BasicInfoComplete(
-        email: email, firstName: firstName, lastName: lastName));
-  }
-
-  Future<void> setPasscode({
+    required String phoneNumber,
     required String passcode,
-    required String email,
-    required String firstName,
-    required String lastName,
   }) async {
     emit(const SignupLoading());
 
-    await signupService.signup(
+    try {
+      PersonService personService =
+          PersonService(); //personService without auth
+
+      CreatePersonResponse? createPersonResponse =
+          await personService.createPerson(CreatePersonReqBody(
         email: email,
         firstName: firstName,
         lastName: lastName,
-        passcode: passcode);
+        mobileNumber: phoneNumber,
+      ));
 
-    emit(SetupPasscode(
-        passcode: passcode,
+      if (createPersonResponse == null) {
+        throw Exception("Failed to create person");
+      }
+      await signupService.createCognitoAccount(
+        phoneNumber: phoneNumber,
         email: email,
         firstName: firstName,
-        lastName: lastName));
+        lastName: lastName,
+        passcode: passcode,
+        accountId: createPersonResponse.accountId,
+        personId: createPersonResponse.personId,
+      );
+      emit(SignupBasicInfoComplete(
+        personId: createPersonResponse.personId,
+        email: email,
+        firstName: firstName,
+        lastName: lastName,
+        phoneNumber: phoneNumber,
+        passcode: passcode,
+      ));
+    } catch (e) {
+      emit(SignupError(
+        message: e.toString(),
+      ));
+    }
   }
 
-  Future<void> confirmToken({
-    required String token,
+  //2. Ask GDPR consent
+  Future<void> setGdprConsent({
+    required String email,
+    required String firstName,
+    required String lastName,
+    required String phoneNumber,
+    required String passcode,
+    required String personId,
+  }) async {
+    emit(const SignupLoading());
+    try {
+      emit(SignupGdprConsentComplete(
+        personId: personId,
+        email: email,
+        firstName: firstName,
+        lastName: lastName,
+        phoneNumber: phoneNumber,
+        passcode: passcode,
+      ));
+    } catch (e) {
+      emit(SignupError(
+        message: e.toString(),
+      ));
+    }
+  }
+
+  // 3. Confirm email address (Cognito account), create consent, create activity, create mobile number to confirm
+  Future<void> confirmEmail({
+    required String phoneNumber,
     required String passcode,
     required String email,
     required String firstName,
     required String lastName,
+    required String personId,
+    required String emailConfirmationCode,
   }) async {
     emit(const SignupLoading());
-    await signupService.confirmSignup(email: email, token: token);
+    try {
+      await signupService.confirmCognitoAccount(
+          email: email, emailConfirmationCode: emailConfirmationCode);
 
-    emit(ConfirmedUser(
+      User? user = await authService.login(email, passcode);
+
+      if (user == null) {
+        throw Exception("Failed to login");
+      }
+
+      CreateDeviceConsentResponse? createdConsent =
+          await DeviceService(user: user).createDeviceConsent();
+
+      if (createdConsent != null) {
+        await DeviceUtilService.saveDeviceConsentId(createdConsent.id);
+      }
+
+      await DeviceService(user: user)
+          .createDeviceActivity(DeviceActivityType.CONSENT_PROVIDED);
+
+      emit(SignupEmailConfirmed(
+        user: user,
+        phoneNumber: phoneNumber,
         passcode: passcode,
         email: email,
         firstName: firstName,
-        lastName: lastName));
+        lastName: lastName,
+      ));
+    } catch (e) {
+      emit(SignupError(
+        message: e.toString(),
+      ));
+    }
+  }
+
+  // 4. Confirm mobile number and create binding
+  Future<void> confirmPhoneNumber({
+    required User user,
+    required String phoneNumber,
+    required String mobileNumberConfirmationCode,
+  }) async {
+    emit(const SignupLoading());
+
+    try {
+      String? deviceConsentId = await DeviceUtilService.getDeviceConsentId();
+      if (deviceConsentId == null) {
+        throw Exception("Device consent id not found");
+      }
+
+      String? deviceFingerPrint =
+          await DeviceUtilService.getDeviceFingerprint(deviceConsentId);
+      if (deviceFingerPrint == null) {
+        throw Exception("Device fingerprint not found");
+      }
+
+      PersonService personService =
+          PersonService(user: user); //personService with auth
+
+      await personService.createMobileNumber(CreateDeviceReqBody(
+        number: phoneNumber,
+        deviceData: deviceFingerPrint,
+      ));
+
+      DeviceService deviceService = DeviceService(user: user);
+
+      await deviceService
+          .createDeviceBinding(user.personId!); //create device binding
+
+      await deviceService.verifyDeviceBindingSignature(
+          '123456'); // verify device with random TAN - To be refactored
+
+      emit(const SignupMobileNumberConfirmed());
+    } catch (e) {
+      log(e.toString());
+      emit(SignupError(
+        message: e.toString(),
+      ));
+    }
   }
 }
