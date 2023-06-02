@@ -7,6 +7,7 @@ import '../models/transaction_model.dart';
 import 'text_currency_value.dart';
 
 const String defaultTransactionDescription = 'Transaction';
+const String defaultTransactionRecipientName = 'Recipient name';
 
 class TransactionListItem extends StatelessWidget {
   final Transaction transaction;
@@ -16,6 +17,8 @@ class TransactionListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final date = transaction.bookingDate!;
+    final recipientName =
+        transaction.recipientName ?? defaultTransactionRecipientName;
     final description = transaction.description!;
     final amount = transaction.amount?.value ?? 0;
 
@@ -30,21 +33,24 @@ class TransactionListItem extends StatelessWidget {
               ),
             ),
         child: TransactionCard(
+          formattedDate: formattedDate,
           amount: amount,
           description: description,
-          formattedDate: formattedDate,
+          recipientName: recipientName,
         ));
   }
 }
 
 class TransactionCard extends StatelessWidget {
+  final String recipientName;
   final String description;
-  final String formattedDate;
   final double amount;
+  final String formattedDate;
 
   const TransactionCard({
     super.key,
     required this.description,
+    required this.recipientName,
     required this.formattedDate,
     required this.amount,
   });
@@ -71,19 +77,27 @@ class TransactionCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                            description.isNotEmpty
-                                ? description
-                                : defaultTransactionDescription,
+                            recipientName.isNotEmpty
+                                ? recipientName
+                                : defaultTransactionRecipientName,
                             style: const TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 16,
                             )),
                         Text(
-                          formattedDate,
+                          description.isNotEmpty
+                              ? description
+                              : defaultTransactionDescription,
                           style: const TextStyle(
                             color: Color(0xFF667085),
                           ),
                         ),
+                        Text(
+                          formattedDate,
+                          style: const TextStyle(
+                            color: Color(0xFF667085),
+                          ),
+                        )
                       ]),
                 ),
               ],

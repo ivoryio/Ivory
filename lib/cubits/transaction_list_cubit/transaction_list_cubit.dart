@@ -1,4 +1,3 @@
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -38,9 +37,13 @@ class TransactionListCubit extends Cubit<TransactionListState> {
 
       List<Transaction> filteredTransactions = transactions
           .where(
-            (transaction) => transaction.description!
-                .toLowerCase()
-                .contains(_checkSearchTerm(searchTerm)),
+            (transaction) =>
+                transaction.description!
+                    .toLowerCase()
+                    .contains(_checkSearchTerm(searchTerm)) ||
+                transaction.recipientName!
+                    .toLowerCase()
+                    .contains(_checkSearchTerm(searchTerm)),
           )
           .toList();
 
