@@ -1,10 +1,15 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:solarisdemo/screens/wallet/card_details_screen.dart';
 
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../cubits/debit_cards_cubit/debit_cards_cubit.dart';
 import '../../models/debit_card.dart';
 import '../../models/user.dart';
+import '../../router/routing_constants.dart';
 import '../../services/debit_card_service.dart';
 import '../../utilities/constants.dart';
 import '../../widgets/button.dart';
@@ -130,10 +135,18 @@ class CardList extends StatelessWidget {
                     card.representation?.formattedExpirationDate ??
                         emptyStringValue;
 
-                return DebitCardWidget(
-                  cardNumber: cardNumber,
-                  cardHolder: cardHolder,
-                  cardExpiry: cardExpiry,
+                return GestureDetector(
+                  onTap: () {
+                    context.push(
+                      cardDetailsRoute.path,
+                      extra: CardDetailsScreenParams(cardId: card.id!),
+                    );
+                  },
+                  child: DebitCardWidget(
+                    cardNumber: cardNumber,
+                    cardHolder: cardHolder,
+                    cardExpiry: cardExpiry,
+                  ),
                 );
               },
             ),

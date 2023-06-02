@@ -68,6 +68,12 @@ const transferRoute = _Route(
   title: 'Transfer money',
 );
 
+const cardDetailsRoute = _Route(
+  name: 'cardDetails',
+  path: '/card-details',
+  title: 'Card details',
+);
+
 class _Route {
   final String name;
   final String path;

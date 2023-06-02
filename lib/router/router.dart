@@ -1,9 +1,13 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:solarisdemo/models/debit_card.dart';
 import 'package:solarisdemo/screens/transactions/transactions_filtering_screen.dart';
+import 'package:solarisdemo/widgets/screen.dart';
 
+import '../screens/wallet/card_details_screen.dart';
 import '../services/transaction_service.dart';
 import 'routing_constants.dart';
 import '../screens/home/home_screen.dart';
@@ -101,6 +105,19 @@ class AppRouter {
                 : const TransferScreenParams(transferType: TransferType.person);
 
             return TransferScreen(transferScreenParams: transferScreenParams);
+          },
+        ),
+        GoRoute(
+          path: cardDetailsRoute.path,
+          name: cardDetailsRoute.name,
+          builder: (BuildContext context, GoRouterState state) {
+            if (state.extra is! CardDetailsScreenParams) {
+              return const ErrorScreen();
+            }
+
+            final params = state.extra as CardDetailsScreenParams;
+
+            return CardDetailsScreen(params: params);
           },
         ),
       ],
