@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:solarisdemo/widgets/modal.dart';
-import 'package:solarisdemo/widgets/popup_header.dart';
 
-import '../models/transaction_model.dart';
+import '../router/routing_constants.dart';
+import 'modal.dart';
 import 'button.dart';
+import 'popup_header.dart';
 import 'spaced_column.dart';
 import 'text_currency_value.dart';
+import '../utilities/format.dart';
+import '../models/transaction_model.dart';
 
 const String defaultTransactionDescription = 'Transaction';
 const String defaultTransactionRecipientName = 'Recipient name';
@@ -126,6 +130,10 @@ class TransactionBottomPopup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final DateFormat dateFormatter = DateFormat('d MMMM yyyy, HH:Hm ');
+    final String formattedDate =
+        dateFormatter.format(DateTime.parse(transaction.bookingDate!));
+
     return Container(
       height: MediaQuery.of(context).size.height * 0.9,
       decoration: const BoxDecoration(
@@ -142,7 +150,7 @@ class TransactionBottomPopup extends StatelessWidget {
           const BottomPopupHeader(
             title: "Transaction Details",
             customPaddingEdgeInsets: EdgeInsets.symmetric(
-              vertical: 32,
+              vertical: 24,
               horizontal: 24,
             ),
           ),
@@ -193,8 +201,8 @@ class TransactionBottomPopup extends StatelessWidget {
                 ),
                 SpacedColumn(
                   space: 24,
-                  children: const [
-                    Row(
+                  children: [
+                    const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
@@ -226,7 +234,7 @@ class TransactionBottomPopup extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                        const Text(
                           'Amount',
                           style: TextStyle(
                             fontSize: 16,
@@ -234,8 +242,8 @@ class TransactionBottomPopup extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'Asd',
-                          style: TextStyle(
+                          _formatAmountWithCurrency(transaction.amount!),
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                           ),
@@ -245,7 +253,7 @@ class TransactionBottomPopup extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                        const Text(
                           'Date',
                           style: TextStyle(
                             fontSize: 16,
@@ -253,15 +261,15 @@ class TransactionBottomPopup extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'Asd',
-                          style: TextStyle(
+                          formattedDate,
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                           ),
                         )
                       ],
                     ),
-                    Row(
+                    const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
@@ -272,7 +280,7 @@ class TransactionBottomPopup extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'Asd',
+                          'Completed',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -280,7 +288,7 @@ class TransactionBottomPopup extends StatelessWidget {
                         )
                       ],
                     ),
-                    Row(
+                    const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
@@ -291,7 +299,7 @@ class TransactionBottomPopup extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'Asd',
+                          'VISA ••5199',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -299,7 +307,7 @@ class TransactionBottomPopup extends StatelessWidget {
                         )
                       ],
                     ),
-                    Row(
+                    const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
@@ -309,28 +317,40 @@ class TransactionBottomPopup extends StatelessWidget {
                             fontWeight: FontWeight.w400,
                           ),
                         ),
-                        Text(
-                          'Asd',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.fastfood,
+                              size: 19,
+                            ),
+                            SizedBox(
+                              width: 9,
+                            ),
+                            Text(
+                              'Restaurants',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
                         )
                       ],
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                        const Text(
                           'Exclude from analytics',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
-                        Text(
-                          'ASD',
-                        ),
+                        PlatformSwitch(
+                          value: false,
+                          onChanged: (bool value) {},
+                        )
                       ],
                     ),
                   ],
@@ -346,6 +366,7 @@ class TransactionBottomPopup extends StatelessWidget {
                   space: 32,
                   children: [
                     const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
                           'Note',
@@ -354,22 +375,57 @@ class TransactionBottomPopup extends StatelessWidget {
                             fontWeight: FontWeight.w400,
                           ),
                         ),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.edit,
+                            ),
+                            SizedBox(
+                              width: 12,
+                            ),
+                            Text(
+                              'Download',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            )
+                          ],
+                        ),
                       ],
                     ),
                     SizedBox(
                       width: double.infinity,
                       height: 48,
                       child: PrimaryButton(
-                        text: "Continue",
-                        // onPressed: () {
-                        // },
+                        text: "Convert into instalments",
                         onPressed: () {
-                          return true;
+                          context.push(
+                            splitpaySelectRoute.path,
+                            extra: transaction,
+                          );
                         },
                       ),
                     ),
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.flag,
+                        ),
+                        SizedBox(
+                          width: 24,
+                        ),
+                        Text(
+                          'Report this transaction',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        )
+                      ],
+                    ),
                   ],
-                  
                 )
               ],
             ),
@@ -377,5 +433,15 @@ class TransactionBottomPopup extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String _formatAmountWithCurrency(Amount amount) {
+    double value = amount.value!;
+    String currencySymbolt = Format.getCurrencySymbol(amount.currency!);
+
+    String formattedAmount = value.abs().toStringAsFixed(2);
+    String sign = value < 0 ? '-' : '+';
+
+    return '$sign $currencySymbolt $formattedAmount';
   }
 }
