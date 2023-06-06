@@ -8,19 +8,22 @@ import 'package:solarisdemo/widgets/spaced_column.dart';
 import 'package:solarisdemo/widgets/transaction_listing_item.dart';
 
 import '../../cubits/splitpay_cubit/splitpay_cubit.dart';
+import '../../utilities/format.dart';
 import '../../widgets/button.dart';
 
+// ignore: must_be_immutable
 class SplitpaySelectionScreen extends StatefulWidget {
   final Transaction transaction;
-  final bool _optionOneSelected = true;
-  final bool _optionTwoSelected = false;
-  final bool _optionThreeSelected = false;
+  late bool _optionOneSelected = true;
+  late bool _optionTwoSelected = false;
+  late bool _optionThreeSelected = false;
 
-  const SplitpaySelectionScreen({
+  SplitpaySelectionScreen({
     super.key,
     required this.transaction,
   });
 
+  @override
   @override
   State<SplitpaySelectionScreen> createState() =>
       _SplitpaySelectionScreenState();
@@ -29,6 +32,28 @@ class SplitpaySelectionScreen extends StatefulWidget {
 class _SplitpaySelectionScreenState extends State<SplitpaySelectionScreen> {
   @override
   Widget build(BuildContext context) {
+    final SplitpayInfo optionOneSplitpayInfo = SplitpayInfo(
+      widget.transaction,
+      3,
+    );
+    final SplitpayInfo optionTwoSplitpayInfo = SplitpayInfo(
+      widget.transaction,
+      6,
+    );
+    final SplitpayInfo optionThreeSplitpayInfo = SplitpayInfo(
+      widget.transaction,
+      9,
+    );
+
+    SplitpayInfo selectedSplitpayInfo = widget._optionOneSelected
+        ? optionOneSplitpayInfo
+        : widget._optionTwoSelected
+            ? optionTwoSplitpayInfo
+            : optionThreeSplitpayInfo;
+
+    final String currencySymbol =
+        Format.getCurrencySymbol(widget.transaction.amount!.currency!);
+
     return Screen(
       title: 'Convert into instalments',
       hideBottomNavbar: true,
@@ -64,6 +89,14 @@ class _SplitpaySelectionScreenState extends State<SplitpaySelectionScreen> {
                       space: 8,
                       children: [
                         BorderedContainer(
+                          onTap: () {
+                            setState(() {
+                              widget._optionOneSelected = true;
+                              widget._optionTwoSelected = false;
+                              widget._optionThreeSelected = false;
+                              selectedSplitpayInfo = optionOneSplitpayInfo;
+                            });
+                          },
                           borderColor: widget._optionOneSelected
                               ? Colors.black
                               : const Color(0xFFEAECF0),
@@ -71,7 +104,7 @@ class _SplitpaySelectionScreenState extends State<SplitpaySelectionScreen> {
                           customPadding: const EdgeInsets.symmetric(
                             horizontal: 8,
                           ),
-                          child: const Row(
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Column(
@@ -79,18 +112,18 @@ class _SplitpaySelectionScreenState extends State<SplitpaySelectionScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Pay in 3 months',
-                                    style: TextStyle(
+                                    'Pay in ${optionOneSplitpayInfo.nrOfMonths} months',
+                                    style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 8,
                                   ),
                                   Text(
-                                    'Total € 355.85',
-                                    style: TextStyle(
+                                    'Total $currencySymbol ${optionOneSplitpayInfo.totalAmount}',
+                                    style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w400,
                                       color: Color(0xFF667085),
@@ -105,13 +138,17 @@ class _SplitpaySelectionScreenState extends State<SplitpaySelectionScreen> {
                                   Row(
                                     children: [
                                       Text(
-                                        '- \$ 150',
+                                        '$currencySymbol ${optionOneSplitpayInfo.monthlyAmount}',
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         width: 8,
                                       ),
                                       RadioButton(
-                                        checked: true,
+                                        checked: widget._optionOneSelected,
                                       ),
                                     ],
                                   ),
@@ -121,6 +158,14 @@ class _SplitpaySelectionScreenState extends State<SplitpaySelectionScreen> {
                           ),
                         ),
                         BorderedContainer(
+                          onTap: () {
+                            setState(() {
+                              widget._optionOneSelected = false;
+                              widget._optionTwoSelected = true;
+                              widget._optionThreeSelected = false;
+                              selectedSplitpayInfo = optionTwoSplitpayInfo;
+                            });
+                          },
                           borderColor: widget._optionTwoSelected
                               ? Colors.black
                               : const Color(0xFFEAECF0),
@@ -128,7 +173,7 @@ class _SplitpaySelectionScreenState extends State<SplitpaySelectionScreen> {
                           customPadding: const EdgeInsets.symmetric(
                             horizontal: 8,
                           ),
-                          child: const Row(
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Column(
@@ -136,18 +181,18 @@ class _SplitpaySelectionScreenState extends State<SplitpaySelectionScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Pay in 6 months',
-                                    style: TextStyle(
+                                    'Pay in ${optionTwoSplitpayInfo.nrOfMonths} months',
+                                    style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 8,
                                   ),
                                   Text(
-                                    'Total € 366.85',
-                                    style: TextStyle(
+                                    'Total $currencySymbol ${optionTwoSplitpayInfo.totalAmount}',
+                                    style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w400,
                                       color: Color(0xFF667085),
@@ -162,13 +207,17 @@ class _SplitpaySelectionScreenState extends State<SplitpaySelectionScreen> {
                                   Row(
                                     children: [
                                       Text(
-                                        '- \$ 150',
+                                        '$currencySymbol ${optionTwoSplitpayInfo.monthlyAmount}',
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         width: 8,
                                       ),
                                       RadioButton(
-                                        checked: true,
+                                        checked: widget._optionTwoSelected,
                                       ),
                                     ],
                                   ),
@@ -178,6 +227,14 @@ class _SplitpaySelectionScreenState extends State<SplitpaySelectionScreen> {
                           ),
                         ),
                         BorderedContainer(
+                          onTap: () {
+                            setState(() {
+                              widget._optionOneSelected = false;
+                              widget._optionTwoSelected = false;
+                              widget._optionThreeSelected = true;
+                              selectedSplitpayInfo = optionThreeSplitpayInfo;
+                            });
+                          },
                           borderColor: widget._optionThreeSelected
                               ? Colors.black
                               : const Color(0xFFEAECF0),
@@ -185,7 +242,7 @@ class _SplitpaySelectionScreenState extends State<SplitpaySelectionScreen> {
                           customPadding: const EdgeInsets.symmetric(
                             horizontal: 8,
                           ),
-                          child: const Row(
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Column(
@@ -193,18 +250,18 @@ class _SplitpaySelectionScreenState extends State<SplitpaySelectionScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Pay in 9 months',
-                                    style: TextStyle(
+                                    'Pay in ${optionThreeSplitpayInfo.nrOfMonths} months',
+                                    style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 8,
                                   ),
                                   Text(
-                                    'Total € 355.85',
-                                    style: TextStyle(
+                                    'Total $currencySymbol ${optionThreeSplitpayInfo.totalAmount}',
+                                    style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w400,
                                       color: Color(0xFF667085),
@@ -219,13 +276,17 @@ class _SplitpaySelectionScreenState extends State<SplitpaySelectionScreen> {
                                   Row(
                                     children: [
                                       Text(
-                                        '- \$ 150',
+                                        '$currencySymbol ${optionThreeSplitpayInfo.monthlyAmount}',
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         width: 8,
                                       ),
                                       RadioButton(
-                                        checked: true,
+                                        checked: widget._optionThreeSelected,
                                       ),
                                     ],
                                   ),
@@ -246,9 +307,10 @@ class _SplitpaySelectionScreenState extends State<SplitpaySelectionScreen> {
               child: PrimaryButton(
                   text: "Convert into instalments",
                   onPressed: () {
-                    context
-                        .read<SplitpayCubit>()
-                        .setSelected(widget.transaction);
+                    context.read<SplitpayCubit>().setSelected(
+                          widget.transaction,
+                          selectedSplitpayInfo,
+                        );
                   }),
             ),
           ],

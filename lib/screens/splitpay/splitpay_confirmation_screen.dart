@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:solarisdemo/router/routing_constants.dart';
 
+import '../../cubits/splitpay_cubit/splitpay_cubit.dart';
 import '../../models/transaction_model.dart';
 import '../../themes/default_theme.dart';
+import '../../utilities/format.dart';
 import '../../widgets/button.dart';
 import '../../widgets/checkbox.dart';
 import '../../widgets/screen.dart';
@@ -18,9 +23,17 @@ class SplitpayConfirmationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String currencySymbol =
+        Format.getCurrencySymbol(transaction.amount!.currency!);
+
+    final state = context.read<SplitpayCubit>().state;
+
     return Screen(
       title: 'Transaction confirmation',
       hideBottomNavbar: true,
+      customBackButtonCallback: () {
+        context.read<SplitpayCubit>().setTransaction(transaction);
+      },
       child: Padding(
         padding: const EdgeInsets.only(
           left: defaultScreenHorizontalPadding,
@@ -35,9 +48,9 @@ class SplitpayConfirmationScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               space: 24,
               children: [
-                const Text(
-                  '€ 350.00 Mediamarkt purchase into monthly instalments from your limit of € 8000',
-                  style: TextStyle(
+                Text(
+                  '$currencySymbol ${transaction.amount!.value!.abs()} ${transaction.recipientName} purchase into monthly instalments from your limit of € 8000',
+                  style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
                     color: Color(
@@ -59,8 +72,8 @@ class SplitpayConfirmationScreen extends StatelessWidget {
                 SpacedColumn(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   space: 8,
-                  children: const [
-                    Text(
+                  children: [
+                    const Text(
                       'Total Amount Payable',
                       style: TextStyle(
                         fontSize: 16,
@@ -71,8 +84,8 @@ class SplitpayConfirmationScreen extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '€ 350',
-                      style: TextStyle(
+                      '$currencySymbol ${state.splitpayInfo!.totalAmount}',
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),
@@ -82,8 +95,8 @@ class SplitpayConfirmationScreen extends StatelessWidget {
                 SpacedColumn(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   space: 8,
-                  children: const [
-                    Text(
+                  children: [
+                    const Text(
                       'Payable (in months)',
                       style: TextStyle(
                         fontSize: 16,
@@ -94,8 +107,8 @@ class SplitpayConfirmationScreen extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '9',
-                      style: TextStyle(
+                      '${state.splitpayInfo!.nrOfMonths}',
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),
@@ -129,11 +142,7 @@ class SplitpayConfirmationScreen extends StatelessWidget {
                   children: [
                     CheckboxWidget(
                       isChecked: false,
-                      onChanged: (bool checked) {
-                        // setState(() {
-                        //   savePayee = checked;
-                        // });
-                      },
+                      onChanged: (bool checked) {},
                     ),
                     const SizedBox(
                       width: 8,
@@ -161,7 +170,9 @@ class SplitpayConfirmationScreen extends StatelessWidget {
               height: 48,
               child: PrimaryButton(
                 text: "Confirm and send",
-                onPressed: () {},
+                onPressed: () {
+                  context.go(homeRoute.path);
+                },
               ),
             ),
           ],

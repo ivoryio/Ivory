@@ -11,11 +11,21 @@ class SplitpayCubit extends Cubit<SplitpayState> {
           transaction: transaction,
         ));
 
-  void setTransaction(Transaction transaction) {
-    emit(SplitpayInitialState(transaction: transaction));
+  void setTransaction(
+    Transaction transaction,
+  ) {
+    emit(SplitpayInitialState(
+      transaction: transaction,
+    ));
   }
 
-  void setSelected(Transaction transaction) {
-    emit(SplitpaySelectedState(transaction: transaction));
+  void setSelected(
+    Transaction transaction,
+    SplitpayInfo splitpayInfo,
+  ) {
+    emit(SplitpaySelectedState(
+      transaction: transaction,
+      splitpayInfo: splitpayInfo,
+    ));
   }
 }
