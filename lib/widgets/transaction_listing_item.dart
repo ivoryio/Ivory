@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -39,6 +41,7 @@ class TransactionListItem extends StatelessWidget {
     return GestureDetector(
         onTap: () => isClickable!
             ? showBottomModal(
+                isScrollControlled: true,
                 context: context,
                 child: TransactionBottomPopup(
                   transaction: transaction,
@@ -141,303 +144,304 @@ class TransactionBottomPopup extends StatelessWidget {
     final String formattedDate =
         dateFormatter.format(DateTime.parse(transaction.bookingDate!));
 
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.9,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
+    return FractionallySizedBox(
+      heightFactor: Platform.isAndroid ? 1 : 0.9,
+      child: Container(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
         ),
-      ),
-      width: double.infinity,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const BottomPopupHeader(
-            title: "Transaction Details",
-            customPaddingEdgeInsets: EdgeInsets.symmetric(
-              vertical: 24,
-              horizontal: 24,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const BottomPopupHeader(
+              title: "Transaction Details",
+              customPaddingEdgeInsets: EdgeInsets.symmetric(
+                vertical: 24,
+                horizontal: 24,
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(
-              bottom: 32,
-              left: 24,
-              right: 24,
-            ),
-            child: Column(
-              children: [
-                SpacedColumn(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  space: 8,
-                  children: [
-                    const Text(
-                      'Source account IBAN:',
-                      style: TextStyle(
-                        color: Color(
-                          0xFF667085,
+            Padding(
+              padding: const EdgeInsets.only(
+                bottom: 32,
+                left: 24,
+                right: 24,
+              ),
+              child: Column(
+                children: [
+                  SpacedColumn(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    space: 8,
+                    children: [
+                      const Text(
+                        'Source account IBAN:',
+                        style: TextStyle(
+                          color: Color(
+                            0xFF667085,
+                          ),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
                         ),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
                       ),
-                    ),
-                    Row(
-                      children: [
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          transaction.recipientIban!,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
+                      Row(
+                        children: [
+                          const SizedBox(
+                            width: 10,
                           ),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(vertical: 24),
-                  child: const Divider(
-                    color: Color(0xFFEEEEEE),
-                    thickness: 1,
+                          Text(
+                            transaction.recipientIban!,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
                   ),
-                ),
-                SpacedColumn(
-                  space: 24,
-                  children: [
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Statement',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.download,
-                            ),
-                            SizedBox(
-                              width: 12,
-                            ),
-                            Text(
-                              'Download',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            )
-                          ],
-                        ),
-                      ],
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 24),
+                    child: const Divider(
+                      color: Color(0xFFEEEEEE),
+                      thickness: 1,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Amount',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                        Text(
-                          _formatAmountWithCurrency(transaction.amount!),
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        )
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Date',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                        Text(
-                          formattedDate,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        )
-                      ],
-                    ),
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Status',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                        Text(
-                          'Completed',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        )
-                      ],
-                    ),
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Card',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                        Text(
-                          'VISA ••5199',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        )
-                      ],
-                    ),
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Category',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.fastfood,
-                              size: 19,
-                            ),
-                            SizedBox(
-                              width: 9,
-                            ),
-                            Text(
-                              'Restaurants',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Exclude from analytics',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                        PlatformSwitch(
-                          value: false,
-                          onChanged: (bool value) {},
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(vertical: 24),
-                  child: const Divider(
-                    color: Color(0xFFEEEEEE),
-                    thickness: 1,
                   ),
-                ),
-                SpacedColumn(
-                  space: 32,
-                  children: [
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Note',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
+                  SpacedColumn(
+                    space: 24,
+                    children: [
+                      const Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Statement',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
-                        ),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.edit,
-                            ),
-                            SizedBox(
-                              width: 12,
-                            ),
-                            Text(
-                              'Download',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.download,
                               ),
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 48,
-                      child: PrimaryButton(
-                        text: "Convert into instalments",
-                        onPressed: () {
-                          context.push(
-                            splitpaySelectRoute.path,
-                            extra: transaction,
-                          );
-                        },
+                              SizedBox(
+                                width: 12,
+                              ),
+                              Text(
+                                'Download',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
                       ),
-                    ),
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.flag,
-                        ),
-                        SizedBox(
-                          width: 24,
-                        ),
-                        Text(
-                          'Report this transaction',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Amount',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
-                        )
-                      ],
+                          Text(
+                            _formatAmountWithCurrency(transaction.amount!),
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          )
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Date',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          Text(
+                            formattedDate,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          )
+                        ],
+                      ),
+                      const Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Status',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          Text(
+                            'Completed',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          )
+                        ],
+                      ),
+                      const Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Card',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          Text(
+                            'VISA ••5199',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          )
+                        ],
+                      ),
+                      const Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Category',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.fastfood,
+                                size: 19,
+                              ),
+                              SizedBox(
+                                width: 9,
+                              ),
+                              Text(
+                                'Restaurants',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Exclude from analytics',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          PlatformSwitch(
+                            value: false,
+                            onChanged: (bool value) {},
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 24),
+                    child: const Divider(
+                      color: Color(0xFFEEEEEE),
+                      thickness: 1,
                     ),
-                  ],
-                )
-              ],
+                  ),
+                  SpacedColumn(
+                    space: 32,
+                    children: [
+                      const Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Note',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.edit,
+                              ),
+                              SizedBox(
+                                width: 12,
+                              ),
+                              Text(
+                                'Download',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 48,
+                        child: PrimaryButton(
+                          text: "Convert into instalments",
+                          onPressed: () {
+                            context.push(
+                              splitpaySelectRoute.path,
+                              extra: transaction,
+                            );
+                          },
+                        ),
+                      ),
+                      const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.flag,
+                          ),
+                          SizedBox(
+                            width: 24,
+                          ),
+                          Text(
+                            'Report this transaction',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
