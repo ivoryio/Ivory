@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:solarisdemo/router/routing_constants.dart';
 
 import '../../cubits/splitpay_cubit/splitpay_cubit.dart';
@@ -27,6 +28,12 @@ class SplitpayConfirmationScreen extends StatelessWidget {
         Format.getCurrencySymbol(transaction.amount!.currency!);
 
     final state = context.read<SplitpayCubit>().state;
+    final formattedMonth = DateFormat('MMM').format(
+      DateTime.parse(transaction.bookingDate!),
+    );
+    final formattedDay = DateFormat('dd').format(
+      DateTime.parse(transaction.bookingDate!),
+    );
 
     return Screen(
       title: 'Transaction confirmation',
@@ -118,10 +125,10 @@ class SplitpayConfirmationScreen extends StatelessWidget {
                 SpacedColumn(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   space: 8,
-                  children: const [
+                  children: [
                     Text(
-                      'APR',
-                      style: TextStyle(
+                      formattedMonth,
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w400,
                         color: Color(
@@ -130,8 +137,8 @@ class SplitpayConfirmationScreen extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '11',
-                      style: TextStyle(
+                      formattedDay,
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),
