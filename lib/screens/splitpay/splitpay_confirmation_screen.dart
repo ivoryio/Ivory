@@ -10,6 +10,7 @@ import '../../themes/default_theme.dart';
 import '../../utilities/format.dart';
 import '../../widgets/button.dart';
 import '../../widgets/checkbox.dart';
+import '../../widgets/dialog.dart';
 import '../../widgets/screen.dart';
 import '../../widgets/spaced_column.dart';
 import '../../widgets/transaction_listing_item.dart';
@@ -178,7 +179,13 @@ class SplitpayConfirmationScreen extends StatelessWidget {
               child: PrimaryButton(
                 text: "Confirm and send",
                 onPressed: () {
-                  context.go(homeRoute.path);
+                  showAlertDialog(
+                    context: context,
+                    message: 'Your split payment transaction was successful.',
+                    onOkPressed: () {
+                      context.push(homeRoute.path);
+                    },
+                  );
                 },
               ),
             ),
