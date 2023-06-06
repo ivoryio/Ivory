@@ -16,9 +16,14 @@ const String defaultTransactionDescription = 'Transaction';
 const String defaultTransactionRecipientName = 'Recipient name';
 
 class TransactionListItem extends StatelessWidget {
+  final bool? isClickable;
   final Transaction transaction;
 
-  const TransactionListItem({super.key, required this.transaction});
+  const TransactionListItem({
+    super.key,
+    required this.transaction,
+    this.isClickable = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,12 +37,14 @@ class TransactionListItem extends StatelessWidget {
     final String formattedDate = dateFormatter.format(DateTime.parse(date));
 
     return GestureDetector(
-        onTap: () => showBottomModal(
-              context: context,
-              child: TransactionBottomPopup(
-                transaction: transaction,
-              ),
-            ),
+        onTap: () => isClickable!
+            ? showBottomModal(
+                context: context,
+                child: TransactionBottomPopup(
+                  transaction: transaction,
+                ),
+              )
+            : {},
         child: TransactionCard(
           formattedDate: formattedDate,
           amount: amount,

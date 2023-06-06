@@ -57,7 +57,7 @@ class NewTransferPopupState extends State<NewTransferPopup> {
               space: 8,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _BorderedContainer(
+                BorderedContainer(
                   onTap: () {
                     setState(() {
                       _isPersonSelected = true;
@@ -89,7 +89,7 @@ class NewTransferPopupState extends State<NewTransferPopup> {
                     ],
                   ),
                 ),
-                _BorderedContainer(
+                BorderedContainer(
                   onTap: () {
                     setState(() {
                       _isBusinessSelected = true;
@@ -150,14 +150,19 @@ class NewTransferPopupState extends State<NewTransferPopup> {
   }
 }
 
-class _BorderedContainer extends StatelessWidget {
+class BorderedContainer extends StatelessWidget {
   final Color borderColor;
   final Function? onTap;
   final Widget child;
+  final EdgeInsets? customPadding;
+  final double? customHeight;
 
-  const _BorderedContainer({
+  const BorderedContainer({
+    super.key,
     this.onTap,
     this.borderColor = Colors.black,
+    this.customPadding = const EdgeInsets.symmetric(horizontal: 16),
+    this.customHeight = 68,
     required this.child,
   });
 
@@ -166,8 +171,8 @@ class _BorderedContainer extends StatelessWidget {
     return GestureDetector(
       onTap: () => onTap != null ? onTap!() : null,
       child: Container(
-        height: 68,
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        height: customHeight,
+        padding: customPadding,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
