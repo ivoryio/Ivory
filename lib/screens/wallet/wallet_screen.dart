@@ -139,7 +139,7 @@ class CardList extends StatelessWidget {
                   onTap: () {
                     context.push(
                       cardDetailsRoute.path,
-                      extra: CardDetailsScreenParams(cardId: card.id!),
+                      extra: card,
                     );
                   },
                   child: DebitCardWidget(

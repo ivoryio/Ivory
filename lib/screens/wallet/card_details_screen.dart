@@ -4,24 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:go_router/go_router.dart';
 import 'package:solarisdemo/models/debit_card.dart';
+import 'package:solarisdemo/widgets/spaced_column.dart';
 
 import '../../router/routing_constants.dart';
 import '../../themes/default_theme.dart';
 import '../../utilities/constants.dart';
+import '../../widgets/debit_card_widget.dart';
 import '../../widgets/screen.dart';
 
-class CardDetailsScreenParams {
-  final String cardId;
-
-  CardDetailsScreenParams({required this.cardId});
-}
-
 class CardDetailsScreen extends StatelessWidget {
-  final CardDetailsScreenParams params;
+  final DebitCard card;
 
   const CardDetailsScreen({
     super.key,
-    required this.params,
+    required this.card,
   });
 
   @override
@@ -31,26 +27,23 @@ class CardDetailsScreen extends StatelessWidget {
       centerTitle: true,
       hideBackButton: false,
       hideBottomNavbar: false,
-      child: const Padding(
+      child: Padding(
         padding: defaultScreenPadding,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              height: 200,
-              child: Card(
-                color: Colors.grey,
-                child: Center(
-                  child: Icon(
-                    Icons.image_outlined,
-                    size: 65,
-                    color: Colors.white,
-                  ),
+            SpacedColumn(
+              space: 20,
+              children: [
+                DebitCardWidget(
+                  cardNumber: card.representation!.maskedPan!,
+                  cardHolder: card.representation!.line1!,
+                  cardExpiry: card.representation!.formattedExpirationDate!,
+                  isViewable: false,
                 ),
-              ),
+                const _CardDetailsOptions(),
+              ],
             ),
-            SizedBox(height: 20),
-            _CardDetailsOptions()
           ],
         ),
       ),
@@ -70,32 +63,111 @@ class __CardDetailsOptionsState extends State<_CardDetailsOptions> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const _CardOptionColumns(
-            icon: Icons.local_atm, fieldName: 'Spending limit'),
-        const SizedBox(height: 29),
-        _CardOptionColumns(
-          icon: Icons.payments,
-          fieldName: 'Online payments',
-          onAskMoreTap: () {
-            log('go to Online payments screen');
-          },
-        ),
-        const SizedBox(height: 29),
-        _CardOptionColumns(
-          icon: Icons.atm,
-          fieldName: 'ATM withdrawals',
-          onAskMoreTap: () {
-            log('go to ATM withdrawal screen');
-          },
-        ),
-        const SizedBox(height: 29),
-        _CardOptionColumns(
-          icon: Icons.contactless,
-          fieldName: 'Contactless payments',
-          onAskMoreTap: () {
-            log('go to Contactless payments screen');
-          },
-        ),
+        SpacedColumn(
+          space: 29,
+          children: [
+            const _CardOptionColumns(
+                icon: Icons.local_atm, fieldName: 'Spending limit'),
+            _CardOptionColumns(
+              icon: Icons.payments,
+              fieldName: 'Online payments',
+              onAskMoreTap: () {
+                log('go to Online payments screen');
+              },
+            ),
+            _CardOptionColumns(
+              icon: Icons.atm,
+              fieldName: 'ATM withdrawals',
+              onAskMoreTap: () {
+                log('go to ATM withdrawal screen');
+              },
+            ),
+            _CardOptionColumns(
+              icon: Icons.contactless,
+              fieldName: 'Contactless payments',
+              onAskMoreTap: () {
+                log('go to Contactless payments screen');
+              },
+            ),
+            _CardOptionColumns(
+              icon: Icons.contactless,
+              fieldName: 'Contactless payments',
+              onAskMoreTap: () {
+                log('go to Contactless payments screen');
+              },
+            ),
+            _CardOptionColumns(
+              icon: Icons.contactless,
+              fieldName: 'Contactless payments',
+              onAskMoreTap: () {
+                log('go to Contactless payments screen');
+              },
+            ),
+            _CardOptionColumns(
+              icon: Icons.contactless,
+              fieldName: 'Contactless payments',
+              onAskMoreTap: () {
+                log('go to Contactless payments screen');
+              },
+            ),
+            _CardOptionColumns(
+              icon: Icons.contactless,
+              fieldName: 'Contactless payments',
+              onAskMoreTap: () {
+                log('go to Contactless payments screen');
+              },
+            ),
+            _CardOptionColumns(
+              icon: Icons.contactless,
+              fieldName: 'Contactless payments',
+              onAskMoreTap: () {
+                log('go to Contactless payments screen');
+              },
+            ),
+            _CardOptionColumns(
+              icon: Icons.contactless,
+              fieldName: 'Contactless payments',
+              onAskMoreTap: () {
+                log('go to Contactless payments screen');
+              },
+            ),
+            _CardOptionColumns(
+              icon: Icons.contactless,
+              fieldName: 'Contactless payments',
+              onAskMoreTap: () {
+                log('go to Contactless payments screen');
+              },
+            ),
+            _CardOptionColumns(
+              icon: Icons.contactless,
+              fieldName: 'Contactless payments',
+              onAskMoreTap: () {
+                log('go to Contactless payments screen');
+              },
+            ),
+            _CardOptionColumns(
+              icon: Icons.contactless,
+              fieldName: 'Contactless payments',
+              onAskMoreTap: () {
+                log('go to Contactless payments screen');
+              },
+            ),
+            _CardOptionColumns(
+              icon: Icons.contactless,
+              fieldName: 'Contactless payments',
+              onAskMoreTap: () {
+                log('go to Contactless payments screen');
+              },
+            ),
+            _CardOptionColumns(
+              icon: Icons.contactless,
+              fieldName: 'Contactless payments',
+              onAskMoreTap: () {
+                log('go to Contactless payments screen');
+              },
+            ),
+          ],
+        )
       ],
     );
   }
@@ -177,7 +249,7 @@ class _CardOptionSwitchState extends State<_CardOptionSwitch> {
       width: 36.0,
       height: 20.0,
       activeColor: Theme.of(context).primaryColor,
-      duration: const Duration(milliseconds: 100),
+      duration: const Duration(milliseconds: 50),
       toggleSize: 18.0,
       value: _isSpendingLimitEnabled,
       padding: 1.5,

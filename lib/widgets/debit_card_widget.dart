@@ -12,6 +12,7 @@ class DebitCardWidget extends StatelessWidget {
   final String cardHolder;
   final String cardNumber;
   final String cardExpiry;
+  final bool? isViewable;
 
   const DebitCardWidget({
     super.key,
@@ -19,6 +20,7 @@ class DebitCardWidget extends StatelessWidget {
     required this.cardExpiry,
     required this.cardHolder,
     required this.cardNumber,
+    this.isViewable = true,
   });
 
   @override
@@ -53,7 +55,7 @@ class DebitCardWidget extends StatelessWidget {
                       child: VisaSvgIcon(),
                     ),
                     if (isPrimary) const PrimaryDebitCardLabel(),
-                    EyeIcon(),
+                    if (isViewable!) const EyeIcon(),
                   ],
                 ),
               ),
