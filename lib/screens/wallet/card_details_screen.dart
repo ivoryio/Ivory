@@ -1,14 +1,10 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
-import 'package:go_router/go_router.dart';
 import 'package:solarisdemo/models/debit_card.dart';
 import 'package:solarisdemo/widgets/spaced_column.dart';
 
 import '../../router/routing_constants.dart';
 import '../../themes/default_theme.dart';
-import '../../utilities/constants.dart';
 import '../../widgets/debit_card_widget.dart';
 import '../../widgets/screen.dart';
 
@@ -23,6 +19,7 @@ class CardDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Screen(
+      scrollPhysics: const NeverScrollableScrollPhysics(),
       title: cardDetailsRoute.title,
       centerTitle: true,
       hideBackButton: false,
@@ -59,116 +56,82 @@ class _CardDetailsOptions extends StatefulWidget {
 }
 
 class __CardDetailsOptionsState extends State<_CardDetailsOptions> {
+  void _buildPopup({required String title, required String content}) {
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Text(title),
+        content: Text(content),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Ok'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SpacedColumn(
-          space: 29,
-          children: [
-            const _CardOptionColumns(
-                icon: Icons.local_atm, fieldName: 'Spending limit'),
-            _CardOptionColumns(
-              icon: Icons.payments,
-              fieldName: 'Online payments',
-              onAskMoreTap: () {
-                log('go to Online payments screen');
-              },
-            ),
-            _CardOptionColumns(
-              icon: Icons.atm,
-              fieldName: 'ATM withdrawals',
-              onAskMoreTap: () {
-                log('go to ATM withdrawal screen');
-              },
-            ),
-            _CardOptionColumns(
-              icon: Icons.contactless,
-              fieldName: 'Contactless payments',
-              onAskMoreTap: () {
-                log('go to Contactless payments screen');
-              },
-            ),
-            _CardOptionColumns(
-              icon: Icons.contactless,
-              fieldName: 'Contactless payments',
-              onAskMoreTap: () {
-                log('go to Contactless payments screen');
-              },
-            ),
-            _CardOptionColumns(
-              icon: Icons.contactless,
-              fieldName: 'Contactless payments',
-              onAskMoreTap: () {
-                log('go to Contactless payments screen');
-              },
-            ),
-            _CardOptionColumns(
-              icon: Icons.contactless,
-              fieldName: 'Contactless payments',
-              onAskMoreTap: () {
-                log('go to Contactless payments screen');
-              },
-            ),
-            _CardOptionColumns(
-              icon: Icons.contactless,
-              fieldName: 'Contactless payments',
-              onAskMoreTap: () {
-                log('go to Contactless payments screen');
-              },
-            ),
-            _CardOptionColumns(
-              icon: Icons.contactless,
-              fieldName: 'Contactless payments',
-              onAskMoreTap: () {
-                log('go to Contactless payments screen');
-              },
-            ),
-            _CardOptionColumns(
-              icon: Icons.contactless,
-              fieldName: 'Contactless payments',
-              onAskMoreTap: () {
-                log('go to Contactless payments screen');
-              },
-            ),
-            _CardOptionColumns(
-              icon: Icons.contactless,
-              fieldName: 'Contactless payments',
-              onAskMoreTap: () {
-                log('go to Contactless payments screen');
-              },
-            ),
-            _CardOptionColumns(
-              icon: Icons.contactless,
-              fieldName: 'Contactless payments',
-              onAskMoreTap: () {
-                log('go to Contactless payments screen');
-              },
-            ),
-            _CardOptionColumns(
-              icon: Icons.contactless,
-              fieldName: 'Contactless payments',
-              onAskMoreTap: () {
-                log('go to Contactless payments screen');
-              },
-            ),
-            _CardOptionColumns(
-              icon: Icons.contactless,
-              fieldName: 'Contactless payments',
-              onAskMoreTap: () {
-                log('go to Contactless payments screen');
-              },
-            ),
-            _CardOptionColumns(
-              icon: Icons.contactless,
-              fieldName: 'Contactless payments',
-              onAskMoreTap: () {
-                log('go to Contactless payments screen');
-              },
-            ),
-          ],
-        )
-      ],
+    final optionWidgets = [
+      SpacedColumn(
+        space: 29,
+        children: [
+          const _CardOptionColumns(
+            icon: Icons.local_atm,
+            fieldName: 'Spending limit',
+            visibleSwitch: false,
+          ),
+          _CardOptionColumns(
+            icon: Icons.payments,
+            fieldName: 'Online payments',
+            forMoreInfoTap: () => _buildPopup(
+                title: 'Online payments',
+                content:
+                    'You can use your card to pay online. You can also disable this option.'),
+            visibleSwitch: true,
+          ),
+          _CardOptionColumns(
+            icon: Icons.atm,
+            fieldName: 'ATM withdrawals',
+            forMoreInfoTap: () => _buildPopup(
+                title: 'ATM withdrawals',
+                content:
+                    'You can use your card to withdraw cash from ATMs. You can also disable this option.'),
+            visibleSwitch: true,
+          ),
+          _CardOptionColumns(
+            icon: Icons.contactless,
+            fieldName: 'Contactless payments',
+            forMoreInfoTap: () => _buildPopup(
+                title: 'Contactless payments',
+                content:
+                    'You can use your card to pay contactless. You can also disable this option.'),
+            visibleSwitch: true,
+          ),
+          Divider(
+            color: Theme.of(context).primaryColor,
+            height: 26.5,
+          ),
+          const _CardOptionColumns(
+            icon: Icons.ac_unit,
+            fieldName: 'Freeze card',
+            visibleSwitch: false,
+          ),
+        ],
+      ),
+    ];
+    return Container(
+      height: (MediaQuery.of(context).size.height * 0.8) - 174,
+      child: ListView.separated(
+        separatorBuilder: (context, index) => const SizedBox(height: 10),
+        itemCount: optionWidgets.length,
+        itemBuilder: (context, index) => optionWidgets[index],
+        physics: const AlwaysScrollableScrollPhysics(),
+        shrinkWrap: true,
+        scrollDirection: Axis.vertical,
+      ),
     );
   }
 }
@@ -176,13 +139,15 @@ class __CardDetailsOptionsState extends State<_CardDetailsOptions> {
 class _CardOptionColumns extends StatelessWidget {
   final IconData icon;
   final String fieldName;
-  final void Function()? onAskMoreTap;
+  final void Function()? forMoreInfoTap;
+  final bool visibleSwitch;
 
   const _CardOptionColumns({
     super.key,
     required this.icon,
     required this.fieldName,
-    this.onAskMoreTap,
+    this.forMoreInfoTap,
+    required this.visibleSwitch,
   });
 
   @override
@@ -201,17 +166,18 @@ class _CardOptionColumns extends StatelessWidget {
                 ),
                 const SizedBox(width: 9),
                 _CardOptionName(name: fieldName),
-                const SizedBox(width: 9.67),
-                if (onAskMoreTap != null)
+                const SizedBox(width: 9.7),
+                if (forMoreInfoTap != null)
                   GestureDetector(
-                    onTap: onAskMoreTap,
+                    onTap: forMoreInfoTap,
                     child: const Icon(
                       Icons.help_outline,
+                      color: Color(0xFFB9B9B9),
                     ),
                   ),
               ],
             ),
-            const _CardOptionSwitch(),
+            if (visibleSwitch == true) const _CardOptionSwitch()
           ],
         )
       ],
@@ -249,6 +215,7 @@ class _CardOptionSwitchState extends State<_CardOptionSwitch> {
       width: 36.0,
       height: 20.0,
       activeColor: Theme.of(context).primaryColor,
+      inactiveColor: Color(0xFFB0B0B0),
       duration: const Duration(milliseconds: 50),
       toggleSize: 18.0,
       value: _isSpendingLimitEnabled,
