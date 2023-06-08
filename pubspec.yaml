@@ -53,6 +53,7 @@ dependencies:
   http_mock_adapter: ^0.4.4
   mockito: ^5.4.0
   flutter_switch: ^0.3.2
+  uuid: ^3.0.7
 
 dev_dependencies:
   flutter_test:

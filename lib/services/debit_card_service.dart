@@ -19,6 +19,17 @@ class DebitCardsService extends ApiService {
       throw Exception("Failed to load cards");
     }
   }
+
+  Future<dynamic> createVirtualDebitCard(CreateDebitCard debitCard) async {
+    try {
+      String path = '/account/cards';
+
+      var data = await post(path, body: debitCard.toJson());
+      return data;
+    } catch (e) {
+      throw Exception("Failed to create debit card");
+    }
+  }
 }
 
 class DebitCardsListFilter {

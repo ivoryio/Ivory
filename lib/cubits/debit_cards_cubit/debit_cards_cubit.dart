@@ -26,4 +26,21 @@ class DebitCardsCubit extends Cubit<DebitCardsState> {
       emit(DebitCardsError(message: e.toString()));
     }
   }
+
+  Future<void> createVirtualDebitCard(CreateDebitCard debitCard) async {
+    try {
+      emit(const DebitCardsLoading());
+
+      await debitCardsService.createVirtualDebitCard(debitCard);
+
+      
+      List<DebitCard>? debitCards = await debitCardsService.getDebitCards();
+
+      if (debitCards is List<DebitCard>) {
+        emit(DebitCardsLoaded(physicalCards: debitCards));
+      }
+    } catch (e) {
+      emit(DebitCardsError(message: e.toString()));
+    }
+  }
 }

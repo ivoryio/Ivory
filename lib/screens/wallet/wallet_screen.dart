@@ -102,6 +102,7 @@ class CardList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 15),
       child: SpacedColumn(
@@ -152,7 +153,18 @@ class CardList extends StatelessWidget {
               Expanded(
                 child: PrimaryButton(
                   text: "Get new card",
-                  onPressed: () {},
+                  onPressed: () {
+                    CreateDebitCard card = CreateDebitCard(
+                      user.person.firstName!,
+                      user.person.lastName!,
+                      DebitCardType
+                          .VIRTUAL_VISA_BUSINESS_DEBIT, //to be changed for production
+                      user.personAccount.businessId ?? '',
+                    );
+                    context
+                        .read<DebitCardsCubit>()
+                        .createVirtualDebitCard(card);
+                  },
                   textStyle: const TextStyle(
                     fontWeight: FontWeight.w600,
                   ),
