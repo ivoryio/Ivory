@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:solarisdemo/cubits/debit_card_details_cubit/debit_card_details_cubit.dart';
+import 'package:solarisdemo/cubits/debit_card_details_cubit/debit_card_details_state.dart';
 import 'package:solarisdemo/models/debit_card.dart';
+import 'package:solarisdemo/services/debit_card_service.dart';
 import 'package:solarisdemo/widgets/spaced_column.dart';
 
+import '../../cubits/auth_cubit/auth_cubit.dart';
+import '../../models/user.dart';
 import '../../router/routing_constants.dart';
 import '../../themes/default_theme.dart';
 import '../../widgets/debit_card_widget.dart';
@@ -18,38 +24,71 @@ class CardDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Screen(
-      scrollPhysics: const NeverScrollableScrollPhysics(),
-      title: cardDetailsRoute.title,
-      centerTitle: true,
-      hideBackButton: false,
-      hideBottomNavbar: false,
-      child: Padding(
-        padding: defaultScreenPadding,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SpacedColumn(
-              space: 20,
-              children: [
-                DebitCardWidget(
-                  cardNumber: card.representation!.maskedPan!,
-                  cardHolder: card.representation!.line1!,
-                  cardExpiry: card.representation!.formattedExpirationDate!,
-                  isViewable: false,
+    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
+    return BlocProvider.value(
+      value: DebitCardDetailsCubit(
+        debitCardsService: DebitCardsService(user: user.cognito),
+      ),
+      child: BlocBuilder<DebitCardDetailsCubit, DebitCardDetailsState>(
+        builder: (context, state) {
+          if (state is DebitCardDetailsLoadingState) {
+            return const LoadingScreen(title: 'Card details');
+          }
+          if (state is DebitCardDetailsLoadedState ||
+              state is DebitCardDetailsInitialState) {
+            return Screen(
+              scrollPhysics: const NeverScrollableScrollPhysics(),
+              title: cardDetailsRoute.title,
+              centerTitle: true,
+              hideBackButton: false,
+              hideBottomNavbar: false,
+              child: Padding(
+                padding: defaultScreenPadding,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SpacedColumn(
+                      space: 20,
+                      children: [
+                        DebitCardWidget(
+                          cardNumber: state.debitCard != null
+                              ? state.debitCard!.representation!.maskedPan!
+                              : card.representation!.maskedPan!,
+                          cardHolder: state.debitCard != null
+                              ? state.debitCard!.representation!.line1!
+                              : card.representation!.line1!,
+                          cardExpiry: state.debitCard != null
+                              ? state.debitCard!.representation!
+                                  .formattedExpirationDate!
+                              : card.representation!.formattedExpirationDate!,
+                          isViewable: false,
+                        ),
+                        _CardDetailsOptions(card: state.debitCard ?? card),
+                      ],
+                    ),
+                  ],
                 ),
-                const _CardDetailsOptions(),
-              ],
-            ),
-          ],
-        ),
+              ),
+            );
+          }
+          if (state is DebitCardDetailsErrorState) {
+            return ErrorScreen(
+              title: cardDetailsRoute.title,
+              message: state.message,
+            );
+          }
+
+          return const LoadingScreen(title: 'Error');
+        },
       ),
     );
   }
 }
 
+// ignore: must_be_immutable
 class _CardDetailsOptions extends StatefulWidget {
-  const _CardDetailsOptions({super.key});
+  DebitCard card;
+  _CardDetailsOptions({super.key, required this.card});
 
   @override
   State<_CardDetailsOptions> createState() => __CardDetailsOptionsState();
@@ -114,11 +153,38 @@ class __CardDetailsOptionsState extends State<_CardDetailsOptions> {
             color: Theme.of(context).primaryColor,
             height: 26.5,
           ),
-          const _CardOptionColumns(
-            icon: Icons.ac_unit,
-            fieldName: 'Freeze card',
-            visibleSwitch: false,
-          ),
+          if (widget.card.status == DebitCardStatus.ACTIVE)
+            GestureDetector(
+              onTap: () async {
+                context.read<DebitCardDetailsCubit>().freezeDebitCard(
+                      widget.card.id,
+                    );
+              },
+              child: const SizedBox(
+                width: double.infinity,
+                child: _CardOptionColumns(
+                  icon: Icons.ac_unit,
+                  fieldName: 'Freeze card',
+                  visibleSwitch: false,
+                ),
+              ),
+            ),
+          if (widget.card.status == DebitCardStatus.BLOCKED)
+            GestureDetector(
+              onTap: () async {
+                context.read<DebitCardDetailsCubit>().unfreezeDebitCard(
+                      widget.card.id,
+                    );
+              },
+              child: const SizedBox(
+                width: double.infinity,
+                child: _CardOptionColumns(
+                  icon: Icons.ac_unit,
+                  fieldName: 'Unfreeze card',
+                  visibleSwitch: false,
+                ),
+              ),
+            ),
         ],
       ),
     ];
