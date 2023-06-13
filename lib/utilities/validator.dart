@@ -32,5 +32,5 @@ class RegexValidator {
   /// [A-Z0-9]{4} matches any four characters that are either uppercase letters or digits.
   ///
   /// \d{8,21} matches any sequence of 8 to 21 digits.
-  static RegExp iban = RegExp(r"^[A-Z]{2}\d{2}[A-Z0-9]{4}\d{8,21}");
+  static RegExp iban = RegExp(r"^[A-Z]{2}\d{2}[A-Z0-9]{4}\d{14}");
 }
