@@ -43,6 +43,12 @@ class HomeScreen extends StatelessWidget {
     )..getTransactions(filter: _defaultTransactionListFilter);
 
     return Screen(
+      onRefresh: () async {
+        accountSummaryCubit.getAccountSummary();
+        transactionListCubit.getTransactions(
+          filter: _defaultTransactionListFilter,
+        );
+      },
       title: 'Hello, ${user.cognito.firstName}!',
       hideBackButton: true,
       appBarColor: const Color(0xFF1C1A28),
