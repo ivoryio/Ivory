@@ -22,11 +22,10 @@ class DebitCardsService extends ApiService {
     }
   }
 
-  Future<DebitCard> getDebitCardById(String id) async {
+  Future<DebitCard?> getDebitCardById(String id) async {
     try {
       var data = await get('/account/cards/$id');
       DebitCard card = DebitCard.fromJson(data);
-      inspect(card);
       return card;
     } catch (e) {
       throw Exception("Failed to load card by id");

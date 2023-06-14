@@ -24,8 +24,18 @@ class DebitCardDetailsCubit extends Cubit<DebitCardDetailsState> {
   //   }
   // }
 
-  void initDebitCardDetails(DebitCard debitCard) {
-    emit(DebitCardDetailsLoadedState(debitCard: debitCard));
+  Future<void> loadDebitCard(String cardId) async {
+    try {
+      DebitCard? debitCard = await debitCardsService.getDebitCardById(cardId);
+
+      if (debitCard is DebitCard) {
+        emit(DebitCardDetailsLoadedState(debitCard: debitCard));
+      } else {
+        throw Exception('Debit card not found');
+      }
+    } catch (e) {
+      emit(DebitCardDetailsErrorState(e.toString()));
+    }
   }
 
   Future<void> freezeDebitCard(String cardId) async {

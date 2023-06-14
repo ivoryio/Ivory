@@ -28,14 +28,13 @@ class CardDetailsScreen extends StatelessWidget {
     return BlocProvider.value(
       value: DebitCardDetailsCubit(
         debitCardsService: DebitCardsService(user: user.cognito),
-      ),
+      )..loadDebitCard(card.id),
       child: BlocBuilder<DebitCardDetailsCubit, DebitCardDetailsState>(
         builder: (context, state) {
           if (state is DebitCardDetailsLoadingState) {
             return const LoadingScreen(title: 'Card details');
           }
-          if (state is DebitCardDetailsLoadedState ||
-              state is DebitCardDetailsInitialState) {
+          if (state is DebitCardDetailsLoadedState) {
             return Screen(
               scrollPhysics: const NeverScrollableScrollPhysics(),
               title: cardDetailsRoute.title,
@@ -51,16 +50,11 @@ class CardDetailsScreen extends StatelessWidget {
                       space: 20,
                       children: [
                         DebitCardWidget(
-                          cardNumber: state.debitCard != null
-                              ? state.debitCard!.representation!.maskedPan!
-                              : card.representation!.maskedPan!,
-                          cardHolder: state.debitCard != null
-                              ? state.debitCard!.representation!.line1!
-                              : card.representation!.line1!,
-                          cardExpiry: state.debitCard != null
-                              ? state.debitCard!.representation!
-                                  .formattedExpirationDate!
-                              : card.representation!.formattedExpirationDate!,
+                          cardNumber:
+                              state.debitCard!.representation!.maskedPan!,
+                          cardHolder: state.debitCard!.representation!.line1!,
+                          cardExpiry: state.debitCard!.representation!
+                              .formattedExpirationDate!,
                           isViewable: false,
                         ),
                         _CardDetailsOptions(card: state.debitCard ?? card),
