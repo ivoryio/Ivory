@@ -1,4 +1,3 @@
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:solarisdemo/utilities/constants.dart';
@@ -6,6 +5,7 @@ import 'package:solarisdemo/utilities/constants.dart';
 import '../../models/transfer.dart';
 import '../../models/person_account.dart';
 import '../../services/transaction_service.dart';
+import '../../services/backoffice_services.dart';
 import '../../models/authorization_request.dart';
 import '../../services/change_request_service.dart';
 
@@ -14,10 +14,12 @@ part 'transfer_state.dart';
 class TransferCubit extends Cubit<TransferState> {
   TransactionService transactionService;
   ChangeRequestService changeRequestService;
+  BackOfficeServices backOfficeServices;
 
   TransferCubit({
     required this.transactionService,
     required this.changeRequestService,
+    required this.backOfficeServices,
   }) : super(const TransferInitialState());
 
   void setInitState({
@@ -129,6 +131,9 @@ class TransferCubit extends Cubit<TransferState> {
       }
       await changeRequestService.confirmChangeRequest(
           state.changeRequestId!, tan);
+
+      await backOfficeServices
+          .processQueuedBooking(backOfficeServices.user!.personId!);
 
       emit(TransferConfirmedState(
         iban: state.iban,
