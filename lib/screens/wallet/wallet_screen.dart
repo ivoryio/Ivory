@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../cubits/debit_cards_cubit/debit_cards_cubit.dart';
 import '../../models/debit_card.dart';
 import '../../models/user.dart';
+import '../../router/routing_constants.dart';
 import '../../services/debit_card_service.dart';
 import '../../utilities/constants.dart';
 import '../../widgets/button.dart';
@@ -100,6 +102,7 @@ class CardList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 15),
       child: SpacedColumn(
@@ -130,10 +133,18 @@ class CardList extends StatelessWidget {
                     card.representation?.formattedExpirationDate ??
                         emptyStringValue;
 
-                return DebitCardWidget(
-                  cardNumber: cardNumber,
-                  cardHolder: cardHolder,
-                  cardExpiry: cardExpiry,
+                return GestureDetector(
+                  onTap: () {
+                    context.push(
+                      cardDetailsRoute.path,
+                      extra: card,
+                    );
+                  },
+                  child: DebitCardWidget(
+                    cardNumber: cardNumber,
+                    cardHolder: cardHolder,
+                    cardExpiry: cardExpiry,
+                  ),
                 );
               },
             ),
@@ -142,7 +153,18 @@ class CardList extends StatelessWidget {
               Expanded(
                 child: PrimaryButton(
                   text: "Get new card",
-                  onPressed: () {},
+                  onPressed: () {
+                    CreateDebitCard card = CreateDebitCard(
+                      user.person.firstName!,
+                      user.person.lastName!,
+                      DebitCardType
+                          .VIRTUAL_VISA_BUSINESS_DEBIT, //to be changed for production
+                      user.personAccount.businessId ?? '',
+                    );
+                    context
+                        .read<DebitCardsCubit>()
+                        .createVirtualDebitCard(card);
+                  },
                   textStyle: const TextStyle(
                     fontWeight: FontWeight.w600,
                   ),

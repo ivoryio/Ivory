@@ -68,6 +68,12 @@ const transferRoute = _Route(
   title: 'Transfer money',
 );
 
+const cardDetailsRoute = _Route(
+  name: 'cardDetails',
+  path: '/card-details',
+  title: 'Card details',
+);
+
 const splitpaySelectRoute = _Route(
   name: 'splitpay',
   path: '/splitpay',

@@ -12,6 +12,7 @@ class DebitCardWidget extends StatelessWidget {
   final String cardHolder;
   final String cardNumber;
   final String cardExpiry;
+  final bool? isViewable;
 
   const DebitCardWidget({
     super.key,
@@ -19,6 +20,7 @@ class DebitCardWidget extends StatelessWidget {
     required this.cardExpiry,
     required this.cardHolder,
     required this.cardNumber,
+    this.isViewable = true,
   });
 
   @override
@@ -40,18 +42,22 @@ class DebitCardWidget extends StatelessWidget {
           ),
           child: Column(
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.only(
-                      left: defaultCardHorizontalPadding,
+              Padding(
+                padding: const EdgeInsets.only(right: 20),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(
+                        left: defaultCardHorizontalPadding,
+                      ),
+                      child: VisaSvgIcon(),
                     ),
-                    child: VisaSvgIcon(),
-                  ),
-                  if (isPrimary) const PrimaryDebitCardLabel(),
-                ],
+                    if (isPrimary) const PrimaryDebitCardLabel(),
+                    if (isViewable!) const EyeIcon(),
+                  ],
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(
@@ -133,7 +139,7 @@ class DebitCardWidget extends StatelessWidget {
                             height: 20 / 16,
                             fontWeight: FontWeight.w600,
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ],
@@ -190,6 +196,21 @@ class VisaSvgIcon extends StatelessWidget {
       height: 40,
       width: 40,
       placeholderBuilder: (context) => const Text("VISA"),
+    );
+  }
+}
+
+class EyeIcon extends StatelessWidget {
+  const EyeIcon({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return const Icon(
+      Icons.remove_red_eye_outlined,
+      color: Colors.white,
+      size: 25,
     );
   }
 }

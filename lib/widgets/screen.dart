@@ -20,6 +20,7 @@ class Screen extends StatelessWidget {
   final Future<void> Function()? onRefresh;
   final Function? customBackButtonCallback;
   final BottomStickyWidget? bottomStickyWidget;
+  final ScrollPhysics? scrollPhysics;
 
   const Screen({
     super.key,
@@ -36,6 +37,7 @@ class Screen extends StatelessWidget {
     this.hideBackButton = false,
     this.hideBottomNavbar = false,
     this.customBackButtonCallback,
+    this.scrollPhysics,
   });
 
   @override
@@ -60,8 +62,9 @@ class Screen extends StatelessWidget {
       initialIndex: currentPageIndex,
     );
 
-    ScrollPhysics? physics =
-        onRefresh != null ? const AlwaysScrollableScrollPhysics() : null;
+    ScrollPhysics? physics = onRefresh != null
+        ? scrollPhysics ?? const AlwaysScrollableScrollPhysics()
+        : null;
 
     if (hideBottomNavbar) {
       return PlatformScaffold(
