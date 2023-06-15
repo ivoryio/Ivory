@@ -7,6 +7,7 @@ import 'package:solarisdemo/models/change_request.dart';
 import 'package:solarisdemo/models/person_account.dart';
 import 'package:solarisdemo/models/transfer.dart';
 import 'package:solarisdemo/models/authorization_request.dart';
+import 'package:solarisdemo/services/backoffice_services.dart';
 import 'package:solarisdemo/services/transaction_service.dart';
 import 'package:solarisdemo/services/change_request_service.dart';
 
@@ -93,17 +94,35 @@ class MockChangeRequestService extends Mock implements ChangeRequestService {
   }
 }
 
+class MockBackOfficeServices extends Mock implements BackOfficeServices {
+  @override
+  Future<void> processQueuedBooking(String personId) async {
+    try {
+      return super.noSuchMethod(
+        Invocation.method(#processQueuedBooking, [personId]),
+        returnValue: Future.value(),
+        returnValueForMissingStub: Future.value(),
+      );
+    } catch (e) {
+      throw Exception("Failed to add transaction");
+    }
+  }
+}
+
 void main() {
   late MockTransactionService mockTransactionService;
   late MockChangeRequestService mockChangeRequestService;
+  late MockBackOfficeServices mockBackOfficeServices;
   late TransferCubit cubit;
 
   setUp(() {
     mockTransactionService = MockTransactionService();
     mockChangeRequestService = MockChangeRequestService();
+    mockBackOfficeServices = MockBackOfficeServices();
     cubit = TransferCubit(
       transactionService: mockTransactionService,
       changeRequestService: mockChangeRequestService,
+      backOfficeServices: mockBackOfficeServices,
     );
   });
 

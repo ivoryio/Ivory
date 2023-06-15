@@ -101,13 +101,47 @@ class __CardDetailsOptionsState extends State<_CardDetailsOptions> {
   @override
   Widget build(BuildContext context) {
     final optionWidgets = [
+      const Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Card settings',
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              fontSize: 18,
+              height: 1.2,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+      const SizedBox(height: 19),
       SpacedColumn(
         space: 29,
         children: [
           const _CardOptionColumns(
+            icon: Icons.key,
+            fieldName: 'View PIN',
+            visibleSwitch: false,
+          ),
+          const _CardOptionColumns(
+            icon: Icons.lock_clock,
+            fieldName: 'Unblock PIN',
+            visibleSwitch: false,
+          ),
+          const _CardOptionColumns(
+            icon: Icons.payments,
+            fieldName: 'Spending limit',
+            visibleSwitch: true,
+          ),
+          const Divider(
+            color: Color(0xFFEEEEEE),
+            thickness: 1,
+          ),
+          const _CardOptionColumns(
             icon: Icons.local_atm,
             fieldName: 'Spending limit',
-            visibleSwitch: false,
+            visibleSwitch: true,
           ),
           _CardOptionColumns(
             icon: Icons.payments,
@@ -136,9 +170,9 @@ class __CardDetailsOptionsState extends State<_CardDetailsOptions> {
                     'You can use your card to pay contactless. You can also disable this option.'),
             visibleSwitch: true,
           ),
-          Divider(
-            color: Theme.of(context).primaryColor,
-            height: 26.5,
+          const Divider(
+            color: Color(0xFFEEEEEE),
+            thickness: 1,
           ),
           if (widget.card.status == DebitCardStatus.ACTIVE)
             GestureDetector(
@@ -178,7 +212,7 @@ class __CardDetailsOptionsState extends State<_CardDetailsOptions> {
     return Container(
       height: (MediaQuery.of(context).size.height * 0.8) - 174,
       child: ListView.separated(
-        separatorBuilder: (context, index) => const SizedBox(height: 10),
+        separatorBuilder: (context, index) => const SizedBox(height: 0),
         itemCount: optionWidgets.length,
         itemBuilder: (context, index) => optionWidgets[index],
         physics: const AlwaysScrollableScrollPhysics(),
@@ -247,7 +281,8 @@ class _CardOptionName extends StatelessWidget {
     return Text(name,
         textAlign: TextAlign.left,
         style: const TextStyle(
-          fontSize: 16,
+          fontSize: 18,
+          height: 1.19,
           fontWeight: FontWeight.w400,
         ));
   }
