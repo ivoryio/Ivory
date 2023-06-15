@@ -23,8 +23,12 @@ import '../../cubits/account_summary_cubit/account_summary_cubit.dart';
 import '../../cubits/transaction_list_cubit/transaction_list_cubit.dart';
 
 const _defaultCountTransactionsDisplayed = 3;
+const _defaultPage = 1;
+const _defaultSort = '-recorded_at';
 const _defaultTransactionListFilter = TransactionListFilter(
   size: _defaultCountTransactionsDisplayed,
+  page: _defaultPage,
+  sort: _defaultSort,
 );
 
 class HomeScreen extends StatelessWidget {

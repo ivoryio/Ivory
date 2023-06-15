@@ -47,12 +47,14 @@ class TransactionListFilter {
   final DateTime? bookingDateMax;
   final int? page;
   final int? size;
+  final String? sort;
 
   const TransactionListFilter({
     this.bookingDateMin,
     this.bookingDateMax,
     this.page,
     this.size,
+    this.sort,
   });
 
   Map<String, String> toMap() {
@@ -72,6 +74,10 @@ class TransactionListFilter {
 
     if (size != null) {
       map["page[size]"] = size.toString();
+    }
+
+    if (sort != null) {
+      map["sort"] = sort!;
     }
 
     return map;
