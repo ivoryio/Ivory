@@ -12,6 +12,7 @@ import '../../models/user.dart';
 import '../../router/routing_constants.dart';
 import '../../themes/default_theme.dart';
 import '../../widgets/debit_card_widget.dart';
+import '../../widgets/dialog.dart';
 import '../../widgets/screen.dart';
 
 class CardDetailsScreen extends StatelessWidget {
@@ -90,18 +91,10 @@ class _CardDetailsOptions extends StatefulWidget {
 
 class __CardDetailsOptionsState extends State<_CardDetailsOptions> {
   void _buildPopup({required String title, required String content}) {
-    showDialog<String>(
+    showAlertDialog(
       context: context,
-      builder: (BuildContext context) => AlertDialog(
-        title: Text(title),
-        content: Text(content),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Ok'),
-          ),
-        ],
-      ),
+      message: content,
+      onOkPressed: () => Navigator.pop(context),
     );
   }
 
