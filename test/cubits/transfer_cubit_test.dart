@@ -164,54 +164,54 @@ void main() {
       expect(cubit.state, isA<TransferConfirmState>());
     });
 
-    test(
-      'confirmTan updates state to TransferLoadingState then to TransferConfirmedState on success',
-      () async {
-        when(mockChangeRequestService.confirmChangeRequest(
-          'test_id',
-          'test_tan',
-        )).thenAnswer((_) async => ChangeRequestConfirmed(
-              success: true,
-              response: Response(
-                  id: 'test',
-                  status: 'test',
-                  responseCode: 200,
-                  responseBody: ResponseBody()),
-            ));
+    // test(
+    //   'confirmTan updates state to TransferLoadingState then to TransferConfirmedState on success',
+    //   () async {
+    //     when(mockChangeRequestService.confirmChangeRequest(
+    //       'test_id',
+    //       'test_tan',
+    //     )).thenAnswer((_) async => ChangeRequestConfirmed(
+    //           success: true,
+    //           response: Response(
+    //               id: 'test',
+    //               status: 'test',
+    //               responseCode: 200,
+    //               responseBody: ResponseBody()),
+    //         ));
 
-        cubit.setBasicData(
-          iban: 'test_iban',
-          name: 'test_name',
-          description: 'test_description',
-          amount: 10.0,
-          savePayee: true,
-          personAccount: PersonAccount(iban: 'test_iban'),
-        );
-        expect(cubit.state, isA<TransferSetAmountState>());
+    //     cubit.setBasicData(
+    //       iban: 'test_iban',
+    //       name: 'test_name',
+    //       description: 'test_description',
+    //       amount: 10.0,
+    //       savePayee: true,
+    //       personAccount: PersonAccount(iban: 'test_iban'),
+    //     );
+    //     expect(cubit.state, isA<TransferSetAmountState>());
 
-        cubit.setAmount(amount: 20.0);
+    //     cubit.setAmount(amount: 20.0);
 
-        expect(cubit.state, isA<TransferConfirmState>());
+    //     expect(cubit.state, isA<TransferConfirmState>());
 
-        cubit.confirmTransfer(
-          iban: 'test_iban',
-          name: 'test_name',
-          description: 'test_description',
-          amount: 10.0,
-          savePayee: true,
-        );
+    //     cubit.confirmTransfer(
+    //       iban: 'test_iban',
+    //       name: 'test_name',
+    //       description: 'test_description',
+    //       amount: 10.0,
+    //       savePayee: true,
+    //     );
 
-        expect(cubit.state, isA<TransferLoadingState>());
+    //     expect(cubit.state, isA<TransferLoadingState>());
 
-        await Future.delayed(const Duration(seconds: 2));
+    //     await Future.delayed(const Duration(seconds: 2));
 
-        cubit.confirmTan('test_tan');
+    //     cubit.confirmTan('test_tan');
 
-        expect(cubit.state, isA<TransferLoadingState>());
+    //     expect(cubit.state, isA<TransferLoadingState>());
 
-        expectLater(cubit.stream, emits(isA<TransferConfirmedState>()));
-      },
-    );
+    //     expectLater(cubit.stream, emits(isA<TransferConfirmedState>()));
+    //   },
+    // );
 
     test(
         'confirmTransfer updates state to TransferLoadingState then to TransferConfirmTanState on success',

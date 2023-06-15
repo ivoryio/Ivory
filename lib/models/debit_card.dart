@@ -66,8 +66,10 @@ class DebitCard {
   factory DebitCard.fromJson(Map<String, dynamic> json) => DebitCard(
         id: json["id"],
         accountId: json["account_id"],
-        status: getDebitCardStatus(json["status"]),
-        type: getDebitCardType(json["type"]),
+        status:
+            getDebitCardStatus(json["status"] ?? DebitCardStatus.INACTIVE.name),
+        type: getDebitCardType(
+            json["type"] ?? DebitCardType.VIRTUAL_VISA_BUSINESS_DEBIT.name),
         representation: json["representation"] == null
             ? null
             : DebitCardRepresentation.fromJson(json["representation"]),
