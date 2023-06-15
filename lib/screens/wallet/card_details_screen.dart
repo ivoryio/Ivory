@@ -251,11 +251,12 @@ class _CardOptionName extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      name,
-      textAlign: TextAlign.left,
-      style: Theme.of(context).textTheme.titleLarge,
-    );
+    return Text(name,
+        textAlign: TextAlign.left,
+        style: const TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+        ));
   }
 }
 
@@ -275,7 +276,7 @@ class _CardOptionSwitchState extends State<_CardOptionSwitch> {
       width: 36.0,
       height: 20.0,
       activeColor: Theme.of(context).primaryColor,
-      inactiveColor: Color(0xFFB0B0B0),
+      inactiveColor: const Color(0xFFB0B0B0),
       duration: const Duration(milliseconds: 50),
       toggleSize: 18.0,
       value: _isSpendingLimitEnabled,
