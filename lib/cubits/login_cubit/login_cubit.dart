@@ -30,7 +30,6 @@ class LoginCubit extends Cubit<LoginState> {
     final credentials = await DeviceUtilService.getCredentialsFromCache();
 
     if (credentials?.email != null && credentials?.password != null) {
-      inspect(credentials);
       debugPrint('$credentials');
       emit(const LoginLoading());
 

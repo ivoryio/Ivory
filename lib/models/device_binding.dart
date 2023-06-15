@@ -112,27 +112,28 @@ CreateDeviceBindingResponse createDeviceBindingResponseFromJson(String str) =>
 String createDeviceBindingResponseToJson(CreateDeviceBindingResponse data) =>
     json.encode(data.toJson());
 
+//commented out keyId is in documentation, mock-solaris doesnt uses it
 class CreateDeviceBindingResponse {
   String id;
-  String keyId;
+  // String keyId;
   Challenge challenge;
 
   CreateDeviceBindingResponse({
     required this.id,
-    required this.keyId,
+    // required this.keyId,
     required this.challenge,
   });
 
   factory CreateDeviceBindingResponse.fromJson(Map<String, dynamic> json) =>
       CreateDeviceBindingResponse(
         id: json["id"],
-        keyId: json["key_id"],
+        // keyId: json["key_id"],
         challenge: Challenge.fromJson(json["challenge"]),
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "key_id": keyId,
+        // "key_id": keyId,
         "challenge": challenge.toJson(),
       };
 }
@@ -165,29 +166,32 @@ class Challenge {
       };
 }
 
-VerifyDeviceSignatureChallengeRequest verifyDeviceSignatureChallengeRequestFromJson(String str) => VerifyDeviceSignatureChallengeRequest.fromJson(json.decode(str));
+VerifyDeviceSignatureChallengeRequest
+    verifyDeviceSignatureChallengeRequestFromJson(String str) =>
+        VerifyDeviceSignatureChallengeRequest.fromJson(json.decode(str));
 
-String verifyDeviceSignatureChallengeRequestToJson(VerifyDeviceSignatureChallengeRequest data) => json.encode(data.toJson());
+String verifyDeviceSignatureChallengeRequestToJson(
+        VerifyDeviceSignatureChallengeRequest data) =>
+    json.encode(data.toJson());
 
 class VerifyDeviceSignatureChallengeRequest {
-    String signature;
-    String deviceData;
+  String signature;
+  String deviceData;
 
-    VerifyDeviceSignatureChallengeRequest({
-        required this.signature,
-        required this.deviceData,
-    });
+  VerifyDeviceSignatureChallengeRequest({
+    required this.signature,
+    required this.deviceData,
+  });
 
-    factory VerifyDeviceSignatureChallengeRequest.fromJson(Map<String, dynamic> json) => VerifyDeviceSignatureChallengeRequest(
+  factory VerifyDeviceSignatureChallengeRequest.fromJson(
+          Map<String, dynamic> json) =>
+      VerifyDeviceSignatureChallengeRequest(
         signature: json["signature"],
         deviceData: json["device_data"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "signature": signature,
         "device_data": deviceData,
-    };
+      };
 }
-
-
-

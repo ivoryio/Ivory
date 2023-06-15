@@ -4,14 +4,17 @@ import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 
 import '../config.dart';
 
-class SignupService {
-  SignupService();
+class CognitoSignupService {
+  CognitoSignupService();
 
-  Future<void> signup({
+  Future<void> createCognitoAccount({
     required String email,
     required String firstName,
     required String lastName,
     required String passcode,
+    required String phoneNumber,
+    required String personId,
+    required String accountId,
   }) async {
     try {
       final userPool = CognitoUserPool(
@@ -21,6 +24,8 @@ class SignupService {
       final userAttributes = [
         AttributeArg(name: 'given_name', value: firstName),
         AttributeArg(name: 'family_name', value: lastName),
+        AttributeArg(name: 'custom:personId', value: personId),
+        AttributeArg(name: 'custom:accountId', value: accountId),
       ];
 
       CognitoUserPoolData? poolData = await userPool.signUp(
@@ -31,13 +36,13 @@ class SignupService {
 
       inspect(poolData);
     } catch (e) {
-      inspect(e);
+      throw Exception("Failed to create Cognito account");
     }
   }
 
-  Future<void> confirmSignup({
+  Future<void> confirmCognitoAccount({
     required String email,
-    required String token,
+    required String emailConfirmationCode,
   }) async {
     try {
       final userPool = CognitoUserPool(
@@ -47,11 +52,9 @@ class SignupService {
 
       CognitoUser user = CognitoUser(email, userPool);
 
-      bool confirmed = await user.confirmRegistration(token);
-
-      log("Confirmed: $confirmed");
+      await user.confirmRegistration(emailConfirmationCode);
     } catch (e) {
-      inspect(e);
+      throw Exception("Failed to confirm Cognito account");
     }
   }
 }

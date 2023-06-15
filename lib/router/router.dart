@@ -3,10 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:solarisdemo/models/debit_card.dart';
+import 'package:solarisdemo/screens/splitpay/splitpay_screen.dart';
 import 'package:solarisdemo/screens/transactions/transactions_filtering_screen.dart';
 import 'package:solarisdemo/widgets/screen.dart';
 
 import '../screens/wallet/card_details_screen.dart';
+import '../models/transaction_model.dart';
 import '../services/transaction_service.dart';
 import 'routing_constants.dart';
 import '../screens/home/home_screen.dart';
@@ -117,6 +119,15 @@ class AppRouter {
             final cards = state.extra as DebitCard;
 
             return CardDetailsScreen(card: cards);
+          },
+        ),
+        GoRoute(
+          path: splitpaySelectRoute.path,
+          name: splitpaySelectRoute.name,
+          builder: (BuildContext context, GoRouterState state) {
+            return SplitpayScreen(
+              transaction: state.extra as Transaction,
+            );
           },
         ),
       ],

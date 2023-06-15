@@ -49,6 +49,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         transactionListFilter?.bookingDateMin != null;
 
     return Screen(
+      onRefresh: () =>
+          transactionListCubit!.getTransactions(filter: transactionListFilter),
       title: "Transactions",
       child: Padding(
         padding: defaultScreenPadding,

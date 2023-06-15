@@ -71,7 +71,7 @@ class Format {
 
 class InputFormatter {
   static MaskTextInputFormatter iban = MaskTextInputFormatter(
-    mask: "AA00 BBBB 0000 0000 0000 0000 0000 0",
+    mask: "AA00 BBBB 0000 0000 0000 00",
     filter: {
       "A": RegExp(r"[A-Za-z]"),
       "B": RegExp(r"[A-Za-z0-9]"),

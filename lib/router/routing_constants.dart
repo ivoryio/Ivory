@@ -74,6 +74,12 @@ const cardDetailsRoute = _Route(
   title: 'Card details',
 );
 
+const splitpaySelectRoute = _Route(
+  name: 'splitpay',
+  path: '/splitpay',
+  title: 'Convert into instalments',
+);
+
 class _Route {
   final String name;
   final String path;

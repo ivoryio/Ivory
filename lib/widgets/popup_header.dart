@@ -4,17 +4,22 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 class BottomPopupHeader extends StatelessWidget {
   final String title;
   final bool? showCloseButton;
+  final EdgeInsets? customPaddingEdgeInsets;
 
   const BottomPopupHeader({
     super.key,
     required this.title,
     this.showCloseButton = true,
+    this.customPaddingEdgeInsets = const EdgeInsets.symmetric(
+      vertical: 10,
+      horizontal: 10,
+    ),
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      padding: customPaddingEdgeInsets!,
       child: Stack(
         alignment: Alignment.center,
         children: [
