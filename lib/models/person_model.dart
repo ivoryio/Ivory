@@ -357,21 +357,201 @@ String createDeviceResponseToJson(CreatePersonResponse data) =>
 
 class CreatePersonResponse {
   String personId;
-  String accountId;
 
   CreatePersonResponse({
     required this.personId,
-    required this.accountId,
   });
 
   factory CreatePersonResponse.fromJson(Map<String, dynamic> json) =>
       CreatePersonResponse(
         personId: json["person_id"],
-        accountId: json["account_id"],
       );
 
   Map<String, dynamic> toJson() => {
         "person_id": personId,
-        "account_id": accountId,
+      };
+}
+
+CreateTaxIdentificationReqBody createTaxIdentificationReqBodyFromJson(
+        String str) =>
+    CreateTaxIdentificationReqBody.fromJson(json.decode(str));
+
+String createTaxIdentificationReqBodyToJson(
+        CreateTaxIdentificationReqBody data) =>
+    json.encode(data.toJson());
+
+class CreateTaxIdentificationReqBody {
+  String number;
+  String country;
+  bool primary;
+
+  CreateTaxIdentificationReqBody({
+    required this.number,
+    required this.country,
+    required this.primary,
+  });
+
+  factory CreateTaxIdentificationReqBody.fromJson(Map<String, dynamic> json) =>
+      CreateTaxIdentificationReqBody(
+        number: json["number"],
+        country: json["country"],
+        primary: json["primary"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "number": number,
+        "country": country,
+        "primary": primary,
+      };
+}
+
+CreateTaxIdentificationResponse createTaxIdentificationResponseFromJson(
+        String str) =>
+    CreateTaxIdentificationResponse.fromJson(json.decode(str));
+
+String createTaxIdentificationResponseToJson(
+        CreateTaxIdentificationResponse data) =>
+    json.encode(data.toJson());
+
+class CreateTaxIdentificationResponse {
+  String id;
+  String country;
+  String number;
+  dynamic reasonNoTin;
+  dynamic reasonDescription;
+  dynamic taxIdType;
+  bool primary;
+  dynamic validUntil;
+
+  CreateTaxIdentificationResponse({
+    required this.id,
+    required this.country,
+    required this.number,
+    this.reasonNoTin,
+    this.reasonDescription,
+    this.taxIdType,
+    required this.primary,
+    this.validUntil,
+  });
+
+  factory CreateTaxIdentificationResponse.fromJson(Map<String, dynamic> json) =>
+      CreateTaxIdentificationResponse(
+        id: json["id"],
+        country: json["country"],
+        number: json["number"],
+        reasonNoTin: json["reason_no_tin"],
+        reasonDescription: json["reason_description"],
+        taxIdType: json["tax_id_type"],
+        primary: json["primary"],
+        validUntil: json["valid_until"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "country": country,
+        "number": number,
+        "reason_no_tin": reasonNoTin,
+        "reason_description": reasonDescription,
+        "tax_id_type": taxIdType,
+        "primary": primary,
+        "valid_until": validUntil,
+      };
+}
+
+CreateKycReqBody createKycReqBodyFromJson(String str) =>
+    CreateKycReqBody.fromJson(json.decode(str));
+
+String createKycReqBodyToJson(CreateKycReqBody data) =>
+    json.encode(data.toJson());
+
+class CreateKycReqBody {
+  String method;
+  String deviceData;
+
+  CreateKycReqBody({
+    required this.method,
+    required this.deviceData,
+  });
+
+  factory CreateKycReqBody.fromJson(Map<String, dynamic> json) =>
+      CreateKycReqBody(
+        method: json["method"],
+        deviceData: json["device_data"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "method": method,
+        "device_data": deviceData,
+      };
+}
+
+CreateKycResponse createKycResponseFromJson(String str) =>
+    CreateKycResponse.fromJson(json.decode(str));
+
+String createKycResponseToJson(CreateKycResponse data) =>
+    json.encode(data.toJson());
+
+class CreateKycResponse {
+  String id;
+  dynamic reference;
+  dynamic url;
+  String status;
+  dynamic completedAt;
+  String method;
+  dynamic proofOfAddressType;
+  dynamic proofOfAddressIssuedAt;
+  dynamic language;
+  dynamic iban;
+  dynamic termsAndConditionsSignedAt;
+  dynamic authorizationExpiresAt;
+  dynamic confirmationExpiresAt;
+
+  CreateKycResponse({
+    required this.id,
+    this.reference,
+    this.url,
+    required this.status,
+    this.completedAt,
+    required this.method,
+    this.proofOfAddressType,
+    this.proofOfAddressIssuedAt,
+    this.language,
+    this.iban,
+    this.termsAndConditionsSignedAt,
+    this.authorizationExpiresAt,
+    this.confirmationExpiresAt,
+  });
+
+  factory CreateKycResponse.fromJson(Map<String, dynamic> json) =>
+      CreateKycResponse(
+        id: json["id"],
+        reference: json["reference"],
+        url: json["url"],
+        status: json["status"],
+        completedAt: json["completed_at"],
+        method: json["method"],
+        proofOfAddressType: json["proof_of_address_type"],
+        proofOfAddressIssuedAt: json["proof_of_address_issued_at"],
+        language: json["language"],
+        iban: json["iban"],
+        termsAndConditionsSignedAt: json["terms_and_conditions_signed_at"],
+        authorizationExpiresAt: json["authorization_expires_at"],
+        confirmationExpiresAt: json["confirmation_expires_at"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "reference": reference,
+        "url": url,
+        "status": status,
+        "completed_at": completedAt,
+        "method": method,
+        "proof_of_address_type": proofOfAddressType,
+        "proof_of_address_issued_at": proofOfAddressIssuedAt,
+        "language": language,
+        "iban": iban,
+        "terms_and_conditions_signed_at": termsAndConditionsSignedAt,
+        "authorization_expires_at": authorizationExpiresAt,
+        "confirmation_expires_at": confirmationExpiresAt,
       };
 }

@@ -7,22 +7,22 @@ String createDeviceToJson(CreateDeviceReqBody data) =>
     json.encode(data.toJson());
 
 class CreateDeviceReqBody {
-  String number;
+  // String number;
   String deviceData;
 
   CreateDeviceReqBody({
-    required this.number,
+    // required this.number,
     required this.deviceData,
   });
 
   factory CreateDeviceReqBody.fromJson(Map<String, dynamic> json) =>
       CreateDeviceReqBody(
-        number: json["number"],
+        // number: json["number"],
         deviceData: json["device_data"],
       );
 
   Map<String, dynamic> toJson() => {
-        "number": number,
+        // "number": number,
         "device_data": deviceData,
       };
 }

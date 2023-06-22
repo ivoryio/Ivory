@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:solarisdemo/services/auth_service.dart';
@@ -40,7 +38,7 @@ class SignupCubit extends Cubit<SignupState> {
         email: email,
         firstName: firstName,
         lastName: lastName,
-        mobileNumber: phoneNumber,
+        mobileNumber: "+15550101",
       ));
 
       if (createPersonResponse == null) {
@@ -52,7 +50,7 @@ class SignupCubit extends Cubit<SignupState> {
         firstName: firstName,
         lastName: lastName,
         passcode: passcode,
-        accountId: createPersonResponse.accountId,
+        // accountId: createPersonResponse.accountId,
         personId: createPersonResponse.personId,
       );
       emit(SignupBasicInfoComplete(
@@ -117,6 +115,8 @@ class SignupCubit extends Cubit<SignupState> {
         throw Exception("Failed to login");
       }
 
+      PersonService personService = PersonService(user: user);
+
       CreateDeviceConsentResponse? createdConsent =
           await DeviceService(user: user).createDeviceConsent();
 
@@ -127,6 +127,53 @@ class SignupCubit extends Cubit<SignupState> {
       await DeviceService(user: user)
           .createDeviceActivity(DeviceActivityType.CONSENT_PROVIDED);
 
+      String? deviceFingerPrint =
+          await DeviceUtilService.getDeviceFingerprint(createdConsent!.id);
+      if (deviceFingerPrint == null) {
+        throw Exception("Device fingerprint not found");
+      }
+
+      //create mobile number
+      await personService.createMobileNumber(CreateDeviceReqBody(
+        deviceData: deviceFingerPrint,
+      ));
+
+      //create device binding
+      DeviceService deviceService = DeviceService(user: user);
+
+      await deviceService.createDeviceBinding(user.personId!);
+
+      //verify device binding signature
+      await deviceService.verifyDeviceBindingSignature(
+          '212212'); // verify device with static TAN - To be refactored
+
+      //create tax identification
+      CreateTaxIdentificationResponse? taxIdentificationResponse =
+          await personService.createTaxIdentification(
+        CreateTaxIdentificationReqBody(
+          number: "48954371207",
+          country: "DE",
+          primary: true,
+        ),
+      );
+      if (taxIdentificationResponse == null) {
+        throw Exception("Failed to create tax identification");
+      }
+
+      //create kyc
+      CreateKycResponse? kycResponse = await personService.createKyc(
+        CreateKycReqBody(
+          method: "idnow",
+          deviceData: deviceFingerPrint,
+        ),
+      );
+      if (kycResponse == null) {
+        throw Exception("Failed to create kyc");
+      }
+
+      //create bank account and update cognitoUser with newly created accountId
+      //TO-DO
+
       emit(SignupEmailConfirmed(
         user: user,
         phoneNumber: phoneNumber,
@@ -136,51 +183,6 @@ class SignupCubit extends Cubit<SignupState> {
         lastName: lastName,
       ));
     } catch (e) {
-      emit(SignupError(
-        message: e.toString(),
-      ));
-    }
-  }
-
-  // 4. Confirm mobile number and create binding
-  Future<void> confirmPhoneNumber({
-    required User user,
-    required String phoneNumber,
-    required String mobileNumberConfirmationCode,
-  }) async {
-    emit(const SignupLoading());
-
-    try {
-      String? deviceConsentId = await DeviceUtilService.getDeviceConsentId();
-      if (deviceConsentId == null) {
-        throw Exception("Device consent id not found");
-      }
-
-      String? deviceFingerPrint =
-          await DeviceUtilService.getDeviceFingerprint(deviceConsentId);
-      if (deviceFingerPrint == null) {
-        throw Exception("Device fingerprint not found");
-      }
-
-      PersonService personService =
-          PersonService(user: user); //personService with auth
-
-      await personService.createMobileNumber(CreateDeviceReqBody(
-        number: phoneNumber,
-        deviceData: deviceFingerPrint,
-      ));
-
-      DeviceService deviceService = DeviceService(user: user);
-
-      await deviceService
-          .createDeviceBinding(user.personId!); //create device binding
-
-      await deviceService.verifyDeviceBindingSignature(
-          '123456'); // verify device with random TAN - To be refactored
-
-      emit(const SignupMobileNumberConfirmed());
-    } catch (e) {
-      log(e.toString());
       emit(SignupError(
         message: e.toString(),
       ));

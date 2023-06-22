@@ -7,7 +7,6 @@ import '../../widgets/checkbox.dart';
 import '../../widgets/auth_error.dart';
 import '../../widgets/spaced_column.dart';
 import '../../widgets/sticky_bottom_content.dart';
-import 'confirm_mobilenumber_screen.dart';
 import '../../widgets/button.dart';
 import '../../widgets/screen.dart';
 import '../../utilities/validator.dart';
@@ -57,10 +56,6 @@ class SignupScreen extends StatelessWidget {
         }
 
         if (state is SignupEmailConfirmed) {
-          return const SignupConfirmMobilenumberScreen();
-        }
-
-        if (state is SignupMobileNumberConfirmed) {
           return const SignupSuccessScreen();
         }
         if (state is SignupError) {
