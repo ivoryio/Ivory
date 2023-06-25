@@ -13,6 +13,7 @@ import '../../utilities/validator.dart';
 import '../../cubits/signup/signup_cubit.dart';
 import '../../widgets/platform_text_input.dart';
 import 'confirm_email_screen.dart';
+import 'countdown_screen.dart';
 import 'signup_success_screen.dart';
 
 class SignupScreen extends StatelessWidget {
@@ -28,7 +29,8 @@ class SignupScreen extends StatelessWidget {
         }
 
         if (state is SignupInitial) {
-          return const BasicInfoScreen();
+          return const CountDownScreen();
+          // return const BasicInfoScreen();
         }
 
         if (state is SignupBasicInfoComplete) {
@@ -50,6 +52,10 @@ class SignupScreen extends StatelessWidget {
             ),
           );
         }
+
+        // if (state is SignupCountdown) {
+        //   return const CountDownScreen();
+        // }
 
         if (state is SignupGdprConsentComplete) {
           return const SignupConfirmEmailScreen();

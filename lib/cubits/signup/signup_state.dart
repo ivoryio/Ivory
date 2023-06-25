@@ -10,6 +10,7 @@ abstract class SignupState extends Equatable {
   final String? token;
   final String? personId;
   final User? user;
+  final int? startTimer;
 
   const SignupState({
     this.user,
@@ -21,6 +22,7 @@ abstract class SignupState extends Equatable {
     this.lastName,
     this.passcode,
     this.token,
+    this.startTimer,
   });
 
   @override
@@ -73,6 +75,10 @@ class SignupEmailConfirmed extends SignupState {
 
 class SignupMobileNumberConfirmed extends SignupState {
   const SignupMobileNumberConfirmed() : super();
+}
+
+class SignupCountdown extends SignupState {
+  const SignupCountdown() : super();
 }
 
 class SignupGdprConsentComplete extends SignupState {

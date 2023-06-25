@@ -78,6 +78,7 @@ class SignupCubit extends Cubit<SignupState> {
     required String personId,
   }) async {
     emit(const SignupLoading());
+
     try {
       emit(SignupGdprConsentComplete(
         personId: personId,
@@ -105,6 +106,7 @@ class SignupCubit extends Cubit<SignupState> {
     required String emailConfirmationCode,
   }) async {
     emit(const SignupLoading());
+
     try {
       await signupService.confirmCognitoAccount(
           email: email, emailConfirmationCode: emailConfirmationCode);
@@ -139,13 +141,13 @@ class SignupCubit extends Cubit<SignupState> {
       ));
 
       //create device binding
-      DeviceService deviceService = DeviceService(user: user);
+      // DeviceService deviceService = DeviceService(user: user);
 
-      await deviceService.createDeviceBinding(user.personId!);
+      // await deviceService.createDeviceBinding(user.personId!);
 
-      //verify device binding signature
-      await deviceService.verifyDeviceBindingSignature(
-          '212212'); // verify device with static TAN - To be refactored
+      // //verify device binding signature
+      // await deviceService.verifyDeviceBindingSignature(
+      //     '212212'); // verify device with static TAN - To be refactored
 
       //create tax identification
       CreateTaxIdentificationResponse? taxIdentificationResponse =
@@ -174,14 +176,16 @@ class SignupCubit extends Cubit<SignupState> {
       //create bank account and update cognitoUser with newly created accountId
       //TO-DO
 
-      emit(SignupEmailConfirmed(
-        user: user,
-        phoneNumber: phoneNumber,
-        passcode: passcode,
-        email: email,
-        firstName: firstName,
-        lastName: lastName,
-      ));
+      emit(const SignupCountdown());
+
+      // emit(SignupEmailConfirmed(
+      //   user: user,
+      //   phoneNumber: phoneNumber,
+      //   passcode: passcode,
+      //   email: email,
+      //   firstName: firstName,
+      //   lastName: lastName,
+      // ));
     } catch (e) {
       emit(SignupError(
         message: e.toString(),

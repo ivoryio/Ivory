@@ -80,6 +80,12 @@ const splitpaySelectRoute = _Route(
   title: 'Convert into instalments',
 );
 
+const countdownRoute = _Route(
+  name: 'countdown',
+  path: '/countdown',
+  title: 'Countdown',
+);
+
 class _Route {
   final String name;
   final String path;
