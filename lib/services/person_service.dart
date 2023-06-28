@@ -106,4 +106,14 @@ class PersonService extends ApiService {
       throw Exception("Failed to create kyc");
     }
   }
+
+  Future<CreateAccountResponse>? createAccount() async {
+    try {
+      String path = 'accounts';
+      var data = await post(path);
+      return CreateAccountResponse.fromJson(data);
+    } catch (e) {
+      throw Exception("Failed to create account");
+    }
+  }
 }

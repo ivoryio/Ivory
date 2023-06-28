@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:solarisdemo/services/auth_service.dart';
@@ -7,6 +10,7 @@ import 'package:solarisdemo/services/person_service.dart';
 import '../../models/device.dart';
 import '../../models/device_activity.dart';
 import '../../models/device_consent.dart';
+import '../../models/person_account.dart';
 import '../../models/person_model.dart';
 import '../../models/user.dart';
 import '../../services/signup_service.dart';
@@ -44,6 +48,9 @@ class SignupCubit extends Cubit<SignupState> {
       if (createPersonResponse == null) {
         throw Exception("Failed to create person");
       }
+
+      log(createPersonResponse.personId);
+
       await signupService.createCognitoAccount(
         phoneNumber: phoneNumber,
         email: email,
@@ -145,7 +152,7 @@ class SignupCubit extends Cubit<SignupState> {
 
       // await deviceService.createDeviceBinding(user.personId!);
 
-      // //verify device binding signature
+      //verify device binding signature
       // await deviceService.verifyDeviceBindingSignature(
       //     '212212'); // verify device with static TAN - To be refactored
 
@@ -175,6 +182,20 @@ class SignupCubit extends Cubit<SignupState> {
 
       //create bank account and update cognitoUser with newly created accountId
       //TO-DO
+      CreateAccountResponse? createAccountResponse =
+          await personService.createAccount();
+
+      if (createAccountResponse == null) {
+        throw Exception("Failed to create account");
+      }
+      String accountId = createAccountResponse.accountId;
+      await signupService.addCustomAttribute(
+        user.cognitoUser,
+        CognitoUserAttribute(
+          name: "custom:accountId",
+          value: accountId,
+        ),
+      );
 
       emit(const SignupCountdown());
 

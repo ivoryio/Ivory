@@ -24,7 +24,7 @@ class CognitoSignupService {
         AttributeArg(name: 'given_name', value: firstName),
         AttributeArg(name: 'family_name', value: lastName),
         AttributeArg(name: 'custom:personId', value: personId),
-        // AttributeArg(name: 'custom:accountId', value: accountId),
+        const AttributeArg(name: 'custom:accountId', value: ''),
       ];
 
       CognitoUserPoolData? poolData = await userPool.signUp(
@@ -54,6 +54,20 @@ class CognitoSignupService {
       await user.confirmRegistration(emailConfirmationCode);
     } catch (e) {
       throw Exception("Failed to confirm Cognito account");
+    }
+  }
+
+  Future<void> addCustomAttribute(
+    CognitoUser user,
+    CognitoUserAttribute userAttribute,
+  ) async {
+    try {
+      bool isSuccess = await user.updateAttributes([userAttribute]);
+      if (!isSuccess) {
+        throw Exception("Failed to update user attributes");
+      }
+    } catch (e) {
+      throw Exception("Failed to add custom attribute");
     }
   }
 }

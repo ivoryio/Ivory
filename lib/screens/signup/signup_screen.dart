@@ -29,8 +29,7 @@ class SignupScreen extends StatelessWidget {
         }
 
         if (state is SignupInitial) {
-          return const CountDownScreen();
-          // return const BasicInfoScreen();
+          return const BasicInfoScreen();
         }
 
         if (state is SignupBasicInfoComplete) {
@@ -53,9 +52,9 @@ class SignupScreen extends StatelessWidget {
           );
         }
 
-        // if (state is SignupCountdown) {
-        //   return const CountDownScreen();
-        // }
+        if (state is SignupCountdown) {
+          return const CountDownScreen();
+        }
 
         if (state is SignupGdprConsentComplete) {
           return const SignupConfirmEmailScreen();
