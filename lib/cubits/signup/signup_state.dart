@@ -77,29 +77,9 @@ class SignupMobileNumberConfirmed extends SignupState {
   const SignupMobileNumberConfirmed() : super();
 }
 
-class SignupCountdown extends SignupState {
-  const SignupCountdown() : super();
-}
-
 class SignupGdprConsentComplete extends SignupState {
   const SignupGdprConsentComplete({
     required String personId,
-    required String phoneNumber,
-    required String passcode,
-    required String email,
-    required String firstName,
-    required String lastName,
-  }) : super(
-            phoneNumber: phoneNumber,
-            passcode: passcode,
-            email: email,
-            firstName: firstName,
-            lastName: lastName,
-            personId: personId);
-}
-
-class ConfirmedUser extends SignupState {
-  const ConfirmedUser({
     required String phoneNumber,
     required String passcode,
     required String email,
@@ -111,7 +91,12 @@ class ConfirmedUser extends SignupState {
           email: email,
           firstName: firstName,
           lastName: lastName,
+          personId: personId,
         );
+}
+
+class ConfirmedUser extends SignupState {
+  const ConfirmedUser() : super();
 }
 
 class SignupError extends SignupState {

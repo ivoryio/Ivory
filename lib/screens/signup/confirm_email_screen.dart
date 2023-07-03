@@ -73,14 +73,15 @@ class SignupConfirmEmailScreen extends StatelessWidget {
                     text: "Confirm",
                     onPressed: () async {
                       context.read<SignupCubit>().confirmEmail(
-                          personId: previousState.personId!,
-                          phoneNumber: phoneNumber,
-                          emailConfirmationCode:
-                              emailConfirmationInputController.text,
-                          passcode: passcode,
-                          email: email,
-                          firstName: firstName,
-                          lastName: lastName);
+                            personId: previousState.personId!,
+                            phoneNumber: phoneNumber,
+                            emailConfirmationCode:
+                                emailConfirmationInputController.text,
+                            passcode: passcode,
+                            email: email,
+                            firstName: firstName,
+                            lastName: lastName,
+                          );
                     },
                   ),
                 ),

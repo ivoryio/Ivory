@@ -180,37 +180,40 @@ class SignupCubit extends Cubit<SignupState> {
         throw Exception("Failed to create kyc");
       }
 
-      //create bank account and update cognitoUser with newly created accountId
-      //TO-DO
-      CreateAccountResponse? createAccountResponse =
-          await personService.createAccount();
-
-      if (createAccountResponse == null) {
-        throw Exception("Failed to create account");
-      }
-      String accountId = createAccountResponse.accountId;
-      await signupService.addCustomAttribute(
-        user.cognitoUser,
-        CognitoUserAttribute(
-          name: "custom:accountId",
-          value: accountId,
-        ),
-      );
-
-      emit(const SignupCountdown());
-
-      // emit(SignupEmailConfirmed(
-      //   user: user,
-      //   phoneNumber: phoneNumber,
-      //   passcode: passcode,
-      //   email: email,
-      //   firstName: firstName,
-      //   lastName: lastName,
-      // ));
+      emit(SignupEmailConfirmed(
+        user: user,
+        phoneNumber: phoneNumber,
+        passcode: passcode,
+        email: email,
+        firstName: firstName,
+        lastName: lastName,
+      ));
     } catch (e) {
       emit(SignupError(
         message: e.toString(),
       ));
     }
+  }
+
+  Future<void> createAccount(User user) async {
+    emit(const SignupLoading());
+
+    PersonService personService = PersonService(user: user);
+
+    //create bank account and update cognitoUser with newly created accountId
+    CreateAccountResponse? createAccountResponse =
+        await personService.createAccount();
+
+    if (createAccountResponse == null) {
+      throw Exception("Failed to create account");
+    }
+    String accountId = createAccountResponse.accountId;
+    await signupService.addCustomAttribute(
+      user.cognitoUser,
+      CognitoUserAttribute(
+        name: "custom:accountId",
+        value: accountId,
+      ),
+    );
   }
 }

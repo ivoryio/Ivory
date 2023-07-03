@@ -7,7 +7,6 @@ import 'package:solarisdemo/screens/splitpay/splitpay_screen.dart';
 import 'package:solarisdemo/screens/transactions/transactions_filtering_screen.dart';
 import 'package:solarisdemo/widgets/screen.dart';
 
-import '../screens/signup/countdown_screen.dart';
 import '../screens/wallet/card_details_screen.dart';
 import '../models/transaction_model.dart';
 import '../services/transaction_service.dart';
@@ -131,12 +130,6 @@ class AppRouter {
             );
           },
         ),
-        GoRoute(
-            path: countdownRoute.path,
-            name: countdownRoute.name,
-            builder: (BuildContext context, GoRouterState state) {
-              return const CountDownScreen();
-            }),
       ],
       redirect: (BuildContext context, GoRouterState state) {
         final bool isAuthenticated =

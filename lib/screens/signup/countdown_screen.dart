@@ -1,50 +1,106 @@
-import 'package:flutter/material.dart';
-import 'package:solarisdemo/widgets/spaced_column.dart';
+import 'dart:async';
+import 'dart:developer';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:solarisdemo/router/routing_constants.dart';
+
+import '../../cubits/signup/signup_cubit.dart';
+import '../../themes/default_theme.dart';
+import '../../widgets/button.dart';
 import '../../widgets/screen.dart';
 
-class CountDownScreen extends StatefulWidget {
-  const CountDownScreen({super.key});
+class CountdownScreen extends StatefulWidget {
+  const CountdownScreen({super.key});
 
   @override
-  State<CountDownScreen> createState() => _CountDownScreenState();
+  // ignore: library_private_types_in_public_api
+  _CountdownScreenState createState() => _CountdownScreenState();
 }
 
-class _CountDownScreenState extends State<CountDownScreen> {
+class _CountdownScreenState extends State<CountdownScreen> {
+  Timer? _timer;
+  int _start = 2 * 60; // 2 minutes in seconds
+
+  @override
+  void initState() {
+    super.initState();
+    startTimer();
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  void startTimer() {
+    const oneSec = Duration(seconds: 1);
+    _timer = Timer.periodic(
+      oneSec,
+      (Timer timer) {
+        if (_start == 0) {
+          setState(() {
+            timer.cancel();
+          });
+        } else {
+          setState(() {
+            _start--;
+          });
+        }
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    int currentTimeInSeconds() {
-      int ms = (DateTime.now()).millisecondsSinceEpoch;
-      return (ms / 1000).round();
+    var state = context.read<SignupCubit>().state;
+    if (state.user == null) {
+      log('User is null');
     }
-
-    int startTimer = currentTimeInSeconds();
-    int duration = 180 * 60 * 1000;
+    int minutes = _start ~/ 60;
+    int seconds = _start % 60;
 
     return Screen(
+      title: "Countdown",
+      hideAppBar: true,
       hideBottomNavbar: true,
-      title: "Countdown Screen",
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text(
-            'Wait until the time\nruns out.',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.w600,
-            ),
+      hideBackButton: true,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: defaultScreenHorizontalPadding,
+          vertical: defaultScreenVerticalPadding,
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              if (_start != 0)
+                Text(
+                  '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
+                  style: const TextStyle(
+                    fontSize: 50,
+                  ),
+                ),
+              if (_start == 0)
+                SizedBox(
+                  width: double.infinity,
+                  child: PrimaryButton(
+                    text: "Log me in",
+                    onPressed: () async {
+                      await context.read<SignupCubit>().createAccount(
+                            state.user!,
+                          );
+                      // ignore: use_build_context_synchronously
+                      context.go(homeRoute.path);
+                    },
+                  ),
+                ),
+            ],
           ),
-          Center(
-            child: Text(
-              '${startTimer.toString()} \n ${duration.toString()}',
-              style: const TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
