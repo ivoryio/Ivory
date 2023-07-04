@@ -14,61 +14,58 @@ import '../../cubits/signup/signup_cubit.dart';
 import '../../widgets/platform_text_input.dart';
 import 'confirm_email_screen.dart';
 import 'countdown_screen.dart';
-import 'signup_success_screen.dart';
 
 class SignupScreen extends StatelessWidget {
   const SignupScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => SignupCubit(),
-      child: BlocBuilder<SignupCubit, SignupState>(builder: (context, state) {
-        if (state is SignupLoading) {
-          return const LoadingScreen(title: "Sign Up");
-        }
+    return BlocProvider.value(
+      value: SignupCubit(),
+      child: BlocBuilder<SignupCubit, SignupState>(
+        builder: (context, state) {
+          if (state is SignupLoading) {
+            return const LoadingScreen(title: "Sign Up");
+          }
 
-        if (state is SignupInitial) {
-          // return const CountdownScreen();
-          return const BasicInfoScreen();
-        }
+          if (state is SignupInitial) {
+            return const BasicInfoScreen();
+          }
 
-        if (state is SignupBasicInfoComplete) {
-          return GdprConsentScreen(
-            bottomStickyWidget: BottomStickyWidget(
-              child: StickyBottomContent(
-                buttonText: "I agree",
-                onContinueCallback: () {
-                  context.read<SignupCubit>().setGdprConsent(
-                        personId: state.personId!,
-                        phoneNumber: state.phoneNumber!,
-                        passcode: state.passcode!,
-                        email: state.email!,
-                        firstName: state.firstName!,
-                        lastName: state.lastName!,
-                      );
-                },
+          if (state is SignupBasicInfoComplete) {
+            return GdprConsentScreen(
+              bottomStickyWidget: BottomStickyWidget(
+                child: StickyBottomContent(
+                  buttonText: "I agree",
+                  onContinueCallback: () {
+                    context.read<SignupCubit>().setGdprConsent(
+                          personId: state.personId!,
+                          phoneNumber: state.phoneNumber!,
+                          passcode: state.passcode!,
+                          email: state.email!,
+                          firstName: state.firstName!,
+                          lastName: state.lastName!,
+                        );
+                  },
+                ),
               ),
-            ),
-          );
-        }
+            );
+          }
 
-        if (state is SignupEmailConfirmed) {
-          return const CountdownScreen();
-        }
+          if (state is SignupEmailConfirmed) {
+            return const CountdownScreen();
+          }
 
-        if (state is SignupGdprConsentComplete) {
-          return const SignupConfirmEmailScreen();
-        }
+          if (state is SignupGdprConsentComplete) {
+            return const SignupConfirmEmailScreen();
+          }
 
-        // if (state is SignupEmailConfirmed) {
-        //   return const SignupSuccessScreen();
-        // }
-        if (state is SignupError) {
-          return AuthErrorScreen(message: state.message, title: "Signup");
-        }
-        return const ErrorScreen();
-      }),
+          if (state is SignupError) {
+            return AuthErrorScreen(message: state.message, title: "Signup");
+          }
+          return const ErrorScreen();
+        },
+      ),
     );
   }
 }

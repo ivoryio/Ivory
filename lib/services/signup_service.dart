@@ -27,13 +27,11 @@ class CognitoSignupService {
         const AttributeArg(name: 'custom:accountId', value: ''),
       ];
 
-      CognitoUserPoolData? poolData = await userPool.signUp(
+      await userPool.signUp(
         email,
         passcode,
         userAttributes: userAttributes,
       );
-
-      inspect(poolData);
     } catch (e) {
       throw Exception("Failed to create Cognito account");
     }

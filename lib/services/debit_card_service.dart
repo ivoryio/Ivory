@@ -48,7 +48,6 @@ class DebitCardsService extends ApiService {
       String path = 'account/cards/$cardId/block';
       var data = await post(path);
       DebitCard card = DebitCard.fromJson(data);
-      inspect(card);
       return card;
     } catch (e) {
       throw Exception("Failed to freeze card");
@@ -60,7 +59,6 @@ class DebitCardsService extends ApiService {
       String path = 'account/cards/$cardId/unblock';
       var data = await post(path);
       DebitCard card = DebitCard.fromJson(data);
-      inspect(card);
 
       return card;
     } catch (e) {

@@ -21,7 +21,7 @@ class CountdownScreen extends StatefulWidget {
 
 class _CountdownScreenState extends State<CountdownScreen> {
   Timer? _timer;
-  int _start = 2 * 60; // 2 minutes in seconds
+  int _start = 3 * 60; // 3 minutes in seconds
 
   @override
   void initState() {
@@ -63,7 +63,7 @@ class _CountdownScreenState extends State<CountdownScreen> {
     int seconds = _start % 60;
 
     return Screen(
-      title: "Countdown",
+      title: "Sign Up",
       hideAppBar: true,
       hideBottomNavbar: true,
       hideBackButton: true,
@@ -88,13 +88,12 @@ class _CountdownScreenState extends State<CountdownScreen> {
                 SizedBox(
                   width: double.infinity,
                   child: PrimaryButton(
-                    text: "Log me in",
-                    onPressed: () async {
-                      await context.read<SignupCubit>().createAccount(
+                    text: "Let's get started!",
+                    onPressed: () {
+                      context.read<SignupCubit>().createAccount(
                             state.user!,
                           );
-                      // ignore: use_build_context_synchronously
-                      context.go(homeRoute.path);
+                      context.go(landingRoute.path);
                     },
                   ),
                 ),
