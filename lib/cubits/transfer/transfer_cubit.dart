@@ -89,7 +89,7 @@ class TransferCubit extends Cubit<TransferState> {
         recipientIban: iban.replaceAll(emptySpaceString, emptyStringValue),
         reference: '123456789',
         description: description,
-        recipientBic: 'TESTBIC',
+        recipientBic: 'SOBKDEB2XXX',
         endToEndId: '123456789',
         type: TransferType.SEPA_CREDIT_TRANSFER,
         amount: Amount(value: amount, currency: 'EUR'),
@@ -97,15 +97,15 @@ class TransferCubit extends Cubit<TransferState> {
 
       await Future.delayed(const Duration(seconds: 1));
 
-      String token = (await changeRequestService.getChangeRequestToken(
-              authorizationRequest.authorizationRequest.id))
-          .token;
+      // String token = (await changeRequestService.getChangeRequestToken(
+      //         authorizationRequest.authorizationRequest.id))
+      //     .token;
 
       emit(TransferConfirmTanState(
         iban: iban,
         name: name,
         description: description,
-        token: token,
+        token: 'token',
         amount: amount,
         savePayee: savePayee,
         changeRequestId: authorizationRequest.authorizationRequest.id,
