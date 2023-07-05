@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:solarisdemo/models/debit_card.dart';
 import 'package:solarisdemo/services/api_service.dart';
 

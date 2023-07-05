@@ -43,28 +43,6 @@ class MockTransactionService extends Mock implements TransactionService {
 
 class MockChangeRequestService extends Mock implements ChangeRequestService {
   @override
-  Future<ChangeRequestToken> getChangeRequestToken(String id) async {
-    try {
-      return super.noSuchMethod(
-        Invocation.method(#getChangeRequestToken, [id]),
-        returnValue: Future.value(
-          ChangeRequestToken(
-            token: 'test_token',
-          ),
-        ),
-        returnValueForMissingStub: Future.value(
-          ChangeRequestToken(
-            token: 'test_token',
-          ),
-        ),
-      );
-    } catch (e) {
-      log('get change request token error $e');
-      throw Exception("Failed to get change request token");
-    }
-  }
-
-  @override
   Future<ChangeRequestConfirmed> confirmChangeRequest(
       String changeRequestId, String tan) async {
     try {
@@ -237,11 +215,6 @@ void main() {
             ),
           ),
           confirmUrl: '',
-        ),
-      );
-      when(mockChangeRequestService.getChangeRequestToken('test')).thenAnswer(
-        (_) async => ChangeRequestToken(
-          token: 'test_token',
         ),
       );
 
