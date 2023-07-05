@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_switch/flutter_switch.dart';
-import 'package:solarisdemo/cubits/debit_card_details_cubit/debit_card_details_cubit.dart';
-import 'package:solarisdemo/cubits/debit_card_details_cubit/debit_card_details_state.dart';
-import 'package:solarisdemo/models/debit_card.dart';
-import 'package:solarisdemo/services/debit_card_service.dart';
+import 'package:solarisdemo/cubits/card_details_cubit/card_details_cubit.dart';
+import 'package:solarisdemo/cubits/card_details_cubit/card_details_state.dart';
+import 'package:solarisdemo/services/card_service.dart';
 import 'package:solarisdemo/widgets/spaced_column.dart';
 
 import '../../cubits/auth_cubit/auth_cubit.dart';
+import '../../models/bank_card.dart';
 import '../../models/user.dart';
 import '../../router/routing_constants.dart';
 import '../../themes/default_theme.dart';
-import '../../widgets/debit_card_widget.dart';
+import '../../widgets/card_widget.dart';
 import '../../widgets/dialog.dart';
 import '../../widgets/screen.dart';
 
 class CardDetailsScreen extends StatelessWidget {
-  final DebitCard card;
+  final BankCard card;
 
   const CardDetailsScreen({
     super.key,
@@ -27,15 +27,15 @@ class CardDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     AuthenticatedUser user = context.read<AuthCubit>().state.user!;
     return BlocProvider.value(
-      value: DebitCardDetailsCubit(
-        debitCardsService: DebitCardsService(user: user.cognito),
-      )..loadDebitCard(card.id),
-      child: BlocBuilder<DebitCardDetailsCubit, DebitCardDetailsState>(
+      value: BankCardDetailsCubit(
+        cardsService: BankCardsService(user: user.cognito),
+      )..loadCard(card.id),
+      child: BlocBuilder<BankCardDetailsCubit, BankCardDetailsState>(
         builder: (context, state) {
-          if (state is DebitCardDetailsLoadingState) {
+          if (state is BankCardDetailsLoadingState) {
             return const LoadingScreen(title: 'Card details');
           }
-          if (state is DebitCardDetailsLoadedState) {
+          if (state is BankCardDetailsLoadedState) {
             return Screen(
               scrollPhysics: const NeverScrollableScrollPhysics(),
               title: cardDetailsRoute.title,
@@ -50,15 +50,14 @@ class CardDetailsScreen extends StatelessWidget {
                     SpacedColumn(
                       space: 20,
                       children: [
-                        DebitCardWidget(
-                          cardNumber:
-                              state.debitCard!.representation!.maskedPan!,
-                          cardHolder: state.debitCard!.representation!.line1!,
-                          cardExpiry: state.debitCard!.representation!
-                              .formattedExpirationDate!,
+                        BankCardWidget(
+                          cardNumber: state.card!.representation!.maskedPan!,
+                          cardHolder: state.card!.representation!.line1!,
+                          cardExpiry: state
+                              .card!.representation!.formattedExpirationDate!,
                           isViewable: false,
                         ),
-                        _CardDetailsOptions(card: state.debitCard ?? card),
+                        _CardDetailsOptions(card: state.card ?? card),
                       ],
                     ),
                   ],
@@ -66,14 +65,14 @@ class CardDetailsScreen extends StatelessWidget {
               ),
             );
           }
-          if (state is DebitCardDetailsErrorState) {
+          if (state is BankCardDetailsErrorState) {
             return ErrorScreen(
               title: cardDetailsRoute.title,
               message: state.message,
             );
           }
 
-          return const LoadingScreen(title: 'Error');
+          return const LoadingScreen(title: 'Card details');
         },
       ),
     );
@@ -82,7 +81,7 @@ class CardDetailsScreen extends StatelessWidget {
 
 // ignore: must_be_immutable
 class _CardDetailsOptions extends StatefulWidget {
-  DebitCard card;
+  BankCard card;
   _CardDetailsOptions({super.key, required this.card});
 
   @override
@@ -174,10 +173,10 @@ class __CardDetailsOptionsState extends State<_CardDetailsOptions> {
             color: Color(0xFFEEEEEE),
             thickness: 1,
           ),
-          if (widget.card.status == DebitCardStatus.ACTIVE)
+          if (widget.card.status == BankCardStatus.ACTIVE)
             GestureDetector(
               onTap: () async {
-                context.read<DebitCardDetailsCubit>().freezeDebitCard(
+                context.read<BankCardDetailsCubit>().freezeCard(
                       widget.card.id,
                     );
               },
@@ -190,10 +189,10 @@ class __CardDetailsOptionsState extends State<_CardDetailsOptions> {
                 ),
               ),
             ),
-          if (widget.card.status == DebitCardStatus.BLOCKED)
+          if (widget.card.status == BankCardStatus.BLOCKED)
             GestureDetector(
               onTap: () async {
-                context.read<DebitCardDetailsCubit>().unfreezeDebitCard(
+                context.read<BankCardDetailsCubit>().unfreezeCard(
                       widget.card.id,
                     );
               },

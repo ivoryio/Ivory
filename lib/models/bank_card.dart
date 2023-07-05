@@ -4,7 +4,7 @@ import 'dart:convert';
 
 import 'package:uuid/uuid.dart';
 
-enum DebitCardStatus {
+enum BankCardStatus {
   ACTIVE,
   ACTIVATION_BLOCKED_BY_SOLARIS,
   BLOCKED,
@@ -21,7 +21,7 @@ enum DebitCardStatus {
 }
 
 //These card types are from Solaris Documentation. For future use
-// enum DebitCardType {
+// enum CardType {
 //   MASTERCARD_DEBIT,
 //   MASTERCARD_BUSINESS_DEBIT,
 //   VIRTUAL_MASTERCARD_DEBIT,
@@ -34,17 +34,18 @@ enum DebitCardStatus {
 //   VIRTUAL_VISA_FREELANCE_DEBIT
 // }
 
-enum DebitCardType {
+enum BankCardType {
   VIRTUAL_VISA_BUSINESS_DEBIT,
   VISA_BUSINESS_DEBIT,
   VISA_BUSINESS_DEBIT_2,
   MASTERCARD_BUSINESS_DEBIT,
   VIRTUAL_MASTERCARD_BUSINESS_DEBIT,
   VIRTUAL_VISA_FREELANCE_DEBIT,
+  VIRTUAL_VISA_CREDIT
 }
 
-class DebitCard {
-  DebitCard({
+class BankCard {
+  BankCard({
     required this.id,
     required this.accountId,
     required this.status,
@@ -54,25 +55,24 @@ class DebitCard {
 
   final String id;
   final String accountId;
-  final DebitCardStatus status;
-  final DebitCardType type;
-  final DebitCardRepresentation? representation;
+  final BankCardStatus status;
+  final BankCardType type;
+  final BankCardRepresentation? representation;
 
-  factory DebitCard.fromRawJson(String str) =>
-      DebitCard.fromJson(json.decode(str));
+  factory BankCard.fromRawJson(String str) =>
+      BankCard.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory DebitCard.fromJson(Map<String, dynamic> json) => DebitCard(
+  factory BankCard.fromJson(Map<String, dynamic> json) => BankCard(
         id: json["id"],
         accountId: json["account_id"],
-        status:
-            getDebitCardStatus(json["status"] ?? DebitCardStatus.INACTIVE.name),
-        type: getDebitCardType(
-            json["type"] ?? DebitCardType.VIRTUAL_VISA_BUSINESS_DEBIT.name),
+        status: getCardStatus(json["status"] ?? BankCardStatus.INACTIVE.name),
+        type:
+            getCardType(json["type"] ?? BankCardType.VIRTUAL_VISA_CREDIT.name),
         representation: json["representation"] == null
             ? null
-            : DebitCardRepresentation.fromJson(json["representation"]),
+            : BankCardRepresentation.fromJson(json["representation"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -84,60 +84,62 @@ class DebitCard {
       };
 }
 
-DebitCardType getDebitCardType(String type) {
+BankCardType getCardType(String type) {
   switch (type) {
     case 'VIRTUAL_VISA_BUSINESS_DEBIT':
-      return DebitCardType.VIRTUAL_VISA_BUSINESS_DEBIT;
+      return BankCardType.VIRTUAL_VISA_BUSINESS_DEBIT;
     case 'VISA_BUSINESS_DEBIT':
-      return DebitCardType.VISA_BUSINESS_DEBIT;
+      return BankCardType.VISA_BUSINESS_DEBIT;
     case 'VISA_BUSINESS_DEBIT_2':
-      return DebitCardType.VISA_BUSINESS_DEBIT_2;
+      return BankCardType.VISA_BUSINESS_DEBIT_2;
     case 'MASTERCARD_BUSINESS_DEBIT':
-      return DebitCardType.MASTERCARD_BUSINESS_DEBIT;
+      return BankCardType.MASTERCARD_BUSINESS_DEBIT;
     case 'VIRTUAL_MASTERCARD_BUSINESS_DEBIT':
-      return DebitCardType.VIRTUAL_MASTERCARD_BUSINESS_DEBIT;
+      return BankCardType.VIRTUAL_MASTERCARD_BUSINESS_DEBIT;
     case 'VIRTUAL_VISA_FREELANCE_DEBIT':
-      return DebitCardType.VIRTUAL_VISA_FREELANCE_DEBIT;
+      return BankCardType.VIRTUAL_VISA_FREELANCE_DEBIT;
+    case 'VIRTUAL_VISA_CREDIT':
+      return BankCardType.VIRTUAL_VISA_CREDIT;
     default:
-      throw Exception('Unknown DebitCardType: $type');
+      throw Exception('Unknown CardType: $type');
   }
 }
 
-DebitCardStatus getDebitCardStatus(String status) {
+BankCardStatus getCardStatus(String status) {
   switch (status) {
     case 'ACTIVE':
-      return DebitCardStatus.ACTIVE;
+      return BankCardStatus.ACTIVE;
     case 'ACTIVATION_BLOCKED_BY_SOLARIS':
-      return DebitCardStatus.ACTIVATION_BLOCKED_BY_SOLARIS;
+      return BankCardStatus.ACTIVATION_BLOCKED_BY_SOLARIS;
     case 'BLOCKED':
-      return DebitCardStatus.BLOCKED;
+      return BankCardStatus.BLOCKED;
     case 'BLOCKED_BY_SOLARIS':
-      return DebitCardStatus.BLOCKED_BY_SOLARIS;
+      return BankCardStatus.BLOCKED_BY_SOLARIS;
     case 'CLOSED':
-      return DebitCardStatus.CLOSED;
+      return BankCardStatus.CLOSED;
     case 'CLOSED_BY_SOLARIS':
-      return DebitCardStatus.CLOSED_BY_SOLARIS;
+      return BankCardStatus.CLOSED_BY_SOLARIS;
     case 'COUNTERFEIT_CARD':
-      return DebitCardStatus.COUNTERFEIT_CARD;
+      return BankCardStatus.COUNTERFEIT_CARD;
     case 'FRAUD':
-      return DebitCardStatus.FRAUD;
+      return BankCardStatus.FRAUD;
     case 'INACTIVE':
-      return DebitCardStatus.INACTIVE;
+      return BankCardStatus.INACTIVE;
     case 'LOST':
-      return DebitCardStatus.LOST;
+      return BankCardStatus.LOST;
     case 'NEVER_RECEIVED':
-      return DebitCardStatus.NEVER_RECEIVED;
+      return BankCardStatus.NEVER_RECEIVED;
     case 'PROCESSING':
-      return DebitCardStatus.PROCESSING;
+      return BankCardStatus.PROCESSING;
     case 'STOLEN':
-      return DebitCardStatus.STOLEN;
+      return BankCardStatus.STOLEN;
     default:
-      return DebitCardStatus.INACTIVE;
+      return BankCardStatus.INACTIVE;
   }
 }
 
-class DebitCardRepresentation {
-  DebitCardRepresentation({
+class BankCardRepresentation {
+  BankCardRepresentation({
     this.line1,
     this.maskedPan,
     this.formattedExpirationDate,
@@ -147,13 +149,13 @@ class DebitCardRepresentation {
   final String? maskedPan;
   final String? formattedExpirationDate;
 
-  factory DebitCardRepresentation.fromRawJson(String str) =>
-      DebitCardRepresentation.fromJson(json.decode(str));
+  factory BankCardRepresentation.fromRawJson(String str) =>
+      BankCardRepresentation.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory DebitCardRepresentation.fromJson(Map<String, dynamic> json) =>
-      DebitCardRepresentation(
+  factory BankCardRepresentation.fromJson(Map<String, dynamic> json) =>
+      BankCardRepresentation(
         line1: json["line_1"],
         maskedPan: json["masked_pan"],
         formattedExpirationDate: json["formatted_expiration_date"],
@@ -166,16 +168,15 @@ class DebitCardRepresentation {
       };
 }
 
-String createDebitCardToJson(CreateDebitCard data) =>
-    json.encode(data.toJson());
+String createCardToJson(CreateBankCard data) => json.encode(data.toJson());
 
-class CreateDebitCard {
+class CreateBankCard {
   late String line1;
-  DebitCardType type;
+  BankCardType type;
   String businessId;
   late String reference;
 
-  CreateDebitCard(
+  CreateBankCard(
     String firstName,
     String lastName,
     this.type,

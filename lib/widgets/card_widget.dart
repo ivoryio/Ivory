@@ -7,14 +7,14 @@ import '../utilities/format.dart';
 const double defaultCardHorizontalPadding = 20;
 const double defaultCardVerticalPadding = 15;
 
-class DebitCardWidget extends StatelessWidget {
+class BankCardWidget extends StatelessWidget {
   final bool isPrimary;
   final String cardHolder;
   final String cardNumber;
   final String cardExpiry;
   final bool? isViewable;
 
-  const DebitCardWidget({
+  const BankCardWidget({
     super.key,
     this.isPrimary = false,
     required this.cardExpiry,
@@ -54,7 +54,7 @@ class DebitCardWidget extends StatelessWidget {
                       ),
                       child: VisaSvgIcon(),
                     ),
-                    if (isPrimary) const PrimaryDebitCardLabel(),
+                    if (isPrimary) const PrimaryBankCardLabel(),
                     if (isViewable!) const EyeIcon(),
                   ],
                 ),
@@ -153,8 +153,8 @@ class DebitCardWidget extends StatelessWidget {
   }
 }
 
-class PrimaryDebitCardLabel extends StatelessWidget {
-  const PrimaryDebitCardLabel({
+class PrimaryBankCardLabel extends StatelessWidget {
+  const PrimaryBankCardLabel({
     super.key,
   });
 

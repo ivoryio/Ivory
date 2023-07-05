@@ -1,18 +1,18 @@
-import 'package:solarisdemo/models/debit_card.dart';
+import 'package:solarisdemo/models/bank_card.dart';
 import 'package:solarisdemo/services/api_service.dart';
 
-class DebitCardsService extends ApiService {
-  DebitCardsService({required super.user});
+class BankCardsService extends ApiService {
+  BankCardsService({required super.user});
 
-  Future<List<DebitCard>?> getDebitCards({
-    DebitCardsListFilter? filter,
+  Future<List<BankCard>?> getCards({
+    BankCardsListFilter? filter,
   }) async {
     try {
       var data =
           await get('/account/cards', queryParameters: filter?.toMap() ?? {});
 
-      List<DebitCard>? cards =
-          (data as List).map((card) => DebitCard.fromJson(card)).toList();
+      List<BankCard>? cards =
+          (data as List).map((card) => BankCard.fromJson(card)).toList();
 
       return cards;
     } catch (e) {
@@ -20,43 +20,43 @@ class DebitCardsService extends ApiService {
     }
   }
 
-  Future<DebitCard?> getDebitCardById(String id) async {
+  Future<BankCard?> getBankCardById(String id) async {
     try {
       var data = await get('/account/cards/$id');
-      DebitCard card = DebitCard.fromJson(data);
+      BankCard card = BankCard.fromJson(data);
       return card;
     } catch (e) {
       throw Exception("Failed to load card by id");
     }
   }
 
-  Future<dynamic> createVirtualDebitCard(CreateDebitCard debitCard) async {
+  Future<dynamic> createVirtualCard(CreateBankCard card) async {
     try {
       String path = '/account/cards';
 
-      var data = await post(path, body: debitCard.toJson());
+      var data = await post(path, body: card.toJson());
       return data;
     } catch (e) {
-      throw Exception("Failed to create debit card");
+      throw Exception("Failed to create card");
     }
   }
 
-  Future<DebitCard> freezeDebitCard(String cardId) async {
+  Future<BankCard> freezeBankCard(String cardId) async {
     try {
       String path = 'account/cards/$cardId/block';
       var data = await post(path);
-      DebitCard card = DebitCard.fromJson(data);
+      BankCard card = BankCard.fromJson(data);
       return card;
     } catch (e) {
       throw Exception("Failed to freeze card");
     }
   }
 
-  Future<DebitCard> unfreezeDebitCard(String cardId) async {
+  Future<BankCard> unfreezeCard(String cardId) async {
     try {
       String path = 'account/cards/$cardId/unblock';
       var data = await post(path);
-      DebitCard card = DebitCard.fromJson(data);
+      BankCard card = BankCard.fromJson(data);
 
       return card;
     } catch (e) {
@@ -65,11 +65,11 @@ class DebitCardsService extends ApiService {
   }
 }
 
-class DebitCardsListFilter {
+class BankCardsListFilter {
   final int? page;
   final int? size;
 
-  DebitCardsListFilter({
+  BankCardsListFilter({
     this.page,
     this.size,
   });

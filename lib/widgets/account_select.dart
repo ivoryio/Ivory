@@ -34,8 +34,9 @@ class AccountSelectState extends State<AccountSelect> {
   Widget build(BuildContext context) {
     AuthenticatedUser? user = context.read<AuthCubit>().state.user;
 
-    String fullName =
-        '${user?.person.firstName ?? ""} ${user?.person.lastName ?? ""}';
+    // String fullName =
+    //     '${user?.person.firstName ?? ""} ${user?.person.lastName ?? ""}';
+    String fullName = user?.person.firstName ?? "";
     String iban = Format.iban(user?.personAccount.iban ?? "");
 
     return SpacedColumn(

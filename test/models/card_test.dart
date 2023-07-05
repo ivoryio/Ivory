@@ -1,14 +1,14 @@
-import 'package:solarisdemo/models/debit_card.dart';
+import 'package:solarisdemo/models/bank_card.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('DebitCard', () {
+  group('BankCard', () {
     test('fromJson/toJson', () {
       final Map<String, dynamic> jsonData = {
         "id": "card_123",
         "account_id": "account_123",
-        "status": DebitCardStatus.ACTIVE.name,
-        "type": DebitCardType.VISA_BUSINESS_DEBIT.name,
+        "status": BankCardStatus.ACTIVE.name,
+        "type": BankCardType.VISA_BUSINESS_DEBIT.name,
         "representation": {
           "line_1": "John Doe",
           "masked_pan": "**** **** **** 1234",
@@ -17,17 +17,17 @@ void main() {
       };
 
       // Test fromJson
-      final debitCard = DebitCard.fromJson(jsonData);
-      expect(debitCard.id, "card_123");
-      expect(debitCard.accountId, "account_123");
-      expect(debitCard.status, DebitCardStatus.ACTIVE);
-      expect(debitCard.type, DebitCardType.VISA_BUSINESS_DEBIT);
-      expect(debitCard.representation?.line1, "John Doe");
-      expect(debitCard.representation?.maskedPan, "**** **** **** 1234");
-      expect(debitCard.representation?.formattedExpirationDate, "12/25");
+      final card = BankCard.fromJson(jsonData);
+      expect(card.id, "card_123");
+      expect(card.accountId, "account_123");
+      expect(card.status, BankCardStatus.ACTIVE);
+      expect(card.type, BankCardType.VISA_BUSINESS_DEBIT);
+      expect(card.representation?.line1, "John Doe");
+      expect(card.representation?.maskedPan, "**** **** **** 1234");
+      expect(card.representation?.formattedExpirationDate, "12/25");
 
       // Test toJson
-      final toJsonResult = debitCard.toJson();
+      final toJsonResult = card.toJson();
       expect(toJsonResult, jsonData);
     });
 
@@ -36,17 +36,17 @@ void main() {
           '{"id":"card_123","account_id":"account_123","status":"ACTIVE","type":"VISA_BUSINESS_DEBIT","representation":{"line_1":"John Doe","masked_pan":"**** **** **** 1234","formatted_expiration_date":"12/25"}}';
 
       // Test fromRawJson
-      final debitCard = DebitCard.fromRawJson(rawJsonData);
-      expect(debitCard.id, "card_123");
-      expect(debitCard.accountId, "account_123");
-      expect(debitCard.status, DebitCardStatus.ACTIVE);
-      expect(debitCard.type, DebitCardType.VISA_BUSINESS_DEBIT);
-      expect(debitCard.representation?.line1, "John Doe");
-      expect(debitCard.representation?.maskedPan, "**** **** **** 1234");
-      expect(debitCard.representation?.formattedExpirationDate, "12/25");
+      final card = BankCard.fromRawJson(rawJsonData);
+      expect(card.id, "card_123");
+      expect(card.accountId, "account_123");
+      expect(card.status, BankCardStatus.ACTIVE);
+      expect(card.type, BankCardType.VISA_BUSINESS_DEBIT);
+      expect(card.representation?.line1, "John Doe");
+      expect(card.representation?.maskedPan, "**** **** **** 1234");
+      expect(card.representation?.formattedExpirationDate, "12/25");
 
       // Test toRawJson
-      final toRawJsonResult = debitCard.toRawJson();
+      final toRawJsonResult = card.toRawJson();
       expect(toRawJsonResult, rawJsonData);
     });
 
@@ -60,41 +60,41 @@ void main() {
         }
       };
 
-      final debitCard = DebitCard.fromJson(jsonData);
-      expect(debitCard.id, "card_123");
-      expect(debitCard.accountId, "account_123");
-      expect(debitCard.status, DebitCardStatus.INACTIVE);
-      expect(debitCard.type, DebitCardType.VIRTUAL_VISA_BUSINESS_DEBIT);
-      expect(debitCard.representation?.line1, "John Doe");
-      expect(debitCard.representation?.maskedPan, null);
-      expect(debitCard.representation?.formattedExpirationDate, "12/25");
+      final card = BankCard.fromJson(jsonData);
+      expect(card.id, "card_123");
+      expect(card.accountId, "account_123");
+      expect(card.status, BankCardStatus.INACTIVE);
+      expect(card.type, BankCardType.VIRTUAL_VISA_BUSINESS_DEBIT);
+      expect(card.representation?.line1, "John Doe");
+      expect(card.representation?.maskedPan, null);
+      expect(card.representation?.formattedExpirationDate, "12/25");
     });
 
     test('fromJson with null representation', () {
       final Map<String, dynamic> jsonData = {
         "id": "card_123",
         "account_id": "account_123",
-        "status": DebitCardStatus.ACTIVE.name,
-        "type": DebitCardType.VISA_BUSINESS_DEBIT.name,
+        "status": BankCardStatus.ACTIVE.name,
+        "type": BankCardType.VISA_BUSINESS_DEBIT.name,
         "representation": null
       };
 
-      final debitCard = DebitCard.fromJson(jsonData);
-      expect(debitCard.id, "card_123");
-      expect(debitCard.accountId, "account_123");
-      expect(debitCard.status, DebitCardStatus.ACTIVE);
-      expect(debitCard.type, DebitCardType.VISA_BUSINESS_DEBIT);
-      expect(debitCard.representation, isNull);
+      final card = BankCard.fromJson(jsonData);
+      expect(card.id, "card_123");
+      expect(card.accountId, "account_123");
+      expect(card.status, BankCardStatus.ACTIVE);
+      expect(card.type, BankCardType.VISA_BUSINESS_DEBIT);
+      expect(card.representation, isNull);
     });
   });
 
-  group('DebitCardRepresentation', () {
+  group('BankCardRepresentation', () {
     test('fromRawJson/toRawJson', () {
       const String rawJsonData =
           '{"line_1":"John Doe","masked_pan":"**** **** **** 1234","formatted_expiration_date":"12/25"}';
 
       // Test fromRawJson
-      final representation = DebitCardRepresentation.fromRawJson(rawJsonData);
+      final representation = BankCardRepresentation.fromRawJson(rawJsonData);
       expect(representation.line1, "John Doe");
       expect(representation.maskedPan, "**** **** **** 1234");
       expect(representation.formattedExpirationDate, "12/25");
@@ -109,7 +109,7 @@ void main() {
         "masked_pan": "**** **** **** 1234"
       };
 
-      final representation = DebitCardRepresentation.fromJson(jsonData);
+      final representation = BankCardRepresentation.fromJson(jsonData);
       expect(representation.line1, "John Doe");
       expect(representation.maskedPan, "**** **** **** 1234");
       expect(representation.formattedExpirationDate, isNull);
@@ -122,7 +122,7 @@ void main() {
         "formatted_expiration_date": ""
       };
 
-      final representation = DebitCardRepresentation.fromJson(jsonData);
+      final representation = BankCardRepresentation.fromJson(jsonData);
       expect(representation.line1, "");
       expect(representation.maskedPan, "");
       expect(representation.formattedExpirationDate, "");
