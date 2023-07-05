@@ -64,7 +64,7 @@ void main() {
       expect(card.id, "card_123");
       expect(card.accountId, "account_123");
       expect(card.status, BankCardStatus.INACTIVE);
-      expect(card.type, BankCardType.VIRTUAL_VISA_BUSINESS_DEBIT);
+      expect(card.type, BankCardType.VIRTUAL_VISA_CREDIT);
       expect(card.representation?.line1, "John Doe");
       expect(card.representation?.maskedPan, null);
       expect(card.representation?.formattedExpirationDate, "12/25");
@@ -75,7 +75,7 @@ void main() {
         "id": "card_123",
         "account_id": "account_123",
         "status": BankCardStatus.ACTIVE.name,
-        "type": BankCardType.VISA_BUSINESS_DEBIT.name,
+        "type": BankCardType.VIRTUAL_VISA_CREDIT.name,
         "representation": null
       };
 
@@ -83,7 +83,7 @@ void main() {
       expect(card.id, "card_123");
       expect(card.accountId, "account_123");
       expect(card.status, BankCardStatus.ACTIVE);
-      expect(card.type, BankCardType.VISA_BUSINESS_DEBIT);
+      expect(card.type, BankCardType.VIRTUAL_VISA_CREDIT);
       expect(card.representation, isNull);
     });
   });
