@@ -9,6 +9,7 @@ class PersonAccountSummary {
     this.spending,
     this.iban,
     this.balance,
+    this.availableBalance,
   });
 
   String? id;
@@ -16,6 +17,7 @@ class PersonAccountSummary {
   double? spending;
   String? iban;
   Balance? balance;
+  Balance? availableBalance;
 
   factory PersonAccountSummary.fromRawJson(String str) =>
       PersonAccountSummary.fromJson(json.decode(str));
@@ -30,6 +32,9 @@ class PersonAccountSummary {
         iban: json["iban"] ?? emptyStringValue,
         balance:
             json["balance"] == null ? null : Balance.fromJson(json["balance"]),
+        availableBalance: json["available_balance"] == null
+            ? null
+            : Balance.fromJson(json["available_balance"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -38,6 +43,7 @@ class PersonAccountSummary {
         "spending": spending,
         "iban": iban,
         "balance": balance?.toJson(),
+        "available_balance": availableBalance?.toJson(),
       };
 }
 
