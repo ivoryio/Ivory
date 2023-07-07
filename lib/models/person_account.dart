@@ -164,3 +164,30 @@ class PersonAccountOverdraft {
         "limit": limit,
       };
 }
+
+CreateAccountResponse createAccountResponseFromJson(String str) =>
+    CreateAccountResponse.fromJson(json.decode(str));
+
+String createAccountResponseToJson(CreateAccountResponse data) =>
+    json.encode(data.toJson());
+
+class CreateAccountResponse {
+  String personId;
+  String accountId;
+
+  CreateAccountResponse({
+    required this.personId,
+    required this.accountId,
+  });
+
+  factory CreateAccountResponse.fromJson(Map<String, dynamic> json) =>
+      CreateAccountResponse(
+        personId: json["person_id"],
+        accountId: json["account_id"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "person_id": personId,
+        "account_id": accountId,
+      };
+}

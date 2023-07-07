@@ -191,7 +191,7 @@ class HomePageHeader extends StatelessWidget {
                     iban: state.data?.iban ?? "",
                     income: state.data?.income ?? 0,
                     spending: state.data?.spending ?? 0,
-                    balance: state.data?.balance?.value ?? 0,
+                    availableBalance: state.data?.availableBalance?.value ?? 0,
                   ),
                   const AccountOptions(),
                 ],
@@ -208,15 +208,15 @@ class HomePageHeader extends StatelessWidget {
 
 class AccountSummary extends StatelessWidget {
   final String iban;
-  final num balance;
+  final num availableBalance;
   final num income;
   final num spending;
 
   const AccountSummary({
     super.key,
     required this.iban,
+    required this.availableBalance,
     required this.income,
-    required this.balance,
     required this.spending,
   });
 
@@ -231,7 +231,7 @@ class AccountSummary extends StatelessWidget {
         children: [
           AccountBalance(
             iban: iban,
-            value: balance,
+            value: availableBalance,
           ),
           AccountStats(
             income: income,

@@ -234,12 +234,16 @@ class DeviceService extends ApiService {
     try {
       String path = 'person/device/consent';
 
+      CreateDeviceConsentRequest reqBody = CreateDeviceConsentRequest(
+        confirmedAt: DateTime.now().toUtc(),
+        eventType: DeviceConsentEventType.APPROVED,
+      );
+
+      Map<String, dynamic> req = reqBody.toJson();
+
       var data = await post(
         path,
-        body: CreateDeviceConsentRequest(
-          confirmedAt: DateTime.now(),
-          eventType: DeviceConsentEventType.APPROVED,
-        ).toJson(),
+        body: req,
       );
       return CreateDeviceConsentResponse.fromJson(data);
     } catch (e) {

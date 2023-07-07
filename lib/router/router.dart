@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:solarisdemo/models/debit_card.dart';
+import 'package:solarisdemo/models/bank_card.dart';
 import 'package:solarisdemo/screens/splitpay/splitpay_screen.dart';
 import 'package:solarisdemo/screens/transactions/transactions_filtering_screen.dart';
 import 'package:solarisdemo/widgets/screen.dart';
@@ -112,11 +112,11 @@ class AppRouter {
           path: cardDetailsRoute.path,
           name: cardDetailsRoute.name,
           builder: (BuildContext context, GoRouterState state) {
-            if (state.extra is! DebitCard) {
+            if (state.extra is! BankCard) {
               return const ErrorScreen();
             }
 
-            final cards = state.extra as DebitCard;
+            final cards = state.extra as BankCard;
 
             return CardDetailsScreen(card: cards);
           },

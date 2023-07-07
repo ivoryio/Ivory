@@ -3,11 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../cubits/auth_cubit/auth_cubit.dart';
-import '../../cubits/debit_cards_cubit/debit_cards_cubit.dart';
-import '../../models/debit_card.dart';
+import '../../cubits/cards_cubit/cards_cubit.dart';
+import '../../models/bank_card.dart';
 import '../../models/user.dart';
 import '../../router/routing_constants.dart';
-import '../../services/debit_card_service.dart';
+import '../../services/card_service.dart';
 import '../../utilities/constants.dart';
 import '../../widgets/button.dart';
 import '../../widgets/empty_list_message.dart';
@@ -15,7 +15,7 @@ import '../../widgets/screen.dart';
 import '../../widgets/tab_view.dart';
 import '../../themes/default_theme.dart';
 import '../../widgets/spaced_column.dart';
-import '../../widgets/debit_card_widget.dart';
+import '../../widgets/card_widget.dart';
 
 class WalletScreen extends StatelessWidget {
   const WalletScreen({super.key});
@@ -24,16 +24,15 @@ class WalletScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     AuthenticatedUser user = context.read<AuthCubit>().state.user!;
     return BlocProvider.value(
-      value: DebitCardsCubit(
-          debitCardsService: DebitCardsService(user: user.cognito))
-        ..getDebitCards(),
-      child: BlocBuilder<DebitCardsCubit, DebitCardsState>(
+      value: BankCardsCubit(cardsService: BankCardsService(user: user.cognito))
+        ..getCards(),
+      child: BlocBuilder<BankCardsCubit, BankCardsState>(
         builder: (context, state) {
-          if (state is DebitCardsLoading) {
+          if (state is BankCardsLoading) {
             return const LoadingScreen(title: "Wallet");
           }
 
-          if (state is DebitCardsLoaded) {
+          if (state is BankCardsLoaded) {
             return Screen(
               title: "Wallet",
               child: WalletScreenBody(
@@ -43,7 +42,7 @@ class WalletScreen extends StatelessWidget {
             );
           }
 
-          if (state is DebitCardsError) {
+          if (state is BankCardsError) {
             return ErrorScreen(
               title: "Wallet",
               message: state.message,
@@ -52,7 +51,7 @@ class WalletScreen extends StatelessWidget {
 
           return const ErrorScreen(
             title: "Wallet",
-            message: "Debit cards could not be loaded",
+            message: "Cards could not be loaded",
           );
         },
       ),
@@ -61,8 +60,8 @@ class WalletScreen extends StatelessWidget {
 }
 
 class WalletScreenBody extends StatelessWidget {
-  final List<DebitCard> physicalCards;
-  final List<DebitCard> virtualCards;
+  final List<BankCard> physicalCards;
+  final List<BankCard> virtualCards;
 
   const WalletScreenBody({
     super.key,
@@ -93,7 +92,7 @@ class WalletScreenBody extends StatelessWidget {
 }
 
 class CardList extends StatelessWidget {
-  final List<DebitCard> cards;
+  final List<BankCard> cards;
 
   const CardList({
     super.key,
@@ -123,12 +122,12 @@ class CardList extends StatelessWidget {
               physics: const ClampingScrollPhysics(),
               separatorBuilder: (context, index) => const SizedBox(height: 10),
               itemBuilder: (context, index) {
-                DebitCard card = cards[index];
+                BankCard card = cards[index];
 
                 String cardNumber =
                     card.representation?.maskedPan ?? emptyStringValue;
                 String cardHolder =
-                    card.representation?.line1 ?? emptyStringValue;
+                    card.representation?.line2 ?? emptyStringValue;
                 String cardExpiry =
                     card.representation?.formattedExpirationDate ??
                         emptyStringValue;
@@ -140,7 +139,7 @@ class CardList extends StatelessWidget {
                       extra: card,
                     );
                   },
-                  child: DebitCardWidget(
+                  child: BankCardWidget(
                     cardNumber: cardNumber,
                     cardHolder: cardHolder,
                     cardExpiry: cardExpiry,
@@ -154,16 +153,14 @@ class CardList extends StatelessWidget {
                 child: PrimaryButton(
                   text: "Get new card",
                   onPressed: () {
-                    CreateDebitCard card = CreateDebitCard(
+                    CreateBankCard card = CreateBankCard(
                       user.person.firstName!,
                       user.person.lastName!,
-                      DebitCardType
-                          .VIRTUAL_VISA_BUSINESS_DEBIT, //to be changed for production
+                      BankCardType
+                          .VIRTUAL_VISA_CREDIT, // TODO to be changed for production
                       user.personAccount.businessId ?? '',
                     );
-                    context
-                        .read<DebitCardsCubit>()
-                        .createVirtualDebitCard(card);
+                    context.read<BankCardsCubit>().createVirtualCard(card);
                   },
                   textStyle: const TextStyle(
                     fontWeight: FontWeight.w600,

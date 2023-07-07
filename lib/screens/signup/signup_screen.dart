@@ -7,67 +7,65 @@ import '../../widgets/checkbox.dart';
 import '../../widgets/auth_error.dart';
 import '../../widgets/spaced_column.dart';
 import '../../widgets/sticky_bottom_content.dart';
-import 'confirm_mobilenumber_screen.dart';
 import '../../widgets/button.dart';
 import '../../widgets/screen.dart';
 import '../../utilities/validator.dart';
 import '../../cubits/signup/signup_cubit.dart';
 import '../../widgets/platform_text_input.dart';
 import 'confirm_email_screen.dart';
-import 'signup_success_screen.dart';
+import 'countdown_screen.dart';
 
 class SignupScreen extends StatelessWidget {
   const SignupScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => SignupCubit(),
-      child: BlocBuilder<SignupCubit, SignupState>(builder: (context, state) {
-        if (state is SignupLoading) {
-          return const LoadingScreen(title: "Sign Up");
-        }
+    return BlocProvider.value(
+      value: SignupCubit(),
+      child: BlocBuilder<SignupCubit, SignupState>(
+        builder: (context, state) {
+          if (state is SignupLoading) {
+            return const LoadingScreen(title: "Sign Up");
+          }
 
-        if (state is SignupInitial) {
-          return const BasicInfoScreen();
-        }
+          if (state is SignupInitial) {
+            return const BasicInfoScreen();
+          }
 
-        if (state is SignupBasicInfoComplete) {
-          return GdprConsentScreen(
-            bottomStickyWidget: BottomStickyWidget(
-              child: StickyBottomContent(
-                buttonText: "I agree",
-                onContinueCallback: () {
-                  context.read<SignupCubit>().setGdprConsent(
-                        personId: state.personId!,
-                        phoneNumber: state.phoneNumber!,
-                        passcode: state.passcode!,
-                        email: state.email!,
-                        firstName: state.firstName!,
-                        lastName: state.lastName!,
-                      );
-                },
+          if (state is SignupBasicInfoComplete) {
+            return GdprConsentScreen(
+              bottomStickyWidget: BottomStickyWidget(
+                child: StickyBottomContent(
+                  buttonText: "I agree",
+                  onContinueCallback: () {
+                    context.read<SignupCubit>().setGdprConsent(
+                          personId: state.personId!,
+                          phoneNumber: state.phoneNumber!,
+                          passcode: state.passcode!,
+                          email: state.email!,
+                          firstName: state.firstName!,
+                          lastName: state.lastName!,
+                        );
+                  },
+                ),
               ),
-            ),
-          );
-        }
+            );
+          }
 
-        if (state is SignupGdprConsentComplete) {
-          return const SignupConfirmEmailScreen();
-        }
+          if (state is SignupEmailConfirmed) {
+            return const CountdownScreen();
+          }
 
-        if (state is SignupEmailConfirmed) {
-          return const SignupConfirmMobilenumberScreen();
-        }
+          if (state is SignupGdprConsentComplete) {
+            return const SignupConfirmEmailScreen();
+          }
 
-        if (state is SignupMobileNumberConfirmed) {
-          return const SignupSuccessScreen();
-        }
-        if (state is SignupError) {
-          return AuthErrorScreen(message: state.message, title: "Signup");
-        }
-        return const ErrorScreen();
-      }),
+          if (state is SignupError) {
+            return AuthErrorScreen(message: state.message, title: "Signup");
+          }
+          return const ErrorScreen();
+        },
+      ),
     );
   }
 }
@@ -198,7 +196,7 @@ class _SignupFormState extends State<SignupForm> {
                 PlatformTextInput(
                   textLabel: "Passcode",
                   hintText: "e.g 123456",
-                  keyboardType: TextInputType.number,
+                  keyboardType: TextInputType.phone,
                   onChanged: (value) {
                     setState(() {
                       _inputPassword = value;
@@ -207,6 +205,9 @@ class _SignupFormState extends State<SignupForm> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your passcode';
+                    }
+                    if (!Validator.isValidPasscode(value)) {
+                      return 'Please enter a valid passcode, with at least 6 digits';
                     }
                     return null;
                   },

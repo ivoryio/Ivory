@@ -1,10 +1,15 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../cubits/auth_cubit/auth_cubit.dart';
+import '../models/user.dart';
 import '../router/routing_constants.dart';
 import 'modal.dart';
 import 'button.dart';
@@ -29,13 +34,19 @@ class TransactionListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final date = transaction.bookingDate!;
-    final recipientName =
-        transaction.recipientName ?? defaultTransactionRecipientName;
+    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
+
+    var recipientName = removeUnrelatedWords(transaction.recipientName);
+    var senderName = removeUnrelatedWords(transaction.senderName);
+
+    final date = transaction.recordedAt!.toIso8601String();
+    final displayedName = user.personAccount.iban == transaction.senderIban
+        ? recipientName
+        : senderName;
     final description = transaction.description!;
     final amount = transaction.amount?.value ?? 0;
 
-    final DateFormat dateFormatter = DateFormat('d MMMM, HH:Hm ');
+    final DateFormat dateFormatter = DateFormat('d MMMM, HH:mm ');
     final String formattedDate = dateFormatter.format(DateTime.parse(date));
 
     return GestureDetector(
@@ -52,8 +63,25 @@ class TransactionListItem extends StatelessWidget {
           formattedDate: formattedDate,
           amount: amount,
           description: description,
-          recipientName: recipientName,
+          recipientName: displayedName,
         ));
+  }
+
+  removeUnrelatedWords(fullName) {
+    var pattern = RegExp(r' X-');
+
+    var storageResult = fullName!.split(pattern)[0];
+    storageResult = storageResult.substring(0, shortenName(storageResult));
+
+    return storageResult;
+  }
+
+  shortenName(name, {maxNameLength = 20}) {
+    if (maxNameLength > name.length) {
+      maxNameLength = name.length;
+    }
+
+    return maxNameLength;
   }
 }
 
@@ -141,8 +169,8 @@ class TransactionBottomPopup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final DateFormat dateFormatter = DateFormat('d MMMM yyyy, HH:Hm ');
-    final String formattedDate =
-        dateFormatter.format(DateTime.parse(transaction.bookingDate!));
+    final String formattedDate = dateFormatter
+        .format(DateTime.parse(transaction.recordedAt!.toIso8601String()));
 
     return FractionallySizedBox(
       heightFactor: Platform.isAndroid ? 1 : 0.9,

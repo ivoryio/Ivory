@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:solarisdemo/services/auth_service.dart';
@@ -9,6 +10,7 @@ import 'package:solarisdemo/services/person_service.dart';
 import '../../models/device.dart';
 import '../../models/device_activity.dart';
 import '../../models/device_consent.dart';
+import '../../models/person_account.dart';
 import '../../models/person_model.dart';
 import '../../models/user.dart';
 import '../../services/signup_service.dart';
@@ -40,19 +42,21 @@ class SignupCubit extends Cubit<SignupState> {
         email: email,
         firstName: firstName,
         lastName: lastName,
-        mobileNumber: phoneNumber,
+        mobileNumber: "+15550101",
       ));
 
       if (createPersonResponse == null) {
         throw Exception("Failed to create person");
       }
+
+      log(createPersonResponse.personId);
+
       await signupService.createCognitoAccount(
         phoneNumber: phoneNumber,
         email: email,
         firstName: firstName,
         lastName: lastName,
         passcode: passcode,
-        accountId: createPersonResponse.accountId,
         personId: createPersonResponse.personId,
       );
       emit(SignupBasicInfoComplete(
@@ -80,6 +84,7 @@ class SignupCubit extends Cubit<SignupState> {
     required String personId,
   }) async {
     emit(const SignupLoading());
+
     try {
       emit(SignupGdprConsentComplete(
         personId: personId,
@@ -107,25 +112,97 @@ class SignupCubit extends Cubit<SignupState> {
     required String emailConfirmationCode,
   }) async {
     emit(const SignupLoading());
-    try {
-      await signupService.confirmCognitoAccount(
-          email: email, emailConfirmationCode: emailConfirmationCode);
 
-      User? user = await authService.login(email, passcode);
+    try {
+      bool confirmed = await signupService.confirmCognitoAccount(
+        email: email,
+        emailConfirmationCode: emailConfirmationCode,
+      );
+      if (confirmed == false) {
+        emit(
+          SignupGdprConsentComplete(
+            personId: personId,
+            email: email,
+            firstName: firstName,
+            lastName: lastName,
+            phoneNumber: phoneNumber,
+            passcode: passcode,
+            errorMessage:
+                'Failed to confirm email, please enter the code again!',
+          ),
+        );
+      }
+
+      User? user = await authService.login(
+        email,
+        passcode,
+      );
 
       if (user == null) {
         throw Exception("Failed to login");
       }
 
-      CreateDeviceConsentResponse? createdConsent =
-          await DeviceService(user: user).createDeviceConsent();
+      PersonService personService = PersonService(
+        user: user,
+      );
+
+      CreateDeviceConsentResponse? createdConsent = await DeviceService(
+        user: user,
+      ).createDeviceConsent();
 
       if (createdConsent != null) {
-        await DeviceUtilService.saveDeviceConsentId(createdConsent.id);
+        await DeviceUtilService.saveDeviceConsentId(
+          createdConsent.id,
+        );
       }
 
       await DeviceService(user: user)
           .createDeviceActivity(DeviceActivityType.CONSENT_PROVIDED);
+
+      String? deviceFingerPrint = await DeviceUtilService.getDeviceFingerprint(
+        createdConsent!.id,
+      );
+      if (deviceFingerPrint == null) {
+        throw Exception("Device fingerprint not found");
+      }
+
+      //create mobile number
+      await personService.createMobileNumber(CreateDeviceReqBody(
+        deviceData: deviceFingerPrint,
+      ));
+
+      //create device binding
+      // DeviceService deviceService = DeviceService(user: user);
+
+      // await deviceService.createDeviceBinding(user.personId!);
+
+      //verify device binding signature
+      // await deviceService.verifyDeviceBindingSignature(
+      //     '212212'); // verify device with static TAN - To be refactored
+
+      //create tax identification
+      CreateTaxIdentificationResponse? taxIdentificationResponse =
+          await personService.createTaxIdentification(
+        CreateTaxIdentificationReqBody(
+          number: "48954371207",
+          country: "DE",
+          primary: true,
+        ),
+      );
+      if (taxIdentificationResponse == null) {
+        throw Exception("Failed to create tax identification");
+      }
+
+      //create kyc
+      CreateKycResponse? kycResponse = await personService.createKyc(
+        CreateKycReqBody(
+          method: "idnow",
+          deviceData: deviceFingerPrint,
+        ),
+      );
+      if (kycResponse == null) {
+        throw Exception("Failed to create kyc");
+      }
 
       emit(SignupEmailConfirmed(
         user: user,
@@ -136,54 +213,29 @@ class SignupCubit extends Cubit<SignupState> {
         lastName: lastName,
       ));
     } catch (e) {
-      emit(SignupError(
-        message: e.toString(),
-      ));
+      log(e.toString());
     }
   }
 
-  // 4. Confirm mobile number and create binding
-  Future<void> confirmPhoneNumber({
-    required User user,
-    required String phoneNumber,
-    required String mobileNumberConfirmationCode,
-  }) async {
+  Future<void> createAccount(User user) async {
     emit(const SignupLoading());
 
-    try {
-      String? deviceConsentId = await DeviceUtilService.getDeviceConsentId();
-      if (deviceConsentId == null) {
-        throw Exception("Device consent id not found");
-      }
+    PersonService personService = PersonService(user: user);
 
-      String? deviceFingerPrint =
-          await DeviceUtilService.getDeviceFingerprint(deviceConsentId);
-      if (deviceFingerPrint == null) {
-        throw Exception("Device fingerprint not found");
-      }
+    //create bank account and update cognitoUser with newly created accountId
+    CreateAccountResponse? createAccountResponse =
+        await personService.createAccount();
 
-      PersonService personService =
-          PersonService(user: user); //personService with auth
-
-      await personService.createMobileNumber(CreateDeviceReqBody(
-        number: phoneNumber,
-        deviceData: deviceFingerPrint,
-      ));
-
-      DeviceService deviceService = DeviceService(user: user);
-
-      await deviceService
-          .createDeviceBinding(user.personId!); //create device binding
-
-      await deviceService.verifyDeviceBindingSignature(
-          '123456'); // verify device with random TAN - To be refactored
-
-      emit(const SignupMobileNumberConfirmed());
-    } catch (e) {
-      log(e.toString());
-      emit(SignupError(
-        message: e.toString(),
-      ));
+    if (createAccountResponse == null) {
+      throw Exception("Failed to create account");
     }
+    String accountId = createAccountResponse.accountId;
+    await signupService.addCustomAttribute(
+      user.cognitoUser,
+      CognitoUserAttribute(
+        name: "custom:accountId",
+        value: accountId,
+      ),
+    );
   }
 }

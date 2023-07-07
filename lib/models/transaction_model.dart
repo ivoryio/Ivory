@@ -11,6 +11,9 @@ class Transaction {
   String? bookingDate;
   String? valutaDate;
   String? metaInfo;
+  DateTime? recordedAt;
+  String? senderIban;
+  String? senderName;
 
   Transaction(
       {this.id,
@@ -24,7 +27,10 @@ class Transaction {
       this.reference,
       this.bookingDate,
       this.valutaDate,
-      this.metaInfo});
+      this.metaInfo,
+      this.recordedAt,
+      this.senderIban,
+      this.senderName});
 
   Transaction.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -39,6 +45,9 @@ class Transaction {
     bookingDate = json['booking_date'];
     valutaDate = json['valuta_date'];
     metaInfo = json['meta_info'];
+    recordedAt = DateTime.parse(json['recorded_at']);
+    senderIban = json['sender_iban'];
+    senderName = json['sender_name'];
   }
 
   Map<String, dynamic> toJson() {
@@ -57,6 +66,9 @@ class Transaction {
     data['booking_date'] = bookingDate;
     data['valuta_date'] = valutaDate;
     data['meta_info'] = metaInfo;
+    data['recorded_at'] = recordedAt!.toIso8601String();
+    data['sender_iban'] = senderIban;
+    data['sender_name'] = senderName;
     return data;
   }
 }

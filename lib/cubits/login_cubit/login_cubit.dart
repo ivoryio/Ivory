@@ -89,21 +89,21 @@ class LoginCubit extends Cubit<LoginState> {
             .createDeviceActivity(DeviceActivityType.APP_START);
       }
     } on CognitoUserNewPasswordRequiredException catch (e) {
-      // handle New Password challenge
+      // TODO handle New Password challenge
     } on CognitoUserMfaRequiredException catch (e) {
-      // handle SMS_MFA challenge
+      // TODO handle SMS_MFA challenge
     } on CognitoUserSelectMfaTypeException catch (e) {
-      // handle SELECT_MFA_TYPE challenge
+      // TODO handle SELECT_MFA_TYPE challenge
     } on CognitoUserMfaSetupException catch (e) {
-      // handle MFA_SETUP challenge
+      // TODO handle MFA_SETUP challenge
     } on CognitoUserTotpRequiredException catch (e) {
-      // handle SOFTWARE_TOKEN_MFA challenge
+      // TODO handle SOFTWARE_TOKEN_MFA challenge
     } on CognitoUserCustomChallengeException catch (e) {
-      // handle CUSTOM_CHALLENGE challenge
+      // TODO handle CUSTOM_CHALLENGE challenge
     } on CognitoUserConfirmationNecessaryException catch (e) {
-      // handle User Confirmation Necessary
+      // TODO handle User Confirmation Necessary
     } on CognitoClientException catch (_) {
-      // handle Wrong Username and Password and Cognito Client
+      // TODO handle Wrong Username and Password and Cognito Client
       emit(
         const LoginError(message: LoginErrorMessage.wrongUsernameOrPassword),
       );
@@ -132,7 +132,7 @@ class LoginCubit extends Cubit<LoginState> {
       Person? person = await personService.getPerson();
       PersonAccount? personAccount = await personService.getAccount();
 
-      // Simulate wrong tan verification (input '1111')
+      // TODO Simulate wrong tan verification (input '1111')
       if (tan == '1111') {
         emit(const LoginError(message: LoginErrorMessage.wrongTan));
         return;

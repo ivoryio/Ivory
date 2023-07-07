@@ -19,17 +19,4 @@ class ChangeRequestService extends ApiService {
       throw Exception("Failed to confirm change request");
     }
   }
-
-  Future<ChangeRequestToken> getChangeRequestToken(
-      String changeRequestId) async {
-    try {
-      String path = 'change_requests/$changeRequestId/token';
-
-      var data = await get(path);
-
-      return ChangeRequestToken.fromJson(data);
-    } catch (e) {
-      throw Exception("Failed to get change request token");
-    }
-  }
 }

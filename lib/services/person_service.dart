@@ -74,4 +74,46 @@ class PersonService extends ApiService {
       throw Exception("Failed to create mobile number");
     }
   }
+
+  Future<CreateTaxIdentificationResponse>? createTaxIdentification(
+      CreateTaxIdentificationReqBody createTaxIdentificationReqBody) async {
+    try {
+      String path = 'person/tax_identification';
+
+      var data = await post(
+        path,
+        body: createTaxIdentificationReqBody.toJson(),
+      );
+
+      return CreateTaxIdentificationResponse.fromJson(data);
+    } catch (e) {
+      throw Exception("Failed to create tax identification");
+    }
+  }
+
+  Future<CreateKycResponse>? createKyc(
+      CreateKycReqBody createKycReqBody) async {
+    try {
+      String path = 'person/kyc';
+
+      var data = await post(
+        path,
+        body: createKycReqBody.toJson(),
+      );
+
+      return CreateKycResponse.fromJson(data);
+    } catch (e) {
+      throw Exception("Failed to create kyc");
+    }
+  }
+
+  Future<CreateAccountResponse>? createAccount() async {
+    try {
+      String path = 'accounts';
+      var data = await post(path);
+      return CreateAccountResponse.fromJson(data);
+    } catch (e) {
+      throw Exception("Failed to create account");
+    }
+  }
 }

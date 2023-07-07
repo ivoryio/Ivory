@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:solarisdemo/utilities/constants.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../models/transfer.dart';
 import '../../models/person_account.dart';
@@ -87,25 +88,21 @@ class TransferCubit extends Cubit<TransferState> {
           await transactionService.createTransfer(Transfer(
         recipientName: name,
         recipientIban: iban.replaceAll(emptySpaceString, emptyStringValue),
-        reference: '123456789',
+        reference: const Uuid().v4(),
         description: description,
-        recipientBic: 'TESTBIC',
-        endToEndId: '123456789',
+        recipientBic: 'SOBKDEB2XXX',
+        endToEndId: '',
         type: TransferType.SEPA_CREDIT_TRANSFER,
         amount: Amount(value: amount, currency: 'EUR'),
       ));
 
       await Future.delayed(const Duration(seconds: 1));
 
-      String token = (await changeRequestService.getChangeRequestToken(
-              authorizationRequest.authorizationRequest.id))
-          .token;
-
       emit(TransferConfirmTanState(
         iban: iban,
         name: name,
         description: description,
-        token: token,
+        token: '212212',
         amount: amount,
         savePayee: savePayee,
         changeRequestId: authorizationRequest.authorizationRequest.id,
@@ -130,10 +127,7 @@ class TransferCubit extends Cubit<TransferState> {
         throw Exception("Change request id is null");
       }
       await changeRequestService.confirmChangeRequest(
-          state.changeRequestId!, tan);
-
-      await backOfficeServices
-          .processQueuedBooking(backOfficeServices.user!.personId!);
+          state.changeRequestId!, state.token!);
 
       emit(TransferConfirmedState(
         iban: state.iban,
