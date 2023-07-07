@@ -157,7 +157,7 @@ class CardList extends StatelessWidget {
                       user.person.firstName!,
                       user.person.lastName!,
                       BankCardType
-                          .VIRTUAL_VISA_CREDIT, //to be changed for production
+                          .VIRTUAL_VISA_CREDIT, // TODO to be changed for production
                       user.personAccount.businessId ?? '',
                     );
                     context.read<BankCardsCubit>().createVirtualCard(card);

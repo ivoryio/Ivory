@@ -20,7 +20,7 @@ enum BankCardStatus {
   STOLEN
 }
 
-//These card types are from Solaris Documentation. For future use
+// TODO These card types are from Solaris Documentation. For future use
 // enum CardType {
 //   MASTERCARD_DEBIT,
 //   MASTERCARD_BUSINESS_DEBIT,
@@ -175,7 +175,7 @@ class BankCardRepresentation {
 String createCardToJson(CreateBankCard data) => json.encode(data.toJson());
 
 class CreateBankCard {
-  // late String line1;
+  // late String line1; // TODO
   late String line2;
   BankCardType type;
   String businessId;
@@ -195,7 +195,7 @@ class CreateBankCard {
   }
 
   Map<String, dynamic> toJson() => {
-        // "line_1": line1,
+        // "line_1": line1, // TODO
         "line_2": line2,
         "type": type.name,
         "business_id": businessId,
