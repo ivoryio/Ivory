@@ -127,7 +127,7 @@ class CardList extends StatelessWidget {
                 String cardNumber =
                     card.representation?.maskedPan ?? emptyStringValue;
                 String cardHolder =
-                    card.representation?.line1 ?? emptyStringValue;
+                    card.representation?.line2 ?? emptyStringValue;
                 String cardExpiry =
                     card.representation?.formattedExpirationDate ??
                         emptyStringValue;

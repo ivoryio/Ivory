@@ -141,11 +141,13 @@ BankCardStatus getCardStatus(String status) {
 class BankCardRepresentation {
   BankCardRepresentation({
     this.line1,
+    this.line2,
     this.maskedPan,
     this.formattedExpirationDate,
   });
 
   final String? line1;
+  final String? line2;
   final String? maskedPan;
   final String? formattedExpirationDate;
 
@@ -157,12 +159,14 @@ class BankCardRepresentation {
   factory BankCardRepresentation.fromJson(Map<String, dynamic> json) =>
       BankCardRepresentation(
         line1: json["line_1"],
+        line2: json["line_2"],
         maskedPan: json["masked_pan"],
         formattedExpirationDate: json["formatted_expiration_date"],
       );
 
   Map<String, dynamic> toJson() => {
         "line_1": line1,
+        "line_2": line2,
         "masked_pan": maskedPan,
         "formatted_expiration_date": formattedExpirationDate,
       };
@@ -171,7 +175,8 @@ class BankCardRepresentation {
 String createCardToJson(CreateBankCard data) => json.encode(data.toJson());
 
 class CreateBankCard {
-  late String line1;
+  // late String line1;
+  late String line2;
   BankCardType type;
   String businessId;
   late String reference;
@@ -182,12 +187,16 @@ class CreateBankCard {
     this.type,
     this.businessId,
   ) {
-    line1 = '$firstName/$lastName'.toUpperCase();
+    if (firstName.length > 21) {
+      firstName = firstName.substring(0, 21);
+    }
+    line2 = firstName.toUpperCase();
     reference = const Uuid().v4().replaceAll('-', '');
   }
 
   Map<String, dynamic> toJson() => {
-        "line_1": line1,
+        // "line_1": line1,
+        "line_2": line2,
         "type": type.name,
         "business_id": businessId,
         "reference": reference,

@@ -52,7 +52,8 @@ class CardDetailsScreen extends StatelessWidget {
                       children: [
                         BankCardWidget(
                           cardNumber: state.card!.representation!.maskedPan!,
-                          cardHolder: state.card!.representation!.line1!,
+                          cardHolder: state.card!.representation!.line2 ??
+                              'data missing',
                           cardExpiry: state
                               .card!.representation!.formattedExpirationDate!,
                           isViewable: false,
