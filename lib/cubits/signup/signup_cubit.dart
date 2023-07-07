@@ -114,29 +114,54 @@ class SignupCubit extends Cubit<SignupState> {
     emit(const SignupLoading());
 
     try {
-      await signupService.confirmCognitoAccount(
-          email: email, emailConfirmationCode: emailConfirmationCode);
+      bool confirmed = await signupService.confirmCognitoAccount(
+        email: email,
+        emailConfirmationCode: emailConfirmationCode,
+      );
+      if (confirmed == false) {
+        emit(
+          SignupGdprConsentComplete(
+            personId: personId,
+            email: email,
+            firstName: firstName,
+            lastName: lastName,
+            phoneNumber: phoneNumber,
+            passcode: passcode,
+            errorMessage:
+                'Failed to confirm email, please enter the code again!',
+          ),
+        );
+      }
 
-      User? user = await authService.login(email, passcode);
+      User? user = await authService.login(
+        email,
+        passcode,
+      );
 
       if (user == null) {
         throw Exception("Failed to login");
       }
 
-      PersonService personService = PersonService(user: user);
+      PersonService personService = PersonService(
+        user: user,
+      );
 
-      CreateDeviceConsentResponse? createdConsent =
-          await DeviceService(user: user).createDeviceConsent();
+      CreateDeviceConsentResponse? createdConsent = await DeviceService(
+        user: user,
+      ).createDeviceConsent();
 
       if (createdConsent != null) {
-        await DeviceUtilService.saveDeviceConsentId(createdConsent.id);
+        await DeviceUtilService.saveDeviceConsentId(
+          createdConsent.id,
+        );
       }
 
       await DeviceService(user: user)
           .createDeviceActivity(DeviceActivityType.CONSENT_PROVIDED);
 
-      String? deviceFingerPrint =
-          await DeviceUtilService.getDeviceFingerprint(createdConsent!.id);
+      String? deviceFingerPrint = await DeviceUtilService.getDeviceFingerprint(
+        createdConsent!.id,
+      );
       if (deviceFingerPrint == null) {
         throw Exception("Device fingerprint not found");
       }
@@ -188,9 +213,7 @@ class SignupCubit extends Cubit<SignupState> {
         lastName: lastName,
       ));
     } catch (e) {
-      emit(SignupError(
-        message: e.toString(),
-      ));
+      log(e.toString());
     }
   }
 

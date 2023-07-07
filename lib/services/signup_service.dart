@@ -1,4 +1,3 @@
-
 import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 
 import '../config.dart';
@@ -36,7 +35,7 @@ class CognitoSignupService {
     }
   }
 
-  Future<void> confirmCognitoAccount({
+  Future<bool> confirmCognitoAccount({
     required String email,
     required String emailConfirmationCode,
   }) async {
@@ -48,8 +47,11 @@ class CognitoSignupService {
 
       CognitoUser user = CognitoUser(email, userPool);
 
-      await user.confirmRegistration(emailConfirmationCode);
+      return await user.confirmRegistration(emailConfirmationCode);
     } catch (e) {
+      if (e is CognitoClientException && e.code == 'CodeMismatchException') {
+        return false;
+      }
       throw Exception("Failed to confirm Cognito account");
     }
   }

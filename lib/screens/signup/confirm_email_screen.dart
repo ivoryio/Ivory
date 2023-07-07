@@ -59,10 +59,21 @@ class SignupConfirmEmailScreen extends StatelessWidget {
                   ),
                 ),
                 PlatformTextInput(
+                  hintText: "ex. 123456",
                   controller: emailConfirmationInputController,
-                  validator: (value) => {},
+                  keyboardType: TextInputType.phone,
                   onChanged: (value) => {},
+                  validator: (value) {},
                 ),
+                if (previousState.errorMessage != null)
+                  Text(
+                    previousState.errorMessage!,
+                    style: const TextStyle(
+                      color: Colors.red,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
               ],
             ),
             Column(

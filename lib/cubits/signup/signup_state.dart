@@ -11,6 +11,7 @@ abstract class SignupState extends Equatable {
   final String? personId;
   final User? user;
   final int? startTimer;
+  final String? errorMessage;
 
   const SignupState({
     this.user,
@@ -23,6 +24,7 @@ abstract class SignupState extends Equatable {
     this.passcode,
     this.token,
     this.startTimer,
+    this.errorMessage,
   });
 
   @override
@@ -85,6 +87,7 @@ class SignupGdprConsentComplete extends SignupState {
     required String email,
     required String firstName,
     required String lastName,
+    String? errorMessage,
   }) : super(
           phoneNumber: phoneNumber,
           passcode: passcode,
@@ -92,6 +95,7 @@ class SignupGdprConsentComplete extends SignupState {
           firstName: firstName,
           lastName: lastName,
           personId: personId,
+          errorMessage: errorMessage,
         );
 }
 
