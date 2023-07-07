@@ -55,10 +55,10 @@ class _CountdownScreenState extends State<CountdownScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var state = context.read<SignupCubit>().state;
-    if (state.user == null) {
-      log('User is null');
-    }
+    // var state = context.read<SignupCubit>().state;
+    // if (state.user == null) {
+    //   log('User is null');
+    // }
     int minutes = _start ~/ 60;
     int seconds = _start % 60;
 
@@ -84,16 +84,26 @@ class _CountdownScreenState extends State<CountdownScreen> {
                     fontSize: 50,
                   ),
                 ),
+              if (_start != 0)
+                const SizedBox(
+                  height: 64,
+                ),
+              if (_start != 0)
+                const Text(
+                  'Almost there!',
+                ),
+              if (_start != 0)
+                const Text('Your personalized experience is being prepared.'),
               if (_start == 0)
                 SizedBox(
                   width: double.infinity,
                   child: PrimaryButton(
                     text: "Let's get started!",
                     onPressed: () {
-                      context.read<SignupCubit>().createAccount(
-                            state.user!,
-                          );
-                      context.go(landingRoute.path);
+                      // context.read<SignupCubit>().createAccount(
+                      //       state.user!,
+                      //     );
+                      // context.go(landingRoute.path);
                     },
                   ),
                 ),
