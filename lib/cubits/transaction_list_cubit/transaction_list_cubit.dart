@@ -43,6 +43,9 @@ class TransactionListCubit extends Cubit<TransactionListState> {
                     .contains(_checkSearchTerm(searchTerm)) ||
                 transaction.recipientName!
                     .toLowerCase()
+                    .contains(_checkSearchTerm(searchTerm)) ||
+                transaction.senderName!
+                    .toLowerCase()
                     .contains(_checkSearchTerm(searchTerm)),
           )
           .toList();

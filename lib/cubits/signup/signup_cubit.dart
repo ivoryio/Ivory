@@ -57,7 +57,6 @@ class SignupCubit extends Cubit<SignupState> {
         firstName: firstName,
         lastName: lastName,
         passcode: passcode,
-        // accountId: createPersonResponse.accountId,
         personId: createPersonResponse.personId,
       );
       emit(SignupBasicInfoComplete(
