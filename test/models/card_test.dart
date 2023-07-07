@@ -11,6 +11,7 @@ void main() {
         "type": BankCardType.VISA_BUSINESS_DEBIT.name,
         "representation": {
           "line_1": "John Doe",
+          "line_2": null,
           "masked_pan": "**** **** **** 1234",
           "formatted_expiration_date": "12/25"
         }
@@ -23,6 +24,7 @@ void main() {
       expect(card.status, BankCardStatus.ACTIVE);
       expect(card.type, BankCardType.VISA_BUSINESS_DEBIT);
       expect(card.representation?.line1, "John Doe");
+      expect(card.representation?.line2, null);
       expect(card.representation?.maskedPan, "**** **** **** 1234");
       expect(card.representation?.formattedExpirationDate, "12/25");
 
@@ -33,7 +35,7 @@ void main() {
 
     test('fromRawJson/toRawJson', () {
       const String rawJsonData =
-          '{"id":"card_123","account_id":"account_123","status":"ACTIVE","type":"VISA_BUSINESS_DEBIT","representation":{"line_1":"John Doe","masked_pan":"**** **** **** 1234","formatted_expiration_date":"12/25"}}';
+          '{"id":"card_123","account_id":"account_123","status":"ACTIVE","type":"VISA_BUSINESS_DEBIT","representation":{"line_1":"John Doe","line_2":null,"masked_pan":"**** **** **** 1234","formatted_expiration_date":"12/25"}}';
 
       // Test fromRawJson
       final card = BankCard.fromRawJson(rawJsonData);
@@ -42,6 +44,7 @@ void main() {
       expect(card.status, BankCardStatus.ACTIVE);
       expect(card.type, BankCardType.VISA_BUSINESS_DEBIT);
       expect(card.representation?.line1, "John Doe");
+      expect(card.representation?.line2, null);
       expect(card.representation?.maskedPan, "**** **** **** 1234");
       expect(card.representation?.formattedExpirationDate, "12/25");
 
@@ -91,7 +94,7 @@ void main() {
   group('BankCardRepresentation', () {
     test('fromRawJson/toRawJson', () {
       const String rawJsonData =
-          '{"line_1":"John Doe","masked_pan":"**** **** **** 1234","formatted_expiration_date":"12/25"}';
+          '{"line_1":"John Doe","line_2":null,"masked_pan":"**** **** **** 1234","formatted_expiration_date":"12/25"}';
 
       // Test fromRawJson
       final representation = BankCardRepresentation.fromRawJson(rawJsonData);

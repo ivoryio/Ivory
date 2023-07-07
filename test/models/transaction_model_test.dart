@@ -17,6 +17,7 @@ void main() {
         bookingDate: '2022-01-01',
         valutaDate: '2022-01-01',
         metaInfo: 'meta1',
+        recordedAt: DateTime.now(),
       );
 
       var json = transaction.toJson();
@@ -36,10 +37,13 @@ void main() {
       expect(fromJson.bookingDate, equals(transaction.bookingDate));
       expect(fromJson.valutaDate, equals(transaction.valutaDate));
       expect(fromJson.metaInfo, equals(transaction.metaInfo));
+      expect(fromJson.recordedAt, equals(transaction.recordedAt));
     });
 
     test('fromJson and toJson should work correctly with null fields', () {
-      var transaction = Transaction();
+      var transaction = Transaction(
+        recordedAt: DateTime.now(),
+      );
 
       var json = transaction.toJson();
       var fromJson = Transaction.fromJson(json);
@@ -56,6 +60,7 @@ void main() {
       expect(fromJson.bookingDate, isNull);
       expect(fromJson.valutaDate, isNull);
       expect(fromJson.metaInfo, isNull);
+      expect(fromJson.recordedAt, equals(transaction.recordedAt));
     });
   });
 }
