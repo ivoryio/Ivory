@@ -196,7 +196,7 @@ class _SignupFormState extends State<SignupForm> {
                 PlatformTextInput(
                   textLabel: "Passcode",
                   hintText: "e.g 123456",
-                  keyboardType: TextInputType.number,
+                  keyboardType: TextInputType.phone,
                   onChanged: (value) {
                     setState(() {
                       _inputPassword = value;
@@ -205,6 +205,9 @@ class _SignupFormState extends State<SignupForm> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your passcode';
+                    }
+                    if (!Validator.isValidPasscode(value)) {
+                      return 'Please enter a valid passcode, with at least 6 digits';
                     }
                     return null;
                   },

@@ -3,6 +3,10 @@ class Validator {
     return RegexValidator.emailAddress.hasMatch(email);
   }
 
+  static isValidPasscode(String passcode) {
+    return passcode.length >= 6;
+  }
+
   static isValidIban(String iban) {
     String valueWithoutSpaces = iban.replaceAll(" ", "");
     return RegexValidator.iban.hasMatch(valueWithoutSpaces);
