@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_switch/flutter_switch.dart';
@@ -209,16 +211,13 @@ class __CardDetailsOptionsState extends State<_CardDetailsOptions> {
         ],
       ),
     ];
-    return Container(
-      height: (MediaQuery.of(context).size.height * 0.8) - 174,
-      child: ListView.separated(
-        separatorBuilder: (context, index) => const SizedBox(height: 0),
-        itemCount: optionWidgets.length,
-        itemBuilder: (context, index) => optionWidgets[index],
-        physics: const AlwaysScrollableScrollPhysics(),
-        shrinkWrap: true,
-        scrollDirection: Axis.vertical,
-      ),
+    return ListView.separated(
+      separatorBuilder: (context, index) => const SizedBox(height: 0),
+      itemCount: optionWidgets.length,
+      itemBuilder: (context, index) => optionWidgets[index],
+      physics: const ClampingScrollPhysics(),
+      shrinkWrap: true,
+      scrollDirection: Axis.vertical,
     );
   }
 }
