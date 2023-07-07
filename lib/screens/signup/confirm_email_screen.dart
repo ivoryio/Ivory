@@ -4,7 +4,6 @@ import 'package:solarisdemo/themes/default_theme.dart';
 import 'package:solarisdemo/widgets/spaced_column.dart';
 
 import '../../cubits/signup/signup_cubit.dart';
-import '../../widgets/button.dart';
 import '../../widgets/platform_text_input.dart';
 import '../../widgets/screen.dart';
 
@@ -32,7 +31,7 @@ class SignupConfirmEmailScreen extends StatelessWidget {
             vertical: defaultScreenVerticalPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SpacedColumn(
               space: 16,
@@ -62,7 +61,21 @@ class SignupConfirmEmailScreen extends StatelessWidget {
                   hintText: "ex. 123456",
                   controller: emailConfirmationInputController,
                   keyboardType: TextInputType.phone,
-                  onChanged: (value) => {},
+                  onChanged: (value) => {
+                    if (value.length == 6)
+                      {
+                        context.read<SignupCubit>().confirmEmail(
+                              personId: previousState.personId!,
+                              phoneNumber: phoneNumber,
+                              emailConfirmationCode:
+                                  emailConfirmationInputController.text,
+                              passcode: passcode,
+                              email: email,
+                              firstName: firstName,
+                              lastName: lastName,
+                            )
+                      }
+                  },
                   validator: (value) {},
                 ),
                 if (previousState.errorMessage != null)
@@ -76,28 +89,6 @@ class SignupConfirmEmailScreen extends StatelessWidget {
                   ),
               ],
             ),
-            Column(
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  child: PrimaryButton(
-                    text: "Confirm",
-                    onPressed: () async {
-                      context.read<SignupCubit>().confirmEmail(
-                            personId: previousState.personId!,
-                            phoneNumber: phoneNumber,
-                            emailConfirmationCode:
-                                emailConfirmationInputController.text,
-                            passcode: passcode,
-                            email: email,
-                            firstName: firstName,
-                            lastName: lastName,
-                          );
-                    },
-                  ),
-                ),
-              ],
-            )
           ],
         ),
       ),
