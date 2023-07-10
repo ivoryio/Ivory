@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:solarisdemo/router/routing_constants.dart';
 
 import '../../cubits/signup/signup_cubit.dart';
@@ -19,19 +20,40 @@ class CountdownScreen extends StatefulWidget {
   _CountdownScreenState createState() => _CountdownScreenState();
 }
 
-class _CountdownScreenState extends State<CountdownScreen> {
+class _CountdownScreenState extends State<CountdownScreen>
+    with WidgetsBindingObserver {
   Timer? _timer;
   int _start = 3 * 60; // 3 minutes in seconds
 
   @override
   void initState() {
     super.initState();
-    startTimer();
+    WidgetsBinding.instance.addObserver(this);
+    restoreTimer();
+  }
+
+  Future<void> restoreTimer() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var endTime = prefs.getInt('signup_countdown_end_time');
+    if (endTime != null) {
+      _start = endTime - DateTime.now().millisecondsSinceEpoch ~/ 1000;
+      if (_start > 0) {
+        startTimer();
+      } else {
+        setState(() {
+          _start = 0;
+        });
+        prefs.remove('signup_countdown_end_time');
+      }
+    } else {
+      startTimer();
+    }
   }
 
   @override
   void dispose() {
     _timer?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -43,14 +65,31 @@ class _CountdownScreenState extends State<CountdownScreen> {
         if (_start == 0) {
           setState(() {
             timer.cancel();
+            saveEndTime(null);
           });
         } else {
           setState(() {
             _start--;
+            saveEndTime(DateTime.now().millisecondsSinceEpoch ~/ 1000 + _start);
           });
         }
       },
     );
+  }
+
+  Future<void> saveEndTime(int? endTime) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt('signup_countdown_end_time', endTime!);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      restoreTimer();
+    } else if (state == AppLifecycleState.paused) {
+      _timer?.cancel();
+    }
   }
 
   @override
