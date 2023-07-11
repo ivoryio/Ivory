@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:solarisdemo/cubits/card_details_cubit/card_details_cubit.dart';
 import 'package:solarisdemo/cubits/card_details_cubit/card_details_state.dart';
+import 'package:solarisdemo/screens/wallet/card_details_activation_success_screen.dart';
 import 'package:solarisdemo/services/card_service.dart';
 import 'package:solarisdemo/widgets/spaced_column.dart';
 
@@ -17,6 +18,8 @@ import '../../widgets/button.dart';
 import '../../widgets/card_widget.dart';
 import '../../widgets/dialog.dart';
 import '../../widgets/screen.dart';
+import 'card_details_choose_pin_screen.dart';
+import 'card_details_confirm_pin_screen.dart';
 import 'card_details_info_screen.dart';
 import 'card_details_main_screen.dart';
 
@@ -38,13 +41,22 @@ class CardDetailsScreen extends StatelessWidget {
       child: BlocBuilder<BankCardDetailsCubit, BankCardDetailsState>(
         builder: (context, state) {
           if (state is BankCardDetailsLoadingState) {
-            return const LoadingScreen(title: 'Card details');
+            return const LoadingScreen(title: 'Wallet');
           }
           if (state is BankCardDetailsLoadedState) {
             return const CardDetailsMainScreen();
           }
           if (state is BankCardDetailsInfoState) {
             return const BankCardDetailsInfoScreen();
+          }
+          if (state is BankCardDetailsChoosePinState) {
+            return const BankCardDetailsChoosePinScreen();
+          }
+          if (state is BankCardDetailsConfirmPinState) {
+            return const BankCardDetailsConfirmPinScreen();
+          }
+          if (state is BankCardDetailsActivationSuccessState) {
+            return const BankCardDetailsActivationSuccessScreen();
           }
           if (state is BankCardDetailsErrorState) {
             return ErrorScreen(
@@ -53,7 +65,7 @@ class CardDetailsScreen extends StatelessWidget {
             );
           }
 
-          return const LoadingScreen(title: 'Card details');
+          return const LoadingScreen(title: 'Wallet');
         },
       ),
     );

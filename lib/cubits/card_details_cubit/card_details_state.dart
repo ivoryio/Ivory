@@ -37,8 +37,8 @@ class BankCardDetailsConfirmPinState extends BankCardDetailsState {
   const BankCardDetailsConfirmPinState() : super();
 }
 
-class BankCardDetailsSuccessState extends BankCardDetailsState {
-  const BankCardDetailsSuccessState() : super();
+class BankCardDetailsActivationSuccessState extends BankCardDetailsState {
+  const BankCardDetailsActivationSuccessState() : super();
 }
 
 class BankCardDetailsErrorState extends BankCardDetailsState {
