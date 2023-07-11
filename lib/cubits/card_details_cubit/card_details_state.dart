@@ -25,6 +25,22 @@ class BankCardDetailsLoadedState extends BankCardDetailsState {
       : super(card: card);
 }
 
+class BankCardDetailsInfoState extends BankCardDetailsState {
+  const BankCardDetailsInfoState() : super();
+}
+
+class BankCardDetailsChoosePinState extends BankCardDetailsState {
+  const BankCardDetailsChoosePinState() : super();
+}
+
+class BankCardDetailsConfirmPinState extends BankCardDetailsState {
+  const BankCardDetailsConfirmPinState() : super();
+}
+
+class BankCardDetailsSuccessState extends BankCardDetailsState {
+  const BankCardDetailsSuccessState() : super();
+}
+
 class BankCardDetailsErrorState extends BankCardDetailsState {
   final String message;
 

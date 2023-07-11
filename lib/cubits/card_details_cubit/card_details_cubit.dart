@@ -44,4 +44,12 @@ class BankCardDetailsCubit extends Cubit<BankCardDetailsState> {
       emit(BankCardDetailsErrorState(e.toString()));
     }
   }
+
+  Future<void> initializeActivation() async {
+    emit(const BankCardDetailsInfoState());
+  }
+  
+  Future<void> function2() async {}
+  Future<void> function3() async {}
+  Future<void> function4() async {}
 }

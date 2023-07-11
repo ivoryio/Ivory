@@ -13,12 +13,9 @@ import '../../models/bank_card.dart';
 import '../../models/user.dart';
 import '../../router/routing_constants.dart';
 import '../../themes/default_theme.dart';
-import '../../widgets/button.dart';
 import '../../widgets/card_widget.dart';
 import '../../widgets/dialog.dart';
 import '../../widgets/screen.dart';
-import 'card_details_info_screen.dart';
-import 'card_details_main_screen.dart';
 
 class CardDetailsScreen extends StatelessWidget {
   final BankCard card;
@@ -41,10 +38,35 @@ class CardDetailsScreen extends StatelessWidget {
             return const LoadingScreen(title: 'Card details');
           }
           if (state is BankCardDetailsLoadedState) {
-            return const CardDetailsMainScreen();
-          }
-          if (state is BankCardDetailsInfoState) {
-            return const BankCardDetailsInfoScreen();
+            return Screen(
+              scrollPhysics: const NeverScrollableScrollPhysics(),
+              title: cardDetailsRoute.title,
+              centerTitle: true,
+              hideBackButton: false,
+              hideBottomNavbar: false,
+              child: Padding(
+                padding: defaultScreenPadding,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SpacedColumn(
+                      space: 20,
+                      children: [
+                        BankCardWidget(
+                          cardNumber: state.card!.representation!.maskedPan!,
+                          cardHolder: state.card!.representation!.line2 ??
+                              'data missing',
+                          cardExpiry: state
+                              .card!.representation!.formattedExpirationDate!,
+                          isViewable: false,
+                        ),
+                        _CardDetailsOptions(card: state.card ?? card),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
           }
           if (state is BankCardDetailsErrorState) {
             return ErrorScreen(
