@@ -1,90 +1,63 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 // ignore: library_prefixes
-import 'package:solarisdemo/main.dart' as MyApp;
 import 'package:solarisdemo/router/routing_constants.dart';
 import 'package:solarisdemo/screens/landing/landing_screen.dart';
 import 'package:solarisdemo/screens/login/login_screen.dart';
-import 'package:solarisdemo/widgets/button.dart';
-import 'package:solarisdemo/router/router.dart';
-import 'package:solarisdemo/widgets/screen.dart';
+import 'package:solarisdemo/services/auth_service.dart';
 // package:flutter_tools/src/test/integration_test_device.dart
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   testWidgets('Login Interface Test', (WidgetTester tester) async {
     //Arrange
+    final authCubit = AuthCubit(authService: AuthService());
+
     final goRouter = GoRouter(
       routes: [
         GoRoute(
-            path: landingRoute.path,
-            name: landingRoute.name,
-            pageBuilder: (context, state) => const MaterialPage<void>(child: LandingScreen()), // your Screen widget
+          path: landingRoute.path,
+          name: landingRoute.name,
+          pageBuilder: (context, state) => MaterialPage<void>(
+            child: BlocProvider.value(
+              value: authCubit,
+              child: const LandingScreen(),
             ),
+          ),
+        ),
         GoRoute(
           path: loginRoute.path,
           name: loginRoute.name,
-          pageBuilder: (context, state) => const MaterialPage<void>(child: LoginScreen()), // your Screen widget
+          pageBuilder: (context, state) => MaterialPage<void>(
+            child: BlocProvider.value(
+              value: authCubit,
+              child: const LoginScreen(),
+            ),
+          ),
         ),
       ],
+      initialLocation: landingRoute.path,
     );
     await tester.pumpWidget(
       MaterialApp.router(
         routerDelegate: goRouter.routerDelegate,
         routeInformationParser: goRouter.routeInformationParser,
         routeInformationProvider: goRouter.routeInformationProvider,
-        
       ),
     );
-    await tester.pumpWidget(const MyApp.MyApp());
-    await tester.pumpWidget(const MaterialApp(
-      home: LandingScreen(),
 
-    ));
-    // await tester.pumpWidget(MaterialApp.router(
-    //   routeInformationParser: goRouter.routeInformationParser,
-    //   routerDelegate: goRouter.routerDelegate,
-    // ));
-
-    
-    //Act
-    //Finder loginButton = find.widgetWithText(Button, 'Login');
-    Finder loginButton = find.text("Manage");
-
-   //print('aici e printul $loginButton');
-
+    Finder loginButton = find.text('Login');
     await tester.tap(loginButton);
     await tester.pumpAndSettle();
 
-    //Assert
-    expect(loginButton, findsOneWidget);
+    print('aici e printul $loginButton');
+
+    // Check if the current page is the login page
+    expect(goRouter.location, equals(loginRoute.path));
   });
-
-  // Build the app
-
-  // // Find the login input fields and submit button
-  // final loginButton = find.byKey(Key('Login'));
-  // //final loginButton = find.byType('button');
-
-  // await tester.tap(loginButton);
-  // await tester.pump();
-
-  // final emailField = find.byKey(Key('email_field'));
-  // final passwordField = find.byKey(Key('password_field'));
-
-  // // Enter test values in the input fields
-  // await tester.enterText(emailField, 'ilie.lupu@thinslices.com');
-  // await tester.enterText(passwordField, '123456');
-
-  // // Tap the login button
-  // // await tester.tap(loginButton);
-  // // await tester.pump();
-
-  // // Check if the login is successful
-  // expect(find.text('Welcome'), findsOneWidget);
-  // expect(find.text('test@example.com'), findsOneWidget);
-  // });
 }
 
 class IntegrationTestWidgetsFlutterBinding {
