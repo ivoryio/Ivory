@@ -12,6 +12,8 @@ class BankCardDetailsChoosePinScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final state = context.read<BankCardDetailsCubit>().state;
+
     return Screen(
       scrollPhysics: const NeverScrollableScrollPhysics(),
       title: 'BankDetailsChoosePinScreen',
@@ -141,7 +143,9 @@ class BankCardDetailsChoosePinScreen extends StatelessWidget {
                     text: "Insert 4 digit for PIN",
                     onPressed: () {
                       // context.read<BankCardDetailsCubit>().initializeActivation();
-                      context.read<BankCardDetailsCubit>().confirmPIN();
+                      context
+                          .read<BankCardDetailsCubit>()
+                          .confirmPIN(state.card!);
                     },
                   ),
                 ),

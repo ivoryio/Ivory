@@ -49,13 +49,10 @@ class BankCardDetailsActivationSuccessScreen extends StatelessWidget {
                 ),
               ],
             ),
-            const BankCardWidget(
-              cardNumber:
-                  '0000 0000 0000 0000', // state.card!.representation!.maskedPan!,
-              cardHolder:
-                  'cardHolder', // state.card!.representation!.line2 ?? 'data missing',
-              cardExpiry:
-                  'cardExpiry', // state.card!.representation!.formattedExpirationDate!,
+            BankCardWidget(
+              cardNumber: state.card!.representation!.maskedPan!,
+              cardHolder: state.card!.representation!.line2 ?? 'data missing',
+              cardExpiry: state.card!.representation!.formattedExpirationDate!,
               isViewable: false,
             ),
             SizedBox(
@@ -63,7 +60,7 @@ class BankCardDetailsActivationSuccessScreen extends StatelessWidget {
               child: PrimaryButton(
                 text: 'Back to "Card"',
                 onPressed: () {
-                  context.read<BankCardDetailsCubit>().backToCard();
+                  context.read<BankCardDetailsCubit>().loadCard(state.card!.id);
                 },
               ),
             ),

@@ -18,6 +18,7 @@ import '../../widgets/button.dart';
 import '../../widgets/card_widget.dart';
 import '../../widgets/dialog.dart';
 import '../../widgets/screen.dart';
+import 'card_activated_screen.dart';
 import 'card_details_choose_pin_screen.dart';
 import 'card_details_confirm_pin_screen.dart';
 import 'card_details_info_screen.dart';
@@ -44,7 +45,7 @@ class CardDetailsScreen extends StatelessWidget {
             return const LoadingScreen(title: 'Wallet');
           }
           if (state is BankCardDetailsLoadedState) {
-            return const CardDetailsMainScreen();
+            return const BankCardDetailsMainScreen();
           }
           if (state is BankCardDetailsInfoState) {
             return const BankCardDetailsInfoScreen();
@@ -57,6 +58,9 @@ class CardDetailsScreen extends StatelessWidget {
           }
           if (state is BankCardDetailsActivationSuccessState) {
             return const BankCardDetailsActivationSuccessScreen();
+          }
+          if (state is BankCardActivatedState) {
+            return const BankCardActivatedScreen();
           }
           if (state is BankCardDetailsErrorState) {
             return ErrorScreen(

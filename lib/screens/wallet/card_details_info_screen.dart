@@ -13,6 +13,8 @@ class BankCardDetailsInfoScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final state = context.read<BankCardDetailsCubit>().state;
+
     return Screen(
       scrollPhysics: const NeverScrollableScrollPhysics(),
       title: 'BankDetailsInfoScreen',
@@ -65,7 +67,7 @@ class BankCardDetailsInfoScreen extends StatelessWidget {
               child: PrimaryButton(
                 text: "Choose PIN",
                 onPressed: () {
-                  context.read<BankCardDetailsCubit>().choosePin();
+                  context.read<BankCardDetailsCubit>().choosePin(state.card!);
                 },
               ),
             ),

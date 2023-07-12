@@ -29,6 +29,7 @@ class BankCardWidget extends StatelessWidget {
 
     return SizedBox(
       width: double.infinity,
+      height: 202,
       child: Card(
         elevation: 0,
         margin: EdgeInsets.zero,

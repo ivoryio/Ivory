@@ -13,6 +13,8 @@ class BankCardDetailsConfirmPinScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final state = context.read<BankCardDetailsCubit>().state;
+
     return Screen(
       scrollPhysics: const NeverScrollableScrollPhysics(),
       title: 'BankDetailsConfirmPinScreen',
@@ -72,7 +74,9 @@ class BankCardDetailsConfirmPinScreen extends StatelessWidget {
                   child: PrimaryButton(
                     text: "Your PIN should match",
                     onPressed: () {
-                      context.read<BankCardDetailsCubit>().successActivation();
+                      context
+                          .read<BankCardDetailsCubit>()
+                          .successActivation(state.card!);
                     },
                   ),
                 ),

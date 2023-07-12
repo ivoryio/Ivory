@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solarisdemo/services/card_service.dart';
+import 'package:solarisdemo/widgets/text_currency_value.dart';
 
 import '../../models/bank_card.dart';
 import 'card_details_state.dart';
@@ -45,23 +46,23 @@ class BankCardDetailsCubit extends Cubit<BankCardDetailsState> {
     }
   }
 
-  Future<void> initializeActivation() async {
-    emit(const BankCardDetailsInfoState());
+  Future<void> initializeActivation(BankCard card) async {
+    emit(BankCardDetailsInfoState(card: card));
   }
 
-  Future<void> choosePin() async {
-    emit(const BankCardDetailsChoosePinState());
+  Future<void> choosePin(BankCard card) async {
+    emit(BankCardDetailsChoosePinState(card: card));
   }
 
-  Future<void> confirmPIN() async {
-    emit(const BankCardDetailsConfirmPinState());
+  Future<void> confirmPIN(BankCard card) async {
+    emit(BankCardDetailsConfirmPinState(card: card));
   }
 
-  Future<void> successActivation() async {
-    emit(const BankCardDetailsActivationSuccessState());
+  Future<void> successActivation(BankCard card) async {
+    emit(BankCardDetailsActivationSuccessState(card: card));
   }
 
-  Future<void> backToCard() async {
-    emit(const BankCardDetailsInfoState());
+  Future<void> goToActivatedScreen() async {
+    emit(const BankCardActivatedState());
   }
 }

@@ -26,19 +26,26 @@ class BankCardDetailsLoadedState extends BankCardDetailsState {
 }
 
 class BankCardDetailsInfoState extends BankCardDetailsState {
-  const BankCardDetailsInfoState() : super();
+  const BankCardDetailsInfoState({required BankCard card}) : super(card: card);
 }
 
 class BankCardDetailsChoosePinState extends BankCardDetailsState {
-  const BankCardDetailsChoosePinState() : super();
+  const BankCardDetailsChoosePinState({required BankCard card})
+      : super(card: card);
 }
 
 class BankCardDetailsConfirmPinState extends BankCardDetailsState {
-  const BankCardDetailsConfirmPinState() : super();
+  const BankCardDetailsConfirmPinState({required BankCard card})
+      : super(card: card);
 }
 
 class BankCardDetailsActivationSuccessState extends BankCardDetailsState {
-  const BankCardDetailsActivationSuccessState() : super();
+  const BankCardDetailsActivationSuccessState({required BankCard card})
+      : super(card: card);
+}
+
+class BankCardActivatedState extends BankCardDetailsState {
+  const BankCardActivatedState() : super();
 }
 
 class BankCardDetailsErrorState extends BankCardDetailsState {
