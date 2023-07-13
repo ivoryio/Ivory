@@ -13,6 +13,7 @@ class BankCardWidget extends StatelessWidget {
   final String cardNumber;
   final String cardExpiry;
   final bool? isViewable;
+  final String? cardType;
 
   const BankCardWidget({
     super.key,
@@ -21,6 +22,7 @@ class BankCardWidget extends StatelessWidget {
     required this.cardHolder,
     required this.cardNumber,
     this.isViewable = true,
+    this.cardType,
   });
 
   @override
@@ -44,7 +46,7 @@ class BankCardWidget extends StatelessWidget {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(right: 20),
+                padding: const EdgeInsets.only(right: 0),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -57,6 +59,7 @@ class BankCardWidget extends StatelessWidget {
                     ),
                     if (isPrimary) const PrimaryBankCardLabel(),
                     if (isViewable!) const EyeIcon(),
+                    if (cardType != null) CardTypeLabel(cardType: cardType!),
                   ],
                 ),
               ),
@@ -208,10 +211,52 @@ class EyeIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Icon(
-      Icons.remove_red_eye_outlined,
-      color: Colors.white,
-      size: 25,
+    return const Padding(
+      padding: EdgeInsets.only(right: 20),
+      child: Icon(
+        Icons.remove_red_eye_outlined,
+        color: Colors.white,
+        size: 25,
+      ),
+    );
+  }
+}
+
+class CardTypeLabel extends StatelessWidget {
+  final String cardType;
+
+  const CardTypeLabel({
+    super.key,
+    required this.cardType,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 89,
+      height: 26,
+      alignment: Alignment.center,
+      margin: const EdgeInsets.only(right: 0),
+      // padding: const EdgeInsets.symmetric(
+      //   horizontal: 16,
+      //   vertical: 6,
+      // ),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(1000),
+          bottomLeft: Radius.circular(1000),
+        ),
+      ),
+      child: Text(
+        cardType,
+        style: const TextStyle(
+          fontSize: 12,
+          height: 18 / 12,
+          fontWeight: FontWeight.w600,
+          color: Colors.black,
+        ),
+      ),
     );
   }
 }
