@@ -8,7 +8,6 @@ const double defaultCardHorizontalPadding = 20;
 const double defaultCardVerticalPadding = 15;
 
 class BankCardWidget extends StatelessWidget {
-  final bool isPrimary;
   final String cardHolder;
   final String cardNumber;
   final String cardExpiry;
@@ -18,7 +17,6 @@ class BankCardWidget extends StatelessWidget {
 
   const BankCardWidget({
     super.key,
-    this.isPrimary = false,
     required this.cardExpiry,
     required this.cardHolder,
     required this.cardNumber,
@@ -66,23 +64,19 @@ class BankCardWidget extends StatelessWidget {
             ),
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.only(
-                          left: defaultCardHorizontalPadding,
-                        ),
-                        child: VisaSvgIcon(),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(
+                        left: defaultCardHorizontalPadding,
                       ),
-                      if (isPrimary) const PrimaryBankCardLabel(),
-                      if (isViewable!) const EyeIcon(),
-                      if (cardType != null) CardTypeLabel(cardType: cardType!),
-                    ],
-                  ),
+                      child: VisaSvgIcon(),
+                    ),
+                    if (isViewable!) const EyeIcon(),
+                    if (cardType != null) CardTypeLabel(cardType: cardType!),
+                  ],
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(
@@ -179,37 +173,6 @@ class BankCardWidget extends StatelessWidget {
   }
 }
 
-class PrimaryBankCardLabel extends StatelessWidget {
-  const PrimaryBankCardLabel({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 10,
-        vertical: 2,
-      ),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(6),
-          bottomLeft: Radius.circular(6),
-        ),
-      ),
-      child: const Text(
-        "Primary card",
-        style: TextStyle(
-          fontSize: 12,
-          height: 16 / 12,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    );
-  }
-}
-
 class VisaSvgIcon extends StatelessWidget {
   const VisaSvgIcon({
     super.key,
@@ -255,14 +218,10 @@ class CardTypeLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 89,
-      height: 26,
-      alignment: Alignment.center,
-      margin: const EdgeInsets.only(right: 0),
-      // padding: const EdgeInsets.symmetric(
-      //   horizontal: 16,
-      //   vertical: 6,
-      // ),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 10,
+        vertical: 2,
+      ),
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
@@ -276,7 +235,6 @@ class CardTypeLabel extends StatelessWidget {
           fontSize: 12,
           height: 18 / 12,
           fontWeight: FontWeight.w600,
-          color: Colors.black,
         ),
       ),
     );

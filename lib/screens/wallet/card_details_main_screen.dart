@@ -115,7 +115,7 @@ class ActiveCard extends StatelessWidget {
               cardExpiry: state.card!.representation!.formattedExpirationDate!,
               isViewable: false,
               cardType: 'Credit card',
-              // backgroundImageFile: 'porsche_logo.png',
+              backgroundImageFile: 'porsche_logo.png',
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
