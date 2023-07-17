@@ -14,6 +14,7 @@ class BankCardWidget extends StatelessWidget {
   final String cardExpiry;
   final bool? isViewable;
   final String? cardType;
+  final String? backgroundImageFile;
 
   const BankCardWidget({
     super.key,
@@ -23,6 +24,7 @@ class BankCardWidget extends StatelessWidget {
     required this.cardNumber,
     this.isViewable = true,
     this.cardType,
+    this.backgroundImageFile,
   });
 
   @override
@@ -40,8 +42,8 @@ class BankCardWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(6),
         ),
         child: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
               begin: Alignment.bottomRight,
               end: Alignment.topLeft,
               stops: [0.0, 0.5629],
@@ -51,10 +53,12 @@ class BankCardWidget extends StatelessWidget {
               ],
               transform: GradientRotation(135 * (3.1415926 / 180.0)),
             ),
-            image: DecorationImage(
-              image: AssetImage('assets/images/porsche_logo.png'),
-              fit: BoxFit.scaleDown,
-            ),
+            image: (backgroundImageFile != null)
+                ? DecorationImage(
+                    image: AssetImage('assets/images/$backgroundImageFile'),
+                    fit: BoxFit.scaleDown,
+                  )
+                : null,
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(
