@@ -17,17 +17,18 @@ class BankCardDetailsMainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final state = context.read<BankCardDetailsCubit>().state;
 
-    return Screen(
-      scrollPhysics: const ClampingScrollPhysics(),
+    return const Screen(
+      scrollPhysics: ClampingScrollPhysics(),
       title: 'Card',
       centerTitle: true,
       hideBackButton: true,
       hideBottomNavbar: false,
       child: Padding(
         padding: defaultScreenPadding,
-        child: (state.card!.status == BankCardStatus.INACTIVE)
-            ? const InactiveCard()
-            : const ActiveCard(),
+        // child: (state.card!.status == BankCardStatus.INACTIVE)
+        //     ? const ActiveCard()
+        //     : const ActiveCard(),
+        child: ActiveCard(),
       ),
     );
   }
@@ -52,6 +53,7 @@ class InactiveCard extends StatelessWidget {
               cardHolder: state.card!.representation!.line2 ?? 'data missing',
               cardExpiry: state.card!.representation!.formattedExpirationDate!,
               isViewable: false,
+              backgroundImageFile: 'porsche_logo.png',
             ),
             SpacedColumn(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -113,6 +115,7 @@ class ActiveCard extends StatelessWidget {
               cardExpiry: state.card!.representation!.formattedExpirationDate!,
               isViewable: false,
               cardType: 'Credit card',
+              // backgroundImageFile: 'porsche_logo.png',
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
