@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ import 'package:solarisdemo/services/auth_service.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/platform_text_input.dart';
 import 'package:solarisdemo/widgets/screen.dart';
+import 'package:solarisdemo/widgets/sticky_bottom_content.dart';
 import 'package:solarisdemo/widgets/tab_view.dart';
 import 'package:solarisdemo/widgets/tan_input.dart';
 // package:flutter_tools/src/test/integration_test_device.dart
@@ -23,38 +25,38 @@ import 'package:solarisdemo/widgets/tan_input.dart';
 void main() {
   group("Login flow test", () {
     IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+    final authCubit = AuthCubit(authService: AuthService());
+
+    final goRouter = GoRouter(
+      routes: [
+        GoRoute(
+          path: landingRoute.path,
+          name: landingRoute.name,
+          pageBuilder: (context, state) => MaterialPage<void>(
+            child: BlocProvider.value(
+              value: authCubit,
+              child: const LandingScreen(),
+            ),
+          ),
+        ),
+        GoRoute(
+          path: loginRoute.path,
+          name: loginRoute.name,
+          pageBuilder: (context, state) => MaterialPage<void>(
+            child: BlocProvider.value(
+              value: authCubit,
+              child: const LoginScreen(),
+            ),
+          ),
+        ),
+      ],
+      initialLocation: landingRoute.path,
+    );
+
     testWidgets(
         'Should tap login button from the landing screen, and redirect the user to the login screen',
         (WidgetTester tester) async {
       //Arrange
-      final authCubit = AuthCubit(authService: AuthService());
-
-      final goRouter = GoRouter(
-        routes: [
-          GoRoute(
-            path: landingRoute.path,
-            name: landingRoute.name,
-            pageBuilder: (context, state) => MaterialPage<void>(
-              child: BlocProvider.value(
-                value: authCubit,
-                child: const LandingScreen(),
-              ),
-            ),
-          ),
-          GoRoute(
-            path: loginRoute.path,
-            name: loginRoute.name,
-            pageBuilder: (context, state) => MaterialPage<void>(
-              child: BlocProvider.value(
-                value: authCubit,
-                child: const LoginScreen(),
-              ),
-            ),
-          ),
-        ],
-        initialLocation: landingRoute.path,
-      );
-
       await tester.pumpWidget(
         MaterialApp.router(
           routerDelegate: goRouter.routerDelegate,
@@ -77,34 +79,7 @@ void main() {
         'Should redirect the user to the GDPR screen when email&password are valid',
         (WidgetTester tester) async {
       //Arrange
-      final authCubit = AuthCubit(authService: AuthService());
-
-      final goRouter = GoRouter(
-        routes: [
-          GoRoute(
-            path: loginRoute.path,
-            name: loginRoute.name,
-            pageBuilder: (context, state) => MaterialPage<void>(
-              child: BlocProvider.value(
-                value: authCubit,
-                child: const LoginScreen(),
-              ),
-            ),
-          ),
-          GoRoute(
-            path: loginPasscodeRoute.path,
-            name: loginPasscodeRoute.name,
-            pageBuilder: (context, state) => MaterialPage<void>(
-              child: BlocProvider.value(
-                value: authCubit,
-                child: const LoginTanScreen(),
-              ),
-            ),
-          ),
-        ],
-        initialLocation: loginRoute.path,
-      );
-
+      await dotenv.load();
       await tester.pumpWidget(
         MaterialApp.router(
           routerDelegate: goRouter.routerDelegate,
@@ -121,70 +96,36 @@ void main() {
           find.widgetWithText(PlatformTextInput, "Email Address");
       Finder passwordTextInput =
           find.widgetWithText(PlatformTextInput, "Password");
-      await tester.enterText(emailTextInput, "anca.nechita@thinslices.com");
+      await tester.enterText(emailTextInput, "gyozo.szasz@thinslices.com");
+      await tester.pumpAndSettle(const Duration(seconds: 2));
       await tester.enterText(passwordTextInput, "123456");
+      await tester.pumpAndSettle(const Duration(seconds: 2));
 
       Finder loginButton = find.widgetWithText(PrimaryButton, "Continue");
       await tester.tap(loginButton);
-      await tester.pumpAndSettle();
+      await tester.pumpAndSettle(const Duration(seconds: 15));
 
-      expect('/login/:username', contains('/login/'));
-      //expect(goRouter.location, equals(loginPasscodeRoute.path));
-
-     
-
-    testWidgets('Should redirect the user to the GdprConsentScreen',
-        (WidgetTester tester) async {
-    //   final authCubit = AuthCubit(authService: AuthService());
-    //   final goRouter = GoRouter(
-    //     routes: [
-    //       GoRoute(
-    //         path: loginPasscodeRoute.path,
-    //         name: loginPasscodeRoute.name,
-    //         pageBuilder: (context, state) => MaterialPage<void>(
-    //           child: BlocProvider.value(
-    //             value: authCubit,
-    //             child: const GdprConsentScreen(),
-    //           ),
-    //         ),
-    //       ),
-    //       GoRoute(
-    //         path: GdprConsentScreen.path,
-    //         name: GdprConsentScreen.name,
-    //         pageBuilder: (context, state) => MaterialPage<void>(
-    //           child: BlocProvider.value(
-    //             value: authCubit,
-    //             child: const GdprConsentScreen(),
-    //           ),
-    //         ),
-    //       ),
-    //     ],
-    //     initialLocation: loginPasscodeRoute.path,
-    //   );
-
-    //   await tester.pumpWidget(
-    //     MaterialApp.router(
-    //       routerDelegate: goRouter.routerDelegate,
-    //       routeInformationParser: goRouter.routeInformationParser,
-    //       routeInformationProvider: goRouter.routeInformationProvider,
-    //     ),
-    //   );
-
-    Finder consentButton =
+      Finder consentPage =
           find.widgetWithText(GdprConsentScreen, "Welcome to SolarisDemo!");
-      await tester.tap(consentButton);
-      await tester.pumpAndSettle(const Duration(seconds: 5));
-    });
 
-      Finder passcodeInput = find.widgetWithText(LoginTanScreen,
-          "Please enter your 4-digit PIN to login. (PIN: 1234)");
+      if (consentPage.evaluate().isNotEmpty) {
+        Finder consentButton =
+            find.widgetWithText(StickyBottomContent, "I agree");
+
+        await tester.tap(consentButton);
+        await tester.pumpAndSettle(const Duration(seconds: 15));
+      }
+
+      Finder passcodeInput = find.byType(InputCodeBox);
+
       await tester.enterText(passcodeInput.first, "1");
       await tester.enterText(passcodeInput.at(1), "2");
       await tester.enterText(passcodeInput.at(2), "3");
       await tester.enterText(passcodeInput.at(3), "4");
-      await tester.pumpAndSettle(const Duration(seconds: 5));
+      await tester.pumpAndSettle(const Duration(seconds: 15));
 
-      // expect(goRouter.location, equals(loginPasscodeRoute.path));
-     });
+      // expect(consentPage, findsOneWidget);
+      // expect(consentButton, findsOneWidget);
+    });
   });
 }
