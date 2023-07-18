@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solarisdemo/widgets/spaced_column.dart';
@@ -5,6 +7,7 @@ import 'package:solarisdemo/widgets/spaced_column.dart';
 import '../../cubits/card_details_cubit/card_details_cubit.dart';
 import '../../themes/default_theme.dart';
 import '../../widgets/button.dart';
+import '../../widgets/pin_field.dart';
 import '../../widgets/screen.dart';
 
 class BankCardDetailsChoosePinScreen extends StatelessWidget {
@@ -33,8 +36,8 @@ class BankCardDetailsChoosePinScreen extends StatelessWidget {
                 SpacedColumn(
                   space: 16,
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text(
+                  children: [
+                    const Text(
                       'Choose PIN',
                       style: TextStyle(
                         fontSize: 24,
@@ -42,13 +45,21 @@ class BankCardDetailsChoosePinScreen extends StatelessWidget {
                         height: 1.33,
                       ),
                     ),
-                    Text(
+                    const Text(
                       'Remember your PIN as you will use it for all future card purchases.',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w400,
                         height: 1.5,
                       ),
+                    ),
+                    PinCodeInput(
+                      onCompleted: (pin) {
+                        context.read<BankCardDetailsCubit>().choosePin(
+                              state.card!,
+                              pin,
+                            );
+                      },
                     ),
                   ],
                 )
@@ -145,7 +156,7 @@ class BankCardDetailsChoosePinScreen extends StatelessWidget {
                       // context.read<BankCardDetailsCubit>().initializeActivation();
                       context
                           .read<BankCardDetailsCubit>()
-                          .confirmPIN(state.card!);
+                          .choosePin(state.card!, "0000");
                     },
                   ),
                 ),
@@ -155,5 +166,79 @@ class BankCardDetailsChoosePinScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class PinCodeInput extends StatefulWidget {
+  final ValueChanged<String> onCompleted;
+
+  const PinCodeInput({super.key, required this.onCompleted});
+
+  @override
+  PinCodeInputState createState() => PinCodeInputState();
+}
+
+class PinCodeInputState extends State<PinCodeInput> {
+  FocusNode focusNode = FocusNode();
+  final List<TextEditingController> _controllers =
+      List.generate(4, (_) => TextEditingController());
+  final List<FocusNode> _focusNodes =
+      List<FocusNode>.generate(4, (index) => FocusNode());
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      log('Focus');
+      FocusScope.of(context).requestFocus(_focusNodes[0]);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: List<Widget>.generate(
+        _controllers.length,
+        (index) => PinField(
+          controller: _controllers[index],
+          focusNode: _focusNodes[index],
+          onChanged: (text) {
+            if (text.isNotEmpty && index < _controllers.length - 1) {
+              log('Unfocus');
+              _focusNodes[index].unfocus();
+              FocusScope.of(context).requestFocus(_focusNodes[index + 1]);
+            } else if (index == _controllers.length - 1 && text.isNotEmpty) {
+              if (!_checkPinCompleted()) {
+                print('Invalid pin');
+              } else {
+                widget.onCompleted(_controllers.map((c) => c.text).join());
+                print('Valid pin');
+              }
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  bool _checkPinCompleted() {
+    // validations here
+    var pinCode = _controllers.map((c) => c.text).join();
+    if (pinCode.length == 4 && pinCode != "0000") {
+      return true;
+    }
+    return false;
+  }
+
+  @override
+  void dispose() {
+    for (var controller in _controllers) {
+      controller.dispose();
+    }
+    for (var focusNode in _focusNodes) {
+      focusNode.dispose();
+    }
+    super.dispose();
   }
 }

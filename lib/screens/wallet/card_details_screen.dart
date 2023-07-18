@@ -47,6 +47,7 @@ class CardDetailsScreen extends StatelessWidget {
           }
           if (state is BankCardDetailsLoadedState) {
             return const BankCardDetailsMainScreen();
+            // return const BankCardDetailsChoosePinScreen();
           }
           if (state is BankCardDetailsInfoState) {
             return const BankCardDetailsInfoScreen();

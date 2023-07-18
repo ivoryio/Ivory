@@ -74,9 +74,10 @@ class BankCardDetailsConfirmPinScreen extends StatelessWidget {
                   child: PrimaryButton(
                     text: "Your PIN should match",
                     onPressed: () {
-                      context
-                          .read<BankCardDetailsCubit>()
-                          .addToAppleWallet(state.card!);
+                      context.read<BankCardDetailsCubit>().addToAppleWallet(
+                            state.card!,
+                            '1234',
+                          );
                     },
                   ),
                 ),

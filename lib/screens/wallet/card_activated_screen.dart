@@ -13,7 +13,7 @@ class BankCardActivatedScreen extends StatelessWidget {
     final state = context.read<BankCardDetailsCubit>().state;
 
     return const Screen(
-      scrollPhysics: const NeverScrollableScrollPhysics(),
+      scrollPhysics: NeverScrollableScrollPhysics(),
       title: 'Card',
       centerTitle: true,
       hideBackButton: true,

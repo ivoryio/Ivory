@@ -67,7 +67,9 @@ class BankCardDetailsInfoScreen extends StatelessWidget {
               child: PrimaryButton(
                 text: "Choose PIN",
                 onPressed: () {
-                  context.read<BankCardDetailsCubit>().choosePin(state.card!);
+                  context
+                      .read<BankCardDetailsCubit>()
+                      .startPinSetup(state.card!);
                 },
               ),
             ),

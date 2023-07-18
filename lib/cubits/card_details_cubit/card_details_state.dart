@@ -4,8 +4,9 @@ import '../../models/bank_card.dart';
 
 class BankCardDetailsState extends Equatable {
   final BankCard? card;
+  final String? pin;
 
-  const BankCardDetailsState({this.card});
+  const BankCardDetailsState({this.card, this.pin});
 
   @override
   // TODO: implement props
@@ -35,18 +36,31 @@ class BankCardDetailsChoosePinState extends BankCardDetailsState {
 }
 
 class BankCardDetailsConfirmPinState extends BankCardDetailsState {
-  const BankCardDetailsConfirmPinState({required BankCard card})
-      : super(card: card);
+  const BankCardDetailsConfirmPinState({
+    required BankCard card,
+    required pin,
+  }) : super(
+          card: card,
+          pin: pin,
+        );
 }
 
 class BankCardDetailsAppleWalletState extends BankCardDetailsState {
-  const BankCardDetailsAppleWalletState({required BankCard card})
-      : super(card: card);
+  const BankCardDetailsAppleWalletState({
+    required BankCard card,
+    required pin,
+  }) : super(
+          card: card,
+          pin: pin,
+        );
 }
 
 class BankCardDetailsActivationSuccessState extends BankCardDetailsState {
-  const BankCardDetailsActivationSuccessState({required BankCard card})
-      : super(card: card);
+  const BankCardDetailsActivationSuccessState({
+    required BankCard card,
+  }) : super(
+          card: card,
+        );
 }
 
 class BankCardActivatedState extends BankCardDetailsState {

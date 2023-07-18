@@ -50,16 +50,16 @@ class BankCardDetailsCubit extends Cubit<BankCardDetailsState> {
     emit(BankCardDetailsInfoState(card: card));
   }
 
-  Future<void> choosePin(BankCard card) async {
+  Future<void> startPinSetup(BankCard card) async {
     emit(BankCardDetailsChoosePinState(card: card));
   }
 
-  Future<void> confirmPIN(BankCard card) async {
-    emit(BankCardDetailsConfirmPinState(card: card));
+  Future<void> choosePin(BankCard card, String pin) async {
+    emit(BankCardDetailsConfirmPinState(card: card, pin: pin));
   }
 
-  Future<void> addToAppleWallet(BankCard card) async {
-    emit(BankCardDetailsAppleWalletState(card: card));
+  Future<void> addToAppleWallet(BankCard card, String pin) async {
+    emit(BankCardDetailsAppleWalletState(card: card, pin: pin));
   }
 
   Future<void> successActivation(BankCard card) async {
