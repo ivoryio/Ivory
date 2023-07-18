@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -12,13 +13,11 @@ import 'package:solarisdemo/screens/home/home_screen.dart';
 import 'package:solarisdemo/screens/landing/landing_screen.dart';
 import 'package:solarisdemo/screens/login/login_consent_screen.dart';
 import 'package:solarisdemo/screens/login/login_screen.dart';
-import 'package:solarisdemo/screens/login/login_tan_screen.dart';
 import 'package:solarisdemo/services/auth_service.dart';
+import 'package:solarisdemo/themes/default_theme.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/platform_text_input.dart';
-import 'package:solarisdemo/widgets/screen.dart';
 import 'package:solarisdemo/widgets/sticky_bottom_content.dart';
-import 'package:solarisdemo/widgets/tab_view.dart';
 import 'package:solarisdemo/widgets/tan_input.dart';
 // package:flutter_tools/src/test/integration_test_device.dart
 
@@ -49,6 +48,16 @@ void main() {
             ),
           ),
         ),
+        GoRoute(
+          path: homeRoute.path,
+          name: homeRoute.name,
+          pageBuilder: (context, state) => MaterialPage<void>(
+            child: BlocProvider.value(
+              value: authCubit,
+              child: const HomeScreen(),
+            ),
+          ),
+        )
       ],
       initialLocation: landingRoute.path,
     );
@@ -58,10 +67,19 @@ void main() {
         (WidgetTester tester) async {
       //Arrange
       await tester.pumpWidget(
-        MaterialApp.router(
-          routerDelegate: goRouter.routerDelegate,
-          routeInformationParser: goRouter.routeInformationParser,
-          routeInformationProvider: goRouter.routeInformationProvider,
+        PlatformApp.router(
+          routerConfig: goRouter,
+          material: (context, platform) => MaterialAppRouterData(
+            theme: defaultMaterialTheme,
+          ),
+          cupertino: (context, platform) => CupertinoAppRouterData(
+            theme: cupertinoTheme,
+          ),
+          localizationsDelegates: const [
+            DefaultMaterialLocalizations.delegate,
+            DefaultWidgetsLocalizations.delegate,
+            DefaultCupertinoLocalizations.delegate,
+          ],
         ),
       );
 
@@ -81,10 +99,19 @@ void main() {
       //Arrange
       await dotenv.load();
       await tester.pumpWidget(
-        MaterialApp.router(
-          routerDelegate: goRouter.routerDelegate,
-          routeInformationParser: goRouter.routeInformationParser,
-          routeInformationProvider: goRouter.routeInformationProvider,
+        PlatformApp.router(
+          routerConfig: goRouter,
+          material: (context, platform) => MaterialAppRouterData(
+            theme: defaultMaterialTheme,
+          ),
+          cupertino: (context, platform) => CupertinoAppRouterData(
+            theme: cupertinoTheme,
+          ),
+          localizationsDelegates: const [
+            DefaultMaterialLocalizations.delegate,
+            DefaultWidgetsLocalizations.delegate,
+            DefaultCupertinoLocalizations.delegate,
+          ],
         ),
       );
 
