@@ -58,6 +58,10 @@ class BankCardDetailsCubit extends Cubit<BankCardDetailsState> {
     emit(BankCardDetailsConfirmPinState(card: card));
   }
 
+  Future<void> addToAppleWallet(BankCard card) async {
+    emit(BankCardDetailsAppleWalletState(card: card));
+  }
+
   Future<void> successActivation(BankCard card) async {
     emit(BankCardDetailsActivationSuccessState(card: card));
   }

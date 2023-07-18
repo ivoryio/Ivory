@@ -19,6 +19,7 @@ import '../../widgets/card_widget.dart';
 import '../../widgets/dialog.dart';
 import '../../widgets/screen.dart';
 import 'card_activated_screen.dart';
+import 'card_details_apple_wallet_screen.dart';
 import 'card_details_choose_pin_screen.dart';
 import 'card_details_confirm_pin_screen.dart';
 import 'card_details_info_screen.dart';
@@ -55,6 +56,9 @@ class CardDetailsScreen extends StatelessWidget {
           }
           if (state is BankCardDetailsConfirmPinState) {
             return const BankCardDetailsConfirmPinScreen();
+          }
+          if (state is BankCardDetailsAppleWalletState) {
+            return const BankCardDetailsAppleWalletScreen();
           }
           if (state is BankCardDetailsActivationSuccessState) {
             return const BankCardDetailsActivationSuccessScreen();

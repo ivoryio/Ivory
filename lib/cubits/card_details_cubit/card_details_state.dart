@@ -39,6 +39,11 @@ class BankCardDetailsConfirmPinState extends BankCardDetailsState {
       : super(card: card);
 }
 
+class BankCardDetailsAppleWalletState extends BankCardDetailsState {
+  const BankCardDetailsAppleWalletState({required BankCard card})
+      : super(card: card);
+}
+
 class BankCardDetailsActivationSuccessState extends BankCardDetailsState {
   const BankCardDetailsActivationSuccessState({required BankCard card})
       : super(card: card);

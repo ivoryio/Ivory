@@ -34,9 +34,9 @@ class BankCardDetailsConfirmPinScreen extends StatelessWidget {
                 Text(
                   'Confirm PIN',
                   style: TextStyle(
-                    fontSize: 32,
+                    fontSize: 24,
                     fontWeight: FontWeight.w600,
-                    height: 1.25,
+                    height: 32 / 24,
                   ),
                 ),
                 Text(
@@ -44,7 +44,7 @@ class BankCardDetailsConfirmPinScreen extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
-                    height: 1.5,
+                    height: 24 / 16,
                   ),
                 ),
               ],
@@ -76,7 +76,7 @@ class BankCardDetailsConfirmPinScreen extends StatelessWidget {
                     onPressed: () {
                       context
                           .read<BankCardDetailsCubit>()
-                          .successActivation(state.card!);
+                          .addToAppleWallet(state.card!);
                     },
                   ),
                 ),
