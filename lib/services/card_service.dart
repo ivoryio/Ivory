@@ -41,6 +41,17 @@ class BankCardsService extends ApiService {
     }
   }
 
+  Future<dynamic> activateVirtualCard(String id) async {
+    String path = '/account/cards/$id';
+
+    try {
+      var data = await post(path, body: {id: id});
+      return data;
+    } catch (e) {
+      throw Exception("Failed to activate card");
+    }
+  }
+
   Future<BankCard> freezeBankCard(String cardId) async {
     try {
       String path = 'account/cards/$cardId/block';

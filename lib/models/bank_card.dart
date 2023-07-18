@@ -190,6 +190,7 @@ class CreateBankCard {
     if (firstName.length > 21) {
       firstName = firstName.substring(0, 21);
     }
+    // line1 = 'TEST/CARD';
     line2 = firstName.toUpperCase();
     reference = const Uuid().v4().replaceAll('-', '');
   }
