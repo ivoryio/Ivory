@@ -19,10 +19,19 @@ class BankCardDetailsChoosePinScreen extends StatelessWidget {
 
     return Screen(
       scrollPhysics: const NeverScrollableScrollPhysics(),
-      title: 'BankDetailsChoosePinScreen',
+      title: 'Step 2 out of 4',
+      backButtonIcon: const Icon(Icons.arrow_back, size: 24),
       centerTitle: true,
+      hideAppBar: false,
       hideBackButton: false,
       hideBottomNavbar: true,
+      trailingActions: [
+        IconButton(
+          icon: Image.asset('assets/icons/porsche_logo.png'),
+          iconSize: 40,
+          onPressed: () {},
+        ),
+      ],
       child: Padding(
         padding: defaultScreenPadding,
         child: Column(
@@ -32,7 +41,6 @@ class BankCardDetailsChoosePinScreen extends StatelessWidget {
             SpacedColumn(
               space: 32,
               children: [
-                const Text('BankDetailsChoosePinScreen'),
                 SpacedColumn(
                   space: 16,
                   crossAxisAlignment: CrossAxisAlignment.start,

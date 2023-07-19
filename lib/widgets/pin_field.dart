@@ -53,12 +53,26 @@ class PinFieldState extends State<PinField> {
         ),
         material: (_, __) => MaterialTextFieldData(
           decoration: InputDecoration(
-            fillColor: _hasText ? Colors.green : Colors.grey,
-            filled: true,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5),
+              borderSide: BorderSide.none,
+            ),
+            isCollapsed: true,
+            icon: Container(
+              width: 20,
+              height: 20,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: _hasText ? Colors.green : Colors.grey,
+              ),
+            ),
+            // fillColor: _hasText ? Colors.green : Colors.grey,
+            filled: false,
           ),
         ),
         cupertino: (_, __) => CupertinoTextFieldData(
           decoration: BoxDecoration(
+            shape: BoxShape.circle,
             color: CupertinoDynamicColor.withBrightness(
               color: _hasText // YOUR COLOR
                   ? CupertinoColors.systemGreen
