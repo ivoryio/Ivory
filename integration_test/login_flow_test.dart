@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
+import 'package:solarisdemo/cubits/login_cubit/login_cubit.dart';
 // ignore: library_prefixes
 import 'package:solarisdemo/router/routing_constants.dart';
 import 'package:solarisdemo/screens/home/home_screen.dart';
@@ -24,6 +25,7 @@ import 'package:solarisdemo/widgets/tan_input.dart';
 void main() {
   group("Login flow test", () {
     IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+
     final authCubit = AuthCubit(authService: AuthService());
 
     final goRouter = GoRouter(
@@ -66,6 +68,7 @@ void main() {
         'Should tap login button from the landing screen, and redirect the user to the login screen',
         (WidgetTester tester) async {
       //Arrange
+      await dotenv.load();
       await tester.pumpWidget(
         PlatformApp.router(
           routerConfig: goRouter,
@@ -123,7 +126,7 @@ void main() {
           find.widgetWithText(PlatformTextInput, "Email Address");
       Finder passwordTextInput =
           find.widgetWithText(PlatformTextInput, "Password");
-      await tester.enterText(emailTextInput, "gyozo.szasz@thinslices.com");
+      await tester.enterText(emailTextInput, "anca.nechita@thinslices.com");
       await tester.pumpAndSettle(const Duration(seconds: 2));
       await tester.enterText(passwordTextInput, "123456");
       await tester.pumpAndSettle(const Duration(seconds: 2));
@@ -140,7 +143,7 @@ void main() {
             find.widgetWithText(StickyBottomContent, "I agree");
 
         await tester.tap(consentButton);
-        await tester.pumpAndSettle(const Duration(seconds: 15));
+        await tester.pumpAndSettle(const Duration(seconds: 5));
       }
 
       Finder passcodeInput = find.byType(InputCodeBox);
@@ -149,10 +152,74 @@ void main() {
       await tester.enterText(passcodeInput.at(1), "2");
       await tester.enterText(passcodeInput.at(2), "3");
       await tester.enterText(passcodeInput.at(3), "4");
+      await tester.pumpAndSettle(const Duration(seconds: 5));
+
+       //expect(consentPage, findsOneWidget);
+       //expect(consentButton, findsOneWidget);
+  
+  testWidgets('Should navigate to HomeScreen', (WidgetTester tester) async {
+  await dotenv.load();
+  await tester.pumpWidget(
+    MaterialApp.router(
+      routerDelegate: goRouter.routerDelegate,
+      routeInformationParser: goRouter.routeInformationParser,
+      routeInformationProvider: goRouter.routeInformationProvider,
+    ),
+  );
+
+  // Găsim widget-ul cu numele corespunzător pentru HomeScreen
+  Finder homeScreenFinder = find.byKey(Key(homeRoute.name));
+  await tester.pumpAndSettle(const Duration(seconds: 15));
+
+
+  expect(homeScreenFinder, findsOneWidget);
+   expect(goRouter.location, equals(homeRoute.path));
+});
+
+testWidgets(
+        'Check if the user is not able to log in with invalid credentials (email address)',
+        (WidgetTester tester) async {
+      //Arrange
+      await dotenv.load();
+      await tester.pumpWidget(
+        MaterialApp.router(
+          routerDelegate: goRouter.routerDelegate,
+          routeInformationParser: goRouter.routeInformationParser,
+          routeInformationProvider: goRouter.routeInformationProvider,
+        ),
+      );
+
+      Finder loginButton = find.text('Login');
+      await tester.tap(loginButton);
+      await tester.pumpAndSettle(const Duration(seconds: 5));
+
+      expect(goRouter.location, equals(loginRoute.path));
+
+
+      Finder emailButton = find.widgetWithText(PlatformElevatedButton, "Email");
+      await tester.tap(emailButton);
+      await tester.pumpAndSettle(const Duration(seconds: 5));
+
+      Finder emailTextInput =
+          find.widgetWithText(PlatformTextInput, "Email Address");
+      Finder passwordTextInput =
+          find.widgetWithText(PlatformTextInput, "Password");
+      await tester.enterText(emailTextInput, "cocorociuschita@yahoo.com");
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+      await tester.enterText(passwordTextInput, "456789");
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      Finder loginButton1 = find.widgetWithText(PrimaryButton, "Continue");
+      await tester.tap(loginButton1);
       await tester.pumpAndSettle(const Duration(seconds: 15));
 
-      // expect(consentPage, findsOneWidget);
-      // expect(consentButton, findsOneWidget);
+      Finder errorText = find.widgetWithText(LoginCubit, "Wrong username or password".trim());
+      expect(find.text("Wrong username or password"), findsOneWidget);
+     
+
+
+    }); 
+       
     });
   });
 }

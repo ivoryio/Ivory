@@ -9,27 +9,24 @@ import 'package:solarisdemo/widgets/button.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
+  testWidgets(
+    "Should submit form when user email&password are valid",
+    (WidgetTester tester) async {
+      //Arrange
+      await tester.pumpWidget(const MaterialApp(
+        home: EmailLoginForm(),
+      ));
 
+      //ACT
 
-    testWidgets(
-      "Should submit form when user email&password are valid",
-      (WidgetTester tester) async {
-        //Arrange
-        await tester.pumpWidget(const MaterialApp(
-          home: EmailLoginForm(),
-        ));
-
-        //ACT
-
-        Finder userNameTextField = find.byWidget(widget);
-        Finder continueButton = find.byWidget(PrimaryButton as Widget);
-        await tester.tap(continueButton);
-        await tester.pumpAndSettle();
-        // ignore: unused_local_variable
-        //Finder errorTexts = find.text("Please enter your email address");
-      },
-    );
- 
+      // Finder userNameTextField = find.byWidget(widget);
+      Finder continueButton = find.byWidget(PrimaryButton as Widget);
+      await tester.tap(continueButton);
+      await tester.pumpAndSettle();
+      // ignore: unused_local_variable
+      //Finder errorTexts = find.text("Please enter your email address");
+    },
+  );
 }
 // testWidgets("Should submit form when user email&password are valid", (WidgetTester tester,) async) {
 //   await tester.pumpWidget(const MaterialApp(home:LoginScreen())

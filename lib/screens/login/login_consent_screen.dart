@@ -67,4 +67,6 @@ class GdprConsentScreen extends StatelessWidget {
       ),
     );
   }
+
+  static evaluate() {}
 }
