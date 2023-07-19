@@ -41,42 +41,36 @@ class PinFieldState extends State<PinField> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        SizedBox(
-          width: 10,
-          height: 10,
-          child: PlatformTextField(
-            focusNode: widget.focusNode, // Added
-            controller: widget.controller,
-            maxLength: 1,
-            keyboardType: TextInputType.number,
-            style: const TextStyle(
-              fontSize: 12,
-            ),
-            material: (_, __) => MaterialTextFieldData(
-              decoration: InputDecoration(
-                fillColor: _hasText ? Colors.green : Colors.grey,
-                filled: true,
-              ),
-            ),
-            cupertino: (_, __) => CupertinoTextFieldData(
-              decoration: BoxDecoration(
-                color: CupertinoDynamicColor.withBrightness(
-                  color: _hasText // YOUR COLOR
-                      ? CupertinoColors.systemGreen
-                      : CupertinoColors.systemGrey,
-                  darkColor: _hasText // YOUR COLOR
-                      ? CupertinoColors.systemGreen
-                      : CupertinoColors.systemGrey,
-                ),
-                borderRadius: const BorderRadius.all(Radius.circular(5.0)),
-              ),
-            ),
+    return Flexible(
+      fit: FlexFit.loose,
+      child: PlatformTextField(
+        focusNode: widget.focusNode, // Added
+        controller: widget.controller,
+        maxLength: 1,
+        keyboardType: TextInputType.number,
+        style: const TextStyle(
+          fontSize: 12,
+        ),
+        material: (_, __) => MaterialTextFieldData(
+          decoration: InputDecoration(
+            fillColor: _hasText ? Colors.green : Colors.grey,
+            filled: true,
           ),
         ),
-      ],
+        cupertino: (_, __) => CupertinoTextFieldData(
+          decoration: BoxDecoration(
+            color: CupertinoDynamicColor.withBrightness(
+              color: _hasText // YOUR COLOR
+                  ? CupertinoColors.systemGreen
+                  : CupertinoColors.systemGrey,
+              darkColor: _hasText // YOUR COLOR
+                  ? CupertinoColors.systemGreen
+                  : CupertinoColors.systemGrey,
+            ),
+            borderRadius: const BorderRadius.all(Radius.circular(5.0)),
+          ),
+        ),
+      ),
     );
   }
 
