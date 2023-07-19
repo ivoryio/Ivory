@@ -1,8 +1,5 @@
 import 'dart:developer';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class PinField extends StatefulWidget {
   final TextEditingController controller;
@@ -23,6 +20,7 @@ class PinField extends StatefulWidget {
 
 class PinFieldState extends State<PinField> {
   bool _hasText = false;
+  bool _isInvalid = false;
 
   @override
   void initState() {
@@ -32,57 +30,123 @@ class PinFieldState extends State<PinField> {
 
   void _handleTextChanged() {
     setState(() {
-      log('Text changed: ${widget.controller.text}');
       _hasText = widget.controller.text.isNotEmpty;
-      log('Has text: $_hasText');
     });
     widget.onChanged(widget.controller.text);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Flexible(
-      fit: FlexFit.loose,
-      child: PlatformTextField(
-        focusNode: widget.focusNode, // Added
-        controller: widget.controller,
-        maxLength: 1,
-        keyboardType: TextInputType.number,
-        style: const TextStyle(
-          fontSize: 12,
-        ),
-        material: (_, __) => MaterialTextFieldData(
-          decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(5),
-              borderSide: BorderSide.none,
-            ),
-            isCollapsed: true,
-            icon: Container(
-              width: 20,
-              height: 20,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: _hasText ? Colors.green : Colors.grey,
+    return Column(
+      children: <Widget>[
+        Container(
+          width: 30,
+          height: 30,
+          decoration: BoxDecoration(
+            color: _isInvalid
+                ? Colors.red
+                : (_hasText ? Colors.green : Colors.grey),
+            shape: BoxShape.circle,
+          ),
+          child: TextField(
+            focusNode: widget.focusNode,
+            controller: widget.controller,
+            maxLength: 1,
+            keyboardType: TextInputType.number,
+            obscureText: true,
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 0),
+            decoration: const InputDecoration(
+              counterText: "",
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.transparent),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.transparent),
               ),
             ),
-            // fillColor: _hasText ? Colors.green : Colors.grey,
-            filled: false,
+            showCursor: false,
           ),
         ),
-        cupertino: (_, __) => CupertinoTextFieldData(
-          decoration: BoxDecoration(
-            // shape: BoxShape.circle,
-            color: CupertinoDynamicColor.withBrightness(
-              color: _hasText // YOUR COLOR
-                  ? CupertinoColors.systemGreen
-                  : CupertinoColors.systemGrey,
-              darkColor: _hasText // YOUR COLOR
-                  ? CupertinoColors.systemGreen
-                  : CupertinoColors.systemGrey,
-            ),
-            borderRadius: const BorderRadius.all(Radius.circular(5.0)),
-          ),
+      ],
+    );
+  }
+
+  void setFieldInvalid() {
+    setState(() {
+      _isInvalid = true;
+    });
+  }
+
+  void setFieldValid() {
+    setState(() {
+      _isInvalid = false;
+    });
+  }
+
+  @override
+  void dispose() {
+    widget.controller.removeListener(_handleTextChanged);
+    super.dispose();
+  }
+}
+
+class FourDigitPinCodeInput extends StatefulWidget {
+  final ValueChanged<String> onCompleted;
+  late String pin;
+
+  FourDigitPinCodeInput({
+    super.key,
+    required this.onCompleted,
+  });
+
+  @override
+  FourDigitPinCodeInputState createState() => FourDigitPinCodeInputState();
+}
+
+class FourDigitPinCodeInputState extends State<FourDigitPinCodeInput> {
+  FocusNode focusNode = FocusNode();
+  final List<TextEditingController> _controllers =
+      List.generate(4, (_) => TextEditingController());
+  final List<FocusNode> _focusNodes =
+      List<FocusNode>.generate(4, (index) => FocusNode());
+
+  List<GlobalKey<PinFieldState>> pinFieldKeys = List.generate(
+    4,
+    (_) => GlobalKey<PinFieldState>(),
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FocusScope.of(context).requestFocus(_focusNodes[0]);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: List<PinField>.generate(
+        _controllers.length,
+        (index) => PinField(
+          key: pinFieldKeys[index],
+          controller: _controllers[index],
+          focusNode: _focusNodes[index],
+          onChanged: (text) {
+            if (text.isNotEmpty && index < _controllers.length - 1) {
+              _focusNodes[index].unfocus();
+              FocusScope.of(context).requestFocus(_focusNodes[index + 1]);
+            } else if (index == _controllers.length - 1 && text.isNotEmpty) {
+              String pin = _controllers.map((c) => c.text).join();
+              setState(() {
+                widget.pin = pin;
+              });
+              widget.onCompleted(pin);
+            }
+          },
         ),
       ),
     );
@@ -90,7 +154,52 @@ class PinFieldState extends State<PinField> {
 
   @override
   void dispose() {
-    widget.controller.removeListener(_handleTextChanged);
+    for (var controller in _controllers) {
+      controller.dispose();
+    }
+    for (var focusNode in _focusNodes) {
+      focusNode.dispose();
+    }
     super.dispose();
+  }
+
+  void clearPin() {
+    for (var controller in _controllers) {
+      controller.clear();
+    }
+  }
+
+  void setFocusOnFirst() {
+    FocusScope.of(context).requestFocus(_focusNodes[0]);
+  }
+
+  void unfocusAllFields() {
+    for (var focusNode in _focusNodes) {
+      focusNode.unfocus();
+    }
+  }
+
+  void toggleValidity() {
+    setAllFieldsInvalid();
+    Future.delayed(
+      const Duration(seconds: 3),
+      () {
+        if (mounted) {
+          setAllFieldsValid();
+        }
+      },
+    );
+  }
+
+  void setAllFieldsValid() {
+    for (var pinField in pinFieldKeys) {
+      pinField.currentState!.setFieldValid();
+    }
+  }
+
+  void setAllFieldsInvalid() {
+    for (var pinField in pinFieldKeys) {
+      pinField.currentState!.setFieldInvalid();
+    }
   }
 }

@@ -13,9 +13,6 @@ import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../models/bank_card.dart';
 import '../../models/user.dart';
 import '../../router/routing_constants.dart';
-import '../../themes/default_theme.dart';
-import '../../widgets/button.dart';
-import '../../widgets/card_widget.dart';
 import '../../widgets/dialog.dart';
 import '../../widgets/screen.dart';
 import 'card_activated_screen.dart';
@@ -53,7 +50,7 @@ class CardDetailsScreen extends StatelessWidget {
             return const BankCardDetailsInfoScreen();
           }
           if (state is BankCardDetailsChoosePinState) {
-            return const BankCardDetailsChoosePinScreen();
+            return BankCardDetailsChoosePinScreen();
           }
           if (state is BankCardDetailsConfirmPinState) {
             return const BankCardDetailsConfirmPinScreen();

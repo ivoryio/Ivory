@@ -19,6 +19,33 @@ class Validator {
   // }
 }
 
+class PinValidator {
+  static bool checkIfPinDiffersFromString(String string, String pin) {
+    return pin != string;
+  }
+
+  static bool checkIfPinDiffersFromBirthDate(String birthDate, String pin) {
+    return pin != birthDate;
+  }
+
+  static bool checkIfPinIsNotSequence(String pin) {
+    for (int i = 0; i < pin.length - 1; i++) {
+      int currentDigit = int.parse(pin[i]);
+      int nextDigit = int.parse(pin[i + 1]);
+
+      if (currentDigit != nextDigit - 1) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  static bool checkPinHasNoDigitsRepeating(String pin) {
+    var uniqueDigits = pin.split('').toSet();
+    return uniqueDigits.length >= 2;
+  }
+}
+
 class RegexValidator {
   static RegExp digitsWithTwoDecimals = RegExp(r'^\d+\.?\d{0,2}');
   static RegExp emailAddress = RegExp(

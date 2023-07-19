@@ -6,12 +6,26 @@ import 'package:solarisdemo/widgets/spaced_column.dart';
 
 import '../../cubits/card_details_cubit/card_details_cubit.dart';
 import '../../themes/default_theme.dart';
-import '../../widgets/button.dart';
+import '../../utilities/validator.dart';
 import '../../widgets/pin_field.dart';
 import '../../widgets/screen.dart';
 
-class BankCardDetailsChoosePinScreen extends StatelessWidget {
-  const BankCardDetailsChoosePinScreen({super.key});
+class BankCardDetailsChoosePinScreen extends StatefulWidget {
+  BankCardDetailsChoosePinScreen({super.key});
+
+  @override
+  State<BankCardDetailsChoosePinScreen> createState() =>
+      _BankCardDetailsChoosePinScreenState();
+}
+
+class _BankCardDetailsChoosePinScreenState
+    extends State<BankCardDetailsChoosePinScreen> {
+  late bool pinDiffersBirthDate = true;
+  late bool pinDiffersPostalCode = true;
+  late bool pinIsNotASequence = true;
+  late bool pinNotContainsRepeatingDigits = true;
+  late bool completed = false;
+  GlobalKey<FourDigitPinCodeInputState> fourDigitPinKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -30,13 +44,6 @@ class BankCardDetailsChoosePinScreen extends StatelessWidget {
       hideAppBar: false,
       hideBackButton: false,
       hideBottomNavbar: true,
-      // trailingActions: [
-      //   IconButton(
-      //     icon: Image.asset('assets/icons/porsche_logo.png'),
-      //     iconSize: 40,
-      //     onPressed: () {},
-      //   ),
-      // ],
       child: Padding(
         padding: defaultScreenPadding,
         child: Column(
@@ -66,192 +73,200 @@ class BankCardDetailsChoosePinScreen extends StatelessWidget {
                         height: 1.5,
                       ),
                     ),
-                    PinCodeInput(
+                    FourDigitPinCodeInput(
+                      key: fourDigitPinKey,
                       onCompleted: (pin) {
-                        context.read<BankCardDetailsCubit>().choosePin(
-                              state.card!,
-                              pin,
-                            );
+                        if (isPinValid(
+                          '5885',
+                          '1991',
+                          pin,
+                        )) {
+                          fourDigitPinKey.currentState?.unfocusAllFields();
+                          markCompleted();
+                          Future.delayed(
+                            const Duration(seconds: 1),
+                            () {
+                              context
+                                  .read<BankCardDetailsCubit>()
+                                  .choosePin(state.card!, pin);
+                            },
+                          );
+                        } else {
+                          highlightReasonsForInvalidPin('1234', '1234', pin);
+                          fourDigitPinKey.currentState?.toggleValidity();
+                          fourDigitPinKey.currentState?.clearPin();
+                          fourDigitPinKey.currentState?.setFocusOnFirst();
+                        }
                       },
                     ),
                   ],
                 )
               ],
             ),
-            SpacedColumn(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              space: 10,
-              children: [
-                const Text(
-                  'Your PIN should not contain:',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    height: 1.5,
+            if (!completed)
+              SpacedColumn(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                space: 10,
+                children: [
+                  const Text(
+                    'Your PIN should not contain:',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      height: 1.5,
+                    ),
                   ),
-                ),
-                SpacedColumn(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  space: 0,
-                  children: const [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.close,
-                          size: 24,
-                        ),
-                        Text(
-                          'Your date of birth',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            height: 1.5,
+                  SpacedColumn(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    space: 0,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.close,
+                            size: 24,
                           ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.close,
-                          size: 24,
-                        ),
-                        Text(
-                          'Your postal code',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            height: 1.5,
+                          Text(
+                            'Your date of birth',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              height: 1.5,
+                              color: pinDiffersBirthDate
+                                  ? Colors.black
+                                  : Colors.red,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.close,
-                          size: 24,
-                        ),
-                        Text(
-                          'Number sequences, e.g. 1234',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            height: 1.5,
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.close,
+                            size: 24,
                           ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.close,
-                          size: 24,
-                        ),
-                        Text(
-                          'More than two digits repeating',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            height: 1.5,
+                          Text(
+                            'Your postal code',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              height: 1.5,
+                              color: pinDiffersPostalCode
+                                  ? Colors.black
+                                  : Colors.red,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  child: PrimaryButton(
-                    text: "Insert 4 digit for PIN",
-                    onPressed: () {
-                      // context.read<BankCardDetailsCubit>().initializeActivation();
-                      context
-                          .read<BankCardDetailsCubit>()
-                          .choosePin(state.card!, "0000");
-                    },
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.close,
+                            size: 24,
+                          ),
+                          Text(
+                            'Number sequences, e.g. 1234',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              height: 1.5,
+                              color:
+                                  pinIsNotASequence ? Colors.black : Colors.red,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.close,
+                            size: 24,
+                          ),
+                          Text(
+                            'More than two digits repeating',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              height: 1.5,
+                              color: pinNotContainsRepeatingDigits
+                                  ? Colors.black
+                                  : Colors.red,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            )
+                  // SizedBox(
+                  //   width: double.infinity,
+                  //   child: PrimaryButton(
+                  //     text: "Insert 4 digit for PIN",
+                  //     onPressed: () {
+                  //       context
+                  //           .read<BankCardDetailsCubit>()
+                  //           .choosePin(state.card!, "0000");
+                  //     },
+                  //   ),
+                  // ),
+                ],
+              )
           ],
         ),
       ),
     );
   }
-}
 
-class PinCodeInput extends StatefulWidget {
-  final ValueChanged<String> onCompleted;
-
-  const PinCodeInput({super.key, required this.onCompleted});
-
-  @override
-  PinCodeInputState createState() => PinCodeInputState();
-}
-
-class PinCodeInputState extends State<PinCodeInput> {
-  FocusNode focusNode = FocusNode();
-  final List<TextEditingController> _controllers =
-      List.generate(4, (_) => TextEditingController());
-  final List<FocusNode> _focusNodes =
-      List<FocusNode>.generate(4, (index) => FocusNode());
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      log('Focus');
-      FocusScope.of(context).requestFocus(_focusNodes[0]);
-    });
+  bool isPinValid(String postalCode, String birthDate, String pin) {
+    return PinValidator.checkIfPinDiffersFromString('1234', pin) &&
+        PinValidator.checkIfPinDiffersFromBirthDate('1234', pin) &&
+        PinValidator.checkIfPinIsNotSequence(pin) &&
+        PinValidator.checkPinHasNoDigitsRepeating(pin);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: List<Widget>.generate(
-        _controllers.length,
-        (index) => PinField(
-          controller: _controllers[index],
-          focusNode: _focusNodes[index],
-          onChanged: (text) {
-            if (text.isNotEmpty && index < _controllers.length - 1) {
-              log('Unfocus');
-              _focusNodes[index].unfocus();
-              FocusScope.of(context).requestFocus(_focusNodes[index + 1]);
-            } else if (index == _controllers.length - 1 && text.isNotEmpty) {
-              if (!_checkPinCompleted()) {
-                print('Invalid pin');
-              } else {
-                widget.onCompleted(_controllers.map((c) => c.text).join());
-                print('Valid pin');
-              }
-            }
-          },
-        ),
-      ),
+  void highlightReasonsForInvalidPin(
+    String birthDate,
+    String postalCode,
+    String pin,
+  ) {
+    setState(() {
+      pinDiffersBirthDate = PinValidator.checkIfPinDiffersFromBirthDate(
+        birthDate,
+        pin,
+      );
+      pinDiffersPostalCode = PinValidator.checkIfPinDiffersFromString(
+        postalCode,
+        pin,
+      );
+      pinIsNotASequence = PinValidator.checkIfPinIsNotSequence(
+        pin,
+      );
+      pinNotContainsRepeatingDigits = PinValidator.checkPinHasNoDigitsRepeating(
+        pin,
+      );
+    });
+    Future.delayed(
+      const Duration(seconds: 3),
+      () {
+        if (mounted) {
+          restoreValidity();
+        }
+      },
     );
   }
 
-  bool _checkPinCompleted() {
-    // validations here
-    var pinCode = _controllers.map((c) => c.text).join();
-    if (pinCode.length == 4 && pinCode != "0000") {
-      return true;
-    }
-    return false;
+  void restoreValidity() {
+    setState(() {
+      pinDiffersBirthDate = true;
+      pinDiffersPostalCode = true;
+      pinIsNotASequence = true;
+      pinNotContainsRepeatingDigits = true;
+    });
   }
 
-  @override
-  void dispose() {
-    for (var controller in _controllers) {
-      controller.dispose();
-    }
-    for (var focusNode in _focusNodes) {
-      focusNode.dispose();
-    }
-    super.dispose();
+  void markCompleted() {
+    setState(() {
+      completed = true;
+    });
   }
 }
