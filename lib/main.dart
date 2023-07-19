@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'router/router.dart';
@@ -28,25 +27,24 @@ class MyApp extends StatelessWidget {
       create: (context) => AuthCubit(
         authService: AuthService(),
       ),
-      child: Theme(
-        data: defaultMaterialTheme,
-        child: PlatformProvider(
-          builder: (context) => PlatformApp.router(
-            routerConfig: AppRouter(context.read<AuthCubit>()).router,
-            material: (context, platform) => MaterialAppRouterData(
-              theme: defaultMaterialTheme,
-            ),
-            cupertino: (context, platform) => CupertinoAppRouterData(
-              theme: cupertinoTheme,
-            ),
-            localizationsDelegates: const [
-              DefaultMaterialLocalizations.delegate,
-              DefaultWidgetsLocalizations.delegate,
-              DefaultCupertinoLocalizations.delegate,
-            ],
-          ),
-        ),
-      ),
+      child: Builder(builder: (context) {
+        return MaterialApp.router(
+          routerConfig: AppRouter(context.read<AuthCubit>()).router,
+          localizationsDelegates: const [
+            DefaultMaterialLocalizations.delegate,
+            DefaultWidgetsLocalizations.delegate,
+            DefaultCupertinoLocalizations.delegate,
+          ],
+          theme: defaultMaterialTheme,
+          builder: (context, child) {
+            return Scaffold(
+              body: Material(
+                child: child,
+              ),
+            );
+          },
+        );
+      }),
     );
   }
 }
