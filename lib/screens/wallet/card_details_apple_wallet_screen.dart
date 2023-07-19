@@ -18,25 +18,29 @@ class BankCardDetailsAppleWalletScreen extends StatelessWidget {
     return Screen(
       scrollPhysics: const NeverScrollableScrollPhysics(),
       title: 'Step 4 out of 4',
+      titleTextStyle: const TextStyle(
+        fontSize: 16,
+        height: 24 / 16,
+        fontWeight: FontWeight.w600,
+      ),
       backButtonIcon: const Icon(Icons.arrow_back, size: 24),
       centerTitle: true,
       hideAppBar: false,
       hideBackButton: false,
       hideBottomNavbar: true,
-      trailingActions: [
-        IconButton(
-          icon: Image.asset('assets/icons/porsche_logo.png'),
-          iconSize: 40,
-          onPressed: () {},
-        ),
-      ],
+      // trailingActions: [
+      //   IconButton(
+      //     icon: Image.asset('assets/icons/porsche_logo.png'),
+      //     iconSize: 40,
+      //     onPressed: () {},
+      //   ),
+      // ],
       child: Padding(
           padding: defaultScreenPadding,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(width: double.infinity, height: 3, color: Colors.red),
               Padding(
                 padding: const EdgeInsets.only(bottom: 24.0),
                 child: SpacedColumn(

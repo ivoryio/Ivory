@@ -18,18 +18,23 @@ class BankCardDetailsConfirmPinScreen extends StatelessWidget {
     return Screen(
       scrollPhysics: const NeverScrollableScrollPhysics(),
       title: 'Step 3 out of 4',
+      titleTextStyle: const TextStyle(
+        fontSize: 16,
+        height: 24 / 16,
+        fontWeight: FontWeight.w600,
+      ),
       backButtonIcon: const Icon(Icons.arrow_back, size: 24),
       centerTitle: true,
       hideAppBar: false,
       hideBackButton: false,
       hideBottomNavbar: true,
-      trailingActions: [
-        IconButton(
-          icon: Image.asset('assets/icons/porsche_logo.png'),
-          iconSize: 40,
-          onPressed: () {},
-        ),
-      ],
+      // trailingActions: [
+      //   IconButton(
+      //     icon: Image.asset('assets/icons/porsche_logo.png'),
+      //     iconSize: 40,
+      //     onPressed: () {},
+      //   ),
+      // ],
       child: Padding(
         padding: defaultScreenPadding,
         child: Column(

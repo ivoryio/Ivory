@@ -72,7 +72,7 @@ class PinFieldState extends State<PinField> {
         ),
         cupertino: (_, __) => CupertinoTextFieldData(
           decoration: BoxDecoration(
-            shape: BoxShape.circle,
+            // shape: BoxShape.circle,
             color: CupertinoDynamicColor.withBrightness(
               color: _hasText // YOUR COLOR
                   ? CupertinoColors.systemGreen

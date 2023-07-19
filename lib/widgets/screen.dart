@@ -77,12 +77,21 @@ class Screen extends StatelessWidget {
 
           Widget body = SingleChildScrollView(
             physics: physics,
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight:
-                    viewportConstraints.maxHeight - bottomStickyWidgetHeight,
-              ),
-              child: IntrinsicHeight(child: child),
+            child: Column(
+              children: [
+                const LinearProgressIndicator(
+                  value: 1 / 4,
+                  color: Color(0xFFCC0000),
+                  backgroundColor: Color(0xFFE9EAEB),
+                ),
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: viewportConstraints.maxHeight -
+                        bottomStickyWidgetHeight,
+                  ),
+                  child: IntrinsicHeight(child: child),
+                ),
+              ],
             ),
           );
 
