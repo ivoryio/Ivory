@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 
 import '../../cubits/card_details_cubit/card_details_cubit.dart';
-import '../../models/bank_card.dart';
 import '../../themes/default_theme.dart';
 import '../../widgets/button.dart';
 import '../../widgets/card_widget.dart';
@@ -15,8 +14,6 @@ class BankCardDetailsMainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.read<BankCardDetailsCubit>().state;
-
     return const Screen(
       scrollPhysics: ClampingScrollPhysics(),
       title: 'Card',

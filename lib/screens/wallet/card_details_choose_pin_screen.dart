@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/widgets/spaced_column.dart';
 
 import '../../cubits/card_details_cubit/card_details_cubit.dart';
@@ -28,6 +31,13 @@ class _BankCardDetailsChoosePinScreenState
   @override
   Widget build(BuildContext context) {
     final state = context.read<BankCardDetailsCubit>().state;
+    DateTime birthDate =
+        context.read<AuthCubit>().state.user!.person.birthDate!;
+    String postalCode =
+        context.read<AuthCubit>().state.user!.person.address!.postalCode!;
+
+    log('postalCode: $postalCode');
+    log('birthDate: $birthDate');
 
     return Screen(
       scrollPhysics: const NeverScrollableScrollPhysics(),
@@ -37,6 +47,9 @@ class _BankCardDetailsChoosePinScreenState
         fontWeight: FontWeight.w600,
       ),
       backButtonIcon: const Icon(Icons.arrow_back, size: 24),
+      customBackButtonCallback: () {
+        context.read<BankCardDetailsCubit>().initializeActivation(state.card!);
+      },
       centerTitle: true,
       hideAppBar: false,
       hideBackButton: false,
@@ -87,8 +100,8 @@ class _BankCardDetailsChoosePinScreenState
                   key: fourDigitPinKey,
                   onCompleted: (pin) {
                     if (isPinValid(
-                      '1234',
-                      '1991',
+                      postalCode,
+                      birthDate,
                       pin,
                     )) {
                       fourDigitPinKey.currentState?.unfocusAllFields();
@@ -102,7 +115,7 @@ class _BankCardDetailsChoosePinScreenState
                         },
                       );
                     } else {
-                      highlightReasonsForInvalidPin('1234', '1991', pin);
+                      highlightReasonsForInvalidPin(postalCode, birthDate, pin);
                       fourDigitPinKey.currentState?.toggleValidity();
                       fourDigitPinKey.currentState?.clearPin();
                       fourDigitPinKey.currentState?.setFocusOnFirst();
@@ -214,7 +227,7 @@ class _BankCardDetailsChoosePinScreenState
     );
   }
 
-  bool isPinValid(String postalCode, String birthDate, String pin) {
+  bool isPinValid(String postalCode, DateTime birthDate, String pin) {
     return PinValidator.checkIfPinDiffersFromString(postalCode, pin) &&
         PinValidator.checkIfPinDiffersFromBirthDate(birthDate, pin) &&
         PinValidator.checkIfPinIsNotSequence(pin) &&
@@ -222,8 +235,8 @@ class _BankCardDetailsChoosePinScreenState
   }
 
   void highlightReasonsForInvalidPin(
-    String birthDate,
     String postalCode,
+    DateTime birthDate,
     String pin,
   ) {
     setState(() {

@@ -17,9 +17,9 @@ class BankCardDetailsActivationSuccessScreen extends StatelessWidget {
 
     return Screen(
       scrollPhysics: const NeverScrollableScrollPhysics(),
-      title: 'BankDetailsActivationSuccessScreen',
+      title: '',
       centerTitle: true,
-      hideBackButton: false,
+      hideBackButton: true,
       hideBottomNavbar: true,
       child: Padding(
         padding: defaultScreenPadding,

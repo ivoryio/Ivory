@@ -24,8 +24,14 @@ class PinValidator {
     return pin != string;
   }
 
-  static bool checkIfPinDiffersFromBirthDate(String birthDate, String pin) {
-    return pin != birthDate;
+  static bool checkIfPinDiffersFromBirthDate(DateTime birthDate, String pin) {
+    String birthYear = birthDate.year.toString();
+    String birthMonth = birthDate.toIso8601String().substring(5, 7);
+    String birthDay = birthDate.toIso8601String().substring(8, 10);
+
+    return pin != birthYear &&
+        pin != birthMonth + birthDay &&
+        pin != birthDay + birthMonth;
   }
 
   static bool checkIfPinIsNotSequence(String pin) {

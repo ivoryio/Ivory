@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_switch/flutter_switch.dart';
@@ -44,7 +42,6 @@ class CardDetailsScreen extends StatelessWidget {
           }
           if (state is BankCardDetailsLoadedState) {
             return const BankCardDetailsMainScreen();
-            // return const BankCardDetailsChoosePinScreen();
           }
           if (state is BankCardDetailsInfoState) {
             return const BankCardDetailsInfoScreen();

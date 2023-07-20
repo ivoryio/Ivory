@@ -23,6 +23,9 @@ class BankCardDetailsAppleWalletScreen extends StatelessWidget {
         fontWeight: FontWeight.w600,
       ),
       backButtonIcon: const Icon(Icons.arrow_back, size: 24),
+      customBackButtonCallback: () {
+        context.read<BankCardDetailsCubit>().startPinSetup(state.card!);
+      },
       centerTitle: true,
       hideAppBar: false,
       hideBackButton: false,
@@ -95,7 +98,11 @@ class BankCardDetailsAppleWalletScreen extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          context
+                              .read<BankCardDetailsCubit>()
+                              .successActivation(state.card!);
+                        },
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -131,11 +138,7 @@ class BankCardDetailsAppleWalletScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                        onPressed: () {
-                          context
-                              .read<BankCardDetailsCubit>()
-                              .successActivation(state.card!);
-                        },
+                        onPressed: () {},
                       ),
                     ),
                   ],

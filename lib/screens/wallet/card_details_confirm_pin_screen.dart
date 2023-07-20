@@ -1,13 +1,9 @@
-import 'dart:developer';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../cubits/card_details_cubit/card_details_cubit.dart';
 import '../../themes/default_theme.dart';
 import '../../utilities/validator.dart';
-import '../../widgets/button.dart';
 import '../../widgets/pin_field.dart';
 import '../../widgets/screen.dart';
 import '../../widgets/spaced_column.dart';
@@ -38,6 +34,9 @@ class _BankCardDetailsConfirmPinScreenState
         fontWeight: FontWeight.w600,
       ),
       backButtonIcon: const Icon(Icons.arrow_back, size: 24),
+      customBackButtonCallback: () {
+        context.read<BankCardDetailsCubit>().startPinSetup(state.card!);
+      },
       centerTitle: true,
       hideAppBar: false,
       hideBackButton: false,

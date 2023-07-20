@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 
 class PinField extends StatefulWidget {
@@ -94,6 +93,7 @@ class PinFieldState extends State<PinField> {
   }
 }
 
+// ignore: must_be_immutable
 class FourDigitPinCodeInput extends StatefulWidget {
   final ValueChanged<String> onCompleted;
   late String pin;
@@ -199,8 +199,8 @@ class FourDigitPinCodeInputState extends State<FourDigitPinCodeInput> {
   }
 
   void setAllFieldsValid() {
-    for (var pinField in pinFieldKeys) {
-      pinField.currentState!.setFieldValid();
+    for (var pinFieldKey in pinFieldKeys) {
+      pinFieldKey.currentState!.setFieldValid();
     }
   }
 
