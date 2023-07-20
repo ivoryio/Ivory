@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solarisdemo/widgets/spaced_column.dart';
@@ -33,7 +31,6 @@ class _BankCardDetailsChoosePinScreenState
 
     return Screen(
       scrollPhysics: const NeverScrollableScrollPhysics(),
-      title: 'Step 2 out of 4',
       titleTextStyle: const TextStyle(
         fontSize: 16,
         height: 24 / 16,
@@ -44,6 +41,17 @@ class _BankCardDetailsChoosePinScreenState
       hideAppBar: false,
       hideBackButton: false,
       hideBottomNavbar: true,
+      trailingActions: [
+        IconButton(
+          icon: Image.asset('assets/icons/porsche_logo.png'),
+          iconSize: 40,
+          onPressed: () {},
+        ),
+      ],
+      bottomProgressBarPages: const BottomProgressBarPagesIndicator(
+        pageNumber: 2,
+        numberOfPages: 4,
+      ),
       child: Padding(
         padding: defaultScreenPadding,
         child: Column(

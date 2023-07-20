@@ -7,7 +7,7 @@ import '../router/routing_constants.dart';
 
 class Screen extends StatelessWidget {
   final Widget child;
-  final String title;
+  final String? title;
   final bool hideAppBar;
   final bool? centerTitle;
   final Color? appBarColor;
@@ -20,6 +20,7 @@ class Screen extends StatelessWidget {
   final Function? customBackButtonCallback;
   final BottomStickyWidget? bottomStickyWidget;
   final ScrollPhysics? scrollPhysics;
+  final BottomProgressBarPagesIndicator? bottomProgressBarPages;
 
   const Screen({
     super.key,
@@ -27,7 +28,7 @@ class Screen extends StatelessWidget {
     this.appBarColor,
     this.backButtonIcon,
     required this.child,
-    required this.title,
+    this.title,
     this.titleTextStyle,
     this.trailingActions,
     this.hideAppBar = false,
@@ -37,6 +38,7 @@ class Screen extends StatelessWidget {
     this.hideBottomNavbar = false,
     this.customBackButtonCallback,
     this.scrollPhysics,
+    this.bottomProgressBarPages,
   });
 
   @override
@@ -45,7 +47,9 @@ class Screen extends StatelessWidget {
         ? null
         : createAppBar(
             context,
-            title: title,
+            title: bottomProgressBarPages != null
+                ? 'Step ${bottomProgressBarPages!.pageNumber} out of ${bottomProgressBarPages!.numberOfPages}'
+                : title ?? '',
             centerTitle: centerTitle,
             backgroundColor: appBarColor,
             hideBackButton: hideBackButton,
@@ -53,6 +57,9 @@ class Screen extends StatelessWidget {
             backButtonIcon: backButtonIcon,
             trailingActions: trailingActions,
             customBackButtonCallback: customBackButtonCallback,
+            bottom: bottomProgressBarPages != null
+                ? bottomProgressBarWidget(bottomProgressBarPages!)
+                : null,
           );
 
     int currentPageIndex = AppRouter.calculateSelectedIndex(context);
@@ -72,11 +79,6 @@ class Screen extends StatelessWidget {
             physics: physics,
             child: Column(
               children: [
-                const LinearProgressIndicator(
-                  value: 1 / 4,
-                  color: Color(0xFFCC0000),
-                  backgroundColor: Color(0xFFE9EAEB),
-                ),
                 ConstrainedBox(
                   constraints: BoxConstraints(
                     minHeight: viewportConstraints.maxHeight -
@@ -206,6 +208,7 @@ AppBar createAppBar(
   List<Widget>? trailingActions,
   Function? customBackButtonCallback,
   Color? backgroundColor = Colors.white,
+  PreferredSizeWidget? bottom,
 }) {
   Text titleText = Text(
     title,
@@ -244,6 +247,7 @@ AppBar createAppBar(
     backgroundColor: backgroundColor,
     elevation: 0,
     centerTitle: centerTitle,
+    bottom: bottom,
     actions: [
       if (trailingActions != null) ...trailingActions,
       const SizedBox(
@@ -286,4 +290,26 @@ class BottomStickyWidget extends StatelessWidget {
       ),
     );
   }
+}
+
+PreferredSizeWidget bottomProgressBarWidget(
+    BottomProgressBarPagesIndicator pages) {
+  return PreferredSize(
+    preferredSize: const Size.fromHeight(4),
+    child: LinearProgressIndicator(
+      value: pages.pageNumber / pages.numberOfPages,
+      color: const Color(0xFFCC0000),
+      backgroundColor: const Color(0xFFE9EAEB),
+    ),
+  );
+}
+
+class BottomProgressBarPagesIndicator {
+  final int pageNumber;
+  final int numberOfPages;
+
+  const BottomProgressBarPagesIndicator({
+    required this.pageNumber,
+    required this.numberOfPages,
+  });
 }

@@ -17,7 +17,6 @@ class BankCardDetailsAppleWalletScreen extends StatelessWidget {
 
     return Screen(
       scrollPhysics: const NeverScrollableScrollPhysics(),
-      title: 'Step 4 out of 4',
       titleTextStyle: const TextStyle(
         fontSize: 16,
         height: 24 / 16,
@@ -28,13 +27,17 @@ class BankCardDetailsAppleWalletScreen extends StatelessWidget {
       hideAppBar: false,
       hideBackButton: false,
       hideBottomNavbar: true,
-      // trailingActions: [
-      //   IconButton(
-      //     icon: Image.asset('assets/icons/porsche_logo.png'),
-      //     iconSize: 40,
-      //     onPressed: () {},
-      //   ),
-      // ],
+      trailingActions: [
+        IconButton(
+          icon: Image.asset('assets/icons/porsche_logo.png'),
+          iconSize: 40,
+          onPressed: () {},
+        ),
+      ],
+      bottomProgressBarPages: const BottomProgressBarPagesIndicator(
+        pageNumber: 4,
+        numberOfPages: 4,
+      ),
       child: Padding(
           padding: defaultScreenPadding,
           child: Column(
