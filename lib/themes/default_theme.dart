@@ -50,7 +50,7 @@ final ThemeData defaultMaterialTheme = ThemeData(
 );
 
 const double defaultScreenHorizontalPadding = 24;
-const double defaultScreenVerticalPadding = 20;
+const double defaultScreenVerticalPadding = 24;
 
 const EdgeInsets defaultScreenPadding = EdgeInsets.symmetric(
   horizontal: defaultScreenHorizontalPadding,

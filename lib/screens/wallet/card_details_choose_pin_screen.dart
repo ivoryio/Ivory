@@ -64,8 +64,8 @@ class _BankCardDetailsChoosePinScreenState
                 SpacedColumn(
                   space: 16,
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
+                  children: const [
+                    Text(
                       'Choose PIN',
                       style: TextStyle(
                         fontSize: 24,
@@ -73,7 +73,7 @@ class _BankCardDetailsChoosePinScreenState
                         height: 1.33,
                       ),
                     ),
-                    const Text(
+                    Text(
                       'Remember your PIN as you will use it for all future card purchases.',
                       style: TextStyle(
                         fontSize: 16,
@@ -81,34 +81,34 @@ class _BankCardDetailsChoosePinScreenState
                         height: 1.5,
                       ),
                     ),
-                    FourDigitPinCodeInput(
-                      key: fourDigitPinKey,
-                      onCompleted: (pin) {
-                        if (isPinValid(
-                          '5885',
-                          '1991',
-                          pin,
-                        )) {
-                          fourDigitPinKey.currentState?.unfocusAllFields();
-                          markCompleted();
-                          Future.delayed(
-                            const Duration(seconds: 1),
-                            () {
-                              context
-                                  .read<BankCardDetailsCubit>()
-                                  .choosePin(state.card!, pin);
-                            },
-                          );
-                        } else {
-                          highlightReasonsForInvalidPin('1234', '1234', pin);
-                          fourDigitPinKey.currentState?.toggleValidity();
-                          fourDigitPinKey.currentState?.clearPin();
-                          fourDigitPinKey.currentState?.setFocusOnFirst();
-                        }
-                      },
-                    ),
                   ],
-                )
+                ),
+                FourDigitPinCodeInput(
+                  key: fourDigitPinKey,
+                  onCompleted: (pin) {
+                    if (isPinValid(
+                      '1234',
+                      '1991',
+                      pin,
+                    )) {
+                      fourDigitPinKey.currentState?.unfocusAllFields();
+                      markCompleted();
+                      Future.delayed(
+                        const Duration(milliseconds: 500),
+                        () {
+                          context
+                              .read<BankCardDetailsCubit>()
+                              .choosePin(state.card!, pin);
+                        },
+                      );
+                    } else {
+                      highlightReasonsForInvalidPin('1234', '1991', pin);
+                      fourDigitPinKey.currentState?.toggleValidity();
+                      fourDigitPinKey.currentState?.clearPin();
+                      fourDigitPinKey.currentState?.setFocusOnFirst();
+                    }
+                  },
+                ),
               ],
             ),
             if (!completed)
@@ -206,17 +206,6 @@ class _BankCardDetailsChoosePinScreenState
                       ),
                     ],
                   ),
-                  // SizedBox(
-                  //   width: double.infinity,
-                  //   child: PrimaryButton(
-                  //     text: "Insert 4 digit for PIN",
-                  //     onPressed: () {
-                  //       context
-                  //           .read<BankCardDetailsCubit>()
-                  //           .choosePin(state.card!, "0000");
-                  //     },
-                  //   ),
-                  // ),
                 ],
               )
           ],
@@ -226,8 +215,8 @@ class _BankCardDetailsChoosePinScreenState
   }
 
   bool isPinValid(String postalCode, String birthDate, String pin) {
-    return PinValidator.checkIfPinDiffersFromString('1234', pin) &&
-        PinValidator.checkIfPinDiffersFromBirthDate('1234', pin) &&
+    return PinValidator.checkIfPinDiffersFromString(postalCode, pin) &&
+        PinValidator.checkIfPinDiffersFromBirthDate(birthDate, pin) &&
         PinValidator.checkIfPinIsNotSequence(pin) &&
         PinValidator.checkPinHasNoDigitsRepeating(pin);
   }
@@ -254,7 +243,7 @@ class _BankCardDetailsChoosePinScreenState
       );
     });
     Future.delayed(
-      const Duration(seconds: 3),
+      const Duration(milliseconds: 2000),
       () {
         if (mounted) {
           restoreValidity();

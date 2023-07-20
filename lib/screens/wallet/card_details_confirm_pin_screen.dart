@@ -1,15 +1,30 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../cubits/card_details_cubit/card_details_cubit.dart';
 import '../../themes/default_theme.dart';
+import '../../utilities/validator.dart';
 import '../../widgets/button.dart';
+import '../../widgets/pin_field.dart';
 import '../../widgets/screen.dart';
 import '../../widgets/spaced_column.dart';
 
-class BankCardDetailsConfirmPinScreen extends StatelessWidget {
+class BankCardDetailsConfirmPinScreen extends StatefulWidget {
   const BankCardDetailsConfirmPinScreen({super.key});
+
+  @override
+  State<BankCardDetailsConfirmPinScreen> createState() =>
+      _BankCardDetailsConfirmPinScreenState();
+}
+
+class _BankCardDetailsConfirmPinScreenState
+    extends State<BankCardDetailsConfirmPinScreen> {
+  late bool twoPinsMatch = true;
+  late bool completed = false;
+  GlobalKey<FourDigitPinCodeInputState> fourDigitPinKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -45,24 +60,75 @@ class BankCardDetailsConfirmPinScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             SpacedColumn(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              space: 16,
-              children: const [
-                Text(
-                  'Confirm PIN',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w600,
-                    height: 32 / 24,
-                  ),
+              space: 32,
+              children: [
+                SpacedColumn(
+                  space: 16,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Confirm PIN',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w600,
+                            height: 32 / 24,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Confirm your PIN by typing it again.',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            height: 24 / 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                Text(
-                  'Confirm your PIN by typing it again.',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    height: 24 / 16,
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FourDigitPinCodeInput(
+                      key: fourDigitPinKey,
+                      onCompleted: (confirmPin) {
+                        if (isPinValid(
+                          state.pin!,
+                          confirmPin,
+                        )) {
+                          fourDigitPinKey.currentState?.unfocusAllFields();
+                          markCompleted();
+                          Future.delayed(
+                            const Duration(
+                              milliseconds: 500,
+                            ),
+                            () {
+                              context.read<BankCardDetailsCubit>().confirmPin(
+                                    state.card!,
+                                    state.pin!,
+                                  );
+                            },
+                          );
+                        } else {
+                          highlightReasonsForInvalidPin(
+                            state.pin!,
+                            confirmPin,
+                          );
+                          fourDigitPinKey.currentState?.toggleValidity();
+                          fourDigitPinKey.currentState?.clearPin();
+                          fourDigitPinKey.currentState?.setFocusOnFirst();
+                        }
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -70,15 +136,25 @@ class BankCardDetailsConfirmPinScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               space: 10,
               children: [
-                const Row(
+                Row(
                   children: [
                     Icon(
                       Icons.check,
+                      color: completed
+                          ? Colors.green
+                          : !twoPinsMatch
+                              ? Colors.red
+                              : Colors.black,
                       size: 24,
                     ),
                     Text(
-                      'Your date of birth',
+                      'Your PIN should match',
                       style: TextStyle(
+                        color: completed
+                            ? Colors.green
+                            : !twoPinsMatch
+                                ? Colors.red
+                                : Colors.black,
                         fontSize: 16,
                         fontWeight: FontWeight.w400,
                         height: 1.5,
@@ -86,23 +162,47 @@ class BankCardDetailsConfirmPinScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(
-                  width: double.infinity,
-                  child: PrimaryButton(
-                    text: "Your PIN should match",
-                    onPressed: () {
-                      context.read<BankCardDetailsCubit>().addToAppleWallet(
-                            state.card!,
-                            '1234',
-                          );
-                    },
-                  ),
-                ),
               ],
             )
           ],
         ),
       ),
     );
+  }
+
+  bool isPinValid(String firstPin, String secondPin) {
+    return !PinValidator.checkIfPinDiffersFromString(secondPin, firstPin);
+  }
+
+  void highlightReasonsForInvalidPin(
+    String pin,
+    String confirmPin,
+  ) {
+    setState(() {
+      twoPinsMatch = !PinValidator.checkIfPinDiffersFromString(
+        pin,
+        confirmPin,
+      );
+    });
+    Future.delayed(
+      const Duration(milliseconds: 2000),
+      () {
+        if (mounted) {
+          restoreValidity();
+        }
+      },
+    );
+  }
+
+  void restoreValidity() {
+    setState(() {
+      twoPinsMatch = true;
+    });
+  }
+
+  void markCompleted() {
+    setState(() {
+      completed = true;
+    });
   }
 }

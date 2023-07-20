@@ -4,15 +4,14 @@ import 'package:flutter/material.dart';
 class PinField extends StatefulWidget {
   final TextEditingController controller;
   final ValueChanged<String> onChanged;
-  final FocusNode? focusNode; // Added
+  final FocusNode? focusNode;
 
   const PinField({
     Key? key,
     required this.controller,
     required this.onChanged,
     this.focusNode,
-  }) // Added
-  : super(key: key);
+  }) : super(key: key);
 
   @override
   PinFieldState createState() => PinFieldState();
@@ -40,12 +39,16 @@ class PinFieldState extends State<PinField> {
     return Column(
       children: <Widget>[
         Container(
-          width: 30,
-          height: 30,
+          width: 10,
+          height: 10,
           decoration: BoxDecoration(
             color: _isInvalid
                 ? Colors.red
-                : (_hasText ? Colors.green : Colors.grey),
+                : (_hasText
+                    ? Colors.green
+                    : const Color(
+                        0xFFADADB4,
+                      )),
             shape: BoxShape.circle,
           ),
           child: TextField(
@@ -126,27 +129,31 @@ class FourDigitPinCodeInputState extends State<FourDigitPinCodeInput> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: List<PinField>.generate(
-        _controllers.length,
-        (index) => PinField(
-          key: pinFieldKeys[index],
-          controller: _controllers[index],
-          focusNode: _focusNodes[index],
-          onChanged: (text) {
-            if (text.isNotEmpty && index < _controllers.length - 1) {
-              _focusNodes[index].unfocus();
-              FocusScope.of(context).requestFocus(_focusNodes[index + 1]);
-            } else if (index == _controllers.length - 1 && text.isNotEmpty) {
-              String pin = _controllers.map((c) => c.text).join();
-              setState(() {
-                widget.pin = pin;
-              });
-              widget.onCompleted(pin);
-            }
-          },
+    return SizedBox(
+      width: 146,
+      height: 10,
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: List<PinField>.generate(
+          _controllers.length,
+          (index) => PinField(
+            key: pinFieldKeys[index],
+            controller: _controllers[index],
+            focusNode: _focusNodes[index],
+            onChanged: (text) {
+              if (text.isNotEmpty && index < _controllers.length - 1) {
+                _focusNodes[index].unfocus();
+                FocusScope.of(context).requestFocus(_focusNodes[index + 1]);
+              } else if (index == _controllers.length - 1 && text.isNotEmpty) {
+                String pin = _controllers.map((c) => c.text).join();
+                setState(() {
+                  widget.pin = pin;
+                });
+                widget.onCompleted(pin);
+              }
+            },
+          ),
         ),
       ),
     );
@@ -182,7 +189,7 @@ class FourDigitPinCodeInputState extends State<FourDigitPinCodeInput> {
   void toggleValidity() {
     setAllFieldsInvalid();
     Future.delayed(
-      const Duration(seconds: 3),
+      const Duration(milliseconds: 2000),
       () {
         if (mounted) {
           setAllFieldsValid();
