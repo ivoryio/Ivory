@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
 
 import '../router/router.dart';
@@ -173,8 +172,8 @@ class LoadingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: createAppBar(context, title: title!),
-      body: Center(
-        child: PlatformCircularProgressIndicator(),
+      body: const Center(
+        child: CircularProgressIndicator(),
       ),
     );
   }
@@ -224,13 +223,10 @@ AppBar createAppBar(
     child: titleText,
   );
 
-  PlatformIconButton backButton = PlatformIconButton(
-    padding: EdgeInsets.zero,
+  IconButton backButton = IconButton(
     icon: backButtonIcon ?? defaultBackButtonIcon,
-    material: (context, platform) => MaterialIconButtonData(
-      alignment: Alignment.centerLeft,
-      padding: const EdgeInsets.only(left: defaultScreenHorizontalPadding),
-    ),
+    padding: const EdgeInsets.only(left: defaultScreenHorizontalPadding),
+    alignment: Alignment.centerLeft,
     onPressed: () {
       if (customBackButtonCallback != null) {
         customBackButtonCallback();
