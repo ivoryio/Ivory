@@ -41,8 +41,14 @@ class PinValidator {
   }
 
   static bool checkPinHasNoDigitsRepeating(String pin) {
-    var uniqueDigits = pin.split('').toSet();
-    return uniqueDigits.length >= 2;
+    List<String> pinDigits = pin.split('');
+
+    for (var digit in pinDigits) {
+      if (pinDigits.where((d) => d == digit).length > 2) {
+        return false;
+      }
+    }
+    return true;
   }
 }
 
