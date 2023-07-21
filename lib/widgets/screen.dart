@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../config.dart';
 import '../router/router.dart';
-import '../themes/default_theme.dart';
 import '../router/routing_constants.dart';
 
 class Screen extends StatelessWidget {
@@ -228,7 +228,10 @@ AppBar createAppBar(
 
   IconButton backButton = IconButton(
     icon: backButtonIcon ?? defaultBackButtonIcon,
-    padding: const EdgeInsets.only(left: defaultScreenHorizontalPadding),
+    padding: EdgeInsets.only(
+      left: ClientConfig.getCustomClientUiSettings()
+          .defaultScreenHorizontalPadding,
+    ),
     alignment: Alignment.centerLeft,
     onPressed: () {
       if (customBackButtonCallback != null) {
@@ -250,8 +253,9 @@ AppBar createAppBar(
     bottom: bottom,
     actions: [
       if (trailingActions != null) ...trailingActions,
-      const SizedBox(
-        width: defaultScreenHorizontalPadding,
+      SizedBox(
+        width: ClientConfig.getCustomClientUiSettings()
+            .defaultScreenHorizontalPadding,
       )
     ],
     automaticallyImplyLeading: hideBackButton == true ? false : true,

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:solarisdemo/themes/default_theme.dart';
 import 'package:solarisdemo/widgets/spaced_column.dart';
 
+import '../../config.dart';
 import '../../cubits/signup/signup_cubit.dart';
 import '../../widgets/platform_text_input.dart';
 import '../../widgets/screen.dart';
@@ -26,9 +26,7 @@ class SignupConfirmEmailScreen extends StatelessWidget {
       hideBottomNavbar: true,
       title: "Signup",
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-            horizontal: defaultScreenHorizontalPadding,
-            vertical: defaultScreenVerticalPadding),
+        padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,

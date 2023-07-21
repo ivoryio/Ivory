@@ -1,10 +1,10 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../config.dart';
 import '../../utilities/format.dart';
 import '../../widgets/screen.dart';
 import '../../utilities/constants.dart';
-import '../../themes/default_theme.dart';
 import '../../router/routing_constants.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../widgets/sticky_bottom_content.dart';
@@ -73,7 +73,7 @@ class TransferSetAmountScreen extends StatelessWidget {
         ),
       ),
       child: Padding(
-        padding: defaultScreenPadding,
+        padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,

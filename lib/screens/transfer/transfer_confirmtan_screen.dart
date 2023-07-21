@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../config.dart';
 import '../../cubits/transfer/transfer_cubit.dart';
-import '../../themes/default_theme.dart';
 import '../../widgets/screen.dart';
 import '../../widgets/spaced_column.dart';
 import '../../widgets/tan_input.dart';
@@ -29,7 +29,7 @@ class TransferConfirmTanScreen extends StatelessWidget {
       title: "Transaction confirmation",
       hideBottomNavbar: true,
       child: Padding(
-        padding: defaultScreenPadding,
+        padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
         child: SpacedColumn(
           space: 16,
           mainAxisAlignment: MainAxisAlignment.center,

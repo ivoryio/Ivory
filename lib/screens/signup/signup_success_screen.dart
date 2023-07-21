@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:solarisdemo/router/routing_constants.dart';
 
-import '../../themes/default_theme.dart';
+import '../../config.dart';
 import '../../widgets/button.dart';
 import '../../widgets/empty_list_message.dart';
 import '../../widgets/screen.dart';
@@ -16,9 +16,7 @@ class SignupSuccessScreen extends StatelessWidget {
       hideBottomNavbar: true,
       title: "Signup",
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-            horizontal: defaultScreenHorizontalPadding,
-            vertical: defaultScreenVerticalPadding),
+        padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

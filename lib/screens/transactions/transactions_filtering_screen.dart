@@ -3,13 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../config.dart';
 import '../../services/transaction_service.dart';
 import '../../widgets/modal.dart';
 import '../../widgets/button.dart';
 import '../../widgets/screen.dart';
 import '../../utilities/format.dart';
 import '../../widgets/pill_button.dart';
-import '../../themes/default_theme.dart';
 import '../../router/routing_constants.dart';
 import '../../widgets/spaced_column.dart';
 import 'modals/transaction_date_picker_popup.dart';
@@ -61,7 +61,8 @@ class TransactionsFilteringScreen extends StatelessWidget {
               ),
             ],
             child: Padding(
-              padding: defaultScreenPadding,
+              padding:
+                  ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,

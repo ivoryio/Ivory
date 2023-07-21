@@ -54,6 +54,7 @@ dependencies:
   mockito: ^5.4.0
   flutter_switch: ^0.3.2
   uuid: ^3.0.7
+  path: ^1.8.3
 
 dev_dependencies:
   flutter_test:
