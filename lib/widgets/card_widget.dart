@@ -33,11 +33,12 @@ class BankCardWidget extends StatelessWidget {
       width: double.infinity,
       height: 202,
       child: Card(
+        clipBehavior: Clip.antiAlias,
         elevation: 0,
         margin: EdgeInsets.zero,
         color: Colors.black,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(6),
+          borderRadius: BorderRadius.circular(8),
         ),
         child: Container(
           decoration: BoxDecoration(
