@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solarisdemo/services/card_service.dart';
+import 'package:solarisdemo/widgets/text_currency_value.dart';
 
 import '../../models/bank_card.dart';
 import 'card_details_state.dart';
@@ -43,5 +44,29 @@ class BankCardDetailsCubit extends Cubit<BankCardDetailsState> {
     } catch (e) {
       emit(BankCardDetailsErrorState(e.toString()));
     }
+  }
+
+  Future<void> initializeActivation(BankCard card) async {
+    emit(BankCardDetailsInfoState(card: card));
+  }
+
+  Future<void> startPinSetup(BankCard card) async {
+    emit(BankCardDetailsChoosePinState(card: card));
+  }
+
+  Future<void> choosePin(BankCard card, String pin) async {
+    emit(BankCardDetailsConfirmPinState(card: card, pin: pin));
+  }
+
+  Future<void> confirmPin(BankCard card, String pin) async {
+    emit(BankCardDetailsAppleWalletState(card: card, pin: pin));
+  }
+
+  Future<void> successActivation(BankCard card) async {
+    emit(BankCardDetailsActivationSuccessState(card: card));
+  }
+
+  Future<void> goToActivatedScreen() async {
+    emit(const BankCardActivatedState());
   }
 }

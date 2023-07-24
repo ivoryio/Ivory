@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../models/user.dart';
@@ -57,7 +56,7 @@ class HomeScreen extends StatelessWidget {
       hideBackButton: true,
       appBarColor: const Color(0xFF1C1A28),
       trailingActions: [
-        PlatformIconButton(
+        IconButton(
           padding: EdgeInsets.zero,
           icon: const Icon(
             Icons.bar_chart,
@@ -65,7 +64,7 @@ class HomeScreen extends StatelessWidget {
           ),
           onPressed: () {},
         ),
-        PlatformIconButton(
+        IconButton(
           padding: EdgeInsets.zero,
           icon: const Icon(
             Icons.notifications_none,
@@ -449,8 +448,7 @@ class TransactionListTitle extends StatelessWidget {
           ),
         ),
         if (displayShowAllButton)
-          PlatformTextButton(
-            padding: EdgeInsets.zero,
+          TextButton(
             child: const Text(
               "See all",
               textAlign: TextAlign.right,

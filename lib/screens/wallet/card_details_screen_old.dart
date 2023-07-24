@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:solarisdemo/cubits/card_details_cubit/card_details_cubit.dart';
 import 'package:solarisdemo/cubits/card_details_cubit/card_details_state.dart';
-import 'package:solarisdemo/screens/wallet/card_details_activation_success_screen.dart';
 import 'package:solarisdemo/services/card_service.dart';
 import 'package:solarisdemo/widgets/spaced_column.dart';
 
@@ -11,14 +10,10 @@ import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../models/bank_card.dart';
 import '../../models/user.dart';
 import '../../router/routing_constants.dart';
+import '../../themes/default_theme.dart';
+import '../../widgets/card_widget.dart';
 import '../../widgets/dialog.dart';
 import '../../widgets/screen.dart';
-import 'card_activated_screen.dart';
-import 'card_details_apple_wallet_screen.dart';
-import 'card_details_choose_pin_screen.dart';
-import 'card_details_confirm_pin_screen.dart';
-import 'card_details_info_screen.dart';
-import 'card_details_main_screen.dart';
 
 class CardDetailsScreen extends StatelessWidget {
   final BankCard card;
@@ -38,28 +33,38 @@ class CardDetailsScreen extends StatelessWidget {
       child: BlocBuilder<BankCardDetailsCubit, BankCardDetailsState>(
         builder: (context, state) {
           if (state is BankCardDetailsLoadingState) {
-            return const LoadingScreen(title: 'Wallet');
+            return const LoadingScreen(title: 'Card details');
           }
           if (state is BankCardDetailsLoadedState) {
-            return const BankCardDetailsMainScreen();
-          }
-          if (state is BankCardDetailsInfoState) {
-            return const BankCardDetailsInfoScreen();
-          }
-          if (state is BankCardDetailsChoosePinState) {
-            return BankCardDetailsChoosePinScreen();
-          }
-          if (state is BankCardDetailsConfirmPinState) {
-            return const BankCardDetailsConfirmPinScreen();
-          }
-          if (state is BankCardDetailsAppleWalletState) {
-            return const BankCardDetailsAppleWalletScreen();
-          }
-          if (state is BankCardDetailsActivationSuccessState) {
-            return const BankCardDetailsActivationSuccessScreen();
-          }
-          if (state is BankCardActivatedState) {
-            return const BankCardActivatedScreen();
+            return Screen(
+              scrollPhysics: const NeverScrollableScrollPhysics(),
+              title: cardDetailsRoute.title,
+              centerTitle: true,
+              hideBackButton: false,
+              hideBottomNavbar: false,
+              child: Padding(
+                padding: defaultScreenPadding,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SpacedColumn(
+                      space: 20,
+                      children: [
+                        BankCardWidget(
+                          cardNumber: state.card!.representation!.maskedPan!,
+                          cardHolder: state.card!.representation!.line2 ??
+                              'data missing',
+                          cardExpiry: state
+                              .card!.representation!.formattedExpirationDate!,
+                          isViewable: false,
+                        ),
+                        _CardDetailsOptions(card: state.card ?? card),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
           }
           if (state is BankCardDetailsErrorState) {
             return ErrorScreen(
@@ -68,7 +73,7 @@ class CardDetailsScreen extends StatelessWidget {
             );
           }
 
-          return const LoadingScreen(title: 'Wallet');
+          return const LoadingScreen(title: 'Card details');
         },
       ),
     );

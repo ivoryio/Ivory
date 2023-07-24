@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 import '../../widgets/screen.dart';
 import '../../widgets/spaced_column.dart';
@@ -67,7 +66,7 @@ class LoginPasscodeFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PlatformTextButton(
+    return TextButton(
         child: const Text("Forgot your passcode?"),
         onPressed: () {
           log("Forgot your passcode?");

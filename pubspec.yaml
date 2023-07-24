@@ -85,6 +85,9 @@ flutter:
   assets:
     - assets/
     - assets/icons/visa_pay_logo.svg
+    - assets/icons/apple_wallet_logo.png
+    - assets/icons/porsche_logo.png
+    - assets/images/
     - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see

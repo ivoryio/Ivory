@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
 
 import '../router/router.dart';
@@ -8,7 +7,7 @@ import '../router/routing_constants.dart';
 
 class Screen extends StatelessWidget {
   final Widget child;
-  final String title;
+  final String? title;
   final bool hideAppBar;
   final bool? centerTitle;
   final Color? appBarColor;
@@ -21,6 +20,7 @@ class Screen extends StatelessWidget {
   final Function? customBackButtonCallback;
   final BottomStickyWidget? bottomStickyWidget;
   final ScrollPhysics? scrollPhysics;
+  final BottomProgressBarPagesIndicator? bottomProgressBarPages;
 
   const Screen({
     super.key,
@@ -28,7 +28,7 @@ class Screen extends StatelessWidget {
     this.appBarColor,
     this.backButtonIcon,
     required this.child,
-    required this.title,
+    this.title,
     this.titleTextStyle,
     this.trailingActions,
     this.hideAppBar = false,
@@ -38,15 +38,18 @@ class Screen extends StatelessWidget {
     this.hideBottomNavbar = false,
     this.customBackButtonCallback,
     this.scrollPhysics,
+    this.bottomProgressBarPages,
   });
 
   @override
   Widget build(BuildContext context) {
-    PlatformAppBar? appBar = hideAppBar == true
+    AppBar? appBar = hideAppBar == true
         ? null
         : createAppBar(
             context,
-            title: title,
+            title: bottomProgressBarPages != null
+                ? 'Step ${bottomProgressBarPages!.pageNumber} out of ${bottomProgressBarPages!.numberOfPages}'
+                : title ?? '',
             centerTitle: centerTitle,
             backgroundColor: appBarColor,
             hideBackButton: hideBackButton,
@@ -54,35 +57,36 @@ class Screen extends StatelessWidget {
             backButtonIcon: backButtonIcon,
             trailingActions: trailingActions,
             customBackButtonCallback: customBackButtonCallback,
+            bottom: bottomProgressBarPages != null
+                ? bottomProgressBarWidget(bottomProgressBarPages!)
+                : null,
           );
 
     int currentPageIndex = AppRouter.calculateSelectedIndex(context);
-
-    PlatformTabController tabController = PlatformTabController(
-      initialIndex: currentPageIndex,
-    );
 
     ScrollPhysics? physics = onRefresh != null
         ? scrollPhysics ?? const AlwaysScrollableScrollPhysics()
         : null;
 
     if (hideBottomNavbar) {
-      return PlatformScaffold(
+      return Scaffold(
         appBar: appBar,
-        iosContentPadding: true,
-        iosContentBottomPadding: true,
         body: LayoutBuilder(builder:
             (BuildContext context, BoxConstraints viewportConstraints) {
           num bottomStickyWidgetHeight = bottomStickyWidget?.height ?? 0;
 
           Widget body = SingleChildScrollView(
             physics: physics,
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight:
-                    viewportConstraints.maxHeight - bottomStickyWidgetHeight,
-              ),
-              child: IntrinsicHeight(child: child),
+            child: Column(
+              children: [
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: viewportConstraints.maxHeight -
+                        bottomStickyWidgetHeight,
+                  ),
+                  child: IntrinsicHeight(child: child),
+                ),
+              ],
             ),
           );
 
@@ -103,45 +107,9 @@ class Screen extends StatelessWidget {
       );
     }
 
-    return PlatformTabScaffold(
-      iosContentPadding: true,
-      tabController: tabController,
-      iosContentBottomPadding: true,
-      appBarBuilder: (context, index) => appBar,
-      itemChanged: (pageIndex) {
-        if (currentPageIndex != pageIndex) {
-          AppRouter.navigateToPage(pageIndex, context);
-        }
-      },
-      materialTabs: (context, platform) => MaterialNavBarData(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
-        elevation: 0,
-      ),
-      cupertinoTabs: (context, platform) => CupertinoTabBarData(
-        backgroundColor: Colors.white,
-        activeColor: Colors.black,
-        inactiveColor: Colors.grey,
-      ),
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.add_card),
-          label: 'Wallet',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.payments),
-          label: 'Transactions',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.person),
-          label: 'Profile',
-        ),
-      ],
-      bodyBuilder: (context, index) => LayoutBuilder(
+    return Scaffold(
+      appBar: appBar,
+      body: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints viewportConstraints) {
           Widget screenContent = SingleChildScrollView(
             physics: physics,
@@ -165,6 +133,35 @@ class Screen extends StatelessWidget {
           });
         },
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: currentPageIndex,
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.white,
+        elevation: 0,
+        onTap: (index) {
+          if (currentPageIndex != index) {
+            AppRouter.navigateToPage(index, context);
+          }
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add_card),
+            label: 'Wallet',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.payments),
+            label: 'Transactions',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+      ),
     );
   }
 }
@@ -175,12 +172,10 @@ class LoadingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PlatformScaffold(
-      iosContentPadding: true,
+    return Scaffold(
       appBar: createAppBar(context, title: title!),
-      iosContentBottomPadding: true,
-      body: Center(
-        child: PlatformCircularProgressIndicator(),
+      body: const Center(
+        child: CircularProgressIndicator(),
       ),
     );
   }
@@ -196,16 +191,14 @@ class ErrorScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PlatformScaffold(
-      iosContentPadding: true,
+    return Scaffold(
       appBar: createAppBar(context, title: title!),
-      iosContentBottomPadding: true,
       body: Text(message!),
     );
   }
 }
 
-PlatformAppBar createAppBar(
+AppBar createAppBar(
   BuildContext context, {
   bool? hideBackButton,
   Icon? backButtonIcon,
@@ -215,6 +208,7 @@ PlatformAppBar createAppBar(
   List<Widget>? trailingActions,
   Function? customBackButtonCallback,
   Color? backgroundColor = Colors.white,
+  PreferredSizeWidget? bottom,
 }) {
   Text titleText = Text(
     title,
@@ -232,16 +226,10 @@ PlatformAppBar createAppBar(
     child: titleText,
   );
 
-  PlatformIconButton backButton = PlatformIconButton(
-    padding: EdgeInsets.zero,
+  IconButton backButton = IconButton(
     icon: backButtonIcon ?? defaultBackButtonIcon,
-    material: (context, platform) => MaterialIconButtonData(
-      alignment: Alignment.centerLeft,
-      padding: const EdgeInsets.only(left: defaultScreenHorizontalPadding),
-    ),
-    cupertino: (context, platform) => CupertinoIconButtonData(
-      alignment: Alignment.centerLeft,
-    ),
+    padding: const EdgeInsets.only(left: defaultScreenHorizontalPadding),
+    alignment: Alignment.centerLeft,
     onPressed: () {
       if (customBackButtonCallback != null) {
         customBackButtonCallback();
@@ -253,24 +241,19 @@ PlatformAppBar createAppBar(
     },
   );
 
-  return PlatformAppBar(
+  return AppBar(
     leading: hideBackButton == true ? null : backButton,
     title: centerTitle == true ? titleText : leftAlignedTitle,
     backgroundColor: backgroundColor,
-    trailingActions: trailingActions,
-    material: (context, platform) =>
-        MaterialAppBarData(elevation: 0, centerTitle: centerTitle, actions: [
+    elevation: 0,
+    centerTitle: centerTitle,
+    bottom: bottom,
+    actions: [
       if (trailingActions != null) ...trailingActions,
       const SizedBox(
         width: defaultScreenHorizontalPadding,
       )
-    ]),
-    cupertino: (context, platform) => CupertinoNavigationBarData(
-      border: Border.all(color: Colors.transparent),
-      padding: const EdgeInsetsDirectional.symmetric(
-        horizontal: defaultScreenHorizontalPadding,
-      ),
-    ),
+    ],
     automaticallyImplyLeading: hideBackButton == true ? false : true,
   );
 }
@@ -307,4 +290,26 @@ class BottomStickyWidget extends StatelessWidget {
       ),
     );
   }
+}
+
+PreferredSizeWidget bottomProgressBarWidget(
+    BottomProgressBarPagesIndicator pages) {
+  return PreferredSize(
+    preferredSize: const Size.fromHeight(4),
+    child: LinearProgressIndicator(
+      value: pages.pageNumber / pages.numberOfPages,
+      color: const Color(0xFFCC0000),
+      backgroundColor: const Color(0xFFE9EAEB),
+    ),
+  );
+}
+
+class BottomProgressBarPagesIndicator {
+  final int pageNumber;
+  final int numberOfPages;
+
+  const BottomProgressBarPagesIndicator({
+    required this.pageNumber,
+    required this.numberOfPages,
+  });
 }

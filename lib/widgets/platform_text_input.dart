@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
-
 const String _defaultHintText = '';
 const double _defaultFontSize = 16;
 const bool _defaultObscureText = false;
@@ -118,14 +117,6 @@ class PlatformTextInput extends StatelessWidget {
                       isDense: true,
                       border: InputBorder.none,
                     ),
-                  ),
-                  cupertino: (context, platform) => CupertinoTextFormFieldData(
-                    style: TextStyle(
-                      color: const Color(0xFF414D63),
-                      fontSize: fontSize,
-                      height: 1.2,
-                    ),
-                    padding: EdgeInsets.zero,
                   ),
                 ),
               ),
