@@ -34,7 +34,7 @@ class ClientConfig {
     return getClientConfig().uiSettings.colorscheme;
   }
 
-  static String getAssetPath() {
+  static String getClientImagePath() {
     String client = const String.fromEnvironment('CLIENT');
     switch (client) {
       case 'porsche':
@@ -44,13 +44,23 @@ class ClientConfig {
     }
   }
 
-  static String getAssetImagePath(String filename) {
-    return join(getAssetPath(), filename);
+  static String getClientIconPath() {
+    String client = const String.fromEnvironment('CLIENT');
+    switch (client) {
+      case 'porsche':
+        return 'assets/icons/porsche';
+      default:
+        return 'assets/icons/default';
+    }
   }
-//    String client = 'company2';
-//    String filename = 'logo.png';
-//    String assetPath = CompanyConfig.getAssetImagePath(client, filename);
-//    print(assetPath); // Output: assets/images/company2/logo.png
+
+  static String getAssetImagePath(String filename) {
+    return join(getClientImagePath(), filename);
+  }
+
+  static String getAssetIconPath(String filename) {
+    return join(getClientIconPath(), filename);
+  }
 }
 
 class ClientConfigData {

@@ -29,7 +29,7 @@ class BankCardDetailsInfoScreen extends StatelessWidget {
       hideBottomNavbar: true,
       trailingActions: [
         IconButton(
-          icon: Image.asset('assets/icons/porsche_logo.png'),
+          icon: Image.asset(ClientConfig.getAssetIconPath('small_logo.png')),
           iconSize: 40,
           onPressed: () {},
         ),

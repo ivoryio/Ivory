@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:solarisdemo/config.dart';
 
 import 'spaced_column.dart';
 import '../utilities/format.dart';
@@ -13,7 +14,6 @@ class BankCardWidget extends StatelessWidget {
   final String cardExpiry;
   final bool? isViewable;
   final String? cardType;
-  final String? backgroundImageFile;
 
   const BankCardWidget({
     super.key,
@@ -22,7 +22,6 @@ class BankCardWidget extends StatelessWidget {
     required this.cardNumber,
     this.isViewable = true,
     this.cardType,
-    this.backgroundImageFile,
   });
 
   @override
@@ -51,12 +50,11 @@ class BankCardWidget extends StatelessWidget {
               ],
               transform: GradientRotation(135 * (3.1415926 / 180.0)),
             ),
-            image: (backgroundImageFile != null)
-                ? DecorationImage(
-                    image: AssetImage('assets/images/$backgroundImageFile'),
-                    fit: BoxFit.scaleDown,
-                  )
-                : null,
+            image: DecorationImage(
+              image:
+                  AssetImage(ClientConfig.getAssetImagePath('card_logo.png')),
+              fit: BoxFit.scaleDown,
+            ),
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(

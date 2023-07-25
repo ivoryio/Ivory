@@ -50,7 +50,6 @@ class InactiveCard extends StatelessWidget {
               cardHolder: state.card!.representation!.line2 ?? 'data missing',
               cardExpiry: state.card!.representation!.formattedExpirationDate!,
               isViewable: false,
-              // backgroundImageFile: 'porsche_logo.png',
             ),
             SpacedColumn(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -119,7 +118,6 @@ class ActiveCard extends StatelessWidget {
               cardExpiry: state.card!.representation!.formattedExpirationDate!,
               isViewable: false,
               cardType: 'Credit card',
-              // backgroundImageFile: 'porsche_logo.png',
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
