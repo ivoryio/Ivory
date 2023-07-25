@@ -50,12 +50,12 @@ class DefaultTheme {
 
 class PorscheTheme {
   static ColorScheme colorScheme = const ColorScheme(
-    primary: Colors.blue,
-    secondary: Colors.red,
-    surface: Colors.black,
-    background: Colors.black,
-    error: Colors.green,
-    onPrimary: Colors.green,
+    primary: Colors.black,
+    secondary: Color(0xffD9D9D9),
+    surface: Colors.white,
+    background: Colors.white,
+    error: Colors.red,
+    onPrimary: Colors.black,
     onSecondary: Colors.black,
     onSurface: Colors.black,
     onBackground: Colors.black,
@@ -64,19 +64,7 @@ class PorscheTheme {
   );
 
   static ClientUiSettings clientUiSettings = ClientUiSettings(
-    colorscheme: const ColorScheme(
-      primary: Colors.blue,
-      secondary: Colors.red,
-      surface: Colors.black,
-      background: Colors.black,
-      error: Colors.green,
-      onPrimary: Colors.green,
-      onSecondary: Colors.black,
-      onSurface: Colors.black,
-      onBackground: Colors.black,
-      onError: Colors.white,
-      brightness: Brightness.light,
-    ),
+    colorscheme: colorScheme,
     themeData: ThemeData(
       primaryColor: colorScheme.primary,
       colorScheme: colorScheme,
