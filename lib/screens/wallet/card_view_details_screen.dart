@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -70,7 +69,7 @@ class BankCardViewDetailsScreen extends StatelessWidget {
                       height: 70,
                       alignment: Alignment.center,
                       padding: const EdgeInsets.all(0.0),
-                      child: const CircularCountdownTImer(),
+                      child: const CircularTimeCounter(),
                     ),
                   ],
                 ),
@@ -97,16 +96,16 @@ class BankCardViewDetailsScreen extends StatelessWidget {
   }
 }
 
-class CircularCountdownTImer extends StatefulWidget {
-  const CircularCountdownTImer({
+class CircularTimeCounter extends StatefulWidget {
+  const CircularTimeCounter({
     super.key,
   });
 
   @override
-  State<CircularCountdownTImer> createState() => _CircularCountdownTImerState();
+  State<CircularTimeCounter> createState() => _CircularTimeCounterState();
 }
 
-class _CircularCountdownTImerState extends State<CircularCountdownTImer> {
+class _CircularTimeCounterState extends State<CircularTimeCounter> {
   final int _duration = 60;
   late int _remainingTime;
   late Timer _timer;
@@ -120,6 +119,7 @@ class _CircularCountdownTImerState extends State<CircularCountdownTImer> {
     _remainingTime = 0;
     _isRunning = false;
     _showValue = '00:00';
+    _handleTap();
   }
 
   void _startTimer() {
@@ -164,51 +164,39 @@ class _CircularCountdownTImerState extends State<CircularCountdownTImer> {
     super.dispose();
   }
 
-  // void didChangeAppLifecycleState(AppLifecycleState state) {
-  //   // super.didChangeAppLifecycleState(state);
-  //   if (state == AppLifecycleState.resumed) {
-  //     _startTimer();
-  //   } else if (state == AppLifecycleState.paused) {
-  //     _timer.cancel();
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: _handleTap,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Container(
-            width: 70,
-            height: 70,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.white,
-            ),
-            child: Center(
-              child: Text(
-                _isRunning ? _showValue : '01:00',
-                style: const TextStyle(
-                  fontSize: 14,
-                  height: 18 / 14,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF15141E),
-                ),
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Container(
+          width: 70,
+          height: 70,
+          decoration: const BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.white,
+          ),
+          child: Center(
+            child: Text(
+              _isRunning ? _showValue : '01:00',
+              style: const TextStyle(
+                fontSize: 14,
+                height: 18 / 14,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF15141E),
               ),
             ),
           ),
-          Positioned.fill(
-            child: CircularProgressIndicator(
-              strokeWidth: 7,
-              value: _remainingTime / _duration,
-              backgroundColor: Colors.white,
-              valueColor: const AlwaysStoppedAnimation<Color>(Colors.red),
-            ),
+        ),
+        Positioned.fill(
+          child: CircularProgressIndicator(
+            strokeWidth: 7,
+            value: _remainingTime / _duration,
+            backgroundColor: Colors.white,
+            valueColor: const AlwaysStoppedAnimation<Color>(Colors.red),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
