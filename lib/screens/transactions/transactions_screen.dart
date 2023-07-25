@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../config.dart';
 import '../../widgets/search_bar.dart';
 import '../../models/user.dart';
 import '../../widgets/screen.dart';
 import '../../widgets/pill_button.dart';
-import '../../themes/default_theme.dart';
 import '../../widgets/spaced_column.dart';
 import 'transactions_filtering_screen.dart';
 import '../../router/routing_constants.dart';
@@ -53,7 +53,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           transactionListCubit!.getTransactions(filter: transactionListFilter),
       title: "Transactions",
       child: Padding(
-        padding: defaultScreenPadding,
+        padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
         child: SpacedColumn(
           space: 36,
           children: [

@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../config.dart';
 import '../../models/user.dart';
 import '../../widgets/modal.dart';
 import '../../widgets/screen.dart';
 import '../../utilities/format.dart';
 import '../../widgets/analytics.dart';
 import 'modals/new_transfer_popup.dart';
-import '../../themes/default_theme.dart';
 import '../../widgets/refer_a_friend.dart';
 import '../../services/person_service.dart';
 import '../../widgets/transaction_list.dart';
@@ -104,7 +104,8 @@ class HomePageContent extends StatelessWidget {
             accountSummaryCubit: accountSummaryCubit,
           ),
           Padding(
-            padding: defaultScreenPadding,
+            padding:
+                ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
             child: Column(
               children: [
                 TransactionList(
@@ -119,13 +120,15 @@ class HomePageContent extends StatelessWidget {
               ],
             ),
           ),
-          const Padding(
-            padding: defaultScreenPadding,
-            child: Analytics(),
+          Padding(
+            padding:
+                ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
+            child: const Analytics(),
           ),
-          const Padding(
-            padding: defaultScreenPadding,
-            child: ReferAFriend(),
+          Padding(
+            padding:
+                ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
+            child: const ReferAFriend(),
           ),
         ],
       ),
@@ -148,9 +151,10 @@ class HomePageHeader extends StatelessWidget {
         builder: (context, state) {
           if (state is AccountSummaryCubitLoading) {
             return Container(
-              padding: const EdgeInsets.symmetric(
+              padding: EdgeInsets.symmetric(
                 vertical: 10,
-                horizontal: defaultScreenHorizontalPadding,
+                horizontal: ClientConfig.getCustomClientUiSettings()
+                    .defaultScreenHorizontalPadding,
               ),
               width: MediaQuery.of(context).size.width,
               decoration: const BoxDecoration(
@@ -171,9 +175,10 @@ class HomePageHeader extends StatelessWidget {
 
           if (state is AccountSummaryCubitLoaded) {
             return Container(
-              padding: const EdgeInsets.symmetric(
+              padding: EdgeInsets.symmetric(
                 vertical: 10,
-                horizontal: defaultScreenHorizontalPadding,
+                horizontal: ClientConfig.getCustomClientUiSettings()
+                    .defaultScreenHorizontalPadding,
               ),
               width: MediaQuery.of(context).size.width,
               decoration: const BoxDecoration(

@@ -1,58 +1,121 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-const ColorScheme defaultColorScheme = ColorScheme(
-  primary: Colors.black,
-  secondary: Color(0xffD9D9D9),
-  surface: Colors.white,
-  background: Colors.white,
-  error: Colors.red,
-  onPrimary: Colors.black,
-  onSecondary: Colors.black,
-  onSurface: Colors.black,
-  onBackground: Colors.black,
-  onError: Colors.white,
-  brightness: Brightness.light,
-);
+class DefaultTheme {
+  static ColorScheme colorScheme = const ColorScheme(
+    primary: Colors.black,
+    secondary: Color(0xffD9D9D9),
+    surface: Colors.white,
+    background: Colors.white,
+    error: Colors.red,
+    onPrimary: Colors.black,
+    onSecondary: Colors.black,
+    onSurface: Colors.black,
+    onBackground: Colors.black,
+    onError: Colors.white,
+    brightness: Brightness.light,
+  );
 
-final ThemeData defaultMaterialTheme = ThemeData(
-  primaryColor: defaultColorScheme.primary,
-  colorScheme: defaultColorScheme,
-  scaffoldBackgroundColor: defaultColorScheme.background,
-  fontFamily: 'Proxima Nova',
-  appBarTheme: AppBarTheme(
-    color: defaultColorScheme.surface,
-    iconTheme: IconThemeData(color: defaultColorScheme.onSurface),
-    titleTextStyle: const TextStyle(
-      fontSize: 20,
-      fontWeight: FontWeight.w600,
-      color: Colors.black,
+  static ClientUiSettings clientUiSettings = ClientUiSettings(
+    colorscheme: colorScheme,
+    themeData: ThemeData(
+      primaryColor: colorScheme.primary,
+      colorScheme: colorScheme,
+      scaffoldBackgroundColor: colorScheme.background,
       fontFamily: 'Proxima Nova',
+      appBarTheme: AppBarTheme(
+        color: colorScheme.surface,
+        iconTheme: IconThemeData(color: colorScheme.onSurface),
+        titleTextStyle: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+          color: Colors.black,
+          fontFamily: 'Proxima Nova',
+        ),
+      ),
+      buttonTheme: ButtonThemeData(
+        buttonColor: colorScheme.primary,
+        textTheme: ButtonTextTheme.normal,
+      ),
     ),
-  ),
-  buttonTheme: ButtonThemeData(
-    buttonColor: defaultColorScheme.primary,
-    textTheme: ButtonTextTheme.normal,
-  ),
-  // cupertinoOverrideTheme: CupertinoThemeData(
-  //   primaryColor: defaultColorScheme.primary,
-  //   brightness: Brightness.light,
-  //   barBackgroundColor: defaultColorScheme.surface,
-  //   scaffoldBackgroundColor: defaultColorScheme.surface,
-  //   textTheme: CupertinoTextThemeData(
-  //     primaryColor: defaultColorScheme.primary,
-  //     textStyle: TextStyle(
-  //       fontFamily: 'Proxima Nova',
-  //       color: defaultColorScheme.primary,
-  //     ),
-  //   ),
-  // ),
-);
+    customSettings: CustomClientUiSettings(
+      defaultScreenHorizontalPadding: 24,
+      defaultScreenVerticalPadding: 24,
+      defaultScreenPadding: const EdgeInsets.symmetric(
+        horizontal: 24,
+        vertical: 24,
+      ),
+    ),
+  );
+}
 
-const double defaultScreenHorizontalPadding = 24;
-const double defaultScreenVerticalPadding = 24;
+class PorscheTheme {
+  static ColorScheme colorScheme = const ColorScheme(
+    primary: Colors.black,
+    secondary: Color(0xffD9D9D9),
+    surface: Colors.white,
+    background: Colors.white,
+    error: Colors.red,
+    onPrimary: Colors.black,
+    onSecondary: Colors.black,
+    onSurface: Colors.black,
+    onBackground: Colors.black,
+    onError: Colors.white,
+    brightness: Brightness.light,
+  );
 
-const EdgeInsets defaultScreenPadding = EdgeInsets.symmetric(
-  horizontal: defaultScreenHorizontalPadding,
-  vertical: defaultScreenVerticalPadding,
-);
+  static ClientUiSettings clientUiSettings = ClientUiSettings(
+    colorscheme: colorScheme,
+    themeData: ThemeData(
+      primaryColor: colorScheme.primary,
+      colorScheme: colorScheme,
+      scaffoldBackgroundColor: colorScheme.background,
+      fontFamily: 'Proxima Nova',
+      appBarTheme: AppBarTheme(
+        color: colorScheme.surface,
+        iconTheme: IconThemeData(color: colorScheme.onSurface),
+        titleTextStyle: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+          color: Colors.black,
+          fontFamily: 'Proxima Nova',
+        ),
+      ),
+      buttonTheme: ButtonThemeData(
+        buttonColor: colorScheme.primary,
+        textTheme: ButtonTextTheme.normal,
+      ),
+    ),
+    customSettings: CustomClientUiSettings(
+      defaultScreenHorizontalPadding: 24,
+      defaultScreenVerticalPadding: 24,
+      defaultScreenPadding: const EdgeInsets.symmetric(
+        horizontal: 24,
+        vertical: 24,
+      ),
+    ),
+  );
+}
+
+class ClientUiSettings {
+  final ColorScheme colorscheme;
+  final ThemeData themeData;
+  final CustomClientUiSettings customSettings;
+
+  const ClientUiSettings({
+    required this.colorscheme,
+    required this.themeData,
+    required this.customSettings,
+  });
+}
+
+class CustomClientUiSettings {
+  final double defaultScreenHorizontalPadding;
+  final double defaultScreenVerticalPadding;
+  final EdgeInsets defaultScreenPadding;
+
+  CustomClientUiSettings({
+    required this.defaultScreenHorizontalPadding,
+    required this.defaultScreenVerticalPadding,
+    required this.defaultScreenPadding,
+  });
+}

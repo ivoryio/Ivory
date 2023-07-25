@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/widgets/spaced_column.dart';
 
+import '../../config.dart';
 import '../../cubits/card_details_cubit/card_details_cubit.dart';
-import '../../themes/default_theme.dart';
 import '../../widgets/button.dart';
 import '../../widgets/screen.dart';
 
@@ -29,7 +29,7 @@ class BankCardDetailsInfoScreen extends StatelessWidget {
       hideBottomNavbar: true,
       trailingActions: [
         IconButton(
-          icon: Image.asset('assets/icons/porsche_logo.png'),
+          icon: Image.asset(ClientConfig.getAssetIconPath('small_logo.png')),
           iconSize: 40,
           onPressed: () {},
         ),
@@ -39,7 +39,7 @@ class BankCardDetailsInfoScreen extends StatelessWidget {
         numberOfPages: 4,
       ),
       child: Padding(
-        padding: defaultScreenPadding,
+        padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

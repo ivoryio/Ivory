@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solarisdemo/services/card_service.dart';
-import 'package:solarisdemo/widgets/text_currency_value.dart';
 
 import '../../models/bank_card.dart';
 import '../../screens/wallet/card_details_main_screen.dart';

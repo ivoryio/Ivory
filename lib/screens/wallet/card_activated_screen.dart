@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import '../../themes/default_theme.dart';
+import '../../config.dart';
 import '../../widgets/screen.dart';
 
 class BankCardActivatedScreen extends StatelessWidget {
@@ -7,15 +7,15 @@ class BankCardActivatedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Screen(
-      scrollPhysics: NeverScrollableScrollPhysics(),
+    return Screen(
+      scrollPhysics: const NeverScrollableScrollPhysics(),
       title: 'Card',
       centerTitle: true,
       hideBackButton: true,
       hideBottomNavbar: false,
       child: Padding(
-        padding: defaultScreenPadding,
-        child: Text(''),
+        padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
+        child: const Text(''),
       ),
     );
   }

@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solarisdemo/utilities/constants.dart';
 import 'package:solarisdemo/utilities/format.dart';
 
+import '../../config.dart';
 import '../../utilities/validator.dart';
 import '../../widgets/screen.dart';
 import '../../widgets/checkbox.dart';
-import '../../themes/default_theme.dart';
 import '../../widgets/spaced_column.dart';
 import '../../widgets/account_select.dart';
 import '../../router/routing_constants.dart';
@@ -86,7 +86,7 @@ class TransferInitialScreen extends StatelessWidget {
         ),
       ),
       child: Padding(
-        padding: defaultScreenPadding,
+        padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

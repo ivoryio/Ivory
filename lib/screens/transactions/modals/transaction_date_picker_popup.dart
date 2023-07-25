@@ -1,10 +1,10 @@
-
 import 'package:flutter/material.dart';
-import 'package:solarisdemo/themes/default_theme.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/date_range_picker.dart';
 
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+
+import '../../../config.dart';
 
 class TransactionDatePickerPopup extends StatefulWidget {
   final DateTimeRange? initialSelectedRange;
@@ -39,8 +39,9 @@ class _TransactionDatePickerPopupState
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: defaultScreenHorizontalPadding,
+          padding: EdgeInsets.symmetric(
+            horizontal: ClientConfig.getCustomClientUiSettings()
+                .defaultScreenHorizontalPadding,
             vertical: 20,
           ),
           child: Column(

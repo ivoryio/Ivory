@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solarisdemo/widgets/spaced_column.dart';
 
+import '../../config.dart';
 import '../../cubits/card_details_cubit/card_details_cubit.dart';
-import '../../themes/default_theme.dart';
 import '../../widgets/button.dart';
 import '../../widgets/card_widget.dart';
 import '../../widgets/screen.dart';
@@ -22,7 +22,7 @@ class BankCardDetailsActivationSuccessScreen extends StatelessWidget {
       hideBackButton: true,
       hideBottomNavbar: true,
       child: Padding(
-        padding: defaultScreenPadding,
+        padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
