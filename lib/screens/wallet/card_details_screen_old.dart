@@ -6,11 +6,11 @@ import 'package:solarisdemo/cubits/card_details_cubit/card_details_state.dart';
 import 'package:solarisdemo/services/card_service.dart';
 import 'package:solarisdemo/widgets/spaced_column.dart';
 
+import '../../config.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../models/bank_card.dart';
 import '../../models/user.dart';
 import '../../router/routing_constants.dart';
-import '../../themes/default_theme.dart';
 import '../../widgets/card_widget.dart';
 import '../../widgets/dialog.dart';
 import '../../widgets/screen.dart';
@@ -43,7 +43,8 @@ class CardDetailsScreen extends StatelessWidget {
               hideBackButton: false,
               hideBottomNavbar: false,
               child: Padding(
-                padding: defaultScreenPadding,
+                padding: ClientConfig.getCustomClientUiSettings()
+                    .defaultScreenPadding,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

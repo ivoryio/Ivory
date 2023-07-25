@@ -54,6 +54,7 @@ dependencies:
   mockito: ^5.4.0
   flutter_switch: ^0.3.2
   uuid: ^3.0.7
+  path: ^1.8.3
 
 dev_dependencies:
   flutter_test:
@@ -84,10 +85,12 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/
-    - assets/icons/visa_pay_logo.svg
-    - assets/icons/apple_wallet_logo.png
-    - assets/icons/porsche_logo.png
+    - assets/icons/
     - assets/images/
+    - assets/icons/default/
+    - assets/images/default/
+    - assets/icons/porsche/
+    - assets/images/porsche/
     - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../config.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../cubits/cards_cubit/cards_cubit.dart';
 import '../../models/bank_card.dart';
@@ -13,7 +14,6 @@ import '../../widgets/button.dart';
 import '../../widgets/empty_list_message.dart';
 import '../../widgets/screen.dart';
 import '../../widgets/tab_view.dart';
-import '../../themes/default_theme.dart';
 import '../../widgets/spaced_column.dart';
 import '../../widgets/card_widget.dart';
 
@@ -72,8 +72,9 @@ class WalletScreenBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: defaultScreenHorizontalPadding,
+      padding: EdgeInsets.symmetric(
+        horizontal: ClientConfig.getCustomClientUiSettings()
+            .defaultScreenHorizontalPadding,
       ),
       child: TabView(
         tabs: [

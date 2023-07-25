@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 
+import '../../config.dart';
 import '../../cubits/card_details_cubit/card_details_cubit.dart';
-import '../../themes/default_theme.dart';
 import '../../widgets/button.dart';
 import '../../widgets/card_widget.dart';
 import '../../widgets/screen.dart';
@@ -14,18 +14,18 @@ class BankCardDetailsMainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Screen(
-      scrollPhysics: ClampingScrollPhysics(),
+    return Screen(
+      scrollPhysics: const ClampingScrollPhysics(),
       title: 'Card',
       centerTitle: true,
       hideBackButton: true,
       hideBottomNavbar: false,
       child: Padding(
-        padding: defaultScreenPadding,
+        padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
         // child: (state.card!.status == BankCardStatus.INACTIVE)
         //     ? const InactiveCard()
         //     : const ActiveCard(),
-        child: InactiveCard(),
+        child: const InactiveCard(),
       ),
     );
   }
@@ -50,7 +50,6 @@ class InactiveCard extends StatelessWidget {
               cardHolder: state.card!.representation!.line2 ?? 'data missing',
               cardExpiry: state.card!.representation!.formattedExpirationDate!,
               isViewable: false,
-              // backgroundImageFile: 'porsche_logo.png',
             ),
             SpacedColumn(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -119,7 +118,6 @@ class ActiveCard extends StatelessWidget {
               cardExpiry: state.card!.representation!.formattedExpirationDate!,
               isViewable: false,
               cardType: 'Credit card',
-              // backgroundImageFile: 'porsche_logo.png',
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -251,7 +249,7 @@ class CardOptionsButton extends StatelessWidget {
         ElevatedButton(
           onPressed: () => onPressed(),
           style: ElevatedButton.styleFrom(
-            backgroundColor: defaultColorScheme.primary,
+            backgroundColor: ClientConfig.getColorScheme().primary,
             fixedSize: const Size(48, 48),
             shape: const CircleBorder(),
             splashFactory: NoSplash.splashFactory,
@@ -259,7 +257,7 @@ class CardOptionsButton extends StatelessWidget {
           child: Icon(
             icon,
             size: 24,
-            color: defaultColorScheme.background,
+            color: ClientConfig.getColorScheme().background,
           ),
         ),
         Padding(
@@ -267,7 +265,7 @@ class CardOptionsButton extends StatelessWidget {
           child: Text(
             textLabel,
             style: TextStyle(
-              color: defaultColorScheme.primary,
+              color: ClientConfig.getColorScheme().primary,
               fontWeight: FontWeight.w600,
               fontSize: 16,
               height: 1.125,
@@ -316,7 +314,7 @@ class ItemName extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Icon(leftIcon, color: defaultColorScheme.error, size: 24),
+        Icon(leftIcon, color: ClientConfig.getColorScheme().error, size: 24),
         const SizedBox(width: 16),
         Expanded(
           child: Column(
@@ -340,7 +338,8 @@ class ItemName extends StatelessWidget {
           padding: const EdgeInsets.only(right: 0),
           child: (actionSwitch == true)
               ? const ActionItem()
-              : Icon(rightIcon, color: defaultColorScheme.primary, size: 24),
+              : Icon(rightIcon,
+                  color: ClientConfig.getColorScheme().primary, size: 24),
         ),
       ],
     );

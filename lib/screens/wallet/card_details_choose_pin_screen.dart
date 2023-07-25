@@ -5,8 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/widgets/spaced_column.dart';
 
+import '../../config.dart';
 import '../../cubits/card_details_cubit/card_details_cubit.dart';
-import '../../themes/default_theme.dart';
 import '../../utilities/validator.dart';
 import '../../widgets/pin_field.dart';
 import '../../widgets/screen.dart';
@@ -56,7 +56,7 @@ class _BankCardDetailsChoosePinScreenState
       hideBottomNavbar: true,
       trailingActions: [
         IconButton(
-          icon: Image.asset('assets/icons/porsche_logo.png'),
+          icon: Image.asset(ClientConfig.getAssetIconPath('small_logo.png')),
           iconSize: 40,
           onPressed: () {},
         ),
@@ -66,7 +66,7 @@ class _BankCardDetailsChoosePinScreenState
         numberOfPages: 4,
       ),
       child: Padding(
-        padding: defaultScreenPadding,
+        padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

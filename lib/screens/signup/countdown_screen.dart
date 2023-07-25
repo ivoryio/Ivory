@@ -7,8 +7,8 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:solarisdemo/router/routing_constants.dart';
 
+import '../../config.dart';
 import '../../cubits/signup/signup_cubit.dart';
-import '../../themes/default_theme.dart';
 import '../../widgets/button.dart';
 import '../../widgets/screen.dart';
 
@@ -107,10 +107,7 @@ class _CountdownScreenState extends State<CountdownScreen>
       hideBottomNavbar: true,
       hideBackButton: true,
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: defaultScreenHorizontalPadding,
-          vertical: defaultScreenVerticalPadding,
-        ),
+        padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

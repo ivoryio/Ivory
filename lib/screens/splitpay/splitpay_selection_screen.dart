@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solarisdemo/models/transaction_model.dart';
 import 'package:solarisdemo/screens/home/modals/new_transfer_popup.dart';
-import 'package:solarisdemo/themes/default_theme.dart';
 import 'package:solarisdemo/widgets/screen.dart';
 import 'package:solarisdemo/widgets/spaced_column.dart';
 import 'package:solarisdemo/widgets/transaction_listing_item.dart';
 
+import '../../config.dart';
 import '../../cubits/splitpay_cubit/splitpay_cubit.dart';
 import '../../utilities/format.dart';
 import '../../widgets/button.dart';
@@ -58,11 +58,16 @@ class _SplitpaySelectionScreenState extends State<SplitpaySelectionScreen> {
       title: 'Convert into instalments',
       hideBottomNavbar: true,
       child: Padding(
-        padding: const EdgeInsets.only(
-          left: defaultScreenHorizontalPadding,
-          right: defaultScreenHorizontalPadding,
-          top: defaultScreenVerticalPadding,
-          bottom: defaultScreenVerticalPadding + 12,
+        padding: EdgeInsets.only(
+          left: ClientConfig.getCustomClientUiSettings()
+              .defaultScreenHorizontalPadding,
+          right: ClientConfig.getCustomClientUiSettings()
+              .defaultScreenHorizontalPadding,
+          top: ClientConfig.getCustomClientUiSettings()
+              .defaultScreenVerticalPadding,
+          bottom: ClientConfig.getCustomClientUiSettings()
+                  .defaultScreenVerticalPadding +
+              12,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

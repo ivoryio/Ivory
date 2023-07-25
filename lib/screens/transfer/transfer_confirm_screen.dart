@@ -2,8 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solarisdemo/widgets/spaced_column.dart';
 
+import '../../config.dart';
 import '../../cubits/transfer/transfer_cubit.dart';
-import '../../themes/default_theme.dart';
 import '../../widgets/account_select.dart';
 import '../../widgets/screen.dart';
 import '../../widgets/sticky_bottom_content.dart';
@@ -45,7 +45,7 @@ class TransferConfirmScreen extends StatelessWidget {
         ),
       ),
       child: Padding(
-        padding: defaultScreenPadding,
+        padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
         child: SpacedColumn(
           space: 32,
           crossAxisAlignment: CrossAxisAlignment.start,

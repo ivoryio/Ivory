@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../config.dart';
 import '../../router/routing_constants.dart';
-import '../../themes/default_theme.dart';
 import '../../widgets/screen.dart';
 import '../../widgets/sticky_bottom_content.dart';
 
@@ -23,9 +23,9 @@ class TransferConfirmedScreen extends StatelessWidget {
           },
         ),
       ),
-      child: const Padding(
-        padding: defaultScreenPadding,
-        child: Column(
+      child: Padding(
+        padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
+        child: const Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

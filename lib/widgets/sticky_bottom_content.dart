@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-import '../themes/default_theme.dart';
+import '../config.dart';
 import 'button.dart';
 
 class StickyBottomContent extends StatefulWidget {
@@ -45,7 +45,7 @@ class StickyBottomContentState extends State<StickyBottomContent> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: defaultScreenPadding,
+      padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
       child: Row(
         children: [
           Expanded(

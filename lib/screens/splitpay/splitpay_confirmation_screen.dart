@@ -4,9 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:solarisdemo/router/routing_constants.dart';
 
+import '../../config.dart';
 import '../../cubits/splitpay_cubit/splitpay_cubit.dart';
 import '../../models/transaction_model.dart';
-import '../../themes/default_theme.dart';
 import '../../utilities/format.dart';
 import '../../widgets/button.dart';
 import '../../widgets/checkbox.dart';
@@ -43,11 +43,16 @@ class SplitpayConfirmationScreen extends StatelessWidget {
         context.read<SplitpayCubit>().setTransaction(transaction);
       },
       child: Padding(
-        padding: const EdgeInsets.only(
-          left: defaultScreenHorizontalPadding,
-          right: defaultScreenHorizontalPadding,
-          top: defaultScreenVerticalPadding,
-          bottom: defaultScreenVerticalPadding + 12,
+        padding: EdgeInsets.only(
+          left: ClientConfig.getCustomClientUiSettings()
+              .defaultScreenHorizontalPadding,
+          right: ClientConfig.getCustomClientUiSettings()
+              .defaultScreenHorizontalPadding,
+          top: ClientConfig.getCustomClientUiSettings()
+              .defaultScreenVerticalPadding,
+          bottom: ClientConfig.getCustomClientUiSettings()
+                  .defaultScreenVerticalPadding +
+              12,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
