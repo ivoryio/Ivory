@@ -64,7 +64,27 @@ class BankCardDetailsActivationSuccessState extends BankCardDetailsState {
 }
 
 class BankCardActivatedState extends BankCardDetailsState {
-  const BankCardActivatedState() : super();
+  const BankCardActivatedState({
+    required BankCard card,
+  }) : super(
+          card: card,
+        );
+}
+
+class BankCardDetailsMainState extends BankCardDetailsState {
+  const BankCardDetailsMainState({
+    required BankCard card,
+  }) : super(
+          card: card,
+        );
+}
+
+class BankCardViewDetailsState extends BankCardDetailsState {
+  const BankCardViewDetailsState({
+    required BankCard card,
+  }) : super(
+          card: card,
+        );
 }
 
 class BankCardDetailsErrorState extends BankCardDetailsState {

@@ -19,6 +19,7 @@ import 'card_details_choose_pin_screen.dart';
 import 'card_details_confirm_pin_screen.dart';
 import 'card_details_info_screen.dart';
 import 'card_details_main_screen.dart';
+import 'card_view_details_screen.dart';
 
 class CardDetailsScreen extends StatelessWidget {
   final BankCard card;
@@ -47,7 +48,7 @@ class CardDetailsScreen extends StatelessWidget {
             return const BankCardDetailsInfoScreen();
           }
           if (state is BankCardDetailsChoosePinState) {
-            return BankCardDetailsChoosePinScreen();
+            return const BankCardDetailsChoosePinScreen();
           }
           if (state is BankCardDetailsConfirmPinState) {
             return const BankCardDetailsConfirmPinScreen();
@@ -58,8 +59,11 @@ class CardDetailsScreen extends StatelessWidget {
           if (state is BankCardDetailsActivationSuccessState) {
             return const BankCardDetailsActivationSuccessScreen();
           }
-          if (state is BankCardActivatedState) {
-            return const BankCardActivatedScreen();
+          if (state is BankCardDetailsMainState) {
+            return const BankCardDetailsMainScreen();
+          }
+          if (state is BankCardViewDetailsState) {
+            return const BankCardViewDetailsScreen();
           }
           if (state is BankCardDetailsErrorState) {
             return ErrorScreen(

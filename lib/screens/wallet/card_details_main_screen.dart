@@ -25,7 +25,7 @@ class BankCardDetailsMainScreen extends StatelessWidget {
         // child: (state.card!.status == BankCardStatus.INACTIVE)
         //     ? const InactiveCard()
         //     : const ActiveCard(),
-        child: InactiveCard(),
+        child: ActiveCard(),
       ),
     );
   }
@@ -50,6 +50,7 @@ class InactiveCard extends StatelessWidget {
               cardHolder: state.card!.representation!.line2 ?? 'data missing',
               cardExpiry: state.card!.representation!.formattedExpirationDate!,
               isViewable: false,
+              cardType: 'Credit card',
               // backgroundImageFile: 'porsche_logo.png',
             ),
             SpacedColumn(
@@ -127,7 +128,11 @@ class ActiveCard extends StatelessWidget {
                 CardOptionsButton(
                   icon: Icons.remove_red_eye_outlined,
                   textLabel: 'Details',
-                  onPressed: () => {},
+                  onPressed: () => {
+                    context
+                        .read<BankCardDetailsCubit>()
+                        .viewCardDetails(state.card!)
+                  },
                 ),
                 CardOptionsButton(
                   icon: Icons.wallet,

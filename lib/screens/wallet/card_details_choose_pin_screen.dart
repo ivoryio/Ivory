@@ -12,7 +12,7 @@ import '../../widgets/pin_field.dart';
 import '../../widgets/screen.dart';
 
 class BankCardDetailsChoosePinScreen extends StatefulWidget {
-  BankCardDetailsChoosePinScreen({super.key});
+  const BankCardDetailsChoosePinScreen({super.key});
 
   @override
   State<BankCardDetailsChoosePinScreen> createState() =>

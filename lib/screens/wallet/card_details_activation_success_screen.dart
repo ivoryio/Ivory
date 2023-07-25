@@ -54,13 +54,16 @@ class BankCardDetailsActivationSuccessScreen extends StatelessWidget {
               cardHolder: state.card!.representation!.line2 ?? 'data missing',
               cardExpiry: state.card!.representation!.formattedExpirationDate!,
               isViewable: false,
+              cardType: 'Credit card',
             ),
             SizedBox(
               width: double.infinity,
               child: PrimaryButton(
                 text: 'Back to "Card"',
                 onPressed: () {
-                  context.read<BankCardDetailsCubit>().loadCard(state.card!.id);
+                  context
+                      .read<BankCardDetailsCubit>()
+                      .goToCardDetails(state.card!);
                 },
               ),
             ),

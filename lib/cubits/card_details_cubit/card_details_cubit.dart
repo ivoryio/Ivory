@@ -3,6 +3,7 @@ import 'package:solarisdemo/services/card_service.dart';
 import 'package:solarisdemo/widgets/text_currency_value.dart';
 
 import '../../models/bank_card.dart';
+import '../../screens/wallet/card_details_main_screen.dart';
 import 'card_details_state.dart';
 
 class BankCardDetailsCubit extends Cubit<BankCardDetailsState> {
@@ -66,7 +67,15 @@ class BankCardDetailsCubit extends Cubit<BankCardDetailsState> {
     emit(BankCardDetailsActivationSuccessState(card: card));
   }
 
-  Future<void> goToActivatedScreen() async {
-    emit(const BankCardActivatedState());
+  Future<void> goToActivatedScreen(BankCard card) async {
+    emit(BankCardActivatedState(card: card));
+  }
+
+  Future<void> goToCardDetails(BankCard card) async {
+    emit(BankCardDetailsMainState(card: card));
+  }
+
+  Future<void> viewCardDetails(BankCard card) async {
+    emit(BankCardViewDetailsState(card: card));
   }
 }
