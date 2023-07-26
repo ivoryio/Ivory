@@ -33,13 +33,12 @@ class BankCardViewDetailsScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
+            const Column(
               children: [
                 BankCardShowDetailsWidget(
-                  cardNumber: state.card!.representation!.maskedPan!,
-                  cardCvv: '123',
-                  cardExpiry:
-                      state.card!.representation!.formattedExpirationDate!,
+                  cardNumber: '4957 3648 3747 4573',
+                  cardCvv: '362',
+                  cardExpiry: '10/27',
                   cardType: 'Physical card',
                 ),
               ],
@@ -66,9 +65,7 @@ class BankCardViewDetailsScreen extends StatelessWidget {
                       height: 70,
                       alignment: Alignment.center,
                       padding: const EdgeInsets.all(0.0),
-                      child: const CircularCountdownProgress(
-                        duration: Duration(seconds: 10),
-                      ),
+                      child: const CircularCountdownProgress(),
                     ),
                   ],
                 ),

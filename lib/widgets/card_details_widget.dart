@@ -1,32 +1,31 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:solarisdemo/widgets/spaced_column.dart';
 
+import '../config.dart';
 import '../utilities/format.dart';
 
 class BankCardShowDetailsWidget extends StatelessWidget {
   final String cardNumber;
   final String cardExpiry;
-  final String? cardCvv;
+  final String cardCvv;
   final String? cardType;
-  final String? backgroundImageFile;
 
-  const BankCardShowDetailsWidget(
-      {super.key,
-      required this.cardNumber,
-      required this.cardExpiry,
-      this.cardCvv,
-      this.cardType,
-      this.backgroundImageFile});
+  const BankCardShowDetailsWidget({
+    super.key,
+    required this.cardNumber,
+    required this.cardExpiry,
+    required this.cardCvv,
+    this.cardType,
+  });
 
   @override
   Widget build(BuildContext context) {
-    // List<String> cardNumberParts = Format.iban(cardNumber).split(" ");
+    List<String> cardNumberParts = Format.iban(cardNumber).split(" ");
 
     return SizedBox(
-      width: double.infinity,
+      // width: double.infinity,
+      width: 295,
+      height: 192,
       child: AspectRatio(
         aspectRatio: 295 / 188,
         child: Card(
@@ -49,12 +48,11 @@ class BankCardShowDetailsWidget extends StatelessWidget {
                 ],
                 transform: GradientRotation(135 * (3.1415926 / 180.0)),
               ),
-              image: (backgroundImageFile != null)
-                  ? DecorationImage(
-                      image: AssetImage('assets/images/$backgroundImageFile'),
-                      fit: BoxFit.scaleDown,
-                    )
-                  : null,
+              image: DecorationImage(
+                image:
+                    AssetImage(ClientConfig.getAssetImagePath('card_logo.png')),
+                fit: BoxFit.scaleDown,
+              ),
             ),
             child: Padding(
               padding: const EdgeInsets.only(top: 16, bottom: 24),
@@ -79,17 +77,67 @@ class BankCardShowDetailsWidget extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   Padding(
-                    padding: const EdgeInsets.only(left: 16, right: 16),
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "CARD HOLDER",
+                              style: TextStyle(
+                                fontSize: 12,
+                                height: 16 / 12,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      cardNumberParts.join(' '),
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        height: 24 / 16,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                const SizedBox(width: 8),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    alignment: Alignment.centerLeft,
+                                    elevation: 0,
+                                    padding: EdgeInsets.zero,
+                                  ),
+                                  onPressed: () {},
+                                  child: const Icon(
+                                    Icons.content_copy,
+                                    color: Colors.white,
+                                    size: 24,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text(
-                                  "CARD HOLDER",
+                                  "EXPIRAY DATE",
                                   style: TextStyle(
                                     fontSize: 12,
                                     height: 16 / 12,
@@ -98,22 +146,66 @@ class BankCardShowDetailsWidget extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  cardNumber,
+                                  cardCvv,
                                   style: const TextStyle(
-                                    fontSize: 24,
-                                    height: 32 / 24,
+                                    fontSize: 16,
+                                    height: 24 / 16,
                                     color: Colors.white,
                                     fontWeight: FontWeight.w600,
                                   ),
-                                )
+                                ),
                               ],
-                            )
+                            ),
+                            const SizedBox(width: 32),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "CVV",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    height: 16 / 12,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      cardCvv,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        height: 24 / 16,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        alignment: Alignment.centerLeft,
+                                        elevation: 0,
+                                        padding: EdgeInsets.zero,
+                                      ),
+                                      onPressed: () {},
+                                      child: const Icon(
+                                        Icons.content_copy,
+                                        color: Colors.white,
+                                        size: 24,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ],
                         ),
-                        const SizedBox(height: 16),
-                        const Row(),
                       ],
                     ),
+                    // const SizedBox(height: 16),
+                    // const Row(),
+                    //   ],
+                    // ),
                   ),
                 ],
               ),
