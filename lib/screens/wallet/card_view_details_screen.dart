@@ -1,12 +1,11 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../config.dart';
 import '../../cubits/card_details_cubit/card_details_cubit.dart';
 import '../../widgets/button.dart';
-import '../../widgets/card_widget.dart';
+import '../../widgets/card_details_widget.dart';
+import '../../widgets/circular_countdown_progress_widget.dart';
 import '../../widgets/screen.dart';
 
 class BankCardViewDetailsScreen extends StatelessWidget {
@@ -36,13 +35,11 @@ class BankCardViewDetailsScreen extends StatelessWidget {
           children: [
             Column(
               children: [
-                BankCardWidget(
+                BankCardShowDetailsWidget(
                   cardNumber: state.card!.representation!.maskedPan!,
-                  cardHolder:
-                      state.card!.representation!.line2 ?? 'data missing',
+                  cardCvv: '123',
                   cardExpiry:
                       state.card!.representation!.formattedExpirationDate!,
-                  isViewable: false,
                   cardType: 'Physical card',
                 ),
               ],
@@ -69,7 +66,9 @@ class BankCardViewDetailsScreen extends StatelessWidget {
                       height: 70,
                       alignment: Alignment.center,
                       padding: const EdgeInsets.all(0.0),
-                      child: const CircularTimeCounter(),
+                      child: const CircularCountdownProgress(
+                        duration: Duration(seconds: 10),
+                      ),
                     ),
                   ],
                 ),
@@ -92,111 +91,6 @@ class BankCardViewDetailsScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class CircularTimeCounter extends StatefulWidget {
-  const CircularTimeCounter({
-    super.key,
-  });
-
-  @override
-  State<CircularTimeCounter> createState() => _CircularTimeCounterState();
-}
-
-class _CircularTimeCounterState extends State<CircularTimeCounter> {
-  final int _duration = 60;
-  late int _remainingTime;
-  late Timer _timer;
-  late bool _isRunning;
-  late String _showValue;
-
-  @override
-  void initState() {
-    super.initState();
-    _duration;
-    _remainingTime = 0;
-    _isRunning = false;
-    _showValue = '00:00';
-    _handleTap();
-  }
-
-  void _startTimer() {
-    setState(() {
-      _isRunning = true;
-    });
-
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      setState(() {
-        if (_remainingTime < _duration - 1) {
-          _remainingTime++;
-          _showValue = _remainingTime.toString().length == 1
-              ? '00:0$_remainingTime'
-              : '00:$_remainingTime';
-        } else {
-          _stopTimer();
-        }
-      });
-    });
-  }
-
-  void _stopTimer() {
-    _timer.cancel();
-
-    setState(() {
-      _isRunning = false;
-      _remainingTime = _duration;
-    });
-  }
-
-  void _handleTap() {
-    if (!_isRunning) {
-      _startTimer();
-    } else {
-      _stopTimer();
-    }
-  }
-
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Container(
-          width: 70,
-          height: 70,
-          decoration: const BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.white,
-          ),
-          child: Center(
-            child: Text(
-              _isRunning ? _showValue : '01:00',
-              style: const TextStyle(
-                fontSize: 14,
-                height: 18 / 14,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF15141E),
-              ),
-            ),
-          ),
-        ),
-        Positioned.fill(
-          child: CircularProgressIndicator(
-            strokeWidth: 7,
-            value: _remainingTime / _duration,
-            backgroundColor: Colors.white,
-            valueColor: const AlwaysStoppedAnimation<Color>(Colors.red),
-          ),
-        ),
-      ],
     );
   }
 }
