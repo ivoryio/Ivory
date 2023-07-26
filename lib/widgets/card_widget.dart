@@ -30,140 +30,142 @@ class BankCardWidget extends StatelessWidget {
 
     return SizedBox(
       width: double.infinity,
-      height: 202,
-      child: Card(
-        clipBehavior: Clip.antiAlias,
-        elevation: 0,
-        margin: EdgeInsets.zero,
-        color: Colors.black,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              begin: Alignment.bottomRight,
-              end: Alignment.topLeft,
-              stops: [0.0, 0.5629],
-              colors: [
-                Color(0xFF585858),
-                Color(0xFF000000),
-              ],
-              transform: GradientRotation(135 * (3.1415926 / 180.0)),
-            ),
-            image: DecorationImage(
-              image:
-                  AssetImage(ClientConfig.getAssetImagePath('card_logo.png')),
-              fit: BoxFit.scaleDown,
-            ),
+      child: AspectRatio(
+        aspectRatio: 295 / 188,
+        child: Card(
+          clipBehavior: Clip.antiAlias,
+          elevation: 0,
+          margin: EdgeInsets.zero,
+          color: Colors.black,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
           ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: defaultCardVerticalPadding,
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                begin: Alignment.bottomRight,
+                end: Alignment.topLeft,
+                stops: [0.0, 0.5629],
+                colors: [
+                  Color(0xFF585858),
+                  Color(0xFF000000),
+                ],
+                transform: GradientRotation(135 * (3.1415926 / 180.0)),
+              ),
+              image: DecorationImage(
+                image:
+                    AssetImage(ClientConfig.getAssetImagePath('card_logo.png')),
+                fit: BoxFit.scaleDown,
+              ),
             ),
-            child: Column(
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(
-                        left: defaultCardHorizontalPadding,
-                      ),
-                      child: VisaSvgIcon(),
-                    ),
-                    if (isViewable!) const EyeIcon(),
-                    if (cardType != null) CardTypeLabel(cardType: cardType!),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                    defaultCardHorizontalPadding,
-                    15,
-                    defaultCardHorizontalPadding,
-                    25,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: defaultCardVerticalPadding,
+              ),
+              child: Column(
+                children: [
+                  Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      ...cardNumberParts.map((cardNumberPart) {
-                        Text textContent = Text(
-                          cardNumberPart,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 24,
-                            letterSpacing: 3,
-                          ),
-                        );
-                        if (cardNumberPart == "****") {
-                          return SizedBox(height: 20, child: textContent);
-                        }
-
-                        return textContent;
-                      })
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                  ),
-                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      SpacedColumn(
-                        space: 3,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "CARD HOLDER",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                              height: 15 / 12,
-                            ),
-                          ),
-                          Text(
-                            cardHolder,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              height: 20 / 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          )
-                        ],
+                      const Padding(
+                        padding: EdgeInsets.only(
+                          left: defaultCardHorizontalPadding,
+                        ),
+                        child: VisaSvgIcon(),
                       ),
-                      SpacedColumn(
-                        space: 3,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          const Text(
-                            "EXPIRES",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                              height: 15 / 12,
-                            ),
-                          ),
-                          Text(
-                            cardExpiry,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              height: 20 / 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
+                      if (isViewable!) const EyeIcon(),
+                      if (cardType != null) CardTypeLabel(cardType: cardType!),
                     ],
                   ),
-                )
-              ],
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      defaultCardHorizontalPadding,
+                      15,
+                      defaultCardHorizontalPadding,
+                      25,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        ...cardNumberParts.map((cardNumberPart) {
+                          Text textContent = Text(
+                            cardNumberPart,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 24,
+                              letterSpacing: 3,
+                            ),
+                          );
+                          if (cardNumberPart == "****") {
+                            return SizedBox(height: 20, child: textContent);
+                          }
+
+                          return textContent;
+                        })
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SpacedColumn(
+                          space: 3,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "CARD HOLDER",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                height: 15 / 12,
+                              ),
+                            ),
+                            Text(
+                              cardHolder,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                height: 20 / 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            )
+                          ],
+                        ),
+                        SpacedColumn(
+                          space: 3,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            const Text(
+                              "EXPIRES",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                height: 15 / 12,
+                              ),
+                            ),
+                            Text(
+                              cardExpiry,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                height: 20 / 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),
