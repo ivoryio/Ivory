@@ -1,6 +1,9 @@
 import UIKit
 import Flutter
 import SeonSDK
+import Foundation
+import CryptoKit
+import CommonCrypto
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
@@ -33,13 +36,13 @@ import SeonSDK
           } else if call.method == "signMessage" {
               guard let args = call.arguments as? [String: Any],
                     let message = args["message"] as? String,
-                    let privateKey = args["privateKey"] as? String
+                    let privateKey = args["privateKeyHex"] as? String
               else {
                   result(FlutterError(code: "INVALID_ARGUMENTS", message: "Invalid method call arguments", details: nil))
                   return
               }
 
-              let signature = self.signMessage(message: message, privateKey: privateKey)
+              let signature = self.signMessage(message: message, privateKeyHex: privateKey)
               result(signature)
           } else {
               result(FlutterMethodNotImplemented)
@@ -50,64 +53,104 @@ import SeonSDK
       return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
   
-  private func generateECDSAP256KeyPair() -> [String: String] {
-      let attributes: [String: Any] = [
-          kSecAttrKeyType as String: kSecAttrKeyTypeECSECPrimeRandom,
-          kSecAttrKeySizeInBits as String: 256,
-          kSecPrivateKeyAttrs as String: [
-              kSecAttrIsPermanent as String: false,
-          ],
-          kSecPublicKeyAttrs as String: [
-              kSecAttrIsPermanent as String: false,
-          ],
-      ]
+private func generateECDSAP256KeyPair() -> [String: String] {
+    // Generate the key pair using CryptoKit
+    let privateKey = P256.KeyAgreement.PrivateKey()
+    let publicKey = privateKey.publicKey
 
-      var error: Unmanaged<CFError>?
-      guard let privateKey = SecKeyCreateRandomKey(attributes as CFDictionary, &error) else {
-          print("Error generating key pair: \(error!.takeRetainedValue() as Error)")
-          return [:]
-      }
+    // Get the raw binary representation of the keys
+    let privateKeyData = privateKey.rawRepresentation
+    let publicKeyData = publicKey.rawRepresentation
 
-      let publicKey = SecKeyCopyPublicKey(privateKey)!
+    // Convert the keys to base64 strings(private key) and hex strings (public key)
+    let privateKeyHex = uncompressedPrivateKeyToHex(privateKeyData)
+    let publicKeyHex = uncompressedPublicKeyToHex(publicKeyData)
 
-      let publicKeyData = SecKeyCopyExternalRepresentation(publicKey, &error)! as Data
-      let privateKeyData = SecKeyCopyExternalRepresentation(privateKey, &error)! as Data
-
-      return [
-          "publicKey": publicKeyData.base64EncodedString(),
-          "privateKey": privateKeyData.base64EncodedString(),
-      ]
-  }
-
- private func signMessage(message: String, privateKey: String) -> String? {
-    guard let privateKeyData = Data(base64Encoded: privateKey) else {
-        print("Error decoding private key")
-        return nil
-    }
-
-    let attributes: [String: Any] = [
-        kSecAttrKeyType as String: kSecAttrKeyTypeECSECPrimeRandom,
-        kSecAttrKeySizeInBits as String: 256,
-        kSecAttrKeyClass as String: kSecAttrKeyClassPrivate,
+    return [
+        "publicKey": publicKeyHex,
+        "privateKey": privateKeyHex,
     ]
+}
 
-    var error: Unmanaged<CFError>?
-    guard let privateKey = SecKeyCreateWithData(privateKeyData as CFData, attributes as CFDictionary, &error) else {
-        print("Error creating private key from data: \(error!.takeRetainedValue() as Error)")
+// Function to convert the uncompressed public key to hex format
+private func uncompressedPublicKeyToHex(_ publicKeyData: Data) -> String {
+    // Uncompressed ECDSA public key format is 04 || x || y
+    let xCoordinate = publicKeyData[publicKeyData.startIndex..<publicKeyData.startIndex.advanced(by: 32)]
+    let yCoordinate = publicKeyData[publicKeyData.startIndex.advanced(by: 32)..<publicKeyData.endIndex]
+    
+    let uncompressedPublicKey = "04" + xCoordinate.map { String(format: "%02hhx", $0) }.joined()
+                                        + yCoordinate.map { String(format: "%02hhx", $0) }.joined()
+    
+    return uncompressedPublicKey
+}
+
+// Function to convert the ECDSA private key to hex format
+private func uncompressedPrivateKeyToHex(_ privateKeyData: Data) -> String {
+    return privateKeyData.map { String(format: "%02hhx", $0) }.joined()
+}
+
+private func signMessage(message: String, privateKeyHex: String) -> String? {
+    print("Private Key Hex: \(privateKeyHex)")
+    print("Signing message: \(message)")
+
+    // Convert the hexadecimal private key to Data
+    guard let privateKeyData = dataFromHexString(privateKeyHex) else {
+        print("Error converting private key hex to data")
         return nil
     }
 
-    guard let messageData = message.data(using: .utf8) else {
-        print("Error converting message to data")
+    // Ensure the private key data has the correct length
+    if privateKeyData.count != 32 {
+        print("Invalid private key length")
         return nil
     }
 
-    var errorSigning: Unmanaged<CFError>?
-    guard let signature = SecKeyCreateSignature(privateKey, SecKeyAlgorithm.ecdsaSignatureMessageX962SHA256, messageData as CFData, &errorSigning) as Data? else {
-        print("Error signing message: \(errorSigning!.takeRetainedValue() as Error)")
+    // Convert the private key data to a private key instance
+    guard let privateKey = try? P256.Signing.PrivateKey(rawRepresentation: privateKeyData) else {
+        print("Error creating private key from data")
         return nil
     }
 
-    return signature.base64EncodedString()
-  } 
+    // Convert the message to data
+    let messageData = Data(message.utf8)
+
+    // Calculate the hash of the message using SHA-256
+    let hash = SHA256.hash(data: messageData)
+
+    // Sign the hash with the private key
+    let signature = try! privateKey.signature(for: hash)
+
+    // Convert the signature to a Data representation
+    let signatureData = signature.rawRepresentation
+
+    // Convert the signature data to a hex-encoded string
+    let hexEncodedSignature = signatureData.map { String(format: "%02hhx", $0) }.joined()
+
+    return hexEncodedSignature
+}
+
+
+private func dataFromHexString(_ hexString: String) -> Data? {
+    var hex = hexString
+    // Ensure the hex string has an even number of characters
+    if hex.count % 2 != 0 {
+        hex = "0" + hex
+    }
+
+    var data = Data(capacity: hex.count / 2)
+
+    var index = hex.startIndex
+    while index < hex.endIndex {
+        let nextIndex = hex.index(index, offsetBy: 2)
+        if let byte = UInt8(hex[index..<nextIndex], radix: 16) {
+            data.append(byte)
+        } else {
+            return nil // Invalid character in the hex string
+        }
+        index = nextIndex
+    }
+
+    return data
+}
+
 }

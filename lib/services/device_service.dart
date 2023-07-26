@@ -8,7 +8,7 @@ import '../models/device_activity.dart';
 import 'api_service.dart';
 
 const String _defaultKeyType = 'ecdsa-p256';
-const String _defaultChallengeType = 'string';
+const String _defaultChallengeType = 'sms';
 const DeviceBindingKeyPurposeType _defaultKeyPurposeType =
     DeviceBindingKeyPurposeType.unrestricted;
 SmsChallenge _defaultSmsChallenge = SmsChallenge(appSignature: 'e2e-e2e-e2e');
@@ -208,7 +208,7 @@ Future<String?> _signMessageOnIos(String message, String privateKey) async {
   try {
     final signature = await _platform.invokeMethod<String>(
       'signMessage',
-      {'message': message, 'privateKey': privateKey},
+      {'message': message, 'privateKeyHex': privateKey},
     );
     return signature;
   } on PlatformException catch (e) {

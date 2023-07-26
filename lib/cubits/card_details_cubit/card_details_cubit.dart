@@ -2,7 +2,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solarisdemo/services/card_service.dart';
 
 import '../../models/bank_card.dart';
-import '../../screens/wallet/card_details_main_screen.dart';
 import 'card_details_state.dart';
 
 class BankCardDetailsCubit extends Cubit<BankCardDetailsState> {

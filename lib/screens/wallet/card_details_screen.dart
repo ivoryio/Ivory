@@ -13,7 +13,6 @@ import '../../models/user.dart';
 import '../../router/routing_constants.dart';
 import '../../widgets/dialog.dart';
 import '../../widgets/screen.dart';
-import 'card_activated_screen.dart';
 import 'card_details_apple_wallet_screen.dart';
 import 'card_details_choose_pin_screen.dart';
 import 'card_details_confirm_pin_screen.dart';

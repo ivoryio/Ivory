@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../config.dart';
 import '../../cubits/card_details_cubit/card_details_cubit.dart';
-import '../../themes/default_theme.dart';
 import '../../widgets/button.dart';
 import '../../widgets/card_widget.dart';
 import '../../widgets/screen.dart';
@@ -30,7 +30,7 @@ class BankCardViewDetailsScreen extends StatelessWidget {
       hideBackButton: false,
       hideBottomNavbar: true,
       child: Padding(
-        padding: defaultScreenPadding,
+        padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
