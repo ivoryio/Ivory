@@ -1,8 +1,18 @@
+// ignore_for_file: depend_on_referenced_packages
+
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:pointycastle/macs/hmac.dart';
+import 'package:pointycastle/signers/ecdsa_signer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:solarisdemo/models/device_binding.dart';
 import 'package:solarisdemo/models/device_consent.dart';
+import 'dart:convert';
+import 'package:convert/convert.dart';
+import 'package:pointycastle/digests/sha256.dart';
+import 'package:pointycastle/pointycastle.dart';
 
 import '../models/device_activity.dart';
 import 'api_service.dart';
@@ -35,15 +45,6 @@ class DeviceUtilService {
       return await _getIosECDSAP256KeyPair();
     }
     return {};
-  }
-
-  static Future<String?> signMessage(String message, String privateKey) async {
-    if (defaultTargetPlatform == TargetPlatform.android) {
-      return await _signMessageOnAndroid(message, privateKey);
-    } else if (defaultTargetPlatform == TargetPlatform.iOS) {
-      return await _signMessageOnIos(message, privateKey);
-    }
-    return '';
   }
 
   static Future<String?> getDeviceConsentId() async {
@@ -82,6 +83,65 @@ class DeviceUtilService {
   static Future<void> saveCredentialsInCache(
       String email, String password) async {
     await _setCredentialsInCache(email, password);
+  }
+
+  static String signMessage(String message, String privateKeyHex) {
+    var sha256Hash = calculateSHA256(message);
+    var signature = signHashWithPrivateKey(
+        privateKeyHex, hex.decode(sha256Hash) as Uint8List);
+    var asn1Signature = encodeSignatureASN1(signature);
+    var hexEncodedSignature = hexEncodeSignature(asn1Signature);
+
+    print("SHA-256 Hash: $sha256Hash");
+    print("Hex Encoded Signature: $hexEncodedSignature");
+    return hexEncodedSignature;
+  }
+
+  static String calculateSHA256(String message) {
+    var bytes = utf8.encode(message);
+    var sha256 = SHA256Digest();
+    var digest = sha256.process(Uint8List.fromList(bytes));
+    return hex.encode(digest);
+  }
+
+  static ECSignature signHashWithPrivateKey(
+      String privateKeyHex, Uint8List hash) {
+    var privateKey = ECPrivateKey(BigInt.parse(privateKeyHex, radix: 16),
+        ECDomainParameters('secp256k1'));
+    var signer = ECDSASigner(null, HMac(SHA256Digest(), 64));
+    signer.init(true, PrivateKeyParameter<ECPrivateKey>(privateKey));
+
+    ECSignature signature;
+
+    do {
+      signature = signer.generateSignature(hash) as ECSignature;
+
+      // Convert r and s components to BigInt
+      var r = signature.r;
+      var s = signature.s;
+
+      // Ensure r has 256 bits (32 bytes)
+      if (r.bitLength < 256) {
+        // Pad with leading zeros
+        r = r << (256 - r.bitLength);
+      }
+
+      // Create a new ECSignature with the modified r component
+      signature = ECSignature(r, s);
+    } while (signature.r.bitLength > 256); // Check if r has more than 256 bits
+
+    return signature;
+  }
+
+  static Uint8List encodeSignatureASN1(ECSignature signature) {
+    var r = ASN1Integer(signature.r);
+    var s = ASN1Integer(signature.s);
+    var sequence = ASN1Sequence(elements: [r, s]);
+    return sequence.encode();
+  }
+
+  static String hexEncodeSignature(Uint8List signature) {
+    return hex.encode(signature);
   }
 }
 
@@ -297,6 +357,7 @@ class DeviceService extends ApiService {
       await DeviceUtilService.saveKeyPairIntoCache(keyPair);
 
       String publicKey = keyPair['publicKey'] as String;
+      log(keyPair.toString());
 
       String? deviceData =
           await DeviceUtilService.getDeviceFingerprint(consentId);
@@ -304,19 +365,21 @@ class DeviceService extends ApiService {
         throw Exception('Device Fingerprint not found');
       }
 
+      CreateDeviceBindingRequest reqBody = CreateDeviceBindingRequest(
+        personId: personId,
+        keyType: _defaultKeyType,
+        challengeType: _defaultChallengeType,
+        key: publicKey,
+        keyPurpose: _defaultKeyPurposeType,
+        name: 'Test Device',
+        smsChallenge: _defaultSmsChallenge,
+        language: _defaultLanguageType,
+        deviceData: deviceData,
+      );
+
       var data = await post(
         path,
-        body: CreateDeviceBindingRequest(
-                personId: personId,
-                keyType: _defaultKeyType,
-                challengeType: _defaultChallengeType,
-                key: publicKey,
-                keyPurpose: _defaultKeyPurposeType,
-                name: 'Test Device',
-                smsChallenge: _defaultSmsChallenge,
-                language: _defaultLanguageType,
-                deviceData: deviceData)
-            .toJson(),
+        body: reqBody.toJson(),
       );
       var response = CreateDeviceBindingResponse.fromJson(data);
       await DeviceUtilService.saveDeviceIdIntoCache(response.id);
@@ -343,10 +406,11 @@ class DeviceService extends ApiService {
         throw Exception('Private key not found');
       }
 
-      String? signature = await DeviceUtilService.signMessage(tan, privateKey);
-      if (signature == null) {
-        throw Exception('Signature not found');
-      }
+      String? signature = DeviceUtilService.signMessage(tan, privateKey);
+      log('signature: $signature');
+      // if (signature == null) {
+      //   throw Exception('Signature not found');
+      // }
 
       String path = 'person/device/verify_signature/$deviceId';
 
