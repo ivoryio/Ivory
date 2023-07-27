@@ -24,8 +24,7 @@ class BankCardShowDetailsWidget extends StatelessWidget {
 
     return SizedBox(
       // width: double.infinity,
-      width: 295,
-      height: 192,
+      width: 310,
       child: AspectRatio(
         aspectRatio: 295 / 188,
         child: Card(
@@ -111,17 +110,17 @@ class BankCardShowDetailsWidget extends StatelessWidget {
                                   ],
                                 ),
                                 const SizedBox(width: 8),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    alignment: Alignment.centerLeft,
-                                    elevation: 0,
-                                    padding: EdgeInsets.zero,
-                                  ),
-                                  onPressed: () {},
-                                  child: const Icon(
-                                    Icons.content_copy,
-                                    color: Colors.white,
-                                    size: 24,
+                                SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: IconButton(
+                                    padding: const EdgeInsets.all(0.0),
+                                    iconSize: 24,
+                                    icon: const Icon(
+                                      Icons.content_copy,
+                                      color: Colors.white,
+                                    ),
+                                    onPressed: () {},
                                   ),
                                 ),
                               ],
@@ -146,7 +145,7 @@ class BankCardShowDetailsWidget extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  cardCvv,
+                                  cardExpiry,
                                   style: const TextStyle(
                                     fontSize: 16,
                                     height: 24 / 16,
@@ -170,6 +169,7 @@ class BankCardShowDetailsWidget extends StatelessWidget {
                                   ),
                                 ),
                                 Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Text(
                                       cardCvv,
@@ -181,17 +181,17 @@ class BankCardShowDetailsWidget extends StatelessWidget {
                                       ),
                                     ),
                                     const SizedBox(width: 8),
-                                    ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        alignment: Alignment.centerLeft,
-                                        elevation: 0,
-                                        padding: EdgeInsets.zero,
-                                      ),
-                                      onPressed: () {},
-                                      child: const Icon(
-                                        Icons.content_copy,
-                                        color: Colors.white,
-                                        size: 24,
+                                    SizedBox(
+                                      width: 24,
+                                      height: 24,
+                                      child: IconButton(
+                                        padding: const EdgeInsets.all(0.0),
+                                        iconSize: 24,
+                                        icon: const Icon(
+                                          Icons.content_copy,
+                                          color: Colors.white,
+                                        ),
+                                        onPressed: () {},
                                       ),
                                     ),
                                   ],
@@ -202,10 +202,6 @@ class BankCardShowDetailsWidget extends StatelessWidget {
                         ),
                       ],
                     ),
-                    // const SizedBox(height: 16),
-                    // const Row(),
-                    //   ],
-                    // ),
                   ),
                 ],
               ),
