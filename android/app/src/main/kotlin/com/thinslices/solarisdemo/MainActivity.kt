@@ -12,6 +12,8 @@ import java.security.Signature
 import java.security.spec.PKCS8EncodedKeySpec
 import java.security.KeyFactory
 import android.util.Log
+import java.security.interfaces.ECPublicKey
+import java.security.interfaces.ECPrivateKey
 
 class MainActivity: FlutterActivity() {
     private val CHANNEL = "com.thinslices.solarisdemo/native"
@@ -58,12 +60,15 @@ class MainActivity: FlutterActivity() {
         keyGen.initialize(ECGenParameterSpec("secp256r1"))
 
         val keyPair = keyGen.generateKeyPair()
-        val publicKey = keyPair.public.encoded
-        val privateKey = keyPair.private.encoded
+        val publicKey = keyPair.public as ECPublicKey
+        val privateKey = keyPair.private as ECPrivateKey
+
+        val publicKeyHex = "04" + publicKey.w.affineX.toString(16).toUpperCase() + publicKey.w.affineY.toString(16).toUpperCase()
+        val privateKeyHex = privateKey.s.toString(16).toUpperCase()
 
         return mapOf(
-            "publicKey" to Base64.getEncoder().encodeToString(publicKey),
-            "privateKey" to Base64.getEncoder().encodeToString(privateKey)
+            "publicKey" to publicKeyHex,
+            "privateKey" to privateKeyHex
         )
     }
 
