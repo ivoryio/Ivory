@@ -44,11 +44,6 @@ class MainActivity: FlutterActivity() {
             } else if (call.method == "generateECDSAP256KeyPair") {
                 val keyPair = generateECDSAP256KeyPair()
                 result.success(keyPair)
-            } else if(call.method == "signMessage") {
-                val message = call.argument<String>("message")!!
-                val privateKey = call.argument<String>("privateKey")!!
-                val signature = signMessage(message, privateKey)
-                result.success(signature)
             } else {
                 result.notImplemented()
             }
@@ -70,20 +65,5 @@ class MainActivity: FlutterActivity() {
             "publicKey" to publicKeyHex,
             "privateKey" to privateKeyHex
         )
-    }
-
-    private fun signMessage(message: String, privateKey: String): String? {
-        val privateKeyData = Base64.getDecoder().decode(privateKey)
-        val keySpec = PKCS8EncodedKeySpec(privateKeyData)
-
-        val keyFactory = KeyFactory.getInstance("EC")
-        val privateKey = keyFactory.generatePrivate(keySpec)
-
-        val signature = Signature.getInstance("SHA256withECDSA")
-        signature.initSign(privateKey)
-        signature.update(message.toByteArray())
-
-        val signatureBytes = signature.sign()
-        return Base64.getEncoder().encodeToString(signatureBytes)
     }
 }

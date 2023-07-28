@@ -172,13 +172,12 @@ class SignupCubit extends Cubit<SignupState> {
       ));
 
       //create device binding
-      // DeviceService deviceService = DeviceService(user: user);
-
-      // await deviceService.createDeviceBinding(user.personId!);
+      DeviceService deviceService = DeviceService(user: user);
+      await deviceService.createDeviceBinding(user.personId!);
 
       //verify device binding signature
-      // await deviceService.verifyDeviceBindingSignature(
-      //     '212212'); // verify device with static TAN - To be refactored
+      await deviceService.verifyDeviceBindingSignature(
+          '212212'); // verify device with static TAN - To be refactored
 
       //create tax identification
       CreateTaxIdentificationResponse? taxIdentificationResponse =

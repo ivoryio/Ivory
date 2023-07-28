@@ -1,18 +1,17 @@
 // ignore_for_file: depend_on_referenced_packages
 
 import 'dart:developer';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:pointycastle/macs/hmac.dart';
-import 'package:pointycastle/signers/ecdsa_signer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:solarisdemo/models/device_binding.dart';
 import 'package:solarisdemo/models/device_consent.dart';
 import 'dart:convert';
 import 'package:convert/convert.dart';
-import 'package:pointycastle/digests/sha256.dart';
 import 'package:pointycastle/pointycastle.dart';
+import 'package:pointycastle/export.dart';
 
 import '../models/device_activity.dart';
 import 'api_service.dart';
@@ -85,16 +84,35 @@ class DeviceUtilService {
     await _setCredentialsInCache(email, password);
   }
 
-  static String signMessage(String message, String privateKeyHex) {
-    var sha256Hash = calculateSHA256(message);
-    var signature = signHashWithPrivateKey(
-        privateKeyHex, hex.decode(sha256Hash) as Uint8List);
-    var asn1Signature = encodeSignatureASN1(signature);
-    var hexEncodedSignature = hexEncodeSignature(asn1Signature);
+  static String signMessage(String message, String encodedPrivateKey) {
+    final utf8EncodedMessage = utf8.encode(message);
 
-    print("SHA-256 Hash: $sha256Hash");
-    print("Hex Encoded Signature: $hexEncodedSignature");
-    return hexEncodedSignature;
+    final bigIntPrivateKey = BigInt.parse(encodedPrivateKey, radix: 16);
+    final privateKey = ECPrivateKey(bigIntPrivateKey, ECCurve_secp256r1());
+
+    final ecSignature =
+        _signUtf8MessageWithEcPrivateKey(privateKey, utf8EncodedMessage);
+    return _convertSignatureToAsn1String(ecSignature);
+  }
+
+  static ECSignature _signUtf8MessageWithEcPrivateKey(
+      ECPrivateKey privateKey, List<int> utf8EncodedMessage) {
+    final signer = ECDSASigner(SHA256Digest());
+    signer.init(true,
+        ParametersWithRandom(PrivateKeyParameter(privateKey), _secureRandom()));
+    final signedMessage =
+        signer.generateSignature(Uint8List.fromList(utf8EncodedMessage))
+            as ECSignature;
+    return signedMessage;
+  }
+
+  static String _convertSignatureToAsn1String(ECSignature signature) {
+    final asn1Sequence = ASN1Sequence();
+    asn1Sequence.add(ASN1Integer(signature.r));
+    asn1Sequence.add(ASN1Integer(signature.s));
+    asn1Sequence.encode();
+    final asn1Bytes = asn1Sequence.encodedBytes;
+    return hex.encode(asn1Bytes!.toList());
   }
 
   static String calculateSHA256(String message) {
@@ -104,44 +122,14 @@ class DeviceUtilService {
     return hex.encode(digest);
   }
 
-  static ECSignature signHashWithPrivateKey(
-      String privateKeyHex, Uint8List hash) {
-    var privateKey = ECPrivateKey(BigInt.parse(privateKeyHex, radix: 16),
-        ECDomainParameters('secp256k1'));
-    var signer = ECDSASigner(null, HMac(SHA256Digest(), 64));
-    signer.init(true, PrivateKeyParameter<ECPrivateKey>(privateKey));
+  static SecureRandom _secureRandom() {
+    final seedSource = Random.secure();
+    final seeds = <int>[];
+    for (int i = 0; i < 32; i++) {
+      seeds.add(seedSource.nextInt(255));
+    }
 
-    ECSignature signature;
-
-    do {
-      signature = signer.generateSignature(hash) as ECSignature;
-
-      // Convert r and s components to BigInt
-      var r = signature.r;
-      var s = signature.s;
-
-      // Ensure r has 256 bits (32 bytes)
-      if (r.bitLength < 256) {
-        // Pad with leading zeros
-        r = r << (256 - r.bitLength);
-      }
-
-      // Create a new ECSignature with the modified r component
-      signature = ECSignature(r, s);
-    } while (signature.r.bitLength > 256); // Check if r has more than 256 bits
-
-    return signature;
-  }
-
-  static Uint8List encodeSignatureASN1(ECSignature signature) {
-    var r = ASN1Integer(signature.r);
-    var s = ASN1Integer(signature.s);
-    var sequence = ASN1Sequence(elements: [r, s]);
-    return sequence.encode();
-  }
-
-  static String hexEncodeSignature(Uint8List signature) {
-    return hex.encode(signature);
+    return FortunaRandom()..seed(KeyParameter(Uint8List.fromList(seeds)));
   }
 }
 
@@ -252,30 +240,6 @@ Future<Map<Object?, Object?>> _getIosECDSAP256KeyPair() async {
   }
 }
 
-Future<String?> _signMessageOnAndroid(String message, String privateKey) async {
-  try {
-    final signature = await _platform.invokeMethod<String>(
-      'signMessage',
-      {'message': message, 'privateKey': privateKey},
-    );
-    return signature;
-  } on PlatformException catch (e) {
-    throw Exception(e.message);
-  }
-}
-
-Future<String?> _signMessageOnIos(String message, String privateKey) async {
-  try {
-    final signature = await _platform.invokeMethod<String>(
-      'signMessage',
-      {'message': message, 'privateKeyHex': privateKey},
-    );
-    return signature;
-  } on PlatformException catch (e) {
-    throw Exception(e.message);
-  }
-}
-
 Future<String> _getDeviceConsentId() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String? deviceConsentId = prefs.getString('device_consent_id');
@@ -357,7 +321,6 @@ class DeviceService extends ApiService {
       await DeviceUtilService.saveKeyPairIntoCache(keyPair);
 
       String publicKey = keyPair['publicKey'] as String;
-      log(keyPair.toString());
 
       String? deviceData =
           await DeviceUtilService.getDeviceFingerprint(consentId);
@@ -407,10 +370,6 @@ class DeviceService extends ApiService {
       }
 
       String? signature = DeviceUtilService.signMessage(tan, privateKey);
-      log('signature: $signature');
-      // if (signature == null) {
-      //   throw Exception('Signature not found');
-      // }
 
       String path = 'person/device/verify_signature/$deviceId';
 
