@@ -14,6 +14,7 @@ class BankCardDetailsMainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var state = context.read<BankCardDetailsCubit>().state;
     return Screen(
       scrollPhysics: const ClampingScrollPhysics(),
       title: 'Card',
@@ -22,10 +23,8 @@ class BankCardDetailsMainScreen extends StatelessWidget {
       hideBottomNavbar: false,
       child: Padding(
         padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-        // child: (state.card!.status == BankCardStatus.INACTIVE)
-        //     ? const InactiveCard()
-        //     : const ActiveCard(),
-        child: ActiveCard(),
+        child: (!state.isActive!) ? const InactiveCard() : const ActiveCard(),
+        // child: ActiveCard(),
       ),
     );
   }

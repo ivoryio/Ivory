@@ -14,7 +14,9 @@ class BankCardDetailsCubit extends Cubit<BankCardDetailsState> {
       BankCard? card = await cardsService.getBankCardById(cardId);
 
       if (card is BankCard) {
-        emit(BankCardDetailsLoadedState(card: card));
+        // get from cache
+
+        emit(BankCardDetailsLoadedState(card: card, ));
       } else {
         throw Exception('Card not found');
       }
@@ -27,7 +29,7 @@ class BankCardDetailsCubit extends Cubit<BankCardDetailsState> {
     emit(const BankCardDetailsLoadingState());
     try {
       BankCard blockedCard = await cardsService.freezeBankCard(cardId);
-      emit(BankCardDetailsLoadedState(card: blockedCard));
+      emit(BankCardDetailsLoadedState(card: blockedCard, isActive: true));
       return;
     } catch (e) {
       emit(BankCardDetailsErrorState(e.toString()));
@@ -38,7 +40,7 @@ class BankCardDetailsCubit extends Cubit<BankCardDetailsState> {
     emit(const BankCardDetailsLoadingState());
     try {
       BankCard unBlockedCard = await cardsService.unfreezeCard(cardId);
-      emit(BankCardDetailsLoadedState(card: unBlockedCard));
+      emit(BankCardDetailsLoadedState(card: unBlockedCard, isActive: true));
       return;
     } catch (e) {
       emit(BankCardDetailsErrorState(e.toString()));
@@ -74,6 +76,8 @@ class BankCardDetailsCubit extends Cubit<BankCardDetailsState> {
   }
 
   Future<void> viewCardDetails(BankCard card) async {
-    emit(BankCardViewDetailsState(card: card));
+    //save to cache
+    bool isActive = true; 
+    emit(BankCardViewDetailsState(card: card, isActive: true));
   }
 }

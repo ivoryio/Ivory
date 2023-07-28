@@ -5,8 +5,9 @@ import '../../models/bank_card.dart';
 class BankCardDetailsState extends Equatable {
   final BankCard? card;
   final String? pin;
+  final bool? isActive;
 
-  const BankCardDetailsState({this.card, this.pin});
+  const BankCardDetailsState({this.card, this.pin, this.isActive});
 
   @override
   // TODO: implement props
@@ -22,8 +23,9 @@ class BankCardDetailsLoadingState extends BankCardDetailsState {
 }
 
 class BankCardDetailsLoadedState extends BankCardDetailsState {
-  const BankCardDetailsLoadedState({required BankCard card})
-      : super(card: card);
+  const BankCardDetailsLoadedState(
+      {required BankCard card, required bool isActive})
+      : super(card: card, isActive: isActive);
 }
 
 class BankCardDetailsInfoState extends BankCardDetailsState {
@@ -82,8 +84,10 @@ class BankCardDetailsMainState extends BankCardDetailsState {
 class BankCardViewDetailsState extends BankCardDetailsState {
   const BankCardViewDetailsState({
     required BankCard card,
+    required bool isActive,
   }) : super(
           card: card,
+          isActive: isActive,
         );
 }
 
