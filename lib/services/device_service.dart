@@ -391,3 +391,29 @@ class DeviceService extends ApiService {
     }
   }
 }
+
+class CacheCardsIds {
+  static Future<void> saveCardIdToCache(String cardIdToStore) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? cardIdsList = prefs.getStringList('ids');
+
+    cardIdsList ??= [];
+    cardIdsList.add(cardIdToStore);
+
+    await prefs.setStringList('ids', cardIdsList);
+  }
+
+  static Future<bool> getCardIdFromCache(String cardIdToFind) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? cardIdsList = prefs.getStringList('ids');
+    // prefs.clear();
+
+    if (cardIdsList == null) {
+      return false;
+    }
+
+    bool containsId = cardIdsList.contains(cardIdToFind);
+
+    return containsId;
+  }
+}

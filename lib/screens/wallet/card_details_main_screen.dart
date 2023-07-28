@@ -4,6 +4,7 @@ import 'package:flutter_switch/flutter_switch.dart';
 
 import '../../config.dart';
 import '../../cubits/card_details_cubit/card_details_cubit.dart';
+import '../../services/device_service.dart';
 import '../../widgets/button.dart';
 import '../../widgets/card_widget.dart';
 import '../../widgets/screen.dart';
@@ -25,12 +26,12 @@ class BankCardDetailsMainScreen extends StatelessWidget {
       hideBottomNavbar: false,
       child: Padding(
         padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-        // child: FutureBuilder(
-        //   future: CacheCardsIds.getCardIdFromCache(id),
-        //   builder: (context, isInCache) => (isInCache.data == false)
-        //       ? const InactiveCard()
-        //       : const ActiveCard(),
-        // ),
+        child: FutureBuilder(
+          future: CacheCardsIds.getCardIdFromCache(id),
+          builder: (context, isInCache) => (isInCache.data == false)
+              ? const InactiveCard()
+              : const ActiveCard(),
+        ),
       ),
     );
   }
