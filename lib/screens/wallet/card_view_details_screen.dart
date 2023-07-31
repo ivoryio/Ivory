@@ -65,7 +65,13 @@ class BankCardViewDetailsScreen extends StatelessWidget {
                       height: 70,
                       alignment: Alignment.center,
                       padding: const EdgeInsets.all(0.0),
-                      child: const CircularCountdownProgress(),
+                      child: CircularCountdownProgress(
+                        onCompleted: () {
+                          context
+                              .read<BankCardDetailsCubit>()
+                              .goToCardDetails(state.card!);
+                        },
+                      ),
                     ),
                   ],
                 ),

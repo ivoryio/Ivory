@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 
 class CircularCountdownProgress extends StatefulWidget {
   final Duration? duration;
+  final Function? onCompleted;
 
   const CircularCountdownProgress({
     super.key,
-    this.duration = const Duration(seconds: 60),
+    this.duration = const Duration(seconds: 5),
+    this.onCompleted,
   });
 
   @override
@@ -43,6 +45,9 @@ class _CircularCountdownProgressState extends State<CircularCountdownProgress> {
           _showValue = convertNumberToMinutesAndSeconds(_remainingTime);
         } else {
           _stopTimer();
+          if (widget.onCompleted != null) {
+            widget.onCompleted!();
+          }
         }
       });
     });

@@ -1,9 +1,14 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 
 import '../../config.dart';
 import '../../cubits/card_details_cubit/card_details_cubit.dart';
+import '../../services/biometric_auth_service.dart';
 import '../../services/device_service.dart';
 import '../../widgets/button.dart';
 import '../../widgets/card_widget.dart';
@@ -109,6 +114,24 @@ class InactiveCard extends StatelessWidget {
 class ActiveCard extends StatelessWidget {
   const ActiveCard({super.key});
 
+  void _loginWithFaceId(BuildContext context) async {
+    final FaceIdAuthentication _faceIdAuthentication =
+        FaceIdAuthentication(message: 'Authenticate to view card details');
+    bool authenticated =
+        await _faceIdAuthentication.authenticateWithBiometrics();
+    if (authenticated) {
+      Future.delayed(const Duration(milliseconds: 500), () {
+        context
+            .read<BankCardDetailsCubit>()
+            .viewCardDetails(context.read<BankCardDetailsCubit>().state.card!);
+      });
+    } else {
+      // Biometric authentication failed or was canceled.
+      // You can show an error message or perform other actions.
+      log('Biometric authentication failed or was canceled.');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = context.read<BankCardDetailsCubit>().state;
@@ -134,9 +157,7 @@ class ActiveCard extends StatelessWidget {
                   icon: Icons.remove_red_eye_outlined,
                   textLabel: 'Details',
                   onPressed: () => {
-                    context
-                        .read<BankCardDetailsCubit>()
-                        .viewCardDetails(state.card!)
+                    _loginWithFaceId(context),
                   },
                 ),
                 CardOptionsButton(
