@@ -118,7 +118,7 @@ class BankCardDetailsAppleWalletScreen extends StatelessWidget {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.black,
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 24, vertical: 6),
+                              horizontal: 12, vertical: 6),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),
@@ -130,7 +130,7 @@ class BankCardDetailsAppleWalletScreen extends StatelessWidget {
                             IconButton(
                               icon: Image.asset(
                                   'assets/icons/apple_wallet_logo.png'),
-                              iconSize: 40,
+                              iconSize: 24,
                               onPressed: () {},
                             ),
                             const SizedBox(width: 8),
