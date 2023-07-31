@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+// import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../config.dart';
@@ -20,6 +21,31 @@ class BankCardShowDetailsWidget extends StatelessWidget {
     required this.cardCvv,
     this.cardType,
   });
+
+  void showAlertDialog(
+      BuildContext context, String stringToCopy, String typeOfString) async {
+    copyToClipboard(stringToCopy);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          "Card $typeOfString successfully copied: $stringToCopy",
+          style: const TextStyle(color: Colors.black),
+        ),
+        duration: const Duration(seconds: 2),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.zero,
+          side: BorderSide(color: Colors.black),
+        ),
+      ),
+    );
+  }
+
+  void copyToClipboard(String stringToCopy) {
+    Clipboard.setData(ClipboardData(text: stringToCopy));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -124,9 +150,8 @@ class BankCardShowDetailsWidget extends StatelessWidget {
                                       color: Colors.white,
                                     ),
                                     onPressed: () {
-                                      copyToClipboard(
-                                        cardNumberParts.join(' '),
-                                      );
+                                      showAlertDialog(context,
+                                          cardNumberParts.join(' '), "Number");
                                       inspect(
                                         ClipboardData(
                                           text: cardNumberParts.join(' '),
@@ -204,7 +229,8 @@ class BankCardShowDetailsWidget extends StatelessWidget {
                                           color: Colors.white,
                                         ),
                                         onPressed: () {
-                                          copyToClipboard(cardCvv);
+                                          showAlertDialog(
+                                              context, cardCvv, "CVV");
                                           inspect(
                                             ClipboardData(text: cardCvv),
                                           );
@@ -227,10 +253,6 @@ class BankCardShowDetailsWidget extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  void copyToClipboard(String string) {
-    Clipboard.setData(ClipboardData(text: "$string"));
   }
 }
 
