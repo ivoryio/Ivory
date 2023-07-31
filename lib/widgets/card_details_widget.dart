@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../config.dart';
@@ -120,7 +121,11 @@ class BankCardShowDetailsWidget extends StatelessWidget {
                                       Icons.content_copy,
                                       color: Colors.white,
                                     ),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      copyToClipboard(
+                                        cardNumberParts.join(' '),
+                                      );
+                                    },
                                   ),
                                 ),
                               ],
@@ -191,7 +196,9 @@ class BankCardShowDetailsWidget extends StatelessWidget {
                                           Icons.content_copy,
                                           color: Colors.white,
                                         ),
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          copyToClipboard(cardCvv);
+                                        },
                                       ),
                                     ),
                                   ],
@@ -210,6 +217,10 @@ class BankCardShowDetailsWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void copyToClipboard(String string) {
+    Clipboard.setData(ClipboardData(text: "$string"));
   }
 }
 
