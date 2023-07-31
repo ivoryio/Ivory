@@ -8,7 +8,7 @@ class CircularCountdownProgress extends StatefulWidget {
 
   const CircularCountdownProgress({
     super.key,
-    this.duration = const Duration(seconds: 5),
+    this.duration = const Duration(seconds: 60),
     this.onCompleted,
   });
 
