@@ -171,14 +171,6 @@ class SignupCubit extends Cubit<SignupState> {
         deviceData: deviceFingerPrint,
       ));
 
-      //create device binding
-      DeviceService deviceService = DeviceService(user: user);
-      await deviceService.createDeviceBinding(user.personId!);
-
-      //verify device binding signature
-      await deviceService.verifyDeviceBindingSignature(
-          '212212'); // verify device with static TAN - To be refactored
-
       //create tax identification
       CreateTaxIdentificationResponse? taxIdentificationResponse =
           await personService.createTaxIdentification(
@@ -236,5 +228,13 @@ class SignupCubit extends Cubit<SignupState> {
         value: accountId,
       ),
     );
+
+    // //create device binding
+    DeviceService deviceService = DeviceService(user: user);
+    await deviceService.createDeviceBinding(user.personId!);
+
+    // //verify device binding signature
+    await deviceService.verifyDeviceBindingSignature(
+        '212212'); // verify device with static TAN - To be refactored
   }
 }

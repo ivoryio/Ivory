@@ -79,7 +79,7 @@ class BankCardViewDetailsScreen extends StatelessWidget {
                     onPressed: () {
                       context
                           .read<BankCardDetailsCubit>()
-                          .initializeActivation(state.card!);
+                          .goToCardDetails(state.card!);
                     },
                   ),
                 ),
