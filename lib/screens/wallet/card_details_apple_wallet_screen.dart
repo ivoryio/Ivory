@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:solarisdemo/services/device_service.dart';
 
 import '../../config.dart';
 import '../../cubits/card_details_cubit/card_details_cubit.dart';
@@ -14,6 +15,7 @@ class BankCardDetailsAppleWalletScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.read<BankCardDetailsCubit>().state;
+    final id = state.card!.id;
 
     return Screen(
       scrollPhysics: const NeverScrollableScrollPhysics(),
@@ -100,6 +102,8 @@ class BankCardDetailsAppleWalletScreen extends StatelessWidget {
                           ),
                         ),
                         onPressed: () {
+                          CacheCardsIds.saveCardIdToCache(id);
+
                           context
                               .read<BankCardDetailsCubit>()
                               .successActivation(state.card!);

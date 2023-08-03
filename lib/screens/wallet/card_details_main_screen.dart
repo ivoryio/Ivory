@@ -4,6 +4,7 @@ import 'package:flutter_switch/flutter_switch.dart';
 
 import '../../config.dart';
 import '../../cubits/card_details_cubit/card_details_cubit.dart';
+import '../../services/device_service.dart';
 import '../../widgets/button.dart';
 import '../../widgets/card_widget.dart';
 import '../../widgets/screen.dart';
@@ -14,6 +15,9 @@ class BankCardDetailsMainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final state = context.read<BankCardDetailsCubit>().state;
+    final id = state.card!.id;
+
     return Screen(
       scrollPhysics: const ClampingScrollPhysics(),
       title: 'Card',
@@ -22,10 +26,12 @@ class BankCardDetailsMainScreen extends StatelessWidget {
       hideBottomNavbar: false,
       child: Padding(
         padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-        // child: (state.card!.status == BankCardStatus.INACTIVE)
-        //     ? const InactiveCard()
-        //     : const ActiveCard(),
-        child: const InactiveCard(),
+        child: FutureBuilder(
+          future: CacheCardsIds.getCardIdFromCache(id),
+          builder: (context, isInCache) => (isInCache.data == false)
+              ? const InactiveCard()
+              : const ActiveCard(),
+        ),
       ),
     );
   }
