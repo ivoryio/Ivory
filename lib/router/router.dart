@@ -7,6 +7,7 @@ import 'package:solarisdemo/screens/splitpay/splitpay_screen.dart';
 import 'package:solarisdemo/screens/transactions/transactions_filtering_screen.dart';
 import 'package:solarisdemo/widgets/screen.dart';
 
+import '../screens/account/account_details_screen.dart';
 import '../screens/wallet/card_details_screen.dart';
 import '../models/transaction_model.dart';
 import '../services/transaction_service.dart';
@@ -130,6 +131,12 @@ class AppRouter {
             );
           },
         ),
+        GoRoute(
+            path: accountDetailsRoute.path,
+            name: accountDetailsRoute.name,
+            builder: (BuildContext context, GoRouterState state) {
+              return const AccountDetailsScreen();
+            }),
       ],
       redirect: (BuildContext context, GoRouterState state) {
         final bool isAuthenticated =

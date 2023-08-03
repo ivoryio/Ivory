@@ -86,6 +86,12 @@ const countdownRoute = _Route(
   title: 'Countdown',
 );
 
+const accountDetailsRoute = _Route(
+  name: 'accountDetails',
+  path: '/account-details',
+  title: 'Account',
+);
+
 class _Route {
   final String name;
   final String path;

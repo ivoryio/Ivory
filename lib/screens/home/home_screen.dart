@@ -381,9 +381,11 @@ class AccountOptions extends StatelessWidget {
             onPressed: () => log("Request"),
           ),
           AccountOptionsButton(
-            textLabel: "Acc. details",
+            textLabel: "Account",
             icon: Icons.info,
-            onPressed: () => log("Acc. details"),
+            onPressed: () {
+              context.push(accountDetailsRoute.path);
+            },
           ),
         ],
       ),
