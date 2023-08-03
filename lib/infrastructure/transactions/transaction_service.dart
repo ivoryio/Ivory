@@ -47,48 +47,6 @@ class TransactionService extends ApiService {
   }
 }
 
-class TransactionListFilter {
-  final DateTime? bookingDateMin;
-  final DateTime? bookingDateMax;
-  final int? page;
-  final int? size;
-  final String? sort;
-
-  const TransactionListFilter({
-    this.bookingDateMin,
-    this.bookingDateMax,
-    this.page,
-    this.size,
-    this.sort,
-  });
-
-  Map<String, String> toMap() {
-    Map<String, String> map = {};
-
-    if (bookingDateMin != null) {
-      map["filter[booking_date][min]"] = Format.date(bookingDateMin!);
-    }
-
-    if (bookingDateMax != null) {
-      map["filter[booking_date][max]"] = Format.date(bookingDateMax!);
-    }
-
-    if (page != null) {
-      map["page[number]"] = page.toString();
-    }
-
-    if (size != null) {
-      map["page[size]"] = size.toString();
-    }
-
-    if (sort != null) {
-      map["sort"] = sort!;
-    }
-
-    return map;
-  }
-}
-
 abstract class TransactionsServiceResponse extends Equatable {
   @override
   List<Object?> get props => [];

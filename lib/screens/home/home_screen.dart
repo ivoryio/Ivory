@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../config.dart';
+import '../../models/transaction_model.dart';
 import '../../models/user.dart';
 import '../../widgets/modal.dart';
 import '../../widgets/screen.dart';

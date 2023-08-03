@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 import '../../infrastructure/transactions/transaction_service.dart';
+import '../../models/transaction_model.dart';
 
 part 'transactions_filtering_state.dart';
 

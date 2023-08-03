@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../config.dart';
 import '../../infrastructure/transactions/transaction_service.dart';
+import '../../models/transaction_model.dart';
 import '../../widgets/modal.dart';
 import '../../widgets/button.dart';
 import '../../widgets/screen.dart';
