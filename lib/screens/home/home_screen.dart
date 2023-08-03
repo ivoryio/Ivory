@@ -15,7 +15,7 @@ import '../../widgets/refer_a_friend.dart';
 import '../../services/person_service.dart';
 import '../../widgets/transaction_list.dart';
 import '../../router/routing_constants.dart';
-import '../../services/transaction_service.dart';
+import '../../infrastructure/transactions/transaction_service.dart';
 import '../../widgets/account_balance_text.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../cubits/account_summary_cubit/account_summary_cubit.dart';

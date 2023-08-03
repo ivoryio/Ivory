@@ -9,7 +9,7 @@ import 'package:solarisdemo/widgets/screen.dart';
 
 import '../screens/wallet/card_details_screen.dart';
 import '../models/transaction_model.dart';
-import '../services/transaction_service.dart';
+import '../infrastructure/transactions/transaction_service.dart';
 import 'routing_constants.dart';
 import '../screens/home/home_screen.dart';
 import '../screens/login/login_screen.dart';

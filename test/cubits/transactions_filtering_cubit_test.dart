@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:solarisdemo/cubits/transactions_filtering/transactions_filtering_cubit.dart';
-import 'package:solarisdemo/services/transaction_service.dart';
+import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart';
 
 class MockTransactionService extends Mock implements TransactionService {}
 

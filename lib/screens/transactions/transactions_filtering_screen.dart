@@ -4,7 +4,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../config.dart';
-import '../../services/transaction_service.dart';
+import '../../infrastructure/transactions/transaction_service.dart';
 import '../../widgets/modal.dart';
 import '../../widgets/button.dart';
 import '../../widgets/screen.dart';

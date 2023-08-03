@@ -1,13 +1,15 @@
 import 'dart:developer';
 
-import 'api_service.dart';
-import '../models/transfer.dart';
-import '../utilities/format.dart';
-import '../models/transaction_model.dart';
-import '../models/authorization_request.dart';
+import 'package:equatable/equatable.dart';
+
+import '../../services/api_service.dart';
+import '../../models/transfer.dart';
+import '../../utilities/format.dart';
+import '../../models/transaction_model.dart';
+import '../../models/authorization_request.dart';
 
 class TransactionService extends ApiService {
-  TransactionService({required super.user});
+  TransactionService({super.user});
 
   Future<AuthorizationRequest> createTransfer(Transfer transfer) async {
     try {
@@ -22,7 +24,7 @@ class TransactionService extends ApiService {
     }
   }
 
-  Future<List<Transaction>?> getTransactions({
+  Future<TransactionsServiceResponse> getTransactions({
     TransactionListFilter? filter,
   }) async {
     try {
@@ -31,13 +33,13 @@ class TransactionService extends ApiService {
         queryParameters: filter?.toMap() ?? {},
       );
 
-      List<Transaction>? transactions = (data as List)
+      List<Transaction> transactions = (data as List)
           .map((transaction) => Transaction.fromJson(transaction))
           .toList();
 
-      return transactions;
+      return GetTransactionsSuccessResponse(transactions: transactions);
     } catch (e) {
-      throw Exception("Failed to load transactions");
+      return TransactionsServiceErrorResponse();
     }
   }
 }
@@ -83,3 +85,19 @@ class TransactionListFilter {
     return map;
   }
 }
+
+abstract class TransactionsServiceResponse extends Equatable {
+  @override
+  List<Object?> get props => [];
+}
+
+class GetTransactionsSuccessResponse extends TransactionsServiceResponse {
+  final List<Transaction> transactions;
+
+  GetTransactionsSuccessResponse({required this.transactions});
+
+  @override
+  List<Object?> get props => [transactions];
+}
+
+class TransactionsServiceErrorResponse extends TransactionsServiceResponse {}

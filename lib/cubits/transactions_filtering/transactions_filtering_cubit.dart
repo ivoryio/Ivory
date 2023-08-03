@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-import '../../services/transaction_service.dart';
+import '../../infrastructure/transactions/transaction_service.dart';
 
 part 'transactions_filtering_state.dart';
 

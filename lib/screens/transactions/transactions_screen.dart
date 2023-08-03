@@ -12,7 +12,7 @@ import 'transactions_filtering_screen.dart';
 import '../../router/routing_constants.dart';
 import '../../widgets/transaction_list.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
-import '../../services/transaction_service.dart';
+import '../../infrastructure/transactions/transaction_service.dart';
 import 'package:solarisdemo/screens/home/home_screen.dart';
 import '../../cubits/transaction_list_cubit/transaction_list_cubit.dart';
 
