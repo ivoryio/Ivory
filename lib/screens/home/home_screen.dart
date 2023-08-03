@@ -5,21 +5,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../config.dart';
-import '../../models/user.dart';
-import '../../widgets/modal.dart';
-import '../../widgets/screen.dart';
-import '../../utilities/format.dart';
-import '../../widgets/analytics.dart';
-import 'modals/new_transfer_popup.dart';
-import '../../widgets/refer_a_friend.dart';
-import '../../services/person_service.dart';
-import '../../widgets/transaction_list.dart';
-import '../../router/routing_constants.dart';
-import '../../services/transaction_service.dart';
-import '../../widgets/account_balance_text.dart';
-import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../cubits/account_summary_cubit/account_summary_cubit.dart';
+import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../cubits/transaction_list_cubit/transaction_list_cubit.dart';
+import '../../models/user.dart';
+import '../../router/routing_constants.dart';
+import '../../services/person_service.dart';
+import '../../services/transaction_service.dart';
+import '../../utilities/format.dart';
+import '../../widgets/account_balance_text.dart';
+import '../../widgets/analytics.dart';
+import '../../widgets/modal.dart';
+import '../../widgets/refer_a_friend.dart';
+import '../../widgets/screen.dart';
+import '../../widgets/transaction_list.dart';
+import 'modals/new_transfer_popup.dart';
 
 const _defaultCountTransactionsDisplayed = 3;
 const _defaultPage = 1;
@@ -363,12 +363,7 @@ class AccountOptions extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           AccountOptionsButton(
-            textLabel: "Top up",
-            icon: Icons.add_card,
-            onPressed: () => log("Top up"),
-          ),
-          AccountOptionsButton(
-            textLabel: "Send",
+            textLabel: "Transfer",
             icon: Icons.compare_arrows,
             onPressed: () => showBottomModal(
               context: context,
@@ -376,9 +371,9 @@ class AccountOptions extends StatelessWidget {
             ),
           ),
           AccountOptionsButton(
-            textLabel: "Request",
+            textLabel: "Repayments",
             icon: Icons.receipt_long,
-            onPressed: () => log("Request"),
+            onPressed: () => context.push(repaymentsRoute.path),
           ),
           AccountOptionsButton(
             textLabel: "Acc. details",

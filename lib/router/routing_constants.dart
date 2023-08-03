@@ -86,6 +86,12 @@ const countdownRoute = _Route(
   title: 'Countdown',
 );
 
+const repaymentsRoute = _Route(
+  name: 'repayments',
+  path: '/repayments',
+  title: 'Repayments',
+);
+
 class _Route {
   final String name;
   final String path;
