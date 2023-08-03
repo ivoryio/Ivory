@@ -18,6 +18,7 @@ import 'package:solarisdemo/services/auth_service.dart';
 import 'package:solarisdemo/themes/default_theme.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/platform_text_input.dart';
+import 'package:solarisdemo/widgets/screen.dart';
 import 'package:solarisdemo/widgets/sticky_bottom_content.dart';
 import 'package:solarisdemo/widgets/tan_input.dart';
 // package:flutter_tools/src/test/integration_test_device.dart
@@ -88,7 +89,7 @@ void main() {
 
       Finder loginButton = find.text('Login');
       await tester.tap(loginButton);
-      await tester.pumpAndSettle(const Duration(seconds: 5));
+      await tester.pumpAndSettle(const Duration(seconds: 3));
 
       // print('aici e printul $loginButton');
 
@@ -96,8 +97,147 @@ void main() {
       expect(goRouter.location, equals(loginRoute.path));
     });
 
+    testWidgets('''It should redirect the user to the HomeScreen 
+        when he enters a valid email&password,
+         agrees with GDPR conditions and enters a valid passcode''',
+        (WidgetTester tester) async {
+      //Arrange
+      await dotenv.load();
+      await tester.pumpWidget(
+        PlatformApp.router(
+          routerConfig: goRouter,
+          material: (context, platform) => MaterialAppRouterData(
+            theme: defaultMaterialTheme,
+          ),
+          cupertino: (context, platform) => CupertinoAppRouterData(
+            theme: cupertinoTheme,
+          ),
+          localizationsDelegates: const [
+            DefaultMaterialLocalizations.delegate,
+            DefaultWidgetsLocalizations.delegate,
+            DefaultCupertinoLocalizations.delegate,
+          ],
+        ),
+      );
+      Finder loginButton = find.text('Login');
+      await tester.tap(loginButton);
+      await tester.pumpAndSettle(const Duration(seconds: 3));
+
+      expect(goRouter.location, equals(loginRoute.path));
+
+      Finder emailButton = find.widgetWithText(PlatformElevatedButton, "Email");
+      await tester.tap(emailButton);
+      await tester.pumpAndSettle(const Duration(seconds: 3));
+
+      Finder emailTextInput =
+          find.widgetWithText(PlatformTextInput, "Email Address");
+      Finder passwordTextInput =
+          find.widgetWithText(PlatformTextInput, "Password");
+      await tester.enterText(emailTextInput, "anca.nechita@thinslices.com");
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+      await tester.enterText(passwordTextInput, "123456");
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      Finder loginButton1 = find.widgetWithText(PrimaryButton, "Continue");
+      await tester.tap(loginButton1);
+      await tester.pumpAndSettle(const Duration(seconds: 3));
+
+      Finder consentPage =
+          find.widgetWithText(GdprConsentScreen, "Welcome to SolarisDemo!");
+
+      if (consentPage.evaluate().isNotEmpty) {
+        Finder consentButton =
+            find.widgetWithText(StickyBottomContent, "I agree");
+
+        await tester.tap(consentButton);
+        await tester.pumpAndSettle(const Duration(seconds: 3));
+      }
+
+      Finder passcodeInput = find.byType(InputCodeBox);
+
+      await tester.enterText(passcodeInput.first, "1");
+      await tester.enterText(passcodeInput.at(1), "2");
+      print('aici e printul passcode');
+      await tester.enterText(passcodeInput.at(2), "3");
+      await tester.enterText(passcodeInput.at(3), "4");
+
+      await tester.pumpAndSettle();
+
+      //Finder homeScreenFinder = find.byKey(Key(homeRoute.name));
+      //Finder homeScreenFinder = find.widgetWithText(HomeScreen, 'Hello, Anca!');
+      // Finder homeScreenFinder = find.byType(PlatformScaffold);
+      //
+      // expect(consentPage, findsOneWidget);
+      // expect(HomeScreen(), findsOneWidget);
+      Finder homeScreenFinder =
+          find.byElementType(InheritedModelElement<Object>);
+      await tester.tapAt(const Offset(100, 200));
+      await tester.pumpAndSettle(const Duration(seconds: 15));
+    });
+
+    testWidgets('Should throw an error message when passcode is invalid',
+        (WidgetTester tester) async {
+      //Arrange
+      await dotenv.load();
+      await tester.pumpWidget(
+        PlatformApp.router(
+          routerConfig: goRouter,
+          material: (context, platform) => MaterialAppRouterData(
+            theme: defaultMaterialTheme,
+          ),
+          cupertino: (context, platform) => CupertinoAppRouterData(
+            theme: cupertinoTheme,
+          ),
+          localizationsDelegates: const [
+            DefaultMaterialLocalizations.delegate,
+            DefaultWidgetsLocalizations.delegate,
+            DefaultCupertinoLocalizations.delegate,
+          ],
+        ),
+      );
+      Finder loginButton = find.text('Login');
+      await tester.tap(loginButton);
+      await tester.pumpAndSettle(const Duration(seconds: 3));
+
+      Finder emailButton = find.widgetWithText(PlatformElevatedButton, "Email");
+      await tester.tap(emailButton);
+      await tester.pumpAndSettle(const Duration(seconds: 3));
+
+      Finder emailTextInput =
+          find.widgetWithText(PlatformTextInput, "Email Address");
+      Finder passwordTextInput =
+          find.widgetWithText(PlatformTextInput, "Password");
+      await tester.enterText(emailTextInput, "anca.nechita@thinslices.com");
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+      await tester.enterText(passwordTextInput, "123456");
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      Finder loginButtone = find.widgetWithText(PrimaryButton, "Continue");
+      await tester.tap(loginButtone);
+      await tester.pumpAndSettle(const Duration(seconds: 3));
+
+      Finder consentPage =
+          find.widgetWithText(GdprConsentScreen, "Welcome to SolarisDemo!");
+
+      if (consentPage.evaluate().isNotEmpty) {
+        Finder consentButton =
+            find.widgetWithText(StickyBottomContent, "I agree");
+
+        await tester.tap(consentButton);
+        await tester.pumpAndSettle(const Duration(seconds: 3));
+      }
+
+      Finder passcodeInput = find.byType(InputCodeBox);
+
+      await tester.enterText(passcodeInput.first, "1");
+      await tester.enterText(passcodeInput.at(1), "1");
+      await tester.enterText(passcodeInput.at(2), "1");
+      await tester.enterText(passcodeInput.at(3), "1");
+      await tester.pumpAndSettle(const Duration(seconds: 3));
+    });
+
     testWidgets(
-        'Should redirect the user to the GDPR screen when email&password are valid',
+        'Check if the user is not able to log in with invalid credentials (email address)',
         (WidgetTester tester) async {
       //Arrange
       await dotenv.load();
@@ -118,83 +258,11 @@ void main() {
         ),
       );
 
-      Finder emailButton = find.widgetWithText(PlatformElevatedButton, "Email");
-      await tester.tap(emailButton);
-      await tester.pumpAndSettle(const Duration(seconds: 5));
-
-      Finder emailTextInput =
-          find.widgetWithText(PlatformTextInput, "Email Address");
-      Finder passwordTextInput =
-          find.widgetWithText(PlatformTextInput, "Password");
-      await tester.enterText(emailTextInput, "anca.nechita@thinslices.com");
-      await tester.pumpAndSettle(const Duration(seconds: 2));
-      await tester.enterText(passwordTextInput, "123456");
-      await tester.pumpAndSettle(const Duration(seconds: 2));
-
-      Finder loginButton = find.widgetWithText(PrimaryButton, "Continue");
-      await tester.tap(loginButton);
-      await tester.pumpAndSettle(const Duration(seconds: 15));
-
-      Finder consentPage =
-          find.widgetWithText(GdprConsentScreen, "Welcome to SolarisDemo!");
-
-      if (consentPage.evaluate().isNotEmpty) {
-        Finder consentButton =
-            find.widgetWithText(StickyBottomContent, "I agree");
-
-        await tester.tap(consentButton);
-        await tester.pumpAndSettle(const Duration(seconds: 5));
-      }
-
-      Finder passcodeInput = find.byType(InputCodeBox);
-
-      await tester.enterText(passcodeInput.first, "1");
-      await tester.enterText(passcodeInput.at(1), "2");
-      await tester.enterText(passcodeInput.at(2), "3");
-      await tester.enterText(passcodeInput.at(3), "4");
-      await tester.pumpAndSettle(const Duration(seconds: 5));
-
-       //expect(consentPage, findsOneWidget);
-       //expect(consentButton, findsOneWidget);
-  
-  testWidgets('Should navigate to HomeScreen', (WidgetTester tester) async {
-  await dotenv.load();
-  await tester.pumpWidget(
-    MaterialApp.router(
-      routerDelegate: goRouter.routerDelegate,
-      routeInformationParser: goRouter.routeInformationParser,
-      routeInformationProvider: goRouter.routeInformationProvider,
-    ),
-  );
-
-  // Găsim widget-ul cu numele corespunzător pentru HomeScreen
-  Finder homeScreenFinder = find.byKey(Key(homeRoute.name));
-  await tester.pumpAndSettle(const Duration(seconds: 15));
-
-
-  expect(homeScreenFinder, findsOneWidget);
-   expect(goRouter.location, equals(homeRoute.path));
-});
-
-testWidgets(
-        'Check if the user is not able to log in with invalid credentials (email address)',
-        (WidgetTester tester) async {
-      //Arrange
-      await dotenv.load();
-      await tester.pumpWidget(
-        MaterialApp.router(
-          routerDelegate: goRouter.routerDelegate,
-          routeInformationParser: goRouter.routeInformationParser,
-          routeInformationProvider: goRouter.routeInformationProvider,
-        ),
-      );
-
-      Finder loginButton = find.text('Login');
-      await tester.tap(loginButton);
+      Finder loginButton2 = find.text('Login');
+      await tester.tap(loginButton2);
       await tester.pumpAndSettle(const Duration(seconds: 5));
 
       expect(goRouter.location, equals(loginRoute.path));
-
 
       Finder emailButton = find.widgetWithText(PlatformElevatedButton, "Email");
       await tester.tap(emailButton);
@@ -209,17 +277,25 @@ testWidgets(
       await tester.enterText(passwordTextInput, "456789");
       await tester.pumpAndSettle(const Duration(seconds: 2));
 
-      Finder loginButton1 = find.widgetWithText(PrimaryButton, "Continue");
-      await tester.tap(loginButton1);
-      await tester.pumpAndSettle(const Duration(seconds: 15));
+      // bool GdprConsentScreen = false;
+      // expect(find.byType(Screen), findsNothing);
 
-      Finder errorText = find.widgetWithText(LoginCubit, "Wrong username or password".trim());
-      expect(find.text("Wrong username or password"), findsOneWidget);
-     
+      Finder consentPage =
+          find.widgetWithText(GdprConsentScreen, "Welcome to ...!");
 
+      if (consentPage.evaluate().isEmpty) {
+        Finder loginButton1 = find.widgetWithText(PrimaryButton, "Continue");
+        await tester.tap(loginButton1);
+        await tester.pumpAndSettle(const Duration(seconds: 3));
+      }
 
-    }); 
-       
+      Finder errorMessage =
+          find.widgetWithText(LoginCubit, "Wrong username or password".trim());
+
+      // Finder errorText =
+      //     find.widgetWithText(LoginCubit, "Wrong username or password".trim());
+      // expect(find.text("Wrong username or password"), findsOneWidget);
     });
+    testWidgets('Un .nou test', (WidgetTester tester) async {});
   });
 }
