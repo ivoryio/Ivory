@@ -390,6 +390,44 @@ class DeviceService extends ApiService {
       throw Exception('Failed to verify device signature - $e');
     }
   }
+
+  Future<String?> getBoundDeviceId() async {
+    try {
+      String path = 'person/device';
+      var data = await get(path);
+      if (data == null) {
+        throw Exception('Failed to get bound device');
+      }
+      return data['id'];
+    } catch (e) {
+      throw Exception('Failed to get bound device - $e');
+    }
+  }
+
+  Future<dynamic> createRestrictedKey() async {
+    // var newKeyPair = await DeviceUtilService.getECDSAP256KeyPair();
+    // if (newKeyPair.isEmpty) {
+    //   throw Exception('Key Pair not found');
+    // }
+    // String? publicKey = await DeviceUtilService.getPublicKeyFromCache();
+    // String? privateKey = await DeviceUtilService.getPrivateKeyFromCache();
+    // if (publicKey == null || privateKey == null) {
+    //   throw Exception('Public/private key not found');
+    // }
+
+    // String? signature = DeviceUtilService.signMessage(
+    //     newKeyPair['publicKey'] as String, privateKey);
+
+    // String? consentId = await _getDeviceConsentId();
+    // if (consentId.isEmpty) {
+    //   throw Exception('Consent Id not found');
+    // }
+
+    // String? deviceFingerprint =
+    //     await DeviceUtilService.getDeviceFingerprint(consentId);
+
+    // await post()
+  }
 }
 
 class CacheCardsIds {
