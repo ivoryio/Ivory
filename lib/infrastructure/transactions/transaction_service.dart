@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:equatable/equatable.dart';
 
+import '../../models/user.dart';
 import '../../services/api_service.dart';
 import '../../models/transfer.dart';
 import '../../utilities/format.dart';
@@ -26,7 +27,9 @@ class TransactionService extends ApiService {
 
   Future<TransactionsServiceResponse> getTransactions({
     TransactionListFilter? filter,
+    User? user,
   }) async {
+    if(user != null) {this.user = user;}
     try {
       var data = await get(
         '/transactions',

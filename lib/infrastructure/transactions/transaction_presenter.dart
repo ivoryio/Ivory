@@ -20,7 +20,7 @@ class TransactionPresenter {
 abstract class TransactionsViewModel extends Equatable {
   final List<Transaction>? transactions;
 
-  TransactionsViewModel({this.transactions});
+  const TransactionsViewModel({this.transactions});
 
   @override
   List<Object?> get props => [transactions];
@@ -33,6 +33,6 @@ class TransactionsLoadingViewModel extends TransactionsViewModel {}
 class TransactionsErrorViewModel extends TransactionsViewModel {}
 
 class TransactionsFetchedViewModel extends TransactionsViewModel {
-  TransactionsFetchedViewModel({required List<Transaction>? transactions}) : super(transactions: transactions);
+  const TransactionsFetchedViewModel({required List<Transaction> transactions}) : super(transactions: transactions);
 }
 
