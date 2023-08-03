@@ -175,7 +175,7 @@ class BankCardRepresentation {
 String createCardToJson(CreateBankCard data) => json.encode(data.toJson());
 
 class CreateBankCard {
-  // late String line1; // TODO
+  late String line1;
   late String line2;
   BankCardType type;
   String businessId;
@@ -190,13 +190,13 @@ class CreateBankCard {
     if (firstName.length > 21) {
       firstName = firstName.substring(0, 21);
     }
-    // line1 = 'TEST/CARD';
+    line1 = firstName.toUpperCase(); // TODO
     line2 = firstName.toUpperCase();
     reference = const Uuid().v4().replaceAll('-', '');
   }
 
   Map<String, dynamic> toJson() => {
-        // "line_1": line1, // TODO
+        "line_1": line1,
         "line_2": line2,
         "type": type.name,
         "business_id": businessId,
