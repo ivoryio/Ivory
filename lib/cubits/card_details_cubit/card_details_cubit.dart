@@ -50,7 +50,14 @@ class BankCardDetailsCubit extends Cubit<BankCardDetailsState> {
   }
 
   Future<void> initializeActivation(BankCard card) async {
-    emit(BankCardDetailsInfoState(card: card));
+    emit(const BankCardDetailsLoadingState());
+    try {
+      BankCard activatedCard = await cardsService.activateCard(card.id);
+      emit(BankCardDetailsInfoState(card: activatedCard));
+      return;
+    } catch (e) {
+      emit(BankCardDetailsErrorState(e.toString()));
+    }
   }
 
   Future<void> startPinSetup(BankCard card) async {

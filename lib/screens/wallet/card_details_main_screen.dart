@@ -4,7 +4,7 @@ import 'package:flutter_switch/flutter_switch.dart';
 
 import '../../config.dart';
 import '../../cubits/card_details_cubit/card_details_cubit.dart';
-import '../../services/device_service.dart';
+import '../../models/bank_card.dart';
 import '../../widgets/button.dart';
 import '../../widgets/card_widget.dart';
 import '../../widgets/screen.dart';
@@ -16,24 +16,20 @@ class BankCardDetailsMainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.read<BankCardDetailsCubit>().state;
-    final id = state.card!.id;
 
     return Screen(
-      scrollPhysics: const ClampingScrollPhysics(),
-      title: 'Card',
-      centerTitle: true,
-      hideBackButton: true,
-      hideBottomNavbar: false,
-      child: Padding(
-        padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-        child: FutureBuilder(
-          future: CacheCardsIds.getCardIdFromCache(id),
-          builder: (context, isInCache) => (isInCache.data == false)
+        scrollPhysics: const ClampingScrollPhysics(),
+        title: 'Card',
+        centerTitle: true,
+        hideBackButton: true,
+        hideBottomNavbar: false,
+        child: Padding(
+          padding:
+              ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
+          child: state.card!.status == BankCardStatus.INACTIVE
               ? const InactiveCard()
               : const ActiveCard(),
-        ),
-      ),
-    );
+        ));
   }
 }
 
@@ -52,9 +48,10 @@ class InactiveCard extends StatelessWidget {
           space: 48,
           children: [
             BankCardWidget(
-              cardNumber: state.card!.representation!.maskedPan!,
-              cardHolder: state.card!.representation!.line2 ?? 'data missing',
-              cardExpiry: state.card!.representation!.formattedExpirationDate!,
+              cardNumber: state.card!.representation!.maskedPan ?? '',
+              cardHolder: state.card!.representation!.line2 ?? '',
+              cardExpiry:
+                  state.card!.representation!.formattedExpirationDate ?? '',
               isViewable: false,
             ),
             SpacedColumn(
@@ -85,18 +82,13 @@ class InactiveCard extends StatelessWidget {
           width: double.infinity,
           child: PrimaryButton(
             text: "Activate my card",
-            // onPressed: (state.card!.status == BankCardStatus.INACTIVE)
-            //     ? () {
-            //         context
-            //             .read<BankCardDetailsCubit>()
-            //             .initializeActivation(state.card!);
-            //       }
-            //     : null,
-            onPressed: () {
-              context
-                  .read<BankCardDetailsCubit>()
-                  .initializeActivation(state.card!);
-            },
+            onPressed: state.card!.status == BankCardStatus.INACTIVE
+                ? () {
+                    context
+                        .read<BankCardDetailsCubit>()
+                        .initializeActivation(state.card!);
+                  }
+                : null,
           ),
         ),
       ],
@@ -119,9 +111,10 @@ class ActiveCard extends StatelessWidget {
           space: 16,
           children: [
             BankCardWidget(
-              cardNumber: state.card!.representation!.maskedPan!,
-              cardHolder: state.card!.representation!.line2 ?? 'data missing',
-              cardExpiry: state.card!.representation!.formattedExpirationDate!,
+              cardNumber: state.card!.representation!.maskedPan ?? '',
+              cardHolder: state.card!.representation!.line2 ?? '',
+              cardExpiry:
+                  state.card!.representation!.formattedExpirationDate ?? '',
               isViewable: false,
               cardType: 'Credit card',
             ),
