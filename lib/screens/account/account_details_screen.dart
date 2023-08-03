@@ -14,6 +14,9 @@ class AccountDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const String iban = 'DE43 1101 0100 2919 3290 34';
+    const String bic = 'SOLARIS35';
+
     return Screen(
       scrollPhysics: const NeverScrollableScrollPhysics(),
       titleTextStyle: const TextStyle(
@@ -89,7 +92,7 @@ class AccountDetailsScreen extends StatelessWidget {
                                   ),
                                   SizedBox(height: 4),
                                   Text(
-                                    'DE43 1101 0100 2919 3290 34',
+                                    iban,
                                     style: TextStyle(
                                       fontSize: 16,
                                       height: 24 / 16,
@@ -102,7 +105,7 @@ class AccountDetailsScreen extends StatelessWidget {
                               CopyContentButton(
                                 onPressed: () {
                                   inspect(const ClipboardData(
-                                    text: 'IBAN pressed',
+                                    text: iban,
                                   ));
                                 },
                               ),
@@ -128,7 +131,7 @@ class AccountDetailsScreen extends StatelessWidget {
                                   ),
                                   SizedBox(height: 4),
                                   Text(
-                                    'SOLARIS35',
+                                    bic,
                                     style: TextStyle(
                                       fontSize: 16,
                                       height: 24 / 16,
@@ -142,7 +145,7 @@ class AccountDetailsScreen extends StatelessWidget {
                               CopyContentButton(
                                 onPressed: () {
                                   inspect(const ClipboardData(
-                                    text: 'BIC pressed',
+                                    text: bic,
                                   ));
                                 },
                               ),
