@@ -41,26 +41,18 @@ class AccountDetailsScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Account',
-                  style: TextStyle(
-                    fontSize: 32,
-                    height: 40 / 32,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: ClientConfig.getTextStyleScheme().heading1,
                 ),
                 const SizedBox(height: 24),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'Details',
-                      style: TextStyle(
-                        fontSize: 18,
-                        height: 24 / 18,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: ClientConfig.getTextStyleScheme().labelLarge,
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(
@@ -77,28 +69,20 @@ class AccountDetailsScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              const Column(
+                              Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     'IBAN',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      height: 18 / 14,
-                                      fontWeight: FontWeight.w600,
-                                      color: Color(0xFF56555E),
-                                    ),
+                                    style: ClientConfig.getTextStyleScheme()
+                                        .labelSmall,
                                   ),
-                                  SizedBox(height: 4),
+                                  const SizedBox(height: 4),
                                   Text(
                                     iban,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      height: 24 / 16,
-                                      fontWeight: FontWeight.w400,
-                                      color: Color(0xFF15141E),
-                                    ),
+                                    style: ClientConfig.getTextStyleScheme()
+                                        .bodyLargeRegular,
                                   ),
                                 ],
                               ),
@@ -116,28 +100,20 @@ class AccountDetailsScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              const Column(
+                              Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     'BIC',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      height: 18 / 14,
-                                      fontWeight: FontWeight.w600,
-                                      color: Color(0xFF56555E),
-                                    ),
+                                    style: ClientConfig.getTextStyleScheme()
+                                        .labelSmall,
                                   ),
-                                  SizedBox(height: 4),
+                                  const SizedBox(height: 4),
                                   Text(
                                     bic,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      height: 24 / 16,
-                                      fontWeight: FontWeight.w400,
-                                      color: Color(0xFF15141E),
-                                    ),
+                                    style: ClientConfig.getTextStyleScheme()
+                                        .bodyLargeRegular,
                                   ),
                                 ],
                               ),
@@ -156,17 +132,13 @@ class AccountDetailsScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
                       'Statements',
-                      style: TextStyle(
-                        fontSize: 18,
-                        height: 24 / 18,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: ClientConfig.getTextStyleScheme().heading4,
                     ),
                   ],
                 ),
@@ -185,28 +157,19 @@ class AccountDetailsScreen extends StatelessWidget {
                         iconColor: const Color(0xFFCC0000),
                       ),
                       const SizedBox(width: 16),
-                      const Flexible(
+                      Flexible(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               'Generate statement',
-                              style: TextStyle(
-                                fontSize: 16,
-                                height: 24 / 16,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xFF000000),
-                              ),
+                              style: ClientConfig.getTextStyleScheme().heading4,
                             ),
                             Text(
                               'Select the period and export your statement',
-                              style: TextStyle(
-                                fontSize: 14,
-                                height: 18 / 14,
-                                fontWeight: FontWeight.w400,
-                                color: Color(0xFF56555E),
-                              ),
+                              style: ClientConfig.getTextStyleScheme()
+                                  .bodySmallRegular,
                             ),
                           ],
                         ),
@@ -319,16 +282,9 @@ class ContentOfModal extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Expanded(
-                child: Text(
-                  'Outstanding balance',
-                  style: TextStyle(
-                    fontSize: 16,
-                    height: 24 / 16,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF15141E),
-                  ),
-                ),
+              Expanded(
+                child: Text('Outstanding balance',
+                    style: ClientConfig.getTextStyleScheme().heading4),
               ),
               const SizedBox(width: 8),
               StatementButton(
@@ -343,17 +299,12 @@ class ContentOfModal extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 24),
-          const Row(
+          Row(
             children: [
               Flexible(
                 child: Text(
                   'The outstanding balance includes any carried-over balance from previous billing cycles, new purchases, fees, and accrued interest. It represents the total amount that you owe.',
-                  style: TextStyle(
-                    fontSize: 16,
-                    height: 24 / 16,
-                    fontWeight: FontWeight.w400,
-                    color: Color(0xFF15141E),
-                  ),
+                  style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
                 ),
               )
             ],
