@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'empty_list_message.dart';
 import 'transaction_listing_item.dart';
 import '../models/transaction_model.dart';
-import '../infrastructure/transactions/transaction_service.dart';
 import '../cubits/transaction_list_cubit/transaction_list_cubit.dart';
 
 class TransactionList extends StatelessWidget {

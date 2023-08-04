@@ -72,11 +72,7 @@ class AppRouter {
           path: transactionsRoute.path,
           name: transactionsRoute.name,
           builder: (BuildContext context, GoRouterState state) {
-            return TransactionsScreen(
-              transactionListFilter: state.extra is TransactionListFilter
-                  ? state.extra as TransactionListFilter
-                  : null,
-            );
+            return const TransactionsScreen();
           },
         ),
         GoRoute(

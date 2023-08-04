@@ -21,12 +21,8 @@ import '../../cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/screens/home/home_screen.dart';
 
 class TransactionsScreen extends StatefulWidget {
-  final TransactionListFilter? transactionListFilter;
 
-  const TransactionsScreen({
-    super.key,
-    this.transactionListFilter,
-  });
+  const TransactionsScreen({super.key});
 
   @override
   State<TransactionsScreen> createState() => _TransactionsScreenState();

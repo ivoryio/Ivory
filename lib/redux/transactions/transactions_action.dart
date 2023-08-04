@@ -1,5 +1,4 @@
 import '../../models/transaction_model.dart';
-import '../../infrastructure/transactions/transaction_service.dart';
 import '../../models/user.dart';
 
 class GetTransactionsCommandAction {
