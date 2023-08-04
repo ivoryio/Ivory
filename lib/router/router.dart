@@ -9,6 +9,8 @@ import 'package:solarisdemo/screens/transactions/transactions_filtering_screen.d
 import 'package:solarisdemo/widgets/screen.dart';
 
 import '../cubits/auth_cubit/auth_cubit.dart';
+import '../screens/account/account_details_screen.dart';
+import '../screens/wallet/card_details_screen.dart';
 import '../models/transaction_model.dart';
 import '../screens/home/home_screen.dart';
 import '../screens/landing/landing_screen.dart';
@@ -129,6 +131,13 @@ class AppRouter {
             return SplitpayScreen(
               transaction: state.extra as Transaction,
             );
+          },
+        ),
+        GoRoute(
+          path: accountDetailsRoute.path,
+          name: accountDetailsRoute.name,
+          builder: (BuildContext context, GoRouterState state) {
+            return const AccountDetailsScreen();
           },
         ),
         GoRoute(
