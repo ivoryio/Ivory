@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:solarisdemo/widgets/yvory_list_tile.dart';
 
 import '../../config.dart';
 import '../../cubits/account_summary_cubit/account_summary_cubit.dart';
@@ -75,8 +76,15 @@ class AccountDetailsScreen extends StatelessWidget {
       child: Column(
         children: [
           Padding(
-            padding:
-                ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
+            padding: EdgeInsets.fromLTRB(
+              ClientConfig.getCustomClientUiSettings()
+                  .defaultScreenVerticalPadding,
+              ClientConfig.getCustomClientUiSettings()
+                  .defaultScreenVerticalPadding,
+              ClientConfig.getCustomClientUiSettings()
+                  .defaultScreenVerticalPadding,
+              8,
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -94,11 +102,9 @@ class AccountDetailsScreen extends StatelessWidget {
                       'Details',
                       style: ClientConfig.getTextStyleScheme().labelLarge,
                     ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 16),
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFF8F9FA),
+                    Material(
+                      color: const Color(0xFFF8F9FA),
+                      shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(
                           Radius.circular(16),
                         ),
