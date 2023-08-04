@@ -151,17 +151,13 @@ class RepaymentsScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 20),
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
                       'Actions',
-                      style: TextStyle(
-                        fontSize: 18,
-                        height: 24 / 18,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: ClientConfig.getTextStyleScheme().heading4,
                     ),
                   ],
                 ),

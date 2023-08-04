@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../config.dart';
+
 Future<dynamic> showBottomModal({
   required BuildContext context,
   Widget? content,
@@ -46,8 +48,7 @@ Future<dynamic> showBottomModal({
                 Expanded(
                   child: Text(
                     title,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w600, fontSize: 16),
+                    style: ClientConfig.getTextStyleScheme().heading4,
                   ),
                 )
               else

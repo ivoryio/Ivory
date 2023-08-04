@@ -3,10 +3,10 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:solarisdemo/widgets/yvory_list_tile.dart';
 
 import '../../config.dart';
 import '../../router/routing_constants.dart';
-import '../../widgets/modal.dart';
 import '../../widgets/screen.dart';
 
 class AccountDetailsScreen extends StatelessWidget {
@@ -35,8 +35,15 @@ class AccountDetailsScreen extends StatelessWidget {
       child: Column(
         children: [
           Padding(
-            padding:
-                ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
+            padding: EdgeInsets.fromLTRB(
+              ClientConfig.getCustomClientUiSettings()
+                  .defaultScreenVerticalPadding,
+              ClientConfig.getCustomClientUiSettings()
+                  .defaultScreenVerticalPadding,
+              ClientConfig.getCustomClientUiSettings()
+                  .defaultScreenVerticalPadding,
+              8,
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,80 +61,82 @@ class AccountDetailsScreen extends StatelessWidget {
                       'Details',
                       style: ClientConfig.getTextStyleScheme().labelLarge,
                     ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 16),
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFF8F9FA),
+                    Material(
+                      color: const Color(0xFFF8F9FA),
+                      shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(
                           Radius.circular(16),
                         ),
                       ),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'IBAN',
-                                    style: ClientConfig.getTextStyleScheme()
-                                        .labelSmall,
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    iban,
-                                    style: ClientConfig.getTextStyleScheme()
-                                        .bodyLargeRegular,
-                                  ),
-                                ],
-                              ),
-                              CopyContentButton(
-                                onPressed: () {
-                                  inspect(const ClipboardData(
-                                    text: iban,
-                                  ));
-                                },
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'BIC',
-                                    style: ClientConfig.getTextStyleScheme()
-                                        .labelSmall,
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    bic,
-                                    style: ClientConfig.getTextStyleScheme()
-                                        .bodyLargeRegular,
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 16),
-                              CopyContentButton(
-                                onPressed: () {
-                                  inspect(const ClipboardData(
-                                    text: bic,
-                                  ));
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 16),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'IBAN',
+                                      style: ClientConfig.getTextStyleScheme()
+                                          .labelSmall,
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      iban,
+                                      style: ClientConfig.getTextStyleScheme()
+                                          .bodyLargeRegular,
+                                    ),
+                                  ],
+                                ),
+                                CopyContentButton(
+                                  onPressed: () {
+                                    inspect(const ClipboardData(
+                                      text: iban,
+                                    ));
+                                  },
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'BIC',
+                                      style: ClientConfig.getTextStyleScheme()
+                                          .labelSmall,
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      bic,
+                                      style: ClientConfig.getTextStyleScheme()
+                                          .bodyLargeRegular,
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 16),
+                                CopyContentButton(
+                                  onPressed: () {
+                                    inspect(const ClipboardData(
+                                      text: bic,
+                                    ));
+                                  },
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -142,57 +151,17 @@ class AccountDetailsScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      StatementButton(
-                        alignment: Alignment.centerLeft,
-                        icon: Icons.ios_share,
-                        onPressed: () {
-                          log('Share button pressed');
-                        },
-                        iconColor: const Color(0xFFCC0000),
-                      ),
-                      const SizedBox(width: 16),
-                      Flexible(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Generate statement',
-                              style: ClientConfig.getTextStyleScheme().heading4,
-                            ),
-                            Text(
-                              'Select the period and export your statement',
-                              style: ClientConfig.getTextStyleScheme()
-                                  .bodySmallRegular,
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      StatementButton(
-                        alignment: Alignment.centerRight,
-                        icon: Icons.arrow_forward_ios,
-                        onPressed: () {
-                          showBottomModal(
-                            context: context,
-                            child: const ContentOfModal(),
-                          );
-                          log('Modal button pressed');
-                        },
-                        iconColor: const Color(0xFF000000),
-                      )
-                    ],
-                  ),
-                ),
               ],
             ),
           ),
+          YvoryListTile(
+            startIcon: Icons.ios_share,
+            title: 'Generate statement',
+            subtitle: 'Select the period and export your statement',
+            onTap: () {
+              log('Generate statement button pressed');
+            },
+          )
         ],
       ),
     );
@@ -255,62 +224,6 @@ class StatementButton extends StatelessWidget {
       onPressed: () {
         onPressed();
       },
-    );
-  }
-}
-
-class ContentOfModal extends StatelessWidget {
-  const ContentOfModal({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 200,
-      padding: const EdgeInsets.only(left: 24, right: 24),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
-      ),
-      child: Column(
-        children: [
-          const SizedBox(height: 28),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Text('Outstanding balance',
-                    style: ClientConfig.getTextStyleScheme().heading4),
-              ),
-              const SizedBox(width: 8),
-              StatementButton(
-                alignment: Alignment.center,
-                icon: Icons.close,
-                onPressed: () {
-                  context.pop();
-                  log('Close button pressed');
-                },
-                iconColor: const Color(0xFF000000),
-              ),
-            ],
-          ),
-          const SizedBox(height: 24),
-          Row(
-            children: [
-              Flexible(
-                child: Text(
-                  'The outstanding balance includes any carried-over balance from previous billing cycles, new purchases, fees, and accrued interest. It represents the total amount that you owe.',
-                  style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                ),
-              )
-            ],
-          ),
-        ],
-      ),
     );
   }
 }

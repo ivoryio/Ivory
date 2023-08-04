@@ -48,22 +48,12 @@ class YvoryListTile extends StatelessWidget {
                   if (title != null)
                     Text(
                       title!,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        height: 24 / 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black,
-                      ),
+                      style: ClientConfig.getTextStyleScheme().heading4,
                     ),
                   if (subtitle != null)
                     Text(
                       subtitle!,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        height: 18 / 14,
-                        fontWeight: FontWeight.w400,
-                        color: Color(0xFF56555E),
-                      ),
+                      style: ClientConfig.getTextStyleScheme().bodySmallRegular,
                     )
                 ],
               ),
