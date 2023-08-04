@@ -367,7 +367,8 @@ class AccountOptions extends StatelessWidget {
             icon: Icons.compare_arrows,
             onPressed: () => showBottomModal(
               context: context,
-              child: const NewTransferPopup(),
+              title: 'New Transfer',
+              content: const NewTransferPopup(),
             ),
           ),
           AccountOptionsButton(

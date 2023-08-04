@@ -2,12 +2,11 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:solarisdemo/widgets/popup_header.dart';
+import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/yvory_list_tile.dart';
 
 import '../../config.dart';
 import '../../router/routing_constants.dart';
-import '../../widgets/modal.dart';
 import '../../widgets/screen.dart';
 
 class RepaymentsScreen extends StatelessWidget {
@@ -74,13 +73,27 @@ class RepaymentsScreen extends StatelessWidget {
                             _CardItem(
                               title: 'Outstanding balance',
                               subtitle: '€2,580.37',
-                              onInfoIconTap: () {},
+                              onInfoIconTap: () {
+                                showBottomModal(
+                                  context: context,
+                                  title: 'Outstanding balance',
+                                  message:
+                                      'The outstanding balance includes any carried-over balance from previous billing cycles, new purchases, fees, and accrued interest. It represents the total amount that you owe.',
+                                );
+                              },
                             ),
                             const Divider(height: 24),
                             _CardItem(
                               title: 'Next full repayment',
                               subtitle: '€595.46',
-                              onInfoIconTap: () {},
+                              onInfoIconTap: () {
+                                showBottomModal(
+                                  context: context,
+                                  title: 'Next full repayment',
+                                  message:
+                                      'This is the amount that will be automatically debited from your reference account this billing cycle. It includes your chosen repayment rate and the applicable interest rate.',
+                                );
+                              },
                             ),
                             const SizedBox(height: 4),
                             const Padding(
@@ -94,7 +107,9 @@ class RepaymentsScreen extends StatelessWidget {
                             const SizedBox(height: 12),
                             const Divider(height: 1),
                             MaterialButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                log('View Details button pressed');
+                              },
                               minWidth: double.infinity,
                               padding: const EdgeInsets.symmetric(
                                 vertical: 16,
@@ -158,11 +173,7 @@ class RepaymentsScreen extends StatelessWidget {
             title: 'Change repayment rate',
             subtitle: 'And choose between percentage or fixed',
             onTap: () {
-              showBottomModal(
-                context: context,
-                child: const _ContentOfModal(),
-              );
-              log('Modal button pressed');
+              log('Change repayment rate');
             },
           ),
           YvoryListTile(
@@ -170,11 +181,7 @@ class RepaymentsScreen extends StatelessWidget {
             title: 'Set repayment reminder',
             subtitle: 'Before we debit your reference account',
             onTap: () {
-              showBottomModal(
-                context: context,
-                child: const _ContentOfModal(),
-              );
-              log('Modal button pressed');
+              log('Set repayment reminder');
             },
           ),
           YvoryListTile(
@@ -182,11 +189,7 @@ class RepaymentsScreen extends StatelessWidget {
             title: 'View bills',
             subtitle: 'View all your repayment bills',
             onTap: () {
-              showBottomModal(
-                context: context,
-                child: const _ContentOfModal(),
-              );
-              log('Modal button pressed');
+              log('View bills');
             },
           ),
           YvoryListTile(
@@ -194,11 +197,7 @@ class RepaymentsScreen extends StatelessWidget {
             title: 'Repayments analytics',
             subtitle: 'Check your repayment analytics',
             onTap: () {
-              showBottomModal(
-                context: context,
-                child: const _ContentOfModal(),
-              );
-              log('Modal button pressed');
+              log('Repayments analytics');
             },
           ),
         ],
@@ -244,41 +243,6 @@ class _CardItem extends StatelessWidget {
           Text(
             subtitle,
             style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 24),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ContentOfModal extends StatelessWidget {
-  const _ContentOfModal();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.only(left: 24, right: 24),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
-      ),
-      child: const Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(height: 28),
-          BottomPopupHeader(title: 'Title'),
-          SizedBox(height: 24),
-          Text(
-            'The outstanding balance includes any carried-over balance from previous billing cycles, new purchases, fees, and accrued interest. It represents the total amount that you owe.',
-            style: TextStyle(
-              fontSize: 16,
-              height: 24 / 16,
-              fontWeight: FontWeight.w400,
-              color: Color(0xFF15141E),
-            ),
           ),
         ],
       ),
