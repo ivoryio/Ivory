@@ -18,7 +18,6 @@ import '../../widgets/transaction_listing_item.dart';
 import 'transactions_filtering_screen.dart';
 import '../../router/routing_constants.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
-import '../../infrastructure/transactions/transaction_service.dart';
 import 'package:solarisdemo/screens/home/home_screen.dart';
 
 class TransactionsScreen extends StatefulWidget {
@@ -34,24 +33,24 @@ class TransactionsScreen extends StatefulWidget {
 }
 
 class _TransactionsScreenState extends State<TransactionsScreen> {
-  TransactionListFilter? transactionListFilter;
 
   @override
   Widget build(BuildContext context) {
-    bool isFilterActive = transactionListFilter?.bookingDateMax != null ||
-        transactionListFilter?.bookingDateMin != null;
     AuthenticatedUser user = context.read<AuthCubit>().state.user!;
 
     return StoreConnector<AppState, TransactionsViewModel>(
       onInit: (store) {
-        store.dispatch(GetTransactionsCommandAction(filter: transactionListFilter, user: user.cognito));
+        store.dispatch(GetTransactionsCommandAction(filter: null, user: user.cognito));
       },
       converter: (store) => TransactionPresenter.presentTransactions(transactionsState: store.state.transactionsState),
       distinct: true,
       builder: (context , viewModel) {
+        bool isFilterActive = viewModel.transactionListFilter?.bookingDateMax != null ||
+            viewModel.transactionListFilter?.bookingDateMin != null;
+
         return Screen(
         onRefresh: () async {
-          StoreProvider.of<AppState>(context).dispatch(GetTransactionsCommandAction(filter: transactionListFilter, user: user.cognito));
+          StoreProvider.of<AppState>(context).dispatch(GetTransactionsCommandAction(filter: viewModel.transactionListFilter, user: user.cognito));
         },
         title: "Transactions",
         child: Padding(
@@ -70,7 +69,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     onPressedFilterButton: () {
                       context.push(
                         transactionsFilteringRoute.path,
-                        extra: transactionListFilter,
+                        extra: viewModel.transactionListFilter,
                       );
                     },
                     onChangedSearch: (value) {
@@ -87,13 +86,9 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       children: [
                         PillButton(
                           buttonText:
-                              '${getFormattedDate(date: transactionListFilter?.bookingDateMin, text: "Start date")} - ${getFormattedDate(date: transactionListFilter?.bookingDateMax, text: "End date")}',
+                              '${getFormattedDate(date: viewModel.transactionListFilter?.bookingDateMin, text: "Start date")} - ${getFormattedDate(date: viewModel.transactionListFilter?.bookingDateMax, text: "End date")}',
                           buttonCallback: () {
-                            setState(() {
-                              transactionListFilter = null;
-                              StoreProvider.of<AppState>(context).dispatch(GetTransactionsCommandAction(filter: transactionListFilter, user: user.cognito));
-                            });
-                            StoreProvider.of<AppState>(context).dispatch(GetTransactionsCommandAction(filter: transactionListFilter, user: user.cognito));
+                            StoreProvider.of<AppState>(context).dispatch(GetTransactionsCommandAction(filter: null, user: user.cognito));
                           },
                           icon: const Icon(
                             Icons.close,
@@ -104,7 +99,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     ),
                 ],
               ),
-              _buildTransactionsList(viewModel, transactionListFilter),
+              _buildTransactionsList(viewModel),
             ],
           ),
         ),
@@ -112,7 +107,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     );
   }
 
-  Widget _buildTransactionsList(TransactionsViewModel viewModel, TransactionListFilter? filter) {
+  Widget _buildTransactionsList(TransactionsViewModel viewModel) {
     const emptyListWidget = TextMessageWithCircularImage(
       title: "No transactions yet",
       message:
@@ -128,14 +123,12 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     }
 
     if(viewModel is TransactionsFetchedViewModel) {
-      bool isFilteringActive = (filter?.bookingDateMin != null ||
-          filter?.bookingDateMax != null);
+      bool isFilteringActive = (viewModel.transactionListFilter?.bookingDateMin != null ||
+          viewModel.transactionListFilter?.bookingDateMax != null);
 
       List<Transaction> transactions = [];
 
-      if (!isFilteringActive) {
-        transactions.addAll(viewModel.transactions as Iterable<Transaction>);
-      }
+      transactions.addAll(viewModel.transactions as Iterable<Transaction>);
 
       if (transactions.isEmpty && !isFilteringActive) {
         return emptyListWidget;

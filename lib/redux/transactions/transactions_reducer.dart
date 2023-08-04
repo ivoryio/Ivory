@@ -7,7 +7,7 @@ TransactionsState transactionsReducer(TransactionsState currentState, dynamic ac
   } else if(action is TransactionsFailedEventAction) {
     return TransactionsErrorState();
   } else if (action is TransactionsFetchedEventAction) {
-    return TransactionsFetchedState(action.transactions);
+    return TransactionsFetchedState(action.transactions, action.transactionListFilter);
   }
 
   return currentState;

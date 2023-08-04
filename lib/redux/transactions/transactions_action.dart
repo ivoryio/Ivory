@@ -14,6 +14,7 @@ class TransactionsFailedEventAction {}
 
 class TransactionsFetchedEventAction{
   final List<Transaction> transactions;
+  final TransactionListFilter? transactionListFilter;
 
-  TransactionsFetchedEventAction({required this.transactions});
+  TransactionsFetchedEventAction({required this.transactions, this.transactionListFilter});
 }

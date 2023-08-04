@@ -10,7 +10,10 @@ class TransactionPresenter {
     } else if(transactionsState is TransactionsErrorState) {
       return TransactionsErrorViewModel();
     } else if(transactionsState is TransactionsFetchedState) {
-      return TransactionsFetchedViewModel(transactions: transactionsState.transactions);
+      return TransactionsFetchedViewModel(
+          transactions: transactionsState.transactions,
+          transactionListFilter: transactionsState.transactionListFilter,
+      );
     }
 
     return TransactionsInitialViewModel();
@@ -19,8 +22,9 @@ class TransactionPresenter {
 
 abstract class TransactionsViewModel extends Equatable {
   final List<Transaction>? transactions;
+  final TransactionListFilter? transactionListFilter;
 
-  const TransactionsViewModel({this.transactions});
+  const TransactionsViewModel({this.transactions, this.transactionListFilter});
 
   @override
   List<Object?> get props => [transactions];
@@ -33,6 +37,12 @@ class TransactionsLoadingViewModel extends TransactionsViewModel {}
 class TransactionsErrorViewModel extends TransactionsViewModel {}
 
 class TransactionsFetchedViewModel extends TransactionsViewModel {
-  const TransactionsFetchedViewModel({required List<Transaction> transactions}) : super(transactions: transactions);
+  const TransactionsFetchedViewModel({
+    required List<Transaction> transactions,
+    TransactionListFilter? transactionListFilter,
+  }) : super(
+      transactions: transactions,
+      transactionListFilter: transactionListFilter,
+  );
 }
 

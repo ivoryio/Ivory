@@ -13,9 +13,10 @@ class TransactionsErrorState extends TransactionsState {}
 
 class TransactionsFetchedState extends TransactionsState {
   final List<Transaction> transactions;
+  final TransactionListFilter? transactionListFilter;
 
-  TransactionsFetchedState(this.transactions);
+  TransactionsFetchedState(this.transactions, this.transactionListFilter);
 
   @override
-  List<Object?> get props => [transactions];
+  List<Object?> get props => [transactions,transactionListFilter];
 }
