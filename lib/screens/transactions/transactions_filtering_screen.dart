@@ -4,16 +4,16 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../config.dart';
-import '../../services/transaction_service.dart';
-import '../../widgets/modal.dart';
-import '../../widgets/button.dart';
-import '../../widgets/screen.dart';
-import '../../utilities/format.dart';
-import '../../widgets/pill_button.dart';
+import '../../cubits/transactions_filtering/transactions_filtering_cubit.dart';
 import '../../router/routing_constants.dart';
+import '../../services/transaction_service.dart';
+import '../../utilities/format.dart';
+import '../../widgets/button.dart';
+import '../../widgets/modal.dart';
+import '../../widgets/pill_button.dart';
+import '../../widgets/screen.dart';
 import '../../widgets/spaced_column.dart';
 import 'modals/transaction_date_picker_popup.dart';
-import '../../cubits/transactions_filtering/transactions_filtering_cubit.dart';
 
 class TransactionsFilteringScreen extends StatelessWidget {
   final TransactionListFilter? transactionListFilter;
@@ -92,7 +92,8 @@ class TransactionsFilteringScreen extends StatelessWidget {
                             buttonCallback: () {
                               showBottomModal(
                                 context: context,
-                                child: TransactionDatePickerPopup(
+                                showCloseButton: false,
+                                content: TransactionDatePickerPopup(
                                   initialSelectedRange: isFilterSelected
                                       ? DateTimeRange(
                                           start: state.transactionListFilter
