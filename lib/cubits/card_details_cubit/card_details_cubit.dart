@@ -27,7 +27,9 @@ class BankCardDetailsCubit extends Cubit<BankCardDetailsState> {
     emit(const BankCardDetailsLoadingState());
     try {
       BankCard blockedCard = await cardsService.freezeBankCard(cardId);
-      emit(BankCardDetailsLoadedState(card: blockedCard));
+      emit(BankCardDetailsLoadedState(
+        card: blockedCard,
+      ));
       return;
     } catch (e) {
       emit(BankCardDetailsErrorState(e.toString()));
@@ -38,7 +40,9 @@ class BankCardDetailsCubit extends Cubit<BankCardDetailsState> {
     emit(const BankCardDetailsLoadingState());
     try {
       BankCard unBlockedCard = await cardsService.unfreezeCard(cardId);
-      emit(BankCardDetailsLoadedState(card: unBlockedCard));
+      emit(BankCardDetailsLoadedState(
+        card: unBlockedCard,
+      ));
       return;
     } catch (e) {
       emit(BankCardDetailsErrorState(e.toString()));
@@ -46,7 +50,14 @@ class BankCardDetailsCubit extends Cubit<BankCardDetailsState> {
   }
 
   Future<void> initializeActivation(BankCard card) async {
-    emit(BankCardDetailsInfoState(card: card));
+    emit(const BankCardDetailsLoadingState());
+    try {
+      BankCard activatedCard = await cardsService.activateCard(card.id);
+      emit(BankCardDetailsInfoState(card: activatedCard));
+      return;
+    } catch (e) {
+      emit(BankCardDetailsErrorState(e.toString()));
+    }
   }
 
   Future<void> startPinSetup(BankCard card) async {
@@ -65,7 +76,15 @@ class BankCardDetailsCubit extends Cubit<BankCardDetailsState> {
     emit(BankCardDetailsActivationSuccessState(card: card));
   }
 
-  Future<void> goToActivatedScreen() async {
-    emit(const BankCardActivatedState());
+  Future<void> goToActivatedScreen(BankCard card) async {
+    emit(BankCardActivatedState(card: card));
+  }
+
+  Future<void> goToCardDetails(BankCard card) async {
+    emit(BankCardDetailsMainState(card: card));
+  }
+
+  Future<void> viewCardDetails(BankCard card) async {
+    emit(BankCardViewDetailsState(card: card));
   }
 }

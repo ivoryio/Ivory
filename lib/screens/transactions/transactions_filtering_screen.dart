@@ -10,12 +10,12 @@ import '../../models/transaction_model.dart';
 import '../../models/user.dart';
 import '../../redux/app_state.dart';
 import '../../redux/transactions/transactions_action.dart';
-import '../../widgets/modal.dart';
-import '../../widgets/button.dart';
-import '../../widgets/screen.dart';
-import '../../utilities/format.dart';
-import '../../widgets/pill_button.dart';
 import '../../router/routing_constants.dart';
+import '../../utilities/format.dart';
+import '../../widgets/button.dart';
+import '../../widgets/modal.dart';
+import '../../widgets/pill_button.dart';
+import '../../widgets/screen.dart';
 import '../../widgets/spaced_column.dart';
 import 'modals/transaction_date_picker_popup.dart';
 
@@ -107,7 +107,7 @@ class _TransactionsFilteringScreenState extends State<TransactionsFilteringScree
                       buttonCallback: () {
                         showBottomModal(
                           context: context,
-                          child: TransactionDatePickerPopup(
+                          content: TransactionDatePickerPopup(
                             initialSelectedRange: isFilterSelected
                                 ? DateTimeRange(
                                 start: transactionListFilter!.bookingDateMin!,

@@ -50,9 +50,10 @@ class BankCardDetailsActivationSuccessScreen extends StatelessWidget {
               ],
             ),
             BankCardWidget(
-              cardNumber: state.card!.representation!.maskedPan!,
-              cardHolder: state.card!.representation!.line2 ?? 'data missing',
-              cardExpiry: state.card!.representation!.formattedExpirationDate!,
+              cardNumber: state.card!.representation!.maskedPan ?? '',
+              cardHolder: state.card!.representation!.line2 ?? '',
+              cardExpiry:
+                  state.card!.representation!.formattedExpirationDate ?? '',
               isViewable: false,
             ),
             SizedBox(

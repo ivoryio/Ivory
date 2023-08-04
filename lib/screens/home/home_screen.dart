@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -364,27 +362,25 @@ class AccountOptions extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           AccountOptionsButton(
-            textLabel: "Top up",
-            icon: Icons.add_card,
-            onPressed: () => log("Top up"),
-          ),
-          AccountOptionsButton(
-            textLabel: "Send",
+            textLabel: "Transfer",
             icon: Icons.compare_arrows,
             onPressed: () => showBottomModal(
               context: context,
-              child: const NewTransferPopup(),
+              title: 'New Transfer',
+              content: const NewTransferPopup(),
             ),
           ),
           AccountOptionsButton(
-            textLabel: "Request",
+            textLabel: "Repayments",
             icon: Icons.receipt_long,
-            onPressed: () => log("Request"),
+            onPressed: () => context.push(repaymentsRoute.path),
           ),
           AccountOptionsButton(
-            textLabel: "Acc. details",
+            textLabel: "Account",
             icon: Icons.info,
-            onPressed: () => log("Acc. details"),
+            onPressed: () {
+              context.push(accountDetailsRoute.path);
+            },
           ),
         ],
       ),

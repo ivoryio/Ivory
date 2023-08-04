@@ -26,11 +26,11 @@ class BankCardsCubit extends Cubit<BankCardsState> {
     }
   }
 
-  Future<void> createVirtualCard(CreateBankCard card) async {
+  Future<void> createCard(CreateBankCard card) async {
     try {
       emit(const BankCardsLoading());
 
-      await cardsService.createVirtualCard(card);
+      await cardsService.createCard(card);
 
       List<BankCard>? cards = await cardsService.getCards();
 

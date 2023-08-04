@@ -134,12 +134,15 @@ class CardList extends StatelessWidget {
                         emptyStringValue;
 
                 return GestureDetector(
-                  onTap: () {
-                    context.push(
-                      cardDetailsRoute.path,
-                      extra: card,
-                    );
-                  },
+                  onTap: card.status == BankCardStatus.ACTIVE ||
+                          card.status == BankCardStatus.INACTIVE
+                      ? () {
+                          context.push(
+                            cardDetailsRoute.path,
+                            extra: card,
+                          );
+                        }
+                      : null,
                   child: BankCardWidget(
                     cardNumber: cardNumber,
                     cardHolder: cardHolder,
@@ -157,11 +160,10 @@ class CardList extends StatelessWidget {
                     CreateBankCard card = CreateBankCard(
                       user.person.firstName!,
                       user.person.lastName!,
-                      BankCardType
-                          .VIRTUAL_VISA_CREDIT, // TODO to be changed for production
+                      BankCardType.VISA_CREDIT,
                       user.personAccount.businessId ?? '',
                     );
-                    context.read<BankCardsCubit>().createVirtualCard(card);
+                    context.read<BankCardsCubit>().createCard(card);
                   },
                   textStyle: const TextStyle(
                     fontWeight: FontWeight.w600,
