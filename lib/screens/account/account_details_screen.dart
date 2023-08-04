@@ -2,22 +2,63 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:solarisdemo/widgets/yvory_list_tile.dart';
 
 import '../../config.dart';
+import '../../cubits/account_summary_cubit/account_summary_cubit.dart';
+import '../../cubits/auth_cubit/auth_cubit.dart';
+import '../../models/user.dart';
 import '../../router/routing_constants.dart';
+import '../../services/person_service.dart';
+import '../../utilities/format.dart';
 import '../../widgets/screen.dart';
 
 class AccountDetailsScreen extends StatelessWidget {
   const AccountDetailsScreen({super.key});
 
+  void showAlertDialog(BuildContext context, String stringToCopy) async {
+    copyToClipboard(stringToCopy);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Center(
+          child: Text(
+            "Copied to clipboard",
+            style: TextStyle(color: Colors.black),
+          ),
+        ),
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.zero,
+          side: BorderSide(color: Color(0xFFE0E0E0)),
+        ),
+      ),
+    );
+  }
+
+  void copyToClipboard(String stringToCopy) {
+    Clipboard.setData(ClipboardData(text: stringToCopy));
+  }
+
   @override
   Widget build(BuildContext context) {
-    const String iban = 'DE43 1101 0100 2919 3290 34';
-    const String bic = 'SOLARIS35';
+    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
+
+    AccountSummaryCubit accountSummaryCubit =
+        AccountSummaryCubit(personService: PersonService(user: user.cognito))
+          ..getAccountSummary();
+
+    late String iban;
+    late String bic;
 
     return Screen(
+      onRefresh: () async {
+        accountSummaryCubit.getAccountSummary();
+      },
       scrollPhysics: const NeverScrollableScrollPhysics(),
       titleTextStyle: const TextStyle(
         fontSize: 16,
@@ -68,100 +109,109 @@ class AccountDetailsScreen extends StatelessWidget {
                           Radius.circular(16),
                         ),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 16),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'IBAN',
-                                      style: ClientConfig.getTextStyleScheme()
-                                          .labelSmall,
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'IBAN',
+                                    style: ClientConfig.getTextStyleScheme()
+                                        .labelSmall,
+                                  ),
+                                  const SizedBox(height: 4),
+                                  BlocProvider<AccountSummaryCubit>.value(
+                                    value: accountSummaryCubit,
+                                    child: BlocBuilder<AccountSummaryCubit,
+                                        AccountSummaryCubitState>(
+                                      builder: (context, state) {
+                                        if (state
+                                            is AccountSummaryCubitLoaded) {
+                                          iban = state.data!.iban ?? '';
+                                          iban = Format.iban(iban);
+
+                                          return Text(
+                                            iban,
+                                            style: ClientConfig
+                                                    .getTextStyleScheme()
+                                                .bodyLargeRegular,
+                                          );
+                                        }
+
+                                        return const Text('');
+                                      },
                                     ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      iban,
-                                      style: ClientConfig.getTextStyleScheme()
-                                          .bodyLargeRegular,
+                                  ),
+                                ],
+                              ),
+                              CopyContentButton(
+                                onPressed: () {
+                                  inspect(iban);
+                                  showAlertDialog(context, iban);
+                                },
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'BIC',
+                                    style: ClientConfig.getTextStyleScheme()
+                                        .labelSmall,
+                                  ),
+                                  const SizedBox(height: 4),
+                                  BlocProvider<AccountSummaryCubit>.value(
+                                    value: accountSummaryCubit,
+                                    child: BlocBuilder<AccountSummaryCubit,
+                                        AccountSummaryCubitState>(
+                                      builder: (context, state) {
+                                        if (state
+                                            is AccountSummaryCubitLoaded) {
+                                          bic = state.data!.bic ?? '';
+
+                                          return Text(
+                                            bic,
+                                            style: ClientConfig
+                                                    .getTextStyleScheme()
+                                                .bodyLargeRegular,
+                                          );
+                                        }
+
+                                        return const Text('');
+                                      },
                                     ),
-                                  ],
-                                ),
-                                CopyContentButton(
-                                  onPressed: () {
-                                    inspect(const ClipboardData(
-                                      text: iban,
-                                    ));
-                                  },
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 16),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'BIC',
-                                      style: ClientConfig.getTextStyleScheme()
-                                          .labelSmall,
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      bic,
-                                      style: ClientConfig.getTextStyleScheme()
-                                          .bodyLargeRegular,
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 16),
-                                CopyContentButton(
-                                  onPressed: () {
-                                    inspect(const ClipboardData(
-                                      text: bic,
-                                    ));
-                                  },
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 16),
+                              CopyContentButton(
+                                onPressed: () {
+                                  inspect(bic);
+                                  showAlertDialog(context, bic);
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Statements',
-                      style: ClientConfig.getTextStyleScheme().heading4,
                     ),
                   ],
                 ),
               ],
             ),
           ),
-          YvoryListTile(
-            startIcon: Icons.ios_share,
-            title: 'Generate statement',
-            subtitle: 'Select the period and export your statement',
-            onTap: () {
-              log('Generate statement button pressed');
-            },
-          )
         ],
       ),
     );
