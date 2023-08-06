@@ -2,20 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:solarisdemo/screens/login/login_consent_screen.dart';
+import 'package:solarisdemo/widgets/app_toolbar.dart';
+import 'package:solarisdemo/widgets/screen_scaffold.dart';
+import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
 
-import '../../widgets/checkbox.dart';
-import '../../widgets/auth_error.dart';
-import '../../widgets/spaced_column.dart';
-import '../../widgets/sticky_bottom_content.dart';
-import '../../widgets/button.dart';
-import '../../widgets/screen.dart';
-import '../../utilities/validator.dart';
 import '../../cubits/signup/signup_cubit.dart';
+import '../../utilities/validator.dart';
+import '../../widgets/auth_error.dart';
+import '../../widgets/button.dart';
+import '../../widgets/checkbox.dart';
 import '../../widgets/platform_text_input.dart';
+import '../../widgets/screen.dart';
+import '../../widgets/spaced_column.dart';
 import 'confirm_email_screen.dart';
 import 'countdown_screen.dart';
 
 class SignupScreen extends StatelessWidget {
+  static const routeName = "/signupScreen";
+
   const SignupScreen({super.key});
 
   @override
@@ -25,7 +29,7 @@ class SignupScreen extends StatelessWidget {
       child: BlocBuilder<SignupCubit, SignupState>(
         builder: (context, state) {
           if (state is SignupLoading) {
-            return const LoadingScreen(title: "Sign Up");
+            return const GenericLoadingScreen(title: "Sign Up");
           }
 
           if (state is SignupInitial) {
@@ -34,21 +38,16 @@ class SignupScreen extends StatelessWidget {
 
           if (state is SignupBasicInfoComplete) {
             return GdprConsentScreen(
-              bottomStickyWidget: BottomStickyWidget(
-                child: StickyBottomContent(
-                  buttonText: "I agree",
-                  onContinueCallback: () {
-                    context.read<SignupCubit>().setGdprConsent(
-                          personId: state.personId!,
-                          phoneNumber: state.phoneNumber!,
-                          passcode: state.passcode!,
-                          email: state.email!,
-                          firstName: state.firstName!,
-                          lastName: state.lastName!,
-                        );
-                  },
-                ),
-              ),
+              onConsentCallback: () {
+                context.read<SignupCubit>().setGdprConsent(
+                      personId: state.personId!,
+                      phoneNumber: state.phoneNumber!,
+                      passcode: state.passcode!,
+                      email: state.email!,
+                      firstName: state.firstName!,
+                      lastName: state.lastName!,
+                    );
+              },
             );
           }
 
@@ -75,19 +74,22 @@ class BasicInfoScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Screen(
-        hideBottomNavbar: true,
-        title: "Sign Up",
+    return const ScreenScaffold(
+      body: ScrollableScreenContainer(
         child: Padding(
-          padding: EdgeInsets.fromLTRB(30, 10, 30, 50),
+          padding: EdgeInsets.symmetric(horizontal: 24),
           child: Column(
             children: [
+              AppToolbar(title: "Sign Up"),
               Expanded(
                 child: SignupForm(),
-              )
+              ),
+              SizedBox(height: 16),
             ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
 

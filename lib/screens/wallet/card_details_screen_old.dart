@@ -10,7 +10,6 @@ import '../../config.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../models/bank_card.dart';
 import '../../models/user.dart';
-import '../../router/routing_constants.dart';
 import '../../widgets/card_widget.dart';
 import '../../widgets/dialog.dart';
 import '../../widgets/screen.dart';
@@ -38,7 +37,7 @@ class CardDetailsScreen extends StatelessWidget {
           if (state is BankCardDetailsLoadedState) {
             return Screen(
               scrollPhysics: const NeverScrollableScrollPhysics(),
-              title: cardDetailsRoute.title,
+              title: "Card details",
               centerTitle: true,
               hideBackButton: false,
               hideBottomNavbar: false,
@@ -69,7 +68,7 @@ class CardDetailsScreen extends StatelessWidget {
           }
           if (state is BankCardDetailsErrorState) {
             return ErrorScreen(
-              title: cardDetailsRoute.title,
+              title: "Card details",
               message: state.message,
             );
           }
@@ -84,6 +83,7 @@ class CardDetailsScreen extends StatelessWidget {
 // ignore: must_be_immutable
 class _CardDetailsOptions extends StatefulWidget {
   BankCard card;
+
   _CardDetailsOptions({super.key, required this.card});
 
   @override
@@ -272,6 +272,7 @@ class _CardOptionColumns extends StatelessWidget {
 
 class _CardOptionName extends StatelessWidget {
   final String name;
+
   const _CardOptionName({super.key, required this.name});
 
   @override

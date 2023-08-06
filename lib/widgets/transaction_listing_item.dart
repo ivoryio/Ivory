@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:solarisdemo/screens/splitpay/splitpay_screen.dart';
 
 import '../cubits/auth_cubit/auth_cubit.dart';
 import '../models/transaction_model.dart';
 import '../models/user.dart';
-import '../router/routing_constants.dart';
 import '../utilities/format.dart';
 import 'button.dart';
 import 'modal.dart';
@@ -408,9 +407,10 @@ class TransactionBottomPopup extends StatelessWidget {
               child: PrimaryButton(
                 text: "Convert into instalments",
                 onPressed: () {
-                  context.push(
-                    splitpaySelectRoute.path,
-                    extra: transaction,
+                  Navigator.popAndPushNamed(
+                    context,
+                    SplitpayScreen.routeName,
+                    arguments: SplitpayScreenParams(transaction: transaction),
                   );
                 },
               ),

@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
-import 'package:go_router/go_router.dart';
-import 'package:solarisdemo/router/routing_constants.dart';
+import 'package:solarisdemo/screens/landing/landing_screen.dart';
+import 'package:solarisdemo/screens/login/login_screen.dart';
+import 'package:solarisdemo/widgets/app_toolbar.dart';
+import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../config.dart';
 import '../../widgets/button.dart';
@@ -8,10 +10,54 @@ import '../../widgets/empty_list_message.dart';
 import '../../widgets/screen.dart';
 
 class SignupSuccessScreen extends StatelessWidget {
+  static const routeName = "/signupSuccessScreen";
+
   const SignupSuccessScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    return ScreenScaffold(
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+            horizontal: ClientConfig.getCustomClientUiSettings()
+                .defaultScreenHorizontalPadding),
+        child: Column(
+          children: [
+            const AppToolbar(title: "Signup", shouldPop: false),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const TextMessageWithCircularImage(
+                    title: "Sign-up successful",
+                    message:
+                        "Your account has been created. Please log in to continue.",
+                  ),
+                  Column(
+                    children: [
+                      SizedBox(
+                        width: double.infinity,
+                        child: PrimaryButton(
+                          text: "Log in",
+                          onPressed: () async {
+                            Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              LoginScreen.routeName,
+                              ModalRoute.withName(LandingScreen.routeName),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
     return Screen(
       hideBottomNavbar: true,
       title: "Signup",
@@ -33,7 +79,11 @@ class SignupSuccessScreen extends StatelessWidget {
                   child: PrimaryButton(
                     text: "Log in",
                     onPressed: () async {
-                      context.go(loginRoute.path);
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        LoginScreen.routeName,
+                        ModalRoute.withName(LandingScreen.routeName),
+                      );
                     },
                   ),
                 ),

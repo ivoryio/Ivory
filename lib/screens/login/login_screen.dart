@@ -1,24 +1,27 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:solarisdemo/screens/landing/landing_screen.dart';
 import 'package:solarisdemo/screens/login/login_consent_screen.dart';
+import 'package:solarisdemo/widgets/app_toolbar.dart';
+import 'package:solarisdemo/widgets/screen_scaffold.dart';
+import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
 
-import '../../services/device_service.dart';
-import '../../utilities/validator.dart';
-import '../../widgets/sticky_bottom_content.dart';
-import '../../widgets/tab_view.dart';
-import 'login_tan_screen.dart';
-import '../../widgets/auth_error.dart';
-import '../../widgets/button.dart';
-import '../../widgets/screen.dart';
-import '../../services/auth_service.dart';
-import '../../widgets/platform_text_input.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../cubits/login_cubit/login_cubit.dart';
+import '../../services/auth_service.dart';
+import '../../services/device_service.dart';
+import '../../utilities/validator.dart';
+import '../../widgets/button.dart';
+import '../../widgets/platform_text_input.dart';
+import '../../widgets/screen.dart';
+import '../../widgets/tab_view.dart';
+import 'login_tan_screen.dart';
 
 class LoginScreen extends StatelessWidget {
+  static const routeName = "/loginScreen";
+
   const LoginScreen({super.key});
 
   @override
@@ -34,34 +37,59 @@ class LoginScreen extends StatelessWidget {
       child: BlocBuilder<LoginCubit, LoginState>(
         builder: (context, state) {
           if (state is LoginInitial) {
-            return const Screen(
-              title: "Login",
-              hideBottomNavbar: true,
-              child: LoginOptions(),
+            return const ScreenScaffold(
+              body: ScrollableScreenContainer(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    children: [
+                      AppToolbar(title: "Login"),
+                      Expanded(child: LoginOptions()),
+                      SizedBox(height: 16),
+                    ],
+                  ),
+                ),
+              ),
             );
           }
 
           if (state is LoginLoading) {
-            return const LoadingScreen(title: "Login");
+            return const GenericLoadingScreen(title: "Login");
           }
 
           if (state is LoginError) {
-            return AuthErrorScreen(message: state.message, title: "Login");
+            return ScreenScaffold(
+              body: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Center(
+                  child: Column(
+                    children: [
+                      Text(state.message),
+                      PrimaryButton(
+                        text: "Go to landing page",
+                        onPressed: () {
+                          context.read<AuthCubit>().reset();
+                          Navigator.popUntil(
+                            context,
+                            ModalRoute.withName(LandingScreen.routeName),
+                          );
+                        },
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            );
           }
           if (state is LoginRequestConsent) {
             return GdprConsentScreen(
-              bottomStickyWidget: BottomStickyWidget(
-                child: StickyBottomContent(
-                  buttonText: "I agree",
-                  onContinueCallback: () {
-                    context.read<LoginCubit>().setCredentials(
-                          email: state.email,
-                          phoneNumber: state.phoneNumber,
-                          password: state.password!,
-                        );
-                  },
-                ),
-              ),
+              onConsentCallback: () {
+                context.read<LoginCubit>().setCredentials(
+                      email: state.email,
+                      phoneNumber: state.phoneNumber,
+                      password: state.password!,
+                    );
+              },
             );
           }
 
@@ -81,14 +109,11 @@ class LoginOptions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.fromLTRB(30, 10, 30, 50),
-      child: TabView(
-        tabs: [
-          TabViewItem(text: "Phone number", child: PhoneNumberLoginForm()),
-          TabViewItem(text: "Email", child: EmailLoginForm()),
-        ],
-      ),
+    return const TabView(
+      tabs: [
+        TabViewItem(text: "Phone number", child: PhoneNumberLoginForm()),
+        TabViewItem(text: "Email", child: EmailLoginForm()),
+      ],
     );
   }
 }

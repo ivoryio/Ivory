@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:solarisdemo/screens/login/login_screen.dart';
+import 'package:solarisdemo/screens/signup/signup_screen.dart';
+import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../widgets/button.dart';
-import '../../widgets/screen.dart';
-import '../../router/routing_constants.dart';
 import '../../widgets/spaced_column.dart';
 
 class LandingScreen extends StatelessWidget {
+  static const routeName = "/landingScreen";
+
   const LandingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Screen(
-      title: landingRoute.title,
-      hideBottomNavbar: true,
-      hideAppBar: true,
-      child: const Column(
+    return const ScreenScaffold(
+      statusBarColor: Colors.transparent,
+      extendBodyBehindAppBar: true,
+      body: Column(
         children: [
           HeroImage(),
           LandingScreenContent(),
@@ -74,7 +75,7 @@ class LandingScreenContent extends StatelessWidget {
                   child: PrimaryButton(
                     text: "Login",
                     onPressed: () {
-                      context.push(loginRoute.path);
+                      Navigator.pushNamed(context, LoginScreen.routeName);
                     },
                   ),
                 ),
@@ -83,53 +84,10 @@ class LandingScreenContent extends StatelessWidget {
                   child: SecondaryButton(
                     text: "Signup",
                     onPressed: () {
-                      context.push(signupRoute.path);
+                      Navigator.pushNamed(context, SignupScreen.routeName);
                     },
                   ),
                 ),
-                // SizedBox(
-                //   width: double.infinity,
-                //   child: PrimaryButton(
-                //     text: "Create device binding",
-                //     onPressed: () async {
-                //       await DeviceUtilService.getDeviceFingerprint(
-                //         "bf50e494417b400480dbfeeb2a94a30e",
-                //       );
-                //     },
-                //   ),
-                // ),
-                // SizedBox(
-                //   width: double.infinity,
-                //   child: PrimaryButton(
-                //     text: "Get device signature",
-                //     onPressed: () async {
-                //       await DeviceUtilService.getDeviceFingerprint(
-                //         "bf50e494417b400480dbfeeb2a94a30e",
-                //       );
-                //     },
-                //   ),
-                // ),
-                // SizedBox(
-                //   width: double.infinity,
-                //   child: PrimaryButton(
-                //     text: "Get key pair",
-                //     onPressed: () async {
-                //       await DeviceUtilService.getECDSAP256KeyPair();
-                //     },
-                //   ),
-                // ),
-                // SizedBox(
-                //   width: double.infinity,
-                //   child: PrimaryButton(
-                //     text: "Get signature",
-                //     onPressed: () async {
-                //       await DeviceUtilService.signMessage(
-                //         "One time password",
-                //         "BE5MCLS7bsFmC2jAwazBhJfctWA4MOvdYTwB5CZBA3v2Jc8vP949zVapBN35HLqlyjoqkITN9UmpWVhQA4R9SgTucCKdFHB68DLkOp43Juue5725nKW0Oq2JMecYf2ZEUg==",
-                //       );
-                //     },
-                //   ),
-                // ),
               ],
             )
           ],

@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
+import 'package:solarisdemo/screens/wallet/card_details_screen.dart';
+import 'package:solarisdemo/widgets/app_toolbar.dart';
+import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
-import '../../config.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../cubits/cards_cubit/cards_cubit.dart';
 import '../../models/bank_card.dart';
 import '../../models/user.dart';
-import '../../router/routing_constants.dart';
 import '../../services/card_service.dart';
 import '../../utilities/constants.dart';
 import '../../widgets/button.dart';
+import '../../widgets/card_widget.dart';
 import '../../widgets/empty_list_message.dart';
 import '../../widgets/screen.dart';
-import '../../widgets/tab_view.dart';
 import '../../widgets/spaced_column.dart';
-import '../../widgets/card_widget.dart';
+import '../../widgets/tab_view.dart';
 
 class WalletScreen extends StatelessWidget {
+  static const routeName = "/walletScreen";
+
   const WalletScreen({super.key});
 
   @override
@@ -29,15 +31,22 @@ class WalletScreen extends StatelessWidget {
       child: BlocBuilder<BankCardsCubit, BankCardsState>(
         builder: (context, state) {
           if (state is BankCardsLoading) {
-            return const LoadingScreen(title: "Wallet");
+            return const GenericLoadingScreen(title: "Wallet");
           }
 
           if (state is BankCardsLoaded) {
-            return Screen(
-              title: "Wallet",
-              child: WalletScreenBody(
-                physicalCards: state.physicalCards,
-                virtualCards: state.virtualCards,
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                children: [
+                  const AppToolbar(title: "Wallet"),
+                  Expanded(
+                    child: WalletScreenBody(
+                      physicalCards: state.physicalCards,
+                      virtualCards: state.virtualCards,
+                    ),
+                  ),
+                ],
               ),
             );
           }
@@ -71,23 +80,17 @@ class WalletScreenBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: ClientConfig.getCustomClientUiSettings()
-            .defaultScreenHorizontalPadding,
-      ),
-      child: TabView(
-        tabs: [
-          TabViewItem(
-            text: "Physical",
-            child: CardList(cards: physicalCards),
-          ),
-          TabViewItem(
-            text: "Virtual",
-            child: CardList(cards: virtualCards),
-          ),
-        ],
-      ),
+    return TabView(
+      tabs: [
+        TabViewItem(
+          text: "Physical",
+          child: CardList(cards: physicalCards),
+        ),
+        TabViewItem(
+          text: "Virtual",
+          child: CardList(cards: virtualCards),
+        ),
+      ],
     );
   }
 }
@@ -137,10 +140,9 @@ class CardList extends StatelessWidget {
                   onTap: card.status == BankCardStatus.ACTIVE ||
                           card.status == BankCardStatus.INACTIVE
                       ? () {
-                          context.push(
-                            cardDetailsRoute.path,
-                            extra: card,
-                          );
+                          Navigator.pushNamed(
+                              context, CardDetailsScreen.routeName,
+                              arguments: CardDetailsScreenParams(card: card));
                         }
                       : null,
                   child: BankCardWidget(

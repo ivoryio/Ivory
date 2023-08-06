@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
+import 'package:solarisdemo/screens/home/home_screen.dart';
+import 'package:solarisdemo/widgets/app_toolbar.dart';
 
 import '../../config.dart';
-import '../../widgets/search_bar.dart';
-import '../../models/user.dart';
-import '../../widgets/screen.dart';
-import '../../widgets/pill_button.dart';
-import '../../widgets/spaced_column.dart';
-import 'transactions_filtering_screen.dart';
-import '../../router/routing_constants.dart';
-import '../../widgets/transaction_list.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
-import '../../services/transaction_service.dart';
-import 'package:solarisdemo/screens/home/home_screen.dart';
 import '../../cubits/transaction_list_cubit/transaction_list_cubit.dart';
+import '../../models/user.dart';
+import '../../services/transaction_service.dart';
+import '../../widgets/pill_button.dart';
+import '../../widgets/search_bar.dart';
+import '../../widgets/spaced_column.dart';
+import '../../widgets/transaction_list.dart';
+import 'transactions_filtering_screen.dart';
 
 class TransactionsScreen extends StatefulWidget {
+  static const routeName = '/transactionsScreen';
+
   final TransactionListFilter? transactionListFilter;
 
   const TransactionsScreen({
@@ -48,15 +48,16 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     bool isFilterActive = transactionListFilter?.bookingDateMax != null ||
         transactionListFilter?.bookingDateMin != null;
 
-    return Screen(
-      onRefresh: () =>
-          transactionListCubit!.getTransactions(filter: transactionListFilter),
-      title: "Transactions",
+    return SingleChildScrollView(
       child: Padding(
-        padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-        child: SpacedColumn(
-          space: 36,
+        padding: EdgeInsets.symmetric(
+          horizontal: ClientConfig.getCustomClientUiSettings()
+              .defaultScreenPadding
+              .left,
+        ),
+        child: Column(
           children: [
+            const AppToolbar(title: "Transactions"),
             SpacedColumn(
               space: 16,
               children: [
@@ -66,10 +67,9 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 CustomSearchBar(
                   showButtonIndicator: isFilterActive,
                   onPressedFilterButton: () {
-                    context.push(
-                      transactionsFilteringRoute.path,
-                      extra: transactionListFilter,
-                    );
+                    Navigator.pushNamed(
+                        context, TransactionsFilteringScreen.routeName,
+                        arguments: transactionListFilter);
                   },
                   onChangedSearch: (value) {
                     if (value.isEmpty) {
@@ -105,6 +105,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                   ),
               ],
             ),
+            const SizedBox(height: 32),
             TransactionList(
               groupedByMonths: true,
               filter: transactionListFilter,
