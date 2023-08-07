@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:solarisdemo/widgets/rewards.dart';
 
 import '../../config.dart';
 import '../../cubits/account_summary_cubit/account_summary_cubit.dart';
@@ -16,7 +17,6 @@ import '../../services/transaction_service.dart';
 import '../../widgets/account_balance_text.dart';
 import '../../widgets/analytics.dart';
 import '../../widgets/modal.dart';
-import '../../widgets/refer_a_friend.dart';
 import '../../widgets/screen.dart';
 import '../../widgets/transaction_list.dart';
 import 'modals/new_transfer_popup.dart';
@@ -130,7 +130,7 @@ class HomePageContent extends StatelessWidget {
           Padding(
             padding:
                 ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-            child: const ReferAFriend(),
+            child: const Rewards(),
           ),
         ],
       ),
