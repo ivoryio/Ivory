@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solarisdemo/logging/navigation_logging_observer.dart';
+import 'package:solarisdemo/models/home/main_navigation_screens.dart';
 import 'package:solarisdemo/navigator.dart';
 import 'package:solarisdemo/screens/account/account_details_screen.dart';
 import 'package:solarisdemo/screens/home/home_screen.dart';

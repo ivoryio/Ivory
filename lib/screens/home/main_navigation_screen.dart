@@ -1,16 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:solarisdemo/models/home/main_navigation_screens.dart';
 import 'package:solarisdemo/screens/home/home_screen.dart';
 import 'package:solarisdemo/screens/profile/profile_screen.dart';
 import 'package:solarisdemo/screens/transactions/transactions_screen.dart';
 import 'package:solarisdemo/screens/wallet/wallet_screen.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
-
-enum MainNavigationScreens {
-  homeScreen,
-  walletScreen,
-  transactionsScreen,
-  profileScreen,
-}
 
 final List<MainNavigationScreens> mainNavigationScreens = [
   MainNavigationScreens.homeScreen,
