@@ -9,9 +9,10 @@ import '../../config.dart';
 import '../../cubits/account_summary_cubit/account_summary_cubit.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../cubits/transaction_list_cubit/transaction_list_cubit.dart';
+import '../../infrastructure/transactions/transaction_service.dart';
+import '../../models/transaction_model.dart';
 import '../../models/user.dart';
 import '../../services/person_service.dart';
-import '../../services/transaction_service.dart';
 import '../../utilities/format.dart';
 import '../../widgets/account_balance_text.dart';
 import '../../widgets/analytics.dart';
@@ -38,9 +39,8 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     AuthenticatedUser user = context.read<AuthCubit>().state.user!;
 
-    AccountSummaryCubit accountSummaryCubit =
-        AccountSummaryCubit(personService: PersonService(user: user.cognito))
-          ..getAccountSummary();
+    AccountSummaryCubit accountSummaryCubit = AccountSummaryCubit(personService: PersonService(user: user.cognito))
+      ..getAccountSummary();
 
     TransactionListCubit transactionListCubit = TransactionListCubit(
       transactionService: TransactionService(user: user.cognito),
@@ -65,44 +65,6 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
     );
-/*
-    return Screen(
-      onRefresh: () async {
-        accountSummaryCubit.getAccountSummary();
-        transactionListCubit.getTransactions(
-          filter: _defaultTransactionListFilter,
-        );
-      },
-      title: 'Hello, ${user.cognito.firstName}!',
-      hideBackButton: true,
-      appBarColor: const Color(0xFF1C1A28),
-      trailingActions: [
-        IconButton(
-          padding: EdgeInsets.zero,
-          icon: const Icon(
-            Icons.bar_chart,
-            color: Colors.white,
-          ),
-          onPressed: () {},
-        ),
-        IconButton(
-          padding: EdgeInsets.zero,
-          icon: const Icon(
-            Icons.notifications_none,
-            color: Colors.white,
-          ),
-          onPressed: () {},
-        )
-      ],
-      titleTextStyle: const TextStyle(color: Colors.white),
-      centerTitle: false,
-      child: HomePageContent(
-        accountSummaryCubit: accountSummaryCubit,
-        transactionListCubit: transactionListCubit,
-      ),
-    );
-
- */
   }
 }
 
@@ -130,8 +92,7 @@ class HomePageContent extends StatelessWidget {
             accountSummaryCubit: accountSummaryCubit,
           ),
           Padding(
-            padding:
-                ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
+            padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
             child: Column(
               children: [
                 TransactionList(
@@ -147,13 +108,11 @@ class HomePageContent extends StatelessWidget {
             ),
           ),
           Padding(
-            padding:
-                ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
+            padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
             child: const Analytics(),
           ),
           Padding(
-            padding:
-                ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
+            padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
             child: const ReferAFriend(),
           ),
         ],
@@ -182,8 +141,7 @@ class HomePageHeader extends StatelessWidget {
             return Container(
               padding: EdgeInsets.symmetric(
                 vertical: 10,
-                horizontal: ClientConfig.getCustomClientUiSettings()
-                    .defaultScreenHorizontalPadding,
+                horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
               ),
               width: MediaQuery.of(context).size.width,
               decoration: const BoxDecoration(
@@ -205,8 +163,7 @@ class HomePageHeader extends StatelessWidget {
           if (state is AccountSummaryCubitLoaded) {
             return Container(
               padding: EdgeInsets.symmetric(
-                horizontal: ClientConfig.getCustomClientUiSettings()
-                    .defaultScreenHorizontalPadding,
+                horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
               ),
               width: MediaQuery.of(context).size.width,
               decoration: const BoxDecoration(
@@ -435,8 +392,7 @@ class AccountOptions extends StatelessWidget {
           AccountOptionsButton(
             textLabel: "Repayments",
             icon: Icons.receipt_long,
-            onPressed: () =>
-                Navigator.pushNamed(context, RepaymentsScreen.routeName),
+            onPressed: () => Navigator.pushNamed(context, RepaymentsScreen.routeName),
           ),
           AccountOptionsButton(
             textLabel: "Account",
@@ -456,11 +412,7 @@ class AccountOptionsButton extends StatelessWidget {
   final IconData icon;
   final Function onPressed;
 
-  const AccountOptionsButton(
-      {super.key,
-      required this.textLabel,
-      required this.icon,
-      required this.onPressed});
+  const AccountOptionsButton({super.key, required this.textLabel, required this.icon, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {

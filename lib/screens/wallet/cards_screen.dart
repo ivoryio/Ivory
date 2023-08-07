@@ -13,7 +13,6 @@ import '../../utilities/constants.dart';
 import '../../widgets/button.dart';
 import '../../widgets/card_widget.dart';
 import '../../widgets/empty_list_message.dart';
-import '../../widgets/screen.dart';
 import '../../widgets/spaced_column.dart';
 import '../../widgets/tab_view.dart';
 
@@ -26,12 +25,11 @@ class CardsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     AuthenticatedUser user = context.read<AuthCubit>().state.user!;
     return BlocProvider.value(
-      value: BankCardsCubit(cardsService: BankCardsService(user: user.cognito))
-        ..getCards(),
+      value: BankCardsCubit(cardsService: BankCardsService(user: user.cognito))..getCards(),
       child: BlocBuilder<BankCardsCubit, BankCardsState>(
         builder: (context, state) {
           if (state is BankCardsLoading) {
-            return const GenericLoadingScreen(title: "Wallet");
+            return const GenericLoadingScreen(title: "Cards");
           }
 
           if (state is BankCardsLoaded) {
@@ -39,7 +37,7 @@ class CardsScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Column(
                 children: [
-                  const AppToolbar(title: "Wallet"),
+                  const AppToolbar(title: "Cards"),
                   Expanded(
                     child: WalletScreenBody(
                       physicalCards: state.physicalCards,
@@ -52,14 +50,14 @@ class CardsScreen extends StatelessWidget {
           }
 
           if (state is BankCardsError) {
-            return ErrorScreen(
-              title: "Wallet",
+            return GenericErrorScreen(
+              title: "Cards",
               message: state.message,
             );
           }
 
-          return const ErrorScreen(
-            title: "Wallet",
+          return const GenericErrorScreen(
+            title: "Cards",
             message: "Cards could not be loaded",
           );
         },
@@ -84,11 +82,11 @@ class WalletScreenBody extends StatelessWidget {
       tabs: [
         TabViewItem(
           text: "Physical",
-          child: CardList(cards: physicalCards),
+          child: Expanded(child: SingleChildScrollView(child: CardList(cards: physicalCards))),
         ),
         TabViewItem(
           text: "Virtual",
-          child: CardList(cards: virtualCards),
+          child: Expanded(child: SingleChildScrollView(child: CardList(cards: virtualCards))),
         ),
       ],
     );
@@ -128,20 +126,14 @@ class CardList extends StatelessWidget {
               itemBuilder: (context, index) {
                 BankCard card = cards[index];
 
-                String cardNumber =
-                    card.representation?.maskedPan ?? emptyStringValue;
-                String cardHolder =
-                    card.representation?.line2 ?? emptyStringValue;
-                String cardExpiry =
-                    card.representation?.formattedExpirationDate ??
-                        emptyStringValue;
+                String cardNumber = card.representation?.maskedPan ?? emptyStringValue;
+                String cardHolder = card.representation?.line2 ?? emptyStringValue;
+                String cardExpiry = card.representation?.formattedExpirationDate ?? emptyStringValue;
 
                 return GestureDetector(
-                  onTap: card.status == BankCardStatus.ACTIVE ||
-                          card.status == BankCardStatus.INACTIVE
+                  onTap: card.status == BankCardStatus.ACTIVE || card.status == BankCardStatus.INACTIVE
                       ? () {
-                          Navigator.pushNamed(
-                              context, CardDetailsScreen.routeName,
+                          Navigator.pushNamed(context, CardDetailsScreen.routeName,
                               arguments: CardDetailsScreenParams(card: card));
                         }
                       : null,

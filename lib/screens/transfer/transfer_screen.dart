@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
+import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/screens/transfer/transfer_confirm_screen.dart';
 import 'package:solarisdemo/services/backoffice_services.dart';
 import 'package:solarisdemo/services/change_request_service.dart';
-import 'package:solarisdemo/services/transaction_service.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../cubits/transfer/transfer_cubit.dart';

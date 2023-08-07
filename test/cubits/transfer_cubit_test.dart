@@ -8,7 +8,7 @@ import 'package:solarisdemo/models/person_account.dart';
 import 'package:solarisdemo/models/transfer.dart';
 import 'package:solarisdemo/models/authorization_request.dart';
 import 'package:solarisdemo/services/backoffice_services.dart';
-import 'package:solarisdemo/services/transaction_service.dart';
+import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart';
 import 'package:solarisdemo/services/change_request_service.dart';
 
 class MockTransactionService extends Mock implements TransactionService {
