@@ -1,87 +1,160 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import '../widgets/account_balance_text.dart';
+import 'package:solarisdemo/cubits/transaction_list_cubit/transaction_list_cubit.dart';
+import 'package:solarisdemo/widgets/account_balance_text.dart';
 
 class Analytics extends StatefulWidget {
-  const Analytics({super.key});
+  const Analytics({
+    Key? key,
+    required this.transactionListCubit,
+  }) : super(key: key);
+
+  final TransactionListCubit transactionListCubit;
 
   @override
   State<StatefulWidget> createState() => AnalyticsState();
 }
 
-class AnalyticsState extends State {
+class AnalyticsState extends State<Analytics> {
   int touchedIndex = -1;
   final double _analyticsPadding = 24;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text(
-              "Analytics",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            PlatformTextButton(
-              padding: EdgeInsets.zero,
-              child: const Text(
-                "See all expenses",
-                textAlign: TextAlign.right,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              onPressed: () {},
-            )
-          ],
-        ),
-        Stack(
-          alignment: Alignment.center,
-          children: [
-            Padding(
-              padding: EdgeInsets.all(_analyticsPadding),
-              child: AspectRatio(
-                aspectRatio: 1,
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: AspectRatio(
-                        aspectRatio: 1,
-                        child: PieChart(
-                          PieChartData(
-                            borderData: FlBorderData(
-                              show: false,
-                            ),
-                            sectionsSpace: 0,
-                            centerSpaceRadius: double.infinity,
-                            sections: showingSections(),
-                            startDegreeOffset: -30,
-                          ),
-                          swapAnimationDuration:
-                              const Duration(milliseconds: 150), // Optional
-                          swapAnimationCurve: Curves.linear, // Optional
-                        ),
+    return BlocProvider<TransactionListCubit>.value(
+      value: widget.transactionListCubit,
+      child: BlocBuilder<TransactionListCubit, TransactionListState>(
+        builder: (context, state) {
+          Widget emptyListWidget = Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "Spending analytics",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  PlatformTextButton(
+                    padding: EdgeInsets.zero,
+                    child: const Text(
+                      "See all expenses",
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFFCC0000),
                       ),
                     ),
-                  ],
+                    onPressed: () {},
+                  )
+                ],
+              ),
+              const Text(
+                "No analytics available. Start spending and you will see your analytics displayed here.",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
                 ),
               ),
-            ),
-            const Center(
-              child: AccountBalanceText(
-                value: 1234.56,
-              ),
-            )
-          ],
-        ),
-      ],
+            ],
+          );
+
+          switch (state.runtimeType) {
+            case TransactionListInitial:
+              return emptyListWidget;
+            case TransactionListLoading:
+              return const Center(child: CircularProgressIndicator());
+            case TransactionListError:
+              return const Text("Transactions could not be loaded");
+            case TransactionListLoaded:
+              return Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "Spending analytics",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      PlatformTextButton(
+                        padding: EdgeInsets.zero,
+                        child: const Text(
+                          "See all expenses",
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFFCC0000),
+                          ),
+                        ),
+                        onPressed: () {},
+                      )
+                    ],
+                  ),
+                  widget.transactionListCubit.state.transactions.isNotEmpty
+                      ? Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.all(_analyticsPadding),
+                              child: AspectRatio(
+                                aspectRatio: 1,
+                                child: Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: AspectRatio(
+                                        aspectRatio: 1,
+                                        child: PieChart(
+                                          PieChartData(
+                                            borderData: FlBorderData(
+                                              show: false,
+                                            ),
+                                            sectionsSpace: 0,
+                                            centerSpaceRadius: double.infinity,
+                                            sections: showingSections(),
+                                            startDegreeOffset: -30,
+                                          ),
+                                          swapAnimationDuration: const Duration(
+                                              milliseconds: 150), // Optional
+                                          swapAnimationCurve:
+                                              Curves.linear, // Optional
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const Center(
+                              child: AccountBalanceText(
+                                value: 1234.56,
+                              ),
+                            )
+                          ],
+                        )
+                      : const Text(
+                          "No analytics available. Start spending and you will see your analytics displayed here.",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                ],
+              );
+
+            default:
+              return const Text("Transactions could not be loaded");
+          }
+        },
+      ),
     );
   }
 

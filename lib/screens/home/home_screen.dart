@@ -123,7 +123,9 @@ class HomePageContent extends StatelessWidget {
           Padding(
             padding:
                 ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-            child: const Analytics(),
+            child: Analytics(
+              transactionListCubit: transactionListCubit,
+            ),
           ),
           Padding(
             padding:
@@ -462,8 +464,8 @@ class TransactionListTitle extends StatelessWidget {
         const Text(
           "Transactions",
           style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
           ),
         ),
         if (displayShowAllButton)
@@ -472,8 +474,9 @@ class TransactionListTitle extends StatelessWidget {
               "See all",
               textAlign: TextAlign.right,
               style: TextStyle(
+                color: Color(0xFFCC0000),
                 fontSize: 16,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w600,
               ),
             ),
             onPressed: () {

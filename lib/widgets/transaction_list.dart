@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'empty_list_message.dart';
-import 'transaction_listing_item.dart';
+import '../cubits/transaction_list_cubit/transaction_list_cubit.dart';
 import '../models/transaction_model.dart';
 import '../services/transaction_service.dart';
-import '../cubits/transaction_list_cubit/transaction_list_cubit.dart';
+import 'transaction_listing_item.dart';
 
 class TransactionList extends StatelessWidget {
   final Widget? header;
@@ -27,10 +26,17 @@ class TransactionList extends StatelessWidget {
       value: transactionListCubit,
       child: BlocBuilder<TransactionListCubit, TransactionListState>(
         builder: (context, state) {
-          Widget emptyListWidget = const TextMessageWithCircularImage(
-            title: "No transactions yet",
-            message:
-                "There are no transactions yet. Your future transactions will be displayed here.",
+          Widget emptyListWidget = Column(
+            children: [
+              if (header != null) header!,
+              const Text(
+                "No transactions yet. When you make payments &  transactions, they will be displayed here.",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ],
           );
 
           switch (state.runtimeType) {
