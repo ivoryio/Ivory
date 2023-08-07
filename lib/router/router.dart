@@ -12,6 +12,7 @@ import '../cubits/auth_cubit/auth_cubit.dart';
 import '../screens/account/account_details_screen.dart';
 import '../screens/wallet/card_details_screen.dart';
 import '../models/transaction_model.dart';
+import 'routing_constants.dart';
 import '../screens/home/home_screen.dart';
 import '../screens/landing/landing_screen.dart';
 import '../screens/login/login_screen.dart';
@@ -19,10 +20,7 @@ import '../screens/profile/profile_screen.dart';
 import '../screens/signup/signup_screen.dart';
 import '../screens/transactions/transactions_screen.dart';
 import '../screens/transfer/transfer_screen.dart';
-import '../screens/wallet/card_details_screen.dart';
 import '../screens/wallet/wallet_screen.dart';
-import '../services/transaction_service.dart';
-import 'routing_constants.dart';
 
 class AppRouter {
   final _rootNavigatorKey =
@@ -74,11 +72,7 @@ class AppRouter {
           path: transactionsRoute.path,
           name: transactionsRoute.name,
           builder: (BuildContext context, GoRouterState state) {
-            return TransactionsScreen(
-              transactionListFilter: state.extra is TransactionListFilter
-                  ? state.extra as TransactionListFilter
-                  : null,
-            );
+            return const TransactionsScreen();
           },
         ),
         GoRoute(

@@ -7,12 +7,16 @@ class CustomSearchBar extends StatelessWidget {
   final void Function() onPressedFilterButton;
   final bool showButtonIndicator;
   final void Function(String value)? onChangedSearch;
+  final void Function(String value)? onSubmitSearch;
+  final String? textLabel;
 
   const CustomSearchBar({
     super.key,
     required this.onPressedFilterButton,
     this.showButtonIndicator = false,
     required this.onChangedSearch,
+    this.onSubmitSearch,
+    this.textLabel,
   });
 
   @override
@@ -30,6 +34,7 @@ class CustomSearchBar extends StatelessWidget {
               return null;
             },
             onChanged: onChangedSearch,
+            onSubmit: onSubmitSearch,
           ),
         ),
         Padding(

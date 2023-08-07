@@ -1,25 +1,24 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../config.dart';
-import '../../cubits/account_summary_cubit/account_summary_cubit.dart';
-import '../../cubits/auth_cubit/auth_cubit.dart';
-import '../../cubits/transaction_list_cubit/transaction_list_cubit.dart';
+import '../../models/transaction_model.dart';
 import '../../models/user.dart';
-import '../../router/routing_constants.dart';
-import '../../services/person_service.dart';
-import '../../services/transaction_service.dart';
-import '../../utilities/format.dart';
-import '../../widgets/account_balance_text.dart';
-import '../../widgets/analytics.dart';
 import '../../widgets/modal.dart';
-import '../../widgets/refer_a_friend.dart';
 import '../../widgets/screen.dart';
-import '../../widgets/transaction_list.dart';
+import '../../utilities/format.dart';
+import '../../widgets/analytics.dart';
 import 'modals/new_transfer_popup.dart';
+import '../../widgets/refer_a_friend.dart';
+import '../../services/person_service.dart';
+import '../../widgets/transaction_list.dart';
+import '../../router/routing_constants.dart';
+import '../../infrastructure/transactions/transaction_service.dart';
+import '../../widgets/account_balance_text.dart';
+import '../../cubits/auth_cubit/auth_cubit.dart';
+import '../../cubits/account_summary_cubit/account_summary_cubit.dart';
+import '../../cubits/transaction_list_cubit/transaction_list_cubit.dart';
 
 const _defaultCountTransactionsDisplayed = 3;
 const _defaultPage = 1;
