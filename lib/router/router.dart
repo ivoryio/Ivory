@@ -3,15 +3,15 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:solarisdemo/models/bank_card.dart';
+import 'package:solarisdemo/screens/repayments/repayment_reminder.dart';
 import 'package:solarisdemo/screens/repayments/repayments_screen.dart';
 import 'package:solarisdemo/screens/splitpay/splitpay_screen.dart';
 import 'package:solarisdemo/screens/transactions/transactions_filtering_screen.dart';
 import 'package:solarisdemo/widgets/screen.dart';
 
 import '../cubits/auth_cubit/auth_cubit.dart';
-import '../screens/account/account_details_screen.dart';
-import '../screens/wallet/card_details_screen.dart';
 import '../models/transaction_model.dart';
+import '../screens/account/account_details_screen.dart';
 import '../screens/home/home_screen.dart';
 import '../screens/landing/landing_screen.dart';
 import '../screens/login/login_screen.dart';
@@ -145,6 +145,13 @@ class AppRouter {
           name: repaymentsRoute.name,
           builder: (BuildContext context, GoRouterState state) {
             return const RepaymentsScreen();
+          },
+        ),
+        GoRoute(
+          path: repaymentReminderRoute.path,
+          name: repaymentReminderRoute.name,
+          builder: (BuildContext context, GoRouterState state) {
+            return const RepaymentReminder();
           },
         ),
       ],
