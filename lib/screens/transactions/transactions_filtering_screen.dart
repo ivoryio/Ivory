@@ -54,10 +54,9 @@ class TransactionsFilteringScreen extends StatelessWidget {
                           context
                               .read<TransactionsFilteringCubit>()
                               .resetFilters();
-                          Navigator.pushNamedAndRemoveUntil(
+                          Navigator.popUntil(
                             context,
-                            TransactionsScreen.routeName,
-                            (route) => false,
+                            ModalRoute.withName(TransactionsScreen.routeName),
                           );
                         },
                         child: const Text(

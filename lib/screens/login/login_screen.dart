@@ -6,7 +6,6 @@ import 'package:solarisdemo/screens/landing/landing_screen.dart';
 import 'package:solarisdemo/screens/login/login_consent_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
-import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
 
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../cubits/login_cubit/login_cubit.dart';
@@ -38,16 +37,14 @@ class LoginScreen extends StatelessWidget {
         builder: (context, state) {
           if (state is LoginInitial) {
             return const ScreenScaffold(
-              body: ScrollableScreenContainer(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24),
-                  child: Column(
-                    children: [
-                      AppToolbar(title: "Login"),
-                      Expanded(child: LoginOptions()),
-                      SizedBox(height: 16),
-                    ],
-                  ),
+              body: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24),
+                child: Column(
+                  children: [
+                    AppToolbar(title: "Login"),
+                    Expanded(child: LoginOptions()),
+                    SizedBox(height: 16),
+                  ],
                 ),
               ),
             );

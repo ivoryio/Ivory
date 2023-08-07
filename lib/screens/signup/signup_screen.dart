@@ -4,7 +4,6 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:solarisdemo/screens/login/login_consent_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
-import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
 
 import '../../cubits/signup/signup_cubit.dart';
 import '../../utilities/validator.dart';
@@ -75,18 +74,16 @@ class BasicInfoScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const ScreenScaffold(
-      body: ScrollableScreenContainer(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24),
-          child: Column(
-            children: [
-              AppToolbar(title: "Sign Up"),
-              Expanded(
-                child: SignupForm(),
-              ),
-              SizedBox(height: 16),
-            ],
-          ),
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 24),
+        child: Column(
+          children: [
+            AppToolbar(title: "Sign Up"),
+            Expanded(
+              child: SignupForm(),
+            ),
+            SizedBox(height: 16),
+          ],
         ),
       ),
     );
@@ -116,196 +113,196 @@ class _SignupFormState extends State<SignupForm> {
       key: _formKey,
       child: Padding(
         padding: const EdgeInsets.only(top: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            SpacedColumn(
-              space: 16,
-              children: [
-                PlatformTextInput(
-                  textLabel: "First name",
-                  hintText: "e.g John",
-                  keyboardType: TextInputType.name,
-                  onChanged: (value) {
-                    setState(() {
-                      _inputFirstName = value;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your first name';
-                    }
-                    return null;
-                  },
-                ),
-                PlatformTextInput(
-                  textLabel: "Last name",
-                  hintText: "e.g Doe",
-                  keyboardType: TextInputType.name,
-                  onChanged: (value) {
-                    setState(() {
-                      _inputLastName = value;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your last name';
-                    }
-                    return null;
-                  },
-                ),
-                PlatformTextInput(
-                  textLabel: "Email Address",
-                  hintText: "e.g john.doe@email.com",
-                  keyboardType: TextInputType.emailAddress,
-                  onChanged: (value) {
-                    setState(() {
-                      _inputEmail = value;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your email address';
-                    }
-                    if (!Validator.isValidEmailAddress(value)) {
-                      return 'Please enter a valid email address';
-                    }
-                    return null;
-                  },
-                ),
-                PlatformTextInput(
-                  textLabel: "Phone Number",
-                  hintText: "e.g 0049 123 456 789",
-                  keyboardType: TextInputType.phone,
-                  onChanged: (value) {
-                    setState(() {
-                      _inputPhoneNumber = value;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your phone number';
-                    }
-                    //Todo: Add phone number validation
-
-                    // if (!Validator.isValidPhoneNumber(value)) {
-                    //   return 'Please enter a valid phone number';
-                    // }
-                    return null;
-                  },
-                ),
-                PlatformTextInput(
-                  textLabel: "Passcode",
-                  hintText: "e.g 123456",
-                  keyboardType: TextInputType.phone,
-                  onChanged: (value) {
-                    setState(() {
-                      _inputPassword = value;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your passcode';
-                    }
-                    if (!Validator.isValidPasscode(value)) {
-                      return 'Please enter a valid passcode, with at least 6 digits';
-                    }
-                    return null;
-                  },
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CheckboxWidget(
-                      isChecked: _agreementAccepted,
-                      onChanged: (bool checked) {
-                        setState(() {
-                          _agreementAccepted = checked;
-                        });
-                      },
-                    ),
-                    const Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 8),
-                        child: Text(
-                            "I agree with Solaris Terms and Conditions and Privacy Policy",
-                            style: TextStyle(
-                              fontSize: 16,
-                            )),
-                      ),
-                    ),
-                  ],
-                )
-              ],
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        "Already have an account?",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      PlatformTextButton(
-                        child: const Text(
-                          "Login",
-                        ),
-                        onPressed: () {},
-                      )
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  child: SecondaryButton(
-                    text: "Continue",
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate() &&
-                          !_agreementAccepted) {
-                        showPlatformDialog(
-                          context: context,
-                          builder: (_) => PlatformAlertDialog(
-                            title: const Text('Signup'),
-                            content: const Text(
-                                'You need to accept the terms in order to continue'),
-                            actions: [
-                              PlatformDialogAction(
-                                child: const Text('OK'),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ],
-                          ),
-                        );
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              SpacedColumn(
+                space: 16,
+                children: [
+                  PlatformTextInput(
+                    textLabel: "First name",
+                    hintText: "e.g John",
+                    keyboardType: TextInputType.name,
+                    onChanged: (value) {
+                      setState(() {
+                        _inputFirstName = value;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your first name';
                       }
-                      if (_formKey.currentState!.validate() &&
-                          _agreementAccepted) {
-                        _formKey.currentState!.save();
-
-                        context.read<SignupCubit>().setBasicInfo(
-                              phoneNumber: _inputPhoneNumber,
-                              email: _inputEmail,
-                              firstName: _inputFirstName,
-                              lastName: _inputLastName,
-                              passcode: _inputPassword,
-                            );
-                      }
+                      return null;
                     },
                   ),
-                ),
-              ],
-            ),
-          ],
+                  PlatformTextInput(
+                    textLabel: "Last name",
+                    hintText: "e.g Doe",
+                    keyboardType: TextInputType.name,
+                    onChanged: (value) {
+                      setState(() {
+                        _inputLastName = value;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your last name';
+                      }
+                      return null;
+                    },
+                  ),
+                  PlatformTextInput(
+                    textLabel: "Email Address",
+                    hintText: "e.g john.doe@email.com",
+                    keyboardType: TextInputType.emailAddress,
+                    onChanged: (value) {
+                      setState(() {
+                        _inputEmail = value;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your email address';
+                      }
+                      if (!Validator.isValidEmailAddress(value)) {
+                        return 'Please enter a valid email address';
+                      }
+                      return null;
+                    },
+                  ),
+                  PlatformTextInput(
+                    textLabel: "Phone Number",
+                    hintText: "e.g 0049 123 456 789",
+                    keyboardType: TextInputType.phone,
+                    onChanged: (value) {
+                      setState(() {
+                        _inputPhoneNumber = value;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your phone number';
+                      }
+                      //Todo: Add phone number validation
+
+                      // if (!Validator.isValidPhoneNumber(value)) {
+                      //   return 'Please enter a valid phone number';
+                      // }
+                      return null;
+                    },
+                  ),
+                  PlatformTextInput(
+                    textLabel: "Passcode",
+                    hintText: "e.g 123456",
+                    keyboardType: TextInputType.phone,
+                    onChanged: (value) {
+                      setState(() {
+                        _inputPassword = value;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your passcode';
+                      }
+                      if (!Validator.isValidPasscode(value)) {
+                        return 'Please enter a valid passcode, with at least 6 digits';
+                      }
+                      return null;
+                    },
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CheckboxWidget(
+                        isChecked: _agreementAccepted,
+                        onChanged: (bool checked) {
+                          setState(() {
+                            _agreementAccepted = checked;
+                          });
+                        },
+                      ),
+                      const Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 8),
+                          child: Text(
+                              "I agree with Solaris Terms and Conditions and Privacy Policy",
+                              style: TextStyle(
+                                fontSize: 16,
+                              )),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          "Already have an account?",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        PlatformTextButton(
+                          child: const Text(
+                            "Login",
+                          ),
+                          onPressed: () {},
+                        )
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: SecondaryButton(
+                      text: "Continue",
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate() &&
+                            !_agreementAccepted) {
+                          showPlatformDialog(
+                            context: context,
+                            builder: (_) => PlatformAlertDialog(
+                              title: const Text('Signup'),
+                              content: const Text(
+                                  'You need to accept the terms in order to continue'),
+                              actions: [
+                                PlatformDialogAction(
+                                  child: const Text('OK'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                        if (_formKey.currentState!.validate() &&
+                            _agreementAccepted) {
+                          _formKey.currentState!.save();
+
+                          context.read<SignupCubit>().setBasicInfo(
+                                phoneNumber: _inputPhoneNumber,
+                                email: _inputEmail,
+                                firstName: _inputFirstName,
+                                lastName: _inputLastName,
+                                passcode: _inputPassword,
+                              );
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

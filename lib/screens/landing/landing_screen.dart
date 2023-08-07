@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:solarisdemo/screens/login/login_screen.dart';
 import 'package:solarisdemo/screens/signup/signup_screen.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
+import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
 
 import '../../widgets/button.dart';
 import '../../widgets/spaced_column.dart';
@@ -16,11 +17,13 @@ class LandingScreen extends StatelessWidget {
     return const ScreenScaffold(
       statusBarColor: Colors.transparent,
       extendBodyBehindAppBar: true,
-      body: Column(
-        children: [
-          HeroImage(),
-          LandingScreenContent(),
-        ],
+      body: ScrollableScreenContainer(
+        child: Column(
+          children: [
+            HeroImage(),
+            LandingScreenContent(),
+          ],
+        ),
       ),
     );
   }

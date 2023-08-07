@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
-import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
 
 import '../../config.dart';
 import '../../cubits/card_details_cubit/card_details_cubit.dart';
@@ -22,21 +21,23 @@ class BankCardDetailsMainScreen extends StatelessWidget {
     final state = context.read<BankCardDetailsCubit>().state;
 
     return ScreenScaffold(
-      body: ScrollableScreenContainer(
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: ClientConfig.getCustomClientUiSettings()
-                .defaultScreenHorizontalPadding,
-          ),
-          child: Column(
-            children: [
-              const AppToolbar(title: "Card"),
-              state.card!.status == BankCardStatus.INACTIVE
-                  ? const InactiveCard()
-                  : const ActiveCard(),
-              const SizedBox(height: 24),
-            ],
-          ),
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: ClientConfig.getCustomClientUiSettings()
+              .defaultScreenHorizontalPadding,
+        ),
+        child: Column(
+          children: [
+            const AppToolbar(title: "Card"),
+            Expanded(
+              child: SingleChildScrollView(
+                child: state.card!.status == BankCardStatus.INACTIVE
+                    ? const InactiveCard()
+                    : const ActiveCard(),
+              ),
+            ),
+            const SizedBox(height: 24),
+          ],
         ),
       ),
     );
@@ -114,7 +115,6 @@ class ActiveCard extends StatelessWidget {
     final state = context.read<BankCardDetailsCubit>().state;
 
     return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SpacedColumn(

@@ -4,7 +4,6 @@ import 'package:solarisdemo/utilities/constants.dart';
 import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
-import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
 
 import '../../cubits/transfer/transfer_cubit.dart';
 import '../../utilities/validator.dart';
@@ -67,53 +66,56 @@ class TransferInitialScreen extends StatelessWidget {
     descriptionController.addListener(changeListener);
 
     return ScreenScaffold(
-      body: ScrollableScreenContainer(
-        child: Column(
-          children: [
-            Padding(
+      body: Column(
+        children: [
+          const AppToolbar(
+            title: "Transfer",
+            padding: EdgeInsets.symmetric(horizontal: 24),
+          ),
+          Expanded(
+            child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Column(
-                children: [
-                  const AppToolbar(title: "Transfer"),
-                  AccountSelect(
-                    key: accountSelectKey,
-                    title: "Send from",
-                  ),
-                  const SizedBox(height: 32),
-                  PayeeInformation(
-                    formKey: formKey,
-                    key: payeeInformationKey,
-                    ibanController: ibanController,
-                    nameController: nameController,
-                    descriptionController: descriptionController,
-                    savePayee: state.savePayee,
-                  ),
-                ],
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    AccountSelect(
+                      key: accountSelectKey,
+                      title: "Send from",
+                    ),
+                    const SizedBox(height: 32),
+                    PayeeInformation(
+                      formKey: formKey,
+                      key: payeeInformationKey,
+                      ibanController: ibanController,
+                      nameController: nameController,
+                      descriptionController: descriptionController,
+                      savePayee: state.savePayee,
+                    ),
+                  ],
+                ),
               ),
             ),
-            const Spacer(),
-            BottomStickyWidget(
-              child: StickyBottomContent(
-                key: stickyBottomContentKey,
-                buttonActive: inputsNotEmpty(),
-                onContinueCallback: () {
-                  if (formKey.currentState!.validate() &&
-                      accountSelectKey.currentState?.selectedAccount != null) {
-                    context.read<TransferCubit>().setBasicData(
-                          iban: ibanController.text,
-                          name: nameController.text,
-                          description: descriptionController.text,
-                          savePayee:
-                              payeeInformationKey.currentState!.savePayee,
-                          personAccount:
-                              accountSelectKey.currentState!.selectedAccount,
-                        );
-                  }
-                },
-              ),
+          ),
+          BottomStickyWidget(
+            child: StickyBottomContent(
+              key: stickyBottomContentKey,
+              buttonActive: inputsNotEmpty(),
+              onContinueCallback: () {
+                if (formKey.currentState!.validate() &&
+                    accountSelectKey.currentState?.selectedAccount != null) {
+                  context.read<TransferCubit>().setBasicData(
+                        iban: ibanController.text,
+                        name: nameController.text,
+                        description: descriptionController.text,
+                        savePayee: payeeInformationKey.currentState!.savePayee,
+                        personAccount:
+                            accountSelectKey.currentState!.selectedAccount,
+                      );
+                }
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -48,71 +48,78 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     bool isFilterActive = transactionListFilter?.bookingDateMax != null ||
         transactionListFilter?.bookingDateMin != null;
 
-    return SingleChildScrollView(
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: ClientConfig.getCustomClientUiSettings()
-              .defaultScreenPadding
-              .left,
-        ),
-        child: Column(
-          children: [
-            const AppToolbar(title: "Transactions"),
-            SpacedColumn(
-              space: 16,
-              children: [
-                const TransactionListTitle(
-                  displayShowAllButton: false,
-                ),
-                CustomSearchBar(
-                  showButtonIndicator: isFilterActive,
-                  onPressedFilterButton: () {
-                    Navigator.pushNamed(
-                        context, TransactionsFilteringScreen.routeName,
-                        arguments: transactionListFilter);
-                  },
-                  onChangedSearch: (value) {
-                    if (value.isEmpty) {
-                      transactionListCubit!.clearFilters();
-                    }
-
-                    transactionListCubit!.searchTransactions(value);
-                  },
-                ),
-                if (isFilterActive)
-                  Row(
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal:
+            ClientConfig.getCustomClientUiSettings().defaultScreenPadding.left,
+      ),
+      child: Column(
+        children: [
+          const AppToolbar(
+            title: "Transactions",
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SpacedColumn(
+                    space: 16,
                     children: [
-                      PillButton(
-                        buttonText:
-                            '${getFormattedDate(date: transactionListFilter?.bookingDateMin, text: "Start date")} - ${getFormattedDate(date: transactionListFilter?.bookingDateMax, text: "End date")}',
-                        buttonCallback: () {
-                          setState(() {
-                            transactionListFilter = null;
-                            transactionListCubit!.getTransactions(
-                              filter: transactionListFilter,
-                            );
-                          });
-                          transactionListCubit!.getTransactions(
-                            filter: transactionListFilter,
-                          );
-                        },
-                        icon: const Icon(
-                          Icons.close,
-                          size: 16,
-                        ),
+                      const TransactionListTitle(
+                        displayShowAllButton: false,
                       ),
+                      CustomSearchBar(
+                        showButtonIndicator: isFilterActive,
+                        onPressedFilterButton: () {
+                          Navigator.pushNamed(
+                              context, TransactionsFilteringScreen.routeName,
+                              arguments: transactionListFilter);
+                        },
+                        onChangedSearch: (value) {
+                          if (value.isEmpty) {
+                            transactionListCubit!.clearFilters();
+                          }
+
+                          transactionListCubit!.searchTransactions(value);
+                        },
+                      ),
+                      if (isFilterActive)
+                        Row(
+                          children: [
+                            PillButton(
+                              buttonText:
+                                  '${getFormattedDate(date: transactionListFilter?.bookingDateMin, text: "Start date")} - ${getFormattedDate(date: transactionListFilter?.bookingDateMax, text: "End date")}',
+                              buttonCallback: () {
+                                setState(() {
+                                  transactionListFilter = null;
+                                  transactionListCubit!.getTransactions(
+                                    filter: transactionListFilter,
+                                  );
+                                });
+                                transactionListCubit!.getTransactions(
+                                  filter: transactionListFilter,
+                                );
+                              },
+                              icon: const Icon(
+                                Icons.close,
+                                size: 16,
+                              ),
+                            ),
+                          ],
+                        ),
                     ],
                   ),
-              ],
+                  const SizedBox(height: 32),
+                  TransactionList(
+                    groupedByMonths: true,
+                    filter: transactionListFilter,
+                    transactionListCubit: transactionListCubit!,
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: 32),
-            TransactionList(
-              groupedByMonths: true,
-              filter: transactionListFilter,
-              transactionListCubit: transactionListCubit!,
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
