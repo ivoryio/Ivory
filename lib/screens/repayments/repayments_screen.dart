@@ -169,6 +169,7 @@ class RepaymentsScreen extends StatelessWidget {
             title: 'Change repayment rate',
             subtitle: 'And choose between percentage or fixed',
             onTap: () {
+              context.push(changeRepaymentRateRoute.path);
               log('Change repayment rate');
             },
           ),

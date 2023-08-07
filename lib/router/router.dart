@@ -10,6 +10,7 @@ import 'package:solarisdemo/widgets/screen.dart';
 
 import '../cubits/auth_cubit/auth_cubit.dart';
 import '../screens/account/account_details_screen.dart';
+import '../screens/repayments/change_repayment_rate.dart';
 import '../screens/wallet/card_details_screen.dart';
 import '../models/transaction_model.dart';
 import '../screens/home/home_screen.dart';
@@ -134,6 +135,13 @@ class AppRouter {
           },
         ),
         GoRoute(
+          path: repaymentsRoute.path,
+          name: repaymentsRoute.name,
+          builder: (BuildContext context, GoRouterState state) {
+            return const RepaymentsScreen();
+          },
+        ),
+        GoRoute(
           path: accountDetailsRoute.path,
           name: accountDetailsRoute.name,
           builder: (BuildContext context, GoRouterState state) {
@@ -141,10 +149,10 @@ class AppRouter {
           },
         ),
         GoRoute(
-          path: repaymentsRoute.path,
-          name: repaymentsRoute.name,
+          path: changeRepaymentRateRoute.path,
+          name: changeRepaymentRateRoute.name,
           builder: (BuildContext context, GoRouterState state) {
-            return const RepaymentsScreen();
+            return const ChangeRepaymentRateScreen();
           },
         ),
       ],

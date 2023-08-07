@@ -98,6 +98,12 @@ const repaymentsRoute = _Route(
   title: 'Repayments',
 );
 
+const changeRepaymentRateRoute = _Route(
+  name: 'changeRepaymentRate',
+  path: '/change-repayment-rate',
+  title: 'Change Repayment Rate',
+);
+
 class _Route {
   final String name;
   final String path;
