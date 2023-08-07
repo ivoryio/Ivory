@@ -3,12 +3,12 @@ import 'package:solarisdemo/models/home/main_navigation_screens.dart';
 import 'package:solarisdemo/screens/home/home_screen.dart';
 import 'package:solarisdemo/screens/profile/profile_screen.dart';
 import 'package:solarisdemo/screens/transactions/transactions_screen.dart';
-import 'package:solarisdemo/screens/wallet/wallet_screen.dart';
+import 'package:solarisdemo/screens/wallet/cards_screen.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 final List<MainNavigationScreens> mainNavigationScreens = [
   MainNavigationScreens.homeScreen,
-  MainNavigationScreens.walletScreen,
+  MainNavigationScreens.cardsScreen,
   MainNavigationScreens.transactionsScreen,
   MainNavigationScreens.profileScreen,
 ];
@@ -51,8 +51,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     switch (mainNavigationScreens[currentPageIndex]) {
       case MainNavigationScreens.homeScreen:
         return const HomeScreen();
-      case MainNavigationScreens.walletScreen:
-        return const WalletScreen();
+      case MainNavigationScreens.cardsScreen:
+        return const CardsScreen();
       case MainNavigationScreens.transactionsScreen:
         return TransactionsScreen(transactionListFilter: widget.screenParams);
       case MainNavigationScreens.profileScreen:
@@ -97,14 +97,14 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           icon: Icon(Icons.home),
           label: 'Home',
         );
-      case MainNavigationScreens.walletScreen:
+      case MainNavigationScreens.cardsScreen:
         return const BottomNavigationBarItem(
-          icon: Icon(Icons.add_card),
-          label: 'Wallet',
+          icon: Icon(Icons.credit_card_outlined),
+          label: 'Cards',
         );
       case MainNavigationScreens.transactionsScreen:
         return const BottomNavigationBarItem(
-          icon: Icon(Icons.payments),
+          icon: Icon(Icons.payments_outlined),
           label: 'Transactions',
         );
       case MainNavigationScreens.profileScreen:

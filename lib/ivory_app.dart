@@ -13,7 +13,7 @@ import 'package:solarisdemo/screens/signup/signup_screen.dart';
 import 'package:solarisdemo/screens/transactions/transactions_screen.dart';
 import 'package:solarisdemo/screens/transfer/transfer_screen.dart';
 import 'package:solarisdemo/screens/wallet/card_details_screen.dart';
-import 'package:solarisdemo/screens/wallet/wallet_screen.dart';
+import 'package:solarisdemo/screens/wallet/cards_screen.dart';
 import 'package:solarisdemo/services/auth_service.dart';
 
 import '../config.dart';
@@ -88,8 +88,8 @@ class _IvoryAppState extends State<IvoryApp> {
               );
             },
             // wallet
-            WalletScreen.routeName: (context) => const MainNavigationScreen(
-                initialScreen: MainNavigationScreens.walletScreen),
+            CardsScreen.routeName: (context) => const MainNavigationScreen(
+                initialScreen: MainNavigationScreens.cardsScreen),
             CardDetailsScreen.routeName: (context) {
               final cardDetailsScreenParams = ModalRoute.of(context)
                   ?.settings

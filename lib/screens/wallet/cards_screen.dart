@@ -17,10 +17,10 @@ import '../../widgets/screen.dart';
 import '../../widgets/spaced_column.dart';
 import '../../widgets/tab_view.dart';
 
-class WalletScreen extends StatelessWidget {
-  static const routeName = "/walletScreen";
+class CardsScreen extends StatelessWidget {
+  static const routeName = "/cardsScreen";
 
-  const WalletScreen({super.key});
+  const CardsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

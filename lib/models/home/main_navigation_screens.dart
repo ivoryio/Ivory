@@ -1,6 +1,6 @@
 enum MainNavigationScreens {
   homeScreen,
-  walletScreen,
+  cardsScreen,
   transactionsScreen,
   profileScreen,
 }
