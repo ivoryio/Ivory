@@ -3,7 +3,7 @@ import 'package:solarisdemo/redux/transactions/transactions_state.dart';
 
 TransactionsState transactionsReducer(TransactionsState currentState, dynamic action) {
   if(action is TransactionsLoadingEventAction) {
-    return TransactionsLoadingState();
+    return TransactionsLoadingState(action.filter);
   } else if(action is TransactionsFailedEventAction) {
     return TransactionsErrorState();
   } else if (action is TransactionsFetchedEventAction) {

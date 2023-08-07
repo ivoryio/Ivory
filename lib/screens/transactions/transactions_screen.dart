@@ -39,7 +39,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         store.dispatch(GetTransactionsCommandAction(filter: null, user: user.cognito));
       },
       converter: (store) => TransactionPresenter.presentTransactions(transactionsState: store.state.transactionsState),
-      distinct: true,
       builder: (context , viewModel) {
         bool isFilterActive = viewModel.transactionListFilter?.bookingDateMax != null ||
             viewModel.transactionListFilter?.bookingDateMin != null;
@@ -61,6 +60,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     displayShowAllButton: false,
                   ),
                   CustomSearchBar(
+                    textLabel: viewModel.transactionListFilter?.searchString,
                     showButtonIndicator: isFilterActive,
                     onPressedFilterButton: () {
                       context.push(
@@ -68,14 +68,26 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                         extra: viewModel.transactionListFilter,
                       );
                     },
-                    onChangedSearch: (value) {
+                    onSubmitSearch: (value) {
+                      TransactionListFilter filter;
                       if (value.isEmpty) {
-                        //TODO: Redo this
-                        //transactionListCubit!.clearFilters();
+                        filter = TransactionListFilter(
+                          bookingDateMax: viewModel.transactionListFilter?.bookingDateMax,
+                          bookingDateMin: viewModel.transactionListFilter?.bookingDateMin,
+                          size: viewModel.transactionListFilter?.size,
+                          searchString: null,
+                        );
+                      } else {
+                        filter = TransactionListFilter(
+                          bookingDateMax: viewModel.transactionListFilter?.bookingDateMax,
+                          bookingDateMin: viewModel.transactionListFilter?.bookingDateMin,
+                          size: viewModel.transactionListFilter?.size,
+                          searchString: value,
+                        );
                       }
-                      //TODO: ALSO this
-                      //transactionListCubit!.searchTransactions(value);
+                      StoreProvider.of<AppState>(context).dispatch(GetTransactionsCommandAction(filter: filter, user: user.cognito));
                     },
+                    onChangedSearch: (String value) { return; },
                   ),
                   if (isFilterActive)
                     Row(

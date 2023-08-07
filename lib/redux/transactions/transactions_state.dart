@@ -8,7 +8,13 @@ abstract class TransactionsState extends Equatable {
 }
 
 class TransactionsInitialState extends TransactionsState {}
-class TransactionsLoadingState extends TransactionsState {}
+
+class TransactionsLoadingState extends TransactionsState {
+  final TransactionListFilter? transactionListFilter;
+
+  TransactionsLoadingState(this.transactionListFilter);
+}
+
 class TransactionsErrorState extends TransactionsState {}
 
 class TransactionsFetchedState extends TransactionsState {

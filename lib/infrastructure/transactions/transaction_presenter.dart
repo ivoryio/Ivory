@@ -6,7 +6,7 @@ import '../../models/transaction_model.dart';
 class TransactionPresenter {
   static TransactionsViewModel presentTransactions({required TransactionsState transactionsState}) {
     if(transactionsState is TransactionsLoadingState) {
-      return TransactionsLoadingViewModel();
+      return TransactionsLoadingViewModel(transactionListFilter: transactionsState.transactionListFilter);
     } else if(transactionsState is TransactionsErrorState) {
       return TransactionsErrorViewModel();
     } else if(transactionsState is TransactionsFetchedState) {
@@ -27,12 +27,15 @@ abstract class TransactionsViewModel extends Equatable {
   const TransactionsViewModel({this.transactions, this.transactionListFilter});
 
   @override
-  List<Object?> get props => [transactions];
+  List<Object?> get props => [transactions,transactionListFilter];
 }
 
 class TransactionsInitialViewModel extends TransactionsViewModel {}
 
-class TransactionsLoadingViewModel extends TransactionsViewModel {}
+class TransactionsLoadingViewModel extends TransactionsViewModel {
+  const TransactionsLoadingViewModel ({TransactionListFilter? transactionListFilter})
+      : super(transactionListFilter: transactionListFilter);
+}
 
 class TransactionsErrorViewModel extends TransactionsViewModel {}
 

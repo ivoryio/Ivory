@@ -100,6 +100,7 @@ class Amount {
 class TransactionListFilter {
   final DateTime? bookingDateMin;
   final DateTime? bookingDateMax;
+  final String? searchString;
   final int? page;
   final int? size;
   final String? sort;
@@ -107,6 +108,7 @@ class TransactionListFilter {
   const TransactionListFilter({
     this.bookingDateMin,
     this.bookingDateMax,
+    this.searchString,
     this.page,
     this.size,
     this.sort,
@@ -133,6 +135,10 @@ class TransactionListFilter {
 
     if (sort != null) {
       map["sort"] = sort!;
+    }
+
+    if(searchString != null) {
+      map["filter[description]"] = searchString!;
     }
 
     return map;

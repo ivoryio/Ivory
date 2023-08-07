@@ -8,7 +8,12 @@ class GetTransactionsCommandAction {
   GetTransactionsCommandAction({required this.filter, required this.user});
 }
 
-class TransactionsLoadingEventAction {}
+class TransactionsLoadingEventAction {
+  final TransactionListFilter? filter;
+
+  TransactionsLoadingEventAction({required this.filter});
+}
+
 class TransactionsFailedEventAction {}
 
 class TransactionsFetchedEventAction{

@@ -14,7 +14,7 @@ class GetTransactionsMiddleware extends MiddlewareClass<AppState> {
     next(action);
 
     if(action is GetTransactionsCommandAction) {
-      store.dispatch(TransactionsLoadingEventAction());
+      store.dispatch(TransactionsLoadingEventAction(filter: action.filter));
       final response = await _transactionService.getTransactions(filter: action.filter, user: action.user);
 
       if(response is GetTransactionsSuccessResponse) {
