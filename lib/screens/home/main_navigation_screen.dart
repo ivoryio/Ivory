@@ -71,24 +71,9 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           currentPageIndex = index;
         });
       },
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.add_card),
-          label: 'Wallet',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.payments),
-          label: 'Transactions',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.person),
-          label: 'Profile',
-        ),
-      ],
+      items: mainNavigationScreens
+          .map((screen) => _getBottomNavbarItem(screen))
+          .toList(),
     );
   }
 
@@ -102,6 +87,31 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         return const Color(0xFF1C1A28);
       default:
         return Colors.transparent;
+    }
+  }
+
+  BottomNavigationBarItem _getBottomNavbarItem(MainNavigationScreens screen) {
+    switch (screen) {
+      case MainNavigationScreens.homeScreen:
+        return const BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          label: 'Home',
+        );
+      case MainNavigationScreens.walletScreen:
+        return const BottomNavigationBarItem(
+          icon: Icon(Icons.add_card),
+          label: 'Wallet',
+        );
+      case MainNavigationScreens.transactionsScreen:
+        return const BottomNavigationBarItem(
+          icon: Icon(Icons.payments),
+          label: 'Transactions',
+        );
+      case MainNavigationScreens.profileScreen:
+        return const BottomNavigationBarItem(
+          icon: Icon(Icons.person),
+          label: 'Profile',
+        );
     }
   }
 
