@@ -41,6 +41,48 @@ class ScreenScaffold extends StatelessWidget {
   }
 }
 
+class MainNavigationScreenScaffold extends StatelessWidget {
+  final Widget body;
+  final Color backgroundColor;
+  final Color? statusBarColor;
+  final bool extendBodyBehindAppBar;
+  final Brightness statusBarIconBrightness;
+  final BottomNavigationBar bottomNavigationBar;
+
+  const MainNavigationScreenScaffold({
+    super.key,
+    this.backgroundColor = Colors.white,
+    this.statusBarColor,
+    this.extendBodyBehindAppBar = false,
+    this.statusBarIconBrightness = Brightness.dark,
+    required this.body,
+    required this.bottomNavigationBar,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: backgroundColor,
+      extendBodyBehindAppBar: extendBodyBehindAppBar,
+      appBar: AppBar(
+        backgroundColor: statusBarColor ?? backgroundColor,
+        toolbarHeight: 0,
+        elevation: 0,
+        primary: false,
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: statusBarColor ?? Colors.transparent,
+          statusBarIconBrightness: statusBarIconBrightness,
+          statusBarBrightness: statusBarIconBrightness == Brightness.dark
+              ? Brightness.light
+              : Brightness.dark,
+        ),
+      ),
+      bottomNavigationBar: bottomNavigationBar,
+      body: body,
+    );
+  }
+}
+
 class GenericLoadingScreen extends StatelessWidget {
   final String title;
 

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:solarisdemo/screens/home/home_screen.dart';
 import 'package:solarisdemo/screens/profile/profile_screen.dart';
 import 'package:solarisdemo/screens/transactions/transactions_screen.dart';
 import 'package:solarisdemo/screens/wallet/wallet_screen.dart';
+import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 enum MainNavigationScreens {
   homeScreen,
@@ -44,20 +44,10 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MainNavigationScreenScaffold(
       backgroundColor: _getBackgroundColor(),
-      appBar: AppBar(
-        backgroundColor: _getStatusBarColor(),
-        toolbarHeight: 0,
-        elevation: 0,
-        systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarColor: _getStatusBarColor(),
-          statusBarIconBrightness: _getStatusBarIconBrightness(),
-          statusBarBrightness: _getStatusBarIconBrightness() == Brightness.dark
-              ? Brightness.light
-              : Brightness.dark,
-        ),
-      ),
+      statusBarColor: _getStatusBarColor(),
+      statusBarIconBrightness: _getStatusBarIconBrightness(),
       body: _getBody(),
       bottomNavigationBar: _buildBottomNavigationBar(),
     );
