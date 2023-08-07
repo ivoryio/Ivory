@@ -8,6 +8,7 @@ class AppToolbar extends StatelessWidget {
   final RichText? richTextTitle;
   final String title;
   final bool backButtonEnabled;
+  final double? toolbarHeight;
   final void Function()? onBackButtonPressed;
 
   const AppToolbar({
@@ -20,6 +21,7 @@ class AppToolbar extends StatelessWidget {
     this.padding,
     this.richTextTitle,
     this.title = "",
+    this.toolbarHeight,
   });
 
   @override
@@ -31,6 +33,7 @@ class AppToolbar extends StatelessWidget {
         automaticallyImplyLeading: false,
         backgroundColor: backgroundColor,
         centerTitle: true,
+        toolbarHeight: toolbarHeight,
         elevation: 0,
         leadingWidth: 25,
         leading: (backButtonEnabled && Navigator.canPop(context))
