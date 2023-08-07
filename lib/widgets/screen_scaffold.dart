@@ -8,6 +8,8 @@ class ScreenScaffold extends StatelessWidget {
   final Color? statusBarColor;
   final bool extendBodyBehindAppBar;
   final Brightness statusBarIconBrightness;
+  final bool shouldPop;
+  final VoidCallback? popAction;
 
   const ScreenScaffold({
     super.key,
@@ -15,11 +17,32 @@ class ScreenScaffold extends StatelessWidget {
     this.statusBarColor,
     this.extendBodyBehindAppBar = false,
     this.statusBarIconBrightness = Brightness.dark,
+    this.shouldPop = true,
+    this.popAction,
     required this.body,
   });
 
   @override
   Widget build(BuildContext context) {
+    if (shouldPop) {
+      if (popAction != null) {
+        return WillPopScope(
+          onWillPop: () async {
+            popAction!();
+            return true;
+          },
+          child: _buildScaffold(),
+        );
+      } else {
+        return _buildScaffold();
+      }
+    } else {
+      return WillPopScope(
+          onWillPop: () async => false, child: _buildScaffold());
+    }
+  }
+
+  Scaffold _buildScaffold() {
     return Scaffold(
       backgroundColor: backgroundColor,
       extendBodyBehindAppBar: extendBodyBehindAppBar,

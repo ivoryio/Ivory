@@ -7,7 +7,7 @@ class AppToolbar extends StatelessWidget {
   final List<Widget> actions;
   final RichText? richTextTitle;
   final Color backgroundColor;
-  final bool shouldPop;
+  final bool backButtonEnabled;
   final void Function()? onBackButtonPressed;
 
   const AppToolbar({
@@ -18,7 +18,7 @@ class AppToolbar extends StatelessWidget {
     this.padding,
     this.actions = const [],
     this.backgroundColor = Colors.transparent,
-    this.shouldPop = true,
+    this.backButtonEnabled = true,
     this.onBackButtonPressed,
   });
 
@@ -34,7 +34,7 @@ class AppToolbar extends StatelessWidget {
         automaticallyImplyLeading: false,
         leadingWidth: 25,
         titleSpacing: 8,
-        leading: (shouldPop && Navigator.canPop(context))
+        leading: (backButtonEnabled && Navigator.canPop(context))
             ? InkWell(
                 onTap: onBackButtonPressed ?? () => Navigator.of(context).pop(),
                 child: backIcon,

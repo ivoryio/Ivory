@@ -23,7 +23,7 @@ class SignupSuccessScreen extends StatelessWidget {
                 .defaultScreenHorizontalPadding),
         child: Column(
           children: [
-            const AppToolbar(title: "Signup", shouldPop: false),
+            const AppToolbar(title: "Signup", backButtonEnabled: false),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
