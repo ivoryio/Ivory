@@ -395,11 +395,6 @@ class AccountOptions extends StatelessWidget {
             ),
           ),
           AccountOptionsButton(
-            textLabel: "Request",
-            icon: Icons.receipt_long,
-            onPressed: () => print("Request"),
-          ),
-          AccountOptionsButton(
             textLabel: "Account",
             icon: Icons.info_outline,
             onPressed: () {
