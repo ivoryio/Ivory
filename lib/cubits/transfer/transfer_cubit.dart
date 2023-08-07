@@ -5,7 +5,7 @@ import 'package:uuid/uuid.dart';
 
 import '../../models/transfer.dart';
 import '../../models/person_account.dart';
-import '../../services/transaction_service.dart';
+import '../../infrastructure/transactions/transaction_service.dart';
 import '../../services/backoffice_services.dart';
 import '../../models/authorization_request.dart';
 import '../../services/change_request_service.dart';

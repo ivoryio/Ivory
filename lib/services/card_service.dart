@@ -30,7 +30,7 @@ class BankCardsService extends ApiService {
     }
   }
 
-  Future<dynamic> createVirtualCard(CreateBankCard card) async {
+  Future<dynamic> createCard(CreateBankCard card) async {
     try {
       String path = '/account/cards';
 
@@ -41,7 +41,7 @@ class BankCardsService extends ApiService {
     }
   }
 
-  Future<dynamic> activateVirtualCard(String id) async {
+  Future<dynamic> activateCard(String id) async {
     String path = '/account/cards/$id';
 
     try {

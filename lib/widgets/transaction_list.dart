@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:solarisdemo/widgets/transaction_listing_item.dart';
 
 import '../cubits/transaction_list_cubit/transaction_list_cubit.dart';
 import '../models/transaction_model.dart';
-import '../services/transaction_service.dart';
-import 'transaction_listing_item.dart';
 
 class TransactionList extends StatelessWidget {
   final Widget? header;

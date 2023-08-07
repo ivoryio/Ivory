@@ -1,19 +1,18 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart';
 import 'package:solarisdemo/widgets/rewards.dart';
 
 import '../../config.dart';
 import '../../cubits/account_summary_cubit/account_summary_cubit.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../cubits/transaction_list_cubit/transaction_list_cubit.dart';
+import '../../models/transaction_model.dart';
 import '../../models/user.dart';
 import '../../router/routing_constants.dart';
 import '../../services/person_service.dart';
-import '../../services/transaction_service.dart';
 import '../../widgets/account_balance_text.dart';
 import '../../widgets/analytics.dart';
 import '../../widgets/modal.dart';
@@ -384,15 +383,21 @@ class AccountOptions extends StatelessWidget {
           AccountOptionsButton(
             textLabel: "Transfer",
             icon: Icons.compare_arrows,
-            onPressed: () => log("Transfer"),
+            onPressed: () => print("Transfer"),
           ),
           AccountOptionsButton(
             textLabel: "Repayments",
             icon: Icons.currency_exchange,
             onPressed: () => showBottomModal(
               context: context,
-              child: const NewTransferPopup(),
+              title: 'New Transfer',
+              content: const NewTransferPopup(),
             ),
+          ),
+          AccountOptionsButton(
+            textLabel: "Request",
+            icon: Icons.receipt_long,
+            onPressed: () => print("Request"),
           ),
           AccountOptionsButton(
             textLabel: "Account",
