@@ -8,7 +8,7 @@ import 'package:solarisdemo/screens/home/home_screen.dart';
 import 'package:solarisdemo/screens/home/main_navigation_screen.dart';
 import 'package:solarisdemo/screens/landing/landing_screen.dart';
 import 'package:solarisdemo/screens/login/login_screen.dart';
-import 'package:solarisdemo/screens/profile/profile_screen.dart';
+import 'package:solarisdemo/screens/settings/settings_screen.dart';
 import 'package:solarisdemo/screens/signup/signup_screen.dart';
 import 'package:solarisdemo/screens/transactions/transactions_screen.dart';
 import 'package:solarisdemo/screens/transfer/transfer_screen.dart';
@@ -65,9 +65,9 @@ class _IvoryAppState extends State<IvoryApp> {
             // home
             HomeScreen.routeName: (context) => const MainNavigationScreen(
                 initialScreen: MainNavigationScreens.homeScreen),
-            // profile
-            ProfileScreen.routeName: (context) => const MainNavigationScreen(
-                initialScreen: MainNavigationScreens.profileScreen),
+            // settings
+            SettingsScreen.routeName: (context) => const MainNavigationScreen(
+                initialScreen: MainNavigationScreens.settingsScreen),
             //transactions
             TransactionsScreen.routeName: (context) {
               final transactionListFilter = ModalRoute.of(context)

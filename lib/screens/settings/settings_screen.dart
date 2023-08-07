@@ -3,10 +3,10 @@ import 'package:solarisdemo/widgets/app_toolbar.dart';
 
 import '../../widgets/screen.dart';
 
-class ProfileScreen extends StatelessWidget {
-  static const routeName = "/profileScreen";
+class SettingsScreen extends StatelessWidget {
+  static const routeName = "/settingsScreen";
 
-  const ProfileScreen({super.key});
+  const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,11 +15,11 @@ class ProfileScreen extends StatelessWidget {
       child: Column(
         children: [
           AppToolbar(
-            title: 'Profile',
+            title: 'Settings',
           ),
           Expanded(
             child: Center(
-              child: Text('Profile'),
+              child: Text('Settings'),
             ),
           ),
         ],

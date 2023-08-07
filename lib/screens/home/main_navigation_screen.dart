@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:solarisdemo/models/home/main_navigation_screens.dart';
 import 'package:solarisdemo/screens/home/home_screen.dart';
-import 'package:solarisdemo/screens/profile/profile_screen.dart';
+import 'package:solarisdemo/screens/settings/settings_screen.dart';
 import 'package:solarisdemo/screens/transactions/transactions_screen.dart';
 import 'package:solarisdemo/screens/wallet/cards_screen.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
@@ -10,7 +10,7 @@ final List<MainNavigationScreens> mainNavigationScreens = [
   MainNavigationScreens.homeScreen,
   MainNavigationScreens.cardsScreen,
   MainNavigationScreens.transactionsScreen,
-  MainNavigationScreens.profileScreen,
+  MainNavigationScreens.settingsScreen,
 ];
 
 class MainNavigationScreen extends StatefulWidget {
@@ -55,8 +55,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         return const CardsScreen();
       case MainNavigationScreens.transactionsScreen:
         return TransactionsScreen(transactionListFilter: widget.screenParams);
-      case MainNavigationScreens.profileScreen:
-        return const ProfileScreen();
+      case MainNavigationScreens.settingsScreen:
+        return const SettingsScreen();
     }
   }
 
@@ -107,10 +107,10 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           icon: Icon(Icons.payments_outlined),
           label: 'Transactions',
         );
-      case MainNavigationScreens.profileScreen:
+      case MainNavigationScreens.settingsScreen:
         return const BottomNavigationBarItem(
-          icon: Icon(Icons.person),
-          label: 'Profile',
+          icon: Icon(Icons.settings_outlined),
+          label: 'Settings',
         );
     }
   }
