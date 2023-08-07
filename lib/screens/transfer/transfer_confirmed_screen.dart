@@ -23,7 +23,11 @@ class TransferConfirmedScreen extends StatelessWidget {
             child: StickyBottomContent(
               buttonText: "OK, got it",
               onContinueCallback: () {
-                Navigator.pushReplacementNamed(context, HomeScreen.routeName);
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  HomeScreen.routeName,
+                  (route) => false,
+                );
               },
             ),
           )
