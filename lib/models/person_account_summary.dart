@@ -8,6 +8,7 @@ class PersonAccountSummary {
     this.income,
     this.spending,
     this.iban,
+    this.bic,
     this.balance,
     this.availableBalance,
   });
@@ -16,6 +17,7 @@ class PersonAccountSummary {
   double? income;
   double? spending;
   String? iban;
+  String? bic;
   Balance? balance;
   Balance? availableBalance;
 
@@ -30,6 +32,7 @@ class PersonAccountSummary {
         income: json["income"]?.toDouble() ?? zeroValue,
         spending: json["spending"]?.toDouble() ?? zeroValue,
         iban: json["iban"] ?? emptyStringValue,
+        bic: json["bic"] ?? emptyStringValue,
         balance:
             json["balance"] == null ? null : Balance.fromJson(json["balance"]),
         availableBalance: json["available_balance"] == null
@@ -42,6 +45,7 @@ class PersonAccountSummary {
         "income": income,
         "spending": spending,
         "iban": iban,
+        "bic": bic,
         "balance": balance?.toJson(),
         "available_balance": availableBalance?.toJson(),
       };
