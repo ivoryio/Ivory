@@ -2,11 +2,11 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:solarisdemo/router/routing_constants.dart';
 import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/yvory_list_tile.dart';
 
 import '../../config.dart';
-import '../../router/routing_constants.dart';
 import '../../widgets/screen.dart';
 
 class RepaymentsScreen extends StatelessWidget {
@@ -15,16 +15,12 @@ class RepaymentsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Screen(
-      scrollPhysics: const NeverScrollableScrollPhysics(),
       titleTextStyle: const TextStyle(
         fontSize: 16,
         height: 24 / 16,
         fontWeight: FontWeight.w600,
       ),
       backButtonIcon: const Icon(Icons.arrow_back, size: 24),
-      customBackButtonCallback: () {
-        context.push(homeRoute.path);
-      },
       centerTitle: true,
       hideAppBar: false,
       hideBackButton: false,
@@ -45,13 +41,9 @@ class RepaymentsScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Repayments',
-                  style: TextStyle(
-                    fontSize: 32,
-                    height: 40 / 32,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: ClientConfig.getTextStyleScheme().heading1,
                 ),
                 const SizedBox(height: 24),
                 Column(
@@ -177,7 +169,7 @@ class RepaymentsScreen extends StatelessWidget {
             title: 'Set repayment reminder',
             subtitle: 'Before we debit your reference account',
             onTap: () {
-              log('Set repayment reminder');
+              context.push(repaymentReminderRoute.path);
             },
           ),
           YvoryListTile(
