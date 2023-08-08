@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:solarisdemo/config.dart';
 
 import '../../router/routing_constants.dart';
@@ -99,7 +99,7 @@ class ChooseRepaymentType extends StatefulWidget {
 class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
   RepaymentType _selectedOption = RepaymentType.percentage;
 
-  double sliderValue = 0.0;
+  double sliderValue = 0.2;
 
   @override
   Widget build(BuildContext context) {
@@ -184,74 +184,180 @@ class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
             ],
           ),
           if (type == RepaymentType.percentage && type == _selectedOption) ...[
-            const DescriptionRepaymentRate(
-                message:
-                    'Choose your preferred percentage rate. The minimum is 1% and the maximum is 9%.'),
-            const ChoosePercentageRate(),
-            Slider(
-              value: sliderValue,
-              onChanged: (double value) {
-                setState(() {
-                  sliderValue = value;
-                });
-              },
-              onChangeEnd: (double value) {
-                setState(() {
-                  sliderValue = value;
-                });
-              },
-              min: 0,
-              max: 1,
-              label: '${(sliderValue * 100).round()}%',
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const SizedBox(height: 8),
+                const Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Choose your preferred percentage rate. The minimum is 5% and the maximum is 90%.',
+                        style: TextStyle(
+                          fontSize: 14,
+                          height: 1.285, // 18 / 14,
+                          fontWeight: FontWeight.w400,
+                          color: Color(0xFF15141E),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SliderTheme(
+                      data: const SliderThemeData(
+                        trackHeight: 8,
+                        activeTrackColor: Color(0xFF2575FC),
+                        inactiveTrackColor: Color(0xFFE9EAEB),
+                        thumbShape:
+                            RoundSliderThumbShape(enabledThumbRadius: 18),
+                        thumbColor: Color(0xFF071034),
+                        overlayColor: Color(0x00FFFFFF),
+                        overlayShape:
+                            RoundSliderOverlayShape(overlayRadius: 20),
+                        valueIndicatorColor: Color(0xFF2575FC),
+                        valueIndicatorTextStyle: TextStyle(
+                          color: Color(0xFFFFFFFF),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        showValueIndicator: ShowValueIndicator.always,
+                      ),
+                      child: Expanded(
+                        child: Slider(
+                          value: sliderValue,
+                          onChanged: (double newValue) {
+                            setState(() {
+                              sliderValue = newValue;
+                            });
+                          },
+                          onChangeEnd: (double newValue) {
+                            setState(() {
+                              sliderValue = newValue;
+                            });
+                          },
+                          min: 0.05,
+                          max: 0.9,
+                          label: '${(sliderValue * 100).round()}%',
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: 12),
+                      child: Text('5%'),
+                    ),
+                    Text('90%'),
+                  ],
+                ),
+              ],
             ),
           ],
-          if (type == RepaymentType.fixed && type == _selectedOption) ...[
-            const DescriptionRepaymentRate(
-                message:
-                    'Choose your preferred fixed rate. The minimum is €500 and the maximum is €9,000.'),
-            const ChooseFixedRate(),
-          ]
+          if (type == RepaymentType.fixed && type == _selectedOption)
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const SizedBox(height: 8),
+                const Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Choose your preferred fixed rate. The minimum is €500 and the maximum is €9,000.',
+                        style: TextStyle(
+                          fontSize: 14,
+                          height: 1.285, // 18 / 14,
+                          fontWeight: FontWeight.w400,
+                          color: Color(0xFF15141E),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        keyboardType: TextInputType.number,
+                        // inputFormatters: <TextInputFormatter>[
+                        //   // FilteringTextInputFormatter.allow(
+                        //   //     RegExp(r'^\d*(\.?)\d*$')),
+                        //   FilteringTextInputFormatter.digitsOnly ,
+                        // ],
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
+                          filled: true,
+                          fillColor: Color(0xFFF8F9FA),
+                          prefixIcon: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 1,
+                                color: Color(0xFFADADB4),
+                                style: BorderStyle.solid,
+                              ),
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(8),
+                                  bottomLeft: Radius.circular(8)),
+                              color: Color(0xFFF8F9FA),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
+                              child: Icon(
+                                Icons.euro,
+                                size: 24,
+                                color: Color(0xFFADADB4),
+                              ),
+                            ),
+                          ),
+                          prefixStyle: TextField.materialMisspelledTextStyle,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                            borderSide: BorderSide(
+                              width: 1,
+                              color: Color(0xFFADADB4),
+                              style: BorderStyle.solid,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                            borderSide: BorderSide(
+                              width: 1,
+                              color: Color(0xFFADADB4),
+                              style: BorderStyle.solid,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                            borderSide: BorderSide(
+                              width: 1,
+                              color: Color(0xFFADADB4),
+                              style: BorderStyle.solid,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
         ],
       ),
     );
-  }
-}
-
-class DescriptionRepaymentRate extends StatelessWidget {
-  final String message;
-
-  const DescriptionRepaymentRate({super.key, required this.message});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        const SizedBox(height: 8),
-        Expanded(
-          child: Text(
-            message,
-            style: const TextStyle(
-              fontSize: 14,
-              height: 1.285, // 18 / 14,
-              fontWeight: FontWeight.w400,
-              color: Color(0xFF15141E),
-            ),
-          ),
-        ),
-        const SizedBox(height: 16),
-      ],
-    );
-  }
-}
-
-class ChoosePercentageRate extends StatelessWidget {
-  const ChoosePercentageRate({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Row(children: [
-      Text('Here will be the slider'),
-    ]);
   }
 }
 
