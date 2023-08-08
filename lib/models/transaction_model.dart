@@ -1,3 +1,5 @@
+import 'package:solarisdemo/utilities/format.dart';
+
 class Transaction {
   String? id;
   String? bookingType;
@@ -92,5 +94,53 @@ class Amount {
     data['unit'] = unit;
     data['currency'] = currency;
     return data;
+  }
+}
+
+class TransactionListFilter {
+  final DateTime? bookingDateMin;
+  final DateTime? bookingDateMax;
+  final String? searchString;
+  final int? page;
+  final int? size;
+  final String? sort;
+
+  const TransactionListFilter({
+    this.bookingDateMin,
+    this.bookingDateMax,
+    this.searchString,
+    this.page,
+    this.size,
+    this.sort,
+  });
+
+  Map<String, String> toMap() {
+    Map<String, String> map = {};
+
+    if (bookingDateMin != null) {
+      map["filter[booking_date][min]"] = Format.date(bookingDateMin!);
+    }
+
+    if (bookingDateMax != null) {
+      map["filter[booking_date][max]"] = Format.date(bookingDateMax!);
+    }
+
+    if (page != null) {
+      map["page[number]"] = page.toString();
+    }
+
+    if (size != null) {
+      map["page[size]"] = size.toString();
+    }
+
+    if (sort != null) {
+      map["sort"] = sort!;
+    }
+
+    if(searchString != null) {
+      map["filter[description]"] = searchString!;
+    }
+
+    return map;
   }
 }

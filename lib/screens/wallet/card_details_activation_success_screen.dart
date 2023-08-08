@@ -9,6 +9,8 @@ import '../../widgets/card_widget.dart';
 import '../../widgets/screen.dart';
 
 class BankCardDetailsActivationSuccessScreen extends StatelessWidget {
+  static const routeName = '/bankCardDetailsActivationSuccessScreen';
+
   const BankCardDetailsActivationSuccessScreen({super.key});
 
   @override

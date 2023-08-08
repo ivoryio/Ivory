@@ -1,91 +1,129 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:go_router/go_router.dart';
-import 'package:solarisdemo/config.dart';
 
-import '../../router/routing_constants.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/widgets/app_toolbar.dart';
+import 'package:solarisdemo/widgets/screen_scaffold.dart';
+
 import '../../widgets/button.dart';
 import '../../widgets/modal.dart';
-import '../../widgets/screen.dart';
 
 class ChangeRepaymentRateScreen extends StatelessWidget {
+  static const routeName = "/changeRepaymentRateScreen";
+
   const ChangeRepaymentRateScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Screen(
-      scrollPhysics: const NeverScrollableScrollPhysics(),
-      titleTextStyle: const TextStyle(
-        fontSize: 16,
-        height: 24 / 16,
-        fontWeight: FontWeight.w600,
-      ),
-      backButtonIcon: const Icon(Icons.arrow_back, size: 24),
-      customBackButtonCallback: () {
-        context.push(repaymentsRoute.path);
-      },
-      centerTitle: true,
-      hideAppBar: false,
-      hideBackButton: false,
-      hideBottomNavbar: true,
-      child: Column(
-        children: [
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(
-                ClientConfig.getCustomClientUiSettings()
-                    .defaultScreenVerticalPadding,
-                ClientConfig.getCustomClientUiSettings()
-                    .defaultScreenVerticalPadding,
-                ClientConfig.getCustomClientUiSettings()
-                    .defaultScreenVerticalPadding,
-                8,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Change repayment rate',
-                            style: ClientConfig.getTextStyleScheme().heading1,
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            'You can decide whether you prefer the flexibility of a percentage rate repayment or the predictability of fixed repayments.',
-                            style: ClientConfig.getTextStyleScheme()
-                                .bodyLargeRegular,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 24),
-                      const ChooseRepaymentType(),
-                    ],
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 48,
-                    child: PrimaryButton(
-                      text: "Save changes",
-                      disabledColor: const Color(0xFFDFE2E6),
-                      onPressed: () {
-                        Navigator.of(context, rootNavigator: true).pop();
-                      },
-                    ),
-                  ),
-                ],
+    return ScreenScaffold(
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: ClientConfig.getCustomClientUiSettings()
+              .defaultScreenHorizontalPadding,
+        ),
+        child: Column(
+          children: [
+            AppToolbar(),
+            Text(
+              'Change repayment rate',
+              style: ClientConfig.getTextStyleScheme().heading1,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'You can decide whether you prefer the flexibility of a percentage rate repayment or the predictability of fixed repayments.',
+              style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+            ),
+            const SizedBox(height: 24),
+            const ChooseRepaymentType(),
+            Spacer(),
+            SizedBox(
+              width: double.infinity,
+              height: 48,
+              child: PrimaryButton(
+                text: "Save changes",
+                disabledColor: const Color(0xFFDFE2E6),
+                onPressed: () {
+                  Navigator.of(context, rootNavigator: true).pop();
+                },
               ),
             ),
-          ),
-        ],
+            const SizedBox(height: 8),
+          ],
+        ),
       ),
     );
+    // return Screen(
+    //   scrollPhysics: const NeverScrollableScrollPhysics(),
+    //   titleTextStyle: const TextStyle(
+    //     fontSize: 16,
+    //     height: 24 / 16,
+    //     fontWeight: FontWeight.w600,
+    //   ),
+    //   backButtonIcon: const Icon(Icons.arrow_back, size: 24),
+    //   customBackButtonCallback: () {
+    //     context.push(repaymentsRoute.path);
+    //   },
+    //   centerTitle: true,
+    //   hideAppBar: false,
+    //   hideBackButton: false,
+    //   hideBottomNavbar: true,
+    //   child: Column(
+    //     children: [
+    //       Expanded(
+    //         child: Padding(
+    //           padding: EdgeInsets.fromLTRB(
+    //             ClientConfig.getCustomClientUiSettings()
+    //                 .defaultScreenVerticalPadding,
+    //             ClientConfig.getCustomClientUiSettings()
+    //                 .defaultScreenVerticalPadding,
+    //             ClientConfig.getCustomClientUiSettings()
+    //                 .defaultScreenVerticalPadding,
+    //             8,
+    //           ),
+    //           child: Column(
+    //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //             children: [
+    //               Column(
+    //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //                 children: [
+    //                   Column(
+    //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //                     crossAxisAlignment: CrossAxisAlignment.start,
+    //                     children: [
+    //                       Text(
+    //                         'Change repayment rate',
+    //                         style: ClientConfig.getTextStyleScheme().heading1,
+    //                       ),
+    //                       const SizedBox(height: 16),
+    //                       Text(
+    //                         'You can decide whether you prefer the flexibility of a percentage rate repayment or the predictability of fixed repayments.',
+    //                         style: ClientConfig.getTextStyleScheme()
+    //                             .bodyLargeRegular,
+    //                       ),
+    //                     ],
+    //                   ),
+    //                   const SizedBox(height: 24),
+    //                   const ChooseRepaymentType(),
+    //                 ],
+    //               ),
+    //               SizedBox(
+    //                 width: double.infinity,
+    //                 height: 48,
+    //                 child: PrimaryButton(
+    //                   text: "Save changes",
+    //                   disabledColor: const Color(0xFFDFE2E6),
+    //                   onPressed: () {
+    //                     Navigator.of(context, rootNavigator: true).pop();
+    //                   },
+    //                 ),
+    //               ),
+    //             ],
+    //           ),
+    //         ),
+    //       ),
+    //     ],
+    //   ),
+    // );
   }
 }
 
@@ -219,7 +257,7 @@ class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
                         overlayColor: Color(0x00FFFFFF),
                         overlayShape:
                             RoundSliderOverlayShape(overlayRadius: 20),
-                        valueIndicatorColor: Color(0xFF2575FC),
+                        valueIndicatorColor: Color(0xFF255FC),
                         valueIndicatorTextStyle: TextStyle(
                           color: Color(0xFFFFFFFF),
                           fontSize: 14,
