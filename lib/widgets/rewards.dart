@@ -115,8 +115,11 @@ class RewardCard extends StatelessWidget {
                       shape: BoxShape.circle,
                     ),
                     child: Center(
-                      child: Image.asset(reward.providerIconUrl,
-                          width: 24, height: 24),
+                      child: Image.asset(
+                        reward.providerIconUrl,
+                        width: 24,
+                        height: 24,
+                      ),
                     ),
                   ),
                   const SizedBox(

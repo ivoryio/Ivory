@@ -39,9 +39,8 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     AuthenticatedUser user = context.read<AuthCubit>().state.user!;
 
-    AccountSummaryCubit accountSummaryCubit =
-        AccountSummaryCubit(personService: PersonService(user: user.cognito))
-          ..getAccountSummary();
+    AccountSummaryCubit accountSummaryCubit = AccountSummaryCubit(personService: PersonService(user: user.cognito))
+      ..getAccountSummary();
 
     TransactionListCubit transactionListCubit = TransactionListCubit(
       transactionService: TransactionService(user: user.cognito),
@@ -110,8 +109,7 @@ class HomePageContent extends StatelessWidget {
             accountSummaryCubit: accountSummaryCubit,
           ),
           Padding(
-            padding:
-                ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
+            padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
             child: Column(
               children: [
                 TransactionList(
@@ -127,15 +125,13 @@ class HomePageContent extends StatelessWidget {
             ),
           ),
           Padding(
-            padding:
-                ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
+            padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
             child: Analytics(
               transactionListCubit: transactionListCubit,
             ),
           ),
           Padding(
-            padding:
-                ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
+            padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
             child: const Rewards(),
           ),
         ],
@@ -164,8 +160,7 @@ class HomePageHeader extends StatelessWidget {
             return Container(
               padding: EdgeInsets.symmetric(
                 vertical: 10,
-                horizontal: ClientConfig.getCustomClientUiSettings()
-                    .defaultScreenHorizontalPadding,
+                horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
               ),
               width: MediaQuery.of(context).size.width,
               decoration: const BoxDecoration(
@@ -187,8 +182,7 @@ class HomePageHeader extends StatelessWidget {
           if (state is AccountSummaryCubitLoaded) {
             return Container(
               padding: EdgeInsets.symmetric(
-                horizontal: ClientConfig.getCustomClientUiSettings()
-                    .defaultScreenHorizontalPadding,
+                horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
               ),
               width: MediaQuery.of(context).size.width,
               decoration: const BoxDecoration(
@@ -300,12 +294,10 @@ class AccountBalance extends StatelessWidget {
         LinearPercentIndicator(
           lineHeight: 8,
           barRadius: const Radius.circular(40),
-          percent: ((user.personAccount.spending?.value ?? 0) /
-                      (user.personAccount.accountLimit?.value ?? 0))
-                  .isInfinite
-              ? 0
-              : (user.personAccount.spending?.value ?? 0) /
-                  (user.personAccount.accountLimit?.value ?? 0),
+          percent:
+              ((user.personAccount.spending?.value ?? 0) / (user.personAccount.accountLimit?.value ?? 0)).isInfinite
+                  ? 0
+                  : (user.personAccount.spending?.value ?? 0) / (user.personAccount.accountLimit?.value ?? 0),
           backgroundColor: const Color(0xFF313038),
           progressColor: const Color(0xFFCC0000),
           curve: Curves.fastOutSlowIn,
@@ -391,12 +383,18 @@ class AccountOptions extends StatelessWidget {
         children: [
           AccountOptionsButton(
             textLabel: "Transfer",
-            icon: Icons.compare_arrows,
+            icon: const ImageIcon(
+              AssetImage('assets/icons/compare_arrows.png'),
+              size: 24,
+            ),
             onPressed: () => print("Transfer"),
           ),
           AccountOptionsButton(
             textLabel: "Repayments",
-            icon: Icons.currency_exchange,
+            icon: const ImageIcon(
+              AssetImage('assets/icons/currency_exchange_euro_repay.png'),
+              size: 24,
+            ),
             onPressed: () => showBottomModal(
               context: context,
               title: 'New Transfer',
@@ -405,7 +403,10 @@ class AccountOptions extends StatelessWidget {
           ),
           AccountOptionsButton(
             textLabel: "Account",
-            icon: Icons.info_outline,
+            icon: const ImageIcon(
+              AssetImage('assets/icons/info.png'),
+              size: 24,
+            ),
             onPressed: () {
               Navigator.pushNamed(context, AccountDetailsScreen.routeName);
             },
@@ -418,14 +419,10 @@ class AccountOptions extends StatelessWidget {
 
 class AccountOptionsButton extends StatelessWidget {
   final String textLabel;
-  final IconData icon;
+  final Widget icon;
   final Function onPressed;
 
-  const AccountOptionsButton(
-      {super.key,
-      required this.textLabel,
-      required this.icon,
-      required this.onPressed});
+  const AccountOptionsButton({super.key, required this.textLabel, required this.icon, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -439,7 +436,15 @@ class AccountOptionsButton extends StatelessWidget {
             shape: const CircleBorder(),
             splashFactory: NoSplash.splashFactory,
           ),
-          child: Icon(icon, color: Colors.black),
+          child: Center(
+            child: IconButton(
+              icon: icon,
+              splashColor: Colors.transparent,
+              color: Colors.black,
+              onPressed: () => onPressed(),
+              iconSize: 24,
+            ),
+          ),
         ),
         Padding(
           padding: const EdgeInsets.only(top: 10),
