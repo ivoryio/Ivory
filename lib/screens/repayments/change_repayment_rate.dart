@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/screens/repayments/repayment_successfully_changed.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
@@ -23,7 +25,7 @@ class ChangeRepaymentRateScreen extends StatelessWidget {
         ),
         child: Column(
           children: [
-            AppToolbar(),
+            const AppToolbar(),
             Text(
               'Change repayment rate',
               style: ClientConfig.getTextStyleScheme().heading1,
@@ -35,15 +37,19 @@ class ChangeRepaymentRateScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             const ChooseRepaymentType(),
-            Spacer(),
+            const Spacer(),
             SizedBox(
               width: double.infinity,
               height: 48,
-              child: PrimaryButton(
+              child: Button(
                 text: "Save changes",
                 disabledColor: const Color(0xFFDFE2E6),
+                color: const Color(0xFF2575FC),
                 onPressed: () {
-                  Navigator.of(context, rootNavigator: true).pop();
+                  Navigator.pushNamed(
+                    context,
+                    RepaymentSuccessfullyChanged.routeName,
+                  );
                 },
               ),
             ),
@@ -52,78 +58,6 @@ class ChangeRepaymentRateScreen extends StatelessWidget {
         ),
       ),
     );
-    // return Screen(
-    //   scrollPhysics: const NeverScrollableScrollPhysics(),
-    //   titleTextStyle: const TextStyle(
-    //     fontSize: 16,
-    //     height: 24 / 16,
-    //     fontWeight: FontWeight.w600,
-    //   ),
-    //   backButtonIcon: const Icon(Icons.arrow_back, size: 24),
-    //   customBackButtonCallback: () {
-    //     context.push(repaymentsRoute.path);
-    //   },
-    //   centerTitle: true,
-    //   hideAppBar: false,
-    //   hideBackButton: false,
-    //   hideBottomNavbar: true,
-    //   child: Column(
-    //     children: [
-    //       Expanded(
-    //         child: Padding(
-    //           padding: EdgeInsets.fromLTRB(
-    //             ClientConfig.getCustomClientUiSettings()
-    //                 .defaultScreenVerticalPadding,
-    //             ClientConfig.getCustomClientUiSettings()
-    //                 .defaultScreenVerticalPadding,
-    //             ClientConfig.getCustomClientUiSettings()
-    //                 .defaultScreenVerticalPadding,
-    //             8,
-    //           ),
-    //           child: Column(
-    //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //             children: [
-    //               Column(
-    //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //                 children: [
-    //                   Column(
-    //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //                     crossAxisAlignment: CrossAxisAlignment.start,
-    //                     children: [
-    //                       Text(
-    //                         'Change repayment rate',
-    //                         style: ClientConfig.getTextStyleScheme().heading1,
-    //                       ),
-    //                       const SizedBox(height: 16),
-    //                       Text(
-    //                         'You can decide whether you prefer the flexibility of a percentage rate repayment or the predictability of fixed repayments.',
-    //                         style: ClientConfig.getTextStyleScheme()
-    //                             .bodyLargeRegular,
-    //                       ),
-    //                     ],
-    //                   ),
-    //                   const SizedBox(height: 24),
-    //                   const ChooseRepaymentType(),
-    //                 ],
-    //               ),
-    //               SizedBox(
-    //                 width: double.infinity,
-    //                 height: 48,
-    //                 child: PrimaryButton(
-    //                   text: "Save changes",
-    //                   disabledColor: const Color(0xFFDFE2E6),
-    //                   onPressed: () {
-    //                     Navigator.of(context, rootNavigator: true).pop();
-    //                   },
-    //                 ),
-    //               ),
-    //             ],
-    //           ),
-    //         ),
-    //       ),
-    //     ],
-    //   ),
-    // );
   }
 }
 
@@ -138,6 +72,8 @@ class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
   RepaymentType _selectedOption = RepaymentType.percentage;
 
   double sliderValue = 0.2;
+  double min = 0.05;
+  double max = 0.9;
 
   @override
   Widget build(BuildContext context) {
@@ -145,14 +81,14 @@ class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildRepaymentOption(type: RepaymentType.percentage),
+        _buildRepaymentOptions(type: RepaymentType.percentage),
         const SizedBox(height: 16),
-        _buildRepaymentOption(type: RepaymentType.fixed),
+        _buildRepaymentOptions(type: RepaymentType.fixed),
       ],
     );
   }
 
-  Widget _buildRepaymentOption({required RepaymentType type}) {
+  Widget _buildRepaymentOptions({required RepaymentType type}) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -247,53 +183,60 @@ class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SliderTheme(
-                      data: const SliderThemeData(
+                      data: SliderThemeData(
                         trackHeight: 8,
-                        activeTrackColor: Color(0xFF2575FC),
-                        inactiveTrackColor: Color(0xFFE9EAEB),
-                        thumbShape:
-                            RoundSliderThumbShape(enabledThumbRadius: 18),
-                        thumbColor: Color(0xFF071034),
-                        overlayColor: Color(0x00FFFFFF),
+                        activeTrackColor: const Color(0xFF2575FC),
+                        inactiveTrackColor: const Color(0xFFE9EAEB),
+                        thumbColor: const Color(0xFF071034),
+                        thumbShape: CustomThumb(
+                          min: min,
+                          max: max,
+                        ),
+                        // thumbShape: RoundSliderThumbShape(
+                        //   enabledThumbRadius: 20,
+                        // ),
+                        overlayColor: const Color(0x00FFFFFF),
                         overlayShape:
-                            RoundSliderOverlayShape(overlayRadius: 20),
-                        valueIndicatorColor: Color(0xFF255FC),
-                        valueIndicatorTextStyle: TextStyle(
+                            const RoundSliderOverlayShape(overlayRadius: 20),
+                        valueIndicatorColor: const Color(0xFF2575FC),
+                        valueIndicatorTextStyle: const TextStyle(
                           color: Color(0xFFFFFFFF),
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                         ),
-                        showValueIndicator: ShowValueIndicator.always,
+                        valueIndicatorShape: const RoundSliderThumbShape(),
                       ),
                       child: Expanded(
                         child: Slider(
                           value: sliderValue,
                           onChanged: (double newValue) {
                             setState(() {
-                              sliderValue = newValue;
+                              print('NEW VALUE ===> $newValue');
+                              sliderValue = newValue.clamp(min, max);
                             });
                           },
                           onChangeEnd: (double newValue) {
                             setState(() {
-                              sliderValue = newValue;
+                              print('FINAL VALUE ===> $newValue');
+                              sliderValue = newValue.clamp(min, max);
                             });
                           },
-                          min: 0.05,
-                          max: 0.9,
+                          min: min,
+                          max: max,
                           label: '${(sliderValue * 100).round()}%',
                         ),
                       ),
                     ),
                   ],
                 ),
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Padding(
                       padding: EdgeInsets.only(left: 12),
-                      child: Text('5%'),
+                      child: Text('${(min * 100).round()}%'),
                     ),
-                    Text('90%'),
+                    Text('${(max * 100).round()}%'),
                   ],
                 ),
               ],
@@ -328,30 +271,30 @@ class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
                       child: TextField(
                         keyboardType: TextInputType.number,
                         // inputFormatters: <TextInputFormatter>[
-                        //   // FilteringTextInputFormatter.allow(
-                        //   //     RegExp(r'^\d*(\.?)\d*$')),
-                        //   FilteringTextInputFormatter.digitsOnly ,
+                        //   FilteringTextInputFormatter.allow(
+                        //       RegExp(r'^\d+\.?\d*$')),
                         // ],
                         decoration: InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(
+                          contentPadding: const EdgeInsets.symmetric(
                             horizontal: 16,
                             vertical: 12,
                           ),
+                          hintText: 'Enter amount',
                           filled: true,
-                          fillColor: Color(0xFFF8F9FA),
+                          fillColor: const Color(0xFFF8F9FA),
                           prefixIcon: Container(
                             decoration: BoxDecoration(
                               border: Border.all(
                                 width: 1,
-                                color: Color(0xFFADADB4),
+                                color: const Color(0xFFADADB4),
                                 style: BorderStyle.solid,
                               ),
-                              borderRadius: BorderRadius.only(
+                              borderRadius: const BorderRadius.only(
                                   topLeft: Radius.circular(8),
                                   bottomLeft: Radius.circular(8)),
-                              color: Color(0xFFF8F9FA),
+                              color: const Color(0xFFF8F9FA),
                             ),
-                            child: Padding(
+                            child: const Padding(
                               padding: EdgeInsets.symmetric(
                                   horizontal: 16, vertical: 8),
                               child: Icon(
@@ -362,7 +305,7 @@ class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
                             ),
                           ),
                           prefixStyle: TextField.materialMisspelledTextStyle,
-                          border: OutlineInputBorder(
+                          border: const OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(8)),
                             borderSide: BorderSide(
                               width: 1,
@@ -370,7 +313,7 @@ class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
                               style: BorderStyle.solid,
                             ),
                           ),
-                          enabledBorder: OutlineInputBorder(
+                          enabledBorder: const OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(8)),
                             borderSide: BorderSide(
                               width: 1,
@@ -378,7 +321,7 @@ class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
                               style: BorderStyle.solid,
                             ),
                           ),
-                          focusedBorder: OutlineInputBorder(
+                          focusedBorder: const OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(8)),
                             borderSide: BorderSide(
                               width: 1,
@@ -399,14 +342,63 @@ class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
   }
 }
 
-class ChooseFixedRate extends StatelessWidget {
-  const ChooseFixedRate({super.key});
+class CustomThumb extends SliderComponentShape {
+  final double min;
+  final double max;
+
+  const CustomThumb({required this.min, required this.max});
 
   @override
-  Widget build(BuildContext context) {
-    return const Row(children: [
-      Text('Here will be the text field'),
-    ]);
+  Size getPreferredSize(bool isEnabled, bool isDiscrete) {
+    return const Size.fromRadius(20);
+  }
+
+  @override
+  void paint(
+    PaintingContext context,
+    Offset center, {
+    required Animation<double> activationAnimation,
+    required Animation<double> enableAnimation,
+    bool isDiscrete = false,
+    bool isEnabled = false,
+    bool? isOnTop,
+    TextPainter? labelPainter,
+    double? value,
+    double? textScaleFactor,
+    RenderBox? parentBox,
+    SliderThemeData? sliderTheme,
+    Size? sizeWithOverflow,
+    TextDirection? textDirection,
+    bool isPressed = false,
+  }) {
+    final canvas = context.canvas;
+    final fillPaint = Paint()
+      ..color = sliderTheme!.thumbColor!
+      ..style = PaintingStyle.fill;
+
+    final borderPaint = Paint()
+      ..strokeWidth = 2
+      ..style = PaintingStyle.stroke;
+
+    final centerWithOffset = center + const Offset(0, 0);
+
+    canvas.drawCircle(centerWithOffset,
+        getPreferredSize(isEnabled, isDiscrete).width / 2, fillPaint);
+    canvas.drawCircle(centerWithOffset,
+        getPreferredSize(isEnabled, isDiscrete).width / 2, borderPaint);
+
+    final valuePainter = TextPainter(
+      text: TextSpan(
+        text: '${(value!.clamp(min, max) * 100).round()}%',
+        style: sliderTheme.valueIndicatorTextStyle,
+      ),
+      textDirection: TextDirection.ltr,
+      textAlign: TextAlign.center,
+    );
+    valuePainter.layout();
+    final valueOffset = centerWithOffset -
+        Offset(valuePainter.width / 2, valuePainter.height / 2);
+    valuePainter.paint(canvas, valueOffset);
   }
 }
 

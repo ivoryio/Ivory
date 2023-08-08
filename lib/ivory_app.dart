@@ -14,6 +14,7 @@ import 'package:solarisdemo/screens/home/home_screen.dart';
 import 'package:solarisdemo/screens/home/main_navigation_screen.dart';
 import 'package:solarisdemo/screens/landing/landing_screen.dart';
 import 'package:solarisdemo/screens/login/login_screen.dart';
+import 'package:solarisdemo/screens/repayments/repayment_successfully_changed.dart';
 import 'package:solarisdemo/screens/repayments/repayments_screen.dart';
 import 'package:solarisdemo/screens/settings/settings_screen.dart';
 import 'package:solarisdemo/screens/signup/signup_screen.dart';
@@ -107,6 +108,8 @@ class _IvoryAppState extends State<IvoryApp> {
               RepaymentsScreen.routeName: (context) => const RepaymentsScreen(),
               ChangeRepaymentRateScreen.routeName: (context) =>
                   const ChangeRepaymentRateScreen(),
+              RepaymentSuccessfullyChanged.routeName: (context) =>
+                  const RepaymentSuccessfullyChanged(),
               // transfer
               TransferScreen.routeName: (context) {
                 final transferScreenParams = ModalRoute.of(context)
