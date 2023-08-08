@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:solarisdemo/screens/splitpay/splitpay_screen.dart';
 
 import '../cubits/auth_cubit/auth_cubit.dart';
 import '../models/transaction_model.dart';
 import '../models/user.dart';
-import '../router/routing_constants.dart';
 import '../utilities/format.dart';
 import 'button.dart';
 import 'modal.dart';
-import 'popup_header.dart';
 import 'spaced_column.dart';
 import 'text_currency_value.dart';
 
@@ -36,9 +34,7 @@ class TransactionListItem extends StatelessWidget {
     var senderName = removeUnrelatedWords(transaction.senderName);
 
     final date = transaction.recordedAt!.toIso8601String();
-    final displayedName = user.personAccount.iban == transaction.senderIban
-        ? recipientName
-        : senderName;
+    final displayedName = user.personAccount.iban == transaction.senderIban ? recipientName : senderName;
     final description = transaction.description!;
     final amount = transaction.amount?.value ?? 0;
 
@@ -114,10 +110,7 @@ class TransactionCard extends StatelessWidget {
                 width: 16,
               ),
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(
-                    recipientName.isNotEmpty
-                        ? recipientName
-                        : defaultTransactionRecipientName,
+                Text(recipientName.isNotEmpty ? recipientName : defaultTransactionRecipientName,
                     style: const TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 16,
@@ -153,8 +146,7 @@ class TransactionBottomPopup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final DateFormat dateFormatter = DateFormat('d MMMM yyyy, HH:Hm ');
-    final String formattedDate = dateFormatter
-        .format(DateTime.parse(transaction.recordedAt!.toIso8601String()));
+    final String formattedDate = dateFormatter.format(DateTime.parse(transaction.recordedAt!.toIso8601String()));
 
     return Column(
       children: [
@@ -396,9 +388,10 @@ class TransactionBottomPopup extends StatelessWidget {
               child: PrimaryButton(
                 text: "Convert into instalments",
                 onPressed: () {
-                  context.push(
-                    splitpaySelectRoute.path,
-                    extra: transaction,
+                  Navigator.popAndPushNamed(
+                    context,
+                    SplitpayScreen.routeName,
+                    arguments: SplitpayScreenParams(transaction: transaction),
                   );
                 },
               ),

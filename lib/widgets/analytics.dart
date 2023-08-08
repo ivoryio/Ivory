@@ -122,10 +122,8 @@ class AnalyticsState extends State<Analytics> {
                                             sections: showingSections(),
                                             startDegreeOffset: -30,
                                           ),
-                                          swapAnimationDuration: const Duration(
-                                              milliseconds: 150), // Optional
-                                          swapAnimationCurve:
-                                              Curves.linear, // Optional
+                                          swapAnimationDuration: const Duration(milliseconds: 150), // Optional
+                                          swapAnimationCurve: Curves.linear, // Optional
                                         ),
                                       ),
                                     ),
@@ -160,8 +158,7 @@ class AnalyticsState extends State<Analytics> {
 
   List<PieChartSectionData> showingSections() {
     return List.generate(6, (i) {
-      final pieChartItemRadius =
-          (MediaQuery.of(context).size.width / 4.2) - _analyticsPadding;
+      final pieChartItemRadius = (MediaQuery.of(context).size.width / 4.2) - _analyticsPadding;
 
       switch (i) {
         case 0:

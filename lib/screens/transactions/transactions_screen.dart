@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:go_router/go_router.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/transactions/transactions_action.dart';
+import 'package:solarisdemo/screens/home/home_screen.dart';
+import 'package:solarisdemo/widgets/app_toolbar.dart';
+import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../config.dart';
+import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../models/transaction_model.dart';
-import '../../widgets/empty_list_message.dart';
-import '../../widgets/search_bar.dart';
 import '../../models/user.dart';
-import '../../widgets/screen.dart';
+import '../../widgets/empty_list_message.dart';
 import '../../widgets/pill_button.dart';
+import '../../widgets/search_bar.dart';
 import '../../widgets/spaced_column.dart';
 import '../../widgets/transaction_listing_item.dart';
 import 'transactions_filtering_screen.dart';
-import '../../router/routing_constants.dart';
-import '../../cubits/auth_cubit/auth_cubit.dart';
-import 'package:solarisdemo/screens/home/home_screen.dart';
 
 class TransactionsScreen extends StatefulWidget {
+  static const routeName = "/transactionsScreen";
 
   const TransactionsScreen({super.key});
 
@@ -29,108 +29,126 @@ class TransactionsScreen extends StatefulWidget {
 }
 
 class _TransactionsScreenState extends State<TransactionsScreen> {
-
   @override
   Widget build(BuildContext context) {
     AuthenticatedUser user = context.read<AuthCubit>().state.user!;
 
     return StoreConnector<AppState, TransactionsViewModel>(
-      onInit: (store) {
-        store.dispatch(GetTransactionsCommandAction(filter: null, user: user.cognito));
-      },
-      converter: (store) => TransactionPresenter.presentTransactions(transactionsState: store.state.transactionsState),
-      builder: (context , viewModel) {
-        bool isFilterActive = viewModel.transactionListFilter?.bookingDateMax != null ||
-            viewModel.transactionListFilter?.bookingDateMin != null;
-
-        return Screen(
-        onRefresh: () async {
-          StoreProvider.of<AppState>(context).dispatch(GetTransactionsCommandAction(filter: viewModel.transactionListFilter, user: user.cognito));
+        onInit: (store) {
+          store.dispatch(GetTransactionsCommandAction(filter: null, user: user.cognito));
         },
-        title: "Transactions",
-        child: Padding(
-          padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-          child: SpacedColumn(
-            space: 36,
-            children: [
-              SpacedColumn(
-                space: 16,
-                children: [
-                  const TransactionListTitle(
-                    displayShowAllButton: false,
-                  ),
-                  CustomSearchBar(
-                    textLabel: viewModel.transactionListFilter?.searchString,
-                    showButtonIndicator: isFilterActive,
-                    onPressedFilterButton: () {
-                      context.push(
-                        transactionsFilteringRoute.path,
-                        extra: viewModel.transactionListFilter,
-                      );
-                    },
-                    onSubmitSearch: (value) {
-                      TransactionListFilter filter;
-                      if (value.isEmpty) {
-                        filter = TransactionListFilter(
-                          bookingDateMax: viewModel.transactionListFilter?.bookingDateMax,
-                          bookingDateMin: viewModel.transactionListFilter?.bookingDateMin,
-                          size: viewModel.transactionListFilter?.size,
-                          searchString: null,
-                        );
-                      } else {
-                        filter = TransactionListFilter(
-                          bookingDateMax: viewModel.transactionListFilter?.bookingDateMax,
-                          bookingDateMin: viewModel.transactionListFilter?.bookingDateMin,
-                          size: viewModel.transactionListFilter?.size,
-                          searchString: value,
-                        );
-                      }
-                      StoreProvider.of<AppState>(context).dispatch(GetTransactionsCommandAction(filter: filter, user: user.cognito));
-                    },
-                    onChangedSearch: (String value) { return; },
-                  ),
-                  if (isFilterActive)
-                    Row(
-                      children: [
-                        PillButton(
-                          buttonText:
-                              '${getFormattedDate(date: viewModel.transactionListFilter?.bookingDateMin, text: "Start date")} - ${getFormattedDate(date: viewModel.transactionListFilter?.bookingDateMax, text: "End date")}',
-                          buttonCallback: () {
-                            StoreProvider.of<AppState>(context).dispatch(GetTransactionsCommandAction(filter: null, user: user.cognito));
-                          },
-                          icon: const Icon(
-                            Icons.close,
-                            size: 16,
-                          ),
+        converter: (store) =>
+            TransactionPresenter.presentTransactions(transactionsState: store.state.transactionsState),
+        builder: (context, viewModel) {
+          bool isFilterActive = viewModel.transactionListFilter?.bookingDateMax != null ||
+              viewModel.transactionListFilter?.bookingDateMin != null;
+
+          return ScreenScaffold(
+            body: RefreshIndicator(
+              onRefresh: () async {
+                StoreProvider.of<AppState>(context).dispatch(
+                  GetTransactionsCommandAction(filter: viewModel.transactionListFilter, user: user.cognito),
+                );
+              },
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+                ),
+                child: Column(
+                  children: [
+                    const AppToolbar(title: "Transactions"),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: SpacedColumn(
+                          space: 36,
+                          children: [
+                            SpacedColumn(
+                              space: 16,
+                              children: [
+                                const TransactionListTitle(
+                                  displayShowAllButton: false,
+                                ),
+                                CustomSearchBar(
+                                  textLabel: viewModel.transactionListFilter?.searchString,
+                                  showButtonIndicator: isFilterActive,
+                                  onPressedFilterButton: () {
+                                    Navigator.pushNamed(
+                                      context,
+                                      TransactionsFilteringScreen.routeName,
+                                      arguments: viewModel.transactionListFilter,
+                                    );
+                                  },
+                                  onSubmitSearch: (value) {
+                                    TransactionListFilter filter;
+                                    if (value.isEmpty) {
+                                      filter = TransactionListFilter(
+                                        bookingDateMax: viewModel.transactionListFilter?.bookingDateMax,
+                                        bookingDateMin: viewModel.transactionListFilter?.bookingDateMin,
+                                        size: viewModel.transactionListFilter?.size,
+                                        searchString: null,
+                                      );
+                                    } else {
+                                      filter = TransactionListFilter(
+                                        bookingDateMax: viewModel.transactionListFilter?.bookingDateMax,
+                                        bookingDateMin: viewModel.transactionListFilter?.bookingDateMin,
+                                        size: viewModel.transactionListFilter?.size,
+                                        searchString: value,
+                                      );
+                                    }
+                                    StoreProvider.of<AppState>(context)
+                                        .dispatch(GetTransactionsCommandAction(filter: filter, user: user.cognito));
+                                  },
+                                  onChangedSearch: (String value) {
+                                    return;
+                                  },
+                                ),
+                                if (isFilterActive)
+                                  Row(
+                                    children: [
+                                      PillButton(
+                                        buttonText:
+                                            '${getFormattedDate(date: viewModel.transactionListFilter?.bookingDateMin, text: "Start date")} - ${getFormattedDate(date: viewModel.transactionListFilter?.bookingDateMax, text: "End date")}',
+                                        buttonCallback: () {
+                                          StoreProvider.of<AppState>(context)
+                                              .dispatch(GetTransactionsCommandAction(filter: null, user: user.cognito));
+                                        },
+                                        icon: const Icon(
+                                          Icons.close,
+                                          size: 16,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                              ],
+                            ),
+                            _buildTransactionsList(viewModel),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
-                ],
+                  ],
+                ),
               ),
-              _buildTransactionsList(viewModel),
-            ],
-          ),
-        ),
-      );}
-    );
+            ),
+          );
+        });
   }
 
   Widget _buildTransactionsList(TransactionsViewModel viewModel) {
     const emptyListWidget = TextMessageWithCircularImage(
       title: "No transactions yet",
-      message:
-      "There are no transactions yet. Your future transactions will be displayed here.",
+      message: "There are no transactions yet. Your future transactions will be displayed here.",
     );
 
-    if(viewModel is TransactionsLoadingViewModel) {
+    if (viewModel is TransactionsLoadingViewModel) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    if(viewModel is TransactionsErrorViewModel) {
+    if (viewModel is TransactionsErrorViewModel) {
       return const Text("Transactions could not be loaded");
     }
 
-    if(viewModel is TransactionsFetchedViewModel) {
+    if (viewModel is TransactionsFetchedViewModel) {
       bool isFilteringActive = (viewModel.transactionListFilter?.bookingDateMin != null ||
           viewModel.transactionListFilter?.bookingDateMax != null);
 
@@ -155,9 +173,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       }
 
       return Column(
-        children: [
-              _buildGroupedByMonthsList(transactions)
-        ],
+        children: [_buildGroupedByMonthsList(transactions)],
       );
     }
 

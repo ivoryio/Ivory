@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
-import '../../../router/routing_constants.dart';
 import '../../../widgets/button.dart';
 import '../../../widgets/spaced_column.dart';
 import '../../transfer/transfer_screen.dart';
@@ -110,10 +108,10 @@ class NewTransferPopupState extends State<NewTransferPopup> {
           child: PrimaryButton(
             text: "Continue",
             onPressed: () {
-              Navigator.of(context, rootNavigator: true).pop();
-              context.push(
-                transferRoute.path,
-                extra: TransferScreenParams(
+              Navigator.popAndPushNamed(
+                context,
+                TransferScreen.routeName,
+                arguments: TransferScreenParams(
                     transferType: _isPersonSelected
                         ? TransferType.person
                         : TransferType.business),

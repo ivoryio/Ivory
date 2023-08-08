@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart';
+import 'package:solarisdemo/models/person_model.dart';
+import 'package:solarisdemo/screens/account/account_details_screen.dart';
+import 'package:solarisdemo/screens/transactions/transactions_screen.dart';
 import 'package:solarisdemo/widgets/rewards.dart';
+import 'package:solarisdemo/widgets/screen.dart';
+import 'package:solarisdemo/widgets/transaction_list.dart';
 
 import '../../config.dart';
 import '../../cubits/account_summary_cubit/account_summary_cubit.dart';
@@ -11,13 +15,10 @@ import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../cubits/transaction_list_cubit/transaction_list_cubit.dart';
 import '../../models/transaction_model.dart';
 import '../../models/user.dart';
-import '../../router/routing_constants.dart';
 import '../../services/person_service.dart';
 import '../../widgets/account_balance_text.dart';
 import '../../widgets/analytics.dart';
 import '../../widgets/modal.dart';
-import '../../widgets/screen.dart';
-import '../../widgets/transaction_list.dart';
 import 'modals/new_transfer_popup.dart';
 
 const _defaultCountTransactionsDisplayed = 3;
@@ -30,6 +31,8 @@ const _defaultTransactionListFilter = TransactionListFilter(
 );
 
 class HomeScreen extends StatelessWidget {
+  static const routeName = "/homeScreen";
+
   const HomeScreen({super.key});
 
   @override
@@ -77,6 +80,7 @@ class HomeScreen extends StatelessWidget {
       child: HomePageContent(
         accountSummaryCubit: accountSummaryCubit,
         transactionListCubit: transactionListCubit,
+        user: user,
       ),
     );
   }
@@ -85,9 +89,11 @@ class HomeScreen extends StatelessWidget {
 class HomePageContent extends StatelessWidget {
   final AccountSummaryCubit accountSummaryCubit;
   final TransactionListCubit transactionListCubit;
+  final AuthenticatedUser user;
 
   const HomePageContent({
     super.key,
+    required this.user,
     required this.accountSummaryCubit,
     required this.transactionListCubit,
   });
@@ -100,6 +106,7 @@ class HomePageContent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           HomePageHeader(
+            customer: user.person,
             accountSummaryCubit: accountSummaryCubit,
           ),
           Padding(
@@ -139,8 +146,11 @@ class HomePageContent extends StatelessWidget {
 
 class HomePageHeader extends StatelessWidget {
   final AccountSummaryCubit accountSummaryCubit;
+  final Person customer;
+
   const HomePageHeader({
     super.key,
+    required this.customer,
     required this.accountSummaryCubit,
   });
 
@@ -177,7 +187,6 @@ class HomePageHeader extends StatelessWidget {
           if (state is AccountSummaryCubitLoaded) {
             return Container(
               padding: EdgeInsets.symmetric(
-                vertical: 10,
                 horizontal: ClientConfig.getCustomClientUiSettings()
                     .defaultScreenHorizontalPadding,
               ),
@@ -398,7 +407,7 @@ class AccountOptions extends StatelessWidget {
             textLabel: "Account",
             icon: Icons.info_outline,
             onPressed: () {
-              context.push(accountDetailsRoute.path);
+              Navigator.pushNamed(context, AccountDetailsScreen.routeName);
             },
           ),
         ],
@@ -480,7 +489,10 @@ class TransactionListTitle extends StatelessWidget {
               ),
             ),
             onPressed: () {
-              context.push(transactionsRoute.path);
+              Navigator.pushReplacementNamed(
+                context,
+                TransactionsScreen.routeName,
+              );
             },
           )
       ],

@@ -1,35 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:solarisdemo/widgets/app_toolbar.dart';
+import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../config.dart';
 import '../../cubits/card_details_cubit/card_details_cubit.dart';
 import '../../models/bank_card.dart';
 import '../../widgets/button.dart';
 import '../../widgets/card_widget.dart';
-import '../../widgets/screen.dart';
 import '../../widgets/spaced_column.dart';
 
 class BankCardDetailsMainScreen extends StatelessWidget {
+  static const routeName = "/bankCardDetailsMainScreen";
+
   const BankCardDetailsMainScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final state = context.read<BankCardDetailsCubit>().state;
 
-    return Screen(
-        scrollPhysics: const ClampingScrollPhysics(),
-        title: 'Card',
-        centerTitle: true,
-        hideBackButton: true,
-        hideBottomNavbar: false,
-        child: Padding(
-          padding:
-              ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-          child: state.card!.status == BankCardStatus.INACTIVE
-              ? const InactiveCard()
-              : const ActiveCard(),
-        ));
+    return ScreenScaffold(
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: ClientConfig.getCustomClientUiSettings()
+              .defaultScreenHorizontalPadding,
+        ),
+        child: Column(
+          children: [
+            const AppToolbar(title: "Card"),
+            Expanded(
+              child: SingleChildScrollView(
+                child: state.card!.status == BankCardStatus.INACTIVE
+                    ? const InactiveCard()
+                    : const ActiveCard(),
+              ),
+            ),
+            const SizedBox(height: 24),
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -104,7 +115,6 @@ class ActiveCard extends StatelessWidget {
     final state = context.read<BankCardDetailsCubit>().state;
 
     return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SpacedColumn(

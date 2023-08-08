@@ -79,9 +79,7 @@ class TransactionList extends StatelessWidget {
               return Column(
                 children: [
                   if (header != null) header!,
-                  groupedByMonths
-                      ? _buildGroupedByMonthsList(transactions)
-                      : _buildList(context, transactions)
+                  groupedByMonths ? _buildGroupedByMonthsList(transactions) : _buildList(context, transactions)
                 ],
               );
 
@@ -119,22 +117,25 @@ Widget _buildList(
   BuildContext context,
   List<Transaction> transactions,
 ) {
-  return ListView.separated(
-      itemCount: transactions.length,
-      shrinkWrap: true,
-      physics: const ClampingScrollPhysics(),
-      separatorBuilder: (context, index) {
-        return const Divider(
-          height: 10,
-          color: Colors.transparent,
-        );
-      },
-      padding: EdgeInsets.zero,
-      itemBuilder: (context, index) {
-        return TransactionListItem(
-          transaction: transactions[index],
-        );
-      });
+  return SizedBox(
+    height: 180,
+    child: ListView.separated(
+        itemCount: transactions.length,
+        shrinkWrap: true,
+        physics: const ClampingScrollPhysics(),
+        separatorBuilder: (context, index) {
+          return const Divider(
+            height: 10,
+            color: Colors.transparent,
+          );
+        },
+        padding: EdgeInsets.zero,
+        itemBuilder: (context, index) {
+          return TransactionListItem(
+            transaction: transactions[index],
+          );
+        }),
+  );
 }
 
 Widget _buildGroupedByMonthsList(List<Transaction> transactions) {
