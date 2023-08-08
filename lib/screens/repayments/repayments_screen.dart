@@ -27,9 +27,13 @@ class RepaymentsScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'Repayments',
-                      style: ClientConfig.getTextStyleScheme().heading1,
+                      style: TextStyle(
+                        fontSize: 32,
+                        height: 40 / 32,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     const SizedBox(height: 24),
                     Column(
@@ -78,9 +82,7 @@ class RepaymentsScreen extends StatelessWidget {
                                   padding: EdgeInsets.symmetric(horizontal: 16),
                                   child: Text(
                                     'Due on Aug 4',
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600),
+                                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                                   ),
                                 ),
                                 const SizedBox(height: 12),
@@ -205,8 +207,7 @@ class _CardItem extends StatelessWidget {
             children: [
               Text(
                 title,
-                style:
-                    const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
               ),
               const SizedBox(width: 4),
               IconButton(
