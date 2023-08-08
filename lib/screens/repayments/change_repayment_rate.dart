@@ -99,6 +99,8 @@ class ChooseRepaymentType extends StatefulWidget {
 class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
   RepaymentType _selectedOption = RepaymentType.percentage;
 
+  double sliderValue = 0.0;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -181,17 +183,86 @@ class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
               ),
             ],
           ),
-          if (type == RepaymentType.percentage)
-            Row(
-              children: [Text("percentage rate repayment")],
+          if (type == RepaymentType.percentage && type == _selectedOption) ...[
+            const DescriptionRepaymentRate(
+                message:
+                    'Choose your preferred percentage rate. The minimum is 1% and the maximum is 9%.'),
+            const ChoosePercentageRate(),
+            Slider(
+              value: sliderValue,
+              onChanged: (double value) {
+                setState(() {
+                  sliderValue = value;
+                });
+              },
+              onChangeEnd: (double value) {
+                setState(() {
+                  sliderValue = value;
+                });
+              },
+              min: 0,
+              max: 1,
+              label: '${(sliderValue * 100).round()}%',
             ),
-          if (type == RepaymentType.fixed)
-            Row(
-              children: [Text("fixed rate repayment")],
-            ),
+          ],
+          if (type == RepaymentType.fixed && type == _selectedOption) ...[
+            const DescriptionRepaymentRate(
+                message:
+                    'Choose your preferred fixed rate. The minimum is €500 and the maximum is €9,000.'),
+            const ChooseFixedRate(),
+          ]
         ],
       ),
     );
+  }
+}
+
+class DescriptionRepaymentRate extends StatelessWidget {
+  final String message;
+
+  const DescriptionRepaymentRate({super.key, required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        const SizedBox(height: 8),
+        Expanded(
+          child: Text(
+            message,
+            style: const TextStyle(
+              fontSize: 14,
+              height: 1.285, // 18 / 14,
+              fontWeight: FontWeight.w400,
+              color: Color(0xFF15141E),
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+      ],
+    );
+  }
+}
+
+class ChoosePercentageRate extends StatelessWidget {
+  const ChoosePercentageRate({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Row(children: [
+      Text('Here will be the slider'),
+    ]);
+  }
+}
+
+class ChooseFixedRate extends StatelessWidget {
+  const ChooseFixedRate({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Row(children: [
+      Text('Here will be the text field'),
+    ]);
   }
 }
 
