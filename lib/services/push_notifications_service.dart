@@ -75,7 +75,8 @@ class FirebasePushNotificationService extends PushNotificationService {
     FirebaseMessaging.instance.getInitialMessage().then(_onMessage); // App is terminated
 
     // Handle token
-    _messaging.onTokenRefresh.listen(_onTokenRefresh);
+    _messaging.getToken().then(_onTokenRefresh); // Initial token (on app start)
+    _messaging.onTokenRefresh.listen(_onTokenRefresh); // Token refresh
   }
 
   void _onMessage(RemoteMessage? message) {
@@ -108,8 +109,9 @@ class FirebasePushNotificationService extends PushNotificationService {
     await androidImplementation?.createNotificationChannel(channel);
   }
 
-  void _onTokenRefresh(String token) async {
+  void _onTokenRefresh(String? token) async {
     debugPrint('FCM Token refreshed: $token');
+    if (token == null) return;
 
     try {
       await post('notifications/token', body: {'token': token});
