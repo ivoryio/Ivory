@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 
-import '../../widgets/screen.dart';
-
 class SettingsScreen extends StatelessWidget {
   static const routeName = "/settingsScreen";
 

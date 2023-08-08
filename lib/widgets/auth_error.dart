@@ -6,7 +6,6 @@ import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../widgets/button.dart';
-import '../../widgets/screen.dart';
 
 class AuthErrorScreen extends StatelessWidget {
   final String title;
@@ -44,14 +43,6 @@ class AuthErrorScreen extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-    return Screen(
-      title: title,
-      hideBottomNavbar: true,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [],
       ),
     );
   }

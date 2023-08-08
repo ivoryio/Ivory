@@ -201,13 +201,13 @@ class ActiveCard extends StatelessWidget {
                 ItemName(
                   leftIcon: Icons.wifi_tethering,
                   actionName: 'Contactless payments',
-                  actionDescription: 'Apple Pay won\’t be affected',
+                  actionDescription: 'Apple Pay won’t be affected',
                   rightIcon: Icons.arrow_forward_ios,
                 ),
                 ItemName(
                   leftIcon: Icons.language,
                   actionName: 'Online payments',
-                  actionDescription: 'Apple Pay won\’t be affected',
+                  actionDescription: 'Apple Pay won’t be affected',
                   rightIcon: Icons.arrow_forward_ios,
                 ),
                 ItemName(

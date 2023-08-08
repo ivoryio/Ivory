@@ -42,9 +42,9 @@ class TransferConfirmScreen extends StatelessWidget {
                           );
                     },
                   ),
-                  SizedBox(height: 32),
+                  const SizedBox(height: 32),
                   const AccountSelect(),
-                  SizedBox(height: 32),
+                  const SizedBox(height: 32),
                   TransferDetails(
                     iban: state.iban!,
                     amount: state.amount!,
@@ -54,7 +54,7 @@ class TransferConfirmScreen extends StatelessWidget {
                 ],
               ),
             ),
-            Spacer(),
+            const Spacer(),
             BottomStickyWidget(
               child: StickyBottomContent(
                 buttonText: "Confirm and send",

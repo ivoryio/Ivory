@@ -7,7 +7,6 @@ import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import '../../config.dart';
 import '../../widgets/button.dart';
 import '../../widgets/empty_list_message.dart';
-import '../../widgets/screen.dart';
 
 class SignupSuccessScreen extends StatelessWidget {
   static const routeName = "/signupSuccessScreen";
@@ -53,41 +52,6 @@ class SignupSuccessScreen extends StatelessWidget {
                   )
                 ],
               ),
-            )
-          ],
-        ),
-      ),
-    );
-    return Screen(
-      hideBottomNavbar: true,
-      title: "Signup",
-      child: Padding(
-        padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const TextMessageWithCircularImage(
-              title: "Sign-up successful",
-              message:
-                  "Your account has been created. Please log in to continue.",
-            ),
-            Column(
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  child: PrimaryButton(
-                    text: "Log in",
-                    onPressed: () async {
-                      Navigator.pushNamedAndRemoveUntil(
-                        context,
-                        LoginScreen.routeName,
-                        ModalRoute.withName(LandingScreen.routeName),
-                      );
-                    },
-                  ),
-                ),
-              ],
             )
           ],
         ),

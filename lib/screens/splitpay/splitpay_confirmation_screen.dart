@@ -42,7 +42,7 @@ class SplitpayConfirmationScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
           children: [
-            AppToolbar(title: 'Transaction confirmation'),
+            const AppToolbar(title: 'Transaction confirmation'),
             Expanded(
               child: Column(
                 children: [
@@ -167,7 +167,7 @@ class SplitpayConfirmationScreen extends StatelessWidget {
                       )
                     ],
                   ),
-                  Spacer(),
+                  const Spacer(),
                   SizedBox(
                     width: double.infinity,
                     height: 48,
@@ -188,7 +188,7 @@ class SplitpayConfirmationScreen extends StatelessWidget {
                       },
                     ),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                 ],
               ),
             ),

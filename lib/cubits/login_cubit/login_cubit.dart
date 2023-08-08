@@ -88,19 +88,19 @@ class LoginCubit extends Cubit<LoginState> {
         await DeviceService(user: user)
             .createDeviceActivity(DeviceActivityType.APP_START);
       }
-    } on CognitoUserNewPasswordRequiredException catch (e) {
+    } on CognitoUserNewPasswordRequiredException {
       // TODO handle New Password challenge
-    } on CognitoUserMfaRequiredException catch (e) {
+    } on CognitoUserMfaRequiredException {
       // TODO handle SMS_MFA challenge
-    } on CognitoUserSelectMfaTypeException catch (e) {
+    } on CognitoUserSelectMfaTypeException {
       // TODO handle SELECT_MFA_TYPE challenge
-    } on CognitoUserMfaSetupException catch (e) {
+    } on CognitoUserMfaSetupException {
       // TODO handle MFA_SETUP challenge
-    } on CognitoUserTotpRequiredException catch (e) {
+    } on CognitoUserTotpRequiredException {
       // TODO handle SOFTWARE_TOKEN_MFA challenge
-    } on CognitoUserCustomChallengeException catch (e) {
+    } on CognitoUserCustomChallengeException {
       // TODO handle CUSTOM_CHALLENGE challenge
-    } on CognitoUserConfirmationNecessaryException catch (e) {
+    } on CognitoUserConfirmationNecessaryException {
       // TODO handle User Confirmation Necessary
     } on CognitoClientException catch (_) {
       // TODO handle Wrong Username and Password and Cognito Client
