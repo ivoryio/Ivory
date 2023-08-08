@@ -48,7 +48,7 @@ We are currently working on converting and developing the app into a revolving c
 ## Product prototype
 
 <div align="center">
-  <video src="https://github.com/ivoryio/SolarisDemoApp/assets/16954041/4963f20b-856b-4364-8c5f-653ada6a3733" />
+  <video src="https://github.com/ivoryio/SolarisDemoApp/assets/16954041/320f3f08-c1bf-4dc1-9523-38d5e44cb4b5" />
 </div>
 
 Find more details [here](https://www.thinslices.com/ivory-banking-app).
