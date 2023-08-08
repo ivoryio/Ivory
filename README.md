@@ -46,6 +46,7 @@ We are currently working on converting and developing the app into a revolving c
 - Repayments
 
 ## Product prototype
+Find more details here: https://www.thinslices.com/ivory-banking-app
 
 You can find the prototype [here](https://www.figma.com/proto/XReOTW8hCzSSTPsfqWhwy6/Ivory---Demo-App?page-id=1086%3A72864&type=design&node-id=1221-101377&viewport=-1964%2C1794%2C0.19&t=XEC1Fu5v6GR6h7B3-1&scaling=contain&starting-point-node-id=1221%3A101373).
 
