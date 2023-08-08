@@ -4,6 +4,7 @@ import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart';
 import 'package:solarisdemo/models/person_model.dart';
 import 'package:solarisdemo/screens/account/account_details_screen.dart';
+import 'package:solarisdemo/screens/repayments/repayments_screen.dart';
 import 'package:solarisdemo/screens/transactions/transactions_screen.dart';
 import 'package:solarisdemo/widgets/rewards.dart';
 import 'package:solarisdemo/widgets/screen.dart';
@@ -387,14 +388,6 @@ class AccountOptions extends StatelessWidget {
               AssetImage('assets/icons/compare_arrows.png'),
               size: 24,
             ),
-            onPressed: () => print("Transfer"),
-          ),
-          AccountOptionsButton(
-            textLabel: "Repayments",
-            icon: const ImageIcon(
-              AssetImage('assets/icons/currency_exchange_euro_repay.png'),
-              size: 24,
-            ),
             onPressed: () => showBottomModal(
               context: context,
               title: 'New Transfer',
@@ -402,14 +395,20 @@ class AccountOptions extends StatelessWidget {
             ),
           ),
           AccountOptionsButton(
+            textLabel: "Repayments",
+            icon: const ImageIcon(
+              AssetImage('assets/icons/currency_exchange_euro_repay.png'),
+              size: 24,
+            ),
+            onPressed: () => Navigator.pushNamed(context, RepaymentsScreen.routeName),
+          ),
+          AccountOptionsButton(
             textLabel: "Account",
             icon: const ImageIcon(
               AssetImage('assets/icons/info.png'),
               size: 24,
             ),
-            onPressed: () {
-              Navigator.pushNamed(context, AccountDetailsScreen.routeName);
-            },
+            onPressed: () => Navigator.pushNamed(context, AccountDetailsScreen.routeName),
           ),
         ],
       ),
