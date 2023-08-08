@@ -30,6 +30,7 @@ class DefaultFirebaseOptions {
     }
   }
 
+  // TODO: secure these API keys inside GCP API Key restrictions
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyCLuogzOjlVJ-C8F47HApQDJXux35cCWDY',
     appId: '1:109004766417:web:f135355abab546ca0f99f0',

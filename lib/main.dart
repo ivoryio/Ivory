@@ -8,6 +8,7 @@ import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart
 import 'package:solarisdemo/ivory_app.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/store_factory.dart';
+import 'package:solarisdemo/services/push_notifications_service.dart';
 
 import '../config.dart';
 import 'firebase_options.dart';
@@ -35,6 +36,7 @@ Store<AppState> _buildStore() {
   final store = createStore(
     initialState: AppState.initialState(),
     transactionService: TransactionService(),
+    pushNotificationService: FirebasePushNotificationService(),
   );
 
   return store;
