@@ -5,7 +5,7 @@ class Format {
   static String currency(
     num number, {
     int digits = 2,
-    String symbol = " € ",
+    String symbol = "€ ",
     String locale = "en_US",
   }) {
     NumberFormat formatter = NumberFormat.currency(

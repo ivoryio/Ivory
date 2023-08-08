@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart';
 import 'package:solarisdemo/models/person_model.dart';
 import 'package:solarisdemo/screens/account/account_details_screen.dart';
-import 'package:solarisdemo/screens/repayments/repayments_screen.dart';
 import 'package:solarisdemo/screens/transactions/transactions_screen.dart';
+import 'package:solarisdemo/widgets/rewards.dart';
+import 'package:solarisdemo/widgets/screen.dart';
+import 'package:solarisdemo/widgets/transaction_list.dart';
 
 import '../../config.dart';
 import '../../cubits/account_summary_cubit/account_summary_cubit.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../cubits/transaction_list_cubit/transaction_list_cubit.dart';
-import '../../infrastructure/transactions/transaction_service.dart';
 import '../../models/transaction_model.dart';
 import '../../models/user.dart';
 import '../../services/person_service.dart';
-import '../../utilities/format.dart';
 import '../../widgets/account_balance_text.dart';
 import '../../widgets/analytics.dart';
 import '../../widgets/modal.dart';
-import '../../widgets/refer_a_friend.dart';
-import '../../widgets/transaction_list.dart';
 import 'modals/new_transfer_popup.dart';
 
 const _defaultCountTransactionsDisplayed = 3;
@@ -46,23 +46,40 @@ class HomeScreen extends StatelessWidget {
       transactionService: TransactionService(user: user.cognito),
     )..getTransactions(filter: _defaultTransactionListFilter);
 
-    return RefreshIndicator(
+    return Screen(
       onRefresh: () async {
         accountSummaryCubit.getAccountSummary();
         transactionListCubit.getTransactions(
           filter: _defaultTransactionListFilter,
         );
       },
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            HomePageContent(
-              user: user,
-              accountSummaryCubit: accountSummaryCubit,
-              transactionListCubit: transactionListCubit,
-            )
-          ],
+      title: 'Welcome ${user.cognito.firstName}!',
+      hideBackButton: true,
+      appBarColor: Colors.black,
+      trailingActions: [
+        IconButton(
+          padding: EdgeInsets.zero,
+          icon: const Icon(
+            Icons.remove_red_eye_outlined,
+            color: Colors.white,
+          ),
+          onPressed: () {},
         ),
+        IconButton(
+          padding: EdgeInsets.zero,
+          icon: const Icon(
+            Icons.notifications_none,
+            color: Colors.white,
+          ),
+          onPressed: () {},
+        )
+      ],
+      titleTextStyle: const TextStyle(color: Colors.white),
+      centerTitle: false,
+      child: HomePageContent(
+        accountSummaryCubit: accountSummaryCubit,
+        transactionListCubit: transactionListCubit,
+        user: user,
       ),
     );
   }
@@ -109,11 +126,13 @@ class HomePageContent extends StatelessWidget {
           ),
           Padding(
             padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-            child: const Analytics(),
+            child: Analytics(
+              transactionListCubit: transactionListCubit,
+            ),
           ),
           Padding(
             padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-            child: const ReferAFriend(),
+            child: const Rewards(),
           ),
         ],
       ),
@@ -149,7 +168,7 @@ class HomePageHeader extends StatelessWidget {
                   bottomLeft: Radius.circular(30),
                   bottomRight: Radius.circular(30),
                 ),
-                color: Color(0xFF1C1A28),
+                color: Color(0xFF000000),
               ),
               child: const Center(
                 child: Padding(
@@ -171,49 +190,19 @@ class HomePageHeader extends StatelessWidget {
                   bottomLeft: Radius.circular(30),
                   bottomRight: Radius.circular(30),
                 ),
-                color: Color(0xFF1C1A28),
+                color: Colors.black,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    child: Row(
-                      children: [
-                        Text(
-                          "Hello, ${customer.firstName}",
-                          style: const TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const Spacer(),
-                        InkWell(
-                          child: const Icon(
-                            Icons.bar_chart,
-                            color: Colors.white,
-                          ),
-                          onTap: () {},
-                        ),
-                        const SizedBox(
-                          width: 12,
-                        ),
-                        InkWell(
-                          child: const Icon(
-                            Icons.notifications_none,
-                            color: Colors.white,
-                          ),
-                          onTap: () {},
-                        )
-                      ],
-                    ),
-                  ),
                   AccountSummary(
                     iban: state.data?.iban ?? "",
-                    income: state.data?.income ?? 0,
                     spending: state.data?.spending ?? 0,
                     availableBalance: state.data?.availableBalance?.value ?? 0,
+                  ),
+                  const Divider(
+                    color: Colors.white,
+                    thickness: 0.5,
                   ),
                   const AccountOptions(),
                 ],
@@ -231,36 +220,27 @@ class HomePageHeader extends StatelessWidget {
 class AccountSummary extends StatelessWidget {
   final String iban;
   final num availableBalance;
-  final num income;
   final num spending;
 
   const AccountSummary({
     super.key,
     required this.iban,
     required this.availableBalance,
-    required this.income,
     required this.spending,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(8)),
-        color: Color(0xFF272735),
-      ),
-      child: Column(
-        children: [
-          AccountBalance(
-            iban: iban,
-            value: availableBalance,
-          ),
-          AccountStats(
-            income: income,
-            spending: spending,
-          ),
-        ],
-      ),
+    return Column(
+      children: [
+        AccountBalance(
+          iban: iban,
+          value: availableBalance,
+        ),
+        AccountStats(
+          spending: spending,
+        ),
+      ],
     );
   }
 }
@@ -277,90 +257,108 @@ class AccountBalance extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(8),
-          topRight: Radius.circular(8),
-        ),
-        color: Colors.black,
-      ),
-      width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Column(
-        children: [
-          const Text(
-            "Total Balance",
-            style: TextStyle(color: Colors.white),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                AccountBalanceText(
-                  value: value,
-                  numberStyle: const TextStyle(color: Colors.white),
-                  centsStyle: const TextStyle(color: Colors.white),
-                ),
-              ],
+    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
+
+    return Column(
+      children: [
+        const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "Available Balance",
+              style: TextStyle(color: Colors.white),
             ),
+            SizedBox(
+              width: 4,
+            ),
+            Icon(
+              Icons.info_outline,
+              color: Colors.white,
+            ),
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              AccountBalanceText(
+                value: value,
+                numberStyle: const TextStyle(color: Colors.white, fontSize: 40),
+                centsStyle: const TextStyle(color: Colors.white, fontSize: 24),
+              ),
+            ],
           ),
-          Text(
-            "IBAN: ${Format.iban(iban)}",
-            style: const TextStyle(color: Colors.white),
-          )
-        ],
-      ),
+        ),
+        LinearPercentIndicator(
+          lineHeight: 8,
+          barRadius: const Radius.circular(40),
+          percent:
+              ((user.personAccount.spending?.value ?? 0) / (user.personAccount.accountLimit?.value ?? 0)).isInfinite
+                  ? 0
+                  : (user.personAccount.spending?.value ?? 0) / (user.personAccount.accountLimit?.value ?? 0),
+          backgroundColor: const Color(0xFF313038),
+          progressColor: const Color(0xFFCC0000),
+          curve: Curves.fastOutSlowIn,
+        ),
+      ],
     );
   }
 }
 
 class AccountStats extends StatelessWidget {
-  final num income;
   final num spending;
 
   const AccountStats({
     super.key,
-    required this.income,
     required this.spending,
   });
 
   @override
   Widget build(BuildContext context) {
+    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
+
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              const Text("Income",
-                  style: TextStyle(
-                    color: Colors.white,
-                  )),
-              const SizedBox(width: 5),
-              Text(Format.euro(income),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  )),
-            ],
-          ),
-          Row(
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                "Spending",
-                style: TextStyle(color: Colors.white),
+                "Outstanding balance",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
               const SizedBox(width: 5),
-              Text(
-                Format.euro(spending),
-                style: const TextStyle(
+              AccountBalanceText(
+                value: spending,
+                numberStyle: const TextStyle(color: Colors.white, fontSize: 18),
+                centsStyle: const TextStyle(color: Colors.white, fontSize: 14),
+              ),
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              const Text(
+                "Credit limit",
+                style: TextStyle(
                   color: Colors.white,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
                 ),
+              ),
+              const SizedBox(width: 5),
+              AccountBalanceText(
+                value: user.personAccount.accountLimit?.value ?? 0,
+                numberStyle: const TextStyle(color: Colors.white, fontSize: 18),
+                centsStyle: const TextStyle(color: Colors.white, fontSize: 14),
               ),
             ],
           ),
@@ -376,13 +374,27 @@ class AccountOptions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
+      padding: const EdgeInsets.symmetric(
+        vertical: 20,
+        horizontal: 24,
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           AccountOptionsButton(
             textLabel: "Transfer",
-            icon: Icons.compare_arrows,
+            icon: const ImageIcon(
+              AssetImage('assets/icons/compare_arrows.png'),
+              size: 24,
+            ),
+            onPressed: () => print("Transfer"),
+          ),
+          AccountOptionsButton(
+            textLabel: "Repayments",
+            icon: const ImageIcon(
+              AssetImage('assets/icons/currency_exchange_euro_repay.png'),
+              size: 24,
+            ),
             onPressed: () => showBottomModal(
               context: context,
               title: 'New Transfer',
@@ -390,13 +402,11 @@ class AccountOptions extends StatelessWidget {
             ),
           ),
           AccountOptionsButton(
-            textLabel: "Repayments",
-            icon: Icons.receipt_long,
-            onPressed: () => Navigator.pushNamed(context, RepaymentsScreen.routeName),
-          ),
-          AccountOptionsButton(
             textLabel: "Account",
-            icon: Icons.info,
+            icon: const ImageIcon(
+              AssetImage('assets/icons/info.png'),
+              size: 24,
+            ),
             onPressed: () {
               Navigator.pushNamed(context, AccountDetailsScreen.routeName);
             },
@@ -409,7 +419,7 @@ class AccountOptions extends StatelessWidget {
 
 class AccountOptionsButton extends StatelessWidget {
   final String textLabel;
-  final IconData icon;
+  final Widget icon;
   final Function onPressed;
 
   const AccountOptionsButton({super.key, required this.textLabel, required this.icon, required this.onPressed});
@@ -421,12 +431,20 @@ class AccountOptionsButton extends StatelessWidget {
         ElevatedButton(
           onPressed: () => onPressed(),
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF272735),
+            backgroundColor: const Color(0xFFFFFFFF),
             fixedSize: const Size(50, 50),
             shape: const CircleBorder(),
             splashFactory: NoSplash.splashFactory,
           ),
-          child: Icon(icon, color: Colors.white),
+          child: Center(
+            child: IconButton(
+              icon: icon,
+              splashColor: Colors.transparent,
+              color: Colors.black,
+              onPressed: () => onPressed(),
+              iconSize: 24,
+            ),
+          ),
         ),
         Padding(
           padding: const EdgeInsets.only(top: 10),
@@ -460,8 +478,8 @@ class TransactionListTitle extends StatelessWidget {
         const Text(
           "Transactions",
           style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
           ),
         ),
         if (displayShowAllButton)
@@ -470,8 +488,9 @@ class TransactionListTitle extends StatelessWidget {
               "See all",
               textAlign: TextAlign.right,
               style: TextStyle(
+                color: Color(0xFFCC0000),
                 fontSize: 16,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w600,
               ),
             ),
             onPressed: () {
