@@ -1,6 +1,6 @@
 # Ivory Demo Application
 
-A proof-of-concept mobile-banking application that uses a [Solaris API](https://docs.solarisgroup.com/api-reference/).
+A proof-of-concept mobile-banking application that uses [Solaris API](https://docs.solarisgroup.com/api-reference/).
 
 ## General architecture overview
 
