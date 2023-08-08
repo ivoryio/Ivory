@@ -5,7 +5,7 @@ class AppState extends Equatable {
 
   final TransactionsState transactionsState;
 
-  AppState({
+  const AppState({
     required this.transactionsState,
   });
 

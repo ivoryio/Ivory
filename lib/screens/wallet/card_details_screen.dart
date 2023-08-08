@@ -54,7 +54,7 @@ class CardDetailsScreen extends StatelessWidget {
             return const BankCardDetailsInfoScreen();
           }
           if (state is BankCardDetailsChoosePinState) {
-            return BankCardDetailsChoosePinScreen();
+            return const BankCardDetailsChoosePinScreen();
           }
           if (state is BankCardDetailsConfirmPinState) {
             return const BankCardDetailsConfirmPinScreen();
@@ -86,7 +86,7 @@ class CardDetailsScreen extends StatelessWidget {
 class _CardDetailsOptions extends StatefulWidget {
   BankCard card;
 
-  _CardDetailsOptions({super.key, required this.card});
+  _CardDetailsOptions({required this.card});
 
   @override
   State<_CardDetailsOptions> createState() => __CardDetailsOptionsState();
@@ -230,7 +230,6 @@ class _CardOptionColumns extends StatelessWidget {
   final bool visibleSwitch;
 
   const _CardOptionColumns({
-    super.key,
     required this.icon,
     required this.fieldName,
     this.forMoreInfoTap,
@@ -275,7 +274,7 @@ class _CardOptionColumns extends StatelessWidget {
 class _CardOptionName extends StatelessWidget {
   final String name;
 
-  const _CardOptionName({super.key, required this.name});
+  const _CardOptionName({required this.name});
 
   @override
   Widget build(BuildContext context) {
@@ -290,7 +289,7 @@ class _CardOptionName extends StatelessWidget {
 }
 
 class _CardOptionSwitch extends StatefulWidget {
-  const _CardOptionSwitch({super.key});
+  const _CardOptionSwitch();
 
   @override
   State<_CardOptionSwitch> createState() => _CardOptionSwitchState();

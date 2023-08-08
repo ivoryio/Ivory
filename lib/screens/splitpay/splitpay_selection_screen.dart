@@ -322,7 +322,7 @@ class _SplitpaySelectionScreenState extends State<SplitpaySelectionScreen> {
                       )
                     ],
                   ),
-                  Spacer(),
+                  const Spacer(),
                   SizedBox(
                     width: double.infinity,
                     height: 48,
@@ -339,7 +339,7 @@ class _SplitpaySelectionScreenState extends State<SplitpaySelectionScreen> {
                 ],
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
           ],
         ),
       ),
