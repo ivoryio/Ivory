@@ -9,6 +9,8 @@ import '../../widgets/screen.dart';
 import '../../widgets/spaced_column.dart';
 
 class BankCardDetailsConfirmPinScreen extends StatefulWidget {
+  static const routeName = '/bankCardDetailsConfirmPinScreen';
+
   const BankCardDetailsConfirmPinScreen({super.key});
 
   @override

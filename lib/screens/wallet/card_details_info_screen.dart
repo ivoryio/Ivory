@@ -9,6 +9,8 @@ import '../../widgets/button.dart';
 import '../../widgets/screen.dart';
 
 class BankCardDetailsInfoScreen extends StatelessWidget {
+  static const routeName = '/cardDetailsInfoScreen';
+
   const BankCardDetailsInfoScreen({super.key});
 
   @override

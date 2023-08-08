@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 import '../config.dart';
-import '../router/router.dart';
-import '../router/routing_constants.dart';
 
 class Screen extends StatelessWidget {
   final Widget child;
@@ -62,112 +59,52 @@ class Screen extends StatelessWidget {
                 : null,
           );
 
-    int currentPageIndex = AppRouter.calculateSelectedIndex(context);
-
     ScrollPhysics? physics = onRefresh != null
         ? scrollPhysics ?? const AlwaysScrollableScrollPhysics()
         : null;
 
-    if (hideBottomNavbar) {
-      return Scaffold(
-        appBar: appBar,
-        body: LayoutBuilder(builder:
-            (BuildContext context, BoxConstraints viewportConstraints) {
-          num bottomStickyWidgetHeight = bottomStickyWidget?.height ?? 0;
-
-          Widget body = SingleChildScrollView(
-            physics: physics,
-            child: Column(
-              children: [
-                ConstrainedBox(
-                  constraints: BoxConstraints(
-                    minHeight: viewportConstraints.maxHeight -
-                        bottomStickyWidgetHeight,
-                  ),
-                  child: IntrinsicHeight(child: child),
-                ),
-              ],
-            ),
-          );
-
-          Widget screenContent = Column(children: [
-            Expanded(child: body),
-            if (bottomStickyWidget != null) bottomStickyWidget!.build(context)
-          ]);
-
-          if (onRefresh != null) {
-            return RefreshIndicator(
-              onRefresh: onRefresh!,
-              child: screenContent,
-            );
-          }
-
-          return screenContent;
-        }),
-      );
-    }
-
     return Scaffold(
       appBar: appBar,
       body: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints viewportConstraints) {
-          Widget screenContent = SingleChildScrollView(
-            physics: physics,
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: viewportConstraints.maxHeight,
+          builder: (BuildContext context, BoxConstraints viewportConstraints) {
+        num bottomStickyWidgetHeight = bottomStickyWidget?.height ?? 0;
+
+        Widget body = SingleChildScrollView(
+          physics: physics,
+          child: Column(
+            children: [
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight:
+                      viewportConstraints.maxHeight - bottomStickyWidgetHeight,
+                ),
+                child: IntrinsicHeight(child: child),
               ),
-              child: child,
-            ),
+            ],
+          ),
+        );
+
+        Widget screenContent = Column(children: [
+          Expanded(child: body),
+          if (bottomStickyWidget != null) bottomStickyWidget!.build(context)
+        ]);
+
+        if (onRefresh != null) {
+          return RefreshIndicator(
+            onRefresh: onRefresh!,
+            child: screenContent,
           );
+        }
 
-          return LayoutBuilder(builder: (context, constraints) {
-            if (onRefresh != null) {
-              return RefreshIndicator(
-                onRefresh: onRefresh!,
-                child: screenContent,
-              );
-            }
-
-            return screenContent;
-          });
-        },
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: currentPageIndex,
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
-        elevation: 0,
-        onTap: (index) {
-          if (currentPageIndex != index) {
-            AppRouter.navigateToPage(index, context);
-          }
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add_card),
-            label: 'Wallet',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.payments),
-            label: 'Transactions',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-      ),
+        return screenContent;
+      }),
     );
   }
 }
 
 class LoadingScreen extends StatelessWidget {
   final String? title;
+
   const LoadingScreen({super.key, this.title = "Loading"});
 
   @override
@@ -184,6 +121,7 @@ class LoadingScreen extends StatelessWidget {
 class ErrorScreen extends StatelessWidget {
   final String? title;
   final String? message;
+
   const ErrorScreen(
       {super.key,
       this.title = "Error",
@@ -237,9 +175,7 @@ AppBar createAppBar(
       if (customBackButtonCallback != null) {
         customBackButtonCallback();
       } else {
-        if (context.canPop()) return context.pop();
-
-        context.go(homeRoute.path);
+        if (Navigator.canPop(context)) Navigator.pop(context);
       }
     },
   );

@@ -3,19 +3,19 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:solarisdemo/widgets/yvory_list_tile.dart';
+import 'package:solarisdemo/widgets/app_toolbar.dart';
+import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../config.dart';
 import '../../cubits/account_summary_cubit/account_summary_cubit.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../models/user.dart';
-import '../../router/routing_constants.dart';
 import '../../services/person_service.dart';
 import '../../utilities/format.dart';
-import '../../widgets/screen.dart';
 
 class AccountDetailsScreen extends StatelessWidget {
+  static const routeName = "/accountDetailsScreen";
+
   const AccountDetailsScreen({super.key});
 
   void showAlertDialog(BuildContext context, String stringToCopy) async {
@@ -55,164 +55,130 @@ class AccountDetailsScreen extends StatelessWidget {
     late String iban;
     late String bic;
 
-    return Screen(
-      onRefresh: () async {
-        accountSummaryCubit.getAccountSummary();
-      },
-      scrollPhysics: const NeverScrollableScrollPhysics(),
-      titleTextStyle: const TextStyle(
-        fontSize: 16,
-        height: 24 / 16,
-        fontWeight: FontWeight.w600,
-      ),
-      backButtonIcon: const Icon(Icons.arrow_back, size: 24),
-      customBackButtonCallback: () {
-        context.push(homeRoute.path);
-      },
-      centerTitle: true,
-      hideAppBar: false,
-      hideBackButton: false,
-      hideBottomNavbar: true,
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.fromLTRB(
-              ClientConfig.getCustomClientUiSettings()
-                  .defaultScreenVerticalPadding,
-              ClientConfig.getCustomClientUiSettings()
-                  .defaultScreenVerticalPadding,
-              ClientConfig.getCustomClientUiSettings()
-                  .defaultScreenVerticalPadding,
-              8,
+    return ScreenScaffold(
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const AppToolbar(),
+            const SizedBox(height: 24),
+            Text(
+              'Account',
+              style: ClientConfig.getTextStyleScheme().heading1,
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Account',
-                  style: ClientConfig.getTextStyleScheme().heading1,
+            const SizedBox(height: 24),
+            Text(
+              'Details',
+              style: ClientConfig.getTextStyleScheme().labelLarge,
+            ),
+            const SizedBox(height: 8),
+            Material(
+              color: const Color(0xFFF8F9FA),
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(16),
                 ),
-                const SizedBox(height: 24),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
                   children: [
-                    Text(
-                      'Details',
-                      style: ClientConfig.getTextStyleScheme().labelLarge,
-                    ),
-                    Material(
-                      color: const Color(0xFFF8F9FA),
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'IBAN',
+                              style:
+                                  ClientConfig.getTextStyleScheme().labelSmall,
+                            ),
+                            const SizedBox(height: 4),
+                            BlocProvider<AccountSummaryCubit>.value(
+                              value: accountSummaryCubit,
+                              child: BlocBuilder<AccountSummaryCubit,
+                                  AccountSummaryCubitState>(
+                                builder: (context, state) {
+                                  if (state is AccountSummaryCubitLoaded) {
+                                    iban = state.data!.iban ?? '';
+                                    iban = Format.iban(iban);
+
+                                    return Text(
+                                      iban,
+                                      style: ClientConfig.getTextStyleScheme()
+                                          .bodyLargeRegular,
+                                    );
+                                  }
+
+                                  return const Text('');
+                                },
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'IBAN',
-                                    style: ClientConfig.getTextStyleScheme()
-                                        .labelSmall,
-                                  ),
-                                  const SizedBox(height: 4),
-                                  BlocProvider<AccountSummaryCubit>.value(
-                                    value: accountSummaryCubit,
-                                    child: BlocBuilder<AccountSummaryCubit,
-                                        AccountSummaryCubitState>(
-                                      builder: (context, state) {
-                                        if (state
-                                            is AccountSummaryCubitLoaded) {
-                                          iban = state.data!.iban ?? '';
-                                          iban = Format.iban(iban);
+                        CopyContentButton(
+                          onPressed: () {
+                            inspect(iban);
+                            showAlertDialog(context, iban);
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'BIC',
+                              style:
+                                  ClientConfig.getTextStyleScheme().labelSmall,
+                            ),
+                            const SizedBox(height: 4),
+                            BlocProvider<AccountSummaryCubit>.value(
+                              value: accountSummaryCubit,
+                              child: BlocBuilder<AccountSummaryCubit,
+                                  AccountSummaryCubitState>(
+                                builder: (context, state) {
+                                  if (state is AccountSummaryCubitLoaded) {
+                                    bic = state.data!.bic ?? '';
 
-                                          return Text(
-                                            iban,
-                                            style: ClientConfig
-                                                    .getTextStyleScheme()
-                                                .bodyLargeRegular,
-                                          );
-                                        }
+                                    return Text(
+                                      bic,
+                                      style: ClientConfig.getTextStyleScheme()
+                                          .bodyLargeRegular,
+                                    );
+                                  }
 
-                                        return const Text('');
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              CopyContentButton(
-                                onPressed: () {
-                                  inspect(iban);
-                                  showAlertDialog(context, iban);
+                                  return const Text('');
                                 },
                               ),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'BIC',
-                                    style: ClientConfig.getTextStyleScheme()
-                                        .labelSmall,
-                                  ),
-                                  const SizedBox(height: 4),
-                                  BlocProvider<AccountSummaryCubit>.value(
-                                    value: accountSummaryCubit,
-                                    child: BlocBuilder<AccountSummaryCubit,
-                                        AccountSummaryCubitState>(
-                                      builder: (context, state) {
-                                        if (state
-                                            is AccountSummaryCubitLoaded) {
-                                          bic = state.data!.bic ?? '';
-
-                                          return Text(
-                                            bic,
-                                            style: ClientConfig
-                                                    .getTextStyleScheme()
-                                                .bodyLargeRegular,
-                                          );
-                                        }
-
-                                        return const Text('');
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 16),
-                              CopyContentButton(
-                                onPressed: () {
-                                  inspect(bic);
-                                  showAlertDialog(context, bic);
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        CopyContentButton(
+                          onPressed: () {
+                            inspect(bic);
+                            showAlertDialog(context, bic);
+                          },
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

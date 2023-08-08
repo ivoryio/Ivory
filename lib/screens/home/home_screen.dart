@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
+import 'package:solarisdemo/models/person_model.dart';
+import 'package:solarisdemo/screens/account/account_details_screen.dart';
+import 'package:solarisdemo/screens/repayments/repayments_screen.dart';
+import 'package:solarisdemo/screens/transactions/transactions_screen.dart';
 
 import '../../config.dart';
+import '../../cubits/account_summary_cubit/account_summary_cubit.dart';
+import '../../cubits/auth_cubit/auth_cubit.dart';
+import '../../cubits/transaction_list_cubit/transaction_list_cubit.dart';
+import '../../infrastructure/transactions/transaction_service.dart';
 import '../../models/transaction_model.dart';
 import '../../models/user.dart';
-import '../../widgets/modal.dart';
-import '../../widgets/screen.dart';
-import '../../utilities/format.dart';
-import '../../widgets/analytics.dart';
-import 'modals/new_transfer_popup.dart';
-import '../../widgets/refer_a_friend.dart';
 import '../../services/person_service.dart';
-import '../../widgets/transaction_list.dart';
-import '../../router/routing_constants.dart';
-import '../../infrastructure/transactions/transaction_service.dart';
+import '../../utilities/format.dart';
 import '../../widgets/account_balance_text.dart';
-import '../../cubits/auth_cubit/auth_cubit.dart';
-import '../../cubits/account_summary_cubit/account_summary_cubit.dart';
-import '../../cubits/transaction_list_cubit/transaction_list_cubit.dart';
+import '../../widgets/analytics.dart';
+import '../../widgets/modal.dart';
+import '../../widgets/refer_a_friend.dart';
+import '../../widgets/transaction_list.dart';
+import 'modals/new_transfer_popup.dart';
 
 const _defaultCountTransactionsDisplayed = 3;
 const _defaultPage = 1;
@@ -30,53 +31,38 @@ const _defaultTransactionListFilter = TransactionListFilter(
 );
 
 class HomeScreen extends StatelessWidget {
+  static const routeName = "/homeScreen";
+
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     AuthenticatedUser user = context.read<AuthCubit>().state.user!;
 
-    AccountSummaryCubit accountSummaryCubit =
-        AccountSummaryCubit(personService: PersonService(user: user.cognito))
-          ..getAccountSummary();
+    AccountSummaryCubit accountSummaryCubit = AccountSummaryCubit(personService: PersonService(user: user.cognito))
+      ..getAccountSummary();
 
     TransactionListCubit transactionListCubit = TransactionListCubit(
       transactionService: TransactionService(user: user.cognito),
     )..getTransactions(filter: _defaultTransactionListFilter);
 
-    return Screen(
+    return RefreshIndicator(
       onRefresh: () async {
         accountSummaryCubit.getAccountSummary();
         transactionListCubit.getTransactions(
           filter: _defaultTransactionListFilter,
         );
       },
-      title: 'Hello, ${user.cognito.firstName}!',
-      hideBackButton: true,
-      appBarColor: const Color(0xFF1C1A28),
-      trailingActions: [
-        IconButton(
-          padding: EdgeInsets.zero,
-          icon: const Icon(
-            Icons.bar_chart,
-            color: Colors.white,
-          ),
-          onPressed: () {},
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            HomePageContent(
+              user: user,
+              accountSummaryCubit: accountSummaryCubit,
+              transactionListCubit: transactionListCubit,
+            )
+          ],
         ),
-        IconButton(
-          padding: EdgeInsets.zero,
-          icon: const Icon(
-            Icons.notifications_none,
-            color: Colors.white,
-          ),
-          onPressed: () {},
-        )
-      ],
-      titleTextStyle: const TextStyle(color: Colors.white),
-      centerTitle: false,
-      child: HomePageContent(
-        accountSummaryCubit: accountSummaryCubit,
-        transactionListCubit: transactionListCubit,
       ),
     );
   }
@@ -85,9 +71,11 @@ class HomeScreen extends StatelessWidget {
 class HomePageContent extends StatelessWidget {
   final AccountSummaryCubit accountSummaryCubit;
   final TransactionListCubit transactionListCubit;
+  final AuthenticatedUser user;
 
   const HomePageContent({
     super.key,
+    required this.user,
     required this.accountSummaryCubit,
     required this.transactionListCubit,
   });
@@ -100,11 +88,11 @@ class HomePageContent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           HomePageHeader(
+            customer: user.person,
             accountSummaryCubit: accountSummaryCubit,
           ),
           Padding(
-            padding:
-                ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
+            padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
             child: Column(
               children: [
                 TransactionList(
@@ -120,13 +108,11 @@ class HomePageContent extends StatelessWidget {
             ),
           ),
           Padding(
-            padding:
-                ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
+            padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
             child: const Analytics(),
           ),
           Padding(
-            padding:
-                ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
+            padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
             child: const ReferAFriend(),
           ),
         ],
@@ -137,8 +123,11 @@ class HomePageContent extends StatelessWidget {
 
 class HomePageHeader extends StatelessWidget {
   final AccountSummaryCubit accountSummaryCubit;
+  final Person customer;
+
   const HomePageHeader({
     super.key,
+    required this.customer,
     required this.accountSummaryCubit,
   });
 
@@ -152,8 +141,7 @@ class HomePageHeader extends StatelessWidget {
             return Container(
               padding: EdgeInsets.symmetric(
                 vertical: 10,
-                horizontal: ClientConfig.getCustomClientUiSettings()
-                    .defaultScreenHorizontalPadding,
+                horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
               ),
               width: MediaQuery.of(context).size.width,
               decoration: const BoxDecoration(
@@ -175,9 +163,7 @@ class HomePageHeader extends StatelessWidget {
           if (state is AccountSummaryCubitLoaded) {
             return Container(
               padding: EdgeInsets.symmetric(
-                vertical: 10,
-                horizontal: ClientConfig.getCustomClientUiSettings()
-                    .defaultScreenHorizontalPadding,
+                horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
               ),
               width: MediaQuery.of(context).size.width,
               decoration: const BoxDecoration(
@@ -190,6 +176,39 @@ class HomePageHeader extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    child: Row(
+                      children: [
+                        Text(
+                          "Hello, ${customer.firstName}",
+                          style: const TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const Spacer(),
+                        InkWell(
+                          child: const Icon(
+                            Icons.bar_chart,
+                            color: Colors.white,
+                          ),
+                          onTap: () {},
+                        ),
+                        const SizedBox(
+                          width: 12,
+                        ),
+                        InkWell(
+                          child: const Icon(
+                            Icons.notifications_none,
+                            color: Colors.white,
+                          ),
+                          onTap: () {},
+                        )
+                      ],
+                    ),
+                  ),
                   AccountSummary(
                     iban: state.data?.iban ?? "",
                     income: state.data?.income ?? 0,
@@ -373,13 +392,13 @@ class AccountOptions extends StatelessWidget {
           AccountOptionsButton(
             textLabel: "Repayments",
             icon: Icons.receipt_long,
-            onPressed: () => context.push(repaymentsRoute.path),
+            onPressed: () => Navigator.pushNamed(context, RepaymentsScreen.routeName),
           ),
           AccountOptionsButton(
             textLabel: "Account",
             icon: Icons.info,
             onPressed: () {
-              context.push(accountDetailsRoute.path);
+              Navigator.pushNamed(context, AccountDetailsScreen.routeName);
             },
           ),
         ],
@@ -393,11 +412,7 @@ class AccountOptionsButton extends StatelessWidget {
   final IconData icon;
   final Function onPressed;
 
-  const AccountOptionsButton(
-      {super.key,
-      required this.textLabel,
-      required this.icon,
-      required this.onPressed});
+  const AccountOptionsButton({super.key, required this.textLabel, required this.icon, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -460,7 +475,10 @@ class TransactionListTitle extends StatelessWidget {
               ),
             ),
             onPressed: () {
-              context.push(transactionsRoute.path);
+              Navigator.pushReplacementNamed(
+                context,
+                TransactionsScreen.routeName,
+              );
             },
           )
       ],

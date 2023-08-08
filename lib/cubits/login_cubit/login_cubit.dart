@@ -8,12 +8,12 @@ import 'package:solarisdemo/models/device_activity.dart';
 import 'package:solarisdemo/models/device_consent.dart';
 import 'package:solarisdemo/services/device_service.dart';
 
-import '../../models/user.dart';
-import '../auth_cubit/auth_cubit.dart';
-import '../../models/person_model.dart';
 import '../../models/person_account.dart';
+import '../../models/person_model.dart';
+import '../../models/user.dart';
 import '../../services/auth_service.dart';
 import '../../services/person_service.dart';
+import '../auth_cubit/auth_cubit.dart';
 
 part 'login_state.dart';
 
@@ -112,7 +112,10 @@ class LoginCubit extends Cubit<LoginState> {
     }
   }
 
-  void login(String tan) async {
+  void login(
+    String tan, {
+    required void Function() onSuccess,
+  }) async {
     try {
       if (state.user == null) {
         throw Exception("User is null");
@@ -147,6 +150,7 @@ class LoginCubit extends Cubit<LoginState> {
         cognito: state.user!,
         personAccount: personAccount!,
       ));
+      onSuccess();
     } catch (e) {
       emit(const LoginError(message: LoginErrorMessage.unknownError));
     }
