@@ -1,6 +1,6 @@
 # Ivory Demo Application
 
-A proof-of-concept mobile-banking application that uses a [Solaris API](https://docs.solarisgroup.com/api-reference/).
+A proof-of-concept mobile-banking application that uses [Solaris API](https://docs.solarisgroup.com/api-reference/).
 
 ## General architecture overview
 
@@ -46,6 +46,12 @@ We are currently working on converting and developing the app into a revolving c
 - Repayments
 
 ## Product prototype
+
+<div align="center">
+  <video src="https://github.com/ivoryio/SolarisDemoApp/assets/16954041/320f3f08-c1bf-4dc1-9523-38d5e44cb4b5" />
+</div>
+
+Find more details [here](https://www.thinslices.com/ivory-banking-app).
 
 You can find the prototype [here](https://www.figma.com/proto/XReOTW8hCzSSTPsfqWhwy6/Ivory---Demo-App?page-id=1086%3A72864&type=design&node-id=1221-101377&viewport=-1964%2C1794%2C0.19&t=XEC1Fu5v6GR6h7B3-1&scaling=contain&starting-point-node-id=1221%3A101373).
 
