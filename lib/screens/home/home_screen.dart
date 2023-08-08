@@ -337,7 +337,7 @@ class AccountStats extends StatelessWidget {
               const SizedBox(width: 5),
               AccountBalanceText(
                 value: spending,
-                numberStyle: const TextStyle(color: Colors.white, fontSize: 24),
+                numberStyle: const TextStyle(color: Colors.white, fontSize: 18),
                 centsStyle: const TextStyle(color: Colors.white, fontSize: 14),
               ),
             ],
@@ -356,7 +356,7 @@ class AccountStats extends StatelessWidget {
               const SizedBox(width: 5),
               AccountBalanceText(
                 value: user.personAccount.accountLimit?.value ?? 0,
-                numberStyle: const TextStyle(color: Colors.white, fontSize: 24),
+                numberStyle: const TextStyle(color: Colors.white, fontSize: 18),
                 centsStyle: const TextStyle(color: Colors.white, fontSize: 14),
               ),
             ],

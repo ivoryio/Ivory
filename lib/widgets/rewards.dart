@@ -9,25 +9,28 @@ class Rewards extends StatelessWidget {
   Widget build(BuildContext context) {
     final rewards = [
       Reward(
-        provider: 'Porsche',
-        providerIconUrl: '',
-        description: '75% off Porsche driving experience',
-        imageUrl:
-            'https://hips.hearstapps.com/hmg-prod/images/2023-porsche-911-dakar-fd-152-1674829952.jpg?crop=0.640xw:0.541xh;0.202xw,0.290xh&resize=2048:*',
+        provider: 'Louis Vuitton',
+        providerIconUrl: 'assets/images/logo_reward_1.png',
+        description: '20% off at Louis Vuitton',
+        imageUrl: 'assets/images/Reward card_1.jpg',
       ),
       Reward(
-        provider: 'Porsche',
-        providerIconUrl: '',
-        description: '20% off at our Design Store',
-        imageUrl:
-            'https://www.jidp.or.jp/en/media/5620b8eb-f71b-4542-ac3d-08187beaa581?w=640&h=360&m=1',
-      ),
-      Reward(
-        provider: 'Porsche',
-        providerIconUrl: '',
+        provider: 'Four Seasons',
+        providerIconUrl: 'assets/images/logo_reward_2.png',
         description: '25% off for luxury accommodations',
-        imageUrl:
-            'https://media.cntraveler.com/photos/5f89a04c832eef138f7b94e9/master/w_1600%2Cc_limit/Dorado%2520Beach%2C%2520a%2520Ritz-Carlton%2520Reserve.jpg',
+        imageUrl: 'assets/images/Reward card_2.jpg',
+      ),
+      Reward(
+        provider: 'Facil',
+        providerIconUrl: 'assets/images/logo_reward_3.png',
+        description: '10% off for fine dining experience',
+        imageUrl: 'assets/images/Reward card_3.jpg',
+      ),
+      Reward(
+        provider: 'Ferrari',
+        providerIconUrl: 'assets/images/logo_reward_4.png',
+        description: '75% off driving experience',
+        imageUrl: 'assets/images/Reward card_4.jpg',
       ),
     ];
 
@@ -95,7 +98,7 @@ class RewardCard extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            Image.network(
+            Image.asset(
               reward.imageUrl,
               fit: BoxFit.fill,
             ),
@@ -112,7 +115,7 @@ class RewardCard extends StatelessWidget {
                       shape: BoxShape.circle,
                     ),
                     child: Center(
-                      child: Image.asset('assets/icons/porsche/small_logo.png',
+                      child: Image.asset(reward.providerIconUrl,
                           width: 24, height: 24),
                     ),
                   ),
