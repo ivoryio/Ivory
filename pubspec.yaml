@@ -37,20 +37,22 @@ dependencies:
   redux: ^5.0.0
   flutter_redux: ^0.10.0
   flutter_bloc: ^8.1.2
+  firebase_core: ^2.15.0
+  firebase_messaging: ^14.6.5
   equatable: ^2.0.5
   http: ^0.13.5
   bloc: ^8.1.1
   flutter_platform_widgets: ^3.0.0
   intl: ^0.18.0
-  fl_chart: ^0.61.0
+  fl_chart: ^0.63.0
   dotted_border: ^2.0.0+3
   amazon_cognito_identity_dart_2: ^3.3.0
-  flutter_dotenv: ^5.0.2
-  flutter_svg: ^2.0.5
-  syncfusion_flutter_datepicker: ^21.1.41
-  mask_text_input_formatter: ^2.4.0
+  flutter_dotenv: ^5.1.0
+  flutter_svg: ^2.0.7
+  syncfusion_flutter_datepicker: ^22.2.8
+  mask_text_input_formatter: ^2.5.0
   ffi: ^2.0.1
-  shared_preferences: ^2.1.0
+  shared_preferences: ^2.2.0
   http_mock_adapter: ^0.4.4
   mockito: ^5.4.0
   flutter_switch: ^0.3.2
