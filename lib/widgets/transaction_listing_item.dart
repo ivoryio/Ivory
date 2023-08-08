@@ -34,9 +34,7 @@ class TransactionListItem extends StatelessWidget {
     var senderName = removeUnrelatedWords(transaction.senderName);
 
     final date = transaction.recordedAt!.toIso8601String();
-    final displayedName = user.personAccount.iban == transaction.senderIban
-        ? recipientName
-        : senderName;
+    final displayedName = user.personAccount.iban == transaction.senderIban ? recipientName : senderName;
     final description = transaction.description!;
     final amount = transaction.amount?.value ?? 0;
 
@@ -96,61 +94,45 @@ class TransactionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 6,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(4.0),
-      ),
-      shadowColor: const Color.fromRGBO(0, 0, 0, 0.80),
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                const Icon(Icons.add_card, size: 30),
-                Padding(
-                  padding: const EdgeInsets.only(left: 10),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                            recipientName.isNotEmpty
-                                ? recipientName
-                                : defaultTransactionRecipientName,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16,
-                            )),
-                        Text(
-                          description.isNotEmpty
-                              ? description
-                              : defaultTransactionDescription,
-                          style: const TextStyle(
-                            color: Color(0xFF667085),
-                          ),
-                        ),
-                        Text(
-                          formattedDate,
-                          style: const TextStyle(
-                            color: Color(0xFF667085),
-                          ),
-                        )
-                      ]),
-                ),
-              ],
-            ),
-            TextCurrencyValue(
-                digits: 0,
-                value: amount,
-                maxDigits: 2,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
-                )),
-          ],
-        ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              const Icon(
+                Icons.add_card,
+                size: 20,
+                color: Color(0xFFCC0000),
+              ),
+              const SizedBox(
+                width: 16,
+              ),
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(recipientName.isNotEmpty ? recipientName : defaultTransactionRecipientName,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                    )),
+                Text(
+                  formattedDate,
+                  style: const TextStyle(
+                    color: Color(0xFF667085),
+                  ),
+                )
+              ]),
+            ],
+          ),
+          TextCurrencyValue(
+              digits: 0,
+              value: amount,
+              maxDigits: 2,
+              style: const TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
+              )),
+        ],
       ),
     );
   }
@@ -164,8 +146,7 @@ class TransactionBottomPopup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final DateFormat dateFormatter = DateFormat('d MMMM yyyy, HH:Hm ');
-    final String formattedDate = dateFormatter
-        .format(DateTime.parse(transaction.recordedAt!.toIso8601String()));
+    final String formattedDate = dateFormatter.format(DateTime.parse(transaction.recordedAt!.toIso8601String()));
 
     return Column(
       children: [

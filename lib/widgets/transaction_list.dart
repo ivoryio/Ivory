@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:solarisdemo/widgets/transaction_listing_item.dart';
 
-import 'empty_list_message.dart';
-import 'transaction_listing_item.dart';
-import '../models/transaction_model.dart';
 import '../cubits/transaction_list_cubit/transaction_list_cubit.dart';
+import '../models/transaction_model.dart';
 
 class TransactionList extends StatelessWidget {
   final Widget? header;
@@ -26,10 +25,17 @@ class TransactionList extends StatelessWidget {
       value: transactionListCubit,
       child: BlocBuilder<TransactionListCubit, TransactionListState>(
         builder: (context, state) {
-          Widget emptyListWidget = const TextMessageWithCircularImage(
-            title: "No transactions yet",
-            message:
-                "There are no transactions yet. Your future transactions will be displayed here.",
+          Widget emptyListWidget = Column(
+            children: [
+              if (header != null) header!,
+              const Text(
+                "No transactions yet. When you make payments &  transactions, they will be displayed here.",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ],
           );
 
           switch (state.runtimeType) {
@@ -73,9 +79,7 @@ class TransactionList extends StatelessWidget {
               return Column(
                 children: [
                   if (header != null) header!,
-                  groupedByMonths
-                      ? _buildGroupedByMonthsList(transactions)
-                      : _buildList(context, transactions)
+                  groupedByMonths ? _buildGroupedByMonthsList(transactions) : _buildList(context, transactions)
                 ],
               );
 
@@ -113,22 +117,25 @@ Widget _buildList(
   BuildContext context,
   List<Transaction> transactions,
 ) {
-  return ListView.separated(
-      itemCount: transactions.length,
-      shrinkWrap: true,
-      physics: const ClampingScrollPhysics(),
-      separatorBuilder: (context, index) {
-        return const Divider(
-          height: 10,
-          color: Colors.transparent,
-        );
-      },
-      padding: EdgeInsets.zero,
-      itemBuilder: (context, index) {
-        return TransactionListItem(
-          transaction: transactions[index],
-        );
-      });
+  return SizedBox(
+    height: 180,
+    child: ListView.separated(
+        itemCount: transactions.length,
+        shrinkWrap: true,
+        physics: const ClampingScrollPhysics(),
+        separatorBuilder: (context, index) {
+          return const Divider(
+            height: 10,
+            color: Colors.transparent,
+          );
+        },
+        padding: EdgeInsets.zero,
+        itemBuilder: (context, index) {
+          return TransactionListItem(
+            transaction: transactions[index],
+          );
+        }),
+  );
 }
 
 Widget _buildGroupedByMonthsList(List<Transaction> transactions) {
