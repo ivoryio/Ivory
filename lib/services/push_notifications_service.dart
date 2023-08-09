@@ -76,10 +76,9 @@ class FirebasePushNotificationService extends PushNotificationService {
       });
     }
 
-    FirebaseMessaging.onBackgroundMessage(_onBackgroundMessage); // App is in background
-    FirebaseMessaging.onMessage.listen(_onMessage); // App is in foreground
-    FirebaseMessaging.onMessageOpenedApp.listen(_onMessage); // App is in foreground
-    FirebaseMessaging.instance.getInitialMessage().then(_onMessage); // App is terminated
+    FirebaseMessaging.onBackgroundMessage(_onBackgroundMessage); // App is in background and notification received
+    FirebaseMessaging.onMessageOpenedApp.listen(_onMessage); // App was in background and notification clicked
+    FirebaseMessaging.instance.getInitialMessage().then(_onMessage); // App was terminated and notification clicked
 
     // Handle token
     _messaging.getToken().then(_onTokenRefresh); // Initial token (on app start)
