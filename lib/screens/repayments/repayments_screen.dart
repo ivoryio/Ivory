@@ -28,13 +28,9 @@ class RepaymentsScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'Repayments',
-                      style: TextStyle(
-                        fontSize: 32,
-                        height: 40 / 32,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: ClientConfig.getTextStyleScheme().heading1,
                     ),
                     const SizedBox(height: 24),
                     Column(

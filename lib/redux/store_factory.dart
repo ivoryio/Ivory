@@ -1,9 +1,9 @@
 import 'package:redux/redux.dart';
 import 'package:solarisdemo/infrastructure/notifications/notifications_middleware.dart';
+import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_middleware.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart';
 import 'package:solarisdemo/redux/app_reducer.dart';
-import 'package:solarisdemo/services/push_notification_service.dart';
 
 import 'app_state.dart';
 

@@ -1,10 +1,10 @@
 import 'package:redux/redux.dart';
+import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart';
 import 'package:solarisdemo/models/transaction_model.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/store_factory.dart';
-import 'package:solarisdemo/services/push_notification_service.dart';
 
 Store<AppState> createTestStore({
   required AppState initialState,
