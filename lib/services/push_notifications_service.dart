@@ -13,6 +13,11 @@ import '../redux/app_state.dart';
 
 const String _channelId = 'high_importance_channel';
 
+@pragma('vm:entry-point')
+Future<void> _onBackgroundMessage(RemoteMessage message) async {
+  debugPrint("FCM Background Message Received: ${message.notification?.title}");
+}
+
 abstract class PushNotificationService extends ApiService {
   PushNotificationService({super.user});
 
@@ -71,7 +76,9 @@ class FirebasePushNotificationService extends PushNotificationService {
       });
     }
 
-    FirebaseMessaging.onMessageOpenedApp.listen(_onMessage); // App is in background
+    FirebaseMessaging.onBackgroundMessage(_onBackgroundMessage); // App is in background
+    FirebaseMessaging.onMessage.listen(_onMessage); // App is in foreground
+    FirebaseMessaging.onMessageOpenedApp.listen(_onMessage); // App is in foreground
     FirebaseMessaging.instance.getInitialMessage().then(_onMessage); // App is terminated
 
     // Handle token
@@ -114,7 +121,7 @@ class FirebasePushNotificationService extends PushNotificationService {
     if (token == null) return;
 
     try {
-      await post('notifications/token', body: {'token': token});
+      await post('notifications/token', body: {'token': token}, authNeeded: true);
     } catch (e) {
       log(e.toString());
       throw Exception("Could not update token");
