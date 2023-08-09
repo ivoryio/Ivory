@@ -1,6 +1,6 @@
 import 'package:redux/redux.dart';
 import 'package:solarisdemo/redux/auth/auth_action.dart';
-import 'package:solarisdemo/services/push_notifications_service.dart';
+import 'package:solarisdemo/services/push_notification_service.dart';
 
 import '../../redux/app_state.dart';
 
