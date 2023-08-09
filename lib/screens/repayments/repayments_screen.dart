@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:solarisdemo/screens/repayments/repayment_reminder.dart';
 import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/yvory_list_tile.dart';
@@ -157,7 +158,7 @@ class RepaymentsScreen extends StatelessWidget {
                   title: 'Set repayment reminder',
                   subtitle: 'Before we debit your reference account',
                   onTap: () {
-                    log('Set repayment reminder');
+                    Navigator.pushNamed(context, RepaymentReminder.routeName);
                   },
                 ),
                 YvoryListTile(

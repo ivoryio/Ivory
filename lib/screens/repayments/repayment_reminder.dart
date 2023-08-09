@@ -7,6 +7,8 @@ import 'package:solarisdemo/widgets/screen.dart';
 import 'package:solarisdemo/widgets/yvory_text_field.dart';
 
 class RepaymentReminder extends StatefulWidget {
+  static const routeName = "/repaymentReminderScreen";
+
   const RepaymentReminder({Key? key}) : super(key: key);
 
   @override
@@ -49,15 +51,13 @@ class _RepaymentReminderState extends State<RepaymentReminder> {
               ..._reminders
                   .map(
                     (e) => ListTile(
-                      leading: const Icon(Icons.notifications_none_rounded,
-                          color: Color(0xFFCC0000)),
+                      leading: const Icon(Icons.notifications_none_rounded, color: Color(0xFFCC0000)),
                       title: Text(
                         e.toString(),
                         style: ClientConfig.getTextStyleScheme().heading4,
                       ),
                       trailing: IconButton(
-                        icon: const Icon(Icons.delete_outline,
-                            color: Color(0xFFCC0000)),
+                        icon: const Icon(Icons.delete_outline, color: Color(0xFFCC0000)),
                         onPressed: () => setState(() => _reminders.remove(e)),
                       ),
                       contentPadding: EdgeInsets.zero,
@@ -159,12 +159,10 @@ class _CustomReminderPopUpContent extends StatefulWidget {
   const _CustomReminderPopUpContent();
 
   @override
-  State<_CustomReminderPopUpContent> createState() =>
-      _CustomReminderPopUpContentState();
+  State<_CustomReminderPopUpContent> createState() => _CustomReminderPopUpContentState();
 }
 
-class _CustomReminderPopUpContentState
-    extends State<_CustomReminderPopUpContent> {
+class _CustomReminderPopUpContentState extends State<_CustomReminderPopUpContent> {
   final _textController = TextEditingController(text: '1');
   TimePeriod _timePeriod = TimePeriod.hours;
   NotificationType _notificationType = NotificationType.push;
