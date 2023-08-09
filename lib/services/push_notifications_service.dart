@@ -52,7 +52,6 @@ class FirebasePushNotificationService extends PushNotificationService {
         alert: true,
         sound: true,
       );
-      FirebaseMessaging.onMessage.listen(_onMessage);
     } else {
       // Android foreground notifications are handled by the app
       FirebaseMessaging.onMessage.listen((message) {
