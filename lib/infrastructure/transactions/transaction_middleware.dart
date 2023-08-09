@@ -13,12 +13,13 @@ class GetTransactionsMiddleware extends MiddlewareClass<AppState> {
   call(Store<AppState> store, action, NextDispatcher next) async {
     next(action);
 
-    if(action is GetTransactionsCommandAction) {
+    if (action is GetTransactionsCommandAction) {
       store.dispatch(TransactionsLoadingEventAction(filter: action.filter));
       final response = await _transactionService.getTransactions(filter: action.filter, user: action.user);
 
-      if(response is GetTransactionsSuccessResponse) {
-        store.dispatch(TransactionsFetchedEventAction(transactions: response.transactions, transactionListFilter: action.filter));
+      if (response is GetTransactionsSuccessResponse) {
+        store.dispatch(
+            TransactionsFetchedEventAction(transactions: response.transactions, transactionListFilter: action.filter));
       } else {
         store.dispatch(TransactionsFailedEventAction());
       }

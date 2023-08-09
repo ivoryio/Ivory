@@ -9,6 +9,7 @@ import 'package:solarisdemo/models/home/main_navigation_screens.dart';
 import 'package:solarisdemo/models/transaction_model.dart';
 import 'package:solarisdemo/navigator.dart';
 import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/auth/auth_action.dart';
 import 'package:solarisdemo/screens/account/account_details_screen.dart';
 import 'package:solarisdemo/screens/home/home_screen.dart';
 import 'package:solarisdemo/screens/home/main_navigation_screen.dart';
@@ -38,6 +39,13 @@ class IvoryApp extends StatefulWidget {
 }
 
 class _IvoryAppState extends State<IvoryApp> {
+  // Hack to inform Redux of logged in action
+  void _onAuthStateChanged(AuthState state) {
+    if (state.user != null) {
+      widget.store.dispatch(AuthLoggedInAction(state.user!.cognito));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return StoreProvider<AppState>(
@@ -45,7 +53,7 @@ class _IvoryAppState extends State<IvoryApp> {
       child: BlocProvider(
         create: (context) => AuthCubit(
           authService: AuthService(),
-        ),
+        )..stream.listen(_onAuthStateChanged),
         child: Builder(builder: (context) {
           return MaterialApp(
             title: "Solaris Demo",

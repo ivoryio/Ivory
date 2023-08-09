@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "109004766417",
+    "project_id": "ivorysolarisdemoapp",
+    "storage_bucket": "ivorysolarisdemoapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:109004766417:android:8385f1c86092651d0f99f0",
+        "android_client_info": {
+          "package_name": "com.thinslices.solarisdemo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "109004766417-knp2uc0kkh53p9bmg2hfsk985m1u6omv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXdWck0_AIAjEzmVtAvtW8GK0lHQWNUN0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "109004766417-knp2uc0kkh53p9bmg2hfsk985m1u6omv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "109004766417-cbpim3q1t4fdkfqm65eiqmiktbrreb7n.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.solarisdemo"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
