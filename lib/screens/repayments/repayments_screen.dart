@@ -8,6 +8,7 @@ import 'package:solarisdemo/infrastructure/credit_line/credit_line_presenter.dar
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/credit_line/credit_line_action.dart';
 import 'package:solarisdemo/screens/repayments/repayment_reminder.dart';
+import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/ivory_error_widget.dart';
 import 'package:solarisdemo/widgets/ivory_list_tile.dart';
 import 'package:solarisdemo/widgets/modal.dart';
@@ -56,8 +57,8 @@ class RepaymentsScreen extends StatelessWidget {
                           onInit: (store) {
                             store.dispatch(GetCreditLineCommandAction(user: user.cognito));
                           },
-                          converter: (store) =>
-                              CreditLinePresenter.presentCreditLine(creditLineState: store.state.creditLineState),
+                          converter: (store) => CreditLinePresenter.presentCreditLine(
+                              creditLineState: store.state.creditLineState, user: user),
                           distinct: true,
                           builder: (context, viewModel) {
                             Widget child;
@@ -154,7 +155,7 @@ class _DetailsContentState extends State<_DetailsContent> {
         children: [
           _DetailsItem(
             title: 'Outstanding balance',
-            subtitle: '€2,580.37',
+            subtitle: Format.euro(widget.viewModel.creditLine.outstandingAmount.value),
             onInfoIconTap: () {
               showBottomModal(
                 context: context,
@@ -167,7 +168,7 @@ class _DetailsContentState extends State<_DetailsContent> {
           const Divider(height: 24),
           _DetailsItem(
             title: 'Next full repayment',
-            subtitle: '€595.46',
+            subtitle: Format.euro(widget.viewModel.creditLine.currentBillAmount.value),
             onInfoIconTap: () {
               showBottomModal(
                 context: context,
@@ -178,19 +179,20 @@ class _DetailsContentState extends State<_DetailsContent> {
             },
           ),
           const SizedBox(height: 4),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
-              'Due on Aug 4',
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+              'Due on ${Format.date(widget.viewModel.creditLine.dueDate, pattern: 'MMM dd')}',
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
             ),
           ),
           const SizedBox(height: 12),
           const Divider(height: 1),
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
-            child:
-                _detailsExpanded ? const Column(children: [_ExpandedDetails(), Divider(height: 1)]) : const SizedBox(),
+            child: _detailsExpanded
+                ? Column(children: [_ExpandedDetails(viewModel: widget.viewModel), const Divider(height: 1)])
+                : const SizedBox(),
           ),
           MaterialButton(
             onPressed: () => setState(() => _detailsExpanded = !_detailsExpanded),
@@ -276,7 +278,8 @@ class _DetailsItem extends StatelessWidget {
 }
 
 class _ExpandedDetails extends StatelessWidget {
-  const _ExpandedDetails();
+  final CreditLineFetchedViewModel viewModel;
+  const _ExpandedDetails({required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
@@ -287,9 +290,9 @@ class _ExpandedDetails extends StatelessWidget {
           child: SpacedColumn(
             space: 8,
             children: [
-              const _ExpandedDetailsRow(title: 'Amount spent', trailing: '€1,000.00'),
-              const _ExpandedDetailsRow(title: 'Percentage repayment rate', trailing: '20%'),
-              const _ExpandedDetailsRow(title: 'Repayment amount', trailing: '€200.00'),
+              _ExpandedDetailsRow(title: 'Amount spent', trailing: '€1,000.00'),
+              _ExpandedDetailsRow(title: 'Percentage repayment rate', trailing: '20%'),
+              _ExpandedDetailsRow(title: 'Repayment amount', trailing: '€200.00'),
               _ExpandedDetailsRow(
                 title: 'Interest rate',
                 trailing: '5%',
@@ -302,7 +305,9 @@ class _ExpandedDetails extends StatelessWidget {
                   );
                 },
               ),
-              const _ExpandedDetailsRow(title: 'Interest amount', trailing: '€50.00'),
+              _ExpandedDetailsRow(
+                  title: 'Interest amount',
+                  trailing: Format.euro(viewModel.creditLine.accumulatedInterestAmount.value)),
             ],
           ),
         ),
@@ -330,8 +335,8 @@ class _ExpandedDetails extends StatelessWidget {
                   }),
                 ],
               ),
-              const _ExpandedDetailsRow(title: 'Account owner', trailing: 'Laura'),
-              const _ExpandedDetailsRow(title: 'IBAN', trailing: 'DE12 3456 7890 1234 5678 90'),
+              _ExpandedDetailsRow(title: 'Account owner', trailing: viewModel.ownerName),
+              _ExpandedDetailsRow(title: 'IBAN', trailing: viewModel.iban),
             ],
           ),
         ),
