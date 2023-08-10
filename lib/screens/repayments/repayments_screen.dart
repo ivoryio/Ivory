@@ -7,6 +7,7 @@ import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/infrastructure/credit_line/credit_line_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/credit_line/credit_line_action.dart';
+import 'package:solarisdemo/screens/repayments/change_repayment_rate.dart';
 import 'package:solarisdemo/screens/repayments/repayment_reminder.dart';
 import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/ivory_error_widget.dart';
@@ -27,103 +28,92 @@ class RepaymentsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = context.read<AuthCubit>().state.user!;
 
-    final screenPadding =
-        EdgeInsets.symmetric(horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding);
     return ScreenScaffold(
       body: SingleChildScrollView(
+        padding:
+            EdgeInsets.symmetric(horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AppToolbar(padding: screenPadding),
-            Column(
-              children: [
-                Padding(
-                  padding: screenPadding,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Repayments',
-                        style: ClientConfig.getTextStyleScheme().heading1,
-                      ),
-                      const SizedBox(height: 24),
-                      Material(
-                        color: const Color(0xFFF8F9FA),
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(16),
-                          ),
-                        ),
-                        child: StoreConnector<AppState, CreditLineViewModel>(
-                          onInit: (store) {
-                            store.dispatch(GetCreditLineCommandAction(user: user.cognito));
-                          },
-                          converter: (store) => CreditLinePresenter.presentCreditLine(
-                            creditLineState: store.state.creditLineState,
-                            user: user,
-                          ),
-                          distinct: true,
-                          builder: (context, viewModel) {
-                            if (viewModel is CreditLineLoadingViewModel) {
-                              return Container(
-                                alignment: Alignment.center,
-                                width: double.infinity,
-                                padding: const EdgeInsets.all(16),
-                                child: const CircularProgressIndicator(),
-                              );
-                            } else if (viewModel is CreditLineErrorViewModel) {
-                              return Container(
-                                alignment: Alignment.center,
-                                width: double.infinity,
-                                padding: const EdgeInsets.all(16),
-                                child: const IvoryErrorWidget('Error loading credit line details'),
-                              );
-                            }
+            const AppToolbar(),
+            Text(
+              'Repayments',
+              style: ClientConfig.getTextStyleScheme().heading1,
+            ),
+            const SizedBox(height: 24),
+            Material(
+              color: const Color(0xFFF8F9FA),
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(16),
+                ),
+              ),
+              child: StoreConnector<AppState, CreditLineViewModel>(
+                onInit: (store) {
+                  store.dispatch(GetCreditLineCommandAction(user: user.cognito));
+                },
+                converter: (store) => CreditLinePresenter.presentCreditLine(
+                  creditLineState: store.state.creditLineState,
+                  user: user,
+                ),
+                distinct: true,
+                builder: (context, viewModel) {
+                  if (viewModel is CreditLineLoadingViewModel) {
+                    return Container(
+                      alignment: Alignment.center,
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(16),
+                      child: const CircularProgressIndicator(),
+                    );
+                  } else if (viewModel is CreditLineErrorViewModel) {
+                    return Container(
+                      alignment: Alignment.center,
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(16),
+                      child: const IvoryErrorWidget('Error loading credit line details'),
+                    );
+                  }
 
-                            return _DetailsContent(viewModel: viewModel as CreditLineFetchedViewModel);
-                          },
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      Text(
-                        'Actions',
-                        style: ClientConfig.getTextStyleScheme().heading4,
-                      ),
-                    ],
-                  ),
-                ),
-                IvoryListTile(
-                  startIcon: Icons.sync,
-                  title: 'Change repayment rate',
-                  subtitle: 'And choose between percentage or fixed',
-                  onTap: () {
-                    log('Change repayment rate');
-                  },
-                ),
-                IvoryListTile(
-                  startIcon: Icons.notifications_active_outlined,
-                  title: 'Set repayment reminder',
-                  subtitle: 'Before we debit your reference account',
-                  onTap: () {
-                    Navigator.pushNamed(context, RepaymentReminder.routeName);
-                  },
-                ),
-                IvoryListTile(
-                  startIcon: Icons.content_paste_search_rounded,
-                  title: 'View bills',
-                  subtitle: 'View all your repayment bills',
-                  onTap: () {
-                    log('View bills');
-                  },
-                ),
-                IvoryListTile(
-                  startIcon: Icons.analytics_outlined,
-                  title: 'Repayments analytics',
-                  subtitle: 'Check your repayment analytics',
-                  onTap: () {
-                    log('Repayments analytics');
-                  },
-                ),
-              ],
+                  return _DetailsContent(viewModel: viewModel as CreditLineFetchedViewModel);
+                },
+              ),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'Actions',
+              style: ClientConfig.getTextStyleScheme().heading4,
+            ),
+            IvoryListTile(
+              startIcon: Icons.sync,
+              title: 'Change repayment rate',
+              subtitle: 'And choose between percentage or fixed',
+              onTap: () {
+                Navigator.pushNamed(context, ChangeRepaymentRateScreen.routeName);
+              },
+            ),
+            IvoryListTile(
+              startIcon: Icons.notifications_active_outlined,
+              title: 'Set repayment reminder',
+              subtitle: 'Before we debit your reference account',
+              onTap: () {
+                Navigator.pushNamed(context, RepaymentReminder.routeName);
+              },
+            ),
+            IvoryListTile(
+              startIcon: Icons.content_paste_search_rounded,
+              title: 'View bills',
+              subtitle: 'View all your repayment bills',
+              onTap: () {
+                log('View bills');
+              },
+            ),
+            IvoryListTile(
+              startIcon: Icons.analytics_outlined,
+              title: 'Repayments analytics',
+              subtitle: 'Check your repayment analytics',
+              onTap: () {
+                log('Repayments analytics');
+              },
             ),
           ],
         ),
