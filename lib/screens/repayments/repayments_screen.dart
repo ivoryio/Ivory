@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:solarisdemo/screens/repayments/change_repayment_rate.dart';
 import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/yvory_list_tile.dart';
@@ -151,7 +152,10 @@ class RepaymentsScreen extends StatelessWidget {
                   title: 'Change repayment rate',
                   subtitle: 'And choose between percentage or fixed',
                   onTap: () {
-                    log('Change repayment rate');
+                    Navigator.pushNamed(
+                      context,
+                      ChangeRepaymentRateScreen.routeName,
+                    );
                   },
                 ),
                 YvoryListTile(
