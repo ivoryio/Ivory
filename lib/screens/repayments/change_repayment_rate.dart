@@ -10,11 +10,18 @@ import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import '../../widgets/button.dart';
 import '../../widgets/modal.dart';
 
-class ChangeRepaymentRateScreen extends StatelessWidget {
+class ChangeRepaymentRateScreen extends StatefulWidget {
   static const routeName = "/changeRepaymentRateScreen";
 
   const ChangeRepaymentRateScreen({super.key});
 
+  @override
+  State<ChangeRepaymentRateScreen> createState() =>
+      _ChangeRepaymentRateScreenState();
+}
+
+class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
+  final TextEditingController _controller = TextEditingController(text: '500');
   @override
   Widget build(BuildContext context) {
     return ScreenScaffold(
@@ -36,7 +43,7 @@ class ChangeRepaymentRateScreen extends StatelessWidget {
               style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
             ),
             const SizedBox(height: 24),
-            const ChooseRepaymentType(),
+            ChooseRepaymentType(controller: _controller),
             const Spacer(),
             SizedBox(
               width: double.infinity,
@@ -62,7 +69,8 @@ class ChangeRepaymentRateScreen extends StatelessWidget {
 }
 
 class ChooseRepaymentType extends StatefulWidget {
-  const ChooseRepaymentType({super.key});
+  final TextEditingController controller;
+  const ChooseRepaymentType({super.key, required this.controller});
 
   @override
   State<ChooseRepaymentType> createState() => _ChooseRepaymentTypeState();
@@ -71,9 +79,9 @@ class ChooseRepaymentType extends StatefulWidget {
 class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
   RepaymentType _selectedOption = RepaymentType.percentage;
 
-  double sliderValue = 0.2;
-  double min = 0.05;
-  double max = 0.9;
+  double sliderValue = 20;
+  double min = 5;
+  double max = 90;
 
   @override
   Widget build(BuildContext context) {
@@ -165,15 +173,9 @@ class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
                 const Row(
                   children: [
                     Expanded(
-                      child: Text(
-                        'Choose your preferred percentage rate. The minimum is 5% and the maximum is 90%.',
-                        style: TextStyle(
-                          fontSize: 14,
-                          height: 1.285, // 18 / 14,
-                          fontWeight: FontWeight.w400,
-                          color: Color(0xFF15141E),
-                        ),
-                      ),
+                      child: RepaymentConditions(
+                          message:
+                              'Choose your preferred percentage rate. The minimum is 5% and the maximum is 90%.'),
                     ),
                   ],
                 ),
@@ -185,45 +187,34 @@ class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
                     SliderTheme(
                       data: SliderThemeData(
                         trackHeight: 8,
+                        trackShape: const RoundedRectSliderTrackShape(),
                         activeTrackColor: const Color(0xFF2575FC),
                         inactiveTrackColor: const Color(0xFFE9EAEB),
                         thumbColor: const Color(0xFF071034),
-                        thumbShape: CustomThumb(
-                          min: min,
-                          max: max,
-                        ),
-                        // thumbShape: RoundSliderThumbShape(
-                        //   enabledThumbRadius: 20,
-                        // ),
-                        overlayColor: const Color(0x00FFFFFF),
-                        overlayShape:
-                            const RoundSliderOverlayShape(overlayRadius: 20),
+                        thumbShape: CustomThumb(label: sliderValue),
+                        overlayColor: const Color(0x00FFFF00),
                         valueIndicatorColor: const Color(0xFF2575FC),
                         valueIndicatorTextStyle: const TextStyle(
                           color: Color(0xFFFFFFFF),
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                         ),
-                        valueIndicatorShape: const RoundSliderThumbShape(),
                       ),
                       child: Expanded(
                         child: Slider(
                           value: sliderValue,
                           onChanged: (double newValue) {
                             setState(() {
-                              print('NEW VALUE ===> $newValue');
-                              sliderValue = newValue.clamp(min, max);
+                              sliderValue = newValue;
                             });
                           },
                           onChangeEnd: (double newValue) {
                             setState(() {
-                              print('FINAL VALUE ===> $newValue');
-                              sliderValue = newValue.clamp(min, max);
+                              sliderValue = newValue;
                             });
                           },
                           min: min,
                           max: max,
-                          label: '${(sliderValue * 100).round()}%',
                         ),
                       ),
                     ),
@@ -233,10 +224,13 @@ class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(left: 12),
-                      child: Text('${(min * 100).round()}%'),
+                      padding: const EdgeInsets.only(left: 18),
+                      child: Text('${min.toInt()}%'),
                     ),
-                    Text('${(max * 100).round()}%'),
+                    Padding(
+                      padding: EdgeInsets.only(right: 6),
+                      child: Text('${max.toInt()}%'),
+                    ),
                   ],
                 ),
               ],
@@ -250,15 +244,9 @@ class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
                 const Row(
                   children: [
                     Expanded(
-                      child: Text(
-                        'Choose your preferred fixed rate. The minimum is €500 and the maximum is €9,000.',
-                        style: TextStyle(
-                          fontSize: 14,
-                          height: 1.285, // 18 / 14,
-                          fontWeight: FontWeight.w400,
-                          color: Color(0xFF15141E),
-                        ),
-                      ),
+                      child: RepaymentConditions(
+                          message:
+                              'Choose your preferred fixed rate. The minimum is €500 and the maximum is €9,000.'),
                     ),
                   ],
                 ),
@@ -267,70 +255,31 @@ class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Expanded(
-                      child: TextField(
-                        keyboardType: TextInputType.number,
-                        // inputFormatters: <TextInputFormatter>[
-                        //   FilteringTextInputFormatter.allow(
-                        //       RegExp(r'^\d+\.?\d*$')),
-                        // ],
-                        decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 12,
-                          ),
-                          hintText: 'Enter amount',
-                          filled: true,
-                          fillColor: const Color(0xFFF8F9FA),
-                          prefixIcon: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                width: 1,
-                                color: const Color(0xFFADADB4),
-                                style: BorderStyle.solid,
-                              ),
-                              borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(8),
-                                  bottomLeft: Radius.circular(8)),
-                              color: const Color(0xFFF8F9FA),
-                            ),
-                            child: const Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 8),
-                              child: Icon(
-                                Icons.euro,
-                                size: 24,
-                                color: Color(0xFFADADB4),
-                              ),
-                            ),
-                          ),
-                          prefixStyle: TextField.materialMisspelledTextStyle,
-                          border: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(8)),
-                            borderSide: BorderSide(
-                              width: 1,
-                              color: Color(0xFFADADB4),
-                              style: BorderStyle.solid,
-                            ),
-                          ),
-                          enabledBorder: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(8)),
-                            borderSide: BorderSide(
-                              width: 1,
-                              color: Color(0xFFADADB4),
-                              style: BorderStyle.solid,
-                            ),
-                          ),
-                          focusedBorder: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(8)),
-                            borderSide: BorderSide(
-                              width: 1,
-                              color: Color(0xFFADADB4),
-                              style: BorderStyle.solid,
-                            ),
-                          ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 8),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          width: 1,
+                          color: const Color(0xFFADADB4),
+                          style: BorderStyle.solid,
+                        ),
+                        borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(8),
+                            bottomLeft: Radius.circular(8)),
+                        color: const Color(0xFFF8F9FA),
+                      ),
+                      child: const Text(
+                        '€',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFFADADB4),
                         ),
                       ),
+                    ),
+                    Expanded(
+                      child: CustomTextField(controller: widget.controller),
                     ),
                   ],
                 ),
@@ -342,11 +291,95 @@ class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
   }
 }
 
-class CustomThumb extends SliderComponentShape {
-  final double min;
-  final double max;
+class RepaymentConditions extends StatelessWidget {
+  final String message;
+  const RepaymentConditions({super.key, required this.message});
 
-  const CustomThumb({required this.min, required this.max});
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      message,
+      style: const TextStyle(
+        fontSize: 14,
+        height: 1.285, // 18 / 14,
+        fontWeight: FontWeight.w400,
+        color: Color(0xFF15141E),
+      ),
+    );
+  }
+}
+
+class CustomTextField extends StatelessWidget {
+  final TextEditingController? controller;
+  final void Function(String)? onChanged;
+
+  const CustomTextField({super.key, this.controller, this.onChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: controller,
+      onChanged: (text) {
+        print(text);
+        if (onChanged != null) {
+          onChanged!(text);
+        }
+      },
+      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+      // inputFormatters: <TextInputFormatter>[
+      //   FilteringTextInputFormatter.allow(
+      //       RegExp(r'^\d+\.?\d*$')),
+      // ],
+
+      decoration: const InputDecoration(
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 12,
+        ),
+        filled: true,
+        fillColor: Color(0xFFF8F9FA),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(8),
+            bottomRight: Radius.circular(8),
+          ),
+          borderSide: BorderSide(
+            width: 1,
+            color: Color(0xFFADADB4),
+            style: BorderStyle.solid,
+          ),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(8),
+            bottomRight: Radius.circular(8),
+          ),
+          borderSide: BorderSide(
+            width: 1,
+            color: Color(0xFFADADB4),
+            style: BorderStyle.solid,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(8),
+            bottomRight: Radius.circular(8),
+          ),
+          borderSide: BorderSide(
+            width: 1,
+            color: Color(0xFFADADB4),
+            style: BorderStyle.solid,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CustomThumb extends SliderComponentShape {
+  final double label;
+
+  CustomThumb({required this.label});
 
   @override
   Size getPreferredSize(bool isEnabled, bool isDiscrete) {
@@ -359,9 +392,7 @@ class CustomThumb extends SliderComponentShape {
     Offset center, {
     required Animation<double> activationAnimation,
     required Animation<double> enableAnimation,
-    bool isDiscrete = false,
-    bool isEnabled = false,
-    bool? isOnTop,
+    bool? isDiscrete,
     TextPainter? labelPainter,
     double? value,
     double? textScaleFactor,
@@ -372,33 +403,34 @@ class CustomThumb extends SliderComponentShape {
     bool isPressed = false,
   }) {
     final canvas = context.canvas;
-    final fillPaint = Paint()
+
+    final paint = Paint()
       ..color = sliderTheme!.thumbColor!
       ..style = PaintingStyle.fill;
+    canvas.drawCircle(center, 20, paint);
 
-    final borderPaint = Paint()
-      ..strokeWidth = 2
-      ..style = PaintingStyle.stroke;
+    const TextStyle textStyle = TextStyle(
+      color: Colors.white,
+      fontSize: 14,
+      fontWeight: FontWeight.bold,
+    );
 
-    final centerWithOffset = center + const Offset(0, 0);
+    final textSpan = TextSpan(
+      text: '${label.round()}%',
+      style: textStyle,
+    );
 
-    canvas.drawCircle(centerWithOffset,
-        getPreferredSize(isEnabled, isDiscrete).width / 2, fillPaint);
-    canvas.drawCircle(centerWithOffset,
-        getPreferredSize(isEnabled, isDiscrete).width / 2, borderPaint);
-
-    final valuePainter = TextPainter(
-      text: TextSpan(
-        text: '${(value!.clamp(min, max) * 100).round()}%',
-        style: sliderTheme.valueIndicatorTextStyle,
-      ),
+    final textPainter = TextPainter(
+      text: textSpan,
       textDirection: TextDirection.ltr,
       textAlign: TextAlign.center,
     );
-    valuePainter.layout();
-    final valueOffset = centerWithOffset -
-        Offset(valuePainter.width / 2, valuePainter.height / 2);
-    valuePainter.paint(canvas, valueOffset);
+    textPainter.layout();
+
+    final textOffset = Offset(
+        center.dx - textPainter.width / 2, center.dy - textPainter.height / 2);
+
+    textPainter.paint(canvas, textOffset);
   }
 }
 
