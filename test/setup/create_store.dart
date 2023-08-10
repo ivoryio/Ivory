@@ -1,28 +1,27 @@
 import 'package:redux/redux.dart';
+import 'package:solarisdemo/infrastructure/credit_line/credit_line_service.dart';
+import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
+import 'package:solarisdemo/infrastructure/repayments/reminder/repayment_reminder_service.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart';
 import 'package:solarisdemo/models/transaction_model.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/store_factory.dart';
-import 'package:solarisdemo/services/push_notification_service.dart';
 
 Store<AppState> createTestStore({
   required AppState initialState,
-  TransactionService? transactionService,
   PushNotificationService? pushNotificationService,
+  TransactionService? transactionService,
+  CreditLineService? creditLineService,
+  RepaymentReminderService? repaymentReminderService,
 }) {
   return createStore(
     initialState: initialState,
-    transactionService: transactionService ?? NotImplementedTransactionService(),
     pushNotificationService: pushNotificationService ?? NotImplementedPushNotificationService(),
+    transactionService: transactionService ?? NotImplementedTransactionService(),
+    creditLineService: creditLineService ?? NotImplementedCreditLineService(),
+    repaymentReminderService: repaymentReminderService ?? NotImplementedRepaymentReminderService(),
   );
-}
-
-class NotImplementedTransactionService extends TransactionService {
-  @override
-  Future<TransactionsServiceResponse> getTransactions({TransactionListFilter? filter, User? user}) {
-    throw UnimplementedError();
-  }
 }
 
 class NotImplementedPushNotificationService extends PushNotificationService {
@@ -33,6 +32,27 @@ class NotImplementedPushNotificationService extends PushNotificationService {
 
   @override
   Future<bool> hasPermission() {
+    throw UnimplementedError();
+  }
+}
+
+class NotImplementedTransactionService extends TransactionService {
+  @override
+  Future<TransactionsServiceResponse> getTransactions({TransactionListFilter? filter, User? user}) {
+    throw UnimplementedError();
+  }
+}
+
+class NotImplementedCreditLineService extends CreditLineService {
+  @override
+  Future<CreditLineServiceResponse> getCreditLine({User? user}) {
+    throw UnimplementedError();
+  }
+}
+
+class NotImplementedRepaymentReminderService extends RepaymentReminderService {
+  @override
+  Future<RepaymentReminderServiceResponse> getRepaymentReminders({User? user}) {
     throw UnimplementedError();
   }
 }

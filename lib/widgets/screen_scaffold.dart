@@ -37,8 +37,7 @@ class ScreenScaffold extends StatelessWidget {
         return _buildScaffold();
       }
     } else {
-      return WillPopScope(
-          onWillPop: () async => false, child: _buildScaffold());
+      return WillPopScope(onWillPop: () async => false, child: _buildScaffold());
     }
   }
 
@@ -54,12 +53,10 @@ class ScreenScaffold extends StatelessWidget {
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: statusBarColor ?? Colors.transparent,
           statusBarIconBrightness: statusBarIconBrightness,
-          statusBarBrightness: statusBarIconBrightness == Brightness.dark
-              ? Brightness.light
-              : Brightness.dark,
+          statusBarBrightness: statusBarIconBrightness == Brightness.dark ? Brightness.light : Brightness.dark,
         ),
       ),
-      body: body,
+      body: SafeArea(top: false, child: body),
     );
   }
 }
@@ -95,9 +92,7 @@ class MainNavigationScreenScaffold extends StatelessWidget {
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: statusBarColor ?? Colors.transparent,
           statusBarIconBrightness: statusBarIconBrightness,
-          statusBarBrightness: statusBarIconBrightness == Brightness.dark
-              ? Brightness.light
-              : Brightness.dark,
+          statusBarBrightness: statusBarIconBrightness == Brightness.dark ? Brightness.light : Brightness.dark,
         ),
       ),
       bottomNavigationBar: bottomNavigationBar,

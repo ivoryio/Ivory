@@ -70,6 +70,12 @@ class DefaultTheme {
         fontWeight: FontWeight.w400,
         color: Color(0xFF15141E),
       ),
+      bodyLargeRegularBold: const TextStyle(
+        fontSize: 16,
+        height: 1.5, // 24 / 16,
+        fontWeight: FontWeight.w600,
+        color: Color(0xFF15141E),
+      ),
       labelSmall: const TextStyle(
         fontSize: 14,
         height: 1.285, // 18 / 14,
@@ -167,6 +173,12 @@ class PorscheTheme {
         fontWeight: FontWeight.w400,
         color: Color(0xFF15141E),
       ),
+      bodyLargeRegularBold: const TextStyle(
+        fontSize: 16,
+        height: 1.5, // 24 / 16,
+        fontWeight: FontWeight.w600,
+        color: Color(0xFF15141E),
+      ),
       labelSmall: const TextStyle(
         fontSize: 14,
         height: 1.285, // 18 / 14,
@@ -199,6 +211,7 @@ class TextStyleScheme {
   final TextStyle heading4;
   final TextStyle bodySmallRegular;
   final TextStyle bodyLargeRegular;
+  final TextStyle bodyLargeRegularBold;
   final TextStyle labelSmall;
   final TextStyle labelMedium;
   final TextStyle labelLarge;
@@ -209,6 +222,7 @@ class TextStyleScheme {
     required this.heading4,
     required this.bodySmallRegular,
     required this.bodyLargeRegular,
+    required this.bodyLargeRegularBold,
     required this.labelSmall,
     required this.labelMedium,
     required this.labelLarge,

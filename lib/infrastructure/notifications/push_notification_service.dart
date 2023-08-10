@@ -9,7 +9,7 @@ import 'package:redux/redux.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/services/api_service.dart';
 
-import '../redux/app_state.dart';
+import '../../redux/app_state.dart';
 
 const String _channelId = 'high_importance_channel';
 
@@ -75,9 +75,13 @@ class FirebasePushNotificationService extends PushNotificationService {
       });
     }
 
-    FirebaseMessaging.onBackgroundMessage(_onBackgroundMessage); // App is in background and notification received
-    FirebaseMessaging.onMessageOpenedApp.listen(_onMessage); // App was in background and notification clicked
-    FirebaseMessaging.instance.getInitialMessage().then(_onMessage); // App was terminated and notification clicked
+    FirebaseMessaging.onBackgroundMessage(
+        _onBackgroundMessage); // App is in background and notification received
+    FirebaseMessaging.onMessageOpenedApp
+        .listen(_onMessage); // App was in background and notification clicked
+    FirebaseMessaging.instance
+        .getInitialMessage()
+        .then(_onMessage); // App was terminated and notification clicked
 
     // Handle token
     _messaging.getToken().then(_onTokenRefresh); // Initial token (on app start)
@@ -99,7 +103,8 @@ class FirebasePushNotificationService extends PushNotificationService {
       importance: Importance.max,
     );
     final androidImplementation = FlutterLocalNotificationsPlugin()
-        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>();
 
     await androidImplementation?.initialize(
       const AndroidInitializationSettings('@mipmap/ic_launcher'),
@@ -119,7 +124,8 @@ class FirebasePushNotificationService extends PushNotificationService {
     if (token == null) return;
 
     try {
-      await post('notifications/token', body: {'token': token}, authNeeded: true);
+      await post('notifications/token',
+          body: {'token': token}, authNeeded: true);
     } catch (e) {
       log(e.toString());
       throw Exception("Could not update token");

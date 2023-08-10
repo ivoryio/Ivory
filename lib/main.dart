@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:redux/redux.dart';
+import 'package:solarisdemo/infrastructure/credit_line/credit_line_service.dart';
+import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
+import 'package:solarisdemo/infrastructure/repayments/reminder/repayment_reminder_service.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart';
 import 'package:solarisdemo/ivory_app.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/store_factory.dart';
-import 'package:solarisdemo/services/push_notification_service.dart';
 
 import '../config.dart';
 import 'firebase_options.dart';
@@ -35,8 +37,10 @@ Future<void> main() async {
 Store<AppState> _buildStore() {
   final store = createStore(
     initialState: AppState.initialState(),
-    transactionService: TransactionService(),
     pushNotificationService: FirebasePushNotificationService(),
+    transactionService: TransactionService(),
+    creditLineService: CreditLineService(),
+    repaymentReminderService: RepaymentReminderService(),
   );
 
   return store;

@@ -16,8 +16,8 @@ Future<dynamic> showBottomModal({
     backgroundColor: Colors.white,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(20),
-        topRight: Radius.circular(20),
+        topLeft: Radius.circular(24),
+        topRight: Radius.circular(24),
       ),
     ),
     builder: (context) => SingleChildScrollView(
@@ -25,7 +25,7 @@ Future<dynamic> showBottomModal({
         24,
         8,
         24,
-        MediaQuery.of(context).padding.bottom + 16,
+        MediaQuery.of(context).padding.bottom + MediaQuery.of(context).viewInsets.bottom + 16,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
