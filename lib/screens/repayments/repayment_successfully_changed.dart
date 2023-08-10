@@ -46,9 +46,9 @@ class RepaymentSuccessfullyChanged extends StatelessWidget {
               disabledColor: const Color(0xFFDFE2E6),
               color: const Color(0xFF2575FC),
               onPressed: () {
-                Navigator.pushNamed(
+                Navigator.popUntil(
                   context,
-                  RepaymentsScreen.routeName,
+                  ModalRoute.withName(RepaymentsScreen.routeName),
                 );
               },
             ),

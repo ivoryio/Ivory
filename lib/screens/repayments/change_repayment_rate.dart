@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
@@ -44,6 +43,15 @@ class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
 
   @override
   Widget build(BuildContext context) {
+    backWithoutSaving() {
+      showBottomModal(
+        context: context,
+        title: "Are you sure you want to discard the changes?",
+        message: "The changes you made will not be saved.",
+        content: const ShowBottomModalActions(),
+      );
+    }
+
     return ScreenScaffold(
       body: Padding(
         padding: EdgeInsets.symmetric(
@@ -52,9 +60,10 @@ class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
         ),
         child: Column(
           children: [
-            const AppToolbar(
-                // onBackButtonPressed: ,
-                ),
+            AppToolbar(
+              onBackButtonPressed:
+                  (_canContinue == true) ? backWithoutSaving : null,
+            ),
             Text(
               'Change repayment rate',
               style: ClientConfig.getTextStyleScheme().heading1,
@@ -88,6 +97,94 @@ class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
             ),
             const SizedBox(height: 8),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class ShowBottomModalActions extends StatelessWidget {
+  const ShowBottomModalActions({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: 0,
+        vertical: ClientConfig.getCustomClientUiSettings()
+            .defaultScreenVerticalPadding,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          CustomAction(
+            path: () {
+              Navigator.pop(context);
+            },
+            message: 'No, go back',
+            backgroundColor: Colors.white,
+            borderColor: Colors.black,
+            messageColor: Colors.black,
+          ),
+          const SizedBox(height: 16),
+          CustomAction(
+            path: () {
+              Navigator.pushNamed(
+                context,
+                RepaymentSuccessfullyChanged.routeName,
+              );
+            },
+            message: 'Yes, discard changes',
+            backgroundColor: Colors.red,
+            borderColor: Colors.red,
+            messageColor: Colors.white,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CustomAction extends StatelessWidget {
+  final void Function() path;
+  final String message;
+  final Color backgroundColor;
+  final Color borderColor;
+  final Color messageColor;
+
+  const CustomAction({
+    super.key,
+    required this.path,
+    required this.message,
+    required this.backgroundColor,
+    required this.borderColor,
+    required this.messageColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 48,
+      child: ElevatedButton(
+        onPressed: () => path(),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: backgroundColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
+            side: BorderSide(
+              width: 1,
+              color: borderColor,
+              style: BorderStyle.solid,
+            ),
+          ),
+          elevation: 0,
+        ),
+        child: Text(
+          message,
+          style: TextStyle(
+            color: messageColor,
+          ),
         ),
       ),
     );
@@ -304,7 +401,7 @@ class RepaymentConditions extends StatelessWidget {
       message,
       style: const TextStyle(
         fontSize: 14,
-        height: 1.285, // 18 / 14,
+        height: 1.285,
         fontWeight: FontWeight.w400,
         color: Color(0xFF15141E),
       ),
