@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
@@ -21,14 +22,14 @@ class ChangeRepaymentRateScreen extends StatefulWidget {
 }
 
 class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
-  final TextEditingController _controller = TextEditingController(text: '500');
+  final TextEditingController _controller =
+      TextEditingController(text: '500.00');
   bool _canContinue = false;
 
   void _updateCanContinue() {
     if (_canContinue == true) {
       return;
     }
-    ;
 
     setState(() {
       _canContinue = true;
@@ -51,7 +52,9 @@ class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
         ),
         child: Column(
           children: [
-            const AppToolbar(),
+            const AppToolbar(
+                // onBackButtonPressed: ,
+                ),
             Text(
               'Change repayment rate',
               style: ClientConfig.getTextStyleScheme().heading1,
@@ -259,7 +262,7 @@ class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
                       child: Text('${min.toInt()}%'),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(right: 6),
+                      padding: const EdgeInsets.only(right: 6),
                       child: Text('${max.toInt()}%'),
                     ),
                   ],
@@ -282,38 +285,7 @@ class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 8),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          width: 1,
-                          color: const Color(0xFFADADB4),
-                          style: BorderStyle.solid,
-                        ),
-                        borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(8),
-                            bottomLeft: Radius.circular(8)),
-                        color: const Color(0xFFF8F9FA),
-                      ),
-                      child: const Text(
-                        '€',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFFADADB4),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: CustomTextField(controller: widget.controller),
-                    ),
-                  ],
-                ),
+                CustomTextField(controller: widget.controller),
               ],
             ),
         ],
@@ -340,76 +312,136 @@ class RepaymentConditions extends StatelessWidget {
   }
 }
 
-class CustomTextField extends StatelessWidget {
+class CustomTextField extends StatefulWidget {
   final TextEditingController? controller;
   final void Function(String)? onChanged;
 
   const CustomTextField({super.key, this.controller, this.onChanged});
 
   @override
+  State<CustomTextField> createState() => _CustomTextFieldState();
+}
+
+class _CustomTextFieldState extends State<CustomTextField> {
+  bool _rangeError = false;
+  String errorMessage = '';
+
+  @override
   Widget build(BuildContext context) {
     final RegExp regExp = RegExp(r'^\d+\.?\d*$');
 
-    return TextField(
-      controller: controller,
-      onChanged: (text) {
-        print(text);
-        if (onChanged != null) {
-          onChanged!(text);
-        }
-      },
-      keyboardType: const TextInputType.numberWithOptions(decimal: true),
-      inputFormatters: <TextInputFormatter>[
-        FilteringTextInputFormatter.allow(regExp),
-        TextInputFormatter.withFunction(
-          (oldValue, newValue) {
-            final text = newValue.text;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  width: 1,
+                  color: _rangeError ? Colors.red : const Color(0xFFADADB4),
+                  style: BorderStyle.solid,
+                ),
+                borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(8),
+                    bottomLeft: Radius.circular(8)),
+                color: const Color(0xFFF8F9FA),
+              ),
+              child: const Text(
+                '€',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFFADADB4),
+                ),
+              ),
+            ),
+            Expanded(
+              child: TextField(
+                controller: widget.controller,
+                onChanged: (text) {
+                  if (widget.onChanged != null) {
+                    widget.onChanged!(text);
+                  }
 
-            return (text.contains(regExp)) ? newValue : oldValue;
-          },
+                  setState(() {
+                    _rangeError =
+                        (double.parse(text) < 500 || double.parse(text) > 9000);
+                  });
+
+                  if (double.parse(text) < 500) {
+                    errorMessage = 'Rate is too low. The minimum is €500.';
+                  }
+
+                  if (double.parse(text) > 9000) {
+                    errorMessage = 'Rate is too high. The maximum is €9,000.';
+                  }
+                },
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.allow(regExp),
+                  TextInputFormatter.withFunction(
+                    (oldValue, newValue) {
+                      final text = newValue.text;
+
+                      if (text.isEmpty) {
+                        return newValue.copyWith(text: '');
+                      }
+
+                      return (text.contains(regExp)) ? newValue : oldValue;
+                    },
+                  ),
+                ],
+                decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                  filled: true,
+                  fillColor: const Color(0xFFF8F9FA),
+                  border: OutlineInputBorder(
+                    borderRadius: const BorderRadius.only(
+                      topRight: Radius.circular(8),
+                      bottomRight: Radius.circular(8),
+                    ),
+                    borderSide: BorderSide(
+                      width: 1,
+                      color: _rangeError ? Colors.red : const Color(0xFFADADB4),
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: const BorderRadius.only(
+                      topRight: Radius.circular(8),
+                      bottomRight: Radius.circular(8),
+                    ),
+                    borderSide: BorderSide(
+                      width: 1,
+                      color: _rangeError ? Colors.red : const Color(0xFFADADB4),
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
+        _rangeError
+            ? Text(
+                errorMessage,
+                style: const TextStyle(
+                  fontFamily: 'Montserrat',
+                  fontSize: 14,
+                  height: 1.6,
+                  color: Colors.red,
+                ),
+              )
+            : const SizedBox(),
       ],
-      decoration: const InputDecoration(
-        contentPadding: EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 12,
-        ),
-        filled: true,
-        fillColor: Color(0xFFF8F9FA),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(8),
-            bottomRight: Radius.circular(8),
-          ),
-          borderSide: BorderSide(
-            width: 1,
-            color: Color(0xFFADADB4),
-            style: BorderStyle.solid,
-          ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(8),
-            bottomRight: Radius.circular(8),
-          ),
-          borderSide: BorderSide(
-            width: 1,
-            color: Color(0xFFADADB4),
-            style: BorderStyle.solid,
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(8),
-            bottomRight: Radius.circular(8),
-          ),
-          borderSide: BorderSide(
-            width: 1,
-            color: Color(0xFFADADB4),
-            style: BorderStyle.solid,
-          ),
-        ),
-      ),
     );
   }
 }
