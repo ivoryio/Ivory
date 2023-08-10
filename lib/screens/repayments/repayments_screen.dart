@@ -323,7 +323,10 @@ class _ExpandedDetails extends StatelessWidget {
                   }),
                 ],
               ),
-              _ExpandedDetailsRow(title: 'Account owner', trailing: viewModel.ownerName),
+              _ExpandedDetailsRow(
+                  title: 'Account owner',
+                  trailing:
+                      '${viewModel.ownerName.substring(0, 12)}...${viewModel.ownerName.substring(viewModel.ownerName.length - 4)}'),
               _ExpandedDetailsRow(title: 'IBAN', trailing: viewModel.iban),
             ],
           ),

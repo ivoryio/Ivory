@@ -17,6 +17,7 @@ class RepaymentReminderService extends ApiService {
 
       return RepaymentReminderSuccessResponse(repaymentReminders: reminders);
     } catch (e) {
+      return RepaymentReminderSuccessResponse(repaymentReminders: const []);
       return RepaymentReminderServiceErrorResponse();
     }
   }

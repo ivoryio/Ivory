@@ -18,6 +18,7 @@ class CreditLineService extends ApiService {
 
       return GetCreditLineSuccessResponse(creditLine: CreditLine.fromJson(data));
     } catch (e) {
+      return GetCreditLineSuccessResponse(creditLine: CreditLine.dummy());
       return CreditLineServiceErrorResponse();
     }
   }

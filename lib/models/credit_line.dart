@@ -32,4 +32,30 @@ class CreditLine {
       minimumPercentage: json['minimum_percentage'],
     );
   }
+
+  factory CreditLine.dummy() => CreditLine(
+        id: '1',
+        dueDate: DateTime.now(),
+        previousBillAmount: AmountValue(
+          value: 0.0,
+          unit: 'cents',
+          currency: 'EUR',
+        ),
+        currentBillAmount: AmountValue(
+          value: 0.0,
+          unit: 'cents',
+          currency: 'EUR',
+        ),
+        outstandingAmount: AmountValue(
+          value: 0.0,
+          unit: 'cents',
+          currency: 'EUR',
+        ),
+        accumulatedInterestAmount: AmountValue(
+          value: 0.0,
+          unit: 'cents',
+          currency: 'EUR',
+        ),
+        minimumPercentage: 0.0,
+      );
 }
