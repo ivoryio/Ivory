@@ -1,11 +1,15 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
+import 'package:solarisdemo/infrastructure/repayments/reminder/repayment_reminder_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
-import 'package:solarisdemo/redux/credit_line/credit_line_state.dart';
+import 'package:solarisdemo/redux/repayments/reminder/repayment_reminder_action.dart';
 import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/button.dart';
+import 'package:solarisdemo/widgets/ivory_error_widget.dart';
 import 'package:solarisdemo/widgets/ivory_text_field.dart';
 import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/screen.dart';
@@ -24,6 +28,8 @@ class _RepaymentReminderState extends State<RepaymentReminder> {
 
   @override
   Widget build(BuildContext context) {
+    final user = context.read<AuthCubit>().state.user!;
+
     return Screen(
       titleTextStyle: const TextStyle(
         fontSize: 16,
@@ -37,14 +43,26 @@ class _RepaymentReminderState extends State<RepaymentReminder> {
       hideBottomNavbar: true,
       child: Padding(
         padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-        child: StoreConnector<AppState, DateTime?>(
-          converter: (store) => store.state.creditLineState is CreditLineFetchedState
-              ? (store.state.creditLineState as CreditLineFetchedState).creditLine.dueDate
-              : DateTime.now(),
+        child: StoreConnector<AppState, RepaymentReminderViewModel>(
+          onInit: (store) => store.dispatch(GetRepaymentRemindersCommandAction(user: user.cognito)),
+          converter: (store) => RepaymentReminderPresenter.presentRepaymentReminder(
+            repaymentReminderState: store.state.repaymentReminderState,
+            creditLineState: store.state.creditLineState,
+          ),
+          onDidChange: (oldViewModel, viewModel) {
+            if (viewModel is RepaymentReminderFetchedViewModel) {
+              _reminders.clear();
+              setState(() => _reminders.addAll(viewModel.repaymentReminders));
+            }
+          },
           distinct: true,
-          builder: (context, repaymentDueDate) {
-            if (repaymentDueDate == null) {
+          builder: (context, viewModel) {
+            if (viewModel is RepaymentReminderLoadingViewModel) {
               return const Center(child: CircularProgressIndicator());
+            }
+
+            if (viewModel is RepaymentReminderErrorViewModel) {
+              return const Center(child: IvoryErrorWidget('Error loading repayment reminder'));
             }
 
             return Column(
@@ -112,11 +130,12 @@ class _RepaymentReminderState extends State<RepaymentReminder> {
                       final value = await showBottomModal(
                         context: context,
                         title: 'Add reminder',
-                        content: _PopUpContent(repaymentDueDate: repaymentDueDate),
+                        content: _PopUpContent(
+                            repaymentDueDate: (viewModel as RepaymentReminderFetchedViewModel).repaymentDueDate),
                       );
 
                       if (value is TimePeriod) {
-                        final reminderDate = repaymentDueDate.subtract(value.duration);
+                        final reminderDate = viewModel.repaymentDueDate.subtract(value.duration);
                         setState(() => _reminders.add(reminderDate));
                       } else if (value is DateTime) {
                         setState(() => _reminders.add(value));

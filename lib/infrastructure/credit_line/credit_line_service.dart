@@ -1,28 +1,11 @@
-import 'dart:developer';
-
 import 'package:equatable/equatable.dart';
 import 'package:solarisdemo/models/credit_line.dart';
 
-import '../../models/authorization_request.dart';
-import '../../models/transfer.dart';
 import '../../models/user.dart';
 import '../../services/api_service.dart';
 
 class CreditLineService extends ApiService {
   CreditLineService({super.user});
-
-  Future<AuthorizationRequest> createTransfer(Transfer transfer) async {
-    try {
-      String path = 'transactions';
-
-      var data = await post(path, body: transfer.toJson());
-
-      return AuthorizationRequest.fromJson(data);
-    } catch (e) {
-      log(e.toString());
-      throw Exception("Failed to create transfer");
-    }
-  }
 
   Future<CreditLineServiceResponse> getCreditLine({
     User? user,

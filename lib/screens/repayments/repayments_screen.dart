@@ -58,11 +58,18 @@ class RepaymentsScreen extends StatelessWidget {
                             store.dispatch(GetCreditLineCommandAction(user: user.cognito));
                           },
                           converter: (store) => CreditLinePresenter.presentCreditLine(
-                              creditLineState: store.state.creditLineState, user: user),
+                            creditLineState: store.state.creditLineState,
+                            user: user,
+                          ),
                           distinct: true,
                           builder: (context, viewModel) {
-                            if (viewModel is CreditLineFetchedViewModel) {
-                              return _DetailsContent(viewModel: viewModel);
+                            if (viewModel is CreditLineLoadingViewModel) {
+                              return Container(
+                                alignment: Alignment.center,
+                                width: double.infinity,
+                                padding: const EdgeInsets.all(16),
+                                child: const CircularProgressIndicator(),
+                              );
                             } else if (viewModel is CreditLineErrorViewModel) {
                               return Container(
                                 alignment: Alignment.center,
@@ -72,12 +79,7 @@ class RepaymentsScreen extends StatelessWidget {
                               );
                             }
 
-                            return Container(
-                              alignment: Alignment.center,
-                              width: double.infinity,
-                              padding: const EdgeInsets.all(16),
-                              child: const CircularProgressIndicator(),
-                            );
+                            return _DetailsContent(viewModel: viewModel as CreditLineFetchedViewModel);
                           },
                         ),
                       ),

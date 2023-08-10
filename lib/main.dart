@@ -6,6 +6,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:redux/redux.dart';
 import 'package:solarisdemo/infrastructure/credit_line/credit_line_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
+import 'package:solarisdemo/infrastructure/repayments/reminder/repayment_reminder_service.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart';
 import 'package:solarisdemo/ivory_app.dart';
 import 'package:solarisdemo/redux/app_state.dart';
@@ -36,9 +37,10 @@ Future<void> main() async {
 Store<AppState> _buildStore() {
   final store = createStore(
     initialState: AppState.initialState(),
+    pushNotificationService: FirebasePushNotificationService(),
     transactionService: TransactionService(),
     creditLineService: CreditLineService(),
-    pushNotificationService: FirebasePushNotificationService(),
+    repaymentReminderService: RepaymentReminderService(),
   );
 
   return store;
