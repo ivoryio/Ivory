@@ -4,20 +4,28 @@ import 'package:flutter/material.dart';
 import 'package:solarisdemo/screens/repayments/repayment_reminder.dart';
 import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
+import 'package:solarisdemo/widgets/spaced_column.dart';
 import 'package:solarisdemo/widgets/yvory_list_tile.dart';
 
 import '../../config.dart';
 import '../../widgets/app_toolbar.dart';
 
-class RepaymentsScreen extends StatelessWidget {
+class RepaymentsScreen extends StatefulWidget {
   static const routeName = "/repaymentsScreen";
 
   const RepaymentsScreen({super.key});
 
   @override
+  State<RepaymentsScreen> createState() => _RepaymentsScreenState();
+}
+
+class _RepaymentsScreenState extends State<RepaymentsScreen> {
+  bool _detailsExpanded = false;
+
+  @override
   Widget build(BuildContext context) {
     return ScreenScaffold(
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
           children: [
@@ -49,7 +57,7 @@ class RepaymentsScreen extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                _CardItem(
+                                _DetailsItem(
                                   title: 'Outstanding balance',
                                   subtitle: '€2,580.37',
                                   onInfoIconTap: () {
@@ -62,7 +70,7 @@ class RepaymentsScreen extends StatelessWidget {
                                   },
                                 ),
                                 const Divider(height: 24),
-                                _CardItem(
+                                _DetailsItem(
                                   title: 'Next full repayment',
                                   subtitle: '€595.46',
                                   onInfoIconTap: () {
@@ -84,10 +92,14 @@ class RepaymentsScreen extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 12),
                                 const Divider(height: 1),
+                                AnimatedSwitcher(
+                                  duration: const Duration(milliseconds: 400),
+                                  child: _detailsExpanded
+                                      ? const Column(children: [_ExpandedDetails(), Divider(height: 1)])
+                                      : const SizedBox(),
+                                ),
                                 MaterialButton(
-                                  onPressed: () {
-                                    log('View Details button pressed');
-                                  },
+                                  onPressed: () => setState(() => _detailsExpanded = !_detailsExpanded),
                                   minWidth: double.infinity,
                                   padding: const EdgeInsets.symmetric(
                                     vertical: 16,
@@ -102,9 +114,9 @@ class RepaymentsScreen extends StatelessWidget {
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      const Text(
-                                        'View Details',
-                                        style: TextStyle(
+                                      Text(
+                                        !_detailsExpanded ? 'View Details' : 'View less',
+                                        style: const TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600,
                                           color: Color(0xFFCC0000),
@@ -112,7 +124,7 @@ class RepaymentsScreen extends StatelessWidget {
                                       ),
                                       const SizedBox(width: 8),
                                       Transform.rotate(
-                                        angle: 1.57,
+                                        angle: !_detailsExpanded ? 1.57 : -1.57,
                                         child: const Icon(
                                           Icons.arrow_forward_ios,
                                           size: 16,
@@ -182,12 +194,12 @@ class RepaymentsScreen extends StatelessWidget {
   }
 }
 
-class _CardItem extends StatelessWidget {
+class _DetailsItem extends StatelessWidget {
   final String title;
   final String subtitle;
   final VoidCallback? onInfoIconTap;
 
-  const _CardItem({
+  const _DetailsItem({
     required this.title,
     required this.subtitle,
     this.onInfoIconTap,
@@ -204,15 +216,12 @@ class _CardItem extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
               ),
-              const SizedBox(width: 4),
-              IconButton(
-                onPressed: onInfoIconTap,
-                icon: const Icon(Icons.info_outline_rounded),
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
-              ),
+              if (onInfoIconTap != null) ...[
+                const SizedBox(width: 4),
+                _InfoIconButton(onTap: onInfoIconTap),
+              ],
             ],
           ),
           const SizedBox(height: 8),
@@ -222,6 +231,119 @@ class _CardItem extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _ExpandedDetails extends StatelessWidget {
+  const _ExpandedDetails();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: SpacedColumn(
+            space: 8,
+            children: [
+              _ExpandedDetailsRow(title: 'Amount spent', trailing: '€1,000.00'),
+              _ExpandedDetailsRow(title: 'Percentage repayment rate', trailing: '20%'),
+              _ExpandedDetailsRow(title: 'Repayment amount', trailing: '€200.00'),
+              _ExpandedDetailsRow(
+                title: 'Interest rate',
+                trailing: '5%',
+                onInfoIconTap: () {
+                  showBottomModal(
+                    context: context,
+                    title: 'Interest rate',
+                    message:
+                        'Our fixed interest rate of 5% remains the same, no matter the repayment type or rate you select. It will accrue based on your outstanding balance after the repayment has been deducted.',
+                  );
+                },
+              ),
+              _ExpandedDetailsRow(title: 'Interest amount', trailing: '€50.00'),
+            ],
+          ),
+        ),
+        const Divider(height: 1),
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: SpacedColumn(
+            space: 8,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    'Reference account',
+                    style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
+                  ),
+                  const SizedBox(width: 4),
+                  _InfoIconButton(onTap: () {
+                    showBottomModal(
+                      context: context,
+                      title: 'Reference account',
+                      message:
+                          'For your convenience, we automatically deduct the amount due from your designated reference account on the 4th of each month.'
+                          '\n\nIf you want to change your reference account, please contact us at +49 151 23456789.',
+                    );
+                  }),
+                ],
+              ),
+              _ExpandedDetailsRow(title: 'Account owner', trailing: 'Laura'),
+              _ExpandedDetailsRow(title: 'IBAN', trailing: 'DE12 3456 7890 1234 5678 90'),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _ExpandedDetailsRow extends StatelessWidget {
+  final String title;
+  final String trailing;
+  final VoidCallback? onInfoIconTap;
+
+  const _ExpandedDetailsRow({
+    required this.title,
+    required this.trailing,
+    this.onInfoIconTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Text(
+          title,
+          style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+        ),
+        if (onInfoIconTap != null) ...[
+          const SizedBox(width: 4),
+          _InfoIconButton(onTap: onInfoIconTap),
+        ],
+        const Spacer(),
+        Text(
+          trailing,
+          style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
+        ),
+      ],
+    );
+  }
+}
+
+class _InfoIconButton extends StatelessWidget {
+  final VoidCallback? onTap;
+  const _InfoIconButton({required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: onTap,
+      icon: const Icon(Icons.info_outline_rounded),
+      padding: EdgeInsets.zero,
+      constraints: const BoxConstraints(),
     );
   }
 }
