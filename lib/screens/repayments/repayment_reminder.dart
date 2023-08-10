@@ -62,7 +62,7 @@ class _RepaymentReminderState extends State<RepaymentReminder> {
             }
 
             if (viewModel is RepaymentReminderErrorViewModel) {
-              return const Center(child: IvoryErrorWidget('Error loading repayment reminder'));
+              return const Center(child: IvoryErrorWidget('Error loading repayment reminders'));
             }
 
             return Column(

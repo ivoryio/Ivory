@@ -13,7 +13,7 @@ class RepaymentReminderService extends ApiService {
     }
     try {
       final data = await get('repayment/reminders');
-      final reminders = data['repayment_reminders'].map<DateTime>((e) => DateTime.parse(e)).toList();
+      final reminders = (data as List).map<DateTime>((e) => DateTime.parse(e)).toList();
 
       return RepaymentReminderSuccessResponse(repaymentReminders: reminders);
     } catch (e) {
