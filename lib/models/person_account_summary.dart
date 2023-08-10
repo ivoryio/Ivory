@@ -11,6 +11,8 @@ class PersonAccountSummary {
     this.bic,
     this.balance,
     this.availableBalance,
+    this.creditLimit,
+    this.outstandingAmount,
   });
 
   String? id;
@@ -20,24 +22,23 @@ class PersonAccountSummary {
   String? bic;
   Balance? balance;
   Balance? availableBalance;
+  double? creditLimit;
+  double? outstandingAmount;
 
-  factory PersonAccountSummary.fromRawJson(String str) =>
-      PersonAccountSummary.fromJson(json.decode(str));
+  factory PersonAccountSummary.fromRawJson(String str) => PersonAccountSummary.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory PersonAccountSummary.fromJson(Map<String, dynamic> json) =>
-      PersonAccountSummary(
+  factory PersonAccountSummary.fromJson(Map<String, dynamic> json) => PersonAccountSummary(
         id: json["id"] ?? emptyStringValue,
         income: json["income"]?.toDouble() ?? zeroValue,
         spending: json["spending"]?.toDouble() ?? zeroValue,
         iban: json["iban"] ?? emptyStringValue,
         bic: json["bic"] ?? emptyStringValue,
-        balance:
-            json["balance"] == null ? null : Balance.fromJson(json["balance"]),
-        availableBalance: json["available_balance"] == null
-            ? null
-            : Balance.fromJson(json["available_balance"]),
+        balance: json["balance"] == null ? null : Balance.fromJson(json["balance"]),
+        availableBalance: json["available_balance"] == null ? null : Balance.fromJson(json["available_balance"]),
+        creditLimit: json["credit_limit"]?.toDouble() ?? zeroValue,
+        outstandingAmount: json["outstanding_amount"]?.toDouble() ?? zeroValue,
       );
 
   Map<String, dynamic> toJson() => {
@@ -48,6 +49,8 @@ class PersonAccountSummary {
         "bic": bic,
         "balance": balance?.toJson(),
         "available_balance": availableBalance?.toJson(),
+        "credit_limit": creditLimit,
+        "outstanding_amount": outstandingAmount,
       };
 }
 

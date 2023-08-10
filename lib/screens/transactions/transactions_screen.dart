@@ -35,24 +35,29 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
     return StoreConnector<AppState, TransactionsViewModel>(
         onInit: (store) {
-          store.dispatch(GetTransactionsCommandAction(filter: null, user: user.cognito));
+          store.dispatch(
+              GetTransactionsCommandAction(filter: null, user: user.cognito));
         },
-        converter: (store) =>
-            TransactionPresenter.presentTransactions(transactionsState: store.state.transactionsState),
+        converter: (store) => TransactionPresenter.presentTransactions(
+            transactionsState: store.state.transactionsState),
         builder: (context, viewModel) {
-          bool isFilterActive = viewModel.transactionListFilter?.bookingDateMax != null ||
-              viewModel.transactionListFilter?.bookingDateMin != null;
+          bool isFilterActive =
+              viewModel.transactionListFilter?.bookingDateMax != null ||
+                  viewModel.transactionListFilter?.bookingDateMin != null;
 
           return ScreenScaffold(
             body: RefreshIndicator(
               onRefresh: () async {
                 StoreProvider.of<AppState>(context).dispatch(
-                  GetTransactionsCommandAction(filter: viewModel.transactionListFilter, user: user.cognito),
+                  GetTransactionsCommandAction(
+                      filter: viewModel.transactionListFilter,
+                      user: user.cognito),
                 );
               },
               child: Padding(
                 padding: EdgeInsets.symmetric(
-                  horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+                  horizontal: ClientConfig.getCustomClientUiSettings()
+                      .defaultScreenHorizontalPadding,
                 ),
                 child: Column(
                   children: [
@@ -69,34 +74,48 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                                   displayShowAllButton: false,
                                 ),
                                 CustomSearchBar(
-                                  textLabel: viewModel.transactionListFilter?.searchString,
+                                  textLabel: viewModel
+                                      .transactionListFilter?.searchString,
                                   showButtonIndicator: isFilterActive,
                                   onPressedFilterButton: () {
                                     Navigator.pushNamed(
                                       context,
                                       TransactionsFilteringScreen.routeName,
-                                      arguments: viewModel.transactionListFilter,
+                                      arguments:
+                                          viewModel.transactionListFilter,
                                     );
                                   },
                                   onSubmitSearch: (value) {
                                     TransactionListFilter filter;
                                     if (value.isEmpty) {
                                       filter = TransactionListFilter(
-                                        bookingDateMax: viewModel.transactionListFilter?.bookingDateMax,
-                                        bookingDateMin: viewModel.transactionListFilter?.bookingDateMin,
-                                        size: viewModel.transactionListFilter?.size,
+                                        bookingDateMax: viewModel
+                                            .transactionListFilter
+                                            ?.bookingDateMax,
+                                        bookingDateMin: viewModel
+                                            .transactionListFilter
+                                            ?.bookingDateMin,
+                                        size: viewModel
+                                            .transactionListFilter?.size,
                                         searchString: null,
                                       );
                                     } else {
                                       filter = TransactionListFilter(
-                                        bookingDateMax: viewModel.transactionListFilter?.bookingDateMax,
-                                        bookingDateMin: viewModel.transactionListFilter?.bookingDateMin,
-                                        size: viewModel.transactionListFilter?.size,
+                                        bookingDateMax: viewModel
+                                            .transactionListFilter
+                                            ?.bookingDateMax,
+                                        bookingDateMin: viewModel
+                                            .transactionListFilter
+                                            ?.bookingDateMin,
+                                        size: viewModel
+                                            .transactionListFilter?.size,
                                         searchString: value,
                                       );
                                     }
                                     StoreProvider.of<AppState>(context)
-                                        .dispatch(GetTransactionsCommandAction(filter: filter, user: user.cognito));
+                                        .dispatch(GetTransactionsCommandAction(
+                                            filter: filter,
+                                            user: user.cognito));
                                   },
                                   onChangedSearch: (String value) {
                                     return;
@@ -110,7 +129,10 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                                             '${getFormattedDate(date: viewModel.transactionListFilter?.bookingDateMin, text: "Start date")} - ${getFormattedDate(date: viewModel.transactionListFilter?.bookingDateMax, text: "End date")}',
                                         buttonCallback: () {
                                           StoreProvider.of<AppState>(context)
-                                              .dispatch(GetTransactionsCommandAction(filter: null, user: user.cognito));
+                                              .dispatch(
+                                                  GetTransactionsCommandAction(
+                                                      filter: null,
+                                                      user: user.cognito));
                                         },
                                         icon: const Icon(
                                           Icons.close,
@@ -137,7 +159,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   Widget _buildTransactionsList(TransactionsViewModel viewModel) {
     const emptyListWidget = TextMessageWithCircularImage(
       title: "No transactions yet",
-      message: "There are no transactions yet. Your future transactions will be displayed here.",
+      message:
+          "There are no transactions yet. Your future transactions will be displayed here.",
     );
 
     if (viewModel is TransactionsLoadingViewModel) {
@@ -149,8 +172,9 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     }
 
     if (viewModel is TransactionsFetchedViewModel) {
-      bool isFilteringActive = (viewModel.transactionListFilter?.bookingDateMin != null ||
-          viewModel.transactionListFilter?.bookingDateMax != null);
+      bool isFilteringActive =
+          (viewModel.transactionListFilter?.bookingDateMin != null ||
+              viewModel.transactionListFilter?.bookingDateMax != null);
 
       List<Transaction> transactions = [];
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart';
+import 'package:solarisdemo/models/person_account_summary.dart';
 import 'package:solarisdemo/models/person_model.dart';
 import 'package:solarisdemo/screens/account/account_details_screen.dart';
 import 'package:solarisdemo/screens/repayments/repayments_screen.dart';
@@ -197,9 +198,10 @@ class HomePageHeader extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AccountSummary(
-                    iban: state.data?.iban ?? "",
                     spending: state.data?.spending ?? 0,
                     availableBalance: state.data?.availableBalance?.value ?? 0,
+                    outstandingAmount: state.data?.outstandingAmount ?? 0,
+                    creditLimit: state.data?.creditLimit ?? 0,
                   ),
                   const Divider(
                     color: Colors.white,
@@ -219,15 +221,17 @@ class HomePageHeader extends StatelessWidget {
 }
 
 class AccountSummary extends StatelessWidget {
-  final String iban;
+  final num outstandingAmount;
+  final num creditLimit;
   final num availableBalance;
   final num spending;
 
   const AccountSummary({
     super.key,
-    required this.iban,
     required this.availableBalance,
     required this.spending,
+    required this.outstandingAmount,
+    required this.creditLimit,
   });
 
   @override
@@ -235,11 +239,12 @@ class AccountSummary extends StatelessWidget {
     return Column(
       children: [
         AccountBalance(
-          iban: iban,
           value: availableBalance,
         ),
         AccountStats(
           spending: spending,
+          creditLimit: creditLimit,
+          outstandingAmount: outstandingAmount,
         ),
       ],
     );
@@ -247,18 +252,16 @@ class AccountSummary extends StatelessWidget {
 }
 
 class AccountBalance extends StatelessWidget {
-  final String iban;
   final num value;
 
   const AccountBalance({
     super.key,
     required this.value,
-    required this.iban,
   });
 
   @override
   Widget build(BuildContext context) {
-    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
+    PersonAccountSummary personAccountSummary = context.read<AccountSummaryCubit>().state.data!;
 
     return Column(
       children: [
@@ -295,10 +298,9 @@ class AccountBalance extends StatelessWidget {
         LinearPercentIndicator(
           lineHeight: 8,
           barRadius: const Radius.circular(40),
-          percent:
-              ((user.personAccount.spending?.value ?? 0) / (user.personAccount.accountLimit?.value ?? 0)).isInfinite
-                  ? 0
-                  : (user.personAccount.spending?.value ?? 0) / (user.personAccount.accountLimit?.value ?? 0),
+          percent: ((personAccountSummary.outstandingAmount ?? 0) / (personAccountSummary.creditLimit ?? 0)).isInfinite
+              ? 0
+              : (personAccountSummary.outstandingAmount ?? 0) / (personAccountSummary.creditLimit ?? 0.01),
           backgroundColor: const Color(0xFF313038),
           progressColor: const Color(0xFFCC0000),
           curve: Curves.fastOutSlowIn,
@@ -310,16 +312,18 @@ class AccountBalance extends StatelessWidget {
 
 class AccountStats extends StatelessWidget {
   final num spending;
+  final num outstandingAmount;
+  final num creditLimit;
 
   const AccountStats({
     super.key,
     required this.spending,
+    required this.outstandingAmount,
+    required this.creditLimit,
   });
 
   @override
   Widget build(BuildContext context) {
-    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
-
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 16),
       child: Row(
@@ -338,7 +342,7 @@ class AccountStats extends StatelessWidget {
               ),
               const SizedBox(width: 5),
               AccountBalanceText(
-                value: spending,
+                value: outstandingAmount,
                 numberStyle: const TextStyle(color: Colors.white, fontSize: 18),
                 centsStyle: const TextStyle(color: Colors.white, fontSize: 14),
               ),
@@ -357,7 +361,7 @@ class AccountStats extends StatelessWidget {
               ),
               const SizedBox(width: 5),
               AccountBalanceText(
-                value: user.personAccount.accountLimit?.value ?? 0,
+                value: creditLimit,
                 numberStyle: const TextStyle(color: Colors.white, fontSize: 18),
                 centsStyle: const TextStyle(color: Colors.white, fontSize: 14),
               ),

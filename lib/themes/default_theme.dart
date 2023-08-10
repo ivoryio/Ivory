@@ -78,14 +78,26 @@ class DefaultTheme {
       ),
       labelSmall: const TextStyle(
         fontSize: 14,
-        height: 18 / 14,
+        height: 1.285, // 18 / 14,
         fontWeight: FontWeight.w600,
         color: Color(0xFF56555E),
       ),
+      labelMedium: const TextStyle(
+        fontSize: 16,
+        height: 1.5, // 24 / 16,
+        fontWeight: FontWeight.w600,
+        color: Color(0xFF15141E),
+      ),
       labelLarge: const TextStyle(
         fontSize: 18,
-        height: 24 / 18,
+        height: 1.33, // 24 / 18,
         fontWeight: FontWeight.w600,
+      ),
+      mixedStyles: const TextStyle(
+        fontSize: 14,
+        height: 1.285, // 18 / 14,
+        fontWeight: FontWeight.w400,
+        color: Color(0xFF15141E),
       ),
     ),
   );
@@ -169,14 +181,26 @@ class PorscheTheme {
       ),
       labelSmall: const TextStyle(
         fontSize: 14,
-        height: 18 / 14,
+        height: 1.285, // 18 / 14,
+        fontWeight: FontWeight.w600,
+        color: Color(0xFF56555E),
+      ),
+      labelMedium: const TextStyle(
+        fontSize: 14,
+        height: 1.285, // 18 / 14,
         fontWeight: FontWeight.w600,
         color: Color(0xFF56555E),
       ),
       labelLarge: const TextStyle(
         fontSize: 18,
-        height: 24 / 18,
+        height: 1.33, // 24 / 18,
         fontWeight: FontWeight.w600,
+      ),
+      mixedStyles: const TextStyle(
+        fontSize: 14,
+        height: 1.285, // 18 / 14,
+        fontWeight: FontWeight.w400,
+        color: Color(0xFF15141E),
       ),
     ),
   );
@@ -189,7 +213,9 @@ class TextStyleScheme {
   final TextStyle bodyLargeRegular;
   final TextStyle bodyLargeRegularBold;
   final TextStyle labelSmall;
+  final TextStyle labelMedium;
   final TextStyle labelLarge;
+  final TextStyle mixedStyles;
 
   TextStyleScheme({
     required this.heading1,
@@ -198,7 +224,9 @@ class TextStyleScheme {
     required this.bodyLargeRegular,
     required this.bodyLargeRegularBold,
     required this.labelSmall,
+    required this.labelMedium,
     required this.labelLarge,
+    required this.mixedStyles,
   });
 }
 
