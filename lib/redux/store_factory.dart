@@ -25,7 +25,7 @@ Store<AppState> createStore({
       NotificationsMiddleware(pushNotificationService),
       GetTransactionsMiddleware(transactionService),
       GetCreditLineMiddleware(creditLineService),
-      GetRepaymentRemindersMiddleware(repaymentReminderService),
+      RepaymentRemindersMiddleware(repaymentReminderService),
     ],
   );
 }

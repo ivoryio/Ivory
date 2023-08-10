@@ -5,6 +5,11 @@ class GetRepaymentRemindersCommandAction {
   GetRepaymentRemindersCommandAction({required this.user});
 }
 
+class UpdateRepaymentRemindersCommandAction {
+  final List<DateTime> reminders;
+  UpdateRepaymentRemindersCommandAction({required this.reminders});
+}
+
 class RepaymentReminderLoadingEventAction {}
 
 class RepaymentReminderFailedEventAction {}

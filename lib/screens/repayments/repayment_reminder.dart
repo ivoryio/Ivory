@@ -160,6 +160,9 @@ class _RepaymentReminderState extends State<RepaymentReminder> {
   }
 
   void _onSaveTap() {
+    StoreProvider.of<AppState>(context).dispatch(UpdateRepaymentRemindersCommandAction(
+      reminders: _reminders,
+    ));
     Navigator.pop(context);
   }
 }

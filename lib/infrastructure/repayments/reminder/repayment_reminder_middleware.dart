@@ -3,10 +3,10 @@ import 'package:solarisdemo/infrastructure/repayments/reminder/repayment_reminde
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/repayments/reminder/repayment_reminder_action.dart';
 
-class GetRepaymentRemindersMiddleware extends MiddlewareClass<AppState> {
+class RepaymentRemindersMiddleware extends MiddlewareClass<AppState> {
   final RepaymentReminderService _repaymentReminderService;
 
-  GetRepaymentRemindersMiddleware(this._repaymentReminderService);
+  RepaymentRemindersMiddleware(this._repaymentReminderService);
 
   @override
   call(Store<AppState> store, action, NextDispatcher next) async {
@@ -21,6 +21,8 @@ class GetRepaymentRemindersMiddleware extends MiddlewareClass<AppState> {
       } else {
         store.dispatch(RepaymentReminderFailedEventAction());
       }
+    } else if (action is UpdateRepaymentRemindersCommandAction) {
+      // TODO:
     }
   }
 }
