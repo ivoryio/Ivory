@@ -22,6 +22,25 @@ class ChangeRepaymentRateScreen extends StatefulWidget {
 
 class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
   final TextEditingController _controller = TextEditingController(text: '500');
+  bool _canContinue = false;
+
+  void _updateCanContinue() {
+    if (_canContinue == true) {
+      return;
+    }
+    ;
+
+    setState(() {
+      _canContinue = true;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(_updateCanContinue);
+  }
+
   @override
   Widget build(BuildContext context) {
     return ScreenScaffold(
@@ -43,7 +62,9 @@ class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
               style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
             ),
             const SizedBox(height: 24),
-            ChooseRepaymentType(controller: _controller),
+            ChooseRepaymentType(
+                controller: _controller,
+                onPercentageChanged: _updateCanContinue),
             const Spacer(),
             SizedBox(
               width: double.infinity,
@@ -52,12 +73,14 @@ class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
                 text: "Save changes",
                 disabledColor: const Color(0xFFDFE2E6),
                 color: const Color(0xFF2575FC),
-                onPressed: () {
-                  Navigator.pushNamed(
-                    context,
-                    RepaymentSuccessfullyChanged.routeName,
-                  );
-                },
+                onPressed: _canContinue
+                    ? () {
+                        Navigator.pushNamed(
+                          context,
+                          RepaymentSuccessfullyChanged.routeName,
+                        );
+                      }
+                    : null,
               ),
             ),
             const SizedBox(height: 8),
@@ -70,7 +93,13 @@ class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
 
 class ChooseRepaymentType extends StatefulWidget {
   final TextEditingController controller;
-  const ChooseRepaymentType({super.key, required this.controller});
+  final void Function() onPercentageChanged;
+
+  const ChooseRepaymentType({
+    super.key,
+    required this.controller,
+    required this.onPercentageChanged,
+  });
 
   @override
   State<ChooseRepaymentType> createState() => _ChooseRepaymentTypeState();
@@ -212,6 +241,8 @@ class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
                             setState(() {
                               sliderValue = newValue;
                             });
+
+                            widget.onPercentageChanged();
                           },
                           min: min,
                           max: max,
@@ -317,6 +348,8 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final RegExp regExp = RegExp(r'^\d+\.?\d*$');
+
     return TextField(
       controller: controller,
       onChanged: (text) {
@@ -326,11 +359,16 @@ class CustomTextField extends StatelessWidget {
         }
       },
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
-      // inputFormatters: <TextInputFormatter>[
-      //   FilteringTextInputFormatter.allow(
-      //       RegExp(r'^\d+\.?\d*$')),
-      // ],
+      inputFormatters: <TextInputFormatter>[
+        FilteringTextInputFormatter.allow(regExp),
+        TextInputFormatter.withFunction(
+          (oldValue, newValue) {
+            final text = newValue.text;
 
+            return (text.contains(regExp)) ? newValue : oldValue;
+          },
+        ),
+      ],
       decoration: const InputDecoration(
         contentPadding: EdgeInsets.symmetric(
           horizontal: 16,
