@@ -58,7 +58,13 @@ class _RepaymentReminderState extends State<RepaymentReminder> {
                       ),
                       trailing: IconButton(
                         icon: const Icon(Icons.delete_outline, color: Color(0xFFCC0000)),
-                        onPressed: () => setState(() => _reminders.remove(e)),
+                        onPressed: () {
+                          showBottomModal(
+                            context: context,
+                            title: 'Are you sure you want to remove the reminder?',
+                            content: const _RemoveReminderPopUp(),
+                          );
+                        },
                       ),
                       contentPadding: EdgeInsets.zero,
                     ),
@@ -217,6 +223,34 @@ class _CustomReminderPopUpContentState extends State<_CustomReminderPopUpContent
           width: double.infinity,
           child: Button(
             text: 'Done',
+            color: const Color(0xFFCC0000),
+            textColor: Colors.white,
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _RemoveReminderPopUp extends StatelessWidget {
+  const _RemoveReminderPopUp();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(
+          width: double.infinity,
+          child: SecondaryButton(text: 'No, go back', onPressed: () => Navigator.of(context).pop()),
+        ),
+        const SizedBox(height: 16),
+        SizedBox(
+          width: double.infinity,
+          child: Button(
+            text: 'Yes, remove reminder',
             color: const Color(0xFFCC0000),
             textColor: Colors.white,
             onPressed: () {

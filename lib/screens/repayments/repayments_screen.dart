@@ -61,27 +61,22 @@ class RepaymentsScreen extends StatelessWidget {
                               creditLineState: store.state.creditLineState, user: user),
                           distinct: true,
                           builder: (context, viewModel) {
-                            Widget child;
-                            if (viewModel is CreditLineLoadingViewModel || viewModel is CreditLineInitialViewModel) {
-                              child = Container(
-                                alignment: Alignment.center,
-                                width: double.infinity,
-                                padding: const EdgeInsets.all(16),
-                                child: const CircularProgressIndicator(),
-                              );
+                            if (viewModel is CreditLineFetchedViewModel) {
+                              return _DetailsContent(viewModel: viewModel);
                             } else if (viewModel is CreditLineErrorViewModel) {
-                              child = Container(
+                              return Container(
                                 alignment: Alignment.center,
                                 width: double.infinity,
                                 padding: const EdgeInsets.all(16),
                                 child: const IvoryErrorWidget('Error loading credit line details'),
                               );
-                            } else {
-                              child = _DetailsContent(viewModel: viewModel as CreditLineFetchedViewModel);
                             }
-                            return AnimatedSwitcher(
-                              duration: const Duration(milliseconds: 300),
-                              child: child,
+
+                            return Container(
+                              alignment: Alignment.center,
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(16),
+                              child: const CircularProgressIndicator(),
                             );
                           },
                         ),
