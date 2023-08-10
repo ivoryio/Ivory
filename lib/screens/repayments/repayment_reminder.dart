@@ -1,6 +1,10 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/credit_line/credit_line_state.dart';
+import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/ivory_text_field.dart';
 import 'package:solarisdemo/widgets/modal.dart';
@@ -16,7 +20,7 @@ class RepaymentReminder extends StatefulWidget {
 }
 
 class _RepaymentReminderState extends State<RepaymentReminder> {
-  final List<TimePeriod> _reminders = [];
+  final List<DateTime> _reminders = [];
 
   @override
   Widget build(BuildContext context) {
@@ -33,92 +37,115 @@ class _RepaymentReminderState extends State<RepaymentReminder> {
       hideBottomNavbar: true,
       child: Padding(
         padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Set repayment reminder',
-              style: ClientConfig.getTextStyleScheme().heading1,
-            ),
-            const SizedBox(height: 24),
-            Text(
-              'We will remind you before we trigger the automatic repayment from your reference account whenever it’s more convenient for you.',
-              style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-            ),
-            const SizedBox(height: 24),
-            if (_reminders.isNotEmpty) ...[
-              ..._reminders
-                  .map(
-                    (e) => ListTile(
-                      leading: const Icon(Icons.notifications_none_rounded, color: Color(0xFFCC0000)),
-                      title: Text(
-                        e.toString(),
-                        style: ClientConfig.getTextStyleScheme().heading4,
-                      ),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete_outline, color: Color(0xFFCC0000)),
-                        onPressed: () {
-                          showBottomModal(
-                            context: context,
-                            title: 'Are you sure you want to remove the reminder?',
-                            content: const _RemoveReminderPopUp(),
-                          );
-                        },
-                      ),
-                      contentPadding: EdgeInsets.zero,
-                    ),
-                  )
-                  .toList(growable: false),
-              const SizedBox(height: 24),
-            ],
-            DottedBorder(
-              borderType: BorderType.RRect,
-              radius: const Radius.circular(6),
-              color: const Color(0xFFADADB4),
-              strokeWidth: 1.5,
-              strokeCap: StrokeCap.round,
-              dashPattern: const [5, 5],
-              child: TextButton.icon(
-                style: TextButton.styleFrom(
-                  foregroundColor: const Color(0xFFCC0000),
-                  minimumSize: const Size(double.infinity, 0),
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 22,
-                    horizontal: 24,
-                  ),
-                  textStyle: const TextStyle(fontWeight: FontWeight.w600),
+        child: StoreConnector<AppState, DateTime?>(
+          converter: (store) => store.state.creditLineState is CreditLineFetchedState
+              ? (store.state.creditLineState as CreditLineFetchedState).creditLine.dueDate
+              : DateTime.now(),
+          distinct: true,
+          builder: (context, repaymentDueDate) {
+            if (repaymentDueDate == null) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Set repayment reminder',
+                  style: ClientConfig.getTextStyleScheme().heading1,
                 ),
-                icon: const Icon(Icons.notifications_active_outlined),
-                label: const Text('Add reminder'),
-                onPressed: () async {
-                  final value = await showBottomModal(
-                    context: context,
-                    title: 'Add reminder',
-                    content: const _PopUpContent(),
-                  );
-                  if (value != null && value is TimePeriod) {
-                    setState(() => _reminders.add(value));
-                  }
-                },
-              ),
-            ),
-            const Spacer(),
-            const SizedBox(
-              width: double.infinity,
-              child: PrimaryButton(
-                text: 'Save',
-              ),
-            ),
-          ],
+                const SizedBox(height: 24),
+                Text(
+                  'We will remind you before we trigger the automatic repayment from your reference account whenever it’s more convenient for you.',
+                  style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                ),
+                const SizedBox(height: 24),
+                if (_reminders.isNotEmpty) ...[
+                  ..._reminders
+                      .map(
+                        (reminderDateTime) => ListTile(
+                          leading: const Icon(Icons.notifications_none_rounded, color: Color(0xFFCC0000)),
+                          title: Text(
+                            Format.date(reminderDateTime, pattern: 'dd MMM yyyy, HH:mm'),
+                            style: ClientConfig.getTextStyleScheme().heading4,
+                          ),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.delete_outline, color: Color(0xFFCC0000)),
+                            onPressed: () async {
+                              final value = await showBottomModal(
+                                context: context,
+                                title: 'Are you sure you want to remove the reminder?',
+                                content: const _RemoveReminderPopUp(),
+                              );
+                              if (value == true) {
+                                setState(() => _reminders.remove(reminderDateTime));
+                              }
+                            },
+                          ),
+                          contentPadding: EdgeInsets.zero,
+                        ),
+                      )
+                      .toList(growable: false),
+                  const SizedBox(height: 24),
+                ],
+                DottedBorder(
+                  borderType: BorderType.RRect,
+                  radius: const Radius.circular(6),
+                  color: const Color(0xFFADADB4),
+                  strokeWidth: 1.5,
+                  strokeCap: StrokeCap.round,
+                  dashPattern: const [5, 5],
+                  child: TextButton.icon(
+                    style: TextButton.styleFrom(
+                      foregroundColor: const Color(0xFFCC0000),
+                      minimumSize: const Size(double.infinity, 0),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 22,
+                        horizontal: 24,
+                      ),
+                      textStyle: const TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    icon: const Icon(Icons.notifications_active_outlined),
+                    label: const Text('Add reminder'),
+                    onPressed: () async {
+                      final value = await showBottomModal(
+                        context: context,
+                        title: 'Add reminder',
+                        content: _PopUpContent(repaymentDueDate: repaymentDueDate),
+                      );
+
+                      if (value is TimePeriod) {
+                        final reminderDate = repaymentDueDate.subtract(value.duration);
+                        setState(() => _reminders.add(reminderDate));
+                      } else if (value is DateTime) {
+                        setState(() => _reminders.add(value));
+                      }
+                    },
+                  ),
+                ),
+                const Spacer(),
+                SizedBox(
+                  width: double.infinity,
+                  child: PrimaryButton(
+                    text: 'Save',
+                    onPressed: _reminders.isNotEmpty ? _onSaveTap : null,
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
   }
+
+  void _onSaveTap() {}
 }
 
 class _PopUpContent extends StatelessWidget {
-  const _PopUpContent();
+  final DateTime repaymentDueDate;
+  const _PopUpContent({Key? key, required this.repaymentDueDate}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -127,33 +154,31 @@ class _PopUpContent extends StatelessWidget {
         _ReminderListTile(
           title: '1 hour before',
           value: TimePeriod.hours,
-          onChanged: (value) {
-            Navigator.pop(context, value);
-          },
+          onChanged: (value) => Navigator.pop(context, value),
         ),
         _ReminderListTile(
           title: '1 day before',
           value: TimePeriod.days,
-          onChanged: (value) {
-            Navigator.pop(context, value);
-          },
+          onChanged: (value) => Navigator.pop(context, value),
         ),
         _ReminderListTile(
           title: '1 week before',
           value: TimePeriod.weeks,
-          onChanged: (value) {
-            Navigator.pop(context, value);
-          },
+          onChanged: (value) => Navigator.pop(context, value),
         ),
         _ReminderListTile(
           title: 'Custom',
           onChanged: (value) {
-            Navigator.pop(context);
             showBottomModal(
               context: context,
               title: 'Custom notification',
               content: const _CustomReminderPopUpContent(),
-            );
+            ).then((value) {
+              if (value is (int, TimePeriod)) {
+                final reminderDate = repaymentDueDate.subtract(value.$2.duration * value.$1);
+                Navigator.pop(context, reminderDate);
+              }
+            });
           },
         ),
       ],
@@ -171,21 +196,16 @@ class _CustomReminderPopUpContent extends StatefulWidget {
 class _CustomReminderPopUpContentState extends State<_CustomReminderPopUpContent> {
   final _textController = TextEditingController(text: '1');
   TimePeriod _timePeriod = TimePeriod.hours;
-  NotificationType _notificationType = NotificationType.push;
 
   void onChangedTimePeriod(TimePeriod? value) {
     setState(() => _timePeriod = value!);
-  }
-
-  void onChangedNotificationType(NotificationType? value) {
-    setState(() => _notificationType = value!);
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        IvoryTextField(controller: _textController),
+        IvoryTextField(controller: _textController, keyboardType: TextInputType.number),
         const SizedBox(height: 16),
         _ReminderListTile(
           title: 'Hours',
@@ -205,19 +225,19 @@ class _CustomReminderPopUpContentState extends State<_CustomReminderPopUpContent
           groupValue: _timePeriod,
           onChanged: onChangedTimePeriod,
         ),
-        const Divider(height: 16),
-        _ReminderListTile(
-          title: 'As push notification',
-          value: NotificationType.push,
-          groupValue: _notificationType,
-          onChanged: onChangedNotificationType,
-        ),
-        _ReminderListTile(
-          title: 'As email',
-          value: NotificationType.email,
-          groupValue: _notificationType,
-          onChanged: onChangedNotificationType,
-        ),
+        // const Divider(height: 16),
+        // _ReminderListTile(
+        //   title: 'As push notification',
+        //   value: NotificationType.push,
+        //   groupValue: _notificationType,
+        //   onChanged: onChangedNotificationType,
+        // ),
+        // _ReminderListTile(
+        //   title: 'As email',
+        //   value: NotificationType.email,
+        //   groupValue: _notificationType,
+        //   onChanged: onChangedNotificationType,
+        // ),
         const Divider(height: 24),
         SizedBox(
           width: double.infinity,
@@ -226,7 +246,7 @@ class _CustomReminderPopUpContentState extends State<_CustomReminderPopUpContent
             color: const Color(0xFFCC0000),
             textColor: Colors.white,
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.of(context).pop((int.parse(_textController.text), _timePeriod));
             },
           ),
         ),
@@ -254,7 +274,7 @@ class _RemoveReminderPopUp extends StatelessWidget {
             color: const Color(0xFFCC0000),
             textColor: Colors.white,
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.of(context).pop(true);
             },
           ),
         ),
@@ -264,8 +284,6 @@ class _RemoveReminderPopUp extends StatelessWidget {
 }
 
 enum TimePeriod { hours, days, weeks }
-
-enum NotificationType { push, email }
 
 class _ReminderListTile<T> extends StatelessWidget {
   final String title;
@@ -307,5 +325,18 @@ class _ReminderListTile<T> extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+extension on TimePeriod {
+  Duration get duration {
+    switch (this) {
+      case TimePeriod.hours:
+        return const Duration(hours: 1);
+      case TimePeriod.days:
+        return const Duration(days: 1);
+      case TimePeriod.weeks:
+        return const Duration(days: 7);
+    }
   }
 }

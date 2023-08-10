@@ -7,6 +7,7 @@ class CreditLine {
   final AmountValue currentBillAmount;
   final AmountValue outstandingAmount;
   final AmountValue accumulatedInterestAmount;
+  final num minimumPercentage;
 
   CreditLine({
     required this.id,
@@ -15,6 +16,7 @@ class CreditLine {
     required this.currentBillAmount,
     required this.outstandingAmount,
     required this.accumulatedInterestAmount,
+    this.minimumPercentage = 0.0,
   });
 
   factory CreditLine.fromJson(Map<String, dynamic> json) {
@@ -27,6 +29,7 @@ class CreditLine {
       currentBillAmount: AmountValue.fromJson(json['current_bill_amount']),
       outstandingAmount: AmountValue.fromJson(json['outstanding_amount']),
       accumulatedInterestAmount: AmountValue.fromJson(json['accumulated_interest_amount']),
+      minimumPercentage: json['minimum_percentage'],
     );
   }
 }

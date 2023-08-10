@@ -285,12 +285,12 @@ class _ExpandedDetails extends StatelessWidget {
           child: SpacedColumn(
             space: 8,
             children: [
-              _ExpandedDetailsRow(title: 'Amount spent', trailing: '€1,000.00'),
-              _ExpandedDetailsRow(title: 'Percentage repayment rate', trailing: '20%'),
-              _ExpandedDetailsRow(title: 'Repayment amount', trailing: '€200.00'),
+              _ExpandedDetailsRow(title: 'Amount spent', trailing: '-'),
+              _ExpandedDetailsRow(title: 'Percentage repayment rate', trailing: '-'),
+              _ExpandedDetailsRow(title: 'Repayment amount', trailing: '-'),
               _ExpandedDetailsRow(
                 title: 'Interest rate',
-                trailing: '5%',
+                trailing: '${viewModel.creditLine.minimumPercentage}%',
                 onInfoIconTap: () {
                   showBottomModal(
                     context: context,
@@ -301,8 +301,9 @@ class _ExpandedDetails extends StatelessWidget {
                 },
               ),
               _ExpandedDetailsRow(
-                  title: 'Interest amount',
-                  trailing: Format.euro(viewModel.creditLine.accumulatedInterestAmount.value)),
+                title: 'Interest amount',
+                trailing: Format.euro(viewModel.creditLine.accumulatedInterestAmount.value),
+              ),
             ],
           ),
         ),

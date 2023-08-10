@@ -6,6 +6,7 @@ class IvoryTextField extends StatelessWidget {
   final String? placeholder;
   final Widget? prefix;
   final Widget? suffix;
+  final TextInputType? keyboardType;
 
   const IvoryTextField({
     Key? key,
@@ -14,6 +15,7 @@ class IvoryTextField extends StatelessWidget {
     this.placeholder,
     this.prefix,
     this.suffix,
+    this.keyboardType,
   }) : super(key: key);
 
   @override
@@ -33,6 +35,7 @@ class IvoryTextField extends StatelessWidget {
       placeholder: placeholder,
       prefix: prefix,
       suffix: suffix,
+      keyboardType: keyboardType,
     );
   }
 }
