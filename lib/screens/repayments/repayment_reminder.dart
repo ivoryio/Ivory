@@ -2,9 +2,9 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/widgets/button.dart';
+import 'package:solarisdemo/widgets/ivory_text_field.dart';
 import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/screen.dart';
-import 'package:solarisdemo/widgets/yvory_text_field.dart';
 
 class RepaymentReminder extends StatefulWidget {
   static const routeName = "/repaymentReminderScreen";
@@ -179,7 +179,7 @@ class _CustomReminderPopUpContentState extends State<_CustomReminderPopUpContent
   Widget build(BuildContext context) {
     return Column(
       children: [
-        YvoryTextField(controller: _textController),
+        IvoryTextField(controller: _textController),
         const SizedBox(height: 16),
         _ReminderListTile(
           title: 'Hours',

@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
 
-class YvoryTextField extends StatelessWidget {
+class IvoryTextField extends StatelessWidget {
   final TextEditingController? controller;
   final ValueChanged<String>? onChanged;
   final String? placeholder;
   final Widget? prefix;
   final Widget? suffix;
 
-  const YvoryTextField({
+  const IvoryTextField({
     Key? key,
     this.controller,
     this.onChanged,

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:redux/redux.dart';
+import 'package:solarisdemo/infrastructure/credit_line/credit_line_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart';
 import 'package:solarisdemo/ivory_app.dart';
@@ -36,6 +37,7 @@ Store<AppState> _buildStore() {
   final store = createStore(
     initialState: AppState.initialState(),
     transactionService: TransactionService(),
+    creditLineService: CreditLineService(),
     pushNotificationService: FirebasePushNotificationService(),
   );
 

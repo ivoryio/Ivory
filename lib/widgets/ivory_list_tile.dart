@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:solarisdemo/config.dart';
 
-class YvoryListTile extends StatelessWidget {
+class IvoryListTile extends StatelessWidget {
   final VoidCallback? onTap;
   final String? title;
   final String? subtitle;
@@ -9,7 +9,7 @@ class YvoryListTile extends StatelessWidget {
   final EdgeInsets? padding;
   final bool rounded;
 
-  const YvoryListTile({
+  const IvoryListTile({
     Key? key,
     this.onTap,
     this.title,
@@ -25,7 +25,11 @@ class YvoryListTile extends StatelessWidget {
       onTap: onTap,
       borderRadius: rounded ? BorderRadius.circular(16) : null,
       child: Padding(
-        padding: padding ?? const EdgeInsets.symmetric(vertical: 16),
+        padding: padding ??
+            EdgeInsets.symmetric(
+              vertical: 16,
+              horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+            ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
