@@ -140,7 +140,9 @@ class _RepaymentReminderState extends State<RepaymentReminder> {
     );
   }
 
-  void _onSaveTap() {}
+  void _onSaveTap() {
+    Navigator.pop(context);
+  }
 }
 
 class _PopUpContent extends StatelessWidget {
