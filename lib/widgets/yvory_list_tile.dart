@@ -26,10 +26,9 @@ class YvoryListTile extends StatelessWidget {
       borderRadius: rounded ? BorderRadius.circular(16) : null,
       child: Padding(
         padding: padding ??
-            EdgeInsets.symmetric(
+            const EdgeInsets.symmetric(
               vertical: 16,
-              horizontal: ClientConfig.getCustomClientUiSettings()
-                  .defaultScreenHorizontalPadding,
+              horizontal: 0,
             ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
