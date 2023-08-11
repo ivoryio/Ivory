@@ -236,54 +236,57 @@ class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
       ),
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Radio(
-                activeColor: const Color(0xFF2575FC),
-                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                visualDensity: const VisualDensity(
-                  horizontal: VisualDensity.minimumDensity,
-                  vertical: VisualDensity.minimumDensity,
+          InkWell(
+            onTap: () => setState(() => _selectedOption = type),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Radio(
+                  activeColor: const Color(0xFF2575FC),
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  visualDensity: const VisualDensity(
+                    horizontal: VisualDensity.minimumDensity,
+                    vertical: VisualDensity.minimumDensity,
+                  ),
+                  value: type,
+                  groupValue: _selectedOption,
+                  onChanged: (RepaymentType? value) {
+                    setState(() {
+                      _selectedOption = value!;
+                    });
+                  },
                 ),
-                value: type,
-                groupValue: _selectedOption,
-                onChanged: (RepaymentType? value) {
-                  setState(() {
-                    _selectedOption = value!;
-                  });
-                },
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Text(
-                  type == RepaymentType.percentage ? 'Percentage rate repayment' : 'Fixed repayment',
-                  style: ClientConfig.getTextStyleScheme().labelMedium,
-                  textAlign: TextAlign.left,
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Text(
+                    type == RepaymentType.percentage ? 'Percentage rate repayment' : 'Fixed repayment',
+                    style: ClientConfig.getTextStyleScheme().labelMedium,
+                    textAlign: TextAlign.left,
+                  ),
                 ),
-              ),
-              const SizedBox(width: 16),
-              InkWell(
-                child: SvgPicture.asset(
-                  "assets/icons/info.svg",
-                  width: 24,
-                  height: 24,
+                const SizedBox(width: 16),
+                InkWell(
+                  child: SvgPicture.asset(
+                    "assets/icons/info.svg",
+                    width: 24,
+                    height: 24,
+                  ),
+                  onTap: () {
+                    final titleOfModal =
+                        type == RepaymentType.percentage ? 'Percentage rate repayment' : 'Fixed rate repayment';
+                    final messageOfModal = type == RepaymentType.percentage
+                        ? 'Reflects the overall cost of repaying credit, accounting for interest and fees. It allows for transparency and informed financial decisions.'
+                        : 'Ensures stability by keeping the interest rate constant throughout the loan term. It provides predictability.';
+                    showBottomModal(
+                      context: context,
+                      title: titleOfModal,
+                      message: messageOfModal,
+                    );
+                  },
                 ),
-                onTap: () {
-                  final titleOfModal =
-                      type == RepaymentType.percentage ? 'Percentage rate repayment' : 'Fixed rate repayment';
-                  final messageOfModal = type == RepaymentType.percentage
-                      ? 'Reflects the overall cost of repaying credit, accounting for interest and fees. It allows for transparency and informed financial decisions.'
-                      : 'Ensures stability by keeping the interest rate constant throughout the loan term. It provides predictability.';
-                  showBottomModal(
-                    context: context,
-                    title: titleOfModal,
-                    message: messageOfModal,
-                  );
-                },
-              ),
-            ],
+              ],
+            ),
           ),
           if (type == RepaymentType.percentage && type == _selectedOption) ...[
             Column(

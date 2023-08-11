@@ -8,11 +8,12 @@ import 'package:solarisdemo/infrastructure/repayments/reminder/repayment_reminde
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/repayments/reminder/repayment_reminder_action.dart';
 import 'package:solarisdemo/utilities/format.dart';
+import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/ivory_error_widget.dart';
 import 'package:solarisdemo/widgets/ivory_text_field.dart';
 import 'package:solarisdemo/widgets/modal.dart';
-import 'package:solarisdemo/widgets/screen.dart';
+import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 class RepaymentReminder extends StatefulWidget {
   static const routeName = "/repaymentReminderScreen";
@@ -30,131 +31,131 @@ class _RepaymentReminderState extends State<RepaymentReminder> {
   Widget build(BuildContext context) {
     final user = context.read<AuthCubit>().state.user!;
 
-    return Screen(
-      titleTextStyle: const TextStyle(
-        fontSize: 16,
-        height: 24 / 16,
-        fontWeight: FontWeight.w600,
-      ),
-      backButtonIcon: const Icon(Icons.arrow_back, size: 24),
-      centerTitle: true,
-      hideAppBar: false,
-      hideBackButton: false,
-      hideBottomNavbar: true,
-      child: Padding(
-        padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-        child: StoreConnector<AppState, RepaymentReminderViewModel>(
-          onInit: (store) => store.dispatch(GetRepaymentRemindersCommandAction(user: user.cognito)),
-          converter: (store) => RepaymentReminderPresenter.presentRepaymentReminder(
-            repaymentReminderState: store.state.repaymentReminderState,
-            creditLineState: store.state.creditLineState,
-          ),
-          onDidChange: (oldViewModel, viewModel) {
-            if (viewModel is RepaymentReminderFetchedViewModel) {
-              _reminders.clear();
-              setState(() => _reminders.addAll(viewModel.repaymentReminders));
-            }
-          },
-          distinct: true,
-          builder: (context, viewModel) {
-            if (viewModel is RepaymentReminderLoadingViewModel) {
-              return const Center(child: CircularProgressIndicator());
-            }
+    return ScreenScaffold(
+      body: Padding(
+        padding:
+            EdgeInsets.symmetric(horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding),
+        child: Column(
+          children: [
+            const AppToolbar(),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Set repayment reminder',
+                style: ClientConfig.getTextStyleScheme().heading1,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'We will remind you before we trigger the automatic repayment from your reference account whenever it’s more convenient for you.',
+              style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+            ),
+            const SizedBox(height: 24),
+            StoreConnector<AppState, RepaymentReminderViewModel>(
+              onInit: (store) => store.dispatch(GetRepaymentRemindersCommandAction(user: user.cognito)),
+              converter: (store) => RepaymentReminderPresenter.presentRepaymentReminder(
+                repaymentReminderState: store.state.repaymentReminderState,
+                creditLineState: store.state.creditLineState,
+              ),
+              onDidChange: (oldViewModel, viewModel) {
+                if (viewModel is RepaymentReminderFetchedViewModel) {
+                  _reminders.clear();
+                  setState(() => _reminders.addAll(viewModel.repaymentReminders));
+                }
+              },
+              distinct: true,
+              builder: (context, viewModel) {
+                if (viewModel is RepaymentReminderLoadingViewModel) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
-            if (viewModel is RepaymentReminderErrorViewModel) {
-              return const Center(child: IvoryErrorWidget('Error loading repayment reminders'));
-            }
+                if (viewModel is RepaymentReminderErrorViewModel) {
+                  return const Center(child: IvoryErrorWidget('Error loading repayment reminders'));
+                }
 
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Set repayment reminder',
-                  style: ClientConfig.getTextStyleScheme().heading1,
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  'We will remind you before we trigger the automatic repayment from your reference account whenever it’s more convenient for you.',
-                  style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                ),
-                const SizedBox(height: 24),
-                if (_reminders.isNotEmpty) ...[
-                  ..._reminders
-                      .map(
-                        (reminderDateTime) => ListTile(
-                          minLeadingWidth: 0,
-                          leading: const Icon(Icons.notifications_none_rounded, color: Color(0xFFCC0000)),
-                          title: Text(
-                            Format.date(reminderDateTime, pattern: 'dd MMM yyyy, HH:mm'),
-                            style: ClientConfig.getTextStyleScheme().heading4,
+                return Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (_reminders.isNotEmpty) ...[
+                        ..._reminders
+                            .map(
+                              (reminderDateTime) => ListTile(
+                                minLeadingWidth: 0,
+                                leading: const Icon(Icons.notifications_none_rounded, color: Color(0xFFCC0000)),
+                                title: Text(
+                                  Format.date(reminderDateTime, pattern: 'dd MMM yyyy, HH:mm'),
+                                  style: ClientConfig.getTextStyleScheme().heading4,
+                                ),
+                                trailing: IconButton(
+                                  icon: const Icon(Icons.delete_outline, color: Color(0xFFCC0000)),
+                                  onPressed: () async {
+                                    final value = await showBottomModal(
+                                      context: context,
+                                      title: 'Are you sure you want to remove the reminder?',
+                                      content: const _RemoveReminderPopUp(),
+                                    );
+                                    if (value == true) {
+                                      setState(() => _reminders.remove(reminderDateTime));
+                                    }
+                                  },
+                                ),
+                                contentPadding: EdgeInsets.zero,
+                              ),
+                            )
+                            .toList(growable: false),
+                        const SizedBox(height: 24),
+                      ],
+                      DottedBorder(
+                        borderType: BorderType.RRect,
+                        radius: const Radius.circular(6),
+                        color: const Color(0xFFADADB4),
+                        strokeWidth: 1.5,
+                        strokeCap: StrokeCap.round,
+                        dashPattern: const [5, 5],
+                        child: TextButton.icon(
+                          style: TextButton.styleFrom(
+                            foregroundColor: const Color(0xFFCC0000),
+                            minimumSize: const Size(double.infinity, 0),
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 22,
+                              horizontal: 24,
+                            ),
+                            textStyle: const TextStyle(fontWeight: FontWeight.w600),
                           ),
-                          trailing: IconButton(
-                            icon: const Icon(Icons.delete_outline, color: Color(0xFFCC0000)),
-                            onPressed: () async {
-                              final value = await showBottomModal(
-                                context: context,
-                                title: 'Are you sure you want to remove the reminder?',
-                                content: const _RemoveReminderPopUp(),
-                              );
-                              if (value == true) {
-                                setState(() => _reminders.remove(reminderDateTime));
-                              }
-                            },
-                          ),
-                          contentPadding: EdgeInsets.zero,
+                          icon: const Icon(Icons.notifications_active_outlined),
+                          label: const Text('Add reminder'),
+                          onPressed: () async {
+                            final value = await showBottomModal(
+                              context: context,
+                              title: 'Add reminder',
+                              content: _PopUpContent(
+                                  repaymentDueDate: (viewModel as RepaymentReminderFetchedViewModel).repaymentDueDate),
+                            );
+
+                            if (value is TimePeriod) {
+                              final reminderDate = viewModel.repaymentDueDate.subtract(value.duration);
+                              setState(() => _reminders.add(reminderDate));
+                            } else if (value is DateTime) {
+                              setState(() => _reminders.add(value));
+                            }
+                          },
                         ),
-                      )
-                      .toList(growable: false),
-                  const SizedBox(height: 24),
-                ],
-                DottedBorder(
-                  borderType: BorderType.RRect,
-                  radius: const Radius.circular(6),
-                  color: const Color(0xFFADADB4),
-                  strokeWidth: 1.5,
-                  strokeCap: StrokeCap.round,
-                  dashPattern: const [5, 5],
-                  child: TextButton.icon(
-                    style: TextButton.styleFrom(
-                      foregroundColor: const Color(0xFFCC0000),
-                      minimumSize: const Size(double.infinity, 0),
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 22,
-                        horizontal: 24,
                       ),
-                      textStyle: const TextStyle(fontWeight: FontWeight.w600),
-                    ),
-                    icon: const Icon(Icons.notifications_active_outlined),
-                    label: const Text('Add reminder'),
-                    onPressed: () async {
-                      final value = await showBottomModal(
-                        context: context,
-                        title: 'Add reminder',
-                        content: _PopUpContent(
-                            repaymentDueDate: (viewModel as RepaymentReminderFetchedViewModel).repaymentDueDate),
-                      );
-
-                      if (value is TimePeriod) {
-                        final reminderDate = viewModel.repaymentDueDate.subtract(value.duration);
-                        setState(() => _reminders.add(reminderDate));
-                      } else if (value is DateTime) {
-                        setState(() => _reminders.add(value));
-                      }
-                    },
+                      const Spacer(),
+                      SizedBox(
+                        width: double.infinity,
+                        child: PrimaryButton(
+                          text: 'Save',
+                          onPressed: _reminders.isNotEmpty ? _onSaveTap : null,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                const Spacer(),
-                SizedBox(
-                  width: double.infinity,
-                  child: PrimaryButton(
-                    text: 'Save',
-                    onPressed: _reminders.isNotEmpty ? _onSaveTap : null,
-                  ),
-                ),
-              ],
-            );
-          },
+                );
+              },
+            ),
+          ],
         ),
       ),
     );
