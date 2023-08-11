@@ -45,6 +45,61 @@ class DefaultTheme {
         vertical: 24,
       ),
     ),
+    labelTextStyle: TextStyleScheme(
+      heading1: const TextStyle(
+        fontSize: 32,
+        height: 1.25, // 40 / 32,
+        fontWeight: FontWeight.w600,
+        color: Color(0xFF15141E),
+      ),
+      heading4: const TextStyle(
+        fontSize: 18,
+        height: 1.33, // 24 / 18,
+        fontWeight: FontWeight.w600,
+        color: Color(0xFF000000),
+      ),
+      bodySmallRegular: const TextStyle(
+        fontSize: 14,
+        height: 1.285, // 18 / 14,
+        fontWeight: FontWeight.w400,
+        color: Color(0xFF56555E),
+      ),
+      bodyLargeRegular: const TextStyle(
+        fontSize: 16,
+        height: 1.5, // 24 / 16,
+        fontWeight: FontWeight.w400,
+        color: Color(0xFF15141E),
+      ),
+      bodyLargeRegularBold: const TextStyle(
+        fontSize: 16,
+        height: 1.5, // 24 / 16,
+        fontWeight: FontWeight.w600,
+        color: Color(0xFF15141E),
+      ),
+      labelSmall: const TextStyle(
+        fontSize: 14,
+        height: 1.285, // 18 / 14,
+        fontWeight: FontWeight.w600,
+        color: Color(0xFF56555E),
+      ),
+      labelMedium: const TextStyle(
+        fontSize: 16,
+        height: 1.5, // 24 / 16,
+        fontWeight: FontWeight.w600,
+        color: Color(0xFF15141E),
+      ),
+      labelLarge: const TextStyle(
+        fontSize: 18,
+        height: 1.33, // 24 / 18,
+        fontWeight: FontWeight.w600,
+      ),
+      mixedStyles: const TextStyle(
+        fontSize: 14,
+        height: 1.285, // 18 / 14,
+        fontWeight: FontWeight.w400,
+        color: Color(0xFF15141E),
+      ),
+    ),
   );
 }
 
@@ -93,18 +148,99 @@ class PorscheTheme {
         vertical: 24,
       ),
     ),
+    labelTextStyle: TextStyleScheme(
+      heading1: const TextStyle(
+        fontSize: 32,
+        height: 1.25, // 40 / 32,
+        fontWeight: FontWeight.w600,
+        color: Color(0xFF15141E),
+      ),
+      heading4: const TextStyle(
+        fontSize: 16,
+        height: 1.5, // 24 / 16,
+        fontWeight: FontWeight.w600,
+        color: Color(0xFF000000),
+      ),
+      bodySmallRegular: const TextStyle(
+        fontSize: 14,
+        height: 1.285, // 18 / 14,
+        fontWeight: FontWeight.w400,
+        color: Color(0xFF56555E),
+      ),
+      bodyLargeRegular: const TextStyle(
+        fontSize: 16,
+        height: 1.5, // 24 / 16,
+        fontWeight: FontWeight.w400,
+        color: Color(0xFF15141E),
+      ),
+      bodyLargeRegularBold: const TextStyle(
+        fontSize: 16,
+        height: 1.5, // 24 / 16,
+        fontWeight: FontWeight.w600,
+        color: Color(0xFF15141E),
+      ),
+      labelSmall: const TextStyle(
+        fontSize: 14,
+        height: 1.285, // 18 / 14,
+        fontWeight: FontWeight.w600,
+        color: Color(0xFF56555E),
+      ),
+      labelMedium: const TextStyle(
+        fontSize: 14,
+        height: 1.285, // 18 / 14,
+        fontWeight: FontWeight.w600,
+        color: Color(0xFF56555E),
+      ),
+      labelLarge: const TextStyle(
+        fontSize: 18,
+        height: 1.33, // 24 / 18,
+        fontWeight: FontWeight.w600,
+      ),
+      mixedStyles: const TextStyle(
+        fontSize: 14,
+        height: 1.285, // 18 / 14,
+        fontWeight: FontWeight.w400,
+        color: Color(0xFF15141E),
+      ),
+    ),
   );
+}
+
+class TextStyleScheme {
+  final TextStyle heading1;
+  final TextStyle heading4;
+  final TextStyle bodySmallRegular;
+  final TextStyle bodyLargeRegular;
+  final TextStyle bodyLargeRegularBold;
+  final TextStyle labelSmall;
+  final TextStyle labelMedium;
+  final TextStyle labelLarge;
+  final TextStyle mixedStyles;
+
+  TextStyleScheme({
+    required this.heading1,
+    required this.heading4,
+    required this.bodySmallRegular,
+    required this.bodyLargeRegular,
+    required this.bodyLargeRegularBold,
+    required this.labelSmall,
+    required this.labelMedium,
+    required this.labelLarge,
+    required this.mixedStyles,
+  });
 }
 
 class ClientUiSettings {
   final ColorScheme colorscheme;
   final ThemeData themeData;
   final CustomClientUiSettings customSettings;
+  final TextStyleScheme labelTextStyle;
 
   const ClientUiSettings({
     required this.colorscheme,
     required this.themeData,
     required this.customSettings,
+    required this.labelTextStyle,
   });
 }
 

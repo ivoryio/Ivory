@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../models/transaction_model.dart';
-import '../../services/transaction_service.dart';
+import '../../infrastructure/transactions/transaction_service.dart';
 
 part 'transaction_list_state.dart';
 
@@ -16,13 +16,13 @@ class TransactionListCubit extends Cubit<TransactionListState> {
     try {
       emit(const TransactionListLoading());
 
-      List<Transaction>? transactions =
+      TransactionsServiceResponse response =
           await transactionService.getTransactions(filter: filter);
 
-      if (transactions is List<Transaction>) {
-        emit(TransactionListLoaded(transactions));
+      if (response is GetTransactionsSuccessResponse) {
+        emit(TransactionListLoaded(response.transactions));
       } else {
-        emit(const TransactionListInitial());
+        emit(const TransactionListError());
       }
     } catch (e) {
       emit(const TransactionListError());

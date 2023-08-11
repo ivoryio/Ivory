@@ -1,8 +1,10 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:solarisdemo/widgets/app_toolbar.dart';
+import 'package:solarisdemo/widgets/screen_scaffold.dart';
+import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
 import 'package:solarisdemo/widgets/spaced_column.dart';
 
-import '../../config.dart';
 import '../../cubits/transfer/transfer_cubit.dart';
 import '../../widgets/account_select.dart';
 import '../../widgets/screen.dart';
@@ -11,6 +13,7 @@ import '../../widgets/text_currency_value.dart';
 
 class TransferConfirmScreen extends StatelessWidget {
   final TransferConfirmState state;
+
   const TransferConfirmScreen({
     super.key,
     required this.state,
@@ -18,44 +21,53 @@ class TransferConfirmScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Screen(
-      customBackButtonCallback: () {
-        context.read<TransferCubit>().setBasicData(
-              name: state.name,
-              iban: state.iban,
-              savePayee: state.savePayee,
-              amount: state.amount,
-              description: state.description,
-            );
-      },
-      title: "Transaction confirmation",
-      hideBottomNavbar: true,
-      bottomStickyWidget: BottomStickyWidget(
-        child: StickyBottomContent(
-          buttonText: "Confirm and send",
-          onContinueCallback: () {
-            context.read<TransferCubit>().confirmTransfer(
-                  name: state.name!,
-                  iban: state.iban!,
-                  savePayee: state.savePayee!,
-                  description: state.description!,
-                  amount: state.amount!,
-                );
-          },
-        ),
-      ),
-      child: Padding(
-        padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-        child: SpacedColumn(
-          space: 32,
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return ScreenScaffold(
+      body: ScrollableScreenContainer(
+        child: Column(
           children: [
-            const AccountSelect(),
-            TransferDetails(
-              iban: state.iban!,
-              amount: state.amount!,
-              name: state.name!,
-              description: state.description!,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AppToolbar(
+                    title: "Transaction confirmation",
+                    onBackButtonPressed: () {
+                      context.read<TransferCubit>().setBasicData(
+                            name: state.name,
+                            iban: state.iban,
+                            savePayee: state.savePayee,
+                            amount: state.amount,
+                            description: state.description,
+                          );
+                    },
+                  ),
+                  const SizedBox(height: 32),
+                  const AccountSelect(),
+                  const SizedBox(height: 32),
+                  TransferDetails(
+                    iban: state.iban!,
+                    amount: state.amount!,
+                    name: state.name!,
+                    description: state.description!,
+                  ),
+                ],
+              ),
+            ),
+            const Spacer(),
+            BottomStickyWidget(
+              child: StickyBottomContent(
+                buttonText: "Confirm and send",
+                onContinueCallback: () {
+                  context.read<TransferCubit>().confirmTransfer(
+                        name: state.name!,
+                        iban: state.iban!,
+                        savePayee: state.savePayee!,
+                        description: state.description!,
+                        amount: state.amount!,
+                      );
+                },
+              ),
             ),
           ],
         ),
@@ -69,6 +81,7 @@ class TransferDetails extends StatelessWidget {
   final String name;
   final String description;
   final double amount;
+
   const TransferDetails({
     super.key,
     required this.iban,

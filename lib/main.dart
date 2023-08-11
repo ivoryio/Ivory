@@ -1,59 +1,47 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:redux/redux.dart';
+import 'package:solarisdemo/infrastructure/credit_line/credit_line_service.dart';
+import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
+import 'package:solarisdemo/infrastructure/repayments/reminder/repayment_reminder_service.dart';
+import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart';
+import 'package:solarisdemo/ivory_app.dart';
+import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/store_factory.dart';
 
-import 'config.dart';
-import 'router/router.dart';
-import 'services/auth_service.dart';
-import 'cubits/auth_cubit/auth_cubit.dart';
+import '../config.dart';
+import 'firebase_options.dart';
 
 Future<void> main() async {
   await dotenv.load();
   ClientConfigData clientConfig = ClientConfig.getClientConfig();
 
   WidgetsFlutterBinding.ensureInitialized();
-  await SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
-  runApp(MyApp(
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+
+  final store = _buildStore();
+
+  runApp(IvoryApp(
     clientConfig: clientConfig,
+    store: store,
   ));
 }
 
-class MyApp extends StatelessWidget {
-  final ClientConfigData clientConfig;
+Store<AppState> _buildStore() {
+  final store = createStore(
+    initialState: AppState.initialState(),
+    pushNotificationService: FirebasePushNotificationService(),
+    transactionService: TransactionService(),
+    creditLineService: CreditLineService(),
+    repaymentReminderService: RepaymentReminderService(),
+  );
 
-  const MyApp({
-    super.key,
-    required this.clientConfig,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => AuthCubit(
-        authService: AuthService(),
-      ),
-      child: Builder(builder: (context) {
-        return MaterialApp.router(
-          routerConfig: AppRouter(context.read<AuthCubit>()).router,
-          localizationsDelegates: const [
-            DefaultMaterialLocalizations.delegate,
-            DefaultWidgetsLocalizations.delegate,
-            DefaultCupertinoLocalizations.delegate,
-          ],
-          theme: clientConfig.uiSettings.themeData,
-          builder: (context, child) {
-            return Scaffold(
-              body: Material(
-                child: child,
-              ),
-            );
-          },
-        );
-      }),
-    );
-  }
+  return store;
 }

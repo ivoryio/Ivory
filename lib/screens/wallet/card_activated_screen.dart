@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
+
 import '../../config.dart';
 import '../../widgets/screen.dart';
 
 class BankCardActivatedScreen extends StatelessWidget {
+  static const routeName = '/bankCardActivatedScreen';
+
   const BankCardActivatedScreen({super.key});
 
   @override
@@ -12,7 +15,7 @@ class BankCardActivatedScreen extends StatelessWidget {
       title: 'Card',
       centerTitle: true,
       hideBackButton: true,
-      hideBottomNavbar: false,
+      hideBottomNavbar: true,
       child: Padding(
         padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
         child: const Text(''),

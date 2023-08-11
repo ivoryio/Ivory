@@ -1,12 +1,12 @@
-# Solaris Demo Application
+# Ivory Demo Application
 
-A proof-of-concept mobile-banking application that uses a [Solaris](https://docs.solarisgroup.com/api-reference/)_-like_ BE API.
+A proof-of-concept mobile-banking application that uses [Solaris API](https://docs.solarisgroup.com/api-reference/).
 
 ## General architecture overview
 
 The Mobile bank application is built with Flutter and can be deployed on both iOS and Android devices.
 
-The Mobile application connects to a backend layer that connects to a [mock-solaris](https://github.com/kontist/mock-solaris).instance. AWS Cognito is used on the backend middle layer to authenticate and differentiate users.
+The Mobile application connects to a backend layer that connects to a [Solaris API](https://docs.solarisgroup.com/api-reference/). AWS Cognito is used on the backend middle layer to authenticate and differentiate users.
 
 ```mermaid
 graph LR
@@ -15,7 +15,7 @@ graph LR
     end
 
     MBA[Mobile Banking App] --> |uses|BFF
-    BFF --> |uses|MS[Mocked Solaris API]
+    BFF --> |uses|MS[Solaris API]
 ```
 
 Environment variables can be set by copying `.env.example` to `.env` _(in root folder)_ and adding the values to the varibles.
@@ -23,30 +23,37 @@ Environment variables can be set by copying `.env.example` to `.env` _(in root f
 ## Scope
 
 The application already includes the following features:
+
+- Sign-up
 - Email + password login
 - User dashboard / landing page
 - Transactions list
 - Send money to a person
+- Physical card details
+- Filter & sort transactions
+- Transaction details
+- Search through transactions
+- Physical card - deactivate
+- Physical card - set card PIN
+- Physical card - Freeze / Unfreeze
 
-| <img src="https://user-images.githubusercontent.com/16261042/232440439-f297a8e0-9e81-40af-b62a-1395da311c4b.jpg" width="150" /> 
-| <img src="https://user-images.githubusercontent.com/16261042/232440449-8b31d943-2112-495d-b478-2c11c2576638.jpg" width="150" /> 
-| <img src="https://user-images.githubusercontent.com/16261042/232440452-341be72a-9e10-4c22-8176-ebc1e5842145.jpg" width="150" /> 
-| <img src="https://user-images.githubusercontent.com/16261042/232440454-f47425ec-49fe-431a-94fe-937d1d5c55cd.jpg" width="150" /> 
-| <img src="https://user-images.githubusercontent.com/16261042/232441790-9763ba80-9af6-410b-a62b-34babc2c6ac8.jpg" width="150" /> |
+We are currently working on converting and developing the app into a revolving credit card app with features such as:
 
-The following features are planned to be implemented:
-1. Physical card details
-1. Filter & sort transactions
-1. Account details
-1. Top up
-1. Transaction details
-1. Search through transactions
-1. Physical card - deactivate
-1. Physical card - set card PIN
-1. Physical card - Freeze / Unfreeze
-1. Send money to a saved payee
-1. Sign UP
+- Credit card onboarding
+- Credit card operations (activate/deactivate, freeze/unfreeze, PIN change, viewing details, etc.)
+- Credit card transactions (filtering, sorting, searching, upcoming transactions, etc.)
+- Credit card payments (3DS, Apple wallet)
+- Repayments
 
+## Product prototype
+
+<div align="center">
+  <video src="https://github.com/ivoryio/SolarisDemoApp/assets/16954041/320f3f08-c1bf-4dc1-9523-38d5e44cb4b5" />
+</div>
+
+Find more details [here](https://www.thinslices.com/ivory-banking-app).
+
+You can find the prototype [here](https://www.figma.com/proto/XReOTW8hCzSSTPsfqWhwy6/Ivory---Demo-App?page-id=1086%3A72864&type=design&node-id=1221-101377&viewport=-1964%2C1794%2C0.19&t=XEC1Fu5v6GR6h7B3-1&scaling=contain&starting-point-node-id=1221%3A101373).
 
 ## Contact
 

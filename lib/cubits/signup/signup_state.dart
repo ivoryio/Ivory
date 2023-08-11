@@ -55,6 +55,16 @@ class SignupBasicInfoComplete extends SignupState {
           passcode: passcode,
           personId: personId,
         );
+
+  @override
+  List<Object> get props => [
+        email!,
+        firstName!,
+        lastName!,
+        phoneNumber!,
+        passcode!,
+        personId!,
+      ];
 }
 
 class SignupEmailConfirmed extends SignupState {

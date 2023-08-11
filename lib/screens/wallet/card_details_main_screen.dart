@@ -5,37 +5,44 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:solarisdemo/widgets/app_toolbar.dart';
+import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../config.dart';
 import '../../cubits/card_details_cubit/card_details_cubit.dart';
 import '../../services/biometric_auth_service.dart';
-import '../../services/device_service.dart';
+import '../../models/bank_card.dart';
 import '../../widgets/button.dart';
 import '../../widgets/card_widget.dart';
-import '../../widgets/screen.dart';
 import '../../widgets/spaced_column.dart';
 
 class BankCardDetailsMainScreen extends StatelessWidget {
+  static const routeName = "/bankCardDetailsMainScreen";
+
   const BankCardDetailsMainScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final state = context.read<BankCardDetailsCubit>().state;
-    final id = state.card!.id;
 
-    return Screen(
-      scrollPhysics: const ClampingScrollPhysics(),
-      title: 'Card',
-      centerTitle: true,
-      hideBackButton: true,
-      hideBottomNavbar: false,
-      child: Padding(
-        padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-        child: FutureBuilder(
-          future: CacheCardsIds.getCardIdFromCache(id),
-          builder: (context, isInCache) => (isInCache.data == false)
-              ? const InactiveCard()
-              : const ActiveCard(),
+    return ScreenScaffold(
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: ClientConfig.getCustomClientUiSettings()
+              .defaultScreenHorizontalPadding,
+        ),
+        child: Column(
+          children: [
+            const AppToolbar(title: "Card"),
+            Expanded(
+              child: SingleChildScrollView(
+                child: state.card!.status == BankCardStatus.INACTIVE
+                    ? const InactiveCard()
+                    : const ActiveCard(),
+              ),
+            ),
+            const SizedBox(height: 24),
+          ],
         ),
       ),
     );
@@ -57,9 +64,10 @@ class InactiveCard extends StatelessWidget {
           space: 48,
           children: [
             BankCardWidget(
-              cardNumber: state.card!.representation!.maskedPan!,
-              cardHolder: state.card!.representation!.line2 ?? 'data missing',
-              cardExpiry: state.card!.representation!.formattedExpirationDate!,
+              cardNumber: state.card!.representation!.maskedPan ?? '',
+              cardHolder: state.card!.representation!.line2 ?? '',
+              cardExpiry:
+                  state.card!.representation!.formattedExpirationDate ?? '',
               isViewable: false,
               cardType: 'Credit card',
               // backgroundImageFile: 'porsche_logo.png',
@@ -92,18 +100,13 @@ class InactiveCard extends StatelessWidget {
           width: double.infinity,
           child: PrimaryButton(
             text: "Activate my card",
-            // onPressed: (state.card!.status == BankCardStatus.INACTIVE)
-            //     ? () {
-            //         context
-            //             .read<BankCardDetailsCubit>()
-            //             .initializeActivation(state.card!);
-            //       }
-            //     : null,
-            onPressed: () {
-              context
-                  .read<BankCardDetailsCubit>()
-                  .initializeActivation(state.card!);
-            },
+            onPressed: state.card!.status == BankCardStatus.INACTIVE
+                ? () {
+                    context
+                        .read<BankCardDetailsCubit>()
+                        .initializeActivation(state.card!);
+                  }
+                : null,
           ),
         ),
       ],
@@ -137,16 +140,16 @@ class ActiveCard extends StatelessWidget {
     final state = context.read<BankCardDetailsCubit>().state;
 
     return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SpacedColumn(
           space: 16,
           children: [
             BankCardWidget(
-              cardNumber: state.card!.representation!.maskedPan!,
-              cardHolder: state.card!.representation!.line2 ?? 'data missing',
-              cardExpiry: state.card!.representation!.formattedExpirationDate!,
+              cardNumber: state.card!.representation!.maskedPan ?? '',
+              cardHolder: state.card!.representation!.line2 ?? '',
+              cardExpiry:
+                  state.card!.representation!.formattedExpirationDate ?? '',
               isViewable: false,
               cardType: 'Credit card',
             ),
@@ -225,13 +228,13 @@ class ActiveCard extends StatelessWidget {
                 ItemName(
                   leftIcon: Icons.wifi_tethering,
                   actionName: 'Contactless payments',
-                  actionDescription: 'Apple Pay won\’t be affected',
+                  actionDescription: 'Apple Pay won’t be affected',
                   rightIcon: Icons.arrow_forward_ios,
                 ),
                 ItemName(
                   leftIcon: Icons.language,
                   actionName: 'Online payments',
-                  actionDescription: 'Apple Pay won\’t be affected',
+                  actionDescription: 'Apple Pay won’t be affected',
                   rightIcon: Icons.arrow_forward_ios,
                 ),
                 ItemName(

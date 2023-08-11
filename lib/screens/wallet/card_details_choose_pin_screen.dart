@@ -12,6 +12,8 @@ import '../../widgets/pin_field.dart';
 import '../../widgets/screen.dart';
 
 class BankCardDetailsChoosePinScreen extends StatefulWidget {
+  static const routeName = '/bankCardDetailsChoosePinScreen';
+
   const BankCardDetailsChoosePinScreen({super.key});
 
   @override

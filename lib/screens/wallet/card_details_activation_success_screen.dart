@@ -9,6 +9,8 @@ import '../../widgets/card_widget.dart';
 import '../../widgets/screen.dart';
 
 class BankCardDetailsActivationSuccessScreen extends StatelessWidget {
+  static const routeName = '/bankCardDetailsActivationSuccessScreen';
+
   const BankCardDetailsActivationSuccessScreen({super.key});
 
   @override
@@ -50,9 +52,10 @@ class BankCardDetailsActivationSuccessScreen extends StatelessWidget {
               ],
             ),
             BankCardWidget(
-              cardNumber: state.card!.representation!.maskedPan!,
-              cardHolder: state.card!.representation!.line2 ?? 'data missing',
-              cardExpiry: state.card!.representation!.formattedExpirationDate!,
+              cardNumber: state.card!.representation!.maskedPan ?? '',
+              cardHolder: state.card!.representation!.line2 ?? '',
+              cardExpiry:
+                  state.card!.representation!.formattedExpirationDate ?? '',
               isViewable: false,
               cardType: 'Credit card',
             ),

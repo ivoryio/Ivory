@@ -34,6 +34,10 @@ class ClientConfig {
     return getClientConfig().uiSettings.colorscheme;
   }
 
+  static TextStyleScheme getTextStyleScheme() {
+    return getClientConfig().uiSettings.labelTextStyle;
+  }
+
   static String getClientImagePath() {
     String client = const String.fromEnvironment('CLIENT');
     switch (client) {

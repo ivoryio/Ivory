@@ -10,6 +10,8 @@ import '../../widgets/screen.dart';
 import '../../widgets/spaced_column.dart';
 
 class BankCardDetailsAppleWalletScreen extends StatelessWidget {
+  static const routeName = '/bankCardDetailsAppleWalletScreen';
+
   const BankCardDetailsAppleWalletScreen({super.key});
 
   @override

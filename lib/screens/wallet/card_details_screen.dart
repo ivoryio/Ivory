@@ -5,14 +5,13 @@ import 'package:solarisdemo/cubits/card_details_cubit/card_details_cubit.dart';
 import 'package:solarisdemo/cubits/card_details_cubit/card_details_state.dart';
 import 'package:solarisdemo/screens/wallet/card_details_activation_success_screen.dart';
 import 'package:solarisdemo/services/card_service.dart';
+import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/spaced_column.dart';
 
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../models/bank_card.dart';
 import '../../models/user.dart';
-import '../../router/routing_constants.dart';
 import '../../widgets/dialog.dart';
-import '../../widgets/screen.dart';
 import 'card_details_apple_wallet_screen.dart';
 import 'card_details_choose_pin_screen.dart';
 import 'card_details_confirm_pin_screen.dart';
@@ -20,12 +19,20 @@ import 'card_details_info_screen.dart';
 import 'card_details_main_screen.dart';
 import 'card_view_details_screen.dart';
 
-class CardDetailsScreen extends StatelessWidget {
+class CardDetailsScreenParams {
   final BankCard card;
+
+  CardDetailsScreenParams({required this.card});
+}
+
+class CardDetailsScreen extends StatelessWidget {
+  static const routeName = '/cardDetailsScreen';
+
+  final CardDetailsScreenParams params;
 
   const CardDetailsScreen({
     super.key,
-    required this.card,
+    required this.params,
   });
 
   @override
@@ -34,11 +41,11 @@ class CardDetailsScreen extends StatelessWidget {
     return BlocProvider.value(
       value: BankCardDetailsCubit(
         cardsService: BankCardsService(user: user.cognito),
-      )..loadCard(card.id),
+      )..loadCard(params.card.id),
       child: BlocBuilder<BankCardDetailsCubit, BankCardDetailsState>(
         builder: (context, state) {
           if (state is BankCardDetailsLoadingState) {
-            return const LoadingScreen(title: 'Wallet');
+            return const GenericLoadingScreen(title: "Wallet");
           }
           if (state is BankCardDetailsLoadedState) {
             return const BankCardDetailsMainScreen();
@@ -65,13 +72,13 @@ class CardDetailsScreen extends StatelessWidget {
             return const BankCardViewDetailsScreen();
           }
           if (state is BankCardDetailsErrorState) {
-            return ErrorScreen(
-              title: cardDetailsRoute.title,
+            return GenericErrorScreen(
+              title: "Card details",
               message: state.message,
             );
           }
 
-          return const LoadingScreen(title: 'Wallet');
+          return const GenericLoadingScreen(title: "Wallet");
         },
       ),
     );
@@ -81,7 +88,8 @@ class CardDetailsScreen extends StatelessWidget {
 // ignore: must_be_immutable
 class _CardDetailsOptions extends StatefulWidget {
   BankCard card;
-  _CardDetailsOptions({super.key, required this.card});
+
+  _CardDetailsOptions({required this.card});
 
   @override
   State<_CardDetailsOptions> createState() => __CardDetailsOptionsState();
@@ -225,7 +233,6 @@ class _CardOptionColumns extends StatelessWidget {
   final bool visibleSwitch;
 
   const _CardOptionColumns({
-    super.key,
     required this.icon,
     required this.fieldName,
     this.forMoreInfoTap,
@@ -269,7 +276,8 @@ class _CardOptionColumns extends StatelessWidget {
 
 class _CardOptionName extends StatelessWidget {
   final String name;
-  const _CardOptionName({super.key, required this.name});
+
+  const _CardOptionName({required this.name});
 
   @override
   Widget build(BuildContext context) {
@@ -284,7 +292,7 @@ class _CardOptionName extends StatelessWidget {
 }
 
 class _CardOptionSwitch extends StatefulWidget {
-  const _CardOptionSwitch({super.key});
+  const _CardOptionSwitch();
 
   @override
   State<_CardOptionSwitch> createState() => _CardOptionSwitchState();
