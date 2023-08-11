@@ -7,23 +7,27 @@ import 'package:path/path.dart';
 import 'themes/default_theme.dart';
 
 class Config {
-  static String cognitoUserPoolId =
-      dotenv.env['COGNITO_USER_POOL_ID'] ?? 'NO_COGNITO_USER_POOL_ID';
-  static String cognitoClientId =
-      dotenv.env['COGNITO_CLIENT_ID'] ?? 'NO_COGNITO_CLIENT_ID';
+  static String cognitoUserPoolId = dotenv.env['COGNITO_USER_POOL_ID'] ?? 'NO_COGNITO_USER_POOL_ID';
+  static String cognitoClientId = dotenv.env['COGNITO_CLIENT_ID'] ?? 'NO_COGNITO_CLIENT_ID';
 
   static String apiBaseUrl = dotenv.env['API_BASE_URL'] ?? 'NO_API_BASE_URL';
 }
 
 class ClientConfig {
+  static ClientConfigData? _clientConfigData;
+
   static ClientConfigData getClientConfig() {
-    String client = const String.fromEnvironment('CLIENT');
-    switch (client) {
-      case 'porsche':
-        return ClientConfigData(uiSettings: PorscheTheme.clientUiSettings);
-      default:
-        return ClientConfigData(uiSettings: DefaultTheme.clientUiSettings);
+    if (_clientConfigData == null) {
+      String client = const String.fromEnvironment('CLIENT');
+      switch (client) {
+        case 'porsche':
+          _clientConfigData = ClientConfigData(uiSettings: PorscheTheme.clientUiSettings);
+        default:
+          _clientConfigData = ClientConfigData(uiSettings: DefaultTheme.clientUiSettings);
+      }
     }
+
+    return _clientConfigData!;
   }
 
   static CustomClientUiSettings getCustomClientUiSettings() {
