@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/screens/repayments/repayment_successfully_changed.dart';
+import 'package:solarisdemo/screens/repayments/repayments_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
@@ -59,9 +60,12 @@ class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
             AppToolbar(
               onBackButtonPressed: (_canContinue == true) ? backWithoutSaving : null,
             ),
-            Text(
-              'Change repayment rate',
-              style: ClientConfig.getTextStyleScheme().heading1,
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Change repayment rate',
+                style: ClientConfig.getTextStyleScheme().heading1,
+              ),
             ),
             const SizedBox(height: 16),
             Text(
@@ -124,7 +128,7 @@ class ShowBottomModalActions extends StatelessWidget {
             path: () {
               Navigator.pushNamed(
                 context,
-                RepaymentSuccessfullyChanged.routeName,
+                RepaymentsScreen.routeName,
               );
             },
             message: 'Yes, discard changes',

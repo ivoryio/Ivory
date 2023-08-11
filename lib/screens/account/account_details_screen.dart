@@ -23,17 +23,33 @@ class AccountDetailsScreen extends StatelessWidget {
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Center(
-          child: Text(
-            "Copied to clipboard",
-            style: TextStyle(color: Colors.black),
-          ),
+        margin: EdgeInsets.only(bottom: 60, left: 90, right: 90),
+        behavior: SnackBarBehavior.floating,
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.content_copy,
+              color: Colors.white,
+            ),
+            SizedBox(width: 8),
+            Text(
+              "Copied to clipboard",
+              style: TextStyle(
+                fontFamily: 'Sofia Pro',
+                fontSize: 16,
+                height: 1.5,
+                color: Colors.white,
+              ),
+            ),
+          ],
         ),
         duration: Duration(seconds: 2),
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.black,
         elevation: 0,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.zero,
+          borderRadius: BorderRadius.all(Radius.circular(24)),
           side: BorderSide(color: Color(0xFFE0E0E0)),
         ),
       ),
