@@ -33,8 +33,8 @@ class CreditLine {
     );
   }
 
-  factory CreditLine.dummy() => CreditLine(
-        id: '1',
+  factory CreditLine.empty() => CreditLine(
+        id: '0',
         dueDate: DateTime.now(),
         previousBillAmount: AmountValue(
           value: 0.0,

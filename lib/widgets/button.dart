@@ -60,16 +60,12 @@ class Button extends StatelessWidget {
         onPressed: onPressed as void Function()?,
         child: Text(
           text,
-          style: textStyle != null
-              ? defaultTextStyle.merge(textStyle)
-              : defaultTextStyle,
+          style: textStyle != null ? defaultTextStyle.merge(textStyle) : defaultTextStyle,
         ));
 
     if (border != null) {
       return Container(
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(borderRadius!)),
-            border: border),
+        decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(borderRadius!)), border: border),
         child: widget,
       );
     }
@@ -100,9 +96,8 @@ class PrimaryButton extends Button {
 }
 
 class SecondaryButton extends Button {
-  const SecondaryButton({
+  SecondaryButton({
     super.key,
-    super.border,
     super.padding,
     super.fontSize,
     super.fontFamily,
@@ -115,8 +110,9 @@ class SecondaryButton extends Button {
   }) : super(
           text: text,
           textStyle: textStyle,
-          color: const Color(0xffD9D9D9),
-          textColor: const Color(0xff747474),
+          color: Colors.transparent,
+          textColor: Colors.black,
+          border: Border.all(color: Colors.black),
         );
 }
 
@@ -142,9 +138,7 @@ class TabExpandedButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 6),
         color: active ? Colors.white : Colors.transparent,
         textColor: const Color(0xff020202),
-        border: active
-            ? Border.all(width: 1, color: const Color(0xffB9B9B9))
-            : null,
+        border: active ? Border.all(width: 1, color: const Color(0xffB9B9B9)) : null,
         onPressed: () {
           onPressed();
         },

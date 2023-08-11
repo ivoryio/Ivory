@@ -16,9 +16,9 @@ class CreditLineService extends ApiService {
     try {
       final data = await get('account/transactions/credit_card_bills');
 
-      return GetCreditLineSuccessResponse(creditLine: CreditLine.fromJson(data));
+      return GetCreditLineSuccessResponse(creditLine: CreditLine.fromJson(data[0]));
     } catch (e) {
-      return GetCreditLineSuccessResponse(creditLine: CreditLine.dummy());
+      return GetCreditLineSuccessResponse(creditLine: CreditLine.empty());
       return CreditLineServiceErrorResponse();
     }
   }

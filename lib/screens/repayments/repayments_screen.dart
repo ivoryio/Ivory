@@ -278,7 +278,20 @@ class _ExpandedDetails extends StatelessWidget {
             space: 8,
             children: [
               _ExpandedDetailsRow(title: 'Amount spent', trailing: '-'),
-              _ExpandedDetailsRow(title: 'Percentage repayment rate', trailing: '-'),
+              _ExpandedDetailsRow(
+                title: 'Percentage repayment rate',
+                trailing: '-',
+                onInfoIconTap: () {
+                  showBottomModal(
+                    context: context,
+                    title: 'Repayment rate',
+                    message:
+                        'You can decide whether you prefer the flexibility of a percentage rate repayment or the predictability of fixed repayments.'
+                        '\n\nThe repayment rate will be automatically deducted from your reference account and added to your credit account which will increase your available spending balance.'
+                        '\n\nPlease note that the repayment rate does not include any applicable interest charges.',
+                  );
+                },
+              ),
               _ExpandedDetailsRow(title: 'Repayment amount', trailing: '-'),
               _ExpandedDetailsRow(
                 title: 'Interest rate',

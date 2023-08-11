@@ -83,6 +83,7 @@ class _RepaymentReminderState extends State<RepaymentReminder> {
                   ..._reminders
                       .map(
                         (reminderDateTime) => ListTile(
+                          minLeadingWidth: 0,
                           leading: const Icon(Icons.notifications_none_rounded, color: Color(0xFFCC0000)),
                           title: Text(
                             Format.date(reminderDateTime, pattern: 'dd MMM yyyy, HH:mm'),
