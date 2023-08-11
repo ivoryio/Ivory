@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/screens/repayments/repayment_successfully_changed.dart';
@@ -16,13 +15,11 @@ class ChangeRepaymentRateScreen extends StatefulWidget {
   const ChangeRepaymentRateScreen({super.key});
 
   @override
-  State<ChangeRepaymentRateScreen> createState() =>
-      _ChangeRepaymentRateScreenState();
+  State<ChangeRepaymentRateScreen> createState() => _ChangeRepaymentRateScreenState();
 }
 
 class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
-  final TextEditingController _controller =
-      TextEditingController(text: '500.00');
+  final TextEditingController _controller = TextEditingController(text: '500.00');
   bool _canContinue = false;
 
   void _updateCanContinue() {
@@ -55,14 +52,12 @@ class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
     return ScreenScaffold(
       body: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: ClientConfig.getCustomClientUiSettings()
-              .defaultScreenHorizontalPadding,
+          horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
         ),
         child: Column(
           children: [
             AppToolbar(
-              onBackButtonPressed:
-                  (_canContinue == true) ? backWithoutSaving : null,
+              onBackButtonPressed: (_canContinue == true) ? backWithoutSaving : null,
             ),
             Text(
               'Change repayment rate',
@@ -74,9 +69,7 @@ class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
               style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
             ),
             const SizedBox(height: 24),
-            ChooseRepaymentType(
-                controller: _controller,
-                onPercentageChanged: _updateCanContinue),
+            ChooseRepaymentType(controller: _controller, onPercentageChanged: _updateCanContinue),
             const Spacer(),
             SizedBox(
               width: double.infinity,
@@ -111,8 +104,7 @@ class ShowBottomModalActions extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: 0,
-        vertical: ClientConfig.getCustomClientUiSettings()
-            .defaultScreenVerticalPadding,
+        vertical: ClientConfig.getCustomClientUiSettings().defaultScreenVerticalPadding,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -232,9 +224,7 @@ class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
         border: Border.fromBorderSide(
           BorderSide(
             width: 1,
-            color: _selectedOption == type
-                ? const Color(0xFF2575FC)
-                : const Color(0xFFE9EAEB),
+            color: _selectedOption == type ? const Color(0xFF2575FC) : const Color(0xFFE9EAEB),
             style: BorderStyle.solid,
           ),
         ),
@@ -264,9 +254,7 @@ class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
               const SizedBox(width: 16),
               Expanded(
                 child: Text(
-                  type == RepaymentType.percentage
-                      ? 'Percentage rate repayment'
-                      : 'Fixed repayment',
+                  type == RepaymentType.percentage ? 'Percentage rate repayment' : 'Fixed repayment',
                   style: ClientConfig.getTextStyleScheme().labelMedium,
                   textAlign: TextAlign.left,
                 ),
@@ -279,9 +267,8 @@ class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
                   height: 24,
                 ),
                 onTap: () {
-                  final titleOfModal = type == RepaymentType.percentage
-                      ? 'Percentage rate repayment'
-                      : 'Fixed rate repayment';
+                  final titleOfModal =
+                      type == RepaymentType.percentage ? 'Percentage rate repayment' : 'Fixed rate repayment';
                   final messageOfModal = type == RepaymentType.percentage
                       ? 'Reflects the overall cost of repaying credit, accounting for interest and fees. It allows for transparency and informed financial decisions.'
                       : 'Ensures stability by keeping the interest rate constant throughout the loan term. It provides predictability.';
@@ -303,8 +290,7 @@ class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
                   children: [
                     Expanded(
                       child: RepaymentConditions(
-                          message:
-                              'Choose your preferred percentage rate. The minimum is 5% and the maximum is 90%.'),
+                          message: 'Choose your preferred percentage rate. The minimum is 5% and the maximum is 90%.'),
                     ),
                   ],
                 ),
@@ -376,8 +362,7 @@ class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
                   children: [
                     Expanded(
                       child: RepaymentConditions(
-                          message:
-                              'Choose your preferred fixed rate. The minimum is €500 and the maximum is €9,000.'),
+                          message: 'Choose your preferred fixed rate. The minimum is €500 and the maximum is €9,000.'),
                     ),
                   ],
                 ),
@@ -442,9 +427,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                   color: _rangeError ? Colors.red : const Color(0xFFADADB4),
                   style: BorderStyle.solid,
                 ),
-                borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(8),
-                    bottomLeft: Radius.circular(8)),
+                borderRadius: const BorderRadius.only(topLeft: Radius.circular(8), bottomLeft: Radius.circular(8)),
                 color: const Color(0xFFF8F9FA),
               ),
               child: const Text(
@@ -460,13 +443,14 @@ class _CustomTextFieldState extends State<CustomTextField> {
               child: TextField(
                 controller: widget.controller,
                 onChanged: (text) {
+                  if (text.isEmpty) text = '0';
+
                   if (widget.onChanged != null) {
                     widget.onChanged!(text);
                   }
 
                   setState(() {
-                    _rangeError =
-                        (double.parse(text) < 500 || double.parse(text) > 9000);
+                    _rangeError = (double.parse(text) < 500 || double.parse(text) > 9000);
                   });
 
                   if (double.parse(text) < 500) {
@@ -477,8 +461,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                     errorMessage = 'Rate is too high. The maximum is €9,000.';
                   }
                 },
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
                 inputFormatters: <TextInputFormatter>[
                   FilteringTextInputFormatter.allow(regExp),
                   TextInputFormatter.withFunction(
@@ -594,8 +577,7 @@ class CustomThumb extends SliderComponentShape {
     );
     textPainter.layout();
 
-    final textOffset = Offset(
-        center.dx - textPainter.width / 2, center.dy - textPainter.height / 2);
+    final textOffset = Offset(center.dx - textPainter.width / 2, center.dy - textPainter.height / 2);
 
     textPainter.paint(canvas, textOffset);
   }

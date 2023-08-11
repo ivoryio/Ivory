@@ -13,7 +13,7 @@ class CreditLinePresenter {
     } else if (creditLineState is CreditLineFetchedState) {
       return CreditLineFetchedViewModel(
         creditLine: creditLineState.creditLine,
-        ownerName: '${user.person.firstName} ${user.person.lastName}',
+        ownerName: user.person.firstName!,
         iban: user.personAccount.iban ?? '',
       );
     }
