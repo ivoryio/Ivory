@@ -1,6 +1,6 @@
 // ignore_for_file: depend_on_referenced_packages
 
-import 'dart:developer';
+import 'dart:developer' as developer;
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
@@ -13,6 +13,7 @@ import 'package:convert/convert.dart';
 import 'package:pointycastle/pointycastle.dart';
 import 'package:pointycastle/export.dart';
 
+import '../models/device.dart';
 import '../models/device_activity.dart';
 import 'api_service.dart';
 
@@ -37,7 +38,7 @@ class DeviceUtilService {
     return '';
   }
 
-  static Future<Map<Object?, Object?>> getECDSAP256KeyPair() async {
+  static Future<Map<Object?, Object?>> generateECDSAP256KeyPair() async {
     if (defaultTargetPlatform == TargetPlatform.android) {
       return await _getAndroidECDSAP256KeyPair();
     } else if (defaultTargetPlatform == TargetPlatform.iOS) {
@@ -54,17 +55,30 @@ class DeviceUtilService {
     await _setDeviceConsentId(consentId);
   }
 
-  static Future<String?> getPublicKeyFromCache() async {
-    return await _getPublicKeyFromCache();
+  static Future<String?> getPublicKeyFromCache({
+    bool restricted = false,
+  }) async {
+    return await _getPublicKeyFromCache(
+      restricted: restricted,
+    );
   }
 
-  static Future<String?> getPrivateKeyFromCache() async {
-    return await _getPrivateKeyFromCache();
+  static Future<String?> getPrivateKeyFromCache({
+    bool restricted = false,
+  }) async {
+    return await _getPrivateKeyFromCache(
+      restricted: restricted,
+    );
   }
 
-  static Future<void> saveKeyPairIntoCache(
-      Map<Object?, Object?> keyPair) async {
-    await _setKeyPairIntoCache(keyPair);
+  static Future<void> saveKeyPairIntoCache({
+    required Map<Object?, Object?> keyPair,
+    bool restricted = false,
+  }) async {
+    await _setKeyPairIntoCache(
+      keyPair: keyPair,
+      restricted: restricted,
+    );
   }
 
   static Future<String?> getDeviceIdFromCache() async {
@@ -72,7 +86,7 @@ class DeviceUtilService {
   }
 
   static Future<void> saveDeviceIdIntoCache(String deviceId) async {
-    await _setDeviceIdIntoCache(deviceId);
+    await setDeviceIdIntoCache(deviceId);
   }
 
   static Future<CacheCredentials?> getCredentialsFromCache() async {
@@ -91,22 +105,22 @@ class DeviceUtilService {
     final privateKey = ECPrivateKey(bigIntPrivateKey, ECCurve_secp256r1());
 
     final ecSignature =
-        _signUtf8MessageWithEcPrivateKey(privateKey, utf8EncodedMessage);
-    return _convertSignatureToAsn1String(ecSignature);
+        signUtf8MessageWithPrivateKey(privateKey, utf8EncodedMessage);
+    return convertSignatureToAsn1String(ecSignature);
   }
 
-  static ECSignature _signUtf8MessageWithEcPrivateKey(
+  static ECSignature signUtf8MessageWithPrivateKey(
       ECPrivateKey privateKey, List<int> utf8EncodedMessage) {
     final signer = ECDSASigner(SHA256Digest());
     signer.init(true,
-        ParametersWithRandom(PrivateKeyParameter(privateKey), _secureRandom()));
+        ParametersWithRandom(PrivateKeyParameter(privateKey), secureRandom()));
     final signedMessage =
         signer.generateSignature(Uint8List.fromList(utf8EncodedMessage))
             as ECSignature;
     return signedMessage;
   }
 
-  static String _convertSignatureToAsn1String(ECSignature signature) {
+  static String convertSignatureToAsn1String(ECSignature signature) {
     final asn1Sequence = ASN1Sequence();
     asn1Sequence.add(ASN1Integer(signature.r));
     asn1Sequence.add(ASN1Integer(signature.s));
@@ -122,7 +136,7 @@ class DeviceUtilService {
     return hex.encode(digest);
   }
 
-  static SecureRandom _secureRandom() {
+  static SecureRandom secureRandom() {
     final seedSource = Random.secure();
     final seeds = <int>[];
     for (int i = 0; i < 32; i++) {
@@ -133,7 +147,7 @@ class DeviceUtilService {
   }
 }
 
-Future<void> _setDeviceIdIntoCache(String deviceId) async {
+Future<void> setDeviceIdIntoCache(String deviceId) async {
   final prefs = await SharedPreferences.getInstance();
   prefs.setString('device_id', deviceId);
 }
@@ -176,22 +190,65 @@ class CacheCredentials {
   });
 }
 
-Future<String> _getPublicKeyFromCache() async {
+Future<String> _getPublicKeyFromCache({
+  bool restricted = false,
+}) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  String? publicKey = prefs.getString('publicKey');
-  return publicKey ?? '';
+
+  String? keyPairData =
+      prefs.getString(restricted ? 'restrictedKeyPair' : 'unrestrictedKeyPair');
+  if (keyPairData != null) {
+    Map<String, dynamic> keyPairObject = json.decode(keyPairData);
+    return keyPairObject['publicKey'] ?? '';
+  }
+
+  return '';
 }
 
-Future<String> _getPrivateKeyFromCache() async {
+// Future<String> _getPrivateKeyFromCache() async {
+//   SharedPreferences prefs = await SharedPreferences.getInstance();
+//   String? privateKey = prefs.getString('privateKey');
+//   return privateKey ?? '';
+// }
+
+// Future<void> _setKeyPairIntoCache(Map<Object?, Object?> keyPair) async {
+//   final prefs = await SharedPreferences.getInstance();
+//   prefs.setString('publicKey', keyPair['publicKey'] as String);
+//   prefs.setString('privateKey', keyPair['privateKey'] as String);
+// }
+
+Future<String> _getPrivateKeyFromCache({
+  bool restricted = false,
+}) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  String? privateKey = prefs.getString('privateKey');
-  return privateKey ?? '';
+
+  String? keyPairData =
+      prefs.getString(restricted ? 'restrictedKeyPair' : 'unrestrictedKeyPair');
+  if (keyPairData != null) {
+    Map<String, dynamic> keyPairObject = json.decode(keyPairData);
+    return keyPairObject['privateKey'] ?? '';
+  }
+
+  return '';
 }
 
-Future<void> _setKeyPairIntoCache(Map<Object?, Object?> keyPair) async {
+Future<void> _setKeyPairIntoCache({
+  required Map<Object?, Object?> keyPair,
+  bool restricted = false,
+}) async {
   final prefs = await SharedPreferences.getInstance();
-  prefs.setString('publicKey', keyPair['publicKey'] as String);
-  prefs.setString('privateKey', keyPair['privateKey'] as String);
+
+  Map<String, String> keypair = {
+    'publicKey': keyPair['publicKey'] as String,
+    'privateKey': keyPair['privateKey'] as String
+  };
+
+  String keyPairData = json.encode(keypair);
+
+  prefs.setString(
+    restricted ? 'restrictedKeyPair' : 'unrestrictedKeyPair',
+    keyPairData,
+  );
 }
 
 Future<String>? _getAndroidDeviceFingerprint(String deviceConsentId) async {
@@ -313,12 +370,14 @@ class DeviceService extends ApiService {
         throw Exception('Consent Id not found');
       }
 
-      var keyPair = await DeviceUtilService.getECDSAP256KeyPair();
+      var keyPair = await DeviceUtilService.generateECDSAP256KeyPair();
       if (keyPair.isEmpty) {
         throw Exception('Key Pair not found');
       }
 
-      await DeviceUtilService.saveKeyPairIntoCache(keyPair);
+      await DeviceUtilService.saveKeyPairIntoCache(
+        keyPair: keyPair,
+      );
 
       String publicKey = keyPair['publicKey'] as String;
 
@@ -391,42 +450,61 @@ class DeviceService extends ApiService {
     }
   }
 
-  Future<String?> getBoundDeviceId() async {
-    try {
-      String path = 'person/device';
-      var data = await get(path);
-      if (data == null) {
-        throw Exception('Failed to get bound device');
-      }
-      return data['id'];
-    } catch (e) {
-      throw Exception('Failed to get bound device - $e');
-    }
-  }
-
   Future<dynamic> createRestrictedKey() async {
-    // var newKeyPair = await DeviceUtilService.getECDSAP256KeyPair();
-    // if (newKeyPair.isEmpty) {
-    //   throw Exception('Key Pair not found');
-    // }
-    // String? publicKey = await DeviceUtilService.getPublicKeyFromCache();
-    // String? privateKey = await DeviceUtilService.getPrivateKeyFromCache();
-    // if (publicKey == null || privateKey == null) {
-    //   throw Exception('Public/private key not found');
-    // }
+    try {
+      String? deviceId = await DeviceUtilService.getDeviceIdFromCache();
+      if (deviceId == null) {
+        throw Exception('Device Id not found');
+      }
+      var newKeyPair = await DeviceUtilService.generateECDSAP256KeyPair();
+      if (newKeyPair.isEmpty) {
+        throw Exception('Key Pair not found');
+      }
+      String newPublicKey = newKeyPair['publicKey'] as String;
 
-    // String? signature = DeviceUtilService.signMessage(
-    //     newKeyPair['publicKey'] as String, privateKey);
+      String? oldPrivateKey = await DeviceUtilService.getPrivateKeyFromCache();
 
-    // String? consentId = await _getDeviceConsentId();
-    // if (consentId.isEmpty) {
-    //   throw Exception('Consent Id not found');
-    // }
+      if (oldPrivateKey == null) {
+        throw Exception('Public/private key not found');
+      }
 
-    // String? deviceFingerprint =
-    //     await DeviceUtilService.getDeviceFingerprint(consentId);
+      String? signature =
+          DeviceUtilService.signMessage(newPublicKey, oldPrivateKey);
 
-    // await post()
+      String? consentId = await _getDeviceConsentId();
+      if (consentId.isEmpty) {
+        throw Exception('Consent Id not found');
+      }
+
+      String? deviceFingerprint =
+          await DeviceUtilService.getDeviceFingerprint(consentId);
+
+      CreateRestrictedKeyRequest reqBody = CreateRestrictedKeyRequest(
+        deviceId: deviceId,
+        deviceData: deviceFingerprint!,
+        deviceSignature: DeviceSignature(
+          signature: signature,
+          signatureKeyPurpose: DeviceBindingKeyPurposeType.unrestricted,
+        ),
+        key: newPublicKey,
+        keyPurpose: DeviceBindingKeyPurposeType.restricted,
+        keyType: _defaultKeyType,
+      );
+
+      String path = 'person/device/key';
+
+      await post(
+        path,
+        body: reqBody.toJson(),
+      );
+
+      await DeviceUtilService.saveKeyPairIntoCache(
+        keyPair: newKeyPair,
+        restricted: true,
+      );
+    } catch (e) {
+      throw Exception('Failed to create restricted key - $e');
+    }
   }
 }
 
