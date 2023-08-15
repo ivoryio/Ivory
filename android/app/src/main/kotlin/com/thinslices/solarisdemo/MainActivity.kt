@@ -41,29 +41,9 @@ class MainActivity: FlutterActivity() {
                     e.printStackTrace()
                     result.error("500", "Fingeprint error", e.toString())
                 }
-            } else if (call.method == "generateECDSAP256KeyPair") {
-                val keyPair = generateECDSAP256KeyPair()
-                result.success(keyPair)
             } else {
                 result.notImplemented()
             }
         }
-    }
-
-    private fun generateECDSAP256KeyPair(): Map<String, String> {
-        val keyGen = KeyPairGenerator.getInstance("EC")
-        keyGen.initialize(ECGenParameterSpec("secp256r1"))
-
-        val keyPair = keyGen.generateKeyPair()
-        val publicKey = keyPair.public as ECPublicKey
-        val privateKey = keyPair.private as ECPrivateKey
-
-        val publicKeyHex = "04" + publicKey.w.affineX.toString(16).toUpperCase() + publicKey.w.affineY.toString(16).toUpperCase()
-        val privateKeyHex = privateKey.s.toString(16).toUpperCase()
-
-        return mapOf(
-            "publicKey" to publicKeyHex,
-            "privateKey" to privateKeyHex
-        )
     }
 }

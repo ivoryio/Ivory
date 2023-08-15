@@ -206,3 +206,88 @@ class CreateBankCard {
         "reference": reference,
       };
 }
+
+String getCardDetailsRequestToJson(GetCardDetailsRequest data) =>
+    json.encode(data.toJson());
+
+class GetCardDetailsRequest {
+  String deviceId;
+  String deviceData;
+  String signature;
+  Jwk jwk;
+  Jwe jwe;
+
+  GetCardDetailsRequest({
+    required this.deviceId,
+    required this.deviceData,
+    required this.signature,
+    required this.jwk,
+    required this.jwe,
+  });
+
+  Map<String, dynamic> toJson() => {
+        "device_id": deviceId,
+        "device_data": deviceData,
+        "signature": signature,
+        "jwk": jwk.toJson(),
+        "jwe": jwe.toJson(),
+      };
+}
+
+class Jwe {
+  String alg;
+  String enc;
+
+  Jwe({
+    required this.alg,
+    required this.enc,
+  });
+
+  Map<String, dynamic> toJson() => {
+        "alg": alg,
+        "enc": enc,
+      };
+}
+
+class Jwk {
+  String kty;
+  String use;
+  String alg;
+  String kid;
+  String n;
+  String e;
+
+  Jwk({
+    required this.kty,
+    required this.use,
+    required this.alg,
+    required this.kid,
+    required this.n,
+    required this.e,
+  });
+
+  Map<String, dynamic> toJson() => {
+        "kty": kty,
+        "use": use,
+        "alg": alg,
+        "kid": kid,
+        "n": n,
+        "e": e,
+      };
+}
+
+GetCardDetailsResponse getCardDetailsResponseFromJson(String str) =>
+    GetCardDetailsResponse.fromJson(json.decode(str));
+
+class GetCardDetailsResponse {
+  String data;
+
+  GetCardDetailsResponse({
+    required this.data,
+  });
+
+  factory GetCardDetailsResponse.fromJson(Map<String, dynamic> json) =>
+      GetCardDetailsResponse(
+        data: json["data"],
+      );
+}

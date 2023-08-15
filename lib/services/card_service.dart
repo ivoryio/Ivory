@@ -74,6 +74,22 @@ class BankCardsService extends ApiService {
       throw Exception("Failed to unfreeze card");
     }
   }
+
+  Future<GetCardDetailsResponse> getCardDetails({
+    required String cardId,
+    required GetCardDetailsRequest requestBody,
+  }) async {
+    try {
+      String path = '/account/cards/$cardId/details';
+      var data = await post(
+        path,
+        body: requestBody.toJson(),
+      );
+      return data;
+    } catch (e) {
+      throw Exception("Failed to get card details");
+    }
+  }
 }
 
 class BankCardsListFilter {

@@ -9,12 +9,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:solarisdemo/models/device_binding.dart';
 import 'package:solarisdemo/models/device_consent.dart';
 import 'dart:convert';
-import 'package:convert/convert.dart';
-import 'package:pointycastle/pointycastle.dart';
-import 'package:pointycastle/export.dart';
+import 'package:solarisdemo/utilities/crypto/crypto_message_signer.dart';
 
 import '../models/device.dart';
 import '../models/device_activity.dart';
+import '../utilities/crypto/crypto_key_generator.dart';
 import 'api_service.dart';
 
 const String _defaultKeyType = 'ecdsa-p256';
@@ -36,15 +35,6 @@ class DeviceUtilService {
       return await _getIosDeviceFingerprint(consentId);
     }
     return '';
-  }
-
-  static Future<Map<Object?, Object?>> generateECDSAP256KeyPair() async {
-    if (defaultTargetPlatform == TargetPlatform.android) {
-      return await _getAndroidECDSAP256KeyPair();
-    } else if (defaultTargetPlatform == TargetPlatform.iOS) {
-      return await _getIosECDSAP256KeyPair();
-    }
-    return {};
   }
 
   static Future<String?> getDeviceConsentId() async {
@@ -72,7 +62,7 @@ class DeviceUtilService {
   }
 
   static Future<void> saveKeyPairIntoCache({
-    required Map<Object?, Object?> keyPair,
+    required CryptoKeyPair keyPair,
     bool restricted = false,
   }) async {
     await _setKeyPairIntoCache(
@@ -96,54 +86,6 @@ class DeviceUtilService {
   static Future<void> saveCredentialsInCache(
       String email, String password) async {
     await _setCredentialsInCache(email, password);
-  }
-
-  static String signMessage(String message, String encodedPrivateKey) {
-    final utf8EncodedMessage = utf8.encode(message);
-
-    final bigIntPrivateKey = BigInt.parse(encodedPrivateKey, radix: 16);
-    final privateKey = ECPrivateKey(bigIntPrivateKey, ECCurve_secp256r1());
-
-    final ecSignature =
-        signUtf8MessageWithPrivateKey(privateKey, utf8EncodedMessage);
-    return convertSignatureToAsn1String(ecSignature);
-  }
-
-  static ECSignature signUtf8MessageWithPrivateKey(
-      ECPrivateKey privateKey, List<int> utf8EncodedMessage) {
-    final signer = ECDSASigner(SHA256Digest());
-    signer.init(true,
-        ParametersWithRandom(PrivateKeyParameter(privateKey), secureRandom()));
-    final signedMessage =
-        signer.generateSignature(Uint8List.fromList(utf8EncodedMessage))
-            as ECSignature;
-    return signedMessage;
-  }
-
-  static String convertSignatureToAsn1String(ECSignature signature) {
-    final asn1Sequence = ASN1Sequence();
-    asn1Sequence.add(ASN1Integer(signature.r));
-    asn1Sequence.add(ASN1Integer(signature.s));
-    asn1Sequence.encode();
-    final asn1Bytes = asn1Sequence.encodedBytes;
-    return hex.encode(asn1Bytes!.toList());
-  }
-
-  static String calculateSHA256(String message) {
-    var bytes = utf8.encode(message);
-    var sha256 = SHA256Digest();
-    var digest = sha256.process(Uint8List.fromList(bytes));
-    return hex.encode(digest);
-  }
-
-  static SecureRandom secureRandom() {
-    final seedSource = Random.secure();
-    final seeds = <int>[];
-    for (int i = 0; i < 32; i++) {
-      seeds.add(seedSource.nextInt(255));
-    }
-
-    return FortunaRandom()..seed(KeyParameter(Uint8List.fromList(seeds)));
   }
 }
 
@@ -233,14 +175,14 @@ Future<String> _getPrivateKeyFromCache({
 }
 
 Future<void> _setKeyPairIntoCache({
-  required Map<Object?, Object?> keyPair,
+  required CryptoKeyPair keyPair,
   bool restricted = false,
 }) async {
   final prefs = await SharedPreferences.getInstance();
 
   Map<String, String> keypair = {
-    'publicKey': keyPair['publicKey'] as String,
-    'privateKey': keyPair['privateKey'] as String
+    'publicKey': keyPair.publicKey,
+    'privateKey': keyPair.privateKey,
   };
 
   String keyPairData = json.encode(keypair);
@@ -268,28 +210,6 @@ Future<String>? _getIosDeviceFingerprint(String deviceConsentId) async {
     final result = await _platform.invokeMethod(
       'getIosDeviceFingerprint',
       {'consentId': deviceConsentId},
-    );
-    return result;
-  } on PlatformException catch (e) {
-    throw Exception(e.message);
-  }
-}
-
-Future<Map<Object?, Object?>> _getAndroidECDSAP256KeyPair() async {
-  try {
-    final result = await _platform.invokeMethod(
-      'generateECDSAP256KeyPair',
-    );
-    return result;
-  } on PlatformException catch (e) {
-    throw Exception(e.message);
-  }
-}
-
-Future<Map<Object?, Object?>> _getIosECDSAP256KeyPair() async {
-  try {
-    final result = await _platform.invokeMethod(
-      'generateIosECDSAP256KeyPair',
     );
     return result;
   } on PlatformException catch (e) {
@@ -370,16 +290,14 @@ class DeviceService extends ApiService {
         throw Exception('Consent Id not found');
       }
 
-      var keyPair = await DeviceUtilService.generateECDSAP256KeyPair();
-      if (keyPair.isEmpty) {
-        throw Exception('Key Pair not found');
-      }
+      CryptoKeyGenerator keyGenerator = CryptoKeyGenerator();
+      final keyPair = keyGenerator.generateKeyPair();
 
       await DeviceUtilService.saveKeyPairIntoCache(
         keyPair: keyPair,
       );
 
-      String publicKey = keyPair['publicKey'] as String;
+      String publicKey = keyPair.publicKey;
 
       String? deviceData =
           await DeviceUtilService.getDeviceFingerprint(consentId);
@@ -427,8 +345,11 @@ class DeviceService extends ApiService {
       if (privateKey == null) {
         throw Exception('Private key not found');
       }
-
-      String? signature = DeviceUtilService.signMessage(tan, privateKey);
+      CryptoMessageSigner messageSigner = CryptoMessageSigner();
+      final signature = messageSigner.signMessage(
+        message: tan,
+        encodedPrivateKey: privateKey,
+      );
 
       String path = 'person/device/verify_signature/$deviceId';
 
@@ -452,15 +373,15 @@ class DeviceService extends ApiService {
 
   Future<dynamic> createRestrictedKey() async {
     try {
+      CryptoMessageSigner messageSigner = CryptoMessageSigner();
+      CryptoKeyGenerator keyGenerator = CryptoKeyGenerator();
+
       String? deviceId = await DeviceUtilService.getDeviceIdFromCache();
       if (deviceId == null) {
         throw Exception('Device Id not found');
       }
-      var newKeyPair = await DeviceUtilService.generateECDSAP256KeyPair();
-      if (newKeyPair.isEmpty) {
-        throw Exception('Key Pair not found');
-      }
-      String newPublicKey = newKeyPair['publicKey'] as String;
+      var newKeyPair = keyGenerator.generateKeyPair();
+      String newPublicKey = newKeyPair.publicKey;
 
       String? oldPrivateKey = await DeviceUtilService.getPrivateKeyFromCache();
 
@@ -468,8 +389,10 @@ class DeviceService extends ApiService {
         throw Exception('Public/private key not found');
       }
 
-      String? signature =
-          DeviceUtilService.signMessage(newPublicKey, oldPrivateKey);
+      final signature = messageSigner.signMessage(
+        message: newPublicKey,
+        encodedPrivateKey: oldPrivateKey,
+      );
 
       String? consentId = await _getDeviceConsentId();
       if (consentId.isEmpty) {
