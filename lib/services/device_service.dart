@@ -147,18 +147,6 @@ Future<String> _getPublicKeyFromCache({
   return '';
 }
 
-// Future<String> _getPrivateKeyFromCache() async {
-//   SharedPreferences prefs = await SharedPreferences.getInstance();
-//   String? privateKey = prefs.getString('privateKey');
-//   return privateKey ?? '';
-// }
-
-// Future<void> _setKeyPairIntoCache(Map<Object?, Object?> keyPair) async {
-//   final prefs = await SharedPreferences.getInstance();
-//   prefs.setString('publicKey', keyPair['publicKey'] as String);
-//   prefs.setString('privateKey', keyPair['privateKey'] as String);
-// }
-
 Future<String> _getPrivateKeyFromCache({
   bool restricted = false,
 }) async {
@@ -291,7 +279,7 @@ class DeviceService extends ApiService {
       }
 
       CryptoKeyGenerator keyGenerator = CryptoKeyGenerator();
-      final keyPair = keyGenerator.generateKeyPair();
+      final keyPair = keyGenerator.generateECKeyPair();
 
       await DeviceUtilService.saveKeyPairIntoCache(
         keyPair: keyPair,
@@ -380,7 +368,7 @@ class DeviceService extends ApiService {
       if (deviceId == null) {
         throw Exception('Device Id not found');
       }
-      var newKeyPair = keyGenerator.generateKeyPair();
+      var newKeyPair = keyGenerator.generateECKeyPair();
       String newPublicKey = newKeyPair.publicKey;
 
       String? oldPrivateKey = await DeviceUtilService.getPrivateKeyFromCache();

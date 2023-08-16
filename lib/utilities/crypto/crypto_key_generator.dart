@@ -4,8 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:pointycastle/export.dart';
 
 class CryptoKeyGenerator {
-  CryptoKeyPair generateKeyPair() {
-    var keyPair = _createKeyGenerator().generateKeyPair();
+  CryptoKeyPair generateECKeyPair() {
+    var keyPair = _createECKeyGenerator().generateKeyPair();
     var publicKeyUncompressedForm =
         _toUncompressedForm(keyPair.publicKey as ECPublicKey);
 
@@ -13,7 +13,7 @@ class CryptoKeyGenerator {
     var i = 0;
     while (i < 10 && stop != true) {
       if (publicKeyUncompressedForm.length % 2 != 0) {
-        keyPair = _createKeyGenerator().generateKeyPair();
+        keyPair = _createECKeyGenerator().generateKeyPair();
         publicKeyUncompressedForm =
             _toUncompressedForm(keyPair.publicKey as ECPublicKey);
         i++;
@@ -27,11 +27,30 @@ class CryptoKeyGenerator {
     );
   }
 
-  ECKeyGenerator _createKeyGenerator() {
+  RSAKeyPair generateRSAKeyPair() {
+    final keyPair = _createRSAKeyGenerator().generateKeyPair();
+    final publicKey = keyPair.publicKey as RSAPublicKey;
+    final privateKey = keyPair.privateKey as RSAPrivateKey;
+    return RSAKeyPair(
+      publicKey: publicKey,
+      privateKey: privateKey,
+    );
+  }
+
+  ECKeyGenerator _createECKeyGenerator() {
     final keyGen = ECKeyGenerator();
 
     keyGen.init(ParametersWithRandom(
         ECKeyGeneratorParameters(ECCurve_secp256r1()), _secureRandom()));
+    return keyGen;
+  }
+
+  RSAKeyGenerator _createRSAKeyGenerator() {
+    final keyGen = RSAKeyGenerator();
+
+    keyGen.init(ParametersWithRandom(
+        RSAKeyGeneratorParameters(BigInt.parse('65537'), 2048, 64),
+        _secureRandom()));
     return keyGen;
   }
 
@@ -62,5 +81,18 @@ class CryptoKeyPair {
   final String publicKey;
   final String privateKey;
 
-  CryptoKeyPair({required this.publicKey, required this.privateKey});
+  CryptoKeyPair({
+    required this.publicKey,
+    required this.privateKey,
+  });
+}
+
+class RSAKeyPair {
+  final RSAPublicKey publicKey;
+  final RSAPrivateKey privateKey;
+
+  RSAKeyPair({
+    required this.publicKey,
+    required this.privateKey,
+  });
 }

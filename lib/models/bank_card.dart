@@ -242,7 +242,12 @@ class Jwe {
     required this.alg,
     required this.enc,
   });
-
+  factory Jwe.defaultValues() {
+    return Jwe(
+      alg: "RSA_OAEP_256",
+      enc: "A256GCM",
+    );
+  }
   Map<String, dynamic> toJson() => {
         "alg": alg,
         "enc": enc,
@@ -250,18 +255,13 @@ class Jwe {
 }
 
 class Jwk {
-  String kty;
-  String use;
-  String alg;
-  String kid;
+  String kty = "RSA";
+  String use = "enc";
+  String alg = "RS256";
   String n;
   String e;
 
   Jwk({
-    required this.kty,
-    required this.use,
-    required this.alg,
-    required this.kid,
     required this.n,
     required this.e,
   });
@@ -270,10 +270,24 @@ class Jwk {
         "kty": kty,
         "use": use,
         "alg": alg,
-        "kid": kid,
         "n": n,
         "e": e,
       };
+
+  String toAlphabeticJson() {
+    Map<String, dynamic> jwkMap = {
+      'kty': kty,
+      'n': n,
+      'e': e,
+      'use': use,
+      'alg': alg,
+    };
+
+    var sortedMap = Map.fromEntries(
+        jwkMap.entries.toList()..sort((e1, e2) => e1.key.compareTo(e2.key)));
+
+    return jsonEncode(sortedMap);
+  }
 }
 
 GetCardDetailsResponse getCardDetailsResponseFromJson(String str) =>
