@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class DefaultTheme {
   static ColorScheme colorScheme = const ColorScheme(
     primary: Colors.black,
-    secondary: Color(0xffD9D9D9),
+    secondary: Color(0xFF2575FC),
     surface: Colors.white,
     background: Colors.white,
     error: Colors.red,
@@ -106,7 +106,7 @@ class DefaultTheme {
 class PorscheTheme {
   static ColorScheme colorScheme = const ColorScheme(
     primary: Colors.black,
-    secondary: Color(0xffD9D9D9),
+    secondary: Color(0xFF2575FC),
     surface: Colors.white,
     background: Colors.white,
     error: Colors.red,
