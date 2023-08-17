@@ -16,8 +16,6 @@ import '../../widgets/button.dart';
 import '../../widgets/empty_list_message.dart';
 import '../../widgets/pill_button.dart';
 import '../../widgets/search_bar.dart';
-import '../../widgets/spaced_column.dart';
-import '../../widgets/tab_view.dart';
 import '../../widgets/transaction_listing_item.dart';
 import 'transactions_filtering_screen.dart';
 
@@ -191,67 +189,77 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       }
 
       return Column(
-        children: [_buildGroupedByMonthsList(transactions)],
+        children: [_buildGroupedByDaysList(transactions)],
       );
     }
 
     return emptyListWidget;
   }
 
-  String _formatMonthYear(String monthAndYear) {
-    var parts = monthAndYear.split('/');
-    var year = DateTime.now().year == int.parse(parts[1]) ? '' : parts[1];
+  String _formatDayMonthYear(String dayMonthYear) {
+    var parts = dayMonthYear.split('/');
+    var year = DateTime.now().year == int.parse(parts[2]) ? '' : parts[2];
     String months = [
-      'January',
-      'February',
-      'March',
-      'April',
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
       'May',
       'June',
       'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
-    ][int.parse(parts[0]) - 1];
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ][int.parse(parts[1]) - 1];
 
-    return '$months $year';
+    return '$months ${parts[0]} $year';
   }
 
-  Widget _buildGroupedByMonthsList(List<Transaction> transactions) {
+  Widget _buildGroupedByDaysList(List<Transaction> transactions) {
     var groupedTransactions = <String, List<Transaction>>{};
 
     for (var transaction in transactions) {
       var transactionDate = DateTime.parse(transaction.bookingDate!);
-      var monthAndYear = '${transactionDate.month}/${transactionDate.year}';
-      if (groupedTransactions.containsKey(monthAndYear)) {
-        groupedTransactions[monthAndYear]!.add(transaction);
+      var dayMonthYear =
+          '${transactionDate.day}/${transactionDate.month}/${transactionDate.year}';
+      if (groupedTransactions.containsKey(dayMonthYear)) {
+        groupedTransactions[dayMonthYear]!.add(transaction);
       } else {
-        groupedTransactions[monthAndYear] = [transaction];
+        groupedTransactions[dayMonthYear] = [transaction];
       }
     }
 
-    var monthAndYearList = groupedTransactions.keys.toList();
-    monthAndYearList.sort((a, b) {
+    var dayMonthYearList = groupedTransactions.keys.toList();
+
+    dayMonthYearList.sort((a, b) {
       var partsA = a.split('/');
       var partsB = b.split('/');
-      var yearA = int.parse(partsA[1]);
-      var yearB = int.parse(partsB[1]);
-      var monthA = int.parse(partsA[0]);
-      var monthB = int.parse(partsB[0]);
+      var yearA = int.parse(partsA[2]);
+      var yearB = int.parse(partsB[2]);
+      var monthA = int.parse(partsA[1]);
+      var monthB = int.parse(partsB[1]);
+      var dayA = int.parse(partsA[0]);
+      var dayB = int.parse(partsB[0]);
 
       if (yearA > yearB) {
         return -1;
       } else if (yearA < yearB) {
         return 1;
       } else {
-        return monthB.compareTo(monthA);
+        if (monthA > monthB) {
+          return -1;
+        } else if (monthA < monthB) {
+          return 1;
+        } else {
+          return dayB.compareTo(dayA);
+        }
       }
     });
 
     return ListView.separated(
-      itemCount: monthAndYearList.length,
+      itemCount: dayMonthYearList.length,
       separatorBuilder: (context, index) => const Divider(
         height: 10,
         color: Colors.transparent,
@@ -260,9 +268,9 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       physics: const ClampingScrollPhysics(),
       padding: EdgeInsets.zero,
       itemBuilder: (context, index) {
-        var monthAndYear = monthAndYearList[index];
-        var transactions = groupedTransactions[monthAndYear]!;
-        var formattedMonthAndYear = _formatMonthYear(monthAndYear);
+        var dayMonthYear = dayMonthYearList[index];
+        var transactions = groupedTransactions[dayMonthYear]!;
+        var formattedDayMonthYear = _formatDayMonthYear(dayMonthYear);
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -270,7 +278,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             Padding(
               padding: const EdgeInsets.only(bottom: 10.0),
               child: Text(
-                formattedMonthAndYear,
+                formattedDayMonthYear,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
@@ -302,7 +310,7 @@ class TransactionType extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ButtonsTransactionType(
+    return const ButtonsTransactionType(
       buttons: [
         ButtonTransactionTypeItem(
             text: TransactionTypeItems.Past, child: PastTransactions()),
@@ -366,6 +374,7 @@ class _ButtonsTransactionTypeState extends State<ButtonsTransactionType> {
             ],
           ),
         ),
+        const SizedBox(height: 16),
         widget.buttons[selectedButton].child,
       ],
     );
