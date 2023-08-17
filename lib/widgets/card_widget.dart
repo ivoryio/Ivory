@@ -44,10 +44,10 @@ class BankCardWidget extends StatelessWidget {
             gradient: const LinearGradient(
               begin: Alignment.bottomRight,
               end: Alignment.topLeft,
-              stops: [0.0, 0.5629],
+              stops: [0.0, 1.0],
               colors: [
-                Color(0xFF585858),
-                Color(0xFF000000),
+                Color(0xFF1D26A7),
+                Color(0xFF6300BB),
               ],
               transform: GradientRotation(135 * (3.1415926 / 180.0)),
             ),

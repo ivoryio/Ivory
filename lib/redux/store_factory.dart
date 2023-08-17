@@ -9,6 +9,8 @@ import 'package:solarisdemo/infrastructure/transactions/transaction_middleware.d
 import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart';
 import 'package:solarisdemo/redux/app_reducer.dart';
 
+import '../infrastructure/bank_card/activation/bank_card_activation_middleware.dart';
+import '../infrastructure/bank_card/activation/bank_card_activation_service.dart';
 import 'app_state.dart';
 
 Store<AppState> createStore({
@@ -17,6 +19,7 @@ Store<AppState> createStore({
   required TransactionService transactionService,
   required CreditLineService creditLineService,
   required RepaymentReminderService repaymentReminderService,
+  required BankCardActivationService bankCardActivationService,
 }) {
   return Store<AppState>(
     appReducer,
@@ -26,6 +29,7 @@ Store<AppState> createStore({
       GetTransactionsMiddleware(transactionService),
       GetCreditLineMiddleware(creditLineService),
       RepaymentRemindersMiddleware(repaymentReminderService),
+      BankCardActivationMiddleware(bankCardActivationService),
     ],
   );
 }

@@ -14,6 +14,7 @@ import 'package:solarisdemo/redux/store_factory.dart';
 
 import '../config.dart';
 import 'firebase_options.dart';
+import 'infrastructure/bank_card/activation/bank_card_activation_service.dart';
 
 Future<void> main() async {
   await dotenv.load();
@@ -24,7 +25,8 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  await SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
   final store = _buildStore();
 
@@ -41,6 +43,7 @@ Store<AppState> _buildStore() {
     transactionService: TransactionService(),
     creditLineService: CreditLineService(),
     repaymentReminderService: RepaymentReminderService(),
+    bankCardActivationService: BankCardActivationService(),
   );
 
   return store;

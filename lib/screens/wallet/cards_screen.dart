@@ -25,7 +25,8 @@ class CardsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     AuthenticatedUser user = context.read<AuthCubit>().state.user!;
     return BlocProvider.value(
-      value: BankCardsCubit(cardsService: BankCardsService(user: user.cognito))..getCards(),
+      value: BankCardsCubit(cardsService: BankCardsService(user: user.cognito))
+        ..getCards(),
       child: BlocBuilder<BankCardsCubit, BankCardsState>(
         builder: (context, state) {
           if (state is BankCardsLoading) {
@@ -82,11 +83,15 @@ class WalletScreenBody extends StatelessWidget {
       tabs: [
         TabViewItem(
           text: "Physical",
-          child: Expanded(child: SingleChildScrollView(child: CardList(cards: physicalCards))),
+          child: Expanded(
+              child:
+                  SingleChildScrollView(child: CardList(cards: physicalCards))),
         ),
         TabViewItem(
           text: "Virtual",
-          child: Expanded(child: SingleChildScrollView(child: CardList(cards: virtualCards))),
+          child: Expanded(
+              child:
+                  SingleChildScrollView(child: CardList(cards: virtualCards))),
         ),
       ],
     );
@@ -126,14 +131,20 @@ class CardList extends StatelessWidget {
               itemBuilder: (context, index) {
                 BankCard card = cards[index];
 
-                String cardNumber = card.representation?.maskedPan ?? emptyStringValue;
-                String cardHolder = card.representation?.line2 ?? emptyStringValue;
-                String cardExpiry = card.representation?.formattedExpirationDate ?? emptyStringValue;
+                String cardNumber =
+                    card.representation?.maskedPan ?? emptyStringValue;
+                String cardHolder =
+                    card.representation?.line2 ?? emptyStringValue;
+                String cardExpiry =
+                    card.representation?.formattedExpirationDate ??
+                        emptyStringValue;
 
                 return GestureDetector(
-                  onTap: card.status == BankCardStatus.ACTIVE || card.status == BankCardStatus.INACTIVE
+                  onTap: card.status == BankCardStatus.ACTIVE ||
+                          card.status == BankCardStatus.INACTIVE
                       ? () {
-                          Navigator.pushNamed(context, CardDetailsScreen.routeName,
+                          Navigator.pushNamed(
+                              context, CardDetailsScreen.routeName,
                               arguments: CardDetailsScreenParams(card: card));
                         }
                       : null,
@@ -154,7 +165,7 @@ class CardList extends StatelessWidget {
                     CreateBankCard card = CreateBankCard(
                       user.person.firstName!,
                       user.person.lastName!,
-                      BankCardType.VISA_CREDIT,
+                      BankCardType.VIRTUAL_VISA_CREDIT,
                       user.personAccount.businessId ?? '',
                     );
                     context.read<BankCardsCubit>().createCard(card);

@@ -26,7 +26,6 @@ class _BankCardDetailsConfirmPinScreenState
 
   @override
   Widget build(BuildContext context) {
-    final state = context.read<BankCardDetailsCubit>().state;
 
     return Screen(
       scrollPhysics: const NeverScrollableScrollPhysics(),
@@ -37,7 +36,8 @@ class _BankCardDetailsConfirmPinScreenState
       ),
       backButtonIcon: const Icon(Icons.arrow_back, size: 24),
       customBackButtonCallback: () {
-        context.read<BankCardDetailsCubit>().startPinSetup(state.card!);
+        // context.read<BankCardDetailsCubit>().startPinSetup(state.card!);
+        //back button ide valamit
       },
       centerTitle: true,
       hideAppBar: false,
@@ -102,7 +102,7 @@ class _BankCardDetailsConfirmPinScreenState
                       key: fourDigitPinKey,
                       onCompleted: (confirmPin) {
                         if (isPinValid(
-                          state.pin!,
+                          // state.pin!,
                           confirmPin,
                         )) {
                           fourDigitPinKey.currentState?.unfocusAllFields();
@@ -113,14 +113,14 @@ class _BankCardDetailsConfirmPinScreenState
                             ),
                             () {
                               context.read<BankCardDetailsCubit>().confirmPin(
-                                    state.card!,
-                                    state.pin!,
+                                    // state.card!,
+                                    // state.pin!,
                                   );
                             },
                           );
                         } else {
                           highlightReasonsForInvalidPin(
-                            state.pin!,
+                            // state.pin!,
                             confirmPin,
                           );
                           fourDigitPinKey.currentState?.toggleValidity();

@@ -18,7 +18,7 @@ class BankCardActivatedScreen extends StatelessWidget {
       hideBottomNavbar: true,
       child: Padding(
         padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-        child: const Text(''),
+        child: const Text('ACTIVEEEEEEEEEEEE'),
       ),
     );
   }
