@@ -1,3 +1,4 @@
+import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -11,7 +12,9 @@ import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import '../../config.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../models/transaction_model.dart';
+import '../../models/transaction_model.dart';
 import '../../models/user.dart';
+import '../../utilities/format.dart';
 import '../../widgets/button.dart';
 import '../../widgets/empty_list_message.dart';
 import '../../widgets/pill_button.dart';
@@ -217,6 +220,26 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     return '$months ${parts[0]} $year';
   }
 
+  Amount _sumOfDay(List<Transaction> transactions) {
+    double sum = 0;
+
+    for (var transaction in transactions) {
+      sum += transaction.amount!.value!;
+    }
+
+    return Amount(value: sum, currency: transactions[0].amount!.currency);
+  }
+
+  String _formatAmountWithCurrency(Amount amount) {
+    double value = amount.value!;
+    String currencySymbol = Format.getCurrencySymbol(amount.currency!);
+
+    String absoluteAmountValue = value.abs().toStringAsFixed(2);
+    String sign = value < 0 ? '-' : '+';
+
+    return '$sign $currencySymbol$absoluteAmountValue';
+  }
+
   Widget _buildGroupedByDaysList(List<Transaction> transactions) {
     var groupedTransactions = <String, List<Transaction>>{};
 
@@ -277,13 +300,20 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           children: [
             Padding(
               padding: const EdgeInsets.only(bottom: 10.0),
-              child: Text(
-                formattedDayMonthYear,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                  color: Color(0xff414D63),
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    formattedDayMonthYear,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: Color(0xff414D63),
+                    ),
+                  ),
+                  Text(_formatAmountWithCurrency(_sumOfDay(transactions)),
+                      style: ClientConfig.getTextStyleScheme().labelSmall),
+                ],
               ),
             ),
             ListView.separated(
