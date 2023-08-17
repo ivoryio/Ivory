@@ -16,13 +16,25 @@ class RepaymentRemindersMiddleware extends MiddlewareClass<AppState> {
       store.dispatch(RepaymentReminderLoadingEventAction());
       final response = await _repaymentReminderService.getRepaymentReminders(user: action.user);
 
-      if (response is RepaymentReminderSuccessResponse) {
+      if (response is GetRepaymentReminderSuccessResponse) {
         store.dispatch(RepaymentReminderFetchedEventAction(repaymentReminders: response.repaymentReminders));
       } else {
         store.dispatch(RepaymentReminderFailedEventAction());
       }
     } else if (action is UpdateRepaymentRemindersCommandAction) {
-      // TODO:
+      final response = await _repaymentReminderService.batchAddRepaymentReminders(reminders: action.reminders);
+
+      if (response is BatchAddRepaymentReminderSuccessResponse) {
+      } else {
+        store.dispatch(RepaymentReminderFailedEventAction());
+      }
+    } else if (action is DeleteRepaymentReminderCommandAction) {
+      final response = await _repaymentReminderService.deleteRepaymentReminder(reminder: action.reminder);
+
+      if (response is DeleteRepaymentReminderSuccessResponse) {
+      } else {
+        store.dispatch(RepaymentReminderFailedEventAction());
+      }
     }
   }
 }
