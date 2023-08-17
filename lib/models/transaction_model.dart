@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:solarisdemo/utilities/format.dart';
 
 class Transaction {
@@ -16,23 +17,26 @@ class Transaction {
   DateTime? recordedAt;
   String? senderIban;
   String? senderName;
+  Category? category;
 
-  Transaction(
-      {this.id,
-      this.bookingType,
-      this.amount,
-      this.description,
-      this.endToEndId,
-      this.recipientBic,
-      this.recipientIban,
-      this.recipientName,
-      this.reference,
-      this.bookingDate,
-      this.valutaDate,
-      this.metaInfo,
-      this.recordedAt,
-      this.senderIban,
-      this.senderName});
+  Transaction({
+    this.id,
+    this.bookingType,
+    this.amount,
+    this.description,
+    this.endToEndId,
+    this.recipientBic,
+    this.recipientIban,
+    this.recipientName,
+    this.reference,
+    this.bookingDate,
+    this.valutaDate,
+    this.metaInfo,
+    this.recordedAt,
+    this.senderIban,
+    this.senderName,
+    this.category,
+  });
 
   Transaction.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -50,10 +54,13 @@ class Transaction {
     recordedAt = DateTime.parse(json['recorded_at']);
     senderIban = json['sender_iban'];
     senderName = json['sender_name'] ?? "SOLARIS";
+    category =
+        json['category'] != null ? Category.fromJson(json['category']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
+
     data['id'] = id;
     data['booking_type'] = bookingType;
     if (amount != null) {
@@ -71,6 +78,47 @@ class Transaction {
     data['recorded_at'] = recordedAt!.toIso8601String();
     data['sender_iban'] = senderIban;
     data['sender_name'] = senderName;
+    data['category'] = category;
+
+    return data;
+  }
+}
+
+class Category {
+  String? id;
+  String? name;
+  IconData? icon;
+
+  final Map<String, IconData> categoryIcon = {
+    "transportationAndTravel": Icons.travel_explore,
+    "foodAndDining": Icons.restaurant,
+    "retailAndShopping": Icons.shopping_bag,
+    "fuelAndAuto": Icons.gas_meter,
+    "healthAndWellness": Icons.health_and_safety,
+    "technologyAndOnlineServices": Icons.online_prediction,
+    "entertainmentAndRecreation": Icons.sports_esports,
+    "homeAndUtilities": Icons.home,
+    "governmentAndTaxes": Icons.interests,
+    "educationAndServices": Icons.cast_for_education,
+    "financialServices": Icons.taxi_alert,
+    "other": Icons.card_giftcard,
+  };
+
+  Category({this.id, this.name});
+
+  Category.fromJson(Map<String, dynamic> json) {
+    id = json['id'] ?? "other";
+    name = json['name'] ?? "Other";
+    icon = categoryIcon[id];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+
+    data['id'] = id;
+    data['name'] = name;
+    data['icon'] = icon;
+
     return data;
   }
 }
@@ -137,7 +185,7 @@ class TransactionListFilter {
       map["sort"] = sort!;
     }
 
-    if(searchString != null) {
+    if (searchString != null) {
       map["filter[description]"] = searchString!;
     }
 
