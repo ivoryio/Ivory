@@ -1,4 +1,4 @@
-import 'package:solarisdemo/models/transaction_model.dart';
+import 'package:solarisdemo/models/transactions/transaction_model.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -52,10 +52,10 @@ void main() {
       expect(fromJson.bookingType, isNull);
       expect(fromJson.amount, isNull);
       expect(fromJson.description, isNull);
-      expect(fromJson.endToEndId, isNull);
+      expect(fromJson.endToEndId, "ID");
       expect(fromJson.recipientBic, isNull);
       expect(fromJson.recipientIban, isNull);
-      expect(fromJson.recipientName, isNull);
+      expect(fromJson.recipientName, "SOLARIS");
       expect(fromJson.reference, isNull);
       expect(fromJson.bookingDate, isNull);
       expect(fromJson.valutaDate, isNull);

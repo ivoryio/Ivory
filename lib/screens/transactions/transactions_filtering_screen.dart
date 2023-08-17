@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:solarisdemo/screens/transactions/transactions_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
+import 'package:solarisdemo/widgets/checkbox.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../config.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
-import '../../models/transaction_model.dart';
+import '../../models/transactions/transaction_model.dart';
 import '../../models/user.dart';
 import '../../redux/app_state.dart';
 import '../../redux/transactions/transactions_action.dart';
@@ -33,6 +33,7 @@ class TransactionsFilteringScreen extends StatefulWidget {
 
 class _TransactionsFilteringScreenState extends State<TransactionsFilteringScreen> {
   TransactionListFilter? transactionListFilter;
+  bool valoare = false;
 
   @override
   void initState() {
@@ -55,40 +56,26 @@ class _TransactionsFilteringScreenState extends State<TransactionsFilteringScree
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AppToolbar(
-              title: "Filter",
-              backIcon: const Icon(
-                Icons.close,
-                color: Colors.black,
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.popUntil(
-                      context,
-                      ModalRoute.withName(TransactionsScreen.routeName),
-                    );
-                  },
-                  child: const Text(
-                    "Reset filters",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                    ),
+             AppToolbar(
+              richTextTitle: RichText(
+                  text: TextSpan(
+                    text: "Filter",
+                    style: ClientConfig.getTextStyleScheme().heading4,
                   ),
-                ),
-              ],
+              ),
             ),
-            const Text("By date"),
+            Text(
+              "By date",
+              style: ClientConfig.getTextStyleScheme().labelLarge,
+            ),
             const SizedBox(height: 16),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Icon(
+                Icon(
                   Icons.today,
-                  size: 15,
-                ),
-                const SizedBox(
-                  width: 8,
+                  size: 24,
+                  color: ClientConfig.getColorScheme().secondary,
                 ),
                 PillButton(
                   active:
@@ -122,6 +109,26 @@ class _TransactionsFilteringScreenState extends State<TransactionsFilteringScree
                           size: 16,
                         )
                       : null,
+                ),
+              ],
+            ),
+            const SizedBox(height: 36,),
+            Text(
+              "By category",
+              style: ClientConfig.getTextStyleScheme().labelLarge,
+            ),
+            const SizedBox(height: 16,),
+            Row(
+              children: [
+                CheckboxWidget(isChecked: valoare, onChanged: (bool? value){
+                  setState(() {
+                    valoare = value!;
+                  });
+                }),
+                const SizedBox(width: 8,),
+                Text(
+                  "ATM",
+                  style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
                 ),
               ],
             ),

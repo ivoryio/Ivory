@@ -10,7 +10,7 @@ import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../config.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
-import '../../models/transaction_model.dart';
+import '../../models/transactions/transaction_model.dart';
 import '../../models/user.dart';
 import '../../widgets/empty_list_message.dart';
 import '../../widgets/pill_button.dart';
