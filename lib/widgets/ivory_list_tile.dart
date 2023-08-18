@@ -32,7 +32,7 @@ class IvoryListTile extends StatelessWidget {
           children: [
             Icon(
               startIcon,
-              color: const Color(0xFFCC0000),
+              color: ClientConfig.getColorScheme().secondary,
             ),
             const SizedBox(width: 16),
             Expanded(

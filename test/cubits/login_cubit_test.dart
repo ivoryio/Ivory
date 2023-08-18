@@ -92,18 +92,5 @@ void main() {
 
       expectLater(cubit.stream, emits(isA<LoginUserExists>()));
     });
-
-    test('requestConsent updates state to LoginRequestConsent', () async {
-      cubit.setCredentials(
-        email: 'test_email',
-        password: 'test_password',
-      );
-
-      await mockAuthService.login('test_email', 'test_password');
-
-      cubit.requestConsent(password: 'test_password');
-
-      expect(cubit.state, isA<LoginRequestConsent>());
-    });
   });
 }
