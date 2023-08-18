@@ -101,7 +101,7 @@ class RepaymentsScreen extends StatelessWidget {
               title: 'Set repayment reminder',
               subtitle: 'Before we debit your reference account',
               onTap: () {
-                Navigator.pushNamed(context, RepaymentReminder.routeName);
+                Navigator.pushNamed(context, RepaymentReminderScreen.routeName);
               },
             ),
             IvoryListTile(
@@ -129,6 +129,7 @@ class RepaymentsScreen extends StatelessWidget {
 
 class _DetailsContent extends StatefulWidget {
   final CreditLineFetchedViewModel viewModel;
+
   const _DetailsContent({Key? key, required this.viewModel}) : super(key: key);
 
   @override
@@ -277,6 +278,7 @@ class _DetailsItem extends StatelessWidget {
 
 class _ExpandedDetails extends StatelessWidget {
   final CreditLineFetchedViewModel viewModel;
+
   const _ExpandedDetails({required this.viewModel});
 
   @override
@@ -402,6 +404,7 @@ class _ExpandedDetailsRow extends StatelessWidget {
 
 class _InfoIconButton extends StatelessWidget {
   final VoidCallback? onTap;
+
   const _InfoIconButton({required this.onTap});
 
   @override

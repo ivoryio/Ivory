@@ -41,7 +41,7 @@ class CreditLine {
 
   factory CreditLine.dummy() => CreditLine(
         id: '0',
-        dueDate: DateTime.now().add(const Duration(days: 7)),
+        dueDate: DateTime.now().add(const Duration(days: 10)),
         previousBillAmount: AmountValue(
           value: 496.22,
           unit: 'cents',

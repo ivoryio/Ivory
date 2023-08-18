@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:solarisdemo/models/repayments/reminder/repayment_reminder.dart';
 
 abstract class RepaymentReminderState extends Equatable {
   @override
@@ -14,7 +15,7 @@ class RepaymentReminderLoadingState extends RepaymentReminderState {
 class RepaymentReminderErrorState extends RepaymentReminderState {}
 
 class RepaymentReminderFetchedState extends RepaymentReminderState {
-  final List<DateTime> repaymentReminders;
+  final List<RepaymentReminder> repaymentReminders;
 
   RepaymentReminderFetchedState(this.repaymentReminders);
 
