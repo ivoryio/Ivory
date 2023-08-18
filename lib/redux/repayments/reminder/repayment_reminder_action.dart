@@ -8,9 +8,10 @@ class GetRepaymentRemindersCommandAction {
 }
 
 class UpdateRepaymentRemindersCommandAction {
+  final User user;
   final List<RepaymentReminder> reminders;
 
-  UpdateRepaymentRemindersCommandAction({required this.reminders});
+  UpdateRepaymentRemindersCommandAction({required this.user, required this.reminders});
 }
 
 class DeleteRepaymentReminderCommandAction {

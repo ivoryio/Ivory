@@ -79,7 +79,9 @@ class RepaymentReminderService extends ApiService {
         }
       }
 
-      return BatchAddRepaymentReminderSuccessResponse();
+      return BatchAddRepaymentReminderSuccessResponse(
+        repaymentReminders: addedReminders,
+      );
     } catch (e) {
       return RepaymentReminderServiceErrorResponse();
     }
@@ -126,7 +128,14 @@ class AddRepaymentReminderSuccessResponse extends RepaymentReminderServiceRespon
   List<Object?> get props => [repaymentReminder];
 }
 
-class BatchAddRepaymentReminderSuccessResponse extends RepaymentReminderServiceResponse {}
+class BatchAddRepaymentReminderSuccessResponse extends RepaymentReminderServiceResponse {
+  final List<RepaymentReminder> repaymentReminders;
+
+  BatchAddRepaymentReminderSuccessResponse({required this.repaymentReminders});
+
+  @override
+  List<Object?> get props => [repaymentReminders];
+}
 
 class DeleteRepaymentReminderSuccessResponse extends RepaymentReminderServiceResponse {}
 

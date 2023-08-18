@@ -7,6 +7,7 @@ import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/infrastructure/repayments/reminder/repayment_reminder_presenter.dart';
 import 'package:solarisdemo/models/repayments/reminder/repayment_reminder.dart';
+import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/repayments/reminder/repayment_reminder_action.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -164,7 +165,7 @@ class _RepaymentReminderScreenState extends State<RepaymentReminderScreen> {
                         width: double.infinity,
                         child: PrimaryButton(
                           text: 'Save',
-                          onPressed: _reminders.isNotEmpty ? _onSaveTap : null,
+                          onPressed: _reminders.isNotEmpty ? () => _onSaveTap(user.cognito) : null,
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -185,12 +186,12 @@ class _RepaymentReminderScreenState extends State<RepaymentReminderScreen> {
     }
   }
 
-  void _onSaveTap() {
+  void _onSaveTap(User user) {
     final remindersToAdd = _reminders.where((reminder) => !_initialReminders.contains(reminder)).toList();
 
     if (remindersToAdd.isNotEmpty) {
       StoreProvider.of<AppState>(context).dispatch(
-        UpdateRepaymentRemindersCommandAction(reminders: remindersToAdd),
+        UpdateRepaymentRemindersCommandAction(user: user, reminders: remindersToAdd),
       );
     }
 
@@ -202,7 +203,7 @@ class _PopUpContent extends StatelessWidget {
   final List<RepaymentReminder> reminders;
   final DateTime repaymentDueDate;
 
-  const _PopUpContent({super.key, required this.repaymentDueDate, required this.reminders});
+  const _PopUpContent({required this.repaymentDueDate, required this.reminders});
 
   bool _isReminderSelected(TimePeriod value) {
     final existingReminder = reminders.firstWhereOrNull((reminder) {
