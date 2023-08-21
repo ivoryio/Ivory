@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,9 +6,10 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/infrastructure/repayments/reminder/repayment_reminder_presenter.dart';
+import 'package:solarisdemo/models/repayments/reminder/repayment_reminder.dart';
+import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/repayments/reminder/repayment_reminder_action.dart';
-import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/ivory_error_widget.dart';
@@ -15,17 +17,20 @@ import 'package:solarisdemo/widgets/ivory_text_field.dart';
 import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
-class RepaymentReminder extends StatefulWidget {
+import '../../models/repayments/reminder/time_period.dart';
+
+class RepaymentReminderScreen extends StatefulWidget {
   static const routeName = "/repaymentReminderScreen";
 
-  const RepaymentReminder({Key? key}) : super(key: key);
+  const RepaymentReminderScreen({Key? key}) : super(key: key);
 
   @override
-  State<RepaymentReminder> createState() => _RepaymentReminderState();
+  State<RepaymentReminderScreen> createState() => _RepaymentReminderScreenState();
 }
 
-class _RepaymentReminderState extends State<RepaymentReminder> {
-  final List<DateTime> _reminders = [];
+class _RepaymentReminderScreenState extends State<RepaymentReminderScreen> {
+  final List<RepaymentReminder> _initialReminders = [];
+  final List<RepaymentReminder> _reminders = [];
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +65,11 @@ class _RepaymentReminderState extends State<RepaymentReminder> {
               onDidChange: (oldViewModel, viewModel) {
                 if (viewModel is RepaymentReminderFetchedViewModel) {
                   _reminders.clear();
-                  setState(() => _reminders.addAll(viewModel.repaymentReminders));
+                  _initialReminders.clear();
+                  setState(() {
+                    _reminders.addAll(viewModel.repaymentReminders);
+                    _initialReminders.addAll(viewModel.repaymentReminders);
+                  });
                 }
               },
               distinct: true,
@@ -80,11 +89,11 @@ class _RepaymentReminderState extends State<RepaymentReminder> {
                       if (_reminders.isNotEmpty) ...[
                         ..._reminders
                             .map(
-                              (reminderDateTime) => ListTile(
+                              (reminder) => ListTile(
                                 minLeadingWidth: 0,
                                 leading: const Icon(Icons.notifications_none_rounded, color: Color(0xFFCC0000)),
                                 title: Text(
-                                  Format.date(reminderDateTime, pattern: 'dd MMM yyyy, HH:mm'),
+                                  reminder.description,
                                   style: ClientConfig.getTextStyleScheme().heading4,
                                 ),
                                 trailing: IconButton(
@@ -96,7 +105,11 @@ class _RepaymentReminderState extends State<RepaymentReminder> {
                                       content: const _RemoveReminderPopUp(),
                                     );
                                     if (value == true) {
-                                      setState(() => _reminders.remove(reminderDateTime));
+                                      setState(() {
+                                        _reminders.remove(reminder);
+                                      });
+
+                                      _onDeleteReminder(reminder);
                                     }
                                   },
                                 ),
@@ -130,13 +143,18 @@ class _RepaymentReminderState extends State<RepaymentReminder> {
                               context: context,
                               title: 'Add reminder',
                               content: _PopUpContent(
-                                  repaymentDueDate: (viewModel as RepaymentReminderFetchedViewModel).repaymentDueDate),
+                                reminders: _reminders,
+                                repaymentDueDate: (viewModel as RepaymentReminderFetchedViewModel).repaymentDueDate,
+                              ),
                             );
 
                             if (value is TimePeriod) {
                               final reminderDate = viewModel.repaymentDueDate.subtract(value.duration);
-                              setState(() => _reminders.add(reminderDate));
-                            } else if (value is DateTime) {
+                              final description = value.description(1);
+                              setState(() {
+                                _reminders.add(RepaymentReminder(datetime: reminderDate, description: description));
+                              });
+                            } else if (value is RepaymentReminder) {
                               setState(() => _reminders.add(value));
                             }
                           },
@@ -147,9 +165,10 @@ class _RepaymentReminderState extends State<RepaymentReminder> {
                         width: double.infinity,
                         child: PrimaryButton(
                           text: 'Save',
-                          onPressed: _reminders.isNotEmpty ? _onSaveTap : null,
+                          onPressed: _reminders.isNotEmpty ? () => _onSaveTap(user.cognito) : null,
                         ),
                       ),
+                      const SizedBox(height: 16),
                     ],
                   ),
                 );
@@ -161,17 +180,38 @@ class _RepaymentReminderState extends State<RepaymentReminder> {
     );
   }
 
-  void _onSaveTap() {
-    StoreProvider.of<AppState>(context).dispatch(UpdateRepaymentRemindersCommandAction(
-      reminders: _reminders,
-    ));
+  void _onDeleteReminder(RepaymentReminder reminder) {
+    if (reminder.id != null) {
+      StoreProvider.of<AppState>(context).dispatch(DeleteRepaymentReminderCommandAction(reminder: reminder));
+    }
+  }
+
+  void _onSaveTap(User user) {
+    final remindersToAdd = _reminders.where((reminder) => !_initialReminders.contains(reminder)).toList();
+
+    if (remindersToAdd.isNotEmpty) {
+      StoreProvider.of<AppState>(context).dispatch(
+        UpdateRepaymentRemindersCommandAction(user: user, reminders: remindersToAdd),
+      );
+    }
+
     Navigator.pop(context);
   }
 }
 
 class _PopUpContent extends StatelessWidget {
+  final List<RepaymentReminder> reminders;
   final DateTime repaymentDueDate;
-  const _PopUpContent({Key? key, required this.repaymentDueDate}) : super(key: key);
+
+  const _PopUpContent({required this.repaymentDueDate, required this.reminders});
+
+  bool _isReminderSelected(TimePeriod value) {
+    final existingReminder = reminders.firstWhereOrNull((reminder) {
+      return reminder.datetime == repaymentDueDate.subtract(value.duration);
+    });
+
+    return existingReminder != null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -180,17 +220,20 @@ class _PopUpContent extends StatelessWidget {
         _ReminderListTile(
           title: '1 hour before',
           value: TimePeriod.hours,
-          onChanged: (value) => Navigator.pop(context, value),
+          groupValue: _isReminderSelected(TimePeriod.hours) ? TimePeriod.hours : null,
+          onChanged: !_isReminderSelected(TimePeriod.hours) ? (value) => Navigator.pop(context, value) : null,
         ),
         _ReminderListTile(
           title: '1 day before',
           value: TimePeriod.days,
-          onChanged: (value) => Navigator.pop(context, value),
+          groupValue: _isReminderSelected(TimePeriod.days) ? TimePeriod.days : null,
+          onChanged: !_isReminderSelected(TimePeriod.days) ? (value) => Navigator.pop(context, value) : null,
         ),
         _ReminderListTile(
           title: '1 week before',
           value: TimePeriod.weeks,
-          onChanged: (value) => Navigator.pop(context, value),
+          groupValue: _isReminderSelected(TimePeriod.weeks) ? TimePeriod.weeks : null,
+          onChanged: !_isReminderSelected(TimePeriod.weeks) ? (value) => Navigator.pop(context, value) : null,
         ),
         _ReminderListTile(
           title: 'Custom',
@@ -202,7 +245,12 @@ class _PopUpContent extends StatelessWidget {
             ).then((value) {
               if (value is (int, TimePeriod)) {
                 final reminderDate = repaymentDueDate.subtract(value.$2.duration * value.$1);
-                Navigator.pop(context, reminderDate);
+                final reminder = RepaymentReminder(
+                  datetime: reminderDate,
+                  description: value.$2.description(value.$1),
+                );
+
+                Navigator.pop(context, reminder);
               }
             });
           },
@@ -309,8 +357,6 @@ class _RemoveReminderPopUp extends StatelessWidget {
   }
 }
 
-enum TimePeriod { hours, days, weeks }
-
 class _ReminderListTile<T> extends StatelessWidget {
   final String title;
   final T? value;
@@ -328,7 +374,9 @@ class _ReminderListTile<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        onChanged?.call(value as T);
+        if (onChanged != null && value != null) {
+          onChanged!(value as T);
+        }
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
@@ -337,7 +385,11 @@ class _ReminderListTile<T> extends StatelessWidget {
             Radio(
               value: value ?? '',
               groupValue: groupValue,
-              onChanged: (value) {},
+              onChanged: (value) {
+                if (onChanged != null && value != null) {
+                  onChanged!(value as T);
+                }
+              },
               activeColor: const Color(0xFFCC0000),
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               visualDensity: VisualDensity.compact,
@@ -351,18 +403,5 @@ class _ReminderListTile<T> extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-extension on TimePeriod {
-  Duration get duration {
-    switch (this) {
-      case TimePeriod.hours:
-        return const Duration(hours: 1);
-      case TimePeriod.days:
-        return const Duration(days: 1);
-      case TimePeriod.weeks:
-        return const Duration(days: 7);
-    }
   }
 }
