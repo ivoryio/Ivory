@@ -3,6 +3,7 @@ import 'package:solarisdemo/infrastructure/credit_line/credit_line_middleware.da
 import 'package:solarisdemo/infrastructure/credit_line/credit_line_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/notifications_middleware.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
+import 'package:solarisdemo/infrastructure/repayments/bills/bill_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/reminder/repayment_reminder_middleware.dart';
 import 'package:solarisdemo/infrastructure/repayments/reminder/repayment_reminder_service.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_middleware.dart';
@@ -17,6 +18,7 @@ Store<AppState> createStore({
   required TransactionService transactionService,
   required CreditLineService creditLineService,
   required RepaymentReminderService repaymentReminderService,
+  required BillService billService,
 }) {
   return Store<AppState>(
     appReducer,

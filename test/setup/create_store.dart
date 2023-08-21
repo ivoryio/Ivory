@@ -1,6 +1,7 @@
 import 'package:redux/redux.dart';
 import 'package:solarisdemo/infrastructure/credit_line/credit_line_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
+import 'package:solarisdemo/infrastructure/repayments/bills/bill_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/reminder/repayment_reminder_service.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart';
 import 'package:solarisdemo/models/transaction_model.dart';
@@ -14,6 +15,7 @@ Store<AppState> createTestStore({
   TransactionService? transactionService,
   CreditLineService? creditLineService,
   RepaymentReminderService? repaymentReminderService,
+  BillService? billService,
 }) {
   return createStore(
     initialState: initialState,
@@ -21,6 +23,7 @@ Store<AppState> createTestStore({
     transactionService: transactionService ?? NotImplementedTransactionService(),
     creditLineService: creditLineService ?? NotImplementedCreditLineService(),
     repaymentReminderService: repaymentReminderService ?? NotImplementedRepaymentReminderService(),
+    billService: billService ?? NotImplementedBillService(),
   );
 }
 
@@ -53,6 +56,18 @@ class NotImplementedCreditLineService extends CreditLineService {
 class NotImplementedRepaymentReminderService extends RepaymentReminderService {
   @override
   Future<RepaymentReminderServiceResponse> getRepaymentReminders({User? user}) {
+    throw UnimplementedError();
+  }
+}
+
+class NotImplementedBillService extends BillService {
+  @override
+  Future<BillServiceResponse> getBills({User? user}) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<BillServiceResponse> getBillById({required String id, User? user}) {
     throw UnimplementedError();
   }
 }
