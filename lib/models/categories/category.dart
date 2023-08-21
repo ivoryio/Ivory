@@ -4,7 +4,7 @@ class Category extends Equatable {
   final String id;
   final String name;
 
-  Category({
+  const Category({
     required this.id,
     required this.name,
   });

@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:solarisdemo/infrastructure/categories/categories_presenter.dart';
+import 'package:solarisdemo/redux/categories/category_action.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/checkbox.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../config.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
+import '../../models/categories/category.dart';
 import '../../models/transactions/transaction_model.dart';
 import '../../models/user.dart';
 import '../../redux/app_state.dart';
@@ -33,7 +36,6 @@ class TransactionsFilteringScreen extends StatefulWidget {
 
 class _TransactionsFilteringScreenState extends State<TransactionsFilteringScreen> {
   TransactionListFilter? transactionListFilter;
-  bool valoare = false;
 
   @override
   void initState() {
@@ -57,6 +59,10 @@ class _TransactionsFilteringScreenState extends State<TransactionsFilteringScree
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
              AppToolbar(
+               onBackButtonPressed: (){
+                 transactionListFilter = widget.transactionListFilter;
+                 Navigator.of(context).pop();
+               },
               richTextTitle: RichText(
                   text: TextSpan(
                     text: "Filter",
@@ -118,26 +124,43 @@ class _TransactionsFilteringScreenState extends State<TransactionsFilteringScree
               style: ClientConfig.getTextStyleScheme().labelLarge,
             ),
             const SizedBox(height: 16,),
-            Row(
-              children: [
-                CheckboxWidget(isChecked: valoare, onChanged: (bool? value){
-                  setState(() {
-                    valoare = value!;
-                  });
-                }),
-                const SizedBox(width: 8,),
-                Text(
-                  "ATM",
-                  style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                ),
-              ],
+            StoreConnector<AppState, CategoriesViewModel>(
+              onInit: (store) {
+                store.dispatch(GetCategoriesCommandAction(user: user.cognito));
+              },
+              converter: (store) => CategoriesPresenter.presentCategories(categoriesState: store.state.categoriesState),
+              builder: (context, viewModel){
+                return Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: _buildFiltersListList(viewModel, transactionListFilter, (category, selected){
+                        final List<String> catIds = transactionListFilter?.categoryIds ?? [];
+                        if(selected == true) {
+                          catIds.add(category.id);
+                        } else {
+                          catIds.remove(category.id);
+                        }
+                        setState(() {
+                          transactionListFilter = TransactionListFilter(
+                            bookingDateMin: transactionListFilter?.bookingDateMin,
+                            bookingDateMax: transactionListFilter?.bookingDateMax,
+                            searchString: transactionListFilter?.searchString,
+                            categoryIds: catIds,
+                          );
+                        });
+                      }),
+                    ),
+                  ),
+                );},
             ),
-            const Spacer(),
+            const SizedBox(height: 8,),
             Row(
               children: [
                 Expanded(
-                  child: PrimaryButton(
+                  child: Button(
+                      color:  ClientConfig.getColorScheme().secondary,
                       text: "Apply filters",
+                      textStyle: ClientConfig.getTextStyleScheme().heading4.copyWith(color: Colors.white),
                       onPressed: () {
                         StoreProvider.of<AppState>(context)
                             .dispatch(GetTransactionsCommandAction(filter: transactionListFilter, user: user.cognito));
@@ -165,3 +188,71 @@ String getFormattedDate({
 
   return Format.date(date, pattern: "dd MMM yyyy");
 }
+
+List<Widget> _buildFiltersListList(
+    CategoriesViewModel viewModel,
+    TransactionListFilter? filter,
+    final Function(Category, bool) onSelectionChanged) {
+
+  final List<Widget> widgetsList = [];
+
+  if(viewModel is CategoriesErrorViewModel) {
+    return [const Center(child: Text("An error appeared while getting the available categories"))];
+  }
+
+  if(viewModel is WithCategoriesViewModel) {
+    for (int index = 0; index < viewModel.categories!.length; index++) {
+      final Category category = viewModel.categories![index];
+      widgetsList.add(_CategoryRow(category: category, filter: filter, onSelectionChanged: onSelectionChanged,));
+      widgetsList.add(const SizedBox(height: 24,));
+    }
+
+    return widgetsList;
+  }
+
+  return [const Center(child: CircularProgressIndicator())];
+}
+
+class _CategoryRow extends StatefulWidget {
+  final Category category;
+  final TransactionListFilter? filter;
+  final Function(Category, bool) onSelectionChanged;
+
+  const _CategoryRow({
+    Key? key,
+    required this.category,
+    required this.filter,
+    required this.onSelectionChanged
+  }) : super(key: key);
+
+  @override
+  State<_CategoryRow> createState() => _CategoryRowState();
+}
+
+class _CategoryRowState extends State<_CategoryRow> {
+  late bool isSelected;
+
+  @override
+  void initState() {
+    isSelected = (widget.filter?.categoryIds == null)
+        ? false : (widget.filter!.categoryIds!.contains(widget.category.id));
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return  Row(
+      children: [
+        CheckboxWidget(isChecked: isSelected, onChanged: (bool? value){
+          widget.onSelectionChanged(widget.category, value!);
+        }),
+        const SizedBox(width: 8,),
+        Text(
+          widget.category.name,
+          style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+        ),
+      ],
+    );
+  }
+}
+

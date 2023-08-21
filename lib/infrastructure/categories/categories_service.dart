@@ -12,7 +12,14 @@ class CategoriesService extends ApiService {
 
     try {
       final response = await get("/transactions/categories");
-      return CategoriesServiceErrorResponse();
+      final categories = (response as List).map((category) {
+        final id = category["id"];
+        final name = category["name"];
+
+        return Category(id: id, name: name);
+      }).toList();
+
+      return GetCategoriesSuccessResponse(categories: categories);
     } catch(e) {
       return CategoriesServiceErrorResponse();
     }
