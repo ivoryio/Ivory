@@ -1,9 +1,10 @@
 import 'package:redux/redux.dart';
+import 'package:solarisdemo/infrastructure/categories/categories_service.dart';
 import 'package:solarisdemo/infrastructure/credit_line/credit_line_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/reminder/repayment_reminder_service.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart';
-import 'package:solarisdemo/models/transaction_model.dart';
+import 'package:solarisdemo/models/transactions/transaction_model.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/store_factory.dart';
@@ -14,6 +15,7 @@ Store<AppState> createTestStore({
   TransactionService? transactionService,
   CreditLineService? creditLineService,
   RepaymentReminderService? repaymentReminderService,
+  CategoriesService? categoriesService,
 }) {
   return createStore(
     initialState: initialState,
@@ -21,6 +23,7 @@ Store<AppState> createTestStore({
     transactionService: transactionService ?? NotImplementedTransactionService(),
     creditLineService: creditLineService ?? NotImplementedCreditLineService(),
     repaymentReminderService: repaymentReminderService ?? NotImplementedRepaymentReminderService(),
+    categoriesService: categoriesService ?? NotImplementedCategoriesService(),
   );
 }
 
@@ -53,6 +56,13 @@ class NotImplementedCreditLineService extends CreditLineService {
 class NotImplementedRepaymentReminderService extends RepaymentReminderService {
   @override
   Future<RepaymentReminderServiceResponse> getRepaymentReminders({User? user}) {
+    throw UnimplementedError();
+  }
+}
+
+class NotImplementedCategoriesService extends CategoriesService {
+  @override
+  Future<CategoriesServiceResponse> getCategories({User? user}) {
     throw UnimplementedError();
   }
 }
