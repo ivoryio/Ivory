@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:redux/redux.dart';
+import 'package:solarisdemo/infrastructure/bank_card/bank_card_service.dart';
 import 'package:solarisdemo/infrastructure/credit_line/credit_line_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/reminder/repayment_reminder_service.dart';
@@ -14,7 +15,6 @@ import 'package:solarisdemo/redux/store_factory.dart';
 
 import '../config.dart';
 import 'firebase_options.dart';
-import 'infrastructure/bank_card/activation/bank_card_activation_service.dart';
 
 Future<void> main() async {
   await dotenv.load();
@@ -43,7 +43,7 @@ Store<AppState> _buildStore() {
     transactionService: TransactionService(),
     creditLineService: CreditLineService(),
     repaymentReminderService: RepaymentReminderService(),
-    bankCardActivationService: BankCardActivationService(),
+    BankCardService: BankCardService(),
   );
 
   return store;

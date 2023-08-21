@@ -5,7 +5,6 @@ import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import '../../config.dart';
 import '../../widgets/button.dart';
 import '../../widgets/card_widget.dart';
-import 'card_details_screen.dart';
 import 'cards_screen.dart';
 
 class BankCardDetailsActivationSuccessScreen extends StatelessWidget {

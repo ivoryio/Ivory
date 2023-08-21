@@ -1,4 +1,5 @@
 import 'package:redux/redux.dart';
+import 'package:solarisdemo/infrastructure/bank_card/bank_card_service.dart';
 import 'package:solarisdemo/infrastructure/credit_line/credit_line_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/reminder/repayment_reminder_service.dart';
@@ -14,6 +15,7 @@ Store<AppState> createTestStore({
   TransactionService? transactionService,
   CreditLineService? creditLineService,
   RepaymentReminderService? repaymentReminderService,
+  BankCardService? bankCardService,
 }) {
   return createStore(
     initialState: initialState,
@@ -21,7 +23,22 @@ Store<AppState> createTestStore({
     transactionService: transactionService ?? NotImplementedTransactionService(),
     creditLineService: creditLineService ?? NotImplementedCreditLineService(),
     repaymentReminderService: repaymentReminderService ?? NotImplementedRepaymentReminderService(),
+    BankCardService: bankCardService ?? NotImplementedBankCardService(),
   );
+}
+
+class NotImplementedBankCardService extends BankCardService {
+  @override
+  Future<BankCardServiceResponse> getBankCardById(
+      {User? user, String? cardId}) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<BankCardServiceResponse> activateBankCard(
+      {User? user, String? cardId}) {
+    throw UnimplementedError();
+  }
 }
 
 class NotImplementedPushNotificationService extends PushNotificationService {
@@ -38,7 +55,8 @@ class NotImplementedPushNotificationService extends PushNotificationService {
 
 class NotImplementedTransactionService extends TransactionService {
   @override
-  Future<TransactionsServiceResponse> getTransactions({TransactionListFilter? filter, User? user}) {
+  Future<TransactionsServiceResponse> getTransactions(
+      {TransactionListFilter? filter, User? user}) {
     throw UnimplementedError();
   }
 }

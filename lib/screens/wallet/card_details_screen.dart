@@ -1,21 +1,18 @@
-import 'dart:developer';
-
-import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:solarisdemo/cubits/card_details_cubit/card_details_cubit.dart';
-import 'package:solarisdemo/infrastructure/bank_card/activation/bank_card_activation_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
-import 'package:solarisdemo/redux/bank_card/activation/bank_card_activation_action.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/spaced_column.dart';
 
 import '../../config.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
+import '../../infrastructure/bank_card/bank_card_presenter.dart';
 import '../../models/bank_card.dart';
 import '../../models/user.dart';
+import '../../redux/bank_card/bank_card_action.dart';
 import '../../widgets/app_toolbar.dart';
 import '../../widgets/button.dart';
 import '../../widgets/card_widget.dart';
@@ -42,16 +39,16 @@ class BankCardDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     AuthenticatedUser user = context.read<AuthCubit>().state.user!;
 
-    return StoreConnector<AppState, BankCardActivationViewModel>(
+    return StoreConnector<AppState, BankCardViewModel>(
       onInit: (store) {
-        store.dispatch(GetBankCardActivationCommandAction(
+        store.dispatch(GetBankCardCommandAction(
           user: user,
           cardId: params.card.id,
         ));
       },
       converter: (store) {
-        return BankCardActivationPresenter.presentBankCardActivation(
-          bankCardActivationState: store.state.bankCardActivationState,
+        return BankCardPresenter.presentBankCard(
+          bankCardState: store.state.bankCardState,
           user: user,
         );
       },
@@ -87,20 +84,20 @@ class BankCardDetailsScreen extends StatelessWidget {
                       ),
                       Expanded(
                         child: (() {
-                          if (viewModel is BankCardActivationInitialViewModel) {
+                          if (viewModel is BankCardInitialViewModel) {
                             return const Center(
                               child: CircularProgressIndicator(),
                             );
                           }
-                          if (viewModel is BankCardActivationLoadingViewModel) {
+                          if (viewModel is BankCardLoadingViewModel) {
                             return const Center(
                               child: CircularProgressIndicator(),
                             );
                           }
-                          if (viewModel is BankCardActivationErrorViewModel) {
+                          if (viewModel is BankCardErrorViewModel) {
                             return const Text("Something went wrong");
                           }
-                          if (viewModel is BankCardActivationFetchedViewModel) {
+                          if (viewModel is BankCardFetchedViewModel) {
                             if (viewModel.bankCard.status ==
                                 BankCardStatus.ACTIVE) {
                               return ActiveCard(
@@ -370,7 +367,7 @@ class _CardOptionSwitchState extends State<_CardOptionSwitch> {
 }
 
 class InactiveCard extends StatelessWidget {
-  final BankCardActivationFetchedViewModel viewModel;
+  final BankCardFetchedViewModel viewModel;
   const InactiveCard({super.key, required this.viewModel});
 
   @override
@@ -440,7 +437,7 @@ class InactiveCard extends StatelessWidget {
 }
 
 class ActiveCard extends StatelessWidget {
-  final BankCardActivationFetchedViewModel viewModel;
+  final BankCardFetchedViewModel viewModel;
   const ActiveCard({super.key, required this.viewModel});
 
   @override

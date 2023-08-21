@@ -1,14 +1,15 @@
-import 'package:amazon_cognito_identity_dart_2/cognito.dart';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
-import 'package:solarisdemo/infrastructure/bank_card/activation/bank_card_activation_presenter.dart';
 import 'package:solarisdemo/models/user.dart';
-import 'package:solarisdemo/redux/bank_card/activation/bank_card_activation_action.dart';
 
 import '../../config.dart';
+import '../../infrastructure/bank_card/bank_card_presenter.dart';
 import '../../redux/app_state.dart';
+import '../../redux/bank_card/bank_card_action.dart';
 import '../../utilities/validator.dart';
 import '../../widgets/app_toolbar.dart';
 import '../../widgets/pin_field.dart';
@@ -35,13 +36,19 @@ class _BankCardDetailsChoosePinScreenState
   GlobalKey<FourDigitPinCodeInputState> fourDigitPinKey = GlobalKey();
 
   @override
+  void initState() {
+    log('initState');
+    restoreValidity();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     AuthenticatedUser user = context.read<AuthCubit>().state.user!;
 
-    return StoreConnector<AppState, BankCardActivationViewModel>(
-      converter: (store) =>
-          BankCardActivationPresenter.presentBankCardActivation(
-        bankCardActivationState: store.state.bankCardActivationState,
+    return StoreConnector<AppState, BankCardViewModel>(
+      converter: (store) => BankCardPresenter.presentBankCard(
+        bankCardState: store.state.bankCardState,
         user: user,
       ),
       builder: (context, viewModel) {
@@ -124,10 +131,13 @@ class _BankCardDetailsChoosePinScreenState
                                 const Duration(milliseconds: 500),
                                 () {
                                   StoreProvider.of<AppState>(context).dispatch(
-                                    BankCardActivationChoosePinCommandAction(
+                                    BankCardChoosePinCommandAction(
+                                      bankCard: viewModel.bankCard!,
+                                      user: user,
                                       pin: pin,
                                     ),
                                   );
+                                  restoreValidity();
                                   Navigator.pushNamed(
                                     context,
                                     BankCardDetailsConfirmPinScreen.routeName,

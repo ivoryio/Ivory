@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:solarisdemo/redux/bank_card/activation/bank_card_activation_state.dart';
+import 'package:solarisdemo/redux/bank_card/bank_card_state.dart';
 import 'package:solarisdemo/redux/credit_line/credit_line_state.dart';
 import 'package:solarisdemo/redux/repayments/reminder/repayment_reminder_state.dart';
 import 'package:solarisdemo/redux/transactions/transactions_state.dart';
@@ -8,13 +8,13 @@ class AppState extends Equatable {
   final TransactionsState transactionsState;
   final CreditLineState creditLineState;
   final RepaymentReminderState repaymentReminderState;
-  final BankCardActivationState bankCardActivationState;
+  final BankCardState bankCardState;
 
   const AppState({
     required this.transactionsState,
     required this.creditLineState,
     required this.repaymentReminderState,
-    required this.bankCardActivationState,
+    required this.bankCardState,
   });
 
   factory AppState.initialState() {
@@ -22,7 +22,7 @@ class AppState extends Equatable {
       transactionsState: TransactionsInitialState(),
       creditLineState: CreditLineInitialState(),
       repaymentReminderState: RepaymentReminderInitialState(),
-      bankCardActivationState: BankCardActivationInitialState(),
+      bankCardState: BankCardInitialState(),
     );
   }
 
@@ -31,7 +31,7 @@ class AppState extends Equatable {
         transactionsState,
         creditLineState,
         repaymentReminderState,
-        bankCardActivationState,
+        BankCardState,
       ];
 
   @override

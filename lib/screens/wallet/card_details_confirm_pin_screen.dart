@@ -6,7 +6,7 @@ import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../config.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
-import '../../infrastructure/bank_card/activation/bank_card_activation_presenter.dart';
+import '../../infrastructure/bank_card/bank_card_presenter.dart';
 import '../../models/user.dart';
 import '../../redux/app_state.dart';
 import '../../utilities/validator.dart';
@@ -33,11 +33,10 @@ class _BankCardDetailsConfirmPinScreenState
   Widget build(BuildContext context) {
     AuthenticatedUser user = context.read<AuthCubit>().state.user!;
 
-    return StoreConnector<AppState, BankCardActivationViewModel>(
-      converter: (store) =>
-          BankCardActivationPresenter.presentBankCardActivation(
+    return StoreConnector<AppState, BankCardViewModel>(
+      converter: (store) => BankCardPresenter.presentBankCard(
         user: user,
-        bankCardActivationState: store.state.bankCardActivationState,
+        bankCardState: store.state.bankCardState,
       ),
       builder: (context, viewModel) {
         return ScreenScaffold(
