@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:solarisdemo/screens/change_pin/change_pin_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
@@ -150,26 +151,26 @@ class ActiveCard extends StatelessWidget {
             SpacedColumn(
               crossAxisAlignment: CrossAxisAlignment.start,
               space: 16,
-              children: const [
-                ItemTitle(
+              children: [
+                const ItemTitle(
                   nameOfActionTitle: 'Spending settings',
                 ),
-                ItemName(
+                const ItemName(
                   leftIcon: Icons.speed_outlined,
                   actionName: 'Spending cap',
                   actionDescription: 'Set it up and get an alert if you exceed it',
                   rightIcon: Icons.arrow_forward_ios,
                   actionSwitch: false,
                 ),
-                ItemName(
+                const ItemName(
                   leftIcon: Icons.wifi_tethering_error,
                   actionName: 'Contactless limit',
                   actionDescription: 'For safe and mindful in-store payments',
                   rightIcon: Icons.arrow_forward_ios,
                   actionSwitch: false,
                 ),
-                ItemTitle(nameOfActionTitle: 'Security settings'),
-                ItemName(
+                const ItemTitle(nameOfActionTitle: 'Security settings'),
+                const ItemName(
                   leftIcon: Icons.key,
                   actionName: 'View PIN',
                   actionDescription: 'For security or personal reasons',
@@ -182,41 +183,47 @@ class ActiveCard extends StatelessWidget {
                   actionDescription: 'For security or personal reasons',
                   rightIcon: Icons.arrow_forward_ios,
                   actionSwitch: false,
+                  onTap: () => {
+                    Navigator.pushNamed(
+                      context,
+                      ChangePinScreen.routeName,
+                    ),
+                  },
                 ),
-                ItemName(
+                const ItemName(
                   leftIcon: Icons.lock_open,
                   actionName: 'Unblock card',
                   actionDescription: 'After 3 incorrect PIN/CVV attempts',
                   rightIcon: Icons.arrow_forward_ios,
                   actionSwitch: false,
                 ),
-                ItemName(
+                const ItemName(
                   leftIcon: Icons.wifi_tethering,
                   actionName: 'Contactless payments',
                   actionDescription: 'Apple Pay won’t be affected',
                   rightIcon: Icons.arrow_forward_ios,
                 ),
-                ItemName(
+                const ItemName(
                   leftIcon: Icons.language,
                   actionName: 'Online payments',
                   actionDescription: 'Apple Pay won’t be affected',
                   rightIcon: Icons.arrow_forward_ios,
                 ),
-                ItemName(
+                const ItemName(
                   leftIcon: Icons.payments,
                   actionName: 'ATM withdrawals',
                   actionDescription: 'If you don’t plan to withdraw',
                   rightIcon: Icons.arrow_forward_ios,
                 ),
-                ItemTitle(nameOfActionTitle: 'Card management'),
-                ItemName(
+                const ItemTitle(nameOfActionTitle: 'Card management'),
+                const ItemName(
                   leftIcon: Icons.credit_card,
                   actionName: 'Replace card',
                   actionDescription: 'If your card is damaged',
                   rightIcon: Icons.arrow_forward_ios,
                   actionSwitch: false,
                 ),
-                ItemName(
+                const ItemName(
                   leftIcon: Icons.delete,
                   actionName: 'Close card',
                   actionDescription: 'The card will be permanently closed',
@@ -294,6 +301,7 @@ class ItemName extends StatelessWidget {
   final String actionDescription;
   final IconData rightIcon;
   final bool actionSwitch;
+  final Function()? onTap;
 
   const ItemName({
     super.key,
@@ -302,39 +310,43 @@ class ItemName extends StatelessWidget {
     required this.actionDescription,
     required this.rightIcon,
     this.actionSwitch = true,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Icon(leftIcon, color: Theme.of(context).colorScheme.error, size: 24),
-        const SizedBox(width: 16),
-        Expanded(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                actionName,
-                style: const TextStyle(fontSize: 16, height: 1.5, fontWeight: FontWeight.w600),
-              ),
-              Text(
-                actionDescription,
-                style: const TextStyle(fontSize: 14, height: 1.29, fontWeight: FontWeight.w400),
-              ),
-            ],
+    return GestureDetector(
+      onTap: onTap,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Icon(leftIcon, color: Theme.of(context).colorScheme.error, size: 24),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  actionName,
+                  style: const TextStyle(fontSize: 16, height: 1.5, fontWeight: FontWeight.w600),
+                ),
+                Text(
+                  actionDescription,
+                  style: const TextStyle(fontSize: 14, height: 1.29, fontWeight: FontWeight.w400),
+                ),
+              ],
+            ),
           ),
-        ),
-        Container(
-          padding: const EdgeInsets.only(right: 0),
-          child: (actionSwitch == true)
-              ? const ActionItem()
-              : Icon(rightIcon, color: Theme.of(context).colorScheme.primary, size: 24),
-        ),
-      ],
+          Container(
+            padding: const EdgeInsets.only(right: 0),
+            child: (actionSwitch == true)
+                ? const ActionItem()
+                : Icon(rightIcon, color: Theme.of(context).colorScheme.primary, size: 24),
+          ),
+        ],
+      ),
     );
   }
 }

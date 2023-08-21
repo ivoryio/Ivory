@@ -11,6 +11,7 @@ import 'package:solarisdemo/navigator.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/auth/auth_action.dart';
 import 'package:solarisdemo/screens/account/account_details_screen.dart';
+import 'package:solarisdemo/screens/change_pin/change_pin_screen.dart';
 import 'package:solarisdemo/screens/home/home_screen.dart';
 import 'package:solarisdemo/screens/home/main_navigation_screen.dart';
 import 'package:solarisdemo/screens/landing/landing_screen.dart';
@@ -98,6 +99,7 @@ class _IvoryAppState extends State<IvoryApp> {
               // wallet
               CardsScreen.routeName: (context) =>
                   const MainNavigationScreen(initialScreen: MainNavigationScreens.cardsScreen),
+              ChangePinScreen.routeName: (context) => const ChangePinScreen(),
               CardDetailsScreen.routeName: (context) {
                 final cardDetailsScreenParams = ModalRoute.of(context)?.settings.arguments as CardDetailsScreenParams?;
 
