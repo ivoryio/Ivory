@@ -96,7 +96,7 @@ class RepaymentsScreen extends StatelessWidget {
               title: 'Set repayment reminder',
               subtitle: 'Before we debit your reference account',
               onTap: () {
-                Navigator.pushNamed(context, RepaymentReminder.routeName);
+                Navigator.pushNamed(context, RepaymentReminderScreen.routeName);
               },
             ),
             IvoryListTile(
@@ -124,6 +124,7 @@ class RepaymentsScreen extends StatelessWidget {
 
 class _DetailsContent extends StatefulWidget {
   final CreditLineFetchedViewModel viewModel;
+
   const _DetailsContent({Key? key, required this.viewModel}) : super(key: key);
 
   @override
@@ -199,19 +200,19 @@ class _DetailsContentState extends State<_DetailsContent> {
               children: [
                 Text(
                   !_detailsExpanded ? 'View Details' : 'View less',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFFCC0000),
+                    color: ClientConfig.getColorScheme().secondary,
                   ),
                 ),
                 const SizedBox(width: 8),
                 Transform.rotate(
                   angle: !_detailsExpanded ? 1.57 : -1.57,
-                  child: const Icon(
+                  child: Icon(
                     Icons.arrow_forward_ios,
                     size: 16,
-                    color: Color(0xFFCC0000),
+                    color: ClientConfig.getColorScheme().secondary,
                   ),
                 ),
               ],
@@ -266,6 +267,7 @@ class _DetailsItem extends StatelessWidget {
 
 class _ExpandedDetails extends StatelessWidget {
   final CreditLineFetchedViewModel viewModel;
+
   const _ExpandedDetails({required this.viewModel});
 
   @override
@@ -296,7 +298,7 @@ class _ExpandedDetails extends StatelessWidget {
                   title: 'Repayment amount', trailing: Format.euro(viewModel.creditLine.previousBillAmount.value)),
               _ExpandedDetailsRow(
                 title: 'Interest rate',
-                trailing: '${viewModel.creditLine.minimumPercentage}%',
+                trailing: '${viewModel.creditLine.interestRate}%',
                 onInfoIconTap: () {
                   showBottomModal(
                     context: context,
@@ -338,7 +340,7 @@ class _ExpandedDetails extends StatelessWidget {
                 ],
               ),
               _ExpandedDetailsRow(title: 'Account owner', trailing: viewModel.ownerName),
-              _ExpandedDetailsRow(title: 'IBAN', trailing: viewModel.iban),
+              _ExpandedDetailsRow(title: 'IBAN', trailing: Format.iban(viewModel.iban)),
             ],
           ),
         ),
@@ -382,6 +384,7 @@ class _ExpandedDetailsRow extends StatelessWidget {
 
 class _InfoIconButton extends StatelessWidget {
   final VoidCallback? onTap;
+
   const _InfoIconButton({required this.onTap});
 
   @override

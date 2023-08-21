@@ -84,7 +84,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   Color _getStatusBarColor() {
     switch (mainNavigationScreens[currentPageIndex]) {
       case MainNavigationScreens.homeScreen:
-        return const Color(0xFF1C1A28);
+        return const Color(0xFF000000);
       default:
         return Colors.transparent;
     }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../cubits/splitpay_cubit/splitpay_cubit.dart';
-import '../../models/transaction_model.dart';
+import '../../models/transactions/transaction_model.dart';
 import 'splitpay_confirmation_screen.dart';
 import 'splitpay_selection_screen.dart';
 

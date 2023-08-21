@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../config.dart';
+
 class CheckboxWidget extends StatefulWidget {
   final bool isChecked;
   final Function(bool) onChanged;
@@ -24,16 +26,23 @@ class _CheckboxWidgetState extends State<CheckboxWidget> {
   Widget build(BuildContext context) {
     return Material(
       child: SizedBox(
-        width: 20,
-        height: 20,
+        width: 24,
+        height: 24,
         child: Checkbox(
-          activeColor: Theme.of(context).primaryColor,
-          side: const BorderSide(
-            color: Color(0xFFCFD9E0),
-            width: 1,
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          visualDensity: const VisualDensity(
+            horizontal: VisualDensity.minimumDensity,
           ),
+          activeColor: ClientConfig.getColorScheme().secondary,
+          side: MaterialStateBorderSide.resolveWith(
+                  (states) {
+                    if(states.contains((MaterialState.selected))) {
+                      return const BorderSide(width: 1.0, color: Color(0xFF2575FC));
+                    }
+                    return const BorderSide(width: 1.0, color: Color.fromRGBO(110, 117, 124, 1));
+                  }),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(2.0),
           ),
           value: _isChecked,
           onChanged: (checked) {

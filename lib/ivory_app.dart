@@ -6,7 +6,7 @@ import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/logging/navigation_logging_observer.dart';
 import 'package:solarisdemo/models/home/main_navigation_screens.dart';
-import 'package:solarisdemo/models/transaction_model.dart';
+import 'package:solarisdemo/models/transactions/transaction_model.dart';
 import 'package:solarisdemo/navigator.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/auth/auth_action.dart';
@@ -119,7 +119,7 @@ class _IvoryAppState extends State<IvoryApp> {
               RepaymentsScreen.routeName: (context) => const RepaymentsScreen(),
               ChangeRepaymentRateScreen.routeName: (context) => const ChangeRepaymentRateScreen(),
               RepaymentSuccessfullyChanged.routeName: (context) => const RepaymentSuccessfullyChanged(),
-              RepaymentReminder.routeName: (context) => const RepaymentReminder(),
+              RepaymentReminderScreen.routeName: (context) => const RepaymentReminderScreen(),
               // transfer
               TransferScreen.routeName: (context) {
                 final transferScreenParams = ModalRoute.of(context)?.settings.arguments as TransferScreenParams?;
