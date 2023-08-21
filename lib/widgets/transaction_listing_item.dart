@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:solarisdemo/models/upcoming_transactions.dart';
 import 'package:solarisdemo/screens/splitpay/splitpay_screen.dart';
 
 import '../config.dart';
@@ -79,6 +80,80 @@ class TransactionListItem extends StatelessWidget {
     }
 
     return maxNameLength;
+  }
+}
+
+class UpcomingTransactionListItem extends StatelessWidget {
+  final bool? isClickable;
+  final UpcomingTransaction upcomingTransaction;
+
+  const UpcomingTransactionListItem({
+    super.key,
+    required this.upcomingTransaction,
+    this.isClickable = true,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final date = upcomingTransaction.statementDate!.toIso8601String();
+    final amount = upcomingTransaction.outstandingAmount?.value ?? 0;
+
+    final DateFormat dateFormatter = DateFormat('MMM d, HH:mm ');
+    final String formattedDate = dateFormatter.format(DateTime.parse(date));
+
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.currency_exchange,
+                size: 20,
+                color: ClientConfig.getColorScheme().secondary,
+              ),
+              const SizedBox(
+                width: 16,
+              ),
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                const Text('Automatic repayment',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                    )),
+                Text(
+                  formattedDate,
+                  style: const TextStyle(
+                    color: Color(0xFF667085),
+                  ),
+                )
+              ]),
+            ],
+          ),
+          Text(
+            amount == 0
+                ? Format.euro(amount)
+                : amount < 0
+                    ? (Format.euro(amount)).split(' ').join('')
+                    : '+ ${Format.euro(amount).split(' ').join('')}',
+            style: const TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 16,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  removeSpaceBetweenCurrencyAndAmount(amount) {
+    var pattern = RegExp(r' ');
+
+    var storageResult = amount!.split(pattern);
+    storageResult = storageResult.join('');
+
+    return storageResult;
   }
 }
 

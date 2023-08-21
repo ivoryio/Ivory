@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 import '../../models/transaction_model.dart';
+import '../../models/upcoming_transactions.dart';
 
 abstract class TransactionsState extends Equatable {
   @override
@@ -24,5 +25,16 @@ class TransactionsFetchedState extends TransactionsState {
   TransactionsFetchedState(this.transactions, this.transactionListFilter);
 
   @override
-  List<Object?> get props => [transactions,transactionListFilter];
+  List<Object?> get props => [transactions, transactionListFilter];
+}
+
+class UpcomingTransactionsFetchedState extends TransactionsState {
+  final List<UpcomingTransaction> upcomingTransactions;
+  final TransactionListFilter? transactionListFilter;
+
+  UpcomingTransactionsFetchedState(
+      this.upcomingTransactions, this.transactionListFilter);
+
+  @override
+  List<Object?> get props => [upcomingTransactions, transactionListFilter];
 }

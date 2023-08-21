@@ -1,8 +1,8 @@
-import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_presenter.dart';
+import 'package:solarisdemo/models/upcoming_transactions.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/transactions/transactions_action.dart';
 import 'package:solarisdemo/screens/home/home_screen.dart';
@@ -11,7 +11,6 @@ import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../config.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
-import '../../models/transaction_model.dart';
 import '../../models/transaction_model.dart';
 import '../../models/user.dart';
 import '../../utilities/format.dart';
@@ -136,9 +135,24 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                                 ],
                               ),
                             const SizedBox(height: 16),
-                            const TransactionType(),
+                            // const TransactionType(),
+                            ButtonsTransactionType(
+                              user: user,
+                              viewModel: viewModel,
+                              buttons: [
+                                ButtonTransactionTypeItem(
+                                  text: TransactionTypeItems.Past,
+                                  // child: PastTransactions()),
+                                  child: _buildTransactionsList(viewModel),
+                                ),
+                                ButtonTransactionTypeItem(
+                                  text: TransactionTypeItems.Upcoming,
+                                  child: _buildTransactionsList(viewModel),
+                                ),
+                              ],
+                            ),
                             const SizedBox(height: 16),
-                            _buildTransactionsList(viewModel)
+                            // _buildTransactionsList(viewModel)
                           ],
                         ),
                       ),
@@ -196,6 +210,38 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       );
     }
 
+    if (viewModel is UpcomingTransactionsFetchedViewModel) {
+      // return const Center(child: Text('view model upcomning'));
+      bool isFilteringActive =
+          (viewModel.transactionListFilter?.bookingDateMin != null ||
+              viewModel.transactionListFilter?.bookingDateMax != null);
+
+      List<UpcomingTransaction> upcomingTransactions = [];
+
+      upcomingTransactions.addAll(
+          viewModel.upcomingTransactions as Iterable<UpcomingTransaction>);
+
+      if (upcomingTransactions.isEmpty && !isFilteringActive) {
+        return emptyListWidget;
+      }
+
+      if (upcomingTransactions.isEmpty && isFilteringActive) {
+        return const Text(
+          "We couldn't find any results. Please try again by searching for other transactions.",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+            color: Color(0xff667085),
+          ),
+        );
+      }
+
+      return Column(
+        children: [_buildGroupedUpcomingByDaysList(upcomingTransactions)],
+      );
+    }
+
     return emptyListWidget;
   }
 
@@ -220,7 +266,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     return '$months ${parts[0]} $year';
   }
 
-  Amount _sumOfDay(List<Transaction> transactions) {
+  Amount _sumOfDay(List<dynamic> transactions) {
     double sum = 0;
 
     for (var transaction in transactions) {
@@ -235,7 +281,11 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     String currencySymbol = Format.getCurrencySymbol(amount.currency!);
 
     String absoluteAmountValue = value.abs().toStringAsFixed(2);
-    String sign = value < 0 ? '-' : '+';
+    String sign = value == 0
+        ? ''
+        : value < 0
+            ? '-'
+            : '+';
 
     return '$sign $currencySymbol$absoluteAmountValue';
   }
@@ -333,20 +383,124 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       },
     );
   }
-}
 
-class TransactionType extends StatelessWidget {
-  const TransactionType({super.key});
+  Widget _buildGroupedUpcomingByDaysList(
+      List<UpcomingTransaction> transactions) {
+    var groupedTransactions = <String, List<UpcomingTransaction>>{};
 
-  @override
-  Widget build(BuildContext context) {
-    return const ButtonsTransactionType(
-      buttons: [
-        ButtonTransactionTypeItem(
-            text: TransactionTypeItems.Past, child: PastTransactions()),
-        ButtonTransactionTypeItem(
-            text: TransactionTypeItems.Upcoming, child: UpcomingTransactions()),
-      ],
+    for (var transaction in transactions) {
+      var transactionDate = DateTime.parse(transaction.dueDate.toString());
+      var dayMonthYear =
+          '${transactionDate.day}/${transactionDate.month}/${transactionDate.year}';
+      if (groupedTransactions.containsKey(dayMonthYear)) {
+        groupedTransactions[dayMonthYear]!.add(transaction);
+      } else {
+        groupedTransactions[dayMonthYear] = [transaction];
+      }
+    }
+
+    var dayMonthYearList = groupedTransactions.keys.toList();
+
+    dayMonthYearList.sort((a, b) {
+      var partsA = a.split('/');
+      var partsB = b.split('/');
+      var yearA = int.parse(partsA[2]);
+      var yearB = int.parse(partsB[2]);
+      var monthA = int.parse(partsA[1]);
+      var monthB = int.parse(partsB[1]);
+      var dayA = int.parse(partsA[0]);
+      var dayB = int.parse(partsB[0]);
+
+      if (yearA > yearB) {
+        return -1;
+      } else if (yearA < yearB) {
+        return 1;
+      } else {
+        if (monthA > monthB) {
+          return -1;
+        } else if (monthA < monthB) {
+          return 1;
+        } else {
+          return dayB.compareTo(dayA);
+        }
+      }
+    });
+
+    CardBillAmount sumOfDay(List<UpcomingTransaction> transactions) {
+      double sum = 0;
+
+      for (var transaction in transactions) {
+        sum += transaction.outstandingAmount!.value!;
+      }
+
+      return CardBillAmount(
+          value: sum, currency: transactions[0].outstandingAmount!.currency);
+    }
+
+    String formatAmountWithCurrency(CardBillAmount amount) {
+      double value = amount.value!;
+      String currencySymbol = Format.getCurrencySymbol(amount.currency!);
+
+      String absoluteAmountValue = value.abs().toStringAsFixed(2);
+      String sign = value == 0
+          ? ''
+          : value < 0
+              ? '-'
+              : '+';
+
+      return '$sign $currencySymbol$absoluteAmountValue';
+    }
+
+    return ListView.separated(
+      itemCount: dayMonthYearList.length,
+      separatorBuilder: (context, index) => const Divider(
+        height: 10,
+        color: Colors.transparent,
+      ),
+      shrinkWrap: true,
+      physics: const ClampingScrollPhysics(),
+      padding: EdgeInsets.zero,
+      itemBuilder: (context, index) {
+        var dayMonthYear = dayMonthYearList[index];
+        var transactions = groupedTransactions[dayMonthYear]!;
+        var formattedDayMonthYear = _formatDayMonthYear(dayMonthYear);
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    formattedDayMonthYear,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: Color(0xff414D63),
+                    ),
+                  ),
+                  Text(formatAmountWithCurrency(sumOfDay(transactions)),
+                      style: ClientConfig.getTextStyleScheme().labelSmall),
+                ],
+              ),
+            ),
+            ListView.separated(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: transactions.length,
+              separatorBuilder: (_, __) => const Divider(
+                height: 10,
+                color: Colors.transparent,
+              ),
+              itemBuilder: (context, index) => UpcomingTransactionListItem(
+                upcomingTransaction: transactions[index],
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -354,11 +508,15 @@ class TransactionType extends StatelessWidget {
 class ButtonsTransactionType extends StatefulWidget {
   final List<ButtonTransactionTypeItem> buttons;
   final int? initialSelectedButtonIndex;
+  final AuthenticatedUser user;
+  final TransactionsViewModel viewModel;
 
   const ButtonsTransactionType({
     super.key,
     required this.buttons,
     this.initialSelectedButtonIndex,
+    required this.user,
+    required this.viewModel,
   });
 
   @override
@@ -399,6 +557,19 @@ class _ButtonsTransactionTypeState extends State<ButtonsTransactionType> {
                     setState(() {
                       selectedButton = buttonIndex;
                     });
+                    if (buttonIndex == 0) {
+                      StoreProvider.of<AppState>(context).dispatch(
+                          GetTransactionsCommandAction(
+                              filter: widget.viewModel.transactionListFilter,
+                              user: widget.user.cognito));
+                    }
+
+                    if (buttonIndex == 1) {
+                      StoreProvider.of<AppState>(context).dispatch(
+                          GetUpcomingTransactionsCommandAction(
+                              user: widget.user.cognito,
+                              filter: widget.viewModel.transactionListFilter));
+                    }
                   },
                 )
             ],
@@ -463,13 +634,13 @@ class PastTransactions extends StatelessWidget {
   }
 }
 
-class UpcomingTransactions extends StatelessWidget {
-  const UpcomingTransactions({super.key});
+// class UpcomingTransactions extends StatelessWidget {
+//   const UpcomingTransactions({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return const Text('Upcoming transactions');
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return const Text('Upcoming transactions');
+//   }
+// }
 
 enum TransactionTypeItems { Past, Upcoming }
