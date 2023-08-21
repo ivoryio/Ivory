@@ -31,7 +31,7 @@ void main() {
     // given
     final repaymentReminderState = RepaymentReminderFetchedState([reminder1]);
     final creditLineState = CreditLineFetchedState(
-      CreditLine.dummy(),
+      CreditLine.empty(),
     );
 
     // when
@@ -52,7 +52,7 @@ void main() {
     // given
     final repaymentReminderState = RepaymentReminderErrorState();
     final creditLineState = CreditLineFetchedState(
-      CreditLine.dummy(),
+      CreditLine.empty(),
     );
 
     // when

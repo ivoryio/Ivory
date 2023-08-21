@@ -8,7 +8,7 @@ class RepaymentReminderPresenter {
       {required RepaymentReminderState repaymentReminderState, required CreditLineState creditLineState}) {
     if (repaymentReminderState is RepaymentReminderLoadingState || creditLineState is CreditLineLoadingState) {
       return RepaymentReminderLoadingViewModel();
-    } else if (repaymentReminderState is RepaymentReminderErrorState) {
+    } else if (repaymentReminderState is RepaymentReminderErrorState || creditLineState is CreditLineErrorState) {
       return RepaymentReminderErrorViewModel();
     } else if (repaymentReminderState is RepaymentReminderFetchedState && creditLineState is CreditLineFetchedState) {
       return RepaymentReminderFetchedViewModel(
