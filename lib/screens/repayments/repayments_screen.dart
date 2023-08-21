@@ -30,9 +30,8 @@ class RepaymentsScreen extends StatelessWidget {
 
     return ScreenScaffold(
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(
-            horizontal: ClientConfig.getCustomClientUiSettings()
-                .defaultScreenHorizontalPadding),
+        padding:
+            EdgeInsets.symmetric(horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -51,8 +50,7 @@ class RepaymentsScreen extends StatelessWidget {
               ),
               child: StoreConnector<AppState, CreditLineViewModel>(
                 onInit: (store) {
-                  store
-                      .dispatch(GetCreditLineCommandAction(user: user.cognito));
+                  store.dispatch(GetCreditLineCommandAction(user: user.cognito));
                 },
                 converter: (store) => CreditLinePresenter.presentCreditLine(
                   creditLineState: store.state.creditLineState,
@@ -72,13 +70,11 @@ class RepaymentsScreen extends StatelessWidget {
                       alignment: Alignment.center,
                       width: double.infinity,
                       padding: const EdgeInsets.all(16),
-                      child: const IvoryErrorWidget(
-                          'Error loading credit line details'),
+                      child: const IvoryErrorWidget('Error loading credit line details'),
                     );
                   }
 
-                  return _DetailsContent(
-                      viewModel: viewModel as CreditLineFetchedViewModel);
+                  return _DetailsContent(viewModel: viewModel as CreditLineFetchedViewModel);
                 },
               ),
             ),
@@ -92,8 +88,7 @@ class RepaymentsScreen extends StatelessWidget {
               title: 'Change repayment rate',
               subtitle: 'And choose between percentage or fixed',
               onTap: () {
-                Navigator.pushNamed(
-                    context, ChangeRepaymentRateScreen.routeName);
+                Navigator.pushNamed(context, ChangeRepaymentRateScreen.routeName);
               },
             ),
             IvoryListTile(
@@ -148,8 +143,7 @@ class _DetailsContentState extends State<_DetailsContent> {
         children: [
           _DetailsItem(
             title: 'Outstanding balance',
-            subtitle: Format.euro(
-                widget.viewModel.creditLine.outstandingAmount.value),
+            subtitle: Format.euro(widget.viewModel.creditLine.outstandingAmount.value),
             onInfoIconTap: () {
               showBottomModal(
                 context: context,
@@ -162,8 +156,7 @@ class _DetailsContentState extends State<_DetailsContent> {
           const Divider(height: 24),
           _DetailsItem(
             title: 'Next full repayment',
-            subtitle: Format.euro(
-                widget.viewModel.creditLine.currentBillAmount.value),
+            subtitle: Format.euro(widget.viewModel.creditLine.currentBillAmount.value),
             onInfoIconTap: () {
               showBottomModal(
                 context: context,
@@ -186,15 +179,11 @@ class _DetailsContentState extends State<_DetailsContent> {
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
             child: _detailsExpanded
-                ? Column(children: [
-                    _ExpandedDetails(viewModel: widget.viewModel),
-                    const Divider(height: 1)
-                  ])
+                ? Column(children: [_ExpandedDetails(viewModel: widget.viewModel), const Divider(height: 1)])
                 : const SizedBox(),
           ),
           MaterialButton(
-            onPressed: () =>
-                setState(() => _detailsExpanded = !_detailsExpanded),
+            onPressed: () => setState(() => _detailsExpanded = !_detailsExpanded),
             minWidth: double.infinity,
             padding: const EdgeInsets.symmetric(
               vertical: 16,
@@ -290,10 +279,7 @@ class _ExpandedDetails extends StatelessWidget {
           child: SpacedColumn(
             space: 8,
             children: [
-              _ExpandedDetailsRow(
-                  title: 'Amount spent',
-                  trailing:
-                      Format.euro(viewModel.creditLine.spentAmount.value)),
+              _ExpandedDetailsRow(title: 'Amount spent', trailing: Format.euro(viewModel.creditLine.spentAmount.value)),
               _ExpandedDetailsRow(
                 title: 'Percentage repayment rate',
                 trailing: '${viewModel.creditLine.repaymentRatePercentage}%',
@@ -309,12 +295,10 @@ class _ExpandedDetails extends StatelessWidget {
                 },
               ),
               _ExpandedDetailsRow(
-                  title: 'Repayment amount',
-                  trailing: Format.euro(
-                      viewModel.creditLine.previousBillAmount.value)),
+                  title: 'Repayment amount', trailing: Format.euro(viewModel.creditLine.previousBillAmount.value)),
               _ExpandedDetailsRow(
                 title: 'Interest rate',
-                trailing: '${viewModel.creditLine.minimumPercentage}%',
+                trailing: '${viewModel.creditLine.interestRate}%',
                 onInfoIconTap: () {
                   showBottomModal(
                     context: context,
@@ -326,8 +310,7 @@ class _ExpandedDetails extends StatelessWidget {
               ),
               _ExpandedDetailsRow(
                 title: 'Interest amount',
-                trailing: Format.euro(
-                    viewModel.creditLine.accumulatedInterestAmount.value),
+                trailing: Format.euro(viewModel.creditLine.accumulatedInterestAmount.value),
               ),
             ],
           ),
@@ -342,8 +325,7 @@ class _ExpandedDetails extends StatelessWidget {
                 children: [
                   Text(
                     'Reference account',
-                    style:
-                        ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
+                    style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
                   ),
                   const SizedBox(width: 4),
                   _InfoIconButton(onTap: () {
@@ -357,10 +339,8 @@ class _ExpandedDetails extends StatelessWidget {
                   }),
                 ],
               ),
-              _ExpandedDetailsRow(
-                  title: 'Account owner', trailing: viewModel.ownerName),
-              _ExpandedDetailsRow(
-                  title: 'IBAN', trailing: Format.iban(viewModel.iban)),
+              _ExpandedDetailsRow(title: 'Account owner', trailing: viewModel.ownerName),
+              _ExpandedDetailsRow(title: 'IBAN', trailing: Format.iban(viewModel.iban)),
             ],
           ),
         ),

@@ -14,11 +14,10 @@ class CreditLineService extends ApiService {
       this.user = user;
     }
     try {
-      final data = await get('account/transactions/credit_card_bills');
+      final data = await get('credit_card/repayment_details');
 
-      return GetCreditLineSuccessResponse(creditLine: CreditLine.fromJson(data[0]));
+      return GetCreditLineSuccessResponse(creditLine: CreditLine.fromJson(data));
     } catch (e) {
-      return GetCreditLineSuccessResponse(creditLine: CreditLine.dummy());
       return CreditLineServiceErrorResponse();
     }
   }
