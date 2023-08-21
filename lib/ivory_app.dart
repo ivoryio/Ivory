@@ -26,6 +26,7 @@ import 'package:solarisdemo/screens/transactions/transactions_filtering_screen.d
 import 'package:solarisdemo/screens/transactions/transactions_screen.dart';
 import 'package:solarisdemo/screens/transfer/transfer_screen.dart';
 import 'package:solarisdemo/screens/wallet/card_details_screen.dart';
+import 'package:solarisdemo/screens/wallet/card_spending_cap_screen.dart';
 import 'package:solarisdemo/screens/wallet/cards_screen.dart';
 import 'package:solarisdemo/services/auth_service.dart';
 
@@ -76,53 +77,74 @@ class _IvoryAppState extends State<IvoryApp> {
               // signup
               SignupScreen.routeName: (context) => const SignupScreen(),
               // home
-              HomeScreen.routeName: (context) =>
-                  const MainNavigationScreen(initialScreen: MainNavigationScreens.homeScreen),
+              HomeScreen.routeName: (context) => const MainNavigationScreen(
+                  initialScreen: MainNavigationScreens.homeScreen),
               // settings
-              SettingsScreen.routeName: (context) =>
-                  const MainNavigationScreen(initialScreen: MainNavigationScreens.settingsScreen),
+              SettingsScreen.routeName: (context) => const MainNavigationScreen(
+                  initialScreen: MainNavigationScreens.settingsScreen),
               //transactions
               TransactionsScreen.routeName: (context) {
-                final transactionListFilter = ModalRoute.of(context)?.settings.arguments as TransactionListFilter?;
+                final transactionListFilter = ModalRoute.of(context)
+                    ?.settings
+                    .arguments as TransactionListFilter?;
 
                 return MainNavigationScreen(
-                    initialScreen: MainNavigationScreens.transactionsScreen, screenParams: transactionListFilter);
+                    initialScreen: MainNavigationScreens.transactionsScreen,
+                    screenParams: transactionListFilter);
               },
               TransactionsFilteringScreen.routeName: (context) {
-                final transactionListFilter = ModalRoute.of(context)?.settings.arguments as TransactionListFilter?;
+                final transactionListFilter = ModalRoute.of(context)
+                    ?.settings
+                    .arguments as TransactionListFilter?;
 
                 return TransactionsFilteringScreen(
                   transactionListFilter: transactionListFilter,
                 );
               },
               // wallet
-              CardsScreen.routeName: (context) =>
-                  const MainNavigationScreen(initialScreen: MainNavigationScreens.cardsScreen),
+              CardsScreen.routeName: (context) => const MainNavigationScreen(
+                  initialScreen: MainNavigationScreens.cardsScreen),
               CardDetailsScreen.routeName: (context) {
-                final cardDetailsScreenParams = ModalRoute.of(context)?.settings.arguments as CardDetailsScreenParams?;
+                final cardDetailsScreenParams = ModalRoute.of(context)
+                    ?.settings
+                    .arguments as CardDetailsScreenParams?;
 
                 return CardDetailsScreen(
                   params: cardDetailsScreenParams!,
                 );
               },
+              CardSpendingCapScreen.routeName: (context) {
+                final params = ModalRoute.of(context)?.settings.arguments
+                    as CardSpendingCapScreenParams;
+
+                return CardSpendingCapScreen(params: params);
+              },
               // repayments
               RepaymentsScreen.routeName: (context) => const RepaymentsScreen(),
-              ChangeRepaymentRateScreen.routeName: (context) => const ChangeRepaymentRateScreen(),
-              RepaymentSuccessfullyChanged.routeName: (context) => const RepaymentSuccessfullyChanged(),
-              RepaymentReminderScreen.routeName: (context) => const RepaymentReminderScreen(),
+              ChangeRepaymentRateScreen.routeName: (context) =>
+                  const ChangeRepaymentRateScreen(),
+              RepaymentSuccessfullyChanged.routeName: (context) =>
+                  const RepaymentSuccessfullyChanged(),
+              RepaymentReminderScreen.routeName: (context) =>
+                  const RepaymentReminderScreen(),
               // transfer
               TransferScreen.routeName: (context) {
-                final transferScreenParams = ModalRoute.of(context)?.settings.arguments as TransferScreenParams?;
+                final transferScreenParams = ModalRoute.of(context)
+                    ?.settings
+                    .arguments as TransferScreenParams?;
 
                 return TransferScreen(
                   transferScreenParams: transferScreenParams!,
                 );
               },
               // account
-              AccountDetailsScreen.routeName: (context) => const AccountDetailsScreen(),
+              AccountDetailsScreen.routeName: (context) =>
+                  const AccountDetailsScreen(),
               // splitpay
               SplitpayScreen.routeName: (context) {
-                final splitpayScreenParams = ModalRoute.of(context)?.settings.arguments as SplitpayScreenParams?;
+                final splitpayScreenParams = ModalRoute.of(context)
+                    ?.settings
+                    .arguments as SplitpayScreenParams?;
                 return SplitpayScreen(
                   params: splitpayScreenParams!,
                 );
