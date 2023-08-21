@@ -1,16 +1,14 @@
 import 'dart:developer';
 
+import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:solarisdemo/cubits/card_details_cubit/card_details_cubit.dart';
-import 'package:solarisdemo/cubits/card_details_cubit/card_details_state.dart';
 import 'package:solarisdemo/infrastructure/bank_card/activation/bank_card_activation_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/bank_card/activation/bank_card_activation_action.dart';
-import 'package:solarisdemo/screens/wallet/card_details_activation_success_screen.dart';
-import 'package:solarisdemo/services/card_service.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/spaced_column.dart';
 
@@ -22,7 +20,7 @@ import '../../widgets/app_toolbar.dart';
 import '../../widgets/button.dart';
 import '../../widgets/card_widget.dart';
 import '../../widgets/dialog.dart';
-import 'card_details_choose_pin.dart';
+import 'card_details_info.dart';
 
 class CardDetailsScreenParams {
   final BankCard card;
@@ -30,12 +28,12 @@ class CardDetailsScreenParams {
   CardDetailsScreenParams({required this.card});
 }
 
-class CardDetailsScreen extends StatelessWidget {
+class BankCardDetailsScreen extends StatelessWidget {
   static const routeName = '/cardDetailsScreen';
 
   final CardDetailsScreenParams params;
 
-  const CardDetailsScreen({
+  const BankCardDetailsScreen({
     super.key,
     required this.params,
   });
@@ -47,84 +45,88 @@ class CardDetailsScreen extends StatelessWidget {
     return StoreConnector<AppState, BankCardActivationViewModel>(
       onInit: (store) {
         store.dispatch(GetBankCardActivationCommandAction(
-            user: user.cognito, cardId: params.card.id));
-      },
-      builder: (context, viewModel) {
-        return ScreenScaffold(
-          body: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: ClientConfig.getCustomClientUiSettings()
-                  .defaultScreenHorizontalPadding,
-              vertical: ClientConfig.getCustomClientUiSettings()
-                  .defaultScreenVerticalPadding,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const AppToolbar(
-                  title: "",
-                  backButtonEnabled: false,
-                ),
-                const Text(
-                  'Cards',
-                  style: TextStyle(
-                    fontSize: 32,
-                    height: 24 / 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                Expanded(
-                  child: (() {
-                    if (viewModel is BankCardActivationInitialViewModel) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                    if (viewModel is BankCardActivationLoadingViewModel) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                    if (viewModel is BankCardActivationErrorViewModel) {
-                      return const Text("Something went wrong");
-                    }
-                    if (viewModel is BankCardActivationFetchedViewModel) {
-                      if (viewModel.bankCard.status == BankCardStatus.ACTIVE) {
-                        log('IS ACTIVE');
-                        // return ActiveCard(
-                        //   viewModel: viewModel,
-                        // );
-                        return InactiveCard(
-                          viewModel: viewModel,
-                        );
-                      }
-                      if (viewModel.bankCard.status ==
-                          BankCardStatus.INACTIVE) {
-                        log('IS INACTIVE');
-                        return InactiveCard(
-                          viewModel: viewModel,
-                        );
-                      }
-                    }
-
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }()),
-                ),
-                const SizedBox(height: 24),
-              ],
-            ),
-          ),
-        );
+          user: user,
+          cardId: params.card.id,
+        ));
       },
       converter: (store) {
         return BankCardActivationPresenter.presentBankCardActivation(
           bankCardActivationState: store.state.bankCardActivationState,
           user: user,
+        );
+      },
+      builder: (context, viewModel) {
+        return ScreenScaffold(
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AppToolbar(
+                padding: EdgeInsets.symmetric(
+                  horizontal: ClientConfig.getCustomClientUiSettings()
+                      .defaultScreenHorizontalPadding,
+                ),
+                // backButtonEnabled: false,
+              ),
+              Expanded(
+                child: Padding(
+                  padding: ClientConfig.getCustomClientUiSettings()
+                      .defaultScreenPadding,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Cards',
+                        style: TextStyle(
+                          fontSize: 32,
+                          height: 24 / 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      Expanded(
+                        child: (() {
+                          if (viewModel is BankCardActivationInitialViewModel) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                          if (viewModel is BankCardActivationLoadingViewModel) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                          if (viewModel is BankCardActivationErrorViewModel) {
+                            return const Text("Something went wrong");
+                          }
+                          if (viewModel is BankCardActivationFetchedViewModel) {
+                            if (viewModel.bankCard.status ==
+                                BankCardStatus.ACTIVE) {
+                              return ActiveCard(
+                                viewModel: viewModel,
+                              );
+                            }
+                            if (viewModel.bankCard.status ==
+                                BankCardStatus.INACTIVE) {
+                              return InactiveCard(
+                                viewModel: viewModel,
+                              );
+                            }
+                          }
+
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }()),
+                      ),
+                      const SizedBox(height: 24),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         );
       },
     );
@@ -387,6 +389,7 @@ class InactiveCard extends StatelessWidget {
                   viewModel.bankCard.representation!.formattedExpirationDate ??
                       '',
               isViewable: false,
+              cardType: 'Physical card',
             ),
             SpacedColumn(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -414,17 +417,19 @@ class InactiveCard extends StatelessWidget {
         ),
         SizedBox(
           width: double.infinity,
-          child: PrimaryButton(
+          child: Button(
             text: "Activate my card",
             // onPressed: viewModel.bankCard.status == BankCardStatus.INACTIVE
             //     ? () {
 
             //       }
             //     : null,
+            disabledColor: const Color(0xFFDFE2E6),
+            color: const Color(0xFF2575FC),
             onPressed: () {
               Navigator.pushNamed(
                 context,
-                BankCardDetailsChoosePinScreen.routeName,
+                BankCardDetailsInfoScreen.routeName,
               );
             },
           ),
@@ -456,7 +461,7 @@ class ActiveCard extends StatelessWidget {
                         .bankCard.representation!.formattedExpirationDate ??
                     '',
                 isViewable: false,
-                cardType: 'Credit card',
+                cardType: 'Physical card',
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -25,9 +25,11 @@ import 'package:solarisdemo/screens/splitpay/splitpay_screen.dart';
 import 'package:solarisdemo/screens/transactions/transactions_filtering_screen.dart';
 import 'package:solarisdemo/screens/transactions/transactions_screen.dart';
 import 'package:solarisdemo/screens/transfer/transfer_screen.dart';
-import 'package:solarisdemo/screens/wallet/card_details_apple_wallet_screen.dart';
+import 'package:solarisdemo/screens/wallet/card_details_activation_success_screen.dart';
+import 'package:solarisdemo/screens/wallet/card_details_apple_wallet.dart';
 import 'package:solarisdemo/screens/wallet/card_details_choose_pin.dart';
 import 'package:solarisdemo/screens/wallet/card_details_confirm_pin_screen.dart';
+import 'package:solarisdemo/screens/wallet/card_details_info.dart';
 import 'package:solarisdemo/screens/wallet/card_details_screen.dart';
 import 'package:solarisdemo/screens/wallet/cards_screen.dart';
 import 'package:solarisdemo/services/auth_service.dart';
@@ -99,19 +101,20 @@ class _IvoryAppState extends State<IvoryApp> {
                 );
               },
               // wallet
-              CardsScreen.routeName: (context) =>
+              BankCardsScreen.routeName: (context) =>
                   const MainNavigationScreen(initialScreen: MainNavigationScreens.cardsScreen),
-              CardDetailsScreen.routeName: (context) {
+              BankCardDetailsScreen.routeName: (context) {
                 final cardDetailsScreenParams = ModalRoute.of(context)?.settings.arguments as CardDetailsScreenParams?;
 
-                return CardDetailsScreen(
+                return BankCardDetailsScreen(
                   params: cardDetailsScreenParams!,
                 );
               },
               BankCardDetailsChoosePinScreen.routeName: (context) => const BankCardDetailsChoosePinScreen(),
               BankCardDetailsConfirmPinScreen.routeName: (context) => const BankCardDetailsConfirmPinScreen(),
               BankCardDetailsAppleWalletScreen.routeName: (context) => const BankCardDetailsAppleWalletScreen(),
-              
+              BankCardDetailsActivationSuccessScreen.routeName: (context) => const BankCardDetailsActivationSuccessScreen(),
+              BankCardDetailsInfoScreen.routeName: (context) => const BankCardDetailsInfoScreen(),
               // repayments
               RepaymentsScreen.routeName: (context) => const RepaymentsScreen(),
               ChangeRepaymentRateScreen.routeName: (context) => const ChangeRepaymentRateScreen(),

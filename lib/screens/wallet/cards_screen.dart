@@ -16,10 +16,10 @@ import '../../widgets/empty_list_message.dart';
 import '../../widgets/spaced_column.dart';
 import '../../widgets/tab_view.dart';
 
-class CardsScreen extends StatelessWidget {
+class BankCardsScreen extends StatelessWidget {
   static const routeName = "/cardsScreen";
 
-  const CardsScreen({super.key});
+  const BankCardsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -144,7 +144,7 @@ class CardList extends StatelessWidget {
                           card.status == BankCardStatus.INACTIVE
                       ? () {
                           Navigator.pushNamed(
-                              context, CardDetailsScreen.routeName,
+                              context, BankCardDetailsScreen.routeName,
                               arguments: CardDetailsScreenParams(card: card));
                         }
                       : null,

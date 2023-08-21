@@ -16,16 +16,22 @@ class BankCardActivationMiddleware extends MiddlewareClass<AppState> {
     if (action is GetBankCardActivationCommandAction) {
       store.dispatch(BankCardActivationLoadingEventAction());
       final response = await _bankCardActivationService.getBankCardById(
-        user: action.user,
+        user: action.user.cognito,
         cardId: action.cardId,
       );
 
       if (response is GetBankCardActivationSuccessResponse) {
-        store.dispatch(
-            BankCardActivationFetchedEventAction(bankCard: response.bankCard));
+        store.dispatch(BankCardActivationFetchedEventAction(
+          bankCard: response.bankCard,
+          user: action.user,
+        ));
       } else {
         store.dispatch(BankCardActivationFailedEventAction());
       }
+    }
+
+    if (action is BankCardActivationChoosePinCommandAction) {
+      store.dispatch(BankCardActivationPinChoosenEventAction(pin: action.pin));
     }
   }
 }

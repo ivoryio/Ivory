@@ -9,7 +9,9 @@ BankCardActivationState bankCardActivationReducer(
   } else if (action is BankCardActivationFailedEventAction) {
     return BankCardActivationErrorState();
   } else if (action is BankCardActivationFetchedEventAction) {
-    return BankCardActivationFetchedState(action.bankCard);
+    return BankCardActivationFetchedState(action.bankCard, action.user);
+  } else if (action is BankCardActivationPinChoosenEventAction) {
+    return BankCardActivationPinChoosenState(action.pin);
   }
 
   return currentState;

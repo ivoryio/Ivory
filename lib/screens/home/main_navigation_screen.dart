@@ -52,7 +52,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       case MainNavigationScreens.homeScreen:
         return const HomeScreen();
       case MainNavigationScreens.cardsScreen:
-        return const CardsScreen();
+        return const BankCardsScreen();
       case MainNavigationScreens.transactionsScreen:
         return const TransactionsScreen();
       case MainNavigationScreens.settingsScreen:
@@ -71,7 +71,9 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           currentPageIndex = index;
         });
       },
-      items: mainNavigationScreens.map((screen) => _getBottomNavbarItem(screen)).toList(),
+      items: mainNavigationScreens
+          .map((screen) => _getBottomNavbarItem(screen))
+          .toList(),
     );
   }
 

@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:solarisdemo/widgets/app_toolbar.dart';
+import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../config.dart';
-import '../../cubits/card_details_cubit/card_details_cubit.dart';
+import '../../cubits/auth_cubit/auth_cubit.dart';
+import '../../infrastructure/bank_card/activation/bank_card_activation_presenter.dart';
+import '../../models/user.dart';
+import '../../redux/app_state.dart';
 import '../../utilities/validator.dart';
 import '../../widgets/pin_field.dart';
-import '../../widgets/screen.dart';
-import '../../widgets/spaced_column.dart';
+import 'card_details_apple_wallet.dart';
 
 class BankCardDetailsConfirmPinScreen extends StatefulWidget {
   static const routeName = '/bankCardDetailsConfirmPinScreen';
@@ -26,118 +31,147 @@ class _BankCardDetailsConfirmPinScreenState
 
   @override
   Widget build(BuildContext context) {
+    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
 
-    return Screen(
-      scrollPhysics: const NeverScrollableScrollPhysics(),
-      titleTextStyle: const TextStyle(
-        fontSize: 16,
-        height: 24 / 16,
-        fontWeight: FontWeight.w600,
+    return StoreConnector<AppState, BankCardActivationViewModel>(
+      converter: (store) =>
+          BankCardActivationPresenter.presentBankCardActivation(
+        user: user,
+        bankCardActivationState: store.state.bankCardActivationState,
       ),
-      backButtonIcon: const Icon(Icons.arrow_back, size: 24),
-      customBackButtonCallback: () {
-        // context.read<BankCardDetailsCubit>().startPinSetup(state.card!);
-        //back button ide valamit
-      },
-      centerTitle: true,
-      hideAppBar: false,
-      hideBackButton: false,
-      hideBottomNavbar: true,
-      trailingActions: [
-        IconButton(
-          icon: Image.asset(ClientConfig.getAssetIconPath('small_logo.png')),
-          iconSize: 40,
-          onPressed: () {},
-        ),
-      ],
-      bottomProgressBarPages: const BottomProgressBarPagesIndicator(
-        pageNumber: 3,
-        numberOfPages: 4,
-      ),
-      child: Padding(
-        padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SpacedColumn(
-              space: 32,
-              children: [
-                SpacedColumn(
-                  space: 16,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Confirm PIN',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w600,
-                            height: 32 / 24,
-                          ),
-                        ),
-                      ],
+      builder: (context, viewModel) {
+        return ScreenScaffold(
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              AppToolbar(
+                richTextTitle: RichText(
+                    text: const TextSpan(
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: 'Step 3 ',
+                      style: TextStyle(color: Color(0xFF15141E)),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Confirm your PIN by typing it again.',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            height: 24 / 16,
-                          ),
-                        ),
-                      ],
+                    TextSpan(
+                      text: 'out of 4',
+                      style: TextStyle(color: Color(0xFF56555E)),
                     ),
                   ],
+                )),
+                padding: EdgeInsets.symmetric(
+                  horizontal: ClientConfig.getCustomClientUiSettings()
+                      .defaultScreenHorizontalPadding,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                backButtonEnabled: true, //needs to be false
+              ),
+              const LinearProgressIndicator(
+                value: 3 / 4,
+                color: Color(0xFF2575FC),
+                backgroundColor: Color(0xFFE9EAEB),
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                  left: ClientConfig.getCustomClientUiSettings()
+                      .defaultScreenHorizontalPadding,
+                  right: ClientConfig.getCustomClientUiSettings()
+                      .defaultScreenHorizontalPadding,
+                  top: ClientConfig.getCustomClientUiSettings()
+                      .defaultScreenVerticalPadding,
+                ),
+                child: Column(
                   children: [
-                    FourDigitPinCodeInput(
-                      key: fourDigitPinKey,
-                      onCompleted: (confirmPin) {
-                        if (isPinValid(
-                          // state.pin!,
-                          confirmPin,
-                        )) {
-                          fourDigitPinKey.currentState?.unfocusAllFields();
-                          markCompleted();
-                          Future.delayed(
-                            const Duration(
-                              milliseconds: 500,
+                    const Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Confirm PIN',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.w600,
+                                height: 32 / 24,
+                              ),
                             ),
-                            () {
-                              context.read<BankCardDetailsCubit>().confirmPin(
-                                    // state.card!,
-                                    // state.pin!,
+                          ],
+                        ),
+                        SizedBox(
+                          height: 16,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Confirm your PIN by typing it again.',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                height: 24 / 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 32,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        FourDigitPinCodeInput(
+                          key: fourDigitPinKey,
+                          onCompleted: (confirmPin) {
+                            if (isPinValid(
+                              viewModel.pin!,
+                              confirmPin,
+                            )) {
+                              fourDigitPinKey.currentState?.unfocusAllFields();
+                              fourDigitPinKey.currentState?.setAllFieldsDone();
+                              markCompleted();
+                              Future.delayed(
+                                const Duration(
+                                  milliseconds: 500,
+                                ),
+                                () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    BankCardDetailsAppleWalletScreen.routeName,
                                   );
-                            },
-                          );
-                        } else {
-                          highlightReasonsForInvalidPin(
-                            // state.pin!,
-                            confirmPin,
-                          );
-                          fourDigitPinKey.currentState?.toggleValidity();
-                          fourDigitPinKey.currentState?.clearPin();
-                          fourDigitPinKey.currentState?.setFocusOnFirst();
-                        }
-                      },
+                                },
+                              );
+                            } else {
+                              highlightReasonsForInvalidPin(
+                                viewModel.pin!,
+                                confirmPin,
+                              );
+                              fourDigitPinKey.currentState?.toggleValidity();
+                              fourDigitPinKey.currentState?.clearPin();
+                              fourDigitPinKey.currentState?.setFocusOnFirst();
+                            }
+                          },
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
-            SpacedColumn(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              space: 10,
-              children: [
-                Row(
+              ),
+              const Spacer(),
+              Padding(
+                padding: EdgeInsets.only(
+                  left: ClientConfig.getCustomClientUiSettings()
+                      .defaultScreenHorizontalPadding,
+                  right: ClientConfig.getCustomClientUiSettings()
+                      .defaultScreenHorizontalPadding,
+                  bottom: ClientConfig.getCustomClientUiSettings()
+                      .defaultScreenVerticalPadding,
+                ),
+                child: Row(
                   children: [
                     Icon(
                       Icons.check,
@@ -163,11 +197,11 @@ class _BankCardDetailsConfirmPinScreenState
                     ),
                   ],
                 ),
-              ],
-            )
-          ],
-        ),
-      ),
+              )
+            ],
+          ),
+        );
+      },
     );
   }
 
