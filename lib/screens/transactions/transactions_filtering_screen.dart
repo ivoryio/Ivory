@@ -15,7 +15,6 @@ import '../../models/user.dart';
 import '../../redux/app_state.dart';
 import '../../redux/transactions/transactions_action.dart';
 import '../../utilities/format.dart';
-import '../../widgets/button.dart';
 import '../../widgets/modal.dart';
 import '../../widgets/pill_button.dart';
 import 'modals/transaction_date_picker_popup.dart';
@@ -56,119 +55,131 @@ class _TransactionsFilteringScreenState extends State<TransactionsFilteringScree
           horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-             AppToolbar(
-               onBackButtonPressed: (){
-                 transactionListFilter = widget.transactionListFilter;
-                 Navigator.of(context).pop();
-               },
+            AppToolbar(
+              onBackButtonPressed: (){
+                transactionListFilter = widget.transactionListFilter;
+                Navigator.of(context).pop();
+              },
               richTextTitle: RichText(
-                  text: TextSpan(
-                    text: "Filter",
-                    style: ClientConfig.getTextStyleScheme().heading4,
-                  ),
+                text: TextSpan(
+                  text: "Filter",
+                  style: ClientConfig.getTextStyleScheme().heading4,
+                ),
               ),
             ),
-            Text(
-              "By date",
-              style: ClientConfig.getTextStyleScheme().labelLarge,
-            ),
-            const SizedBox(height: 16),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.today,
-                  size: 24,
-                  color: ClientConfig.getColorScheme().secondary,
-                ),
-                PillButton(
-                  active:
-                      transactionListFilter?.bookingDateMin != null || transactionListFilter?.bookingDateMax != null,
-                  buttonText:
-                      '${getFormattedDate(date: transactionListFilter?.bookingDateMin, text: "Start date")} - ${getFormattedDate(date: transactionListFilter?.bookingDateMax, text: "End date")}',
-                  buttonCallback: () {
-                    showBottomModal(
-                      context: context,
-                      showCloseButton: false,
-                      content: TransactionDatePickerPopup(
-                        initialSelectedRange: isFilterSelected
-                            ? DateTimeRange(
-                                start: transactionListFilter!.bookingDateMin!,
-                                end: transactionListFilter!.bookingDateMax!)
-                            : null,
-                        onDateRangeSelected: (DateTimeRange range) {
-                          setState(() {
-                            transactionListFilter = TransactionListFilter(
-                              bookingDateMin: range.start,
-                              bookingDateMax: range.end,
-                            );
-                          });
-                        },
-                      ),
-                    );
-                  },
-                  icon: (transactionListFilter?.bookingDateMin != null || transactionListFilter?.bookingDateMax != null)
-                      ? const Icon(
-                          Icons.close,
-                          size: 16,
-                        )
-                      : null,
-                ),
-              ],
-            ),
-            const SizedBox(height: 36,),
-            Text(
-              "By category",
-              style: ClientConfig.getTextStyleScheme().labelLarge,
-            ),
-            const SizedBox(height: 16,),
-            StoreConnector<AppState, CategoriesViewModel>(
-              onInit: (store) {
-                store.dispatch(GetCategoriesCommandAction(user: user.cognito));
-              },
-              converter: (store) => CategoriesPresenter.presentCategories(categoriesState: store.state.categoriesState),
-              builder: (context, viewModel){
-                return Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: _buildFiltersListList(viewModel, transactionListFilter, (category, selected){
-                        final List<String> catIds = transactionListFilter?.categoryIds ?? [];
-                        if(selected == true) {
-                          catIds.add(category.id);
-                        } else {
-                          catIds.remove(category.id);
-                        }
-                        setState(() {
-                          transactionListFilter = TransactionListFilter(
-                            bookingDateMin: transactionListFilter?.bookingDateMin,
-                            bookingDateMax: transactionListFilter?.bookingDateMax,
-                            searchString: transactionListFilter?.searchString,
-                            categoryIds: catIds,
-                          );
-                        });
-                      }),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "By date",
+                      style: ClientConfig.getTextStyleScheme().labelLarge,
                     ),
-                  ),
-                );},
+                    const SizedBox(height: 16),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.today,
+                          size: 24,
+                          color: ClientConfig.getColorScheme().secondary,
+                        ),
+                        PillButton(
+                          active:
+                              transactionListFilter?.bookingDateMin != null || transactionListFilter?.bookingDateMax != null,
+                          buttonText:
+                              '${getFormattedDate(date: transactionListFilter?.bookingDateMin, text: "Start date")} - ${getFormattedDate(date: transactionListFilter?.bookingDateMax, text: "End date")}',
+                          buttonCallback: () {
+                            showBottomModal(
+                              context: context,
+                              showCloseButton: false,
+                              content: TransactionDatePickerPopup(
+                                initialSelectedRange: isFilterSelected
+                                    ? DateTimeRange(
+                                        start: transactionListFilter!.bookingDateMin!,
+                                        end: transactionListFilter!.bookingDateMax!)
+                                    : null,
+                                onDateRangeSelected: (DateTimeRange range) {
+                                  setState(() {
+                                    transactionListFilter = TransactionListFilter(
+                                      bookingDateMin: range.start,
+                                      bookingDateMax: range.end,
+                                    );
+                                  });
+                                },
+                              ),
+                            );
+                          },
+                          icon: (transactionListFilter?.bookingDateMin != null || transactionListFilter?.bookingDateMax != null)
+                              ? const Icon(
+                                  Icons.close,
+                                  size: 16,
+                                )
+                              : null,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 36,),
+                    Text(
+                      "By category",
+                      style: ClientConfig.getTextStyleScheme().labelLarge,
+                    ),
+                    const SizedBox(height: 16,),
+                    StoreConnector<AppState, CategoriesViewModel>(
+                      onInit: (store) {
+                        store.dispatch(GetCategoriesCommandAction(user: user.cognito));
+                      },
+                      converter: (store) => CategoriesPresenter.presentCategories(categoriesState: store.state.categoriesState),
+                      builder: (context, viewModel){
+                        return Column(
+                          children: _buildFiltersListList(viewModel, transactionListFilter, (category, selected){
+                            final List<String> catIds = transactionListFilter?.categoryIds ?? [];
+                            if(selected == true) {
+                              catIds.add(category.id);
+                            } else {
+                              catIds.remove(category.id);
+                            }
+                            setState(() {
+                              transactionListFilter = TransactionListFilter(
+                                bookingDateMin: transactionListFilter?.bookingDateMin,
+                                bookingDateMax: transactionListFilter?.bookingDateMax,
+                                searchString: transactionListFilter?.searchString,
+                                categoryIds: catIds,
+                              );
+                            });
+                          }),
+                        );},
+                    ),
+                  ],
+                ),
+              ),
             ),
             const SizedBox(height: 8,),
-            Row(
-              children: [
-                Expanded(
-                  child: Button(
-                      color:  ClientConfig.getColorScheme().secondary,
-                      text: "Apply filters",
-                      textStyle: ClientConfig.getTextStyleScheme().heading4.copyWith(color: Colors.white),
-                      onPressed: () {
-                        StoreProvider.of<AppState>(context)
-                            .dispatch(GetTransactionsCommandAction(filter: transactionListFilter, user: user.cognito));
+            SizedBox(
+              height: 48,
+              width: double.infinity,
+              child: ElevatedButton(
+                  style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.resolveWith(
+                      (states){
+                        return ClientConfig.getColorScheme().secondary;
+                      }
+                  ),
+                    shape: MaterialStateProperty.all(const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4)))),
+                  ),
+                  onPressed: () {
+                    StoreProvider.of<AppState>(context)
+                        .dispatch(GetTransactionsCommandAction(filter: transactionListFilter, user: user.cognito));
 
-                        Navigator.pop(context);
-                      }),
-                ),
-              ],
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    "Apply filters",
+                    style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold.copyWith(color: Colors.white),
+                  ),
+              ),
             ),
             const SizedBox(height: 16),
           ],
