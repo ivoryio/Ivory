@@ -26,4 +26,10 @@ class AmountValue {
         "unit": unit,
         "currency": currency,
       };
+
+  factory AmountValue.empty() => AmountValue(
+        value: 0,
+        unit: 'cents',
+        currency: 'EUR',
+      );
 }
