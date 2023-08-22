@@ -56,7 +56,7 @@ class DefaultTheme {
         fontSize: 18,
         height: 1.33, // 24 / 18,
         fontWeight: FontWeight.w600,
-        color: Color(0xFF000000),
+        color: Color.fromRGBO(21, 20, 30, 1),
       ),
       bodySmallRegular: const TextStyle(
         fontSize: 14,
@@ -74,7 +74,7 @@ class DefaultTheme {
         fontSize: 16,
         height: 1.5, // 24 / 16,
         fontWeight: FontWeight.w600,
-        color: Color(0xFF15141E),
+        color: Color.fromRGBO(21, 20, 30, 1),
       ),
       labelSmall: const TextStyle(
         fontSize: 14,

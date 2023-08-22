@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:redux/redux.dart';
+import 'package:solarisdemo/infrastructure/categories/categories_service.dart';
 import 'package:solarisdemo/infrastructure/credit_line/credit_line_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/bills/bill_service.dart';
@@ -43,6 +44,7 @@ Store<AppState> _buildStore() {
     creditLineService: CreditLineService(),
     repaymentReminderService: RepaymentReminderService(),
     billService: BillService(),
+    categoriesService: CategoriesService(),
   );
 
   return store;

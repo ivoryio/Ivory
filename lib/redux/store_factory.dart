@@ -1,4 +1,6 @@
 import 'package:redux/redux.dart';
+import 'package:solarisdemo/infrastructure/categories/categories_middleware.dart';
+import 'package:solarisdemo/infrastructure/categories/categories_service.dart';
 import 'package:solarisdemo/infrastructure/credit_line/credit_line_middleware.dart';
 import 'package:solarisdemo/infrastructure/credit_line/credit_line_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/notifications_middleware.dart';
@@ -20,6 +22,7 @@ Store<AppState> createStore({
   required CreditLineService creditLineService,
   required RepaymentReminderService repaymentReminderService,
   required BillService billService,
+  required CategoriesService categoriesService,
 }) {
   return Store<AppState>(
     appReducer,
@@ -30,6 +33,7 @@ Store<AppState> createStore({
       GetCreditLineMiddleware(creditLineService),
       RepaymentRemindersMiddleware(repaymentReminderService),
       GetBillsMiddleware(billService),
+      GetCategoriesMiddleware(categoriesService),
     ],
   );
 }

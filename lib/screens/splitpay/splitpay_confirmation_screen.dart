@@ -6,7 +6,7 @@ import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../cubits/splitpay_cubit/splitpay_cubit.dart';
-import '../../models/transaction_model.dart';
+import '../../models/transactions/transaction_model.dart';
 import '../../utilities/format.dart';
 import '../../widgets/button.dart';
 import '../../widgets/checkbox.dart';
