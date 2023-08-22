@@ -64,7 +64,6 @@ class TransactionListItem extends StatelessWidget {
 
   removeUnrelatedWords(fullName) {
     var pattern = RegExp(r' X-');
-    fullName = fullName ?? 'asdfg';
     var storageResult = fullName!.split(pattern)[0];
     storageResult = storageResult.substring(0, shortenName(storageResult));
 
