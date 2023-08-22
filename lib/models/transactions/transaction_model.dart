@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:solarisdemo/utilities/format.dart';
+
+import '../categories/category.dart';
 
 class Transaction {
   String? id;
@@ -81,35 +82,6 @@ class Transaction {
     data['category'] = category;
 
     return data;
-  }
-}
-
-class Category {
-  String? id;
-  String? name;
-  IconData? icon;
-
-  final Map<String, IconData> categoryIcon = {
-    "transportationAndTravel": Icons.local_taxi_outlined,
-    "foodAndDining": Icons.fastfood_outlined,
-    "retailAndShopping": Icons.shopping_bag_outlined,
-    "fuelAndAuto": Icons.local_gas_station_outlined,
-    "healthAndWellness": Icons.health_and_safety_outlined,
-    "technologyAndOnlineServices": Icons.devices_outlined,
-    "entertainmentAndRecreation": Icons.live_tv_outlined,
-    "homeAndUtilities": Icons.house_outlined,
-    "governmentAndTaxes": Icons.receipt_long_outlined,
-    "educationAndServices": Icons.school_outlined,
-    "financialServices": Icons.account_balance_outlined,
-    "other": Icons.local_offer_outlined,
-  };
-
-  Category({this.id, this.name});
-
-  Category.fromJson(Map<String, dynamic> json) {
-    id = json['id'] ?? "other";
-    name = json['name'] ?? "Other";
-    icon = categoryIcon[id];
   }
 }
 

@@ -9,7 +9,7 @@ import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../config.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
-// import '../../models/categories/category.dart';
+import '../../models/categories/category.dart';
 import '../../models/transactions/transaction_model.dart';
 import '../../models/user.dart';
 import '../../redux/app_state.dart';
@@ -156,7 +156,7 @@ class _TransactionsFilteringScreenState
                             final List<String> catIds =
                                 transactionListFilter?.categoryIds ?? [];
                             if (selected == true) {
-                              catIds.add(category.id!);
+                              catIds.add(category.id);
                             } else {
                               catIds.remove(category.id);
                             }
@@ -243,7 +243,7 @@ List<Widget> _buildFiltersListList(
 
   if (viewModel is WithCategoriesViewModel) {
     for (int index = 0; index < viewModel.categories!.length; index++) {
-      final Category category = viewModel.categories![index] as Category;
+      final Category category = viewModel.categories![index];
       widgetsList.add(_CategoryRow(
         category: category,
         filter: filter,
@@ -300,7 +300,7 @@ class _CategoryRowState extends State<_CategoryRow> {
           width: 8,
         ),
         Text(
-          widget.category.name!,
+          widget.category.name,
           style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
         ),
       ],
