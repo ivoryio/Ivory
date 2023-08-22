@@ -22,13 +22,7 @@ class BillService extends ApiService {
     }
   }
 
-  Future<BillServiceResponse> getBillById({
-    required String id,
-    User? user,
-  }) async {
-    if (user != null) {
-      this.user = user;
-    }
+  Future<BillServiceResponse> getBillById({required String id}) async {
     try {
       final data = await get('bills/$id');
 
@@ -38,7 +32,7 @@ class BillService extends ApiService {
     }
   }
 
-  Future downloadPostboxPdf({
+  Future downloadBillAsPdf({
     required String postboxItemId,
     User? user,
   }) async {
@@ -47,7 +41,7 @@ class BillService extends ApiService {
     }
 
     try {
-      final data = await get('/postbox_items/$postboxItemId');
+      final data = await get('postbox_items/$postboxItemId');
 
       return data;
     } catch (e) {

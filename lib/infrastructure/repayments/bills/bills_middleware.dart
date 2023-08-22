@@ -22,5 +22,16 @@ class GetBillsMiddleware extends MiddlewareClass<AppState> {
         store.dispatch(BillsFailedEventAction());
       }
     }
+
+    if (action is DownloadBillCommandAction) {
+      store.dispatch(BillDownloadingEventAction());
+      final response = await _billService.downloadBillAsPdf(postboxItemId: action.bill.postboxItemId);
+
+      if (response != null) {
+        store.dispatch(DownloadBillSuccessEventAction());
+      } else {
+        store.dispatch(DownloadBillFailedEventAction());
+      }
+    }
   }
 }

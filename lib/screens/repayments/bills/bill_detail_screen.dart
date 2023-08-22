@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/models/repayments/bills/bill.dart';
+import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/repayments/bills/bills_action.dart';
 import 'package:solarisdemo/screens/repayments/repayments_screen.dart';
 import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -17,7 +20,7 @@ class BillDetailScreen extends StatelessWidget {
     final bill = ModalRoute.of(context)!.settings.arguments as Bill;
 
     return ScreenScaffold(
-      body: Padding(
+      body: SingleChildScrollView(
         padding:
             EdgeInsets.symmetric(horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding),
         child: Column(
@@ -131,7 +134,9 @@ class _DownloadBillButton extends StatelessWidget {
         ),
       ),
       contentPadding: EdgeInsets.zero,
-      onTap: () {},
+      onTap: () {
+        StoreProvider.of<AppState>(context).dispatch(DownloadBillCommandAction(bill: bill));
+      },
     );
   }
 }
