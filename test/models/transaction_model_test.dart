@@ -1,4 +1,4 @@
-import 'package:solarisdemo/models/transaction_model.dart';
+import 'package:solarisdemo/models/transactions/transaction_model.dart';
 import 'package:test/test.dart';
 
 void main() {

@@ -5,7 +5,7 @@ import 'package:equatable/equatable.dart';
 import '../../models/user.dart';
 import '../../services/api_service.dart';
 import '../../models/transfer.dart';
-import '../../models/transaction_model.dart';
+import '../../models/transactions/transaction_model.dart';
 import '../../models/authorization_request.dart';
 
 class TransactionService extends ApiService {
