@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:solarisdemo/widgets/spaced_column.dart';
+import 'package:solarisdemo/widgets/app_toolbar.dart';
+import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../config.dart';
-import '../../cubits/card_details_cubit/card_details_cubit.dart';
 import '../../widgets/button.dart';
 import '../../widgets/card_widget.dart';
-import '../../widgets/screen.dart';
+import 'cards_screen.dart';
 
 class BankCardDetailsActivationSuccessScreen extends StatelessWidget {
   static const routeName = '/bankCardDetailsActivationSuccessScreen';
@@ -15,64 +14,65 @@ class BankCardDetailsActivationSuccessScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.read<BankCardDetailsCubit>().state;
-
-    return Screen(
-      scrollPhysics: const NeverScrollableScrollPhysics(),
-      title: '',
-      centerTitle: true,
-      hideBackButton: true,
-      hideBottomNavbar: true,
-      child: Padding(
-        padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SpacedColumn(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              space: 16,
-              children: const [
-                Text(
-                  'Card successfully activated!',
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.w600,
-                    height: 1.25,
-                  ),
-                ),
-                Text(
-                  'You can now start using your PIN to make in-store purchases, make withdrawals and more.',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    height: 1.5,
-                  ),
-                ),
-              ],
+    return ScreenScaffold(
+        body: Padding(
+      padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const AppToolbar(
+            backButtonEnabled: false,
+          ),
+          const Text(
+            'Physical card successfully activated!',
+            style: TextStyle(
+              fontSize: 32,
+              fontWeight: FontWeight.w600,
+              height: 1.25,
             ),
-            BankCardWidget(
-              cardNumber: state.card!.representation!.maskedPan ?? '',
-              cardHolder: state.card!.representation!.line2 ?? '',
-              cardExpiry:
-                  state.card!.representation!.formattedExpirationDate ?? '',
-              isViewable: false,
-              cardType: 'Credit card',
+          ),
+          const SizedBox(height: 16),
+          const Text(
+            'You can now start using your PIN to make in-store purchases, make withdrawals and more.',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w400,
+              height: 1.5,
             ),
-            SizedBox(
-              width: double.infinity,
-              child: PrimaryButton(
-                text: 'Back to "Card"',
-                onPressed: () {
-                  context
-                      .read<BankCardDetailsCubit>()
-                      .goToCardDetails(state.card!);
-                },
+          ),
+          const Spacer(),
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              BankCardWidget(
+                isCardEmpty: true,
+                customHeight: 148,
+                customWidth: 231,
+                isViewable: false,
+                imageScaledownFactor: 1.5,
               ),
+            ],
+          ),
+          const SizedBox(
+            height: 124,
+          ),
+          SizedBox(
+            width: double.infinity,
+            child: Button(
+              disabledColor: const Color(0xFFDFE2E6),
+              color: const Color(0xFF2575FC),
+              text: 'Back to "Card"',
+              onPressed: () {
+                Navigator.pushNamed(
+                  context,
+                  BankCardsScreen.routeName,
+                );
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
+    ));
   }
 }

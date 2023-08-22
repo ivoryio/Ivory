@@ -2,89 +2,95 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
 
-import 'spaced_column.dart';
 import '../utilities/format.dart';
 
 const double defaultCardHorizontalPadding = 20;
 const double defaultCardVerticalPadding = 15;
+const double defaultHeigth = 202;
+const double defaultWidth = 343;
 
 class BankCardWidget extends StatelessWidget {
-  final String cardHolder;
-  final String cardNumber;
-  final String cardExpiry;
+  final bool? isCardEmpty;
+  final String? cardHolder;
+  final String? cardNumber;
+  final String? cardExpiry;
   final bool? isViewable;
   final String? cardType;
+  final double? customHeight;
+  final double? customWidth;
+  final double? imageScaledownFactor;
 
   const BankCardWidget({
     super.key,
-    required this.cardExpiry,
-    required this.cardHolder,
-    required this.cardNumber,
+    this.isCardEmpty = false,
+    this.customHeight,
+    this.customWidth,
+    this.cardExpiry,
+    this.cardHolder,
+    this.cardNumber,
     this.isViewable = true,
     this.cardType,
+    this.imageScaledownFactor,
   });
 
   @override
   Widget build(BuildContext context) {
-    List<String> cardNumberParts = Format.iban(cardNumber).split(" ");
+    List<String> cardNumberParts = Format.iban(cardNumber ?? '').split(" ");
 
     return SizedBox(
-      width: double.infinity,
-      child: AspectRatio(
-        aspectRatio: 295 / 188,
-        child: Card(
-          clipBehavior: Clip.antiAlias,
-          elevation: 0,
-          margin: EdgeInsets.zero,
-          color: Colors.black,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                begin: Alignment.bottomRight,
-                end: Alignment.topLeft,
-                stops: [0.0, 0.5629],
-                colors: [
-                  Color(0xFF585858),
-                  Color(0xFF000000),
-                ],
-                transform: GradientRotation(135 * (3.1415926 / 180.0)),
-              ),
-              image: DecorationImage(
-                image:
-                    AssetImage(ClientConfig.getAssetImagePath('card_logo.png')),
-                fit: BoxFit.scaleDown,
-              ),
+      width: customWidth ?? defaultWidth,
+      height: customHeight ?? defaultHeigth,
+      child: Card(
+        clipBehavior: Clip.antiAlias,
+        elevation: 0,
+        margin: EdgeInsets.zero,
+        color: Colors.black,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              begin: Alignment.bottomRight,
+              end: Alignment.topLeft,
+              stops: [0.0, 1.0],
+              colors: [
+                Color(0xFF1D26A7),
+                Color(0xFF6300BB),
+              ],
+              transform: GradientRotation(135 * (3.1415926 / 180.0)),
             ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: defaultCardVerticalPadding,
-              ),
-              child: Column(
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.only(
-                          left: defaultCardHorizontalPadding,
-                        ),
-                        child: VisaSvgIcon(),
+            image: DecorationImage(
+              image:
+                  AssetImage(ClientConfig.getAssetImagePath('card_logo.png')),
+              fit: BoxFit.scaleDown,
+              scale: imageScaledownFactor ?? 1,
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 16,
+            ),
+            child: Column(
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(
+                        left: 16,
                       ),
-                      if (isViewable!) const EyeIcon(),
-                      if (cardType != null) CardTypeLabel(cardType: cardType!),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(
-                      defaultCardHorizontalPadding,
-                      15,
-                      defaultCardHorizontalPadding,
-                      25,
+                      child: VisaSvgIcon(),
                     ),
+                    if (isViewable!) const EyeIcon(),
+                    if (cardType != null) CardTypeLabel(cardType: cardType!),
+                  ],
+                ),
+                const Spacer(),
+                if (isCardEmpty != true)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -100,7 +106,7 @@ class BankCardWidget extends StatelessWidget {
                             ),
                           );
                           if (cardNumberPart == "****") {
-                            return SizedBox(height: 20, child: textContent);
+                            return SizedBox(height: 29, child: textContent);
                           }
 
                           return textContent;
@@ -108,27 +114,30 @@ class BankCardWidget extends StatelessWidget {
                       ],
                     ),
                   ),
+                if (isCardEmpty != true) const Spacer(),
+                if (isCardEmpty != true)
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
+                      horizontal: 16,
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        SpacedColumn(
-                          space: 3,
+                        Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              "CARD HOLDER",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                                height: 15 / 12,
+                            if (cardHolder != null)
+                              const Text(
+                                "CARD HOLDER",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  height: 15 / 12,
+                                ),
                               ),
-                            ),
+                            if (cardHolder != null) const SizedBox(height: 3),
                             Text(
-                              cardHolder,
+                              cardHolder ?? '',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
@@ -138,20 +147,21 @@ class BankCardWidget extends StatelessWidget {
                             )
                           ],
                         ),
-                        SpacedColumn(
-                          space: 3,
+                        Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            const Text(
-                              "EXPIRES",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                                height: 15 / 12,
+                            if (cardExpiry != null)
+                              const Text(
+                                "EXPIRES",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  height: 15 / 12,
+                                ),
                               ),
-                            ),
+                            if (cardExpiry != null) const SizedBox(height: 3),
                             Text(
-                              cardExpiry,
+                              cardExpiry ?? '',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
@@ -164,8 +174,7 @@ class BankCardWidget extends StatelessWidget {
                       ],
                     ),
                   )
-                ],
-              ),
+              ],
             ),
           ),
         ),
@@ -220,8 +229,8 @@ class CardTypeLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(
-        horizontal: 10,
-        vertical: 2,
+        horizontal: 16,
+        vertical: 4,
       ),
       decoration: const BoxDecoration(
         color: Colors.white,
