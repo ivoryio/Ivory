@@ -28,17 +28,14 @@ class BankCardDetailsMainScreen extends StatelessWidget {
     return ScreenScaffold(
       body: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: ClientConfig.getCustomClientUiSettings()
-              .defaultScreenHorizontalPadding,
+          horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
         ),
         child: Column(
           children: [
             const AppToolbar(title: "Card"),
             Expanded(
               child: SingleChildScrollView(
-                child: state.card!.status == BankCardStatus.INACTIVE
-                    ? const InactiveCard()
-                    : const ActiveCard(),
+                child: state.card!.status == BankCardStatus.INACTIVE ? const InactiveCard() : const ActiveCard(),
               ),
             ),
             const SizedBox(height: 24),
@@ -66,8 +63,7 @@ class InactiveCard extends StatelessWidget {
             BankCardWidget(
               cardNumber: state.card!.representation!.maskedPan ?? '',
               cardHolder: state.card!.representation!.line2 ?? '',
-              cardExpiry:
-                  state.card!.representation!.formattedExpirationDate ?? '',
+              cardExpiry: state.card!.representation!.formattedExpirationDate ?? '',
               isViewable: false,
               cardType: 'Credit card',
               // backgroundImageFile: 'porsche_logo.png',
@@ -102,9 +98,7 @@ class InactiveCard extends StatelessWidget {
             text: "Activate my card",
             onPressed: state.card!.status == BankCardStatus.INACTIVE
                 ? () {
-                    context
-                        .read<BankCardDetailsCubit>()
-                        .initializeActivation(state.card!);
+                    context.read<BankCardDetailsCubit>().initializeActivation(state.card!);
                   }
                 : null,
           ),
@@ -148,8 +142,7 @@ class ActiveCard extends StatelessWidget {
             BankCardWidget(
               cardNumber: state.card!.representation!.maskedPan ?? '',
               cardHolder: state.card!.representation!.line2 ?? '',
-              cardExpiry:
-                  state.card!.representation!.formattedExpirationDate ?? '',
+              cardExpiry: state.card!.representation!.formattedExpirationDate ?? '',
               isViewable: false,
               cardType: 'Credit card',
             ),
@@ -191,8 +184,7 @@ class ActiveCard extends StatelessWidget {
                 ItemName(
                   leftIcon: Icons.speed_outlined,
                   actionName: 'Spending cap',
-                  actionDescription:
-                      'Set it up and get an alert if you exceed it',
+                  actionDescription: 'Set it up and get an alert if you exceed it',
                   rightIcon: Icons.arrow_forward_ios,
                   actionSwitch: false,
                 ),
@@ -272,11 +264,7 @@ class CardOptionsButton extends StatelessWidget {
   final String textLabel;
   final Function onPressed;
 
-  const CardOptionsButton(
-      {super.key,
-      required this.icon,
-      required this.textLabel,
-      required this.onPressed});
+  const CardOptionsButton({super.key, required this.icon, required this.textLabel, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -285,7 +273,7 @@ class CardOptionsButton extends StatelessWidget {
         ElevatedButton(
           onPressed: () => onPressed(),
           style: ElevatedButton.styleFrom(
-            backgroundColor: ClientConfig.getColorScheme().primary,
+            backgroundColor: Theme.of(context).colorScheme.primary,
             fixedSize: const Size(48, 48),
             shape: const CircleBorder(),
             splashFactory: NoSplash.splashFactory,
@@ -293,7 +281,7 @@ class CardOptionsButton extends StatelessWidget {
           child: Icon(
             icon,
             size: 24,
-            color: ClientConfig.getColorScheme().background,
+            color: Theme.of(context).colorScheme.background,
           ),
         ),
         Padding(
@@ -301,7 +289,7 @@ class CardOptionsButton extends StatelessWidget {
           child: Text(
             textLabel,
             style: TextStyle(
-              color: ClientConfig.getColorScheme().primary,
+              color: Theme.of(context).colorScheme.primary,
               fontWeight: FontWeight.w600,
               fontSize: 16,
               height: 1.125,
@@ -322,8 +310,7 @@ class ItemTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       nameOfActionTitle,
-      style: const TextStyle(
-          fontSize: 20, height: 1.4, fontWeight: FontWeight.w600),
+      style: const TextStyle(fontSize: 20, height: 1.4, fontWeight: FontWeight.w600),
     );
   }
 }
@@ -350,7 +337,7 @@ class ItemName extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Icon(leftIcon, color: ClientConfig.getColorScheme().error, size: 24),
+        Icon(leftIcon, color: Theme.of(context).colorScheme.error, size: 24),
         const SizedBox(width: 16),
         Expanded(
           child: Column(
@@ -359,13 +346,11 @@ class ItemName extends StatelessWidget {
             children: [
               Text(
                 actionName,
-                style: const TextStyle(
-                    fontSize: 16, height: 1.5, fontWeight: FontWeight.w600),
+                style: const TextStyle(fontSize: 16, height: 1.5, fontWeight: FontWeight.w600),
               ),
               Text(
                 actionDescription,
-                style: const TextStyle(
-                    fontSize: 14, height: 1.29, fontWeight: FontWeight.w400),
+                style: const TextStyle(fontSize: 14, height: 1.29, fontWeight: FontWeight.w400),
               ),
             ],
           ),
@@ -374,8 +359,7 @@ class ItemName extends StatelessWidget {
           padding: const EdgeInsets.only(right: 0),
           child: (actionSwitch == true)
               ? const ActionItem()
-              : Icon(rightIcon,
-                  color: ClientConfig.getColorScheme().primary, size: 24),
+              : Icon(rightIcon, color: Theme.of(context).colorScheme.primary, size: 24),
         ),
       ],
     );

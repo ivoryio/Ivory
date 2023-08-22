@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:solarisdemo/models/repayments/reminder/repayment_reminder.dart';
 import 'package:solarisdemo/redux/credit_line/credit_line_state.dart';
 import 'package:solarisdemo/redux/repayments/reminder/repayment_reminder_state.dart';
 
@@ -7,7 +8,7 @@ class RepaymentReminderPresenter {
       {required RepaymentReminderState repaymentReminderState, required CreditLineState creditLineState}) {
     if (repaymentReminderState is RepaymentReminderLoadingState || creditLineState is CreditLineLoadingState) {
       return RepaymentReminderLoadingViewModel();
-    } else if (repaymentReminderState is RepaymentReminderErrorState) {
+    } else if (repaymentReminderState is RepaymentReminderErrorState || creditLineState is CreditLineErrorState) {
       return RepaymentReminderErrorViewModel();
     } else if (repaymentReminderState is RepaymentReminderFetchedState && creditLineState is CreditLineFetchedState) {
       return RepaymentReminderFetchedViewModel(
@@ -34,7 +35,7 @@ class RepaymentReminderLoadingViewModel extends RepaymentReminderViewModel {}
 class RepaymentReminderErrorViewModel extends RepaymentReminderViewModel {}
 
 class RepaymentReminderFetchedViewModel extends RepaymentReminderViewModel {
-  final List<DateTime> repaymentReminders;
+  final List<RepaymentReminder> repaymentReminders;
   final DateTime repaymentDueDate;
 
   const RepaymentReminderFetchedViewModel({

@@ -39,17 +39,17 @@ class Transaction {
     bookingType = json['booking_type'];
     amount = json['amount'] != null ? Amount.fromJson(json['amount']) : null;
     description = json['description'];
-    endToEndId = json['end_to_end_id'];
+    endToEndId = json['end_to_end_id'] ?? "ID";
     recipientBic = json['recipient_bic'];
     recipientIban = json['recipient_iban'];
-    recipientName = json['recipient_name'];
+    recipientName = json['recipient_name'] ?? "SOLARIS";
     reference = json['reference'];
     bookingDate = json['booking_date'];
     valutaDate = json['valuta_date'];
     metaInfo = json['meta_info'];
     recordedAt = DateTime.parse(json['recorded_at']);
     senderIban = json['sender_iban'];
-    senderName = json['sender_name'];
+    senderName = json['sender_name'] ?? "SOLARIS";
   }
 
   Map<String, dynamic> toJson() {
@@ -104,6 +104,7 @@ class TransactionListFilter {
   final int? page;
   final int? size;
   final String? sort;
+  final List<String>? categoryIds;
 
   const TransactionListFilter({
     this.bookingDateMin,
@@ -112,6 +113,7 @@ class TransactionListFilter {
     this.page,
     this.size,
     this.sort,
+    this.categoryIds,
   });
 
   Map<String, String> toMap() {
@@ -139,6 +141,12 @@ class TransactionListFilter {
 
     if(searchString != null) {
       map["filter[description]"] = searchString!;
+    }
+
+    if(categoryIds != null) {
+      for (int index = 0; index < categoryIds!.length; index++) {
+        map["filter[category_id]"] = categoryIds![index];
+      }
     }
 
     return map;

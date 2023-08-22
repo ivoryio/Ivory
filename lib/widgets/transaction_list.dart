@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solarisdemo/widgets/transaction_listing_item.dart';
 
 import '../cubits/transaction_list_cubit/transaction_list_cubit.dart';
-import '../models/transaction_model.dart';
+import '../models/transactions/transaction_model.dart';
 
 class TransactionList extends StatelessWidget {
   final Widget? header;
