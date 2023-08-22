@@ -210,7 +210,7 @@ class FourDigitPinCodeInputState extends State<FourDigitPinCodeInput> {
   void toggleValidity() {
     setAllFieldsInvalid();
     Future.delayed(
-      const Duration(milliseconds: 2000),
+      const Duration(milliseconds: 1000),
       () {
         if (mounted) {
           setAllFieldsValid();

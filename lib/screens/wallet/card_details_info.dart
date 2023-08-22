@@ -32,7 +32,7 @@ class BankCardDetailsInfoScreen extends StatelessWidget {
                   style: TextStyle(color: Color(0xFF15141E)),
                 ),
                 TextSpan(
-                  text: 'out of 3',
+                  text: 'out of 4',
                   style: TextStyle(color: Color(0xFF56555E)),
                 ),
               ],

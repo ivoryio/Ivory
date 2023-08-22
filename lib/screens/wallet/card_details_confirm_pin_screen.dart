@@ -56,7 +56,7 @@ class _BankCardDetailsConfirmPinScreenState
                       style: TextStyle(color: Color(0xFF15141E)),
                     ),
                     TextSpan(
-                      text: 'out of 3',
+                      text: 'out of 4',
                       style: TextStyle(color: Color(0xFF56555E)),
                     ),
                   ],
@@ -204,7 +204,7 @@ class _BankCardDetailsConfirmPinScreenState
       );
     });
     Future.delayed(
-      const Duration(milliseconds: 2000),
+      const Duration(milliseconds: 1000),
       () {
         if (mounted) {
           restoreValidity();
