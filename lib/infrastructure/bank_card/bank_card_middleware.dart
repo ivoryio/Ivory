@@ -42,7 +42,7 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
         cardId: action.cardId,
       );
 
-      if (response is GetBankCardSuccessResponse) {
+      if (response is ActivateBankCardSuccessResponse) {
         store.dispatch(BankCardActivatedEventAction(
           bankCard: response.bankCard,
           user: action.user,

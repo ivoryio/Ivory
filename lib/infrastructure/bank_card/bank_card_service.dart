@@ -31,7 +31,7 @@ class BankCardService extends ApiService {
     try {
       final data = await post('/account/cards/$cardId');
 
-      return GetBankCardSuccessResponse(
+      return ActivateBankCardSuccessResponse(
         bankCard: BankCard.fromJson(data),
       );
     } catch (e) {
@@ -49,6 +49,15 @@ class GetBankCardSuccessResponse extends BankCardServiceResponse {
   final BankCard bankCard;
 
   GetBankCardSuccessResponse({required this.bankCard});
+
+  @override
+  List<Object?> get props => [bankCard];
+}
+
+class ActivateBankCardSuccessResponse extends BankCardServiceResponse {
+  final BankCard bankCard;
+
+  ActivateBankCardSuccessResponse({required this.bankCard});
 
   @override
   List<Object?> get props => [bankCard];
