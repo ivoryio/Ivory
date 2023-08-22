@@ -32,13 +32,13 @@ class ButtonWithIcon extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 24.0,
-          vertical: 12.0,
+          vertical: 8.0,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             iconWidget,
-            const SizedBox(width: 8.0), // Spacing between iconWidget and text
+            const SizedBox(width: 8.0),
             Text(
               text,
               style: textStyle,
