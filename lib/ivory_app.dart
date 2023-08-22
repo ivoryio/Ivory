@@ -111,13 +111,7 @@ class _IvoryAppState extends State<IvoryApp> {
               RepaymentSuccessfullyChanged.routeName: (context) => const RepaymentSuccessfullyChanged(),
               RepaymentReminderScreen.routeName: (context) => const RepaymentReminderScreen(),
               // transfer
-              TransferScreen.routeName: (context) {
-                final transferScreenParams = ModalRoute.of(context)?.settings.arguments as TransferScreenParams?;
-
-                return TransferScreen(
-                  transferScreenParams: transferScreenParams!,
-                );
-              },
+              TransferScreen.routeName: (context) => const TransferScreen(),
               // account
               AccountDetailsScreen.routeName: (context) => const AccountDetailsScreen(),
               // splitpay

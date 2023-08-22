@@ -7,6 +7,7 @@ import 'package:solarisdemo/models/person_model.dart';
 import 'package:solarisdemo/screens/account/account_details_screen.dart';
 import 'package:solarisdemo/screens/repayments/repayments_screen.dart';
 import 'package:solarisdemo/screens/transactions/transactions_screen.dart';
+import 'package:solarisdemo/screens/transfer/transfer_screen.dart';
 import 'package:solarisdemo/widgets/rewards.dart';
 import 'package:solarisdemo/widgets/screen.dart';
 import 'package:solarisdemo/widgets/transaction_list.dart';
@@ -20,8 +21,6 @@ import '../../models/user.dart';
 import '../../services/person_service.dart';
 import '../../widgets/account_balance_text.dart';
 import '../../widgets/analytics.dart';
-import '../../widgets/modal.dart';
-import 'modals/new_transfer_popup.dart';
 
 const _defaultCountTransactionsDisplayed = 3;
 const _defaultPage = 1;
@@ -392,11 +391,7 @@ class AccountOptions extends StatelessWidget {
               AssetImage('assets/icons/compare_arrows.png'),
               size: 24,
             ),
-            onPressed: () => showBottomModal(
-              context: context,
-              title: 'New Transfer',
-              content: const NewTransferPopup(),
-            ),
+            onPressed: () => Navigator.pushNamed(context, TransferScreen.routeName),
           ),
           AccountOptionsButton(
             textLabel: "Repayments",
