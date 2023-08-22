@@ -87,6 +87,12 @@ class PinFieldState extends State<PinField> {
     });
   }
 
+  void setFieldUndone() {
+    setState(() {
+      _isDone = false;
+    });
+  }
+
   @override
   void dispose() {
     widget.controller.removeListener(_handleTextChanged);
@@ -228,6 +234,12 @@ class FourDigitPinCodeInputState extends State<FourDigitPinCodeInput> {
   void setAllFieldsDone() {
     for (var pinField in pinFieldKeys) {
       pinField.currentState!.setFieldDone();
+    }
+  }
+
+  void setAllFieldsUndone() {
+    for (var pinField in pinFieldKeys) {
+      pinField.currentState!.setFieldUndone();
     }
   }
 }

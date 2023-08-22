@@ -67,7 +67,7 @@ class _BankCardDetailsConfirmPinScreenState
                 ),
                 backButtonEnabled: true,
                 onBackButtonPressed: () {
-                  Navigator.pop(context);
+                  Navigator.pop(context, );
                 },
               ),
               const LinearProgressIndicator(

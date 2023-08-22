@@ -118,35 +118,19 @@ class _BankCardDetailsChoosePinScreenState
                               viewModel.user!.person.birthDate!,
                               pin,
                             )) {
-                              fourDigitPinKey.currentState?.unfocusAllFields();
-                              fourDigitPinKey.currentState?.setAllFieldsDone();
-                              markCompleted();
-                              Future.delayed(
-                                const Duration(milliseconds: 500),
-                                () {
-                                  StoreProvider.of<AppState>(context).dispatch(
-                                    BankCardChoosePinCommandAction(
-                                      bankCard: viewModel.bankCard!,
-                                      user: user,
-                                      pin: pin,
-                                    ),
-                                  );
-                                  restoreValidity();
-                                  Navigator.pushNamed(
-                                    context,
-                                    BankCardDetailsConfirmPinScreen.routeName,
-                                  );
-                                },
+                              pageCleanupAndNavigate(
+                                context,
+                                fourDigitPinKey,
+                                pin,
+                                viewModel,
+                                user,
                               );
                             } else {
-                              highlightReasonsForInvalidPin(
-                                viewModel.user!.person.address!.postalCode!,
-                                viewModel.user!.person.birthDate!,
+                              highlightReasonAndResetScreen(
+                                fourDigitPinKey,
+                                user,
                                 pin,
                               );
-                              fourDigitPinKey.currentState?.toggleValidity();
-                              fourDigitPinKey.currentState?.clearPin();
-                              fourDigitPinKey.currentState?.setFocusOnFirst();
                             }
                           },
                         ),
@@ -217,6 +201,53 @@ class _BankCardDetailsChoosePinScreenState
     );
   }
 
+  void highlightReasonAndResetScreen(
+    GlobalKey<FourDigitPinCodeInputState> fourDigitPinKey,
+    AuthenticatedUser user,
+    String pin,
+  ) {
+    // Highlight reasons for an invalid pin
+    highlightReasonsForInvalidPin(
+      user.person.address!.postalCode!,
+      user.person.birthDate!,
+      pin,
+    );
+
+    // Toggle validity, clear pin, and set focus on first field
+    fourDigitPinKey.currentState?.toggleValidity();
+    fourDigitPinKey.currentState?.clearPin();
+    fourDigitPinKey.currentState?.setFocusOnFirst();
+  }
+
+  void pageCleanupAndNavigate(
+    BuildContext context,
+    GlobalKey<FourDigitPinCodeInputState> fourDigitPinKey,
+    String pin,
+    BankCardViewModel viewModel,
+    AuthenticatedUser user,
+  ) {
+    fourDigitPinKey.currentState?.unfocusAllFields();
+    fourDigitPinKey.currentState?.setAllFieldsDone();
+    markCompleted();
+
+    Future.delayed(const Duration(milliseconds: 500), () {
+      StoreProvider.of<AppState>(context).dispatch(
+        BankCardChoosePinCommandAction(
+          bankCard: viewModel.bankCard!,
+          user: user,
+          pin: pin,
+        ),
+      );
+      Navigator.pushNamed(context, BankCardDetailsConfirmPinScreen.routeName);
+
+      fourDigitPinKey.currentState?.clearPin();
+      fourDigitPinKey.currentState?.setAllFieldsUndone();
+      fourDigitPinKey.currentState?.setFocusOnFirst();
+      restoreValidity();
+      unmarkCompleted();
+    });
+  }
+
   bool isPinValid(String postalCode, DateTime birthDate, String pin) {
     return PinValidator.checkIfPinDiffersFromString(postalCode, pin) &&
         PinValidator.checkIfPinDiffersFromBirthDate(birthDate, pin) &&
@@ -267,6 +298,12 @@ class _BankCardDetailsChoosePinScreenState
   void markCompleted() {
     setState(() {
       completed = true;
+    });
+  }
+
+  void unmarkCompleted() {
+    setState(() {
+      completed = false;
     });
   }
 }
