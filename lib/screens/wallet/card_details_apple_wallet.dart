@@ -127,19 +127,23 @@ class BankCardDetailsAppleWalletScreen extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: 16),
-                            ButtonWithIcon(
-                              text: 'Add to Apple Wallet',
-                              textStyle: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.white,
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
+                              child: ButtonWithIcon(
+                                text: 'Add to Apple Wallet',
+                                textStyle: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.white,
+                                ),
+                                borderRadius: BorderRadius.circular(16),
+                                onPressed: () {
+                                  //TODO: Add to apple wallet flow
+                                },
+                                iconWidget: Image.asset(
+                                    'assets/icons/apple_wallet_logo.png'),
                               ),
-                              borderRadius: BorderRadius.circular(16),
-                              onPressed: () {
-                                //TODO: Add to apple wallet flow
-                              },
-                              iconWidget: Image.asset(
-                                  'assets/icons/apple_wallet_logo.png'),
                             ),
                           ],
                         ),

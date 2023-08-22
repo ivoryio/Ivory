@@ -29,16 +29,22 @@ class ButtonWithIcon extends StatelessWidget {
         ),
       ),
       onPressed: onPressed,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          iconWidget,
-          const SizedBox(width: 8.0), // Spacing between iconWidget and text
-          Text(
-            text,
-            style: textStyle,
-          ),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 24.0,
+          vertical: 12.0,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            iconWidget,
+            const SizedBox(width: 8.0), // Spacing between iconWidget and text
+            Text(
+              text,
+              style: textStyle,
+            ),
+          ],
+        ),
       ),
     );
   }
