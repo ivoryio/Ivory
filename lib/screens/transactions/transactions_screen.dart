@@ -134,15 +134,12 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                                   ),
                                 ],
                               ),
-                            const SizedBox(height: 16),
-                            // const TransactionType(),
                             ButtonsTransactionType(
                               user: user,
                               viewModel: viewModel,
                               buttons: [
                                 ButtonTransactionTypeItem(
                                   text: TransactionTypeItems.Past,
-                                  // child: PastTransactions()),
                                   child: _buildTransactionsList(viewModel),
                                 ),
                                 ButtonTransactionTypeItem(
@@ -151,8 +148,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 16),
-                            // _buildTransactionsList(viewModel)
                           ],
                         ),
                       ),
@@ -211,7 +206,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     }
 
     if (viewModel is UpcomingTransactionsFetchedViewModel) {
-      // return const Center(child: Text('view model upcomning'));
       bool isFilteringActive =
           (viewModel.transactionListFilter?.bookingDateMin != null ||
               viewModel.transactionListFilter?.bookingDateMax != null);
@@ -334,7 +328,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     return ListView.separated(
       itemCount: dayMonthYearList.length,
       separatorBuilder: (context, index) => const Divider(
-        height: 10,
+        height: 0,
         color: Colors.transparent,
       ),
       shrinkWrap: true,
@@ -348,36 +342,34 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    formattedDayMonthYear,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: Color(0xff414D63),
-                    ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  formattedDayMonthYear,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: Color(0xff414D63),
                   ),
-                  Text(_formatAmountWithCurrency(_sumOfDay(transactions)),
-                      style: ClientConfig.getTextStyleScheme().labelSmall),
-                ],
-              ),
+                ),
+                Text(_formatAmountWithCurrency(_sumOfDay(transactions)),
+                    style: ClientConfig.getTextStyleScheme().labelSmall),
+              ],
             ),
             ListView.separated(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemCount: transactions.length,
               separatorBuilder: (_, __) => const Divider(
-                height: 10,
+                height: 0,
                 color: Colors.transparent,
               ),
               itemBuilder: (context, index) => TransactionListItem(
                 transaction: transactions[index],
               ),
             ),
+            const SizedBox(height: 24)
           ],
         );
       },
@@ -575,7 +567,7 @@ class _ButtonsTransactionTypeState extends State<ButtonsTransactionType> {
             ],
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 24),
         widget.buttons[selectedButton].child,
       ],
     );
@@ -633,14 +625,5 @@ class PastTransactions extends StatelessWidget {
     return const Text('Past transactions');
   }
 }
-
-// class UpcomingTransactions extends StatelessWidget {
-//   const UpcomingTransactions({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return const Text('Upcoming transactions');
-//   }
-// }
 
 enum TransactionTypeItems { Past, Upcoming }

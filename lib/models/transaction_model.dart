@@ -90,18 +90,18 @@ class Category {
   IconData? icon;
 
   final Map<String, IconData> categoryIcon = {
-    "transportationAndTravel": Icons.travel_explore,
-    "foodAndDining": Icons.restaurant,
-    "retailAndShopping": Icons.shopping_bag,
-    "fuelAndAuto": Icons.gas_meter,
-    "healthAndWellness": Icons.health_and_safety,
-    "technologyAndOnlineServices": Icons.online_prediction,
-    "entertainmentAndRecreation": Icons.sports_esports,
-    "homeAndUtilities": Icons.home,
-    "governmentAndTaxes": Icons.interests,
-    "educationAndServices": Icons.cast_for_education,
-    "financialServices": Icons.taxi_alert,
-    "other": Icons.card_giftcard,
+    "transportationAndTravel": Icons.local_taxi_outlined,
+    "foodAndDining": Icons.fastfood_outlined,
+    "retailAndShopping": Icons.shopping_bag_outlined,
+    "fuelAndAuto": Icons.local_gas_station_outlined,
+    "healthAndWellness": Icons.health_and_safety_outlined,
+    "technologyAndOnlineServices": Icons.devices_outlined,
+    "entertainmentAndRecreation": Icons.live_tv_outlined,
+    "homeAndUtilities": Icons.house_outlined,
+    "governmentAndTaxes": Icons.receipt_long_outlined,
+    "educationAndServices": Icons.school_outlined,
+    "financialServices": Icons.account_balance_outlined,
+    "other": Icons.local_offer_outlined,
   };
 
   Category({this.id, this.name});
