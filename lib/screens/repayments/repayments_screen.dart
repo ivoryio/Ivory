@@ -280,8 +280,8 @@ class _ExpandedDetails extends StatelessWidget {
           child: SpacedColumn(
             space: 8,
             children: [
-              _ExpandedDetailsRow(title: 'Amount spent', trailing: Format.euro(viewModel.creditLine.spentAmount.value)),
-              _ExpandedDetailsRow(
+              ExpandedDetailsRow(title: 'Amount spent', trailing: Format.euro(viewModel.creditLine.spentAmount.value)),
+              ExpandedDetailsRow(
                 title: 'Percentage repayment rate',
                 trailing: '${viewModel.creditLine.repaymentRatePercentage}%',
                 onInfoIconTap: () {
@@ -295,9 +295,9 @@ class _ExpandedDetails extends StatelessWidget {
                   );
                 },
               ),
-              _ExpandedDetailsRow(
+              ExpandedDetailsRow(
                   title: 'Repayment amount', trailing: Format.euro(viewModel.creditLine.previousBillAmount.value)),
-              _ExpandedDetailsRow(
+              ExpandedDetailsRow(
                 title: 'Interest rate',
                 trailing: '${viewModel.creditLine.interestRate}%',
                 onInfoIconTap: () {
@@ -309,7 +309,7 @@ class _ExpandedDetails extends StatelessWidget {
                   );
                 },
               ),
-              _ExpandedDetailsRow(
+              ExpandedDetailsRow(
                 title: 'Interest amount',
                 trailing: Format.euro(viewModel.creditLine.accumulatedInterestAmount.value),
               ),
@@ -340,8 +340,8 @@ class _ExpandedDetails extends StatelessWidget {
                   }),
                 ],
               ),
-              _ExpandedDetailsRow(title: 'Account owner', trailing: viewModel.ownerName),
-              _ExpandedDetailsRow(title: 'IBAN', trailing: Format.iban(viewModel.iban)),
+              ExpandedDetailsRow(title: 'Account owner', trailing: viewModel.ownerName),
+              ExpandedDetailsRow(title: 'IBAN', trailing: Format.iban(viewModel.iban)),
             ],
           ),
         ),
@@ -350,12 +350,13 @@ class _ExpandedDetails extends StatelessWidget {
   }
 }
 
-class _ExpandedDetailsRow extends StatelessWidget {
+class ExpandedDetailsRow extends StatelessWidget {
   final String title;
   final String trailing;
   final VoidCallback? onInfoIconTap;
 
-  const _ExpandedDetailsRow({
+  const ExpandedDetailsRow({
+    super.key,
     required this.title,
     required this.trailing,
     this.onInfoIconTap,

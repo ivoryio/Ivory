@@ -6,12 +6,6 @@ class GetBillsCommandAction {
   GetBillsCommandAction({required this.user});
 }
 
-class GetBillByIdCommandAction {
-  final String id;
-  final User user;
-  GetBillByIdCommandAction({required this.id, required this.user});
-}
-
 class BillsLoadingEventAction {}
 
 class BillsFailedEventAction {}

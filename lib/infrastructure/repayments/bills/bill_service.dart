@@ -13,9 +13,10 @@ class BillService extends ApiService {
       this.user = user;
     }
     try {
-      final data = await get('account/transactions/past_credit_card_bills'); // bills/past_bills
+      final data = await get('bills/past_bills');
+      final bills = (data as List).map((e) => Bill.fromJson(e)).toList();
 
-      return GetBillsSuccessResponse(bills: Bill.fromJson(data));
+      return GetBillsSuccessResponse(bills: bills);
     } catch (e) {
       return BillServiceErrorResponse();
     }
@@ -29,11 +30,28 @@ class BillService extends ApiService {
       this.user = user;
     }
     try {
-      final data = await get('account/transactions/past_credit_card_bills/$id'); // bills/$id
+      final data = await get('bills/$id');
 
-      return GetBillsSuccessResponse(bills: Bill.fromJson(data));
+      return GetBillsSuccessResponse(bills: [Bill.fromJson(data)]);
     } catch (e) {
       return BillServiceErrorResponse();
+    }
+  }
+
+  Future downloadPostboxPdf({
+    required String postboxItemId,
+    User? user,
+  }) async {
+    if (user != null) {
+      this.user = user;
+    }
+
+    try {
+      final data = await get('/postbox_items/$postboxItemId');
+
+      return data;
+    } catch (e) {
+      return null;
     }
   }
 }
@@ -44,7 +62,7 @@ abstract class BillServiceResponse extends Equatable {
 }
 
 class GetBillsSuccessResponse extends BillServiceResponse {
-  final Bill bills;
+  final List<Bill> bills;
 
   GetBillsSuccessResponse({required this.bills});
 
