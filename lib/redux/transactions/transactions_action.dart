@@ -1,6 +1,7 @@
 import 'package:solarisdemo/models/upcoming_transactions.dart';
 
-import '../../models/transaction_model.dart';
+// import '../../models/transaction_model.dart';
+import '../../models/transactions/transaction_model.dart';
 import '../../models/user.dart';
 
 class GetTransactionsCommandAction {

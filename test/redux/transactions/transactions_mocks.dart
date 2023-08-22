@@ -1,5 +1,5 @@
 import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart';
-import 'package:solarisdemo/models/transaction_model.dart';
+import 'package:solarisdemo/models/transactions/transaction_model.dart';
 import 'package:solarisdemo/models/user.dart';
 
 class FakeTransactionService extends TransactionService {

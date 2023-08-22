@@ -15,7 +15,7 @@ import '../../config.dart';
 import '../../cubits/account_summary_cubit/account_summary_cubit.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../cubits/transaction_list_cubit/transaction_list_cubit.dart';
-import '../../models/transaction_model.dart';
+import '../../models/transactions/transaction_model.dart';
 import '../../models/user.dart';
 import '../../services/person_service.dart';
 import '../../widgets/account_balance_text.dart';

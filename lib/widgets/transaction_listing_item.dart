@@ -7,7 +7,7 @@ import 'package:solarisdemo/screens/splitpay/splitpay_screen.dart';
 
 import '../config.dart';
 import '../cubits/auth_cubit/auth_cubit.dart';
-import '../models/transaction_model.dart';
+import '../models/transactions/transaction_model.dart';
 import '../models/user.dart';
 import '../utilities/format.dart';
 import 'button.dart';

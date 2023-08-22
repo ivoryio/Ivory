@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../config.dart';
+
 class PillButton extends StatelessWidget {
   final String buttonText;
   final void Function() buttonCallback;
@@ -33,10 +35,11 @@ class PillButton extends StatelessWidget {
             children: [
               Text(
                 buttonText,
-                style: const TextStyle(
-                  fontSize: 12,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontFamily: "Proxima Nova",
                   fontWeight: FontWeight.w600,
-                  height: 16 / 12,
+                  color: ClientConfig.getColorScheme().secondary,
                 ),
               ),
               if (icon != null)

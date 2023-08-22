@@ -111,16 +111,6 @@ class Category {
     name = json['name'] ?? "Other";
     icon = categoryIcon[id];
   }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-
-    data['id'] = id;
-    data['name'] = name;
-    data['icon'] = icon;
-
-    return data;
-  }
 }
 
 class Amount {
@@ -152,6 +142,7 @@ class TransactionListFilter {
   final int? page;
   final int? size;
   final String? sort;
+  final List<String>? categoryIds;
 
   const TransactionListFilter({
     this.bookingDateMin,
@@ -160,6 +151,7 @@ class TransactionListFilter {
     this.page,
     this.size,
     this.sort,
+    this.categoryIds,
   });
 
   Map<String, String> toMap() {
@@ -187,6 +179,12 @@ class TransactionListFilter {
 
     if (searchString != null) {
       map["filter[description]"] = searchString!;
+    }
+
+    if (categoryIds != null) {
+      for (int index = 0; index < categoryIds!.length; index++) {
+        map["filter[category_id]"] = categoryIds![index];
+      }
     }
 
     return map;
