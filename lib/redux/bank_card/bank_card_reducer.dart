@@ -1,10 +1,7 @@
-import 'dart:developer';
-
 import 'bank_card_action.dart';
 import 'bank_card_state.dart';
 
 BankCardState bankCardReducer(BankCardState currentState, dynamic action) {
-  log(action.toString());
   if (action is BankCardLoadingEventAction) {
     return BankCardLoadingState();
   } else if (action is BankCardFailedEventAction) {
