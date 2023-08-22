@@ -50,6 +50,7 @@ class BankCardDetailsActivationSuccessScreen extends StatelessWidget {
                 customHeight: 148,
                 customWidth: 231,
                 isViewable: false,
+                imageScaledownFactor: 1.5,
               ),
             ],
           ),

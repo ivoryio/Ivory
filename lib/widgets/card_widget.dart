@@ -19,6 +19,7 @@ class BankCardWidget extends StatelessWidget {
   final String? cardType;
   final double? customHeight;
   final double? customWidth;
+  final double? imageScaledownFactor;
 
   const BankCardWidget({
     super.key,
@@ -30,6 +31,7 @@ class BankCardWidget extends StatelessWidget {
     this.cardNumber,
     this.isViewable = true,
     this.cardType,
+    this.imageScaledownFactor,
   });
 
   @override
@@ -63,6 +65,7 @@ class BankCardWidget extends StatelessWidget {
               image:
                   AssetImage(ClientConfig.getAssetImagePath('card_logo.png')),
               fit: BoxFit.scaleDown,
+              scale: imageScaledownFactor ?? 1,
             ),
           ),
           child: Padding(
@@ -108,7 +111,7 @@ class BankCardWidget extends StatelessWidget {
                             ),
                           );
                           if (cardNumberPart == "****") {
-                            return SizedBox(height: 20, child: textContent);
+                            return SizedBox(height: 29, child: textContent);
                           }
 
                           return textContent;
