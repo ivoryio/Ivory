@@ -32,7 +32,7 @@ class BankCardDetailsInfoScreen extends StatelessWidget {
                   style: TextStyle(color: Color(0xFF15141E)),
                 ),
                 TextSpan(
-                  text: 'out of 4',
+                  text: 'out of 3',
                   style: TextStyle(color: Color(0xFF56555E)),
                 ),
               ],
@@ -41,10 +41,15 @@ class BankCardDetailsInfoScreen extends StatelessWidget {
               horizontal: ClientConfig.getCustomClientUiSettings()
                   .defaultScreenHorizontalPadding,
             ),
-            backButtonEnabled: true, //needs to be false
+            backButtonEnabled: true,
+            onBackButtonPressed: () {
+              Navigator.pop(
+                context,
+              );
+            },
           ),
           const LinearProgressIndicator(
-            value: 1 / 4,
+            value: 1 / 3,
             color: Color(0xFF2575FC),
             backgroundColor: Color(0xFFE9EAEB),
           ),

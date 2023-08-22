@@ -56,7 +56,7 @@ class _BankCardDetailsConfirmPinScreenState
                       style: TextStyle(color: Color(0xFF15141E)),
                     ),
                     TextSpan(
-                      text: 'out of 4',
+                      text: 'out of 3',
                       style: TextStyle(color: Color(0xFF56555E)),
                     ),
                   ],
@@ -65,10 +65,13 @@ class _BankCardDetailsConfirmPinScreenState
                   horizontal: ClientConfig.getCustomClientUiSettings()
                       .defaultScreenHorizontalPadding,
                 ),
-                backButtonEnabled: true, //needs to be false
+                backButtonEnabled: true,
+                onBackButtonPressed: () {
+                  Navigator.pop(context);
+                },
               ),
               const LinearProgressIndicator(
-                value: 3 / 4,
+                value: 3 / 3,
                 color: Color(0xFF2575FC),
                 backgroundColor: Color(0xFFE9EAEB),
               ),

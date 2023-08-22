@@ -30,33 +30,14 @@ class BankCardDetailsAppleWalletScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           AppToolbar(
-            richTextTitle: RichText(
-                text: const TextSpan(
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
-              children: <TextSpan>[
-                TextSpan(
-                  text: 'Step 4 ',
-                  style: TextStyle(color: Color(0xFF15141E)),
-                ),
-                TextSpan(
-                  text: 'out of 4',
-                  style: TextStyle(color: Color(0xFF56555E)),
-                ),
-              ],
-            )),
             padding: EdgeInsets.symmetric(
               horizontal: ClientConfig.getCustomClientUiSettings()
                   .defaultScreenHorizontalPadding,
             ),
             backButtonEnabled: false,
-          ),
-          const LinearProgressIndicator(
-            value: 4 / 4,
-            color: Color(0xFF2575FC),
-            backgroundColor: Color(0xFFE9EAEB),
+            onBackButtonPressed: () {
+              Navigator.pop(context);
+            },
           ),
           StoreConnector<AppState, BankCardViewModel>(
               converter: (store) => BankCardPresenter.presentBankCard(

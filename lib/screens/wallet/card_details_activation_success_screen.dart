@@ -22,7 +22,7 @@ class BankCardDetailsActivationSuccessScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           const AppToolbar(
-            backButtonEnabled: true, //needs to be false
+            backButtonEnabled: false,
           ),
           const Text(
             'Physical card successfully activated!',

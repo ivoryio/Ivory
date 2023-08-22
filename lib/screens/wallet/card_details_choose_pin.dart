@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/models/user.dart';
+import 'package:solarisdemo/screens/wallet/card_details_info.dart';
 
 import '../../config.dart';
 import '../../infrastructure/bank_card/bank_card_presenter.dart';
@@ -36,13 +37,6 @@ class _BankCardDetailsChoosePinScreenState
   GlobalKey<FourDigitPinCodeInputState> fourDigitPinKey = GlobalKey();
 
   @override
-  void initState() {
-    log('initState');
-    restoreValidity();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     AuthenticatedUser user = context.read<AuthCubit>().state.user!;
 
@@ -68,7 +62,7 @@ class _BankCardDetailsChoosePinScreenState
                       style: TextStyle(color: Color(0xFF15141E)),
                     ),
                     TextSpan(
-                      text: 'out of 4',
+                      text: 'out of 3',
                       style: TextStyle(color: Color(0xFF56555E)),
                     ),
                   ],
@@ -77,10 +71,13 @@ class _BankCardDetailsChoosePinScreenState
                   horizontal: ClientConfig.getCustomClientUiSettings()
                       .defaultScreenHorizontalPadding,
                 ),
-                backButtonEnabled: true, //needs to be false
+                backButtonEnabled: true,
+                onBackButtonPressed: () {
+                  Navigator.pop(context);
+                },
               ),
               const LinearProgressIndicator(
-                value: 2 / 4,
+                value: 2 / 3,
                 color: Color(0xFF2575FC),
                 backgroundColor: Color(0xFFE9EAEB),
               ),
@@ -185,80 +182,25 @@ class _BankCardDetailsChoosePinScreenState
                         ),
                       ),
                       const SizedBox(height: 10),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.close,
-                            size: 24,
-                          ),
-                          Text(
-                            'Your date of birth',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              height: 1.5,
-                              color: pinDiffersBirthDate
-                                  ? Colors.black
-                                  : Colors.red,
-                            ),
-                          ),
-                        ],
+                      PinValidityRule(
+                        isValid: pinDiffersBirthDate,
+                        text: 'Your date of birth',
+                        icon: Icons.close,
                       ),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.close,
-                            size: 24,
-                          ),
-                          Text(
-                            'Your postal code',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              height: 1.5,
-                              color: pinDiffersPostalCode
-                                  ? Colors.black
-                                  : Colors.red,
-                            ),
-                          ),
-                        ],
+                      PinValidityRule(
+                        isValid: pinDiffersPostalCode,
+                        text: 'Your postal code',
+                        icon: Icons.close,
                       ),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.close,
-                            size: 24,
-                          ),
-                          Text(
-                            'Number sequences, e.g. 1234',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              height: 1.5,
-                              color:
-                                  pinIsNotASequence ? Colors.black : Colors.red,
-                            ),
-                          ),
-                        ],
+                      PinValidityRule(
+                        isValid: pinIsNotASequence,
+                        text: 'Number sequences, e.g. 1234',
+                        icon: Icons.close,
                       ),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.close,
-                            size: 24,
-                          ),
-                          Text(
-                            'More than two digits repeating',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              height: 1.5,
-                              color: pinNotContainsRepeatingDigits
-                                  ? Colors.black
-                                  : Colors.red,
-                            ),
-                          ),
-                        ],
+                      PinValidityRule(
+                        isValid: pinNotContainsRepeatingDigits,
+                        text: 'More than two digits repeating',
+                        icon: Icons.close,
                       ),
                     ],
                   ),
@@ -321,5 +263,40 @@ class _BankCardDetailsChoosePinScreenState
     setState(() {
       completed = true;
     });
+  }
+}
+
+class PinValidityRule extends StatelessWidget {
+  final bool isValid;
+  final String text;
+  final IconData icon;
+
+  const PinValidityRule({
+    super.key,
+    required this.isValid,
+    required this.text,
+    required this.icon,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(
+          icon,
+          size: 24,
+          color: isValid ? Colors.black : Colors.red,
+        ),
+        Text(
+          text,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+            height: 1.5,
+            color: isValid ? Colors.black : Colors.red,
+          ),
+        ),
+      ],
+    );
   }
 }

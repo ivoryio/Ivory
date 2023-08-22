@@ -62,7 +62,7 @@ class BankCardDetailsScreen extends StatelessWidget {
                   horizontal: ClientConfig.getCustomClientUiSettings()
                       .defaultScreenHorizontalPadding,
                 ),
-                // backButtonEnabled: false,
+                backButtonEnabled: false,
               ),
               Expanded(
                 child: Padding(
@@ -416,11 +416,6 @@ class InactiveCard extends StatelessWidget {
           width: double.infinity,
           child: Button(
             text: "Activate my card",
-            // onPressed: viewModel.bankCard.status == BankCardStatus.INACTIVE
-            //     ? () {
-
-            //       }
-            //     : null,
             disabledColor: const Color(0xFFDFE2E6),
             color: const Color(0xFF2575FC),
             onPressed: () {
@@ -442,8 +437,6 @@ class ActiveCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final state = context.read<BankCardDetailsCubit>().state;
-
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -459,6 +452,9 @@ class ActiveCard extends StatelessWidget {
                     '',
                 isViewable: false,
                 cardType: 'Physical card',
+              ),
+              SizedBox(
+                height: 16,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -488,7 +484,7 @@ class ActiveCard extends StatelessWidget {
               const SizedBox(height: 20),
               SpacedColumn(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                space: 16,
+                space: 32,
                 children: const [
                   ItemTitle(
                     nameOfActionTitle: 'Spending settings',
