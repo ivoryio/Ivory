@@ -8,6 +8,8 @@ import 'package:solarisdemo/widgets/circular_slider.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
 
+const String EURO_SYMBOL = "€";
+
 class CardSpendingCapScreenParams {
   final double maxSpendingCap;
 
@@ -31,8 +33,7 @@ class CardSpendingCapScreen extends StatelessWidget {
     return ScreenScaffold(
       body: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: ClientConfig.getCustomClientUiSettings()
-              .defaultScreenHorizontalPadding,
+          horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
         ),
         child: Column(
           children: [
@@ -43,8 +44,7 @@ class CardSpendingCapScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 24),
-                    Text("Card spending cap",
-                        style: ClientConfig.getTextStyleScheme().heading1),
+                    Text("Card spending cap", style: ClientConfig.getTextStyleScheme().heading1),
                     const SizedBox(height: 16),
                     RichText(
                         text: TextSpan(
@@ -54,9 +54,7 @@ class CardSpendingCapScreen extends StatelessWidget {
                       children: [
                         TextSpan(
                           text: "Notifications",
-                          style: ClientConfig.getTextStyleScheme()
-                              .bodyLargeRegularBold
-                              .copyWith(
+                          style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold.copyWith(
                                 color: const Color(0xFF406FE6),
                               ),
                           recognizer: TapGestureRecognizer()
@@ -84,8 +82,7 @@ class CardSpendingCapScreen extends StatelessWidget {
                     const SizedBox(height: 16),
                     SizedBox(
                       width: double.infinity,
-                      child: PrimaryButton(
-                          text: "Confirm spending cap", onPressed: () {}),
+                      child: PrimaryButton(text: "Confirm spending cap", onPressed: () {}),
                     ),
                   ],
                 ),
@@ -118,9 +115,9 @@ class _SpendingCapSliderState extends State<_SpendingCapSlider> {
 
   double _value = 0.00;
 
-  String get _valueText => _value.toStringAsFixed(2);
+  String get _valueText => EuroInputFormatter.format(_value);
 
-  String get _maxValueText => widget.maxValue.toStringAsFixed(2);
+  String get _maxValueText => EuroInputFormatter.format(widget.maxValue);
 
   @override
   void initState() {
@@ -129,7 +126,7 @@ class _SpendingCapSliderState extends State<_SpendingCapSlider> {
     _focusNode = FocusNode();
 
     _controller.addListener(() {
-      final value = double.tryParse(_controller.text) ?? 0.00;
+      final value = EuroInputFormatter.parse(_controller.text);
       if (value > widget.maxValue) {
         _controller.text = _maxValueText;
         _controller.selection = TextSelection.fromPosition(
@@ -138,7 +135,7 @@ class _SpendingCapSliderState extends State<_SpendingCapSlider> {
       }
 
       setState(() {
-        _value = double.tryParse(_controller.text) ?? 0.00;
+        _value = value;
       });
     });
   }
@@ -177,7 +174,7 @@ class _SpendingCapSliderState extends State<_SpendingCapSlider> {
             focusNode: _focusNode,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(r'^\d{0,6}\.?\d{0,2}')),
+              EuroInputFormatter(),
             ],
             textAlign: TextAlign.center,
             style: ClientConfig.getTextStyleScheme().heading1,
@@ -197,9 +194,31 @@ class _SpendingCapSliderState extends State<_SpendingCapSlider> {
             ),
           ),
           const SizedBox(height: 16),
-          // Spacer(),
         ],
       ),
     );
+  }
+}
+
+class EuroInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    final textValue = newValue.text.replaceAll(EURO_SYMBOL, '').replaceAll(RegExp(r'[^0-9.]'), '').trim();
+    final textValueTwoDecimals = RegExp(r'^\d{0,6}\.?\d{0,2}').stringMatch(textValue) ?? oldValue.text;
+
+    final newText = '$EURO_SYMBOL $textValueTwoDecimals';
+
+    return TextEditingValue(
+      text: newText,
+      selection: TextSelection.collapsed(offset: newText.length),
+    );
+  }
+
+  static String format(double value) {
+    return '$EURO_SYMBOL ${value.toStringAsFixed(2)}';
+  }
+
+  static double parse(String value) {
+    return double.tryParse(value.replaceAll(EURO_SYMBOL, '').trim()) ?? 0.00;
   }
 }
