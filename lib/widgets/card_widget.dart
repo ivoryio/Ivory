@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
 
-import 'spaced_column.dart';
 import '../utilities/format.dart';
 
 const double defaultCardHorizontalPadding = 20;
@@ -70,7 +69,7 @@ class BankCardWidget extends StatelessWidget {
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(
-              vertical: defaultCardVerticalPadding,
+              vertical: 16,
             ),
             child: Column(
               children: [
@@ -80,7 +79,7 @@ class BankCardWidget extends StatelessWidget {
                   children: [
                     const Padding(
                       padding: EdgeInsets.only(
-                        left: defaultCardHorizontalPadding,
+                        left: 16,
                       ),
                       child: VisaSvgIcon(),
                     ),
@@ -88,14 +87,10 @@ class BankCardWidget extends StatelessWidget {
                     if (cardType != null) CardTypeLabel(cardType: cardType!),
                   ],
                 ),
+                const Spacer(),
                 if (isCardEmpty != true)
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(
-                      defaultCardHorizontalPadding,
-                      15,
-                      defaultCardHorizontalPadding,
-                      25,
-                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -119,16 +114,16 @@ class BankCardWidget extends StatelessWidget {
                       ],
                     ),
                   ),
+                if (isCardEmpty != true) const Spacer(),
                 if (isCardEmpty != true)
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
+                      horizontal: 16,
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        SpacedColumn(
-                          space: 3,
+                        Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             if (cardHolder != null)
@@ -140,6 +135,7 @@ class BankCardWidget extends StatelessWidget {
                                   height: 15 / 12,
                                 ),
                               ),
+                            if (cardHolder != null) const SizedBox(height: 3),
                             Text(
                               cardHolder ?? '',
                               style: const TextStyle(
@@ -151,8 +147,7 @@ class BankCardWidget extends StatelessWidget {
                             )
                           ],
                         ),
-                        SpacedColumn(
-                          space: 3,
+                        Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             if (cardExpiry != null)
@@ -164,6 +159,7 @@ class BankCardWidget extends StatelessWidget {
                                   height: 15 / 12,
                                 ),
                               ),
+                            if (cardExpiry != null) const SizedBox(height: 3),
                             Text(
                               cardExpiry ?? '',
                               style: const TextStyle(
