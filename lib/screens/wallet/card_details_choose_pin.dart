@@ -1,11 +1,8 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/models/user.dart';
-import 'package:solarisdemo/screens/wallet/card_details_info.dart';
 
 import '../../config.dart';
 import '../../infrastructure/bank_card/bank_card_presenter.dart';
@@ -186,21 +183,29 @@ class _BankCardDetailsChoosePinScreenState
                         isValid: pinDiffersBirthDate,
                         text: 'Your date of birth',
                         icon: Icons.close,
+                        validColor: const Color(0xFF15141E),
+                        invalidColor: const Color(0xFFE61F27),
                       ),
                       PinValidityRule(
                         isValid: pinDiffersPostalCode,
                         text: 'Your postal code',
                         icon: Icons.close,
+                        validColor: const Color(0xFF15141E),
+                        invalidColor: const Color(0xFFE61F27),
                       ),
                       PinValidityRule(
                         isValid: pinIsNotASequence,
                         text: 'Number sequences, e.g. 1234',
                         icon: Icons.close,
+                        validColor: const Color(0xFF15141E),
+                        invalidColor: const Color(0xFFE61F27),
                       ),
                       PinValidityRule(
                         isValid: pinNotContainsRepeatingDigits,
                         text: 'More than two digits repeating',
                         icon: Icons.close,
+                        validColor: const Color(0xFF15141E),
+                        invalidColor: const Color(0xFFE61F27),
                       ),
                     ],
                   ),
@@ -270,12 +275,16 @@ class PinValidityRule extends StatelessWidget {
   final bool isValid;
   final String text;
   final IconData icon;
+  final Color validColor;
+  final Color invalidColor;
 
   const PinValidityRule({
     super.key,
     required this.isValid,
     required this.text,
     required this.icon,
+    required this.validColor,
+    required this.invalidColor,
   });
 
   @override
@@ -285,7 +294,7 @@ class PinValidityRule extends StatelessWidget {
         Icon(
           icon,
           size: 24,
-          color: isValid ? Colors.black : Colors.red,
+          color: isValid ? validColor : invalidColor,
         ),
         Text(
           text,
@@ -293,7 +302,7 @@ class PinValidityRule extends StatelessWidget {
             fontSize: 16,
             fontWeight: FontWeight.w400,
             height: 1.5,
-            color: isValid ? Colors.black : Colors.red,
+            color: isValid ? validColor : invalidColor,
           ),
         ),
       ],

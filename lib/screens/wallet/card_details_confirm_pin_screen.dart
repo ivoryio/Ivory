@@ -12,6 +12,7 @@ import '../../redux/app_state.dart';
 import '../../utilities/validator.dart';
 import '../../widgets/pin_field.dart';
 import 'card_details_apple_wallet.dart';
+import 'card_details_choose_pin.dart';
 
 class BankCardDetailsConfirmPinScreen extends StatefulWidget {
   static const routeName = '/bankCardDetailsConfirmPinScreen';
@@ -32,7 +33,6 @@ class _BankCardDetailsConfirmPinScreenState
   @override
   Widget build(BuildContext context) {
     AuthenticatedUser user = context.read<AuthCubit>().state.user!;
-
     return StoreConnector<AppState, BankCardViewModel>(
       converter: (store) => BankCardPresenter.presentBankCard(
         user: user,
@@ -165,41 +165,23 @@ class _BankCardDetailsConfirmPinScreenState
               ),
               const Spacer(),
               Padding(
-                padding: EdgeInsets.only(
-                  left: ClientConfig.getCustomClientUiSettings()
-                      .defaultScreenHorizontalPadding,
-                  right: ClientConfig.getCustomClientUiSettings()
-                      .defaultScreenHorizontalPadding,
-                  bottom: ClientConfig.getCustomClientUiSettings()
-                      .defaultScreenVerticalPadding,
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.check,
-                      color: completed
-                          ? Colors.green
-                          : !twoPinsMatch
-                              ? Colors.red
-                              : Colors.black,
-                      size: 24,
-                    ),
-                    Text(
-                      'Your PIN should match',
-                      style: TextStyle(
-                        color: completed
-                            ? Colors.green
-                            : !twoPinsMatch
-                                ? Colors.red
-                                : Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        height: 1.5,
-                      ),
-                    ),
-                  ],
-                ),
-              )
+                  padding: EdgeInsets.only(
+                    left: ClientConfig.getCustomClientUiSettings()
+                        .defaultScreenHorizontalPadding,
+                    right: ClientConfig.getCustomClientUiSettings()
+                        .defaultScreenHorizontalPadding,
+                    bottom: ClientConfig.getCustomClientUiSettings()
+                        .defaultScreenVerticalPadding,
+                  ),
+                  child: PinValidityRule(
+                    isValid: twoPinsMatch,
+                    text: 'Your PIN should match',
+                    icon: Icons.check,
+                    validColor: completed
+                        ? const Color(0xFF00774C)
+                        : const Color(0xFF15141E),
+                    invalidColor: const Color(0xFFE61F27),
+                  ))
             ],
           ),
         );

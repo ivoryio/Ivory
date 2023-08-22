@@ -95,9 +95,9 @@ class PinFieldState extends State<PinField> {
 
   decideColor() {
     if (_isInvalid) {
-      return Colors.red;
+      return const Color(0xFFE61F27);
     } else if (_isDone) {
-      return Colors.green;
+      return const Color(0xFF00774C);
     } else if (_hasText) {
       return const Color(0xFF15141E);
     } else {
