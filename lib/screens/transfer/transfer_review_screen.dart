@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/screens/transfer/transfer_sign_screen.dart';
+import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/ivory_card.dart';
@@ -8,10 +9,22 @@ import 'package:solarisdemo/widgets/ivory_switch.dart';
 import 'package:solarisdemo/widgets/ivory_text_field.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
+class TransferReviewScreenParams {
+  final double amount;
+  final String toAccount;
+
+  TransferReviewScreenParams({
+    required this.amount,
+    required this.toAccount,
+  });
+}
+
 class TransferReviewScreen extends StatelessWidget {
   static const routeName = "/transferReviewScreen";
 
-  const TransferReviewScreen({super.key});
+  final TransferReviewScreenParams params;
+
+  const TransferReviewScreen({super.key, required this.params});
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +59,7 @@ class TransferReviewScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            "€ 1,000.00",
+                            Format.euro(params.amount),
                             style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold.copyWith(
                                   color: Colors.black,
                                 ),
@@ -61,7 +74,7 @@ class TransferReviewScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            "Reference account",
+                            Format.iban(params.toAccount),
                             style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold.copyWith(
                                   color: Colors.black,
                                 ),

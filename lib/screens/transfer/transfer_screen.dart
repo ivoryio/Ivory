@@ -36,7 +36,14 @@ class _TransferScreenState extends State<TransferScreen> {
 
   void onTapNext() {
     FocusScope.of(context).unfocus();
-    Navigator.pushNamed(context, TransferReviewScreen.routeName);
+    Navigator.pushNamed(
+      context,
+      TransferReviewScreen.routeName,
+      arguments: TransferReviewScreenParams(
+        amount: double.parse(amountController.text),
+        toAccount: _to.iban,
+      ),
+    );
   }
 
   @override

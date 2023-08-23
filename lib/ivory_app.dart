@@ -127,7 +127,11 @@ class _IvoryAppState extends State<IvoryApp> {
               RepaymentReminderScreen.routeName: (context) => const RepaymentReminderScreen(),
               // transfer
               TransferScreen.routeName: (context) => const TransferScreen(),
-              TransferReviewScreen.routeName: (context) => const TransferReviewScreen(),
+              TransferReviewScreen.routeName: (context) {
+                return TransferReviewScreen(
+                  params: ModalRoute.of(context)?.settings.arguments as TransferReviewScreenParams,
+                );
+              },
               TransferSignScreen.routeName: (context) => const TransferSignScreen(),
               TransferSuccessfulScreen.routeName: (context) => const TransferSuccessfulScreen(),
               // account
