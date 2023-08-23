@@ -34,17 +34,8 @@ class FakeTransactionService extends TransactionService {
       ],
     );
   }
-}
 
-class FakeFailingTransactionService extends TransactionService {
   @override
-  Future<TransactionsServiceResponse> getTransactions(
-      {TransactionListFilter? filter, User? user}) async {
-    return TransactionsServiceErrorResponse();
-  }
-}
-
-class FakeUpcomingTransactionService extends TransactionService {
   Future<UpcomingTransactionServiceResponse> getUpcomingTransactions({
     User? user,
   }) async {
@@ -64,5 +55,13 @@ class FakeUpcomingTransactionService extends TransactionService {
         ),
       ],
     );
+  }
+}
+
+class FakeFailingTransactionService extends TransactionService {
+  @override
+  Future<TransactionsServiceResponse> getTransactions(
+      {TransactionListFilter? filter, User? user}) async {
+    return TransactionsServiceErrorResponse();
   }
 }

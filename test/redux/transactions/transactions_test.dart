@@ -99,7 +99,7 @@ void main() {
       () async {
     //given
     final store = createTestStore(
-      transactionService: FakeUpcomingTransactionService(),
+      transactionService: FakeTransactionService(),
       initialState: createAppState(
         transactionsState: TransactionsInitialState(),
       ),
@@ -127,7 +127,7 @@ void main() {
       () async {
     //given
     final store = createTestStore(
-      transactionService: FakeUpcomingTransactionService(),
+      transactionService: FakeTransactionService(),
       initialState: createAppState(
         transactionsState: TransactionsInitialState(),
       ),

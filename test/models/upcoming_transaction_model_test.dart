@@ -28,7 +28,7 @@ void main() {
         repaymentType: 'type1',
         minimumAmount:
             CardBillAmount(value: 100.0, unit: 'cents', currency: 'EUR'),
-        minimumPercentage: 100.0,
+        minimumPercentage: 100,
         gracePeriodInDays: 1,
         dunningFees:
             CardBillAmount(value: 100.0, unit: 'cents', currency: 'EUR'),

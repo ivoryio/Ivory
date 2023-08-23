@@ -115,11 +115,11 @@ void main() {
       "When fetching upcoming transactions is successful should return a list of upcoming transactions",
       () {
     //given
-    final transactionsState =
+    final upcomingTransactionsState =
         UpcomingTransactionsFetchedState(upcomingTransactions, null);
     //when
     final viewModel = TransactionPresenter.presentTransactions(
-        transactionsState: transactionsState);
+        transactionsState: upcomingTransactionsState);
     //then
     expect(
         viewModel,

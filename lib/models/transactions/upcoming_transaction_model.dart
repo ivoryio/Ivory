@@ -15,7 +15,7 @@ class UpcomingTransaction {
   CardBillAmount? outstandingAmount;
   String? repaymentType;
   CardBillAmount? minimumAmount;
-  double? minimumPercentage;
+  int? minimumPercentage;
   int? gracePeriodInDays;
   CardBillAmount? dunningFees;
   CardBillAmount? otherFees;

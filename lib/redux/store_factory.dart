@@ -17,7 +17,6 @@ Store<AppState> createStore({
   required AppState initialState,
   required PushNotificationService pushNotificationService,
   required TransactionService transactionService,
-  required TransactionService upcomingTransactionService,
   required CreditLineService creditLineService,
   required RepaymentReminderService repaymentReminderService,
   required CategoriesService categoriesService,
@@ -28,7 +27,6 @@ Store<AppState> createStore({
     middleware: [
       NotificationsMiddleware(pushNotificationService),
       GetTransactionsMiddleware(transactionService),
-      GetTransactionsMiddleware(upcomingTransactionService),
       GetCreditLineMiddleware(creditLineService),
       RepaymentRemindersMiddleware(repaymentReminderService),
       GetCategoriesMiddleware(categoriesService),

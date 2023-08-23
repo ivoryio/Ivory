@@ -56,7 +56,7 @@ class TransactionService extends ApiService {
     }
 
     try {
-      var data = await get('/account/transactions/credit_card_bills');
+      var data = await get('/bills/upcoming_bills');
 
       List<UpcomingTransaction> upcomingTransactions = (data as List)
           .map((transaction) => UpcomingTransaction.fromJson(transaction))
@@ -69,12 +69,12 @@ class TransactionService extends ApiService {
           outstandingAmount:
               CardBillAmount(value: 496.22, unit: "cents", currency: "EUR"),
         ),
-        // UpcomingTransaction(
-        //   statementDate: DateTime.now().add(const Duration(days: 7)),
-        //   dueDate: DateTime.now().add(const Duration(days: 7)),
-        //   outstandingAmount:
-        //       CardBillAmount(value: 123.45, unit: "cents", currency: "EUR"),
-        // ),
+        UpcomingTransaction(
+          statementDate: DateTime.now().add(const Duration(days: 7)),
+          dueDate: DateTime.now().add(const Duration(days: 7)),
+          outstandingAmount:
+              CardBillAmount(value: 123.45, unit: "cents", currency: "EUR"),
+        ),
       });
 
       return GetUpcomingTransactionsSuccessResponse(

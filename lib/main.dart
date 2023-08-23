@@ -41,7 +41,6 @@ Store<AppState> _buildStore() {
     initialState: AppState.initialState(),
     pushNotificationService: FirebasePushNotificationService(),
     transactionService: TransactionService(),
-    upcomingTransactionService: TransactionService(),
     creditLineService: CreditLineService(),
     repaymentReminderService: RepaymentReminderService(),
     categoriesService: CategoriesService(),

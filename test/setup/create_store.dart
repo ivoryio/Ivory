@@ -23,8 +23,6 @@ Store<AppState> createTestStore({
         pushNotificationService ?? NotImplementedPushNotificationService(),
     transactionService:
         transactionService ?? NotImplementedTransactionService(),
-    upcomingTransactionService:
-        transactionService ?? NotImplementedUpcomingTransactionService(),
     creditLineService: creditLineService ?? NotImplementedCreditLineService(),
     repaymentReminderService:
         repaymentReminderService ?? NotImplementedRepaymentReminderService(),
@@ -50,9 +48,7 @@ class NotImplementedTransactionService extends TransactionService {
       {TransactionListFilter? filter, User? user}) {
     throw UnimplementedError();
   }
-}
 
-class NotImplementedUpcomingTransactionService extends TransactionService {
   @override
   Future<UpcomingTransactionServiceResponse> getUpcomingTransactions(
       {User? user}) {
