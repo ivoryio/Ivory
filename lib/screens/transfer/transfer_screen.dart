@@ -235,13 +235,3 @@ class _TransferScreenState extends State<TransferScreen> {
     );
   }
 }
-
-enum TransferType { person, business }
-
-class TransferScreenParams {
-  final TransferType transferType;
-
-  const TransferScreenParams({
-    required this.transferType,
-  });
-}
