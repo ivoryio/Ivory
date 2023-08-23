@@ -26,7 +26,7 @@ class Transfer {
   final String endToEndId;
   final String recipientName;
   final String recipientIban;
-  final Amount amount;
+  final AmountTransfer amount;
 
   factory Transfer.fromRawJson(String str) =>
       Transfer.fromJson(json.decode(str));
@@ -41,7 +41,7 @@ class Transfer {
         endToEndId: json["end_to_end_id"],
         recipientName: json["recipient_name"],
         recipientIban: json["recipient_iban"],
-        amount: Amount.fromJson(json["amount"]),
+        amount: AmountTransfer.fromJson(json["amount"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -56,8 +56,8 @@ class Transfer {
       };
 }
 
-class Amount {
-  Amount({
+class AmountTransfer {
+  AmountTransfer({
     required this.value,
     required this.currency,
   });
@@ -65,11 +65,12 @@ class Amount {
   final num value;
   final String currency;
 
-  factory Amount.fromRawJson(String str) => Amount.fromJson(json.decode(str));
+  factory AmountTransfer.fromRawJson(String str) =>
+      AmountTransfer.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory Amount.fromJson(Map<String, dynamic> json) => Amount(
+  factory AmountTransfer.fromJson(Map<String, dynamic> json) => AmountTransfer(
         value: json["value"],
         currency: json["currency"],
       );

@@ -93,7 +93,7 @@ class TransferCubit extends Cubit<TransferState> {
         recipientBic: 'SOBKDEB2XXX',
         endToEndId: '',
         type: TransferType.SEPA_CREDIT_TRANSFER,
-        amount: Amount(value: amount, currency: 'EUR'),
+        amount: AmountTransfer(value: amount, currency: 'EUR'),
       ));
 
       await Future.delayed(const Duration(seconds: 1));

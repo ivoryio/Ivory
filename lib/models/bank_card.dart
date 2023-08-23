@@ -43,6 +43,7 @@ enum BankCardType {
   VIRTUAL_VISA_FREELANCE_DEBIT,
   VIRTUAL_VISA_CREDIT,
   VISA_CREDIT,
+  VISA_DEBIT,
 }
 
 class BankCard {
@@ -103,6 +104,8 @@ BankCardType getCardType(String type) {
       return BankCardType.VIRTUAL_VISA_CREDIT;
     case 'VISA_CREDIT':
       return BankCardType.VISA_CREDIT;
+    case 'VISA_DEBIT':
+      return BankCardType.VISA_DEBIT;
     default:
       throw Exception('Unknown CardType: $type');
   }

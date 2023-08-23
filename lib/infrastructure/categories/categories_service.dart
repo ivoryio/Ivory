@@ -7,8 +7,10 @@ import '../../models/user.dart';
 class CategoriesService extends ApiService {
   CategoriesService({super.user});
 
-  Future<CategoriesServiceResponse> getCategories({User? user}) async{
-    if(user != null) {this.user = user;}
+  Future<CategoriesServiceResponse> getCategories({User? user}) async {
+    if (user != null) {
+      this.user = user;
+    }
 
     try {
       final response = await get("/transactions/categories");
@@ -20,7 +22,7 @@ class CategoriesService extends ApiService {
       }).toList();
 
       return GetCategoriesSuccessResponse(categories: categories);
-    } catch(e) {
+    } catch (e) {
       return CategoriesServiceErrorResponse();
     }
   }

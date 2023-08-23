@@ -1,4 +1,5 @@
 import 'package:redux/redux.dart';
+import 'package:solarisdemo/infrastructure/bank_card/bank_card_service.dart';
 import 'package:solarisdemo/infrastructure/categories/categories_service.dart';
 import 'package:solarisdemo/infrastructure/credit_line/credit_line_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
@@ -15,16 +16,35 @@ Store<AppState> createTestStore({
   TransactionService? transactionService,
   CreditLineService? creditLineService,
   RepaymentReminderService? repaymentReminderService,
+  BankCardService? bankCardService,
   CategoriesService? categoriesService,
 }) {
   return createStore(
     initialState: initialState,
-    pushNotificationService: pushNotificationService ?? NotImplementedPushNotificationService(),
-    transactionService: transactionService ?? NotImplementedTransactionService(),
+    pushNotificationService:
+        pushNotificationService ?? NotImplementedPushNotificationService(),
+    transactionService:
+        transactionService ?? NotImplementedTransactionService(),
     creditLineService: creditLineService ?? NotImplementedCreditLineService(),
-    repaymentReminderService: repaymentReminderService ?? NotImplementedRepaymentReminderService(),
+    repaymentReminderService:
+        repaymentReminderService ?? NotImplementedRepaymentReminderService(),
+    bankCardService: bankCardService ?? NotImplementedBankCardService(),
     categoriesService: categoriesService ?? NotImplementedCategoriesService(),
   );
+}
+
+class NotImplementedBankCardService extends BankCardService {
+  @override
+  Future<BankCardServiceResponse> getBankCardById(
+      {User? user, String? cardId}) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<BankCardServiceResponse> activateBankCard(
+      {User? user, String? cardId}) {
+    throw UnimplementedError();
+  }
 }
 
 class NotImplementedPushNotificationService extends PushNotificationService {
@@ -41,7 +61,14 @@ class NotImplementedPushNotificationService extends PushNotificationService {
 
 class NotImplementedTransactionService extends TransactionService {
   @override
-  Future<TransactionsServiceResponse> getTransactions({TransactionListFilter? filter, User? user}) {
+  Future<TransactionsServiceResponse> getTransactions(
+      {TransactionListFilter? filter, User? user}) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<UpcomingTransactionServiceResponse> getUpcomingTransactions(
+      {User? user}) {
     throw UnimplementedError();
   }
 }
