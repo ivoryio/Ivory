@@ -34,7 +34,9 @@ class TransactionListItem extends StatelessWidget {
     var senderName = removeUnrelatedWords(transaction.senderName);
 
     final date = transaction.recordedAt!.toIso8601String();
-    final displayedName = user.personAccount.iban == transaction.senderIban ? recipientName : senderName;
+    final displayedName = user.personAccount.iban == transaction.senderIban
+        ? recipientName
+        : senderName;
     final description = transaction.description!;
     final amount = transaction.amount?.value ?? 0;
 
@@ -62,7 +64,6 @@ class TransactionListItem extends StatelessWidget {
 
   removeUnrelatedWords(fullName) {
     var pattern = RegExp(r' X-');
-
     var storageResult = fullName!.split(pattern)[0];
     storageResult = storageResult.substring(0, shortenName(storageResult));
 
@@ -110,7 +111,10 @@ class TransactionCard extends StatelessWidget {
                 width: 16,
               ),
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(recipientName.isNotEmpty ? recipientName : defaultTransactionRecipientName,
+                Text(
+                    recipientName.isNotEmpty
+                        ? recipientName
+                        : defaultTransactionRecipientName,
                     style: const TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 16,
@@ -146,7 +150,8 @@ class TransactionBottomPopup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final DateFormat dateFormatter = DateFormat('d MMMM yyyy, HH:Hm ');
-    final String formattedDate = dateFormatter.format(DateTime.parse(transaction.recordedAt!.toIso8601String()));
+    final String formattedDate = dateFormatter
+        .format(DateTime.parse(transaction.recordedAt!.toIso8601String()));
 
     return Column(
       children: [
