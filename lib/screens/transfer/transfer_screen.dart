@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solarisdemo/config.dart';
@@ -21,6 +22,13 @@ class TransferScreen extends StatefulWidget {
 }
 
 class _TransferScreenState extends State<TransferScreen> {
+  late _Account _from;
+  _Account _to = _ReferenceAccount(
+    title: "Reference account",
+    iban: "DE12345678901234567890",
+    bankName: "Deutsche Bank",
+  );
+
   late AuthenticatedUser user;
   String? _errorText;
   bool _canContinue = false;
@@ -36,6 +44,11 @@ class _TransferScreenState extends State<TransferScreen> {
     super.initState();
 
     user = context.read<AuthCubit>().state.user!;
+    _from = _PorscheAccount(
+      title: "Porsche account",
+      iban: user.personAccount.iban!,
+      balance: user.personAccount.availableBalance!.value,
+    );
 
     amountController.addListener(() {
       setState(() {
@@ -75,21 +88,12 @@ class _TransferScreenState extends State<TransferScreen> {
                 ),
                 child: Column(
                   children: [
-                    _buildCard(
-                      title: "Porsche account",
-                      iban: user.personAccount.iban!,
-                      balance: user.personAccount.availableBalance!.value,
-                      isReference: true,
-                    ),
+                    _buildCard(_from),
                     const Padding(
                       padding: EdgeInsets.all(4.0),
                       child: Icon(Icons.arrow_downward),
                     ),
-                    _buildCard(
-                      title: "Reference account",
-                      iban: "DE12345678901234567890",
-                      bankName: "Deutsche Bank",
-                    ),
+                    _buildCard(_to),
                     const SizedBox(height: 32),
                     Text(
                       "Enter transfer amount",
@@ -114,9 +118,29 @@ class _TransferScreenState extends State<TransferScreen> {
                     ],
                     const SizedBox(height: 40),
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        if (_from is _PorscheAccount) {
+                          setState(() {
+                            _from = _to;
+                            _to = _PorscheAccount(
+                              title: "Porsche account",
+                              iban: user.personAccount.iban!,
+                              balance: user.personAccount.availableBalance!.value,
+                            );
+                          });
+                        } else {
+                          setState(() {
+                            _to = _from;
+                            _from = _PorscheAccount(
+                              title: "Porsche account",
+                              iban: user.personAccount.iban!,
+                              balance: user.personAccount.availableBalance!.value,
+                            );
+                          });
+                        }
+                      },
                       child: Text(
-                        "Want to top up your Porsche account?",
+                        "Want to top up your ${_from is _PorscheAccount ? 'Porsche' : 'Reference'} account?",
                         style: ClientConfig.getTextStyleScheme()
                             .bodyLargeRegularBold
                             .copyWith(color: const Color(0xFF406FE6)),
@@ -145,13 +169,7 @@ class _TransferScreenState extends State<TransferScreen> {
     );
   }
 
-  Widget _buildCard({
-    required String title,
-    required String iban,
-    num? balance,
-    String? bankName,
-    bool isReference = false,
-  }) {
+  Widget _buildCard(_Account account) {
     return IvoryCard(
       child: Column(
         children: [
@@ -159,11 +177,11 @@ class _TransferScreenState extends State<TransferScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(children: [
-              Text(title, style: ClientConfig.getTextStyleScheme().heading4),
-              if (balance != null) ...[
+              Text(account.title, style: ClientConfig.getTextStyleScheme().heading4),
+              if (account is _PorscheAccount) ...[
                 const Spacer(),
                 Text(
-                  "€${balance.toStringAsFixed(2)}",
+                  "€${account.balance.toStringAsFixed(2)}",
                   style: ClientConfig.getTextStyleScheme().heading4,
                 ),
                 Text("*", style: ClientConfig.getTextStyleScheme().heading4.copyWith(color: Colors.red)),
@@ -176,10 +194,10 @@ class _TransferScreenState extends State<TransferScreen> {
             child: Row(
               children: [
                 Text(
-                  Format.iban(iban),
+                  Format.iban(account.iban),
                   style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(color: const Color(0xFF56555E)),
                 ),
-                if (balance != null) ...[
+                if (account is _PorscheAccount) ...[
                   const Spacer(),
                   Text(
                     "Balance",
@@ -189,14 +207,14 @@ class _TransferScreenState extends State<TransferScreen> {
               ],
             ),
           ),
-          if (bankName != null) ...[
+          if (account is _ReferenceAccount) ...[
             const SizedBox(height: 4),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 children: [
                   Text(
-                    bankName,
+                    account.bankName,
                     style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(color: const Color(0xFF56555E)),
                   ),
                 ],
@@ -204,7 +222,7 @@ class _TransferScreenState extends State<TransferScreen> {
             ),
           ],
           const SizedBox(height: 16),
-          if (isReference) ...[
+          if (account is _PorscheAccount) ...[
             const Divider(height: 1),
             Padding(
               padding: const EdgeInsets.all(16),
@@ -234,4 +252,44 @@ class _TransferScreenState extends State<TransferScreen> {
       ),
     );
   }
+}
+
+// TODO: temporary solution until we have the real data
+abstract class _Account extends Equatable {
+  final String title;
+  final String iban;
+
+  const _Account({
+    required this.title,
+    required this.iban,
+  });
+
+  @override
+  List<Object?> get props => [title, iban];
+}
+
+class _PorscheAccount extends _Account {
+  final num balance;
+
+  const _PorscheAccount({
+    required super.title,
+    required super.iban,
+    required this.balance,
+  });
+
+  @override
+  List<Object?> get props => [title, iban, balance];
+}
+
+class _ReferenceAccount extends _Account {
+  final String bankName;
+
+  const _ReferenceAccount({
+    required super.title,
+    required super.iban,
+    required this.bankName,
+  });
+
+  @override
+  List<Object?> get props => [title, iban, bankName];
 }
