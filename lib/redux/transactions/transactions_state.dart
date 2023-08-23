@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-// import '../../models/transaction_model.dart';
-import '../../models/upcoming_transactions.dart';
+import '../../models/transactions/upcoming_transaction_model.dart';
 import '../../models/transactions/transaction_model.dart';
 
 abstract class TransactionsState extends Equatable {

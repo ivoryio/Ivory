@@ -2,11 +2,11 @@ import 'dart:developer';
 
 import 'package:equatable/equatable.dart';
 
-import '../../models/upcoming_transactions.dart';
 import '../../models/user.dart';
 import '../../services/api_service.dart';
 import '../../models/transfer.dart';
 import '../../models/transactions/transaction_model.dart';
+import '../../models/transactions/upcoming_transaction_model.dart';
 import '../../models/authorization_request.dart';
 
 class TransactionService extends ApiService {

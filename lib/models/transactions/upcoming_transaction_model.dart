@@ -98,24 +98,44 @@ class UpcomingTransaction {
     data['id'] = id;
     data['application_id'] = applicationId;
     data['status'] = status;
-    data['start_date'] = startDate;
-    data['end_date'] = endDate;
-    data['statement_date'] = statementDate;
-    data['due_date'] = dueDate;
-    data['sdd_collection_date'] = sddCollectionDate;
-    data['previous_bill_amount'] = previousBillAmount;
-    data['current_bill_amount'] = currentBillAmount;
-    data['total_outstanding_amount'] = totalOutstandingAmount;
-    data['minimum_due_amount'] = minimumDueAmount;
-    data['outstanding_sddr_amount'] = outstandingSddrAmount;
-    data['outstanding_amount'] = outstandingAmount;
+    data['start_date'] = startDate!.toIso8601String();
+    data['end_date'] = endDate!.toIso8601String();
+    data['statement_date'] = statementDate!.toIso8601String();
+    data['due_date'] = dueDate!.toIso8601String();
+    data['sdd_collection_date'] = sddCollectionDate!.toIso8601String();
+    if (data['previous_bill_amount'] == null) {
+      data['previous_bill_amount'] = previousBillAmount!.toJson();
+    }
+    if (data['current_bill_amount'] == null) {
+      data['current_bill_amount'] = currentBillAmount!.toJson();
+    }
+    if (data['total_outstanding_amount'] == null) {
+      data['total_outstanding_amount'] = totalOutstandingAmount!.toJson();
+    }
+    if (data['minimum_due_amount'] == null) {
+      data['minimum_due_amount'] = minimumDueAmount!.toJson();
+    }
+    if (data['outstanding_sddr_amount'] == null) {
+      data['outstanding_sddr_amount'] = outstandingSddrAmount!.toJson();
+    }
+    if (data['outstanding_amount'] == null) {
+      data['outstanding_amount'] = outstandingAmount!.toJson();
+    }
     data['repayment_type'] = repaymentType;
-    data['minimum_amount'] = minimumAmount;
+    if (data['minimum_amount'] == null) {
+      data['minimum_amount'] = minimumAmount!.toJson();
+    }
     data['minimum_percentage'] = minimumPercentage;
     data['grace_period_in_days'] = gracePeriodInDays;
-    data['dunning_fees'] = dunningFees;
-    data['other_fees'] = otherFees;
-    data['accumulated_interest_amount'] = accumulatedInterestAmount;
+    if (data['dunning_fees'] == null) {
+      data['dunning_fees'] = dunningFees!.toJson();
+    }
+    if (data['other_fees'] == null) {
+      data['other_fees'] = otherFees!.toJson();
+    }
+    if (data['accumulated_interest_amount'] == null) {
+      data['accumulated_interest_amount'] = accumulatedInterestAmount!.toJson();
+    }
     data['postbox_item_id'] = postboxItemId;
 
     return data;

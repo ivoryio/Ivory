@@ -19,10 +19,15 @@ Store<AppState> createTestStore({
 }) {
   return createStore(
     initialState: initialState,
-    pushNotificationService: pushNotificationService ?? NotImplementedPushNotificationService(),
-    transactionService: transactionService ?? NotImplementedTransactionService(),
+    pushNotificationService:
+        pushNotificationService ?? NotImplementedPushNotificationService(),
+    transactionService:
+        transactionService ?? NotImplementedTransactionService(),
+    upcomingTransactionService:
+        transactionService ?? NotImplementedUpcomingTransactionService(),
     creditLineService: creditLineService ?? NotImplementedCreditLineService(),
-    repaymentReminderService: repaymentReminderService ?? NotImplementedRepaymentReminderService(),
+    repaymentReminderService:
+        repaymentReminderService ?? NotImplementedRepaymentReminderService(),
     categoriesService: categoriesService ?? NotImplementedCategoriesService(),
   );
 }
@@ -41,7 +46,16 @@ class NotImplementedPushNotificationService extends PushNotificationService {
 
 class NotImplementedTransactionService extends TransactionService {
   @override
-  Future<TransactionsServiceResponse> getTransactions({TransactionListFilter? filter, User? user}) {
+  Future<TransactionsServiceResponse> getTransactions(
+      {TransactionListFilter? filter, User? user}) {
+    throw UnimplementedError();
+  }
+}
+
+class NotImplementedUpcomingTransactionService extends TransactionService {
+  @override
+  Future<UpcomingTransactionServiceResponse> getUpcomingTransactions(
+      {User? user}) {
     throw UnimplementedError();
   }
 }

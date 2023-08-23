@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:solarisdemo/redux/transactions/transactions_state.dart';
 
-import '../../models/upcoming_transactions.dart';
+import '../../models/transactions/upcoming_transaction_model.dart';
 import '../../models/transactions/transaction_model.dart';
 
 class TransactionPresenter {

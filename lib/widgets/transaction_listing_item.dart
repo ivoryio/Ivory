@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:intl/intl.dart';
-import 'package:solarisdemo/models/upcoming_transactions.dart';
 import 'package:solarisdemo/screens/splitpay/splitpay_screen.dart';
 
 import '../config.dart';
 import '../cubits/auth_cubit/auth_cubit.dart';
 import '../models/transactions/transaction_model.dart';
+import '../models/transactions/upcoming_transaction_model.dart';
 import '../models/user.dart';
 import '../utilities/format.dart';
 import 'button.dart';

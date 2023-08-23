@@ -13,7 +13,8 @@ AppState createAppState({
   return AppState(
     transactionsState: transactionsState ?? TransactionsInitialState(),
     creditLineState: creditLineState ?? CreditLineInitialState(),
-    repaymentReminderState: repaymentReminderState ?? RepaymentReminderInitialState(),
+    repaymentReminderState:
+        repaymentReminderState ?? RepaymentReminderInitialState(),
     categoriesState: categoriesState ?? CategoriesInitialState(),
   );
 }
