@@ -19,6 +19,7 @@ class PinField extends StatefulWidget {
 class PinFieldState extends State<PinField> {
   bool _hasText = false;
   bool _isInvalid = false;
+  bool _isDone = false;
 
   @override
   void initState() {
@@ -41,13 +42,7 @@ class PinFieldState extends State<PinField> {
           width: 10,
           height: 10,
           decoration: BoxDecoration(
-            color: _isInvalid
-                ? Colors.red
-                : (_hasText
-                    ? Colors.green
-                    : const Color(
-                        0xFFADADB4,
-                      )),
+            color: decideColor(),
             shape: BoxShape.circle,
           ),
           child: TextField(
@@ -86,10 +81,36 @@ class PinFieldState extends State<PinField> {
     });
   }
 
+  void setFieldDone() {
+    setState(() {
+      _isDone = true;
+    });
+  }
+
+  void setFieldUndone() {
+    setState(() {
+      _isDone = false;
+    });
+  }
+
   @override
   void dispose() {
     widget.controller.removeListener(_handleTextChanged);
     super.dispose();
+  }
+
+  decideColor() {
+    if (_isInvalid) {
+      return const Color(0xFFE61F27);
+    } else if (_isDone) {
+      return const Color(0xFF00774C);
+    } else if (_hasText) {
+      return const Color(0xFF15141E);
+    } else {
+      return const Color(
+        0xFFADADB4,
+      );
+    }
   }
 }
 
@@ -189,7 +210,7 @@ class FourDigitPinCodeInputState extends State<FourDigitPinCodeInput> {
   void toggleValidity() {
     setAllFieldsInvalid();
     Future.delayed(
-      const Duration(milliseconds: 2000),
+      const Duration(milliseconds: 1000),
       () {
         if (mounted) {
           setAllFieldsValid();
@@ -207,6 +228,18 @@ class FourDigitPinCodeInputState extends State<FourDigitPinCodeInput> {
   void setAllFieldsInvalid() {
     for (var pinField in pinFieldKeys) {
       pinField.currentState!.setFieldInvalid();
+    }
+  }
+
+  void setAllFieldsDone() {
+    for (var pinField in pinFieldKeys) {
+      pinField.currentState!.setFieldDone();
+    }
+  }
+
+  void setAllFieldsUndone() {
+    for (var pinField in pinFieldKeys) {
+      pinField.currentState!.setFieldUndone();
     }
   }
 }

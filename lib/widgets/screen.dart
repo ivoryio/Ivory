@@ -17,26 +17,23 @@ class Screen extends StatelessWidget {
   final Function? customBackButtonCallback;
   final BottomStickyWidget? bottomStickyWidget;
   final ScrollPhysics? scrollPhysics;
-  final BottomProgressBarPagesIndicator? bottomProgressBarPages;
 
-  const Screen({
-    super.key,
-    this.onRefresh,
-    this.appBarColor,
-    this.backButtonIcon,
-    required this.child,
-    this.title,
-    this.titleTextStyle,
-    this.trailingActions,
-    this.hideAppBar = false,
-    this.centerTitle = true,
-    this.bottomStickyWidget,
-    this.hideBackButton = false,
-    this.hideBottomNavbar = false,
-    this.customBackButtonCallback,
-    this.scrollPhysics,
-    this.bottomProgressBarPages,
-  });
+  const Screen(
+      {super.key,
+      this.onRefresh,
+      this.appBarColor,
+      this.backButtonIcon,
+      required this.child,
+      this.title,
+      this.titleTextStyle,
+      this.trailingActions,
+      this.hideAppBar = false,
+      this.centerTitle = true,
+      this.bottomStickyWidget,
+      this.hideBackButton = false,
+      this.hideBottomNavbar = false,
+      this.customBackButtonCallback,
+      this.scrollPhysics});
 
   @override
   Widget build(BuildContext context) {
@@ -44,9 +41,7 @@ class Screen extends StatelessWidget {
         ? null
         : createAppBar(
             context,
-            title: bottomProgressBarPages != null
-                ? 'Step ${bottomProgressBarPages!.pageNumber} out of ${bottomProgressBarPages!.numberOfPages}'
-                : title ?? '',
+            title: title ?? '',
             centerTitle: centerTitle,
             backgroundColor: appBarColor,
             hideBackButton: hideBackButton,
@@ -54,9 +49,6 @@ class Screen extends StatelessWidget {
             backButtonIcon: backButtonIcon,
             trailingActions: trailingActions,
             customBackButtonCallback: customBackButtonCallback,
-            bottom: bottomProgressBarPages != null
-                ? bottomProgressBarWidget(bottomProgressBarPages!)
-                : null,
           );
 
     ScrollPhysics? physics = onRefresh != null
@@ -230,26 +222,4 @@ class BottomStickyWidget extends StatelessWidget {
       ),
     );
   }
-}
-
-PreferredSizeWidget bottomProgressBarWidget(
-    BottomProgressBarPagesIndicator pages) {
-  return PreferredSize(
-    preferredSize: const Size.fromHeight(4),
-    child: LinearProgressIndicator(
-      value: pages.pageNumber / pages.numberOfPages,
-      color: const Color(0xFFCC0000),
-      backgroundColor: const Color(0xFFE9EAEB),
-    ),
-  );
-}
-
-class BottomProgressBarPagesIndicator {
-  final int pageNumber;
-  final int numberOfPages;
-
-  const BottomProgressBarPagesIndicator({
-    required this.pageNumber,
-    required this.numberOfPages,
-  });
 }
