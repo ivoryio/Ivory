@@ -65,6 +65,12 @@ class NotImplementedTransactionService extends TransactionService {
       {TransactionListFilter? filter, User? user}) {
     throw UnimplementedError();
   }
+
+  @override
+  Future<UpcomingTransactionServiceResponse> getUpcomingTransactions(
+      {User? user}) {
+    throw UnimplementedError();
+  }
 }
 
 class NotImplementedCreditLineService extends CreditLineService {
