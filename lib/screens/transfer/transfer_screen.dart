@@ -3,11 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/models/user.dart';
+import 'package:solarisdemo/screens/transfer/transfer_review_screen.dart';
 import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
-import 'package:solarisdemo/widgets/card_rounded_corners.dart';
 import 'package:solarisdemo/widgets/currency_text_field.dart';
+import 'package:solarisdemo/widgets/ivory_card.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 class TransferScreen extends StatefulWidget {
@@ -24,6 +25,11 @@ class _TransferScreenState extends State<TransferScreen> {
   String? _errorText;
   bool _canContinue = false;
   final amountController = TextEditingController();
+
+  void onTapNext() {
+    FocusScope.of(context).unfocus();
+    Navigator.pushNamed(context, TransferReviewScreen.routeName);
+  }
 
   @override
   void initState() {
@@ -55,7 +61,12 @@ class _TransferScreenState extends State<TransferScreen> {
     return ScreenScaffold(
       body: Column(
         children: [
-          const AppToolbar(title: "Transfer"),
+          AppToolbar(
+            title: "Transfer",
+            padding: EdgeInsets.symmetric(
+              horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+            ),
+          ),
           Expanded(
             child: SingleChildScrollView(
               child: Padding(
@@ -124,7 +135,7 @@ class _TransferScreenState extends State<TransferScreen> {
               ),
               child: PrimaryButton(
                 text: "Next",
-                onPressed: _canContinue ? () {} : null,
+                onPressed: _canContinue ? onTapNext : null,
               ),
             ),
           ),
@@ -141,7 +152,7 @@ class _TransferScreenState extends State<TransferScreen> {
     String? bankName,
     bool isReference = false,
   }) {
-    return CardRoundedCorners(
+    return IvoryCard(
       child: Column(
         children: [
           const SizedBox(height: 16),

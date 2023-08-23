@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:solarisdemo/config.dart';
 
 class AppToolbar extends StatelessWidget {
   final Color backgroundColor;
@@ -28,9 +27,7 @@ class AppToolbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: padding != null
-          ? padding!
-          : EdgeInsets.symmetric(horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding),
+      padding: padding != null ? padding! : null,
       color: backgroundColor,
       child: AppBar(
         actions: actions,

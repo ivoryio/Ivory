@@ -29,6 +29,9 @@ import 'package:solarisdemo/screens/wallet/card_details_screen.dart';
 import 'package:solarisdemo/screens/wallet/cards_screen.dart';
 import 'package:solarisdemo/services/auth_service.dart';
 
+import 'screens/transfer/transfer_review_screen.dart';
+import 'screens/transfer/transfer_successful_screen.dart';
+
 class IvoryApp extends StatefulWidget {
   static final routeObserver = RouteObserver<PageRoute<dynamic>>();
 
@@ -112,6 +115,8 @@ class _IvoryAppState extends State<IvoryApp> {
               RepaymentReminderScreen.routeName: (context) => const RepaymentReminderScreen(),
               // transfer
               TransferScreen.routeName: (context) => const TransferScreen(),
+              TransferReviewScreen.routeName: (context) => const TransferReviewScreen(),
+              TransferSuccessfulScreen.routeName: (context) => const TransferSuccessfulScreen(),
               // account
               AccountDetailsScreen.routeName: (context) => const AccountDetailsScreen(),
               // splitpay

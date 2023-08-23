@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class CardRoundedCorners extends StatelessWidget {
+class IvoryCard extends StatelessWidget {
   final BorderRadiusGeometry borderRadius;
   final Color color;
   final Widget child;
   final EdgeInsets padding;
 
-  const CardRoundedCorners({
+  const IvoryCard({
     super.key,
     required this.child,
     this.color = const Color(0xFFF8F9FA),
