@@ -1,26 +1,57 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
+import 'package:solarisdemo/widgets/card_rounded_corners.dart';
+import 'package:solarisdemo/widgets/currency_text_field.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
-const EURO_SYMBOL = "€";
-
-class TransferScreen extends StatelessWidget {
+class TransferScreen extends StatefulWidget {
   static const routeName = "/transferScreen";
 
   const TransferScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
+  State<TransferScreen> createState() => _TransferScreenState();
+}
 
+class _TransferScreenState extends State<TransferScreen> {
+  late AuthenticatedUser user;
+  String? _errorText;
+  bool _canContinue = false;
+  final amountController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    user = context.read<AuthCubit>().state.user!;
+
+    amountController.addListener(() {
+      setState(() {
+        final value = double.tryParse(amountController.text) ?? 0;
+        final balance = user.personAccount.availableBalance!.value;
+
+        if (value > balance) {
+          _errorText = "Insufficient funds";
+          _canContinue = false;
+        } else if (value > 0) {
+          _errorText = null;
+          _canContinue = true;
+        } else {
+          _errorText = null;
+          _canContinue = false;
+        }
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return ScreenScaffold(
       body: Column(
         children: [
@@ -48,22 +79,56 @@ class TransferScreen extends StatelessWidget {
                       iban: "DE12345678901234567890",
                       bankName: "Deutsche Bank",
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 32),
                     Text(
                       "Enter transfer amount",
-                      style:
-                          ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(color: const Color(0xFF56555E)),
+                      style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(
+                            color: _errorText != null ? Colors.red : Color(0xFF56555E),
+                            fontWeight: FontWeight.w600,
+                          ),
                     ),
-                    _TransferAmountTextField(),
+                    CurrencyTextField(
+                      controller: amountController,
+                      error: _errorText != null,
+                    ),
+                    if (_errorText != null) ...[
+                      const SizedBox(height: 8),
+                      Text(
+                        _errorText!,
+                        style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(
+                              color: Colors.red,
+                              fontWeight: FontWeight.w600,
+                            ),
+                      ),
+                    ],
+                    const SizedBox(height: 40),
+                    InkWell(
+                      onTap: () {},
+                      child: Text(
+                        "Want to top up your Porsche account?",
+                        style: ClientConfig.getTextStyleScheme()
+                            .bodyLargeRegularBold
+                            .copyWith(color: const Color(0xFF406FE6)),
+                      ),
+                    ),
                   ],
                 ),
               ),
             ),
           ),
-          PrimaryButton(
-            text: "Transfer",
-            onPressed: () {},
+          SizedBox(
+            width: double.infinity,
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+              ),
+              child: PrimaryButton(
+                text: "Next",
+                onPressed: _canContinue ? () {} : null,
+              ),
+            ),
           ),
+          const SizedBox(height: 16),
         ],
       ),
     );
@@ -76,7 +141,7 @@ class TransferScreen extends StatelessWidget {
     String? bankName,
     bool isReference = false,
   }) {
-    return _Card(
+    return CardRoundedCorners(
       child: Column(
         children: [
           const SizedBox(height: 16),
@@ -160,24 +225,6 @@ class TransferScreen extends StatelessWidget {
   }
 }
 
-class _Card extends StatelessWidget {
-  final Widget child;
-
-  const _Card({required this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        color: const Color(0xFFF8F9FA),
-      ),
-      child: child,
-    );
-  }
-}
-
 enum TransferType { person, business }
 
 class TransferScreenParams {
@@ -186,79 +233,4 @@ class TransferScreenParams {
   const TransferScreenParams({
     required this.transferType,
   });
-}
-
-class EuroInputFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-    final valueWithoutCurrencySymbol =
-        newValue.text.replaceAll(EURO_SYMBOL, '').replaceAll(RegExp(r'[^0-9.]'), '').trim();
-    final textValue = RegExp(r'^\d{0,6}\.?\d{0,2}').stringMatch(valueWithoutCurrencySymbol) ?? "";
-    final decimals = RegExp(r'\.(\d{0,2})').stringMatch(textValue)?.substring(1) ?? "";
-
-    if (textValue.isEmpty) {
-      return const TextEditingValue(
-        text: "",
-        selection: TextSelection.collapsed(offset: 0),
-      );
-    }
-
-    NumberFormat formatter = NumberFormat.currency(
-      locale: "en_US",
-      symbol: "€ ",
-      decimalDigits: decimals.length,
-    );
-
-    final formattedValue = formatter.format(double.tryParse(textValue) ?? 0.00);
-
-    if (textValue.endsWith(".")) {
-      return TextEditingValue(
-        text: "$formattedValue.",
-        selection: TextSelection.collapsed(offset: formattedValue.length + 1),
-      );
-    }
-
-    return TextEditingValue(
-      text: formattedValue,
-      selection: TextSelection.collapsed(offset: formattedValue.length),
-    );
-  }
-
-  static String format(double value) {
-    return '$EURO_SYMBOL ${value.toStringAsFixed(2)}';
-  }
-
-  static double parse(String value) {
-    return double.tryParse(value.replaceAll(EURO_SYMBOL, '').trim()) ?? 0.00;
-  }
-}
-
-class _TransferAmountTextField extends StatelessWidget {
-  const _TransferAmountTextField({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      keyboardType: const TextInputType.numberWithOptions(decimal: true),
-      inputFormatters: [
-        EuroInputFormatter(),
-      ],
-      textAlign: TextAlign.center,
-      style: ClientConfig.getTextStyleScheme().heading1,
-      decoration: InputDecoration(
-        contentPadding: const EdgeInsets.only(bottom: 10),
-        isDense: true,
-        focusedBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(
-            color: Color(0xFFE9EAEB),
-            width: 2,
-          ),
-        ),
-        hintText: "0",
-        hintStyle: ClientConfig.getTextStyleScheme().heading1.copyWith(
-              color: const Color(0xFFC4C4C4),
-            ),
-      ),
-    );
-  }
 }
