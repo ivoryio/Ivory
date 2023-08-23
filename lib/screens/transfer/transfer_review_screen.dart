@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:solarisdemo/config.dart';
-import 'package:solarisdemo/screens/transfer/transfer_successful_screen.dart';
+import 'package:solarisdemo/screens/transfer/transfer_sign_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/ivory_card.dart';
@@ -117,7 +117,7 @@ class TransferReviewScreen extends StatelessWidget {
             ),
             child: PrimaryButton(
               text: "Sign & confirm",
-              onPressed: () => Navigator.pushNamed(context, TransferSuccessfulScreen.routeName),
+              onPressed: () => Navigator.pushNamed(context, TransferSignScreen.routeName),
             ),
           ),
           const SizedBox(height: 16),
