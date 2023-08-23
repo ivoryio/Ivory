@@ -10,6 +10,7 @@ import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/currency_text_field.dart';
 import 'package:solarisdemo/widgets/ivory_card.dart';
+import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 class TransferScreen extends StatefulWidget {
@@ -22,13 +23,6 @@ class TransferScreen extends StatefulWidget {
 }
 
 class _TransferScreenState extends State<TransferScreen> {
-  late _Account _from;
-  _Account _to = _ReferenceAccount(
-    title: "Reference account",
-    iban: "DE12345678901234567890",
-    bankName: "Deutsche Bank",
-  );
-
   late AuthenticatedUser user;
   String? _errorText;
   bool _canContinue = false;
@@ -41,7 +35,7 @@ class _TransferScreenState extends State<TransferScreen> {
       TransferReviewScreen.routeName,
       arguments: TransferReviewScreenParams(
         amount: double.parse(amountController.text),
-        toAccount: _to.iban,
+        toAccount: "DE12345678901234567890",
       ),
     );
   }
@@ -51,11 +45,6 @@ class _TransferScreenState extends State<TransferScreen> {
     super.initState();
 
     user = context.read<AuthCubit>().state.user!;
-    _from = _PorscheAccount(
-      title: "Porsche account",
-      iban: user.personAccount.iban!,
-      balance: user.personAccount.availableBalance!.value,
-    );
 
     amountController.addListener(() {
       setState(() {
@@ -63,7 +52,7 @@ class _TransferScreenState extends State<TransferScreen> {
         final balance = user.personAccount.availableBalance!.value;
 
         if (value > balance) {
-          _errorText = "Insufficient funds";
+          _errorText = "Not enough balance";
           _canContinue = false;
         } else if (value > 0) {
           _errorText = null;
@@ -95,17 +84,25 @@ class _TransferScreenState extends State<TransferScreen> {
                 ),
                 child: Column(
                   children: [
-                    _buildCard(_from),
+                    _buildCard(_PorscheAccount(
+                      title: "Porsche account",
+                      iban: user.personAccount.iban!,
+                      balance: user.personAccount.availableBalance!.value,
+                    )),
                     const Padding(
                       padding: EdgeInsets.all(4.0),
                       child: Icon(Icons.arrow_downward),
                     ),
-                    _buildCard(_to),
+                    _buildCard(const _ReferenceAccount(
+                      title: "Reference account",
+                      iban: "DE12345678901234567890",
+                      bankName: "Deutsche Bank",
+                    )),
                     const SizedBox(height: 32),
                     Text(
                       "Enter transfer amount",
                       style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(
-                            color: _errorText != null ? Colors.red : Color(0xFF56555E),
+                            color: _errorText != null ? Colors.red : const Color(0xFF56555E),
                             fontWeight: FontWeight.w600,
                           ),
                     ),
@@ -126,28 +123,14 @@ class _TransferScreenState extends State<TransferScreen> {
                     const SizedBox(height: 40),
                     InkWell(
                       onTap: () {
-                        if (_from is _PorscheAccount) {
-                          setState(() {
-                            _from = _to;
-                            _to = _PorscheAccount(
-                              title: "Porsche account",
-                              iban: user.personAccount.iban!,
-                              balance: user.personAccount.availableBalance!.value,
-                            );
-                          });
-                        } else {
-                          setState(() {
-                            _to = _from;
-                            _from = _PorscheAccount(
-                              title: "Porsche account",
-                              iban: user.personAccount.iban!,
-                              balance: user.personAccount.availableBalance!.value,
-                            );
-                          });
-                        }
+                        showBottomModal(
+                          context: context,
+                          title: "How to top up your Ivory account?",
+                          content: _TopUpBottomSheetContent(),
+                        );
                       },
                       child: Text(
-                        "Want to top up your ${_from is _PorscheAccount ? 'Porsche' : 'Reference'} account?",
+                        "Want to top up your Porsche account?",
                         style: ClientConfig.getTextStyleScheme()
                             .bodyLargeRegularBold
                             .copyWith(color: const Color(0xFF406FE6)),
@@ -179,6 +162,7 @@ class _TransferScreenState extends State<TransferScreen> {
   Widget _buildCard(_Account account) {
     return IvoryCard(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 16),
           Padding(
@@ -191,7 +175,7 @@ class _TransferScreenState extends State<TransferScreen> {
                   "€${account.balance.toStringAsFixed(2)}",
                   style: ClientConfig.getTextStyleScheme().heading4,
                 ),
-                Text("*", style: ClientConfig.getTextStyleScheme().heading4.copyWith(color: Colors.red)),
+                Text("*", style: ClientConfig.getTextStyleScheme().heading4.copyWith(color: const Color(0xFF2575FC))),
               ]
             ]),
           ),
@@ -239,7 +223,7 @@ class _TransferScreenState extends State<TransferScreen> {
                     TextSpan(
                       text: "*",
                       style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(
-                            color: Colors.red,
+                            color: const Color(0xFF2575FC),
                             fontWeight: FontWeight.w600,
                           ),
                     ),
@@ -299,4 +283,19 @@ class _ReferenceAccount extends _Account {
 
   @override
   List<Object?> get props => [title, iban, bankName];
+}
+
+class _TopUpBottomSheetContent extends StatelessWidget {
+  const _TopUpBottomSheetContent({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      children: [
+        Row(
+          children: [],
+        ),
+      ],
+    );
+  }
 }

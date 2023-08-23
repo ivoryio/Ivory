@@ -5,7 +5,6 @@ import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/ivory_card.dart';
-import 'package:solarisdemo/widgets/ivory_switch.dart';
 import 'package:solarisdemo/widgets/ivory_text_field.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
@@ -99,25 +98,6 @@ class TransferReviewScreen extends StatelessWidget {
                       placeholder: "Add note",
                     ),
                     const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.calendar_month_outlined,
-                          color: Color(0xFFCC0000),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Text(
-                            "Schedule transfer",
-                            style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold.copyWith(color: Colors.black),
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        IvorySwitch(
-                          onToggle: (value) => print("Schedule transfer toggle: $value"),
-                        )
-                      ],
-                    ),
                   ],
                 ),
               ),
