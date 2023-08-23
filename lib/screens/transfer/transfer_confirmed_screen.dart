@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:solarisdemo/screens/home/home_screen.dart';
+import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
-import '../../router/routing_constants.dart';
-import '../../themes/default_theme.dart';
 import '../../widgets/screen.dart';
 import '../../widgets/sticky_bottom_content.dart';
 
@@ -11,26 +10,28 @@ class TransferConfirmedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Screen(
-      title: '',
-      hideBackButton: true,
-      hideBottomNavbar: true,
-      bottomStickyWidget: BottomStickyWidget(
-        child: StickyBottomContent(
-          buttonText: "OK, got it",
-          onContinueCallback: () {
-            context.go(homeRoute.path);
-          },
-        ),
-      ),
-      child: const Padding(
-        padding: defaultScreenPadding,
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TransferSuccessful(),
-            ]),
+    return ScreenScaffold(
+      body: Column(
+        children: [
+          const Spacer(),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24),
+            child: TransferSuccessful(),
+          ),
+          const Spacer(),
+          BottomStickyWidget(
+            child: StickyBottomContent(
+              buttonText: "OK, got it",
+              onContinueCallback: () {
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  HomeScreen.routeName,
+                  (route) => false,
+                );
+              },
+            ),
+          )
+        ],
       ),
     );
   }

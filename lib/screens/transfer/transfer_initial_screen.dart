@@ -2,19 +2,21 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solarisdemo/utilities/constants.dart';
 import 'package:solarisdemo/utilities/format.dart';
+import 'package:solarisdemo/widgets/app_toolbar.dart';
+import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
-import '../../utilities/validator.dart';
-import '../../widgets/screen.dart';
-import '../../widgets/checkbox.dart';
-import '../../themes/default_theme.dart';
-import '../../widgets/spaced_column.dart';
-import '../../widgets/account_select.dart';
-import '../../router/routing_constants.dart';
-import '../../widgets/platform_text_input.dart';
-import '../../widgets/sticky_bottom_content.dart';
 import '../../cubits/transfer/transfer_cubit.dart';
+import '../../utilities/validator.dart';
+import '../../widgets/account_select.dart';
+import '../../widgets/checkbox.dart';
+import '../../widgets/platform_text_input.dart';
+import '../../widgets/screen.dart';
+import '../../widgets/spaced_column.dart';
+import '../../widgets/sticky_bottom_content.dart';
 
 class TransferInitialScreen extends StatelessWidget {
+  static const String route = "/transferInitialScreen";
+
   final TransferState state;
 
   const TransferInitialScreen({
@@ -63,52 +65,57 @@ class TransferInitialScreen extends StatelessWidget {
     ibanController.addListener(changeListener);
     descriptionController.addListener(changeListener);
 
-    return Screen(
-      title: transferRoute.title,
-      hideBottomNavbar: true,
-      bottomStickyWidget: BottomStickyWidget(
-        child: StickyBottomContent(
-          key: stickyBottomContentKey,
-          buttonActive: inputsNotEmpty(),
-          onContinueCallback: () {
-            if (formKey.currentState!.validate() &&
-                accountSelectKey.currentState?.selectedAccount != null) {
-              context.read<TransferCubit>().setBasicData(
-                    iban: ibanController.text,
-                    name: nameController.text,
-                    description: descriptionController.text,
-                    savePayee: payeeInformationKey.currentState!.savePayee,
-                    personAccount:
-                        accountSelectKey.currentState!.selectedAccount,
-                  );
-            }
-          },
-        ),
-      ),
-      child: Padding(
-        padding: defaultScreenPadding,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SpacedColumn(
-              space: 32,
-              children: [
-                AccountSelect(
-                  key: accountSelectKey,
-                  title: "Send from",
+    return ScreenScaffold(
+      body: Column(
+        children: [
+          const AppToolbar(
+            title: "Transfer",
+            padding: EdgeInsets.symmetric(horizontal: 24),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    AccountSelect(
+                      key: accountSelectKey,
+                      title: "Send from",
+                    ),
+                    const SizedBox(height: 32),
+                    PayeeInformation(
+                      formKey: formKey,
+                      key: payeeInformationKey,
+                      ibanController: ibanController,
+                      nameController: nameController,
+                      descriptionController: descriptionController,
+                      savePayee: state.savePayee,
+                    ),
+                  ],
                 ),
-                PayeeInformation(
-                  formKey: formKey,
-                  key: payeeInformationKey,
-                  ibanController: ibanController,
-                  nameController: nameController,
-                  descriptionController: descriptionController,
-                  savePayee: state.savePayee,
-                ),
-              ],
-            )
-          ],
-        ),
+              ),
+            ),
+          ),
+          BottomStickyWidget(
+            child: StickyBottomContent(
+              key: stickyBottomContentKey,
+              buttonActive: inputsNotEmpty(),
+              onContinueCallback: () {
+                if (formKey.currentState!.validate() &&
+                    accountSelectKey.currentState?.selectedAccount != null) {
+                  context.read<TransferCubit>().setBasicData(
+                        iban: ibanController.text,
+                        name: nameController.text,
+                        description: descriptionController.text,
+                        savePayee: payeeInformationKey.currentState!.savePayee,
+                        personAccount:
+                            accountSelectKey.currentState!.selectedAccount,
+                      );
+                }
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../widgets/button.dart';
-import '../../../widgets/popup_header.dart';
-import '../../transfer/transfer_screen.dart';
 import '../../../widgets/spaced_column.dart';
-import '../../../router/routing_constants.dart';
+import '../../transfer/transfer_screen.dart';
 
 class NewTransferPopup extends StatefulWidget {
   const NewTransferPopup({Key? key}) : super(key: key);
@@ -20,132 +17,109 @@ class NewTransferPopupState extends State<NewTransferPopup> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 440,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 22.0, horizontal: 24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const BottomPopupHeader(
-              title: 'New Transfer',
-              showCloseButton: true,
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 24),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    "Who are you sending to?",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SpacedColumn(
-              space: 8,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                BorderedContainer(
-                  onTap: () {
-                    setState(() {
-                      _isPersonSelected = true;
-                      _isBusinessSelected = false;
-                    });
-                  },
-                  borderColor: _isPersonSelected
-                      ? Colors.black
-                      : const Color(0xFFEAECF0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Row(
-                        children: [
-                          Icon(Icons.person),
-                          SizedBox(width: 11.3),
-                          Text(
-                            "Person",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [RadioButton(checked: _isPersonSelected)],
-                      ),
-                    ],
-                  ),
-                ),
-                BorderedContainer(
-                  onTap: () {
-                    setState(() {
-                      _isBusinessSelected = true;
-                      _isPersonSelected = false;
-                    });
-                  },
-                  borderColor: _isBusinessSelected
-                      ? Colors.black
-                      : const Color(0xFFEAECF0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Row(
-                        children: [
-                          Icon(Icons.work),
-                          SizedBox(width: 10),
-                          Text(
-                            "Business/Organization",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
-                      ),
-                      RadioButton(
-                        checked: _isBusinessSelected,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 32),
-              child: SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: PrimaryButton(
-                  text: "Continue",
-                  onPressed: () {
-                    Navigator.of(context, rootNavigator: true).pop();
-                    context.push(
-                      transferRoute.path,
-                      extra: TransferScreenParams(
-                          transferType: _isPersonSelected
-                              ? TransferType.person
-                              : TransferType.business),
-                    );
-                  },
-                ),
+            Text(
+              "Who are you sending to?",
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
               ),
             ),
           ],
         ),
-      ),
+        const SizedBox(height: 16),
+        SpacedColumn(
+          space: 8,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            BorderedContainer(
+              onTap: () {
+                setState(() {
+                  _isPersonSelected = true;
+                  _isBusinessSelected = false;
+                });
+              },
+              borderColor:
+                  _isPersonSelected ? Colors.black : const Color(0xFFEAECF0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Row(
+                    children: [
+                      Icon(Icons.person),
+                      SizedBox(width: 11.3),
+                      Text(
+                        "Person",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [RadioButton(checked: _isPersonSelected)],
+                  ),
+                ],
+              ),
+            ),
+            BorderedContainer(
+              onTap: () {
+                setState(() {
+                  _isBusinessSelected = true;
+                  _isPersonSelected = false;
+                });
+              },
+              borderColor:
+                  _isBusinessSelected ? Colors.black : const Color(0xFFEAECF0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Row(
+                    children: [
+                      Icon(Icons.work),
+                      SizedBox(width: 10),
+                      Text(
+                        "Business/Organization",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                  RadioButton(
+                    checked: _isBusinessSelected,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 24),
+        SizedBox(
+          width: double.infinity,
+          height: 48,
+          child: PrimaryButton(
+            text: "Continue",
+            onPressed: () {
+              Navigator.popAndPushNamed(
+                context,
+                TransferScreen.routeName,
+                arguments: TransferScreenParams(
+                    transferType: _isPersonSelected
+                        ? TransferType.person
+                        : TransferType.business),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }

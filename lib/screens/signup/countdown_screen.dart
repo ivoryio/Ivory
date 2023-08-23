@@ -3,16 +3,18 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:solarisdemo/router/routing_constants.dart';
+import 'package:solarisdemo/screens/landing/landing_screen.dart';
+import 'package:solarisdemo/widgets/app_toolbar.dart';
+import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
+import '../../config.dart';
 import '../../cubits/signup/signup_cubit.dart';
-import '../../themes/default_theme.dart';
 import '../../widgets/button.dart';
-import '../../widgets/screen.dart';
 
 class CountdownScreen extends StatefulWidget {
+  static const routeName = "/countdownScreen";
+
   const CountdownScreen({super.key});
 
   @override
@@ -101,53 +103,60 @@ class _CountdownScreenState extends State<CountdownScreen>
     int minutes = _start ~/ 60;
     int seconds = _start % 60;
 
-    return Screen(
-      title: "Sign Up",
-      hideAppBar: true,
-      hideBottomNavbar: true,
-      hideBackButton: true,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: defaultScreenHorizontalPadding,
-          vertical: defaultScreenVerticalPadding,
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              if (_start != 0)
-                Text(
-                  '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
-                  style: const TextStyle(
-                    fontSize: 50,
-                  ),
+    return ScreenScaffold(
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+            horizontal: ClientConfig.getCustomClientUiSettings()
+                .defaultScreenHorizontalPadding),
+        child: Column(
+          children: [
+            const AppToolbar(title: "Sign Up"),
+            Expanded(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    if (_start != 0)
+                      Text(
+                        '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
+                        style: const TextStyle(
+                          fontSize: 50,
+                        ),
+                      ),
+                    if (_start != 0)
+                      const SizedBox(
+                        height: 64,
+                      ),
+                    if (_start != 0)
+                      const Text(
+                        'Almost there!',
+                      ),
+                    if (_start != 0)
+                      const Text(
+                          'Your personalized experience is being prepared.'),
+                    if (_start == 0)
+                      SizedBox(
+                        width: double.infinity,
+                        child: PrimaryButton(
+                          text: "Let's get started!",
+                          onPressed: () {
+                            context.read<SignupCubit>().createAccount(
+                                  state.user!,
+                                );
+
+                            Navigator.popUntil(
+                              context,
+                              ModalRoute.withName(LandingScreen.routeName),
+                            );
+                          },
+                        ),
+                      ),
+                  ],
                 ),
-              if (_start != 0)
-                const SizedBox(
-                  height: 64,
-                ),
-              if (_start != 0)
-                const Text(
-                  'Almost there!',
-                ),
-              if (_start != 0)
-                const Text('Your personalized experience is being prepared.'),
-              if (_start == 0)
-                SizedBox(
-                  width: double.infinity,
-                  child: PrimaryButton(
-                    text: "Let's get started!",
-                    onPressed: () {
-                      context.read<SignupCubit>().createAccount(
-                            state.user!,
-                          );
-                      context.go(landingRoute.path);
-                    },
-                  ),
-                ),
-            ],
-          ),
+              ),
+            ),
+          ],
         ),
       ),
     );

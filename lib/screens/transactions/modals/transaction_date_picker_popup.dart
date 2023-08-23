@@ -1,9 +1,6 @@
-
 import 'package:flutter/material.dart';
-import 'package:solarisdemo/themes/default_theme.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/date_range_picker.dart';
-
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class TransactionDatePickerPopup extends StatefulWidget {
@@ -29,57 +26,42 @@ class _TransactionDatePickerPopupState
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        height: 440,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: defaultScreenHorizontalPadding,
-            vertical: 20,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              DateRangePicker(
-                initialSelectedRange: widget.initialSelectedRange,
-                onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
-                  if (args.value is PickerDateRange) {
-                    final DateTime rangeStartDate =
-                        args.value.startDate ?? args.value.endDate;
-                    final DateTime rangeEndDate =
-                        args.value.endDate ?? args.value.startDate;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        DateRangePicker(
+          initialSelectedRange: widget.initialSelectedRange,
+          onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
+            if (args.value is PickerDateRange) {
+              final DateTime rangeStartDate =
+                  args.value.startDate ?? args.value.endDate;
+              final DateTime rangeEndDate =
+                  args.value.endDate ?? args.value.startDate;
 
-                    setState(() {
-                      _dateRange = DateTimeRange(
-                        start: rangeStartDate,
-                        end: rangeEndDate,
-                      );
-                    });
-                  }
+              setState(() {
+                _dateRange = DateTimeRange(
+                  start: rangeStartDate,
+                  end: rangeEndDate,
+                );
+              });
+            }
+          },
+        ),
+        Row(
+          children: [
+            Expanded(
+              child: PrimaryButton(
+                text: "Apply date",
+                onPressed: () {
+                  widget.onDateRangeSelected(_dateRange);
+                  Navigator.of(context).pop();
                 },
               ),
-              Row(
-                children: [
-                  Expanded(
-                    child: PrimaryButton(
-                      text: "Apply date",
-                      onPressed: () {
-                        widget.onDateRangeSelected(_dateRange);
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  )
-                ],
-              )
-            ],
-          ),
-        ));
+            )
+          ],
+        )
+      ],
+    );
   }
 }

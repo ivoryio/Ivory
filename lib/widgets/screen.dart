@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:go_router/go_router.dart';
 
-import '../router/router.dart';
-import '../themes/default_theme.dart';
-import '../router/routing_constants.dart';
+import '../config.dart';
 
 class Screen extends StatelessWidget {
   final Widget child;
-  final String title;
+  final String? title;
   final bool hideAppBar;
   final bool? centerTitle;
   final Color? appBarColor;
@@ -22,31 +18,30 @@ class Screen extends StatelessWidget {
   final BottomStickyWidget? bottomStickyWidget;
   final ScrollPhysics? scrollPhysics;
 
-  const Screen({
-    super.key,
-    this.onRefresh,
-    this.appBarColor,
-    this.backButtonIcon,
-    required this.child,
-    required this.title,
-    this.titleTextStyle,
-    this.trailingActions,
-    this.hideAppBar = false,
-    this.centerTitle = true,
-    this.bottomStickyWidget,
-    this.hideBackButton = false,
-    this.hideBottomNavbar = false,
-    this.customBackButtonCallback,
-    this.scrollPhysics,
-  });
+  const Screen(
+      {super.key,
+      this.onRefresh,
+      this.appBarColor,
+      this.backButtonIcon,
+      required this.child,
+      this.title,
+      this.titleTextStyle,
+      this.trailingActions,
+      this.hideAppBar = false,
+      this.centerTitle = true,
+      this.bottomStickyWidget,
+      this.hideBackButton = false,
+      this.hideBottomNavbar = false,
+      this.customBackButtonCallback,
+      this.scrollPhysics});
 
   @override
   Widget build(BuildContext context) {
-    PlatformAppBar? appBar = hideAppBar == true
+    AppBar? appBar = hideAppBar == true
         ? null
         : createAppBar(
             context,
-            title: title,
+            title: title ?? '',
             centerTitle: centerTitle,
             backgroundColor: appBarColor,
             hideBackButton: hideBackButton,
@@ -56,131 +51,60 @@ class Screen extends StatelessWidget {
             customBackButtonCallback: customBackButtonCallback,
           );
 
-    int currentPageIndex = AppRouter.calculateSelectedIndex(context);
-
-    PlatformTabController tabController = PlatformTabController(
-      initialIndex: currentPageIndex,
-    );
-
     ScrollPhysics? physics = onRefresh != null
         ? scrollPhysics ?? const AlwaysScrollableScrollPhysics()
         : null;
 
-    if (hideBottomNavbar) {
-      return PlatformScaffold(
-        appBar: appBar,
-        iosContentPadding: true,
-        iosContentBottomPadding: true,
-        body: LayoutBuilder(builder:
-            (BuildContext context, BoxConstraints viewportConstraints) {
-          num bottomStickyWidgetHeight = bottomStickyWidget?.height ?? 0;
+    return Scaffold(
+      appBar: appBar,
+      body: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints viewportConstraints) {
+        num bottomStickyWidgetHeight = bottomStickyWidget?.height ?? 0;
 
-          Widget body = SingleChildScrollView(
-            physics: physics,
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight:
-                    viewportConstraints.maxHeight - bottomStickyWidgetHeight,
+        Widget body = SingleChildScrollView(
+          physics: physics,
+          child: Column(
+            children: [
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight:
+                      viewportConstraints.maxHeight - bottomStickyWidgetHeight,
+                ),
+                child: IntrinsicHeight(child: child),
               ),
-              child: IntrinsicHeight(child: child),
-            ),
+            ],
+          ),
+        );
+
+        Widget screenContent = Column(children: [
+          Expanded(child: body),
+          if (bottomStickyWidget != null) bottomStickyWidget!.build(context)
+        ]);
+
+        if (onRefresh != null) {
+          return RefreshIndicator(
+            onRefresh: onRefresh!,
+            child: screenContent,
           );
-
-          Widget screenContent = Column(children: [
-            Expanded(child: body),
-            if (bottomStickyWidget != null) bottomStickyWidget!.build(context)
-          ]);
-
-          if (onRefresh != null) {
-            return RefreshIndicator(
-              onRefresh: onRefresh!,
-              child: screenContent,
-            );
-          }
-
-          return screenContent;
-        }),
-      );
-    }
-
-    return PlatformTabScaffold(
-      iosContentPadding: true,
-      tabController: tabController,
-      iosContentBottomPadding: true,
-      appBarBuilder: (context, index) => appBar,
-      itemChanged: (pageIndex) {
-        if (currentPageIndex != pageIndex) {
-          AppRouter.navigateToPage(pageIndex, context);
         }
-      },
-      materialTabs: (context, platform) => MaterialNavBarData(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
-        elevation: 0,
-      ),
-      cupertinoTabs: (context, platform) => CupertinoTabBarData(
-        backgroundColor: Colors.white,
-        activeColor: Colors.black,
-        inactiveColor: Colors.grey,
-      ),
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.add_card),
-          label: 'Wallet',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.payments),
-          label: 'Transactions',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.person),
-          label: 'Profile',
-        ),
-      ],
-      bodyBuilder: (context, index) => LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints viewportConstraints) {
-          Widget screenContent = SingleChildScrollView(
-            physics: physics,
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: viewportConstraints.maxHeight,
-              ),
-              child: child,
-            ),
-          );
 
-          return LayoutBuilder(builder: (context, constraints) {
-            if (onRefresh != null) {
-              return RefreshIndicator(
-                onRefresh: onRefresh!,
-                child: screenContent,
-              );
-            }
-
-            return screenContent;
-          });
-        },
-      ),
+        return screenContent;
+      }),
     );
   }
 }
 
 class LoadingScreen extends StatelessWidget {
   final String? title;
+
   const LoadingScreen({super.key, this.title = "Loading"});
 
   @override
   Widget build(BuildContext context) {
-    return PlatformScaffold(
-      iosContentPadding: true,
+    return Scaffold(
       appBar: createAppBar(context, title: title!),
-      iosContentBottomPadding: true,
-      body: Center(
-        child: PlatformCircularProgressIndicator(),
+      body: const Center(
+        child: CircularProgressIndicator(),
       ),
     );
   }
@@ -189,6 +113,7 @@ class LoadingScreen extends StatelessWidget {
 class ErrorScreen extends StatelessWidget {
   final String? title;
   final String? message;
+
   const ErrorScreen(
       {super.key,
       this.title = "Error",
@@ -196,16 +121,14 @@ class ErrorScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PlatformScaffold(
-      iosContentPadding: true,
+    return Scaffold(
       appBar: createAppBar(context, title: title!),
-      iosContentBottomPadding: true,
       body: Text(message!),
     );
   }
 }
 
-PlatformAppBar createAppBar(
+AppBar createAppBar(
   BuildContext context, {
   bool? hideBackButton,
   Icon? backButtonIcon,
@@ -215,6 +138,7 @@ PlatformAppBar createAppBar(
   List<Widget>? trailingActions,
   Function? customBackButtonCallback,
   Color? backgroundColor = Colors.white,
+  PreferredSizeWidget? bottom,
 }) {
   Text titleText = Text(
     title,
@@ -232,45 +156,36 @@ PlatformAppBar createAppBar(
     child: titleText,
   );
 
-  PlatformIconButton backButton = PlatformIconButton(
-    padding: EdgeInsets.zero,
+  IconButton backButton = IconButton(
     icon: backButtonIcon ?? defaultBackButtonIcon,
-    material: (context, platform) => MaterialIconButtonData(
-      alignment: Alignment.centerLeft,
-      padding: const EdgeInsets.only(left: defaultScreenHorizontalPadding),
+    padding: EdgeInsets.only(
+      left: ClientConfig.getCustomClientUiSettings()
+          .defaultScreenHorizontalPadding,
     ),
-    cupertino: (context, platform) => CupertinoIconButtonData(
-      alignment: Alignment.centerLeft,
-    ),
+    alignment: Alignment.centerLeft,
     onPressed: () {
       if (customBackButtonCallback != null) {
         customBackButtonCallback();
       } else {
-        if (context.canPop()) return context.pop();
-
-        context.go(homeRoute.path);
+        if (Navigator.canPop(context)) Navigator.pop(context);
       }
     },
   );
 
-  return PlatformAppBar(
+  return AppBar(
     leading: hideBackButton == true ? null : backButton,
     title: centerTitle == true ? titleText : leftAlignedTitle,
     backgroundColor: backgroundColor,
-    trailingActions: trailingActions,
-    material: (context, platform) =>
-        MaterialAppBarData(elevation: 0, centerTitle: centerTitle, actions: [
+    elevation: 0,
+    centerTitle: centerTitle,
+    bottom: bottom,
+    actions: [
       if (trailingActions != null) ...trailingActions,
-      const SizedBox(
-        width: defaultScreenHorizontalPadding,
+      SizedBox(
+        width: ClientConfig.getCustomClientUiSettings()
+            .defaultScreenHorizontalPadding,
       )
-    ]),
-    cupertino: (context, platform) => CupertinoNavigationBarData(
-      border: Border.all(color: Colors.transparent),
-      padding: const EdgeInsetsDirectional.symmetric(
-        horizontal: defaultScreenHorizontalPadding,
-      ),
-    ),
+    ],
     automaticallyImplyLeading: hideBackButton == true ? false : true,
   );
 }

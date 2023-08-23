@@ -27,7 +27,9 @@ class BankCardDetailsCubit extends Cubit<BankCardDetailsState> {
     emit(const BankCardDetailsLoadingState());
     try {
       BankCard blockedCard = await cardsService.freezeBankCard(cardId);
-      emit(BankCardDetailsLoadedState(card: blockedCard));
+      emit(BankCardDetailsLoadedState(
+        card: blockedCard,
+      ));
       return;
     } catch (e) {
       emit(BankCardDetailsErrorState(e.toString()));
@@ -38,10 +40,51 @@ class BankCardDetailsCubit extends Cubit<BankCardDetailsState> {
     emit(const BankCardDetailsLoadingState());
     try {
       BankCard unBlockedCard = await cardsService.unfreezeCard(cardId);
-      emit(BankCardDetailsLoadedState(card: unBlockedCard));
+      emit(BankCardDetailsLoadedState(
+        card: unBlockedCard,
+      ));
       return;
     } catch (e) {
       emit(BankCardDetailsErrorState(e.toString()));
     }
+  }
+
+  Future<void> initializeActivation(BankCard card) async {
+    emit(const BankCardDetailsLoadingState());
+    try {
+      BankCard activatedCard = await cardsService.activateCard(card.id);
+      emit(BankCardDetailsInfoState(card: activatedCard));
+      return;
+    } catch (e) {
+      emit(BankCardDetailsErrorState(e.toString()));
+    }
+  }
+
+  Future<void> startPinSetup(BankCard card) async {
+    emit(BankCardDetailsChoosePinState(card: card));
+  }
+
+  Future<void> choosePin(BankCard card, String pin) async {
+    emit(BankCardDetailsConfirmPinState(card: card, pin: pin));
+  }
+
+  Future<void> confirmPin(BankCard card, String pin) async {
+    emit(BankCardDetailsAppleWalletState(card: card, pin: pin));
+  }
+
+  Future<void> successActivation(BankCard card) async {
+    emit(BankCardDetailsActivationSuccessState(card: card));
+  }
+
+  Future<void> goToActivatedScreen(BankCard card) async {
+    emit(BankCardActivatedState(card: card));
+  }
+
+  Future<void> goToCardDetails(BankCard card) async {
+    emit(BankCardDetailsMainState(card: card));
+  }
+
+  Future<void> viewCardDetails(BankCard card) async {
+    emit(BankCardViewDetailsState(card: card));
   }
 }

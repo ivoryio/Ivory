@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:http/http.dart' as http;
 import 'package:amazon_cognito_identity_dart_2/cognito.dart';
+import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 
 import '../config.dart';
 import '../models/user.dart';
@@ -30,7 +31,8 @@ class ApiService<T> {
       }
 
       return jsonDecode(response.body);
-    } catch (e) {
+    } catch (e, s) {
+      debugPrintStack(stackTrace: s);
       throw Exception("Could not get data");
     }
   }
@@ -61,6 +63,35 @@ class ApiService<T> {
     } catch (e) {
       log(e.toString());
       throw Exception("Could not post data");
+    }
+  }
+
+  Future<T> delete(
+    String path, {
+    Map<String, String> queryParameters = const {},
+    Map<String, dynamic> body = const {},
+    bool authNeeded = true,
+  }) async {
+    try {
+      String? accessToken = authNeeded ? await this.getAccessToken() : "";
+
+      final response = await http.delete(
+        ApiService.url(path, queryParameters: queryParameters),
+        headers: authNeeded & accessToken.isNotEmpty
+            ? {
+                "Authorization": "Bearer $accessToken",
+              }
+            : {},
+        body: jsonEncode(body),
+      );
+      if (![200, 204].contains(response.statusCode)) {
+        throw Exception("DELETE request response code: ${response.statusCode}");
+      }
+
+      return response.body.isNotEmpty ? jsonDecode(response.body) : {};
+    } catch (e) {
+      log(e.toString());
+      throw Exception("DELETE request failed");
     }
   }
 

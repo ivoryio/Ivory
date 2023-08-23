@@ -30,7 +30,7 @@ class BankCardsService extends ApiService {
     }
   }
 
-  Future<dynamic> createVirtualCard(CreateBankCard card) async {
+  Future<dynamic> createCard(CreateBankCard card) async {
     try {
       String path = '/account/cards';
 
@@ -38,6 +38,17 @@ class BankCardsService extends ApiService {
       return data;
     } catch (e) {
       throw Exception("Failed to create card");
+    }
+  }
+
+  Future<dynamic> activateCard(String id) async {
+    String path = '/account/cards/$id';
+
+    try {
+      var data = await post(path, body: {id: id});
+      return data;
+    } catch (e) {
+      throw Exception("Failed to activate card");
     }
   }
 

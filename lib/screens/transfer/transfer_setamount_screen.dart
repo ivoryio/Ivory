@@ -1,16 +1,16 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:solarisdemo/widgets/app_toolbar.dart';
+import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
-import '../../utilities/format.dart';
-import '../../widgets/screen.dart';
-import '../../utilities/constants.dart';
-import '../../themes/default_theme.dart';
-import '../../router/routing_constants.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
-import '../../widgets/sticky_bottom_content.dart';
 import '../../cubits/transfer/transfer_cubit.dart';
-import '../../widgets/platform_currency_input.dart';
+import '../../utilities/constants.dart';
 import '../../utilities/currency_text_field_controller.dart';
+import '../../utilities/format.dart';
+import '../../widgets/platform_currency_input.dart';
+import '../../widgets/screen.dart';
+import '../../widgets/sticky_bottom_content.dart';
 
 class TransferSetAmountScreen extends StatelessWidget {
   final TransferSetAmountState state;
@@ -48,41 +48,46 @@ class TransferSetAmountScreen extends StatelessWidget {
 
     amountController.addListener(changeListener);
 
-    return Screen(
-      customBackButtonCallback: () {
-        context.read<TransferCubit>().setInitState(
-              name: state.name,
-              iban: state.iban,
-              savePayee: state.savePayee,
-              description: state.description,
-            );
-      },
-      title: transferRoute.title,
-      hideBottomNavbar: true,
-      bottomStickyWidget: BottomStickyWidget(
-        child: StickyBottomContent(
-          key: stickyBottomContentKey,
-          buttonActive: state.amount != null,
-          buttonText: "Send money",
-          onContinueCallback: () {
-            final amount = amountController.doubleValue;
-            if (formKey.currentState!.validate()) {
-              context.read<TransferCubit>().setAmount(amount: amount);
-            }
-          },
-        ),
-      ),
-      child: Padding(
-        padding: defaultScreenPadding,
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              AmountInformation(
-                formKey: formKey,
-                amountController: amountController,
-              )
-            ]),
+    return ScreenScaffold(
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: AppToolbar(
+              title: "Transfer",
+              onBackButtonPressed: () {
+                context.read<TransferCubit>().setInitState(
+                      name: state.name,
+                      iban: state.iban,
+                      savePayee: state.savePayee,
+                      description: state.description,
+                    );
+              },
+            ),
+          ),
+          const Spacer(),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: AmountInformation(
+              formKey: formKey,
+              amountController: amountController,
+            ),
+          ),
+          const Spacer(),
+          BottomStickyWidget(
+            child: StickyBottomContent(
+              key: stickyBottomContentKey,
+              buttonActive: state.amount != null,
+              buttonText: "Send money",
+              onContinueCallback: () {
+                final amount = amountController.doubleValue;
+                if (formKey.currentState!.validate()) {
+                  context.read<TransferCubit>().setAmount(amount: amount);
+                }
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

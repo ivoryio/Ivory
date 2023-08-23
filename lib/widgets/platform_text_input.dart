@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
-
 const String _defaultHintText = '';
 const double _defaultFontSize = 16;
 const bool _defaultObscureText = false;
@@ -30,6 +29,7 @@ class PlatformTextInput extends StatelessWidget {
   final BorderRadius? borderRadius;
   final TextInputType? keyboardType;
   final Function(String value)? onChanged;
+  final Function(String value)? onSubmit;
   final TextEditingController? controller;
   final List<TextInputFormatter>? inputFormatters;
 
@@ -39,6 +39,7 @@ class PlatformTextInput extends StatelessWidget {
     this.border,
     this.textLabel,
     this.onChanged,
+    this.onSubmit,
     this.controller,
     this.keyboardType,
     this.borderRadius,
@@ -104,6 +105,9 @@ class PlatformTextInput extends StatelessWidget {
                   onChanged: (value) => {
                     if (onChanged != null) onChanged!(value),
                   },
+                  onFieldSubmitted: (value) => {
+                    if(onSubmit != null) onSubmit!(value),
+                  },
                   validator: (value) {
                     return validator(value);
                   },
@@ -118,14 +122,6 @@ class PlatformTextInput extends StatelessWidget {
                       isDense: true,
                       border: InputBorder.none,
                     ),
-                  ),
-                  cupertino: (context, platform) => CupertinoTextFormFieldData(
-                    style: TextStyle(
-                      color: const Color(0xFF414D63),
-                      fontSize: fontSize,
-                      height: 1.2,
-                    ),
-                    padding: EdgeInsets.zero,
                   ),
                 ),
               ),

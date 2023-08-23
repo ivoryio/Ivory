@@ -41,7 +41,9 @@ enum BankCardType {
   MASTERCARD_BUSINESS_DEBIT,
   VIRTUAL_MASTERCARD_BUSINESS_DEBIT,
   VIRTUAL_VISA_FREELANCE_DEBIT,
-  VIRTUAL_VISA_CREDIT
+  VIRTUAL_VISA_CREDIT,
+  VISA_CREDIT,
+  VISA_DEBIT,
 }
 
 class BankCard {
@@ -100,6 +102,10 @@ BankCardType getCardType(String type) {
       return BankCardType.VIRTUAL_VISA_FREELANCE_DEBIT;
     case 'VIRTUAL_VISA_CREDIT':
       return BankCardType.VIRTUAL_VISA_CREDIT;
+    case 'VISA_CREDIT':
+      return BankCardType.VISA_CREDIT;
+    case 'VISA_DEBIT':
+      return BankCardType.VISA_DEBIT;
     default:
       throw Exception('Unknown CardType: $type');
   }
@@ -175,7 +181,7 @@ class BankCardRepresentation {
 String createCardToJson(CreateBankCard data) => json.encode(data.toJson());
 
 class CreateBankCard {
-  // late String line1; // TODO
+  late String line1;
   late String line2;
   BankCardType type;
   String businessId;
@@ -190,12 +196,13 @@ class CreateBankCard {
     if (firstName.length > 21) {
       firstName = firstName.substring(0, 21);
     }
+    line1 = firstName.toUpperCase(); // TODO
     line2 = firstName.toUpperCase();
     reference = const Uuid().v4().replaceAll('-', '');
   }
 
   Map<String, dynamic> toJson() => {
-        // "line_1": line1, // TODO
+        "line_1": line1,
         "line_2": line2,
         "type": type.name,
         "business_id": businessId,
