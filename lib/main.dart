@@ -25,7 +25,8 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  await SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
   final store = _buildStore();
 
@@ -40,6 +41,7 @@ Store<AppState> _buildStore() {
     initialState: AppState.initialState(),
     pushNotificationService: FirebasePushNotificationService(),
     transactionService: TransactionService(),
+    upcomingTransactionService: TransactionService(),
     creditLineService: CreditLineService(),
     repaymentReminderService: RepaymentReminderService(),
     categoriesService: CategoriesService(),
