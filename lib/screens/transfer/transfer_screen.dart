@@ -8,7 +8,7 @@ import 'package:solarisdemo/screens/transfer/transfer_review_screen.dart';
 import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
-import 'package:solarisdemo/widgets/currency_text_field.dart';
+import 'package:solarisdemo/widgets/ivory_amount_field.dart';
 import 'package:solarisdemo/widgets/ivory_card.dart';
 import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
@@ -106,7 +106,7 @@ class _TransferScreenState extends State<TransferScreen> {
                             fontWeight: FontWeight.w600,
                           ),
                     ),
-                    CurrencyTextField(
+                    IvoryAmountField(
                       controller: amountController,
                       error: _errorText != null,
                     ),
@@ -130,7 +130,7 @@ class _TransferScreenState extends State<TransferScreen> {
                         );
                       },
                       child: Text(
-                        "Want to top up your Porsche account?",
+                        "Want to top up your Ivory account?",
                         style: ClientConfig.getTextStyleScheme()
                             .bodyLargeRegularBold
                             .copyWith(color: const Color(0xFF406FE6)),

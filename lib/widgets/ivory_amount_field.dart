@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
-class CurrencyTextField extends StatefulWidget {
+class IvoryAmountField extends StatefulWidget {
   final Color errorBorderColor;
   final Color focusedBorderColor;
   final Color unfocusedBorderColor;
@@ -16,7 +16,7 @@ class CurrencyTextField extends StatefulWidget {
   final int decimals;
   final Color hintColor;
 
-  const CurrencyTextField({
+  const IvoryAmountField({
     super.key,
     this.controller,
     this.currencySymbol = "€",
@@ -41,10 +41,10 @@ class CurrencyTextField extends StatefulWidget {
   });
 
   @override
-  State<CurrencyTextField> createState() => _CurrencyTextFieldState();
+  State<IvoryAmountField> createState() => _IvoryAmountFieldState();
 }
 
-class _CurrencyTextFieldState extends State<CurrencyTextField> {
+class _IvoryAmountFieldState extends State<IvoryAmountField> {
   late TextEditingController _controller;
   final TextEditingController _digitsController = TextEditingController();
   final TextEditingController _decimalsController = TextEditingController();
