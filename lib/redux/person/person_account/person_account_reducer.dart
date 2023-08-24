@@ -6,7 +6,7 @@ PersonAccountState personAccountReducer(PersonAccountState state, dynamic action
     return PersonAccountLoadingState();
   } else if (action is PersonAccountFetchedEventAction) {
     return PersonAccountFetchedState(action.personAccount);
-  } else if (action is PersonAccountFailedEventAction) {
+  } else if (action is GetPersonAccountFailedEventAction) {
     return PersonAccountErrorState();
   }
 

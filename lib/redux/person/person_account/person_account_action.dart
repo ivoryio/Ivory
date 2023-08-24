@@ -15,4 +15,4 @@ class PersonAccountFetchedEventAction {
   PersonAccountFetchedEventAction(this.personAccount);
 }
 
-class PersonAccountFailedEventAction {}
+class GetPersonAccountFailedEventAction {}

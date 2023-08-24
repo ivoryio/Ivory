@@ -15,4 +15,4 @@ class ReferenceAccountFetchedEventAction {
   ReferenceAccountFetchedEventAction(this.referenceAccount);
 }
 
-class ReferenceAccountFailedEventAction {}
+class GetReferenceAccountFailedEventAction {}

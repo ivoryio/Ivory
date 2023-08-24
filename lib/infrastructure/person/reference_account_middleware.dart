@@ -18,7 +18,7 @@ class ReferenceAccountMiddleware extends MiddlewareClass<AppState> {
       if (response is GetReferenceAccountSuccessResponse) {
         store.dispatch(ReferenceAccountFetchedEventAction(response.referenceAccount));
       } else if (response is PersonServiceErrorResponse) {
-        store.dispatch(ReferenceAccountFailedEventAction());
+        store.dispatch(GetReferenceAccountFailedEventAction());
       }
     }
   }

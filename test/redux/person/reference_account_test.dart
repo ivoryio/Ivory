@@ -9,6 +9,24 @@ import 'person_mocks.dart';
 
 void main() {
   group("Reference Account Fetching", () {
+    test("When fetching reference account should update with loading", () async {
+      // given
+      final store = createTestStore(
+        personService: FakePersonService(),
+        initialState: createAppState(
+          referenceAccountState: ReferenceAccountInitialState(),
+        ),
+      );
+      final loadingState =
+          store.onChange.firstWhere((element) => element.referenceAccountState is ReferenceAccountLoadingState);
+
+      // when
+      store.dispatch(GetReferenceAccountCommandAction(user: MockUser()));
+
+      // then
+      expect((await loadingState).referenceAccountState, isA<ReferenceAccountLoadingState>());
+    });
+
     test("When fetching reference account successfully should update with reference account", () async {
       // given
       final store = createTestStore(
