@@ -4,8 +4,10 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:solarisdemo/screens/splitpay/splitpay_screen.dart';
 
+import '../config.dart';
 import '../cubits/auth_cubit/auth_cubit.dart';
 import '../models/transactions/transaction_model.dart';
+import '../models/transactions/upcoming_transaction_model.dart';
 import '../models/user.dart';
 import '../utilities/format.dart';
 import 'button.dart';
@@ -34,11 +36,13 @@ class TransactionListItem extends StatelessWidget {
     var senderName = removeUnrelatedWords(transaction.senderName);
 
     final date = transaction.recordedAt!.toIso8601String();
-    final displayedName = user.personAccount.iban == transaction.senderIban ? recipientName : senderName;
+    final displayedName = user.personAccount.iban == transaction.senderIban
+        ? recipientName
+        : senderName;
     final description = transaction.description!;
     final amount = transaction.amount?.value ?? 0;
 
-    final DateFormat dateFormatter = DateFormat('d MMMM, HH:mm ');
+    final DateFormat dateFormatter = DateFormat('MMM d, HH:mm ');
     final String formattedDate = dateFormatter.format(DateTime.parse(date));
 
     return GestureDetector(
@@ -57,12 +61,12 @@ class TransactionListItem extends StatelessWidget {
           amount: amount,
           description: description,
           recipientName: displayedName,
+          categoryIcon: transaction.category?.icon,
         ));
   }
 
   removeUnrelatedWords(fullName) {
     var pattern = RegExp(r' X-');
-
     var storageResult = fullName!.split(pattern)[0];
     storageResult = storageResult.substring(0, shortenName(storageResult));
 
@@ -78,11 +82,86 @@ class TransactionListItem extends StatelessWidget {
   }
 }
 
+class UpcomingTransactionListItem extends StatelessWidget {
+  final bool? isClickable;
+  final UpcomingTransaction upcomingTransaction;
+
+  const UpcomingTransactionListItem({
+    super.key,
+    required this.upcomingTransaction,
+    this.isClickable = true,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final date = upcomingTransaction.statementDate!.toIso8601String();
+    final amount = upcomingTransaction.outstandingAmount?.value ?? 0;
+
+    final DateFormat dateFormatter = DateFormat('MMM d, HH:mm ');
+    final String formattedDate = dateFormatter.format(DateTime.parse(date));
+
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.currency_exchange,
+                size: 20,
+                color: ClientConfig.getColorScheme().secondary,
+              ),
+              const SizedBox(
+                width: 16,
+              ),
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                const Text('Automatic repayment',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                    )),
+                Text(
+                  formattedDate,
+                  style: const TextStyle(
+                    color: Color(0xFF667085),
+                  ),
+                )
+              ]),
+            ],
+          ),
+          Text(
+            amount == 0
+                ? Format.euro(amount)
+                : amount < 0
+                    ? (Format.euro(amount)).split(' ').join('')
+                    : '+ ${Format.euro(amount).split(' ').join('')}',
+            style: const TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 16,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  removeSpaceBetweenCurrencyAndAmount(amount) {
+    var pattern = RegExp(r' ');
+
+    var storageResult = amount!.split(pattern);
+    storageResult = storageResult.join('');
+
+    return storageResult;
+  }
+}
+
 class TransactionCard extends StatelessWidget {
   final String recipientName;
   final String description;
   final double amount;
   final String formattedDate;
+  final IconData? categoryIcon;
 
   const TransactionCard({
     super.key,
@@ -90,6 +169,7 @@ class TransactionCard extends StatelessWidget {
     required this.recipientName,
     required this.formattedDate,
     required this.amount,
+    required this.categoryIcon,
   });
 
   @override
@@ -101,16 +181,19 @@ class TransactionCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(
-                Icons.add_card,
+              Icon(
+                categoryIcon,
                 size: 20,
-                color: Color(0xFFCC0000),
+                color: ClientConfig.getColorScheme().secondary,
               ),
               const SizedBox(
                 width: 16,
               ),
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(recipientName.isNotEmpty ? recipientName : defaultTransactionRecipientName,
+                Text(
+                    recipientName.isNotEmpty
+                        ? recipientName
+                        : defaultTransactionRecipientName,
                     style: const TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 16,
@@ -146,7 +229,8 @@ class TransactionBottomPopup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final DateFormat dateFormatter = DateFormat('d MMMM yyyy, HH:Hm ');
-    final String formattedDate = dateFormatter.format(DateTime.parse(transaction.recordedAt!.toIso8601String()));
+    final String formattedDate = dateFormatter
+        .format(DateTime.parse(transaction.recordedAt!.toIso8601String()));
 
     return Column(
       children: [

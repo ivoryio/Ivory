@@ -12,7 +12,7 @@ void main() {
         endToEndId: 'end1',
         recipientName: 'name1',
         recipientIban: 'iban1',
-        amount: Amount(value: 100.0, currency: 'USD'),
+        amount: AmountTransfer(value: 100.0, currency: 'USD'),
       );
 
       var json = transfer.toJson();

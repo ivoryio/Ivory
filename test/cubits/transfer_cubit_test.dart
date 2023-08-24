@@ -202,7 +202,7 @@ void main() {
         recipientBic: 'test_bic',
         endToEndId: 'test_endToEndId',
         type: TransferType.SEPA_CREDIT_TRANSFER,
-        amount: Amount(value: 10.0, currency: 'EUR'),
+        amount: AmountTransfer(value: 10.0, currency: 'EUR'),
       );
 
       when(mockTransactionService.createTransfer(mockTransfer)).thenAnswer(

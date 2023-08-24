@@ -1,3 +1,4 @@
+import 'package:solarisdemo/redux/bank_card/bank_card_reducer.dart';
 import 'package:solarisdemo/redux/categories/category_reducer.dart';
 import 'package:solarisdemo/redux/credit_line/credit_line_reducer.dart';
 import 'package:solarisdemo/redux/repayments/bills/bills_reducer.dart';
@@ -12,6 +13,7 @@ AppState appReducer(AppState currentState, dynamic action) {
     creditLineState: creditLineReducer(currentState.creditLineState, action),
     repaymentReminderState: repaymentReminderReducer(currentState.repaymentReminderState, action),
     billsState: billsReducer(currentState.billsState, action),
+    bankCardState: bankCardReducer(currentState.bankCardState, action),
     categoriesState: categoriesReducer(currentState.categoriesState, action),
   );
 }

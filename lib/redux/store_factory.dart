@@ -1,4 +1,6 @@
 import 'package:redux/redux.dart';
+import 'package:solarisdemo/infrastructure/bank_card/bank_card_middleware.dart';
+import 'package:solarisdemo/infrastructure/bank_card/bank_card_service.dart';
 import 'package:solarisdemo/infrastructure/categories/categories_middleware.dart';
 import 'package:solarisdemo/infrastructure/categories/categories_service.dart';
 import 'package:solarisdemo/infrastructure/credit_line/credit_line_middleware.dart';
@@ -22,6 +24,7 @@ Store<AppState> createStore({
   required CreditLineService creditLineService,
   required RepaymentReminderService repaymentReminderService,
   required BillService billService,
+  required BankCardService bankCardService,
   required CategoriesService categoriesService,
 }) {
   return Store<AppState>(
@@ -33,6 +36,7 @@ Store<AppState> createStore({
       GetCreditLineMiddleware(creditLineService),
       RepaymentRemindersMiddleware(repaymentReminderService),
       GetBillsMiddleware(billService),
+      BankCardMiddleware(bankCardService),
       GetCategoriesMiddleware(categoriesService),
     ],
   );

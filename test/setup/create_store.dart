@@ -1,4 +1,5 @@
 import 'package:redux/redux.dart';
+import 'package:solarisdemo/infrastructure/bank_card/bank_card_service.dart';
 import 'package:solarisdemo/infrastructure/categories/categories_service.dart';
 import 'package:solarisdemo/infrastructure/credit_line/credit_line_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
@@ -17,6 +18,7 @@ Store<AppState> createTestStore({
   CreditLineService? creditLineService,
   RepaymentReminderService? repaymentReminderService,
   BillService? billService,
+  BankCardService? bankCardService,
   CategoriesService? categoriesService,
 }) {
   return createStore(
@@ -26,6 +28,7 @@ Store<AppState> createTestStore({
     creditLineService: creditLineService ?? NotImplementedCreditLineService(),
     repaymentReminderService: repaymentReminderService ?? NotImplementedRepaymentReminderService(),
     billService: billService ?? NotImplementedBillService(),
+    bankCardService: bankCardService ?? NotImplementedBankCardService(),
     categoriesService: categoriesService ?? NotImplementedCategoriesService(),
   );
 }
@@ -71,6 +74,18 @@ class NotImplementedBillService extends BillService {
 
   @override
   Future<BillServiceResponse> getBillById({required String id, User? user}) {
+    throw UnimplementedError();
+  }
+}
+
+class NotImplementedBankCardService extends BankCardService {
+  @override
+  Future<BankCardServiceResponse> getBankCardById({User? user, String? cardId}) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<BankCardServiceResponse> activateBankCard({User? user, String? cardId}) {
     throw UnimplementedError();
   }
 }
