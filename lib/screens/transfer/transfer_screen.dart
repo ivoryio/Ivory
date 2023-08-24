@@ -7,6 +7,7 @@ import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/infrastructure/transfer/transfer_presenter.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/person/person_account/person_account_action.dart';
 import 'package:solarisdemo/redux/person/reference_account/reference_account_action.dart';
 import 'package:solarisdemo/screens/transfer/transfer_review_screen.dart';
 import 'package:solarisdemo/utilities/format.dart';
@@ -14,6 +15,7 @@ import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/ivory_amount_field.dart';
 import 'package:solarisdemo/widgets/ivory_card.dart';
+import 'package:solarisdemo/widgets/ivory_generic_error.dart';
 import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
@@ -57,6 +59,7 @@ class _TransferScreenState extends State<TransferScreen> {
       body: StoreConnector<AppState, TransferViewModel>(
         onInit: (store) {
           store.dispatch(GetReferenceAccountCommandAction(user: user.cognito));
+          store.dispatch(GetPersonAccountCommandAction(user: user.cognito));
         },
         converter: (store) => TransferPresenter.presentTransfer(
           referenceAccountState: store.state.referenceAccountState,
@@ -67,7 +70,7 @@ class _TransferScreenState extends State<TransferScreen> {
             amountController.addListener(() {
               setState(() {
                 final value = double.tryParse(amountController.text) ?? 0;
-                final balance = user.personAccount.availableBalance!.value;
+                final balance = newViewModel.personAccount.availableBalance!.value.toDouble();
 
                 if (value > balance) {
                   _errorText = "Not enough balance";
@@ -97,7 +100,7 @@ class _TransferScreenState extends State<TransferScreen> {
                   ? const [Expanded(child: Center(child: CircularProgressIndicator()))]
                   : viewModel is TransferFetchedAccountsViewModel
                       ? _buildBody(viewModel)
-                      : [Text("Error")],
+                      : const [IvoryGenericError()],
             ],
           );
         },
@@ -117,8 +120,8 @@ class _TransferScreenState extends State<TransferScreen> {
               children: [
                 _Card(
                   title: "Porsche account",
-                  iban: user.personAccount.iban!,
-                  balance: user.personAccount.availableBalance!.value.toDouble(),
+                  iban: viewModel.personAccount.iban!,
+                  balance: viewModel.personAccount.availableBalance!.value.toDouble(),
                 ),
                 const Padding(
                   padding: EdgeInsets.all(4.0),
