@@ -49,24 +49,6 @@ class _TransferScreenState extends State<TransferScreen> {
     super.initState();
 
     user = context.read<AuthCubit>().state.user!;
-
-    // amountController.addListener(() {
-    //   setState(() {
-    //     final value = double.tryParse(amountController.text) ?? 0;
-    //     final balance = user.personAccount.availableBalance!.value;
-    //
-    //     if (value > balance) {
-    //       _errorText = "Not enough balance";
-    //       _canContinue = false;
-    //     } else if (value > 0) {
-    //       _errorText = null;
-    //       _canContinue = true;
-    //     } else {
-    //       _errorText = null;
-    //       _canContinue = false;
-    //     }
-    //   });
-    // });
   }
 
   @override
@@ -78,6 +60,7 @@ class _TransferScreenState extends State<TransferScreen> {
         },
         converter: (store) => TransferPresenter.presentTransfer(
           referenceAccountState: store.state.referenceAccountState,
+          personAccountState: store.state.personAccountState,
         ),
         onWillChange: (oldViewModel, newViewModel) {
           if (newViewModel is TransferFetchedAccountsViewModel) {
