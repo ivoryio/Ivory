@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart';
 import 'package:solarisdemo/models/person_account_summary.dart';
@@ -9,18 +10,21 @@ import 'package:solarisdemo/screens/repayments/repayments_screen.dart';
 import 'package:solarisdemo/screens/transactions/transactions_screen.dart';
 import 'package:solarisdemo/widgets/rewards.dart';
 import 'package:solarisdemo/widgets/screen.dart';
-import 'package:solarisdemo/widgets/transaction_list.dart';
 
 import '../../config.dart';
 import '../../cubits/account_summary_cubit/account_summary_cubit.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../cubits/transaction_list_cubit/transaction_list_cubit.dart';
+import '../../infrastructure/transactions/transaction_presenter.dart';
 import '../../models/transactions/transaction_model.dart';
 import '../../models/user.dart';
+import '../../redux/app_state.dart';
+import '../../redux/transactions/transactions_action.dart';
 import '../../services/person_service.dart';
 import '../../widgets/account_balance_text.dart';
 import '../../widgets/analytics.dart';
 import '../../widgets/modal.dart';
+import '../../widgets/transaction_listing_item.dart';
 import 'modals/new_transfer_popup.dart';
 
 const _defaultCountTransactionsDisplayed = 3;
@@ -41,8 +45,9 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     AuthenticatedUser user = context.read<AuthCubit>().state.user!;
 
-    AccountSummaryCubit accountSummaryCubit = AccountSummaryCubit(personService: PersonService(user: user.cognito))
-      ..getAccountSummary();
+    AccountSummaryCubit accountSummaryCubit =
+        AccountSummaryCubit(personService: PersonService(user: user.cognito))
+          ..getAccountSummary();
 
     TransactionListCubit transactionListCubit = TransactionListCubit(
       transactionService: TransactionService(user: user.cognito),
@@ -80,7 +85,6 @@ class HomeScreen extends StatelessWidget {
       centerTitle: false,
       child: HomePageContent(
         accountSummaryCubit: accountSummaryCubit,
-        transactionListCubit: transactionListCubit,
         user: user,
       ),
     );
@@ -89,14 +93,12 @@ class HomeScreen extends StatelessWidget {
 
 class HomePageContent extends StatelessWidget {
   final AccountSummaryCubit accountSummaryCubit;
-  final TransactionListCubit transactionListCubit;
   final AuthenticatedUser user;
 
   const HomePageContent({
     super.key,
     required this.user,
     required this.accountSummaryCubit,
-    required this.transactionListCubit,
   });
 
   @override
@@ -111,29 +113,63 @@ class HomePageContent extends StatelessWidget {
             accountSummaryCubit: accountSummaryCubit,
           ),
           Padding(
-            padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
+            padding:
+                ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
             child: Column(
               children: [
-                TransactionList(
-                  transactionListCubit: transactionListCubit,
-                  header: const TransactionListTitle(
-                    displayShowAllButton: true,
+                const TransactionListTitle(
+                  displayShowAllButton: true,
+                ),
+                StoreConnector<AppState, TransactionsViewModel>(
+                  onInit: (store) => store.dispatch(
+                    GetTransactionsCommandAction(
+                      filter: _defaultTransactionListFilter,
+                      user: user.cognito,
+                    ),
                   ),
-                  filter: const TransactionListFilter(
-                    size: _defaultCountTransactionsDisplayed,
-                  ),
+                  converter: (store) =>
+                      TransactionPresenter.presentTransactions(
+                          transactionsState: store.state.transactionsState),
+                  builder: (context, viewModel) {
+                    if (viewModel is TransactionsErrorViewModel) {
+                      return const Center(
+                        child: Text('Could not load transactions'),
+                      );
+                    }
+
+                    if (viewModel is TransactionsFetchedViewModel) {
+                      return Column(
+                        children: [
+                          for (var transaction in viewModel.transactions!)
+                            TransactionListItem(
+                              transaction: transaction,
+                            ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 0,
+                              vertical: ClientConfig.getCustomClientUiSettings()
+                                  .defaultScreenVerticalPadding,
+                            ),
+                            child: Analytics(
+                              transactions: viewModel.transactions!,
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+
+                    return const Center(child: CircularProgressIndicator());
+                  },
                 ),
               ],
             ),
           ),
           Padding(
-            padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-            child: Analytics(
-              transactionListCubit: transactionListCubit,
+            padding: EdgeInsets.symmetric(
+              horizontal: ClientConfig.getCustomClientUiSettings()
+                  .defaultScreenHorizontalPadding,
+              vertical: 0,
             ),
-          ),
-          Padding(
-            padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
             child: const Rewards(),
           ),
         ],
@@ -162,7 +198,8 @@ class HomePageHeader extends StatelessWidget {
             return Container(
               padding: EdgeInsets.symmetric(
                 vertical: 10,
-                horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+                horizontal: ClientConfig.getCustomClientUiSettings()
+                    .defaultScreenHorizontalPadding,
               ),
               width: MediaQuery.of(context).size.width,
               decoration: const BoxDecoration(
@@ -184,7 +221,8 @@ class HomePageHeader extends StatelessWidget {
           if (state is AccountSummaryCubitLoaded) {
             return Container(
               padding: EdgeInsets.symmetric(
-                horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+                horizontal: ClientConfig.getCustomClientUiSettings()
+                    .defaultScreenHorizontalPadding,
               ),
               width: MediaQuery.of(context).size.width,
               decoration: const BoxDecoration(
@@ -261,7 +299,8 @@ class AccountBalance extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PersonAccountSummary personAccountSummary = context.read<AccountSummaryCubit>().state.data!;
+    PersonAccountSummary personAccountSummary =
+        context.read<AccountSummaryCubit>().state.data!;
 
     return Column(
       children: [
@@ -298,9 +337,12 @@ class AccountBalance extends StatelessWidget {
         LinearPercentIndicator(
           lineHeight: 8,
           barRadius: const Radius.circular(40),
-          percent: ((personAccountSummary.outstandingAmount ?? 0) / (personAccountSummary.creditLimit ?? 0)).isInfinite
+          percent: ((personAccountSummary.outstandingAmount ?? 0) /
+                      (personAccountSummary.creditLimit ?? 0))
+                  .isInfinite
               ? 0
-              : (personAccountSummary.outstandingAmount ?? 0) / (personAccountSummary.creditLimit ?? 0.01),
+              : (personAccountSummary.outstandingAmount ?? 0) /
+                  (personAccountSummary.creditLimit ?? 0.01),
           backgroundColor: const Color(0xFF313038),
           progressColor: const Color(0xFFCC0000),
           curve: Curves.fastOutSlowIn,
@@ -404,7 +446,8 @@ class AccountOptions extends StatelessWidget {
               AssetImage('assets/icons/currency_exchange_euro_repay.png'),
               size: 24,
             ),
-            onPressed: () => Navigator.pushNamed(context, RepaymentsScreen.routeName),
+            onPressed: () =>
+                Navigator.pushNamed(context, RepaymentsScreen.routeName),
           ),
           AccountOptionsButton(
             textLabel: "Account",
@@ -412,7 +455,8 @@ class AccountOptions extends StatelessWidget {
               AssetImage('assets/icons/info.png'),
               size: 24,
             ),
-            onPressed: () => Navigator.pushNamed(context, AccountDetailsScreen.routeName),
+            onPressed: () =>
+                Navigator.pushNamed(context, AccountDetailsScreen.routeName),
           ),
         ],
       ),
@@ -425,7 +469,11 @@ class AccountOptionsButton extends StatelessWidget {
   final Widget icon;
   final Function onPressed;
 
-  const AccountOptionsButton({super.key, required this.textLabel, required this.icon, required this.onPressed});
+  const AccountOptionsButton(
+      {super.key,
+      required this.textLabel,
+      required this.icon,
+      required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
