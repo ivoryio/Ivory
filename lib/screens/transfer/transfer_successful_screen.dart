@@ -129,7 +129,8 @@ class TransferSuccessfulScreen extends StatelessWidget {
             padding: EdgeInsets.symmetric(
               horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
             ),
-            child: PrimaryButton(
+            child: Button(
+              color: const Color(0xFF2575FC),
               text: "Back to \"Home\"",
               onPressed: () => Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false),
             ),

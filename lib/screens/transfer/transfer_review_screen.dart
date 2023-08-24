@@ -58,7 +58,22 @@ class TransferReviewScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            Format.euro(params.amount),
+                            Format.euro(params.amount, digits: 2),
+                            style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold.copyWith(
+                                  color: Colors.black,
+                                ),
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            "From:",
+                            style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(
+                                  color: const Color(0xFF56555E),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            "Ivory account",
                             style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold.copyWith(
                                   color: Colors.black,
                                 ),
@@ -73,7 +88,7 @@ class TransferReviewScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            Format.iban(params.toAccount),
+                            "Reference account",
                             style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold.copyWith(
                                   color: Colors.black,
                                 ),
@@ -108,7 +123,8 @@ class TransferReviewScreen extends StatelessWidget {
             padding: EdgeInsets.symmetric(
               horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
             ),
-            child: PrimaryButton(
+            child: Button(
+              color: const Color(0xFF2575FC),
               text: "Sign & confirm",
               onPressed: () => Navigator.pushNamed(context, TransferSignScreen.routeName),
             ),
