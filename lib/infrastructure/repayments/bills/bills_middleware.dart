@@ -1,7 +1,9 @@
 import 'package:redux/redux.dart';
+import 'package:solarisdemo/infrastructure/file_saver_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/bills/bill_service.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/repayments/bills/bills_action.dart';
+import 'package:solarisdemo/redux/repayments/bills/bills_state.dart';
 
 class GetBillsMiddleware extends MiddlewareClass<AppState> {
   final BillService _billService;
@@ -23,14 +25,32 @@ class GetBillsMiddleware extends MiddlewareClass<AppState> {
       }
     }
 
+    if (action is GetBillByIdCommandAction) {
+      final response = await _billService.getBillById(id: action.id, user: action.user);
+
+      if (response is GetBillByIdSuccessResponse) {
+        final newBills = (store.state.billsState as BillsFetchedState).bills.map((bill) {
+          if (bill.id == action.id) {
+            return response.bill;
+          }
+
+          return bill;
+        }).toList();
+        store.dispatch(BillsFetchedEventAction(bills: newBills));
+      }
+    }
+
     if (action is DownloadBillCommandAction) {
       store.dispatch(BillDownloadingEventAction());
       final response = await _billService.downloadBillAsPdf(postboxItemId: action.bill.postboxItemId);
 
       if (response != null) {
-        store.dispatch(DownloadBillSuccessEventAction());
+        await FileSaverService.saveFile(
+            name: action.bill.postboxItemId, ext: '.pdf', bytes: response, mimeType: 'application/pdf');
+
+        action.onDownloaded?.call();
       } else {
-        store.dispatch(DownloadBillFailedEventAction());
+        action.onDownloadFailed?.call();
       }
     }
   }

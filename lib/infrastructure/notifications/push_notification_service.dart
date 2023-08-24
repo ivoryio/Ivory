@@ -11,7 +11,7 @@ import 'package:solarisdemo/services/api_service.dart';
 
 import '../../redux/app_state.dart';
 
-const String _channelId = 'high_importance_channel';
+const String highImportanceChannelId = 'high_importance_channel';
 
 @pragma('vm:entry-point')
 Future<void> _onBackgroundMessage(RemoteMessage message) async {
@@ -65,8 +65,8 @@ class FirebasePushNotificationService extends PushNotificationService {
             notification.body,
             NotificationDetails(
               android: AndroidNotificationDetails(
-                android.channelId ?? _channelId,
-                android.channelId ?? _channelId,
+                android.channelId ?? highImportanceChannelId,
+                android.channelId ?? highImportanceChannelId,
               ),
             ),
             payload: jsonEncode(message.toMap()),
@@ -75,13 +75,9 @@ class FirebasePushNotificationService extends PushNotificationService {
       });
     }
 
-    FirebaseMessaging.onBackgroundMessage(
-        _onBackgroundMessage); // App is in background and notification received
-    FirebaseMessaging.onMessageOpenedApp
-        .listen(_onMessage); // App was in background and notification clicked
-    FirebaseMessaging.instance
-        .getInitialMessage()
-        .then(_onMessage); // App was terminated and notification clicked
+    FirebaseMessaging.onBackgroundMessage(_onBackgroundMessage); // App is in background and notification received
+    FirebaseMessaging.onMessageOpenedApp.listen(_onMessage); // App was in background and notification clicked
+    FirebaseMessaging.instance.getInitialMessage().then(_onMessage); // App was terminated and notification clicked
 
     // Handle token
     _messaging.getToken().then(_onTokenRefresh); // Initial token (on app start)
@@ -98,19 +94,18 @@ class FirebasePushNotificationService extends PushNotificationService {
     if (!Platform.isAndroid) return;
 
     const AndroidNotificationChannel channel = AndroidNotificationChannel(
-      _channelId,
-      _channelId,
+      highImportanceChannelId,
+      highImportanceChannelId,
       importance: Importance.max,
     );
     final androidImplementation = FlutterLocalNotificationsPlugin()
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>();
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
 
     await androidImplementation?.initialize(
       const AndroidInitializationSettings('@mipmap/ic_launcher'),
       onDidReceiveNotificationResponse: (response) async {
         // On click handled for our foreground notifications on Android
-        if (response.payload == null) return;
+        if (response.payload == null || response.payload!.isEmpty) return;
         final message = RemoteMessage.fromMap(jsonDecode(response.payload!));
         _onMessage(message);
       },
@@ -124,8 +119,7 @@ class FirebasePushNotificationService extends PushNotificationService {
     if (token == null) return;
 
     try {
-      await post('notifications/token',
-          body: {'token': token}, authNeeded: true);
+      await post('notifications/token', body: {'token': token}, authNeeded: true);
     } catch (e) {
       log(e.toString());
       throw Exception("Could not update token");

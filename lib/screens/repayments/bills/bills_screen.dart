@@ -46,10 +46,7 @@ class BillsScreen extends StatelessWidget {
               onInit: (store) {
                 store.dispatch(GetBillsCommandAction(user: user.cognito));
               },
-              converter: (store) => BillsPresenter.presentBills(
-                billState: store.state.billsState,
-                user: user,
-              ),
+              converter: (store) => BillsPresenter.presentBills(billState: store.state.billsState),
               distinct: true,
               builder: (context, viewModel) {
                 if (viewModel is BillsLoadingViewModel || viewModel is BillsInitialViewModel) {
@@ -158,7 +155,7 @@ class _BillItem extends StatelessWidget {
       contentPadding: EdgeInsets.zero,
       onTap: () => Navigator.of(context).pushNamed(
         BillDetailScreen.routeName,
-        arguments: bill,
+        arguments: bill.id,
       ),
     );
   }

@@ -1,4 +1,7 @@
+import 'dart:typed_data';
+
 import 'package:equatable/equatable.dart';
+import 'package:http/http.dart' as http;
 import 'package:solarisdemo/models/repayments/bills/bill.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/services/api_service.dart';
@@ -22,30 +25,55 @@ class BillService extends ApiService {
     }
   }
 
-  Future<BillServiceResponse> getBillById({required String id}) async {
+  Future<BillServiceResponse> getBillById({required String id, User? user}) async {
+    if (user != null) {
+      this.user = user;
+    }
     try {
       final data = await get('bills/$id');
 
-      return GetBillsSuccessResponse(bills: [Bill.fromJson(data)]);
+      return GetBillByIdSuccessResponse(bill: Bill.fromJson(data));
     } catch (e) {
       return BillServiceErrorResponse();
     }
   }
 
-  Future downloadBillAsPdf({
+  Future<Uint8List?> downloadBillAsPdf({
     required String postboxItemId,
     User? user,
   }) async {
     if (user != null) {
       this.user = user;
     }
-
     try {
-      final data = await get('postbox_items/$postboxItemId');
+      final data = await downloadPdf('postbox_items/$postboxItemId');
 
       return data;
     } catch (e) {
       return null;
+    }
+  }
+
+  Future<Uint8List> downloadPdf(
+    String path, {
+    Map<String, String> queryParameters = const {},
+  }) async {
+    try {
+      String? accessToken = await getAccessToken();
+
+      final response = await http.get(
+        ApiService.url(path, queryParameters: queryParameters),
+        headers: {
+          "Authorization": "Bearer $accessToken",
+        },
+      );
+      if (response.statusCode != 200) {
+        throw Exception("GET request response code: ${response.statusCode}");
+      }
+
+      return response.bodyBytes;
+    } catch (e) {
+      throw Exception("Could not get data");
     }
   }
 }
@@ -62,6 +90,15 @@ class GetBillsSuccessResponse extends BillServiceResponse {
 
   @override
   List<Object?> get props => [bills];
+}
+
+class GetBillByIdSuccessResponse extends BillServiceResponse {
+  final Bill bill;
+
+  GetBillByIdSuccessResponse({required this.bill});
+
+  @override
+  List<Object?> get props => [bill];
 }
 
 class BillServiceErrorResponse extends BillServiceResponse {}

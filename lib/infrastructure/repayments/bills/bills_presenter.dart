@@ -1,10 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:solarisdemo/models/repayments/bills/bill.dart';
-import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/repayments/bills/bills_state.dart';
 
 class BillsPresenter {
-  static BillsViewModel presentBills({required BillsState billState, required AuthenticatedUser user}) {
+  static BillsViewModel presentBills({required BillsState billState}) {
     if (billState is BillsLoadingState) {
       return BillsLoadingViewModel();
     } else if (billState is BillsErrorState) {
