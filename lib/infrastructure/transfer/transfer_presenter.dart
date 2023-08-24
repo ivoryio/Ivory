@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:solarisdemo/models/person/person_reference_account.dart';
-import 'package:solarisdemo/redux/person/reference_account_state.dart';
+import 'package:solarisdemo/redux/person/reference_account/reference_account_state.dart';
 
 class TransferPresenter {
   static TransferViewModel presentTransfer({

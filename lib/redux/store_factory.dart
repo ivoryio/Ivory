@@ -7,6 +7,7 @@ import 'package:solarisdemo/infrastructure/credit_line/credit_line_middleware.da
 import 'package:solarisdemo/infrastructure/credit_line/credit_line_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/notifications_middleware.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
+import 'package:solarisdemo/infrastructure/person/person_account_middleware.dart';
 import 'package:solarisdemo/infrastructure/repayments/bills/bill_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/bills/bills_middleware.dart';
 import 'package:solarisdemo/infrastructure/person/person_service.dart';
@@ -42,6 +43,7 @@ Store<AppState> createStore({
       BankCardMiddleware(bankCardService),
       GetCategoriesMiddleware(categoriesService),
       ReferenceAccountMiddleware(personService),
+      PersonAccountMiddleware(personService),
     ],
   );
 }

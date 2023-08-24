@@ -7,7 +7,7 @@ import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/infrastructure/transfer/transfer_presenter.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
-import 'package:solarisdemo/redux/person/reference_account_action.dart';
+import 'package:solarisdemo/redux/person/reference_account/reference_account_action.dart';
 import 'package:solarisdemo/screens/transfer/transfer_review_screen.dart';
 import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';

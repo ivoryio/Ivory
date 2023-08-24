@@ -105,4 +105,9 @@ class NotImplementedPersonService extends PersonService {
   Future<PersonServiceResponse> getReferenceAccount({User? user}) {
     throw UnimplementedError();
   }
+
+  @override
+  Future<PersonServiceResponse> getPersonAccount({User? user}) {
+    throw UnimplementedError();
+  }
 }

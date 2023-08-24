@@ -7,12 +7,12 @@ class GetReferenceAccountCommandAction {
   GetReferenceAccountCommandAction({required this.user});
 }
 
-class GetReferenceAccountLoadingEventAction {}
+class ReferenceAccountLoadingEventAction {}
 
-class GetReferenceAccountSuccessEventAction {
+class ReferenceAccountFetchedEventAction {
   final PersonReferenceAccount referenceAccount;
 
-  GetReferenceAccountSuccessEventAction(this.referenceAccount);
+  ReferenceAccountFetchedEventAction(this.referenceAccount);
 }
 
-class GetReferenceAccountFailedEventAction {}
+class ReferenceAccountFailedEventAction {}
