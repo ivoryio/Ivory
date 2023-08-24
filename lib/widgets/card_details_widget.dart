@@ -4,21 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 // import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:solarisdemo/models/bank_card.dart';
 
 import '../config.dart';
 import '../utilities/format.dart';
 
 class BankCardShowDetailsWidget extends StatelessWidget {
-  final String cardNumber;
-  final String cardExpiry;
-  final String cardCvv;
+  final BankCardFetchedDetails cardDetails;
   final String? cardType;
 
   const BankCardShowDetailsWidget({
     super.key,
-    required this.cardNumber,
-    required this.cardExpiry,
-    required this.cardCvv,
+    required this.cardDetails,
     this.cardType,
   });
 
@@ -49,10 +46,9 @@ class BankCardShowDetailsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<String> cardNumberParts = Format.iban(cardNumber).split(" ");
+    List<String> cardNumberParts = Format.iban(cardDetails.cardNumber).split(" ");
 
     return SizedBox(
-      // width: double.infinity,
       width: 310,
       child: AspectRatio(
         aspectRatio: 295 / 188,
@@ -71,8 +67,8 @@ class BankCardShowDetailsWidget extends StatelessWidget {
                 end: Alignment.topLeft,
                 stops: [0.0, 0.5629],
                 colors: [
-                  Color(0xFF585858),
-                  Color(0xFF000000),
+                  Color(0xFF1D26A7),
+                  Color(0xFF6300BB),
                 ],
                 transform: GradientRotation(135 * (3.1415926 / 180.0)),
               ),
@@ -113,7 +109,7 @@ class BankCardShowDetailsWidget extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Text(
-                              "CARD HOLDER",
+                              "CARD NUMBER",
                               style: TextStyle(
                                 fontSize: 12,
                                 height: 16 / 12,
@@ -173,7 +169,7 @@ class BankCardShowDetailsWidget extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text(
-                                  "EXPIRAY DATE",
+                                  "EXPIRY DATE",
                                   style: TextStyle(
                                     fontSize: 12,
                                     height: 16 / 12,
@@ -182,7 +178,7 @@ class BankCardShowDetailsWidget extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  cardExpiry,
+                                  cardDetails.cardExpiry,
                                   style: const TextStyle(
                                     fontSize: 16,
                                     height: 24 / 16,
@@ -209,7 +205,7 @@ class BankCardShowDetailsWidget extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Text(
-                                      cardCvv,
+                                      cardDetails.cvv,
                                       style: const TextStyle(
                                         fontSize: 16,
                                         height: 24 / 16,
@@ -230,9 +226,11 @@ class BankCardShowDetailsWidget extends StatelessWidget {
                                         ),
                                         onPressed: () {
                                           showAlertDialog(
-                                              context, cardCvv, "CVV");
+                                              context, cardDetails.cvv, "CVV");
                                           inspect(
-                                            ClipboardData(text: cardCvv),
+                                            ClipboardData(
+                                              text: cardDetails.cvv,
+                                            ),
                                           );
                                         },
                                       ),

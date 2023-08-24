@@ -8,6 +8,7 @@ import 'package:solarisdemo/models/device_activity.dart';
 import 'package:solarisdemo/models/device_consent.dart';
 import 'package:solarisdemo/services/device_service.dart';
 
+import '../../infrastructure/devices/device_service.dart';
 import '../../models/person_account.dart';
 import '../../models/person_model.dart';
 import '../../models/user.dart';
@@ -27,7 +28,7 @@ class LoginCubit extends Cubit<LoginState> {
   }) : super(LoginInitial());
 
   Future<void> getSavedCredentials() async {
-    final credentials = await DeviceUtilService.getCredentialsFromCache();
+    final credentials = await DeviceService.getCredentialsFromCache();
 
     if (credentials?.email != null && credentials?.password != null) {
       debugPrint('$credentials');
@@ -72,20 +73,20 @@ class LoginCubit extends Cubit<LoginState> {
           user: user,
         ));
 
-        await DeviceUtilService.saveCredentialsInCache(email!, password);
+        await DeviceService.saveCredentialsInCache(email!, password);
 
-        String? consentId = await DeviceUtilService.getDeviceConsentId();
-        if (consentId == null || consentId.isEmpty) {
+        String? consentId = await DeviceService.getDeviceConsentId();
+        if (consentId.isEmpty) {
           log('consentId is null');
           CreateDeviceConsentResponse? createdConsent =
-              await DeviceService(user: user).createDeviceConsent();
+              await OldDeviceService(user: user).createDeviceConsent();
           if (createdConsent != null) {
-            await DeviceUtilService.saveDeviceConsentId(createdConsent.id);
+            await DeviceService.saveDeviceConsentId(createdConsent.id);
           }
-          await DeviceService(user: user)
+          await OldDeviceService(user: user)
               .createDeviceActivity(DeviceActivityType.CONSENT_PROVIDED);
         }
-        await DeviceService(user: user)
+        await OldDeviceService(user: user)
             .createDeviceActivity(DeviceActivityType.APP_START);
       }
     } on CognitoUserNewPasswordRequiredException {

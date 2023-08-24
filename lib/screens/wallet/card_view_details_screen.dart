@@ -1,96 +1,154 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:solarisdemo/widgets/app_toolbar.dart';
+import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../config.dart';
-import '../../cubits/card_details_cubit/card_details_cubit.dart';
+import '../../cubits/auth_cubit/auth_cubit.dart';
+import '../../infrastructure/bank_card/bank_card_presenter.dart';
+import '../../models/user.dart';
+import '../../redux/app_state.dart';
+import '../../redux/bank_card/bank_card_action.dart';
 import '../../widgets/button.dart';
 import '../../widgets/card_details_widget.dart';
 import '../../widgets/circular_countdown_progress_widget.dart';
-import '../../widgets/screen.dart';
+import 'card_details_screen.dart';
 
 class BankCardViewDetailsScreen extends StatelessWidget {
-  const BankCardViewDetailsScreen({super.key});
+  final CardDetailsScreenParams params;
+  static const routeName = '/cardViewDetailsScreen';
+
+  const BankCardViewDetailsScreen({super.key, required this.params});
 
   @override
   Widget build(BuildContext context) {
-    final state = context.read<BankCardDetailsCubit>().state;
+    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
 
-    return Screen(
-      scrollPhysics: const NeverScrollableScrollPhysics(),
-      title: 'View card details',
-      titleTextStyle: const TextStyle(
-        fontSize: 16,
-        height: 24 / 16,
-        fontWeight: FontWeight.w600,
-      ),
-      backButtonIcon: const Icon(Icons.arrow_back, size: 24),
-      centerTitle: true,
-      hideAppBar: false,
-      hideBackButton: false,
-      hideBottomNavbar: true,
-      child: Padding(
+    return ScreenScaffold(
+      body: Padding(
         padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const Column(
-              children: [
-                BankCardShowDetailsWidget(
-                  cardNumber: '4957 3648 3747 4573',
-                  cardCvv: '362',
-                  cardExpiry: '10/27',
-                  cardType: 'Physical card',
-                ),
-              ],
+            AppToolbar(
+              title: 'View card details',
+              onBackButtonPressed: () {
+                Navigator.pop(context);
+                StoreProvider.of<AppState>(context).dispatch(
+                  GetBankCardCommandAction(
+                    user: user,
+                    cardId: params.card.id,
+                  ),
+                );
+              },
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Flexible(
-                      child: Text(
-                        'This information will be displayed for 60 seconds.',
-                        style: TextStyle(
-                            fontSize: 16,
-                            height: 24 / 16,
-                            fontWeight: FontWeight.w400),
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Container(
-                      width: 70,
-                      height: 70,
-                      alignment: Alignment.center,
-                      padding: const EdgeInsets.all(0.0),
-                      child: CircularCountdownProgress(
-                        onCompleted: () {
-                          context
-                              .read<BankCardDetailsCubit>()
-                              .goToCardDetails(state.card!);
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(top: 16),
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  child: PrimaryButton(
-                    text: 'Back to "Card"',
-                    onPressed: () {
-                      context
-                          .read<BankCardDetailsCubit>()
-                          .goToCardDetails(state.card!);
-                    },
+            StoreConnector<AppState, BankCardViewModel>(
+              converter: (store) => BankCardPresenter.presentBankCard(
+                bankCardState: store.state.bankCardState,
+                user: user,
+              ),
+              onInit: (store) => {
+                store.dispatch(
+                  BankCardFetchDetailsCommandAction(
+                    user: user,
+                    bankCard: params.card,
                   ),
                 ),
-              ],
-            ),
+              },
+              builder: (context, viewModel) {
+                if (viewModel is BankCardLoadingViewModel) {
+                  return const Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircularProgressIndicator(),
+                      ],
+                    ),
+                  );
+                }
+                if (viewModel is BankCardErrorViewModel) {
+                  return const Center(
+                    child: Text('Error'),
+                  );
+                }
+                if (viewModel is BankCardDetailsFetchedViewModel) {
+                  return Flexible(
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        BankCardShowDetailsWidget(
+                          cardDetails: viewModel.cardDetails,
+                          cardType: 'Physical card',
+                        ),
+                        const Spacer(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Flexible(
+                              child: Text(
+                                'This information will be displayed for 60 seconds.',
+                                style: TextStyle(fontSize: 16, height: 24 / 16, fontWeight: FontWeight.w400),
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Container(
+                              width: 70,
+                              height: 70,
+                              alignment: Alignment.center,
+                              padding: const EdgeInsets.all(0.0),
+                              child: CircularCountdownProgress(
+                                onCompleted: () {
+                                  Navigator.pop(context);
+                                  StoreProvider.of<AppState>(context).dispatch(
+                                    GetBankCardCommandAction(
+                                      user: user,
+                                      cardId: params.card.id,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        SizedBox(
+                          width: double.infinity,
+                          height: 48,
+                          child: Button(
+                            disabledColor: const Color(0xFFDFE2E6),
+                            color: const Color(0xFF2575FC),
+                            text: 'Back to "Card"',
+                            onPressed: () {
+                              Navigator.pop(context);
+                              StoreProvider.of<AppState>(context).dispatch(
+                                GetBankCardCommandAction(
+                                  user: user,
+                                  cardId: params.card.id,
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+                return const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ],
+                );
+              },
+            )
           ],
         ),
       ),

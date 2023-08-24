@@ -77,7 +77,7 @@ class BankCardsService extends ApiService {
 
   Future<GetCardDetailsResponse> getCardDetails({
     required String cardId,
-    required GetCardDetailsRequest requestBody,
+    required GetCardDetailsRequestBody requestBody,
   }) async {
     try {
       String path = '/account/cards/$cardId/details';

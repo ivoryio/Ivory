@@ -125,8 +125,9 @@ class _CircularCountdownProgressState extends State<CircularCountdownProgress> {
             value: widget.duration!.inSeconds > 0
                 ? _remainingTime / widget.duration!.inSeconds
                 : 0,
-            backgroundColor: Colors.white,
-            valueColor: const AlwaysStoppedAnimation<Color>(Colors.red),
+            backgroundColor: const Color(0xFFE9EAEB),
+            valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF2575FC)),
+            
           ),
         ),
       ],

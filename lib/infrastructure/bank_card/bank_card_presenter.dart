@@ -31,6 +31,11 @@ class BankCardPresenter {
         user: user,
         bankCard: bankCardState.card,
       );
+    } else if (bankCardState is BankCardDetailsFetchedState) {
+      return BankCardDetailsFetchedViewModel(
+        cardDetails: bankCardState.cardDetails,
+        bankCard: bankCardState.bankCard,
+      );
     }
     return BankCardInitialViewModel();
   }
@@ -40,8 +45,9 @@ abstract class BankCardViewModel extends Equatable {
   final String? pin;
   final BankCard? bankCard;
   final AuthenticatedUser? user;
+  final BankCardFetchedDetails? cardDetails;
 
-  const BankCardViewModel({this.user, this.pin, this.bankCard});
+  const BankCardViewModel({this.user, this.pin, this.bankCard, this.cardDetails});
 
   @override
   List<Object?> get props => [pin];
@@ -68,8 +74,7 @@ class BankCardPinChoosenViewModel extends BankCardViewModel {
   final String pin;
   final AuthenticatedUser user;
 
-  const BankCardPinChoosenViewModel(
-      {required this.pin, required this.user, required this.bankCard});
+  const BankCardPinChoosenViewModel({required this.pin, required this.user, required this.bankCard});
 
   @override
   List<Object?> get props => [pin];
@@ -79,9 +84,18 @@ class BankCardActivatedViewModel extends BankCardViewModel {
   final BankCard bankCard;
   final AuthenticatedUser user;
 
-  const BankCardActivatedViewModel(
-      {required this.bankCard, required this.user});
+  const BankCardActivatedViewModel({required this.bankCard, required this.user});
 
   @override
   List<Object?> get props => [bankCard];
+}
+
+class BankCardDetailsFetchedViewModel extends BankCardViewModel {
+  final BankCardFetchedDetails cardDetails;
+  final BankCard bankCard;
+
+  const BankCardDetailsFetchedViewModel({required this.cardDetails, required this.bankCard});
+
+  @override
+  List<Object?> get props => [cardDetails, bankCard];
 }

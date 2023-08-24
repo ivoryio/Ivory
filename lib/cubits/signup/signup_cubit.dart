@@ -7,6 +7,7 @@ import 'package:solarisdemo/services/auth_service.dart';
 import 'package:solarisdemo/services/device_service.dart';
 import 'package:solarisdemo/services/person_service.dart';
 
+import '../../infrastructure/devices/device_service.dart';
 import '../../models/device.dart';
 import '../../models/device_activity.dart';
 import '../../models/device_consent.dart';
@@ -146,20 +147,20 @@ class SignupCubit extends Cubit<SignupState> {
         user: user,
       );
 
-      CreateDeviceConsentResponse? createdConsent = await DeviceService(
+      CreateDeviceConsentResponse? createdConsent = await OldDeviceService(
         user: user,
       ).createDeviceConsent();
 
       if (createdConsent != null) {
-        await DeviceUtilService.saveDeviceConsentId(
+        await DeviceService.saveDeviceConsentId(
           createdConsent.id,
         );
       }
 
-      await DeviceService(user: user)
+      await OldDeviceService(user: user)
           .createDeviceActivity(DeviceActivityType.CONSENT_PROVIDED);
 
-      String? deviceFingerPrint = await DeviceUtilService.getDeviceFingerprint(
+      String? deviceFingerPrint = await DeviceService.getDeviceFingerprint(
         createdConsent!.id,
       );
       if (deviceFingerPrint == null) {
@@ -230,7 +231,7 @@ class SignupCubit extends Cubit<SignupState> {
     );
 
     //create device binding and unrestricted key
-    DeviceService deviceService = DeviceService(
+    OldDeviceService deviceService = OldDeviceService(
       user: user,
     );
     await deviceService.createDeviceBinding(

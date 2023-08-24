@@ -31,6 +31,7 @@ import 'package:solarisdemo/screens/wallet/card_details_choose_pin.dart';
 import 'package:solarisdemo/screens/wallet/card_details_confirm_pin_screen.dart';
 import 'package:solarisdemo/screens/wallet/card_details_info.dart';
 import 'package:solarisdemo/screens/wallet/card_details_screen.dart';
+import 'package:solarisdemo/screens/wallet/card_view_details_screen.dart';
 import 'package:solarisdemo/screens/wallet/cards_screen.dart';
 import 'package:solarisdemo/services/auth_service.dart';
 
@@ -115,6 +116,13 @@ class _IvoryAppState extends State<IvoryApp> {
               BankCardDetailsAppleWalletScreen.routeName: (context) => const BankCardDetailsAppleWalletScreen(),
               BankCardDetailsActivationSuccessScreen.routeName: (context) => const BankCardDetailsActivationSuccessScreen(),
               BankCardDetailsInfoScreen.routeName: (context) => const BankCardDetailsInfoScreen(),
+              BankCardViewDetailsScreen.routeName: (context) {
+                final cardDetailsScreenParams = ModalRoute.of(context)?.settings.arguments as CardDetailsScreenParams?;
+
+                return BankCardViewDetailsScreen(
+                  params: cardDetailsScreenParams!,
+                );
+              },
               // repayments
               RepaymentsScreen.routeName: (context) => const RepaymentsScreen(),
               ChangeRepaymentRateScreen.routeName: (context) => const ChangeRepaymentRateScreen(),

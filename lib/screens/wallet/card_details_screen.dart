@@ -4,6 +4,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:solarisdemo/cubits/card_details_cubit/card_details_cubit.dart';
 import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/screens/wallet/card_view_details_screen.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/spaced_column.dart';
 
@@ -59,15 +60,13 @@ class BankCardDetailsScreen extends StatelessWidget {
             children: [
               AppToolbar(
                 padding: EdgeInsets.symmetric(
-                  horizontal: ClientConfig.getCustomClientUiSettings()
-                      .defaultScreenHorizontalPadding,
+                  horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
                 ),
-                backButtonEnabled: false,
+                backButtonEnabled: true,
               ),
               Expanded(
                 child: Padding(
-                  padding: ClientConfig.getCustomClientUiSettings()
-                      .defaultScreenPadding,
+                  padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -98,14 +97,12 @@ class BankCardDetailsScreen extends StatelessWidget {
                             return const Text("Something went wrong");
                           }
                           if (viewModel is BankCardFetchedViewModel) {
-                            if (viewModel.bankCard.status ==
-                                BankCardStatus.ACTIVE) {
+                            if (viewModel.bankCard.status == BankCardStatus.ACTIVE) {
                               return ActiveCard(
                                 viewModel: viewModel,
                               );
                             }
-                            if (viewModel.bankCard.status ==
-                                BankCardStatus.INACTIVE) {
+                            if (viewModel.bankCard.status == BankCardStatus.INACTIVE) {
                               return InactiveCard(
                                 viewModel: viewModel,
                               );
@@ -199,8 +196,7 @@ class __CardDetailsOptionsState extends State<_CardDetailsOptions> {
             fieldName: 'Online payments',
             forMoreInfoTap: () => _buildPopup(
                 title: 'Online payments',
-                content:
-                    'You can use your card to pay online. You can also disable this option.'),
+                content: 'You can use your card to pay online. You can also disable this option.'),
             visibleSwitch: true,
           ),
           _CardOptionColumns(
@@ -208,8 +204,7 @@ class __CardDetailsOptionsState extends State<_CardDetailsOptions> {
             fieldName: 'ATM withdrawals',
             forMoreInfoTap: () => _buildPopup(
                 title: 'ATM withdrawals',
-                content:
-                    'You can use your card to withdraw cash from ATMs. You can also disable this option.'),
+                content: 'You can use your card to withdraw cash from ATMs. You can also disable this option.'),
             visibleSwitch: true,
           ),
           _CardOptionColumns(
@@ -217,8 +212,7 @@ class __CardDetailsOptionsState extends State<_CardDetailsOptions> {
             fieldName: 'Contactless payments',
             forMoreInfoTap: () => _buildPopup(
                 title: 'Contactless payments',
-                content:
-                    'You can use your card to pay contactless. You can also disable this option.'),
+                content: 'You can use your card to pay contactless. You can also disable this option.'),
             visibleSwitch: true,
           ),
           const Divider(
@@ -382,9 +376,7 @@ class InactiveCard extends StatelessWidget {
             BankCardWidget(
               cardNumber: viewModel.bankCard.representation!.maskedPan ?? '',
               cardHolder: viewModel.bankCard.representation!.line2 ?? '',
-              cardExpiry:
-                  viewModel.bankCard.representation!.formattedExpirationDate ??
-                      '',
+              cardExpiry: viewModel.bankCard.representation!.formattedExpirationDate ?? '',
               isViewable: false,
               cardType: 'Physical card',
             ),
@@ -447,13 +439,11 @@ class ActiveCard extends StatelessWidget {
               BankCardWidget(
                 cardNumber: viewModel.bankCard.representation!.maskedPan ?? '',
                 cardHolder: viewModel.bankCard.representation!.line2 ?? '',
-                cardExpiry: viewModel
-                        .bankCard.representation!.formattedExpirationDate ??
-                    '',
+                cardExpiry: viewModel.bankCard.representation!.formattedExpirationDate ?? '',
                 isViewable: false,
                 cardType: 'Physical card',
               ),
-              SizedBox(
+              const SizedBox(
                 height: 16,
               ),
               Row(
@@ -462,12 +452,18 @@ class ActiveCard extends StatelessWidget {
                   CardOptionsButton(
                     icon: Icons.remove_red_eye_outlined,
                     textLabel: 'Details',
-                    onPressed: () => {},
+                    onPressed: () async {
+                      Navigator.pushNamed(
+                        context,
+                        BankCardViewDetailsScreen.routeName,
+                        arguments: CardDetailsScreenParams(card: viewModel.bankCard),
+                      );
+                    },
                   ),
                   CardOptionsButton(
                     icon: Icons.wallet,
                     textLabel: 'Add to wallet',
-                    onPressed: () => {},
+                    onPressed: () {},
                   ),
                   CardOptionsButton(
                     icon: Icons.speed,
@@ -477,7 +473,7 @@ class ActiveCard extends StatelessWidget {
                   CardOptionsButton(
                     icon: Icons.ac_unit,
                     textLabel: 'Freeze',
-                    onPressed: () => {},
+                    onPressed: () {},
                   ),
                 ],
               ),
@@ -492,8 +488,7 @@ class ActiveCard extends StatelessWidget {
                   ItemName(
                     leftIcon: Icons.speed_outlined,
                     actionName: 'Spending cap',
-                    actionDescription:
-                        'Set it up and get an alert if you exceed it',
+                    actionDescription: 'Set it up and get an alert if you exceed it',
                     rightIcon: Icons.arrow_forward_ios,
                     actionSwitch: false,
                   ),
@@ -574,11 +569,7 @@ class CardOptionsButton extends StatelessWidget {
   final String textLabel;
   final Function onPressed;
 
-  const CardOptionsButton(
-      {super.key,
-      required this.icon,
-      required this.textLabel,
-      required this.onPressed});
+  const CardOptionsButton({super.key, required this.icon, required this.textLabel, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -625,7 +616,10 @@ class ItemTitle extends StatelessWidget {
     return Text(
       nameOfActionTitle,
       style: const TextStyle(
-          fontSize: 20, height: 1.4, fontWeight: FontWeight.w600),
+        fontSize: 20,
+        height: 1.4,
+        fontWeight: FontWeight.w600,
+      ),
     );
   }
 }
@@ -661,22 +655,19 @@ class ItemName extends StatelessWidget {
             children: [
               Text(
                 actionName,
-                style: const TextStyle(
-                    fontSize: 16, height: 1.5, fontWeight: FontWeight.w600),
+                style: const TextStyle(fontSize: 16, height: 1.5, fontWeight: FontWeight.w600),
               ),
               Text(
                 actionDescription,
-                style: const TextStyle(
-                    fontSize: 14, height: 1.29, fontWeight: FontWeight.w400),
+                style: const TextStyle(fontSize: 14, height: 1.29, fontWeight: FontWeight.w400),
               ),
             ],
           ),
         ),
         Container(
           padding: const EdgeInsets.only(right: 0),
-          child: (actionSwitch == true)
-              ? const ActionItem()
-              : Icon(rightIcon, color: const Color(0XFF2575FC), size: 24),
+          child:
+              (actionSwitch == true) ? const ActionItem() : Icon(rightIcon, color: const Color(0XFF2575FC), size: 24),
         ),
       ],
     );

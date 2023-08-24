@@ -9,8 +9,8 @@ import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../cubits/login_cubit/login_cubit.dart';
+import '../../infrastructure/devices/device_service.dart';
 import '../../services/auth_service.dart';
-import '../../services/device_service.dart';
 import '../../utilities/validator.dart';
 import '../../widgets/button.dart';
 import '../../widgets/platform_text_input.dart';
@@ -211,10 +211,9 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
                                 String phoneNumber = phoneController.text;
                                 String password = passwordInputController.text;
                                 String? deviceConsentId =
-                                    await DeviceUtilService
+                                    await DeviceService
                                         .getDeviceConsentId();
-                                if (deviceConsentId != null &&
-                                    deviceConsentId.isNotEmpty) {
+                                if (deviceConsentId.isNotEmpty) {
                                   context.read<LoginCubit>().setCredentials(
                                         phoneNumber: phoneNumber,
                                         password: password,
@@ -272,7 +271,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
 
   Future<CacheCredentials?> getCredentials() async {
     CacheCredentials? credentials =
-        await DeviceUtilService.getCredentialsFromCache();
+        await DeviceService.getCredentialsFromCache();
 
     if (credentials != null) {
       emailInputController.text = credentials.email ?? "";
@@ -359,10 +358,9 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                                 String emailAddress = emailInputController.text;
                                 String password = passwordInputController.text;
                                 String? deviceConsentId =
-                                    await DeviceUtilService
+                                    await DeviceService
                                         .getDeviceConsentId();
-                                if (deviceConsentId != null &&
-                                    deviceConsentId.isNotEmpty) {
+                                if (deviceConsentId.isNotEmpty) {
                                   context.read<LoginCubit>().setCredentials(
                                         email: emailAddress,
                                         password: password,

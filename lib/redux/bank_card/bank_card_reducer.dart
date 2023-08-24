@@ -12,6 +12,8 @@ BankCardState bankCardReducer(BankCardState currentState, dynamic action) {
     return BankCardPinChoosenState(action.pin, action.user, action.bankcard);
   } else if (action is BankCardActivatedEventAction) {
     return BankCardActivatedState(action.bankCard, action.user);
+  } else if (action is BankCardDetailsFetchedEventAction) {
+    return BankCardDetailsFetchedState(action.cardDetails, action.bankCard);
   }
 
   return currentState;
