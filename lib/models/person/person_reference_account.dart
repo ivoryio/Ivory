@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 
-class ReferenceAccount extends Equatable {
+class PersonReferenceAccount extends Equatable {
   final String name;
   final String iban;
 
-  const ReferenceAccount({
+  const PersonReferenceAccount({
     required this.name,
     required this.iban,
   });

@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:solarisdemo/models/person/reference_account.dart';
+import 'package:solarisdemo/models/person/person_reference_account.dart';
 
 abstract class ReferenceAccountState extends Equatable {
   @override
@@ -13,7 +13,7 @@ class ReferenceAccountLoadingState extends ReferenceAccountState {
 }
 
 class ReferenceAccountFetchedState extends ReferenceAccountState {
-  final ReferenceAccount referenceAccount;
+  final PersonReferenceAccount referenceAccount;
 
   ReferenceAccountFetchedState(this.referenceAccount);
 

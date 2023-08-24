@@ -1,14 +1,15 @@
 import 'package:equatable/equatable.dart';
+import 'package:solarisdemo/models/person/person_reference_account.dart';
 import 'package:solarisdemo/models/person/person_service_error_type.dart';
-import 'package:solarisdemo/models/person/reference_account.dart';
+import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/services/api_service.dart';
 
 class PersonService extends ApiService {
   PersonService({super.user});
 
-  Future<PersonServiceResponse> getReferenceAccount() async {
+  Future<PersonServiceResponse> getReferenceAccount({User? user}) async {
     return GetReferenceAccountSuccessResponse(
-      referenceAccount: const ReferenceAccount(name: "test", iban: "iban"),
+      referenceAccount: const PersonReferenceAccount(name: "test", iban: "iban"),
     );
   }
 }
@@ -16,7 +17,7 @@ class PersonService extends ApiService {
 abstract class PersonServiceResponse extends Equatable {}
 
 class GetReferenceAccountSuccessResponse extends PersonServiceResponse {
-  final ReferenceAccount referenceAccount;
+  final PersonReferenceAccount referenceAccount;
 
   GetReferenceAccountSuccessResponse({required this.referenceAccount});
 
