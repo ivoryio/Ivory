@@ -7,6 +7,8 @@ import 'package:solarisdemo/infrastructure/credit_line/credit_line_middleware.da
 import 'package:solarisdemo/infrastructure/credit_line/credit_line_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/notifications_middleware.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
+import 'package:solarisdemo/infrastructure/repayments/bills/bill_service.dart';
+import 'package:solarisdemo/infrastructure/repayments/bills/bills_middleware.dart';
 import 'package:solarisdemo/infrastructure/person/person_service.dart';
 import 'package:solarisdemo/infrastructure/person/reference_account_middleware.dart';
 import 'package:solarisdemo/infrastructure/repayments/reminder/repayment_reminder_middleware.dart';
@@ -23,6 +25,7 @@ Store<AppState> createStore({
   required TransactionService transactionService,
   required CreditLineService creditLineService,
   required RepaymentReminderService repaymentReminderService,
+  required BillService billService,
   required BankCardService bankCardService,
   required CategoriesService categoriesService,
   required PersonService personService,
@@ -35,6 +38,7 @@ Store<AppState> createStore({
       GetTransactionsMiddleware(transactionService),
       GetCreditLineMiddleware(creditLineService),
       RepaymentRemindersMiddleware(repaymentReminderService),
+      GetBillsMiddleware(billService),
       BankCardMiddleware(bankCardService),
       GetCategoriesMiddleware(categoriesService),
       ReferenceAccountMiddleware(personService),

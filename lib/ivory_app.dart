@@ -15,6 +15,8 @@ import 'package:solarisdemo/screens/home/home_screen.dart';
 import 'package:solarisdemo/screens/home/main_navigation_screen.dart';
 import 'package:solarisdemo/screens/landing/landing_screen.dart';
 import 'package:solarisdemo/screens/login/login_screen.dart';
+import 'package:solarisdemo/screens/repayments/bills/bill_detail_screen.dart';
+import 'package:solarisdemo/screens/repayments/bills/bills_screen.dart';
 import 'package:solarisdemo/screens/repayments/change_repayment_rate.dart';
 import 'package:solarisdemo/screens/repayments/repayment_reminder.dart';
 import 'package:solarisdemo/screens/repayments/repayment_successfully_changed.dart';
@@ -125,6 +127,8 @@ class _IvoryAppState extends State<IvoryApp> {
               ChangeRepaymentRateScreen.routeName: (context) => const ChangeRepaymentRateScreen(),
               RepaymentSuccessfullyChanged.routeName: (context) => const RepaymentSuccessfullyChanged(),
               RepaymentReminderScreen.routeName: (context) => const RepaymentReminderScreen(),
+              BillsScreen.routeName: (context) => const BillsScreen(),
+              BillDetailScreen.routeName: (context) => const BillDetailScreen(),
               // transfer
               TransferScreen.routeName: (context) => const TransferScreen(),
               TransferReviewScreen.routeName: (context) {
