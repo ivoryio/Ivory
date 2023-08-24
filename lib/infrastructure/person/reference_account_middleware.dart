@@ -13,7 +13,7 @@ class ReferenceAccountMiddleware extends MiddlewareClass<AppState> {
     next(action);
 
     if (action is GetReferenceAccountCommandAction) {
-      final response = await _personService.getReferenceAccount();
+      final response = await _personService.getReferenceAccount(user: action.user);
 
       if (response is GetReferenceAccountSuccessResponse) {
         store.dispatch(GetReferenceAccountSuccessEventAction(response.referenceAccount));

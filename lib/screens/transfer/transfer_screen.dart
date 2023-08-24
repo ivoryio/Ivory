@@ -1,10 +1,13 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
+import 'package:solarisdemo/infrastructure/transfer/transfer_presenter.dart';
 import 'package:solarisdemo/models/user.dart';
+import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/person/reference_account_action.dart';
 import 'package:solarisdemo/screens/transfer/transfer_review_screen.dart';
 import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -47,121 +50,178 @@ class _TransferScreenState extends State<TransferScreen> {
 
     user = context.read<AuthCubit>().state.user!;
 
-    amountController.addListener(() {
-      setState(() {
-        final value = double.tryParse(amountController.text) ?? 0;
-        final balance = user.personAccount.availableBalance!.value;
-
-        if (value > balance) {
-          _errorText = "Not enough balance";
-          _canContinue = false;
-        } else if (value > 0) {
-          _errorText = null;
-          _canContinue = true;
-        } else {
-          _errorText = null;
-          _canContinue = false;
-        }
-      });
-    });
+    // amountController.addListener(() {
+    //   setState(() {
+    //     final value = double.tryParse(amountController.text) ?? 0;
+    //     final balance = user.personAccount.availableBalance!.value;
+    //
+    //     if (value > balance) {
+    //       _errorText = "Not enough balance";
+    //       _canContinue = false;
+    //     } else if (value > 0) {
+    //       _errorText = null;
+    //       _canContinue = true;
+    //     } else {
+    //       _errorText = null;
+    //       _canContinue = false;
+    //     }
+    //   });
+    // });
   }
 
   @override
   Widget build(BuildContext context) {
     return ScreenScaffold(
-      body: Column(
-        children: [
-          AppToolbar(
-            title: "Transfer",
-            padding: EdgeInsets.symmetric(
-              horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-            ),
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
+      body: StoreConnector<AppState, TransferViewModel>(
+        onInit: (store) {
+          store.dispatch(GetReferenceAccountCommandAction(user: user.cognito));
+        },
+        converter: (store) => TransferPresenter.presentTransfer(
+          referenceAccountState: store.state.referenceAccountState,
+        ),
+        onWillChange: (oldViewModel, newViewModel) {
+          if (newViewModel is TransferFetchedAccountsViewModel) {
+            amountController.addListener(() {
+              setState(() {
+                final value = double.tryParse(amountController.text) ?? 0;
+                final balance = user.personAccount.availableBalance!.value;
+
+                if (value > balance) {
+                  _errorText = "Not enough balance";
+                  _canContinue = false;
+                } else if (value > 0) {
+                  _errorText = null;
+                  _canContinue = true;
+                } else {
+                  _errorText = null;
+                  _canContinue = false;
+                }
+              });
+            });
+          }
+        },
+        distinct: true,
+        builder: (context, viewModel) {
+          return Column(
+            children: [
+              AppToolbar(
+                title: "Transfer",
                 padding: EdgeInsets.symmetric(
                   horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
                 ),
-                child: Column(
-                  children: [
-                    _buildCard(_PorscheAccount(
-                      title: "Porsche account",
-                      iban: user.personAccount.iban!,
-                      balance: user.personAccount.availableBalance!.value,
-                    )),
-                    const Padding(
-                      padding: EdgeInsets.all(4.0),
-                      child: Icon(Icons.arrow_downward),
-                    ),
-                    _buildCard(const _ReferenceAccount(
-                      title: "Reference account",
-                      iban: "DE12345678901234567890",
-                      bankName: "Deutsche Bank",
-                    )),
-                    const SizedBox(height: 32),
-                    Text(
-                      "Enter transfer amount",
-                      style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(
-                            color: _errorText != null ? Colors.red : const Color(0xFF56555E),
-                            fontWeight: FontWeight.w600,
-                          ),
-                    ),
-                    IvoryAmountField(
-                      controller: amountController,
-                      error: _errorText != null,
-                    ),
-                    if (_errorText != null) ...[
-                      const SizedBox(height: 8),
-                      Text(
-                        _errorText!,
-                        style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(
-                              color: Colors.red,
-                              fontWeight: FontWeight.w600,
-                            ),
-                      ),
-                    ],
-                    const SizedBox(height: 40),
-                    InkWell(
-                      onTap: () {
-                        showBottomModal(
-                          context: context,
-                          title: "How to top up your Ivory account?",
-                          content: _TopUpBottomSheetContent(iban: user.personAccount.iban!),
-                        );
-                      },
-                      child: Text(
-                        "Want to top up your Ivory account?",
-                        style: ClientConfig.getTextStyleScheme()
-                            .bodyLargeRegularBold
-                            .copyWith(color: const Color(0xFF406FE6)),
-                      ),
-                    ),
-                  ],
-                ),
               ),
-            ),
-          ),
-          SizedBox(
-            width: double.infinity,
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-              ),
-              child: Button(
-                color: const Color(0xFF2575FC),
-                text: "Next",
-                onPressed: _canContinue ? onTapNext : null,
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-        ],
+              ...viewModel is TransferLoadingViewModel
+                  ? const [Expanded(child: Center(child: CircularProgressIndicator()))]
+                  : viewModel is TransferFetchedAccountsViewModel
+                      ? _buildBody(viewModel)
+                      : [Text("Error")],
+            ],
+          );
+        },
       ),
     );
   }
 
-  Widget _buildCard(_Account account) {
+  List<Widget> _buildBody(TransferFetchedAccountsViewModel viewModel) {
+    return [
+      Expanded(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+            ),
+            child: Column(
+              children: [
+                _Card(
+                  title: "Porsche account",
+                  iban: user.personAccount.iban!,
+                  balance: user.personAccount.availableBalance!.value.toDouble(),
+                ),
+                const Padding(
+                  padding: EdgeInsets.all(4.0),
+                  child: Icon(Icons.arrow_downward),
+                ),
+                _Card(
+                  title: "Reference account",
+                  iban: viewModel.referenceAccount.iban,
+                  bankName: viewModel.referenceAccount.name,
+                ),
+                const SizedBox(height: 32),
+                Text(
+                  "Enter transfer amount",
+                  style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(
+                        color: _errorText != null ? Colors.red : const Color(0xFF56555E),
+                        fontWeight: FontWeight.w600,
+                      ),
+                ),
+                IvoryAmountField(
+                  controller: amountController,
+                  error: _errorText != null,
+                ),
+                if (_errorText != null) ...[
+                  const SizedBox(height: 8),
+                  Text(
+                    _errorText!,
+                    style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(
+                          color: Colors.red,
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
+                ],
+                const SizedBox(height: 40),
+                InkWell(
+                  onTap: () {
+                    showBottomModal(
+                      context: context,
+                      title: "How to top up your Ivory account?",
+                      content: _TopUpBottomSheetContent(iban: user.personAccount.iban!),
+                    );
+                  },
+                  child: Text(
+                    "Want to top up your Ivory account?",
+                    style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold.copyWith(
+                          color: const Color(0xFF406FE6),
+                        ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+      SizedBox(
+        width: double.infinity,
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+          ),
+          child: Button(
+            color: const Color(0xFF2575FC),
+            text: "Next",
+            onPressed: _canContinue ? onTapNext : null,
+          ),
+        ),
+      ),
+      const SizedBox(height: 16),
+    ];
+  }
+}
+
+class _Card extends StatelessWidget {
+  final String title;
+  final String iban;
+  final double? balance;
+  final String? bankName;
+
+  const _Card({
+    required this.title,
+    required this.iban,
+    this.balance,
+    this.bankName,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return IvoryCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -170,11 +230,11 @@ class _TransferScreenState extends State<TransferScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(children: [
-              Text(account.title, style: ClientConfig.getTextStyleScheme().heading4),
-              if (account is _PorscheAccount) ...[
+              Text(title, style: ClientConfig.getTextStyleScheme().heading4),
+              if (balance != null) ...[
                 const Spacer(),
                 Text(
-                  "€${account.balance.toStringAsFixed(2)}",
+                  "€${balance!.toStringAsFixed(2)}",
                   style: ClientConfig.getTextStyleScheme().heading4,
                 ),
                 Text("*", style: ClientConfig.getTextStyleScheme().heading4.copyWith(color: const Color(0xFF2575FC))),
@@ -187,10 +247,10 @@ class _TransferScreenState extends State<TransferScreen> {
             child: Row(
               children: [
                 Text(
-                  Format.iban(account.iban),
+                  Format.iban(iban),
                   style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(color: const Color(0xFF56555E)),
                 ),
-                if (account is _PorscheAccount) ...[
+                if (balance != null) ...[
                   const Spacer(),
                   Text(
                     "Balance",
@@ -200,14 +260,14 @@ class _TransferScreenState extends State<TransferScreen> {
               ],
             ),
           ),
-          if (account is _ReferenceAccount) ...[
+          if (bankName != null) ...[
             const SizedBox(height: 4),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 children: [
                   Text(
-                    account.bankName,
+                    bankName!,
                     style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(color: const Color(0xFF56555E)),
                   ),
                 ],
@@ -215,7 +275,7 @@ class _TransferScreenState extends State<TransferScreen> {
             ),
           ],
           const SizedBox(height: 16),
-          if (account is _PorscheAccount) ...[
+          if (balance != null) ...[
             const Divider(height: 1),
             Padding(
               padding: const EdgeInsets.all(16),
@@ -245,46 +305,6 @@ class _TransferScreenState extends State<TransferScreen> {
       ),
     );
   }
-}
-
-// TODO: temporary solution until we have the real data
-abstract class _Account extends Equatable {
-  final String title;
-  final String iban;
-
-  const _Account({
-    required this.title,
-    required this.iban,
-  });
-
-  @override
-  List<Object?> get props => [title, iban];
-}
-
-class _PorscheAccount extends _Account {
-  final num balance;
-
-  const _PorscheAccount({
-    required super.title,
-    required super.iban,
-    required this.balance,
-  });
-
-  @override
-  List<Object?> get props => [title, iban, balance];
-}
-
-class _ReferenceAccount extends _Account {
-  final String bankName;
-
-  const _ReferenceAccount({
-    required super.title,
-    required super.iban,
-    required this.bankName,
-  });
-
-  @override
-  List<Object?> get props => [title, iban, bankName];
 }
 
 class _TopUpBottomSheetContent extends StatelessWidget {

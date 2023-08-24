@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:solarisdemo/redux/person/reference_account_action.dart';
 import 'package:solarisdemo/redux/person/reference_account_state.dart';
 
+import '../../infrastructure/bank_card/bank_card_presenter_test.dart';
 import '../../setup/create_app_state.dart';
 import '../../setup/create_store.dart';
 import 'person_mocks.dart';
@@ -22,7 +23,7 @@ void main() {
           store.onChange.firstWhere((element) => element.referenceAccountState is ReferenceAccountFetchedState);
 
       // when
-      store.dispatch(GetReferenceAccountCommandAction());
+      store.dispatch(GetReferenceAccountCommandAction(user: MockUser()));
 
       // then
       expect((await loadingState).referenceAccountState, isA<ReferenceAccountLoadingState>());
@@ -43,7 +44,7 @@ void main() {
           store.onChange.firstWhere((element) => element.referenceAccountState is ReferenceAccountErrorState);
 
       // when
-      store.dispatch(GetReferenceAccountCommandAction());
+      store.dispatch(GetReferenceAccountCommandAction(user: MockUser()));
 
       // then
       expect((await loadingState).referenceAccountState, isA<ReferenceAccountLoadingState>());

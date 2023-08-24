@@ -1,6 +1,11 @@
 import 'package:solarisdemo/models/person/person_reference_account.dart';
+import 'package:solarisdemo/models/user.dart';
 
-class GetReferenceAccountCommandAction {}
+class GetReferenceAccountCommandAction {
+  final User user;
+
+  GetReferenceAccountCommandAction({required this.user});
+}
 
 class GetReferenceAccountLoadingEventAction {}
 

@@ -8,9 +8,22 @@ class PersonService extends ApiService {
   PersonService({super.user});
 
   Future<PersonServiceResponse> getReferenceAccount({User? user}) async {
-    return GetReferenceAccountSuccessResponse(
-      referenceAccount: const PersonReferenceAccount(name: "test", iban: "iban"),
-    );
+    if (user != null) {
+      this.user = user;
+    }
+
+    try {
+      final data = await get('person/reference_accounts');
+
+      return GetReferenceAccountSuccessResponse(
+        referenceAccount: PersonReferenceAccount(
+          name: (data as List).first['name'] as String,
+          iban: data.first["iban"] as String,
+        ),
+      );
+    } catch (e) {
+      return PersonServiceErrorResponse();
+    }
   }
 }
 
