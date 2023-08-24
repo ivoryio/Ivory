@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
-import 'package:solarisdemo/infrastructure/transfer/transfer_presenter.dart';
+import 'package:solarisdemo/infrastructure/transfer/transfer_accounts_presenter.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/person/person_account/person_account_action.dart';
@@ -56,17 +56,17 @@ class _TransferScreenState extends State<TransferScreen> {
   @override
   Widget build(BuildContext context) {
     return ScreenScaffold(
-      body: StoreConnector<AppState, TransferViewModel>(
+      body: StoreConnector<AppState, TransferAccountsViewModel>(
         onInit: (store) {
           store.dispatch(GetReferenceAccountCommandAction(user: user.cognito));
           store.dispatch(GetPersonAccountCommandAction(user: user.cognito));
         },
-        converter: (store) => TransferPresenter.presentTransfer(
+        converter: (store) => TransferAccountsPresenter.presentTransfer(
           referenceAccountState: store.state.referenceAccountState,
           personAccountState: store.state.personAccountState,
         ),
         onWillChange: (oldViewModel, newViewModel) {
-          if (newViewModel is TransferFetchedAccountsViewModel) {
+          if (newViewModel is TransferAccountsFetchedViewModel) {
             amountController.addListener(() {
               setState(() {
                 final value = double.tryParse(amountController.text) ?? 0;
@@ -96,9 +96,9 @@ class _TransferScreenState extends State<TransferScreen> {
                   horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
                 ),
               ),
-              ...viewModel is TransferLoadingViewModel
+              ...viewModel is TransferAccountsLoadingViewModel
                   ? const [Expanded(child: Center(child: CircularProgressIndicator()))]
-                  : viewModel is TransferFetchedAccountsViewModel
+                  : viewModel is TransferAccountsFetchedViewModel
                       ? _buildBody(viewModel)
                       : const [IvoryGenericError()],
             ],
@@ -108,7 +108,7 @@ class _TransferScreenState extends State<TransferScreen> {
     );
   }
 
-  List<Widget> _buildBody(TransferFetchedAccountsViewModel viewModel) {
+  List<Widget> _buildBody(TransferAccountsFetchedViewModel viewModel) {
     return [
       Expanded(
         child: SingleChildScrollView(

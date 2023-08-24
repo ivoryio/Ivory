@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:solarisdemo/infrastructure/transfer/transfer_presenter.dart';
+import 'package:solarisdemo/infrastructure/transfer/transfer_accounts_presenter.dart';
 import 'package:solarisdemo/models/person/person_reference_account.dart';
 import 'package:solarisdemo/models/person_account.dart';
 import 'package:solarisdemo/redux/person/person_account/person_account_state.dart';
@@ -15,13 +15,13 @@ void main() {
     final personAccountState = PersonAccountLoadingState();
 
     //when
-    final viewModel = TransferPresenter.presentTransfer(
+    final viewModel = TransferAccountsPresenter.presentTransfer(
       referenceAccountState: referenceAccountState,
       personAccountState: personAccountState,
     );
 
     //then
-    expect(viewModel, TransferLoadingViewModel());
+    expect(viewModel, TransferAccountsLoadingViewModel());
   });
 
   test("When fetching is in progress for reference account it should return loading", () {
@@ -30,13 +30,13 @@ void main() {
     final personAccountState = PersonAccountInitialState();
 
     //when
-    final viewModel = TransferPresenter.presentTransfer(
+    final viewModel = TransferAccountsPresenter.presentTransfer(
       referenceAccountState: referenceAccountState,
       personAccountState: personAccountState,
     );
 
     //then
-    expect(viewModel, TransferLoadingViewModel());
+    expect(viewModel, TransferAccountsLoadingViewModel());
   });
 
   test("When fetching failed for person account it should return error", () {
@@ -45,13 +45,13 @@ void main() {
     final personAccountState = PersonAccountErrorState();
 
     //when
-    final viewModel = TransferPresenter.presentTransfer(
+    final viewModel = TransferAccountsPresenter.presentTransfer(
       referenceAccountState: referenceAccountState,
       personAccountState: personAccountState,
     );
 
     //then
-    expect(viewModel, TransferErrorViewModel());
+    expect(viewModel, TransferAccountsErrorViewModel());
   });
 
   test("When fetching failed for reference account it should return error", () {
@@ -60,13 +60,13 @@ void main() {
     final personAccountState = PersonAccountInitialState();
 
     //when
-    final viewModel = TransferPresenter.presentTransfer(
+    final viewModel = TransferAccountsPresenter.presentTransfer(
       referenceAccountState: referenceAccountState,
       personAccountState: personAccountState,
     );
 
     //then
-    expect(viewModel, TransferErrorViewModel());
+    expect(viewModel, TransferAccountsErrorViewModel());
   });
 
   test("When fetching succeeded for person account and reference account it should return fetched accounts", () {
@@ -75,7 +75,7 @@ void main() {
     final personAccountState = PersonAccountFetchedState(personAccount);
 
     //when
-    final viewModel = TransferPresenter.presentTransfer(
+    final viewModel = TransferAccountsPresenter.presentTransfer(
       referenceAccountState: referenceAccountState,
       personAccountState: personAccountState,
     );
@@ -83,7 +83,7 @@ void main() {
     //then
     expect(
       viewModel,
-      TransferFetchedAccountsViewModel(personAccount: personAccount, referenceAccount: referenceAccount),
+      TransferAccountsFetchedViewModel(personAccount: personAccount, referenceAccount: referenceAccount),
     );
   });
 
@@ -93,12 +93,12 @@ void main() {
     final personAccountState = PersonAccountInitialState();
 
     //when
-    final viewModel = TransferPresenter.presentTransfer(
+    final viewModel = TransferAccountsPresenter.presentTransfer(
       referenceAccountState: referenceAccountState,
       personAccountState: personAccountState,
     );
 
     //then
-    expect(viewModel, TransferInitialViewModel());
+    expect(viewModel, TransferAccountsInitialViewModel());
   });
 }

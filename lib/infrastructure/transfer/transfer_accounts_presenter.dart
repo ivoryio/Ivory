@@ -4,44 +4,44 @@ import 'package:solarisdemo/models/person_account.dart';
 import 'package:solarisdemo/redux/person/person_account/person_account_state.dart';
 import 'package:solarisdemo/redux/person/reference_account/reference_account_state.dart';
 
-class TransferPresenter {
-  static TransferViewModel presentTransfer({
+class TransferAccountsPresenter {
+  static TransferAccountsViewModel presentTransfer({
     required ReferenceAccountState referenceAccountState,
     required PersonAccountState personAccountState,
   }) {
     if (referenceAccountState is ReferenceAccountErrorState || personAccountState is PersonAccountErrorState) {
-      return TransferErrorViewModel();
+      return TransferAccountsErrorViewModel();
     } else if (referenceAccountState is ReferenceAccountFetchedState &&
         personAccountState is PersonAccountFetchedState) {
-      return TransferFetchedAccountsViewModel(
+      return TransferAccountsFetchedViewModel(
         referenceAccount: referenceAccountState.referenceAccount,
         personAccount: personAccountState.personAccount,
       );
     } else if (referenceAccountState is ReferenceAccountLoadingState ||
         personAccountState is PersonAccountLoadingState) {
-      return TransferLoadingViewModel();
+      return TransferAccountsLoadingViewModel();
     }
 
-    return TransferInitialViewModel();
+    return TransferAccountsInitialViewModel();
   }
 }
 
-abstract class TransferViewModel extends Equatable {
-  const TransferViewModel();
+abstract class TransferAccountsViewModel extends Equatable {
+  const TransferAccountsViewModel();
 
   @override
   List<Object?> get props => [];
 }
 
-class TransferInitialViewModel extends TransferViewModel {}
+class TransferAccountsInitialViewModel extends TransferAccountsViewModel {}
 
-class TransferLoadingViewModel extends TransferViewModel {}
+class TransferAccountsLoadingViewModel extends TransferAccountsViewModel {}
 
-class TransferFetchedAccountsViewModel extends TransferViewModel {
+class TransferAccountsFetchedViewModel extends TransferAccountsViewModel {
   final PersonAccount personAccount;
   final PersonReferenceAccount referenceAccount;
 
-  const TransferFetchedAccountsViewModel({
+  const TransferAccountsFetchedViewModel({
     required this.personAccount,
     required this.referenceAccount,
   });
@@ -50,4 +50,4 @@ class TransferFetchedAccountsViewModel extends TransferViewModel {
   List<Object?> get props => [personAccount, referenceAccount];
 }
 
-class TransferErrorViewModel extends TransferViewModel {}
+class TransferAccountsErrorViewModel extends TransferAccountsViewModel {}
