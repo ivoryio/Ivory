@@ -8,6 +8,7 @@ import 'package:solarisdemo/infrastructure/bank_card/bank_card_service.dart';
 import 'package:solarisdemo/infrastructure/categories/categories_service.dart';
 import 'package:solarisdemo/infrastructure/credit_line/credit_line_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
+import 'package:solarisdemo/infrastructure/repayments/bills/bill_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/reminder/repayment_reminder_service.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart';
 import 'package:solarisdemo/ivory_app.dart';
@@ -26,8 +27,7 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  await SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
   final store = _buildStore();
 
@@ -44,6 +44,7 @@ Store<AppState> _buildStore() {
     transactionService: TransactionService(),
     creditLineService: CreditLineService(),
     repaymentReminderService: RepaymentReminderService(),
+    billService: BillService(),
     bankCardService: BankCardService(),
     categoriesService: CategoriesService(),
   );

@@ -11,7 +11,7 @@ class CreditLine {
   final num repaymentRatePercentage;
   final num interestRate;
 
-  CreditLine({
+  const CreditLine({
     required this.id,
     required this.dueDate,
     required this.previousBillAmount,
