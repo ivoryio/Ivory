@@ -1,6 +1,6 @@
 package com.thinslices.solarisdemo
 
-import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import io.seon.androidsdk.exception.SeonException
@@ -15,7 +15,7 @@ import android.util.Log
 import java.security.interfaces.ECPublicKey
 import java.security.interfaces.ECPrivateKey
 
-class MainActivity: FlutterActivity() {
+class MainActivity: FlutterFragmentActivity() {
     private val CHANNEL = "com.thinslices.solarisdemo/native"
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
