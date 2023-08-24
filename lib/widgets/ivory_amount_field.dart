@@ -69,6 +69,16 @@ class _IvoryAmountFieldState extends State<IvoryAmountField> {
     _decimalsFocusNode.addListener(_onFocusChange);
   }
 
+  double get doubleValue {
+    final digitsText = _digitsController.text.replaceAll(widget.currencySymbol, "").replaceAll(",", "").trim();
+    final decimalsText = _decimalsController.text;
+
+    final digits = int.tryParse(digitsText) ?? 0;
+    final decimals = int.tryParse(decimalsText) != null ? decimalsText : 0;
+
+    return double.tryParse("$digits.$decimals") ?? 0;
+  }
+
   void _setControllersText({bool force = false}) {
     final number = double.tryParse(_controller.text) ?? 0;
     final numberFormatted = NumberFormat.currency(
@@ -92,15 +102,10 @@ class _IvoryAmountFieldState extends State<IvoryAmountField> {
   }
 
   void _updateControllerValue() {
-    final digitsText = _digitsController.text.replaceAll(widget.currencySymbol, "").replaceAll(",", "").trim();
-    final decimalsText = _decimalsController.text;
-
-    final digits = int.tryParse(digitsText) ?? 0;
-    final decimals = int.tryParse(decimalsText) ?? 0;
-
-    final number = double.tryParse("$digits.$decimals") ?? 0;
-
-    _controller.text = number.toStringAsFixed(widget.decimals);
+    final newText = doubleValue.toStringAsFixed(widget.decimals);
+    if (_controller.text != newText) {
+      _controller.text = newText;
+    }
   }
 
   void _onFocusChange() {
@@ -148,7 +153,8 @@ class _IvoryAmountFieldState extends State<IvoryAmountField> {
                 TextInputFormatter.withFunction((oldValue, newValue) {
                   if (newValue.text.endsWith(".")) {
                     _decimalsFocusNode.requestFocus();
-                    _decimalsController.selection = TextSelection.collapsed(offset: _decimalsController.text.length);
+                    _decimalsController.text = "";
+                    _decimalsController.selection = const TextSelection.collapsed(offset: 0);
                     return oldValue;
                   }
                   return newValue;
@@ -158,7 +164,9 @@ class _IvoryAmountFieldState extends State<IvoryAmountField> {
                   currencySymbol: widget.currencySymbol,
                 ),
               ],
-              style: widget.digitsTextStyle,
+              style: widget.digitsTextStyle.copyWith(
+                color: doubleValue > 0 ? widget.digitsTextStyle.color : widget.hintColor,
+              ),
               decoration: InputDecoration(
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.zero,
@@ -168,7 +176,12 @@ class _IvoryAmountFieldState extends State<IvoryAmountField> {
               ),
             ),
           ),
-          Text(".", style: widget.digitsTextStyle),
+          Text(
+            ".",
+            style: widget.digitsTextStyle.copyWith(
+              color: doubleValue > 0 ? widget.digitsTextStyle.color : widget.hintColor,
+            ),
+          ),
           const SizedBox(width: 2),
           IntrinsicWidth(
             child: TextField(
@@ -179,7 +192,9 @@ class _IvoryAmountFieldState extends State<IvoryAmountField> {
                 FilteringTextInputFormatter.digitsOnly,
                 LengthLimitingTextInputFormatter(widget.decimals),
               ],
-              style: widget.decimalsTextStyle,
+              style: widget.decimalsTextStyle.copyWith(
+                color: doubleValue > 0 ? widget.digitsTextStyle.color : widget.hintColor,
+              ),
               decoration: InputDecoration(
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.zero,
