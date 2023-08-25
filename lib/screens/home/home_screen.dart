@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart';
 import 'package:solarisdemo/models/person_account_summary.dart';
 import 'package:solarisdemo/models/person_model.dart';
 import 'package:solarisdemo/screens/account/account_details_screen.dart';
@@ -15,7 +14,6 @@ import 'package:solarisdemo/widgets/screen.dart';
 import '../../config.dart';
 import '../../cubits/account_summary_cubit/account_summary_cubit.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
-import '../../cubits/transaction_list_cubit/transaction_list_cubit.dart';
 import '../../infrastructure/transactions/transaction_presenter.dart';
 import '../../models/transactions/transaction_model.dart';
 import '../../models/user.dart';
@@ -47,15 +45,14 @@ class HomeScreen extends StatelessWidget {
     AccountSummaryCubit accountSummaryCubit = AccountSummaryCubit(personService: PersonService(user: user.cognito))
       ..getAccountSummary();
 
-    TransactionListCubit transactionListCubit = TransactionListCubit(
-      transactionService: TransactionService(user: user.cognito),
-    )..getTransactions(filter: _defaultTransactionListFilter);
-
     return Screen(
       onRefresh: () async {
         accountSummaryCubit.getAccountSummary();
-        transactionListCubit.getTransactions(
-          filter: _defaultTransactionListFilter,
+        StoreProvider.of<AppState>(context).dispatch(
+          GetTransactionsCommandAction(
+            filter: _defaultTransactionListFilter,
+            user: user.cognito,
+          ),
         );
       },
       title: 'Welcome ${user.cognito.firstName}!',
