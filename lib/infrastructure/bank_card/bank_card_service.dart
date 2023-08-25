@@ -46,10 +46,11 @@ class BankCardService extends ApiService {
       this.user = user;
     }
     try {
-      final data = await post(
-        '/account/cards/$cardId/details',
-        body: reqBody.toJson(),
-      );
+      //Uncomment this after and remove the row below after final implementation
+      // final data = await post(
+      //   '/account/cards/$cardId/details',
+      //   body: reqBody.toJson(),
+      // );
       //TODO: Decode the data string and return the card details, for now, we will just return a dummy data
 
       return GetCardDetailsSuccessResponse(

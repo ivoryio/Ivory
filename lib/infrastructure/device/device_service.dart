@@ -93,7 +93,6 @@ class DeviceService {
 
   static Future<CacheCredentials?> _getCredentialsFromCache() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    // prefs.clear();
     String? email = prefs.getString('email');
     String? password = prefs.getString('password');
     String? deviceId = await _getDeviceIdFromCache();
