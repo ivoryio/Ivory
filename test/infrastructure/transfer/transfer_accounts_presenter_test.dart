@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:solarisdemo/infrastructure/transfer/transfer_accounts_presenter.dart';
 import 'package:solarisdemo/models/person/person_reference_account.dart';
+import 'package:solarisdemo/models/person/person_service_error_type.dart';
 import 'package:solarisdemo/models/person_account.dart';
 import 'package:solarisdemo/redux/person/person_account/person_account_state.dart';
 import 'package:solarisdemo/redux/person/reference_account/reference_account_state.dart';
@@ -56,7 +57,7 @@ void main() {
 
   test("When fetching failed for reference account it should return error", () {
     //given
-    final referenceAccountState = ReferenceAccountErrorState();
+    final referenceAccountState = ReferenceAccountErrorState(errorType: PersonServiceErrorType.unknown);
     final personAccountState = PersonAccountInitialState();
 
     //when

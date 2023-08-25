@@ -7,7 +7,7 @@ ReferenceAccountState referenceAccountReducer(ReferenceAccountState currentState
   } else if (action is ReferenceAccountFetchedEventAction) {
     return ReferenceAccountFetchedState(action.referenceAccount);
   } else if (action is GetReferenceAccountFailedEventAction) {
-    return ReferenceAccountErrorState();
+    return ReferenceAccountErrorState(errorType: action.errorType);
   }
 
   return currentState;

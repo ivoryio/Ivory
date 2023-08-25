@@ -16,6 +16,10 @@ class PersonService extends ApiService {
     try {
       final data = await get('person/reference_accounts');
 
+      if (data is List && data.isEmpty) {
+        return PersonServiceErrorResponse(errorType: PersonServiceErrorType.referenceAccountUnavailable);
+      }
+
       return GetReferenceAccountSuccessResponse(
         referenceAccount: PersonReferenceAccount(
           name: (data as List).first['name'] as String,

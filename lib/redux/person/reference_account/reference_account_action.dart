@@ -1,4 +1,5 @@
 import 'package:solarisdemo/models/person/person_reference_account.dart';
+import 'package:solarisdemo/models/person/person_service_error_type.dart';
 import 'package:solarisdemo/models/user.dart';
 
 class GetReferenceAccountCommandAction {
@@ -15,4 +16,8 @@ class ReferenceAccountFetchedEventAction {
   ReferenceAccountFetchedEventAction(this.referenceAccount);
 }
 
-class GetReferenceAccountFailedEventAction {}
+class GetReferenceAccountFailedEventAction {
+  PersonServiceErrorType errorType;
+
+  GetReferenceAccountFailedEventAction({this.errorType = PersonServiceErrorType.unknown});
+}

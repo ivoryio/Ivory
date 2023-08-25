@@ -88,7 +88,10 @@ class _TransferScreenState extends State<TransferScreen> {
                     ? const Expanded(child: Center(child: CircularProgressIndicator()))
                     : viewModel is TransferAccountsFetchedViewModel
                         ? Expanded(child: _buildScreenBody(viewModel))
-                        : const IvoryErrorWidget("Could not load accounts"),
+                        : IvoryErrorWidget(viewModel is TransferAccountsErrorViewModel &&
+                                viewModel.errorType == TransferAccountsErrorType.referenceAccountUnavailable
+                            ? "Reference account is not set"
+                            : "Could not load accounts"),
               ],
             ),
           );
