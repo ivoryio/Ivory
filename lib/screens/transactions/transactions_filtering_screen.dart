@@ -153,12 +153,12 @@ class _TransactionsFilteringScreenState
                           children: _buildFiltersListList(
                               viewModel, transactionListFilter,
                               (category, selected) {
-                            final List<String> catIds =
-                                transactionListFilter?.categoryIds ?? [];
+                            final List<Category> categories =
+                                transactionListFilter?.categories ?? [];
                             if (selected == true) {
-                              catIds.add(category.id);
+                              categories.add(category);
                             } else {
-                              catIds.remove(category.id);
+                              categories.remove(category);
                             }
                             setState(() {
                               transactionListFilter = TransactionListFilter(
@@ -168,7 +168,7 @@ class _TransactionsFilteringScreenState
                                     transactionListFilter?.bookingDateMax,
                                 searchString:
                                     transactionListFilter?.searchString,
-                                categoryIds: catIds,
+                                categories: categories,
                               );
                             });
                           }),
@@ -281,9 +281,9 @@ class _CategoryRowState extends State<_CategoryRow> {
 
   @override
   void initState() {
-    isSelected = (widget.filter?.categoryIds == null)
+    isSelected = (widget.filter?.categories == null)
         ? false
-        : (widget.filter!.categoryIds!.contains(widget.category.id));
+        : (widget.filter!.categories!.contains(widget.category));
     super.initState();
   }
 
