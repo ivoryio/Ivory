@@ -3,11 +3,11 @@ import 'package:solarisdemo/models/transfer/reference_account_transfer.dart';
 
 class TransferConfirmation extends Equatable {
   final bool success;
-  final ReferenceAccountTransfer? transfer;
+  final ReferenceAccountTransfer transfer;
 
   const TransferConfirmation({
     required this.success,
-    this.transfer,
+    required this.transfer,
   });
 
   @override

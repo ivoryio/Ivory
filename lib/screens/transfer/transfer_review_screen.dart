@@ -70,18 +70,21 @@ class _TransferReviewScreenState extends State<TransferReviewScreen> {
                   : Button(
                       color: const Color(0xFF2575FC),
                       text: "Sign & confirm",
-                      onPressed: () => StoreProvider.of<AppState>(context).dispatch(
-                        TransferCommandAction(
-                          user: user.cognito,
-                          transfer: ReferenceAccountTransfer(
-                            description: noteController.text,
-                            amount: ReferenceAccountTransferAmount(
-                              value: widget.params.transferAmountValue,
+                      onPressed: () {
+                        FocusScope.of(context).unfocus();
+
+                        StoreProvider.of<AppState>(context).dispatch(
+                          TransferCommandAction(
+                            user: user.cognito,
+                            transfer: ReferenceAccountTransfer(
+                              description: noteController.text,
+                              amount: ReferenceAccountTransferAmount(
+                                value: widget.params.transferAmountValue,
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                    ),
+                        );
+                      }),
             ),
             const SizedBox(height: 16),
           ],

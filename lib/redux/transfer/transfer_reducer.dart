@@ -9,7 +9,7 @@ TransferState transferReducer(TransferState state, dynamic action) {
   } else if (action is SendTransferFailedEventAction || action is ConfirmTransferFailedEventAction) {
     return TransferFailedState();
   } else if (action is ConfirmTransferSuccessEventAction) {
-    return TransferConfirmedState();
+    return TransferConfirmedState(amount: action.transfer.amount.value);
   }
 
   return state;

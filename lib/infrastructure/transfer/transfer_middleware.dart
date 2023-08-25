@@ -34,9 +34,12 @@ class TransferMiddleware extends MiddlewareClass<AppState> {
         tan: action.tan,
       );
 
-      if (response is ConfirmTransferChangeRequestSuccessResponse &&
-          response.transferConfirmation.success) {
-        store.dispatch(ConfirmTransferSuccessEventAction());
+      if (response is ConfirmTransferChangeRequestSuccessResponse) {
+        store.dispatch(
+          ConfirmTransferSuccessEventAction(
+            transfer: response.transferConfirmation.transfer,
+          ),
+        );
       } else {
         store.dispatch(ConfirmTransferFailedEventAction());
       }

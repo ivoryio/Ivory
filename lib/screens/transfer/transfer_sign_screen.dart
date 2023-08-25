@@ -29,7 +29,7 @@ class TransferSignScreen extends StatelessWidget {
       ),
       onWillChange: (previousViewModel, newViewModel) {
         if (newViewModel is TransferConfirmedViewModel) {
-          Navigator.pushNamed(context, TransferSuccessfulScreen.routeName);
+          Navigator.popAndPushNamed(context, TransferSuccessfulScreen.routeName);
         } else if (newViewModel is TransferFailedViewModel) {
           Navigator.popAndPushNamed(context, TransferFailedScreen.routeName);
         }

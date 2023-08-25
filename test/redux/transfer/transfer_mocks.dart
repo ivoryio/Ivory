@@ -42,6 +42,12 @@ class FakeChangeRequestService extends ChangeRequestService {
     return ConfirmTransferChangeRequestSuccessResponse(
       transferConfirmation: const TransferConfirmation(
         success: true,
+        transfer: ReferenceAccountTransfer(
+          description: 'transfer description',
+          amount: ReferenceAccountTransferAmount(
+            value: 100,
+          ),
+        ),
       ),
     );
   }

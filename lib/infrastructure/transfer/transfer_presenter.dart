@@ -17,7 +17,7 @@ class TransferPresenter {
       } else if (transferState is TransferNeedConfirmationState) {
         return TransferConfirmationViewModel(changeRequestId: transferState.transferAuthorizationRequest.id);
       } else if (transferState is TransferConfirmedState) {
-        return TransferConfirmedViewModel();
+        return TransferConfirmedViewModel(amount: transferState.amount);
       }
     } else {
       return TransferFailedViewModel();
@@ -47,4 +47,11 @@ class TransferConfirmationViewModel extends TransferViewModel {
   List<Object?> get props => [changeRequestId];
 }
 
-class TransferConfirmedViewModel extends TransferViewModel {}
+class TransferConfirmedViewModel extends TransferViewModel {
+  final double amount;
+
+  TransferConfirmedViewModel({required this.amount});
+
+  @override
+  List<Object?> get props => [amount];
+}

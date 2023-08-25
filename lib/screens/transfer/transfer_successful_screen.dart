@@ -1,9 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/infrastructure/transfer/transfer_presenter.dart';
+import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/screens/home/home_screen.dart';
 import 'package:solarisdemo/screens/transactions/transactions_screen.dart';
+import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
@@ -57,39 +61,48 @@ class TransferSuccessfulScreen extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 16),
-                    RichText(
-                      text: TextSpan(
-                        text: "You have successfully transferred ",
-                        style: regularFont,
-                        children: [
-                          TextSpan(
-                            text: "€ 1,000.00 ",
-                            style: boldFont,
-                            children: [
-                              TextSpan(
-                                text: "from your ",
+                    StoreConnector<AppState, TransferViewModel>(
+                      converter: (store) => TransferPresenter.presentTransfer(
+                        transferState: store.state.transferState,
+                        personAccountState: store.state.personAccountState,
+                        referenceAccountState: store.state.referenceAccountState,
+                      ),
+                      builder: (context, viewModel) => viewModel is TransferConfirmedViewModel
+                          ? RichText(
+                              text: TextSpan(
+                                text: "You have successfully transferred ",
                                 style: regularFont,
                                 children: [
-                                  TextSpan(text: "Reference account", style: boldFont, children: [
-                                    TextSpan(
-                                      text: " to your ",
-                                      style: regularFont,
-                                      children: [
-                                        TextSpan(text: "Porsche account", style: boldFont, children: [
-                                          TextSpan(
-                                            text: ".",
-                                            style: regularFont,
-                                          ),
-                                        ]),
-                                      ],
-                                    ),
-                                  ]),
+                                  TextSpan(
+                                    text: Format.euro(viewModel.amount, digits: 2),
+                                    style: boldFont,
+                                    children: [
+                                      TextSpan(
+                                        text: " from your ",
+                                        style: regularFont,
+                                        children: [
+                                          TextSpan(text: "Reference account", style: boldFont, children: [
+                                            TextSpan(
+                                              text: " to your ",
+                                              style: regularFont,
+                                              children: [
+                                                TextSpan(text: "Porsche account", style: boldFont, children: [
+                                                  TextSpan(
+                                                    text: ".",
+                                                    style: regularFont,
+                                                  ),
+                                                ]),
+                                              ],
+                                            ),
+                                          ]),
+                                        ],
+                                      )
+                                    ],
+                                  ),
                                 ],
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
+                              ),
+                            )
+                          : Container(),
                     ),
                     SizedBox(height: 16),
                     RichText(

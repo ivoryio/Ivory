@@ -24,19 +24,21 @@ class ChangeRequestService extends ApiService {
         body: {"tan": tan},
       );
 
+      if (data['success'] == false) {
+        return ChangeRequestServiceErrorResponse();
+      }
+
       return ConfirmTransferChangeRequestSuccessResponse(
         transferConfirmation: TransferConfirmation(
           success: data['success'],
-          transfer: data['success'] == true
-              ? ReferenceAccountTransfer(
-                  description: data['response']['response_body']['description'],
-                  amount: ReferenceAccountTransferAmount(
-                    value: (data['response']['response_body']['amount']['value']
-                            as int) /
-                        100,
-                  ),
-                )
-              : null,
+          transfer: ReferenceAccountTransfer(
+            description: data['response']['response_body']['description'],
+            amount: ReferenceAccountTransferAmount(
+              value: (data['response']['response_body']['amount']['value']
+                      as int) /
+                  100,
+            ),
+          ),
         ),
       );
     } catch (e) {

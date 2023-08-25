@@ -29,6 +29,10 @@ class SendTransferSuccessEventAction {
 
 class SendTransferFailedEventAction {}
 
-class ConfirmTransferSuccessEventAction {}
+class ConfirmTransferSuccessEventAction {
+  final ReferenceAccountTransfer transfer;
+
+  ConfirmTransferSuccessEventAction({required this.transfer});
+}
 
 class ConfirmTransferFailedEventAction {}

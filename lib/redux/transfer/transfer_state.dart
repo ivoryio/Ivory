@@ -18,6 +18,12 @@ class TransferNeedConfirmationState extends TransferState {
   });
 }
 
-class TransferConfirmedState extends TransferState {}
+class TransferConfirmedState extends TransferState {
+  final double amount;
+
+  TransferConfirmedState({
+    required this.amount,
+  });
+}
 
 class TransferFailedState extends TransferState {}
