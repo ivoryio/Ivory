@@ -94,8 +94,8 @@ class DefaultTheme {
         fontWeight: FontWeight.w600,
       ),
       mixedStyles: const TextStyle(
-        fontSize: 14,
-        height: 1.285, // 18 / 14,
+        fontSize: 16,
+        height: 1.5, // 24 / 16,
         fontWeight: FontWeight.w400,
         color: Color(0xFF15141E),
       ),
@@ -197,8 +197,8 @@ class PorscheTheme {
         fontWeight: FontWeight.w600,
       ),
       mixedStyles: const TextStyle(
-        fontSize: 14,
-        height: 1.285, // 18 / 14,
+        fontSize: 16,
+        height: 1.5, // 24 / 16,
         fontWeight: FontWeight.w400,
         color: Color(0xFF15141E),
       ),
