@@ -67,6 +67,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     Expanded(
                       child: SingleChildScrollView(
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const TransactionListTitle(
                               displayShowAllButton: false,
@@ -113,37 +114,20 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                                 return;
                               },
                             ),
-                            const SizedBox(height: 16),
-                            if (isFilterActive)
-                              Row(
-                                children: [
-                                  PillButton(
-                                    buttonText:
-                                        '${getFormattedDate(date: viewModel.transactionListFilter?.bookingDateMin, text: "Start date")} - ${getFormattedDate(date: viewModel.transactionListFilter?.bookingDateMax, text: "End date")}',
-                                    buttonCallback: () {
-                                      StoreProvider.of<AppState>(context)
-                                          .dispatch(
-                                              GetTransactionsCommandAction(
-                                                  filter: null,
-                                                  user: user.cognito));
-                                    },
-                                    icon: const Icon(
-                                      Icons.close,
-                                      size: 16,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              child: _buildFilterListDisplay(viewModel, user),
+                            ),
                             ButtonsTransactionType(
                               user: user,
                               viewModel: viewModel,
                               buttons: [
                                 ButtonTransactionTypeItem(
-                                  text: TransactionTypeItems.Past,
+                                  text: TransactionTypeItems.past,
                                   child: _buildTransactionsList(viewModel),
                                 ),
                                 ButtonTransactionTypeItem(
-                                  text: TransactionTypeItems.Upcoming,
+                                  text: TransactionTypeItems.upcoming,
                                   child: _buildTransactionsList(viewModel),
                                 ),
                               ],
@@ -495,6 +479,82 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       },
     );
   }
+
+  Widget _buildFilterListDisplay(TransactionsViewModel viewModel, AuthenticatedUser user) {
+    List<Widget> widgetList = [];
+
+    if(viewModel.transactionListFilter?.bookingDateMax != null ||
+        viewModel.transactionListFilter?.bookingDateMin != null) {
+      widgetList.add(
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            PillButton(
+              buttonText:
+              '${getFormattedDate(date: viewModel.transactionListFilter?.bookingDateMin, text: "Start date")} - ${getFormattedDate(date: viewModel.transactionListFilter?.bookingDateMax, text: "End date")}',
+              buttonCallback: () {
+                StoreProvider.of<AppState>(context)
+                    .dispatch(
+                    GetTransactionsCommandAction(
+                        filter: TransactionListFilter(
+                          bookingDateMax: null,
+                          bookingDateMin: null,
+                          searchString: viewModel.transactionListFilter!.searchString,
+                          categories: viewModel.transactionListFilter!.categories,
+                        ),
+                        user: user.cognito));
+              },
+              icon: const Icon(
+                Icons.close,
+                size: 16,
+              ),
+            ),
+          ],
+        ),);
+    }
+
+    if(viewModel.transactionListFilter?.categories?.isNotEmpty == true) {
+      for(var index = 0; index < viewModel.transactionListFilter!.categories!.length; index ++) {
+        widgetList.add(
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              PillButton(
+                buttonText:
+                viewModel.transactionListFilter!.categories![index].name,
+                buttonCallback: () {
+                  var newCategories = viewModel.transactionListFilter!.categories!;
+                  newCategories.remove(viewModel.transactionListFilter!.categories![index]);
+                  StoreProvider.of<AppState>(context)
+                      .dispatch(
+                      GetTransactionsCommandAction(
+                          filter: TransactionListFilter(
+                            bookingDateMax: viewModel.transactionListFilter!.bookingDateMax,
+                            bookingDateMin: viewModel.transactionListFilter!.bookingDateMax,
+                            searchString: viewModel.transactionListFilter!.searchString,
+                            categories: newCategories,
+                          ),
+                          user: user.cognito));
+                },
+                icon: const Icon(
+                  Icons.close,
+                  size: 16,
+                ),
+              ),
+            ],
+          ),
+        );
+      }
+    }
+
+    return Wrap(
+      spacing: 8,
+      runSpacing: 4,
+      children: widgetList,
+    );
+  }
+
 }
 
 class ButtonsTransactionType extends StatefulWidget {
@@ -543,7 +603,7 @@ class _ButtonsTransactionTypeState extends State<ButtonsTransactionType> {
                   buttonIndex++)
                 ActiveButton(
                   active: selectedButton == buttonIndex,
-                  text: widget.buttons[buttonIndex].text,
+                  type: widget.buttons[buttonIndex].text,
                   textStyle: ClientConfig.getTextStyleScheme().labelSmall,
                   onPressed: () {
                     setState(() {
@@ -575,7 +635,7 @@ class _ButtonsTransactionTypeState extends State<ButtonsTransactionType> {
 }
 
 class ActiveButton extends StatelessWidget {
-  final TransactionTypeItems text;
+  final TransactionTypeItems type;
   final bool active;
   final Function onPressed;
   final TextStyle? textStyle;
@@ -584,7 +644,7 @@ class ActiveButton extends StatelessWidget {
     super.key,
     this.textStyle,
     required this.active,
-    required this.text,
+    required this.type,
     required this.onPressed,
   });
 
@@ -592,7 +652,7 @@ class ActiveButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Button(
-        text: text.name,
+        text: (type == TransactionTypeItems.past) ? "Past":"Upcoming",
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         color: active ? const Color(0xFFDFE2E6) : Colors.white,
         textColor: const Color(0xFF15141E),
@@ -617,13 +677,4 @@ class ButtonTransactionTypeItem {
   });
 }
 
-class PastTransactions extends StatelessWidget {
-  const PastTransactions({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Text('Past transactions');
-  }
-}
-
-enum TransactionTypeItems { Past, Upcoming }
+enum TransactionTypeItems { past, upcoming }

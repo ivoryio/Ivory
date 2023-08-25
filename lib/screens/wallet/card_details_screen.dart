@@ -453,7 +453,7 @@ class ActiveCard extends StatelessWidget {
                 isViewable: false,
                 cardType: 'Physical card',
               ),
-              SizedBox(
+              const SizedBox(
                 height: 16,
               ),
               Row(
@@ -707,7 +707,6 @@ class _ActionItemState extends State<ActionItem> {
       onToggle: (val) {
         setState(() {
           _isSpendingLimitEnabled = val;
-          print('Switch Value ===> $val');
         });
       },
     );

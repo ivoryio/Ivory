@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart';
 import 'package:solarisdemo/models/person_account_summary.dart';
@@ -10,17 +11,20 @@ import 'package:solarisdemo/screens/transactions/transactions_screen.dart';
 import 'package:solarisdemo/screens/transfer/transfer_screen.dart';
 import 'package:solarisdemo/widgets/rewards.dart';
 import 'package:solarisdemo/widgets/screen.dart';
-import 'package:solarisdemo/widgets/transaction_list.dart';
 
 import '../../config.dart';
 import '../../cubits/account_summary_cubit/account_summary_cubit.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../cubits/transaction_list_cubit/transaction_list_cubit.dart';
+import '../../infrastructure/transactions/transaction_presenter.dart';
 import '../../models/transactions/transaction_model.dart';
 import '../../models/user.dart';
+import '../../redux/app_state.dart';
+import '../../redux/transactions/transactions_action.dart';
 import '../../services/person_service.dart';
 import '../../widgets/account_balance_text.dart';
 import '../../widgets/analytics.dart';
+import '../../widgets/transaction_listing_item.dart';
 
 const _defaultCountTransactionsDisplayed = 3;
 const _defaultPage = 1;
@@ -79,7 +83,6 @@ class HomeScreen extends StatelessWidget {
       centerTitle: false,
       child: HomePageContent(
         accountSummaryCubit: accountSummaryCubit,
-        transactionListCubit: transactionListCubit,
         user: user,
       ),
     );
@@ -88,14 +91,12 @@ class HomeScreen extends StatelessWidget {
 
 class HomePageContent extends StatelessWidget {
   final AccountSummaryCubit accountSummaryCubit;
-  final TransactionListCubit transactionListCubit;
   final AuthenticatedUser user;
 
   const HomePageContent({
     super.key,
     required this.user,
     required this.accountSummaryCubit,
-    required this.transactionListCubit,
   });
 
   @override
@@ -113,26 +114,56 @@ class HomePageContent extends StatelessWidget {
             padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
             child: Column(
               children: [
-                TransactionList(
-                  transactionListCubit: transactionListCubit,
-                  header: const TransactionListTitle(
-                    displayShowAllButton: true,
+                const TransactionListTitle(
+                  displayShowAllButton: true,
+                ),
+                StoreConnector<AppState, TransactionsViewModel>(
+                  onInit: (store) => store.dispatch(
+                    GetTransactionsCommandAction(
+                      filter: _defaultTransactionListFilter,
+                      user: user.cognito,
+                    ),
                   ),
-                  filter: const TransactionListFilter(
-                    size: _defaultCountTransactionsDisplayed,
-                  ),
+                  converter: (store) =>
+                      TransactionPresenter.presentTransactions(transactionsState: store.state.transactionsState),
+                  builder: (context, viewModel) {
+                    if (viewModel is TransactionsErrorViewModel) {
+                      return const Center(
+                        child: Text('Could not load transactions'),
+                      );
+                    }
+
+                    if (viewModel is TransactionsFetchedViewModel) {
+                      return Column(
+                        children: [
+                          for (var transaction in viewModel.transactions!)
+                            TransactionListItem(
+                              transaction: transaction,
+                            ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 0,
+                              vertical: ClientConfig.getCustomClientUiSettings().defaultScreenVerticalPadding,
+                            ),
+                            child: Analytics(
+                              transactions: viewModel.transactions!,
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+
+                    return const Center(child: CircularProgressIndicator());
+                  },
                 ),
               ],
             ),
           ),
           Padding(
-            padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-            child: Analytics(
-              transactionListCubit: transactionListCubit,
+            padding: EdgeInsets.symmetric(
+              horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+              vertical: 0,
             ),
-          ),
-          Padding(
-            padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
             child: const Rewards(),
           ),
         ],
