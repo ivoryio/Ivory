@@ -11,6 +11,8 @@ class TransferLoadingState extends TransferState {}
 
 class TransferNeedConfirmationState extends TransferState {}
 
+class TransferConfirmationLoadingState extends TransferNeedConfirmationState {}
+
 class TransferConfirmedState extends TransferState {}
 
 class TransferFailedState extends TransferState {}
