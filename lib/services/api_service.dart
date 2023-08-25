@@ -26,6 +26,7 @@ class ApiService<T> {
           "Authorization": "Bearer $accessToken",
         },
       );
+
       if (response.statusCode != 200) {
         throw Exception("GET request response code: ${response.statusCode}");
       }

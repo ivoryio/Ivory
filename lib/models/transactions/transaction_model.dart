@@ -114,7 +114,7 @@ class TransactionListFilter {
   final int? page;
   final int? size;
   final String? sort;
-  final List<String>? categoryIds;
+  final List<Category>? categories;
 
   const TransactionListFilter({
     this.bookingDateMin,
@@ -123,7 +123,7 @@ class TransactionListFilter {
     this.page,
     this.size,
     this.sort,
-    this.categoryIds,
+    this.categories,
   });
 
   Map<String, String> toMap() {
@@ -153,9 +153,10 @@ class TransactionListFilter {
       map["filter[description]"] = searchString!;
     }
 
-    if (categoryIds != null) {
-      for (int index = 0; index < categoryIds!.length; index++) {
-        map["filter[category_id]"] = categoryIds![index];
+    if (categories != null) {
+      if(categories!.isNotEmpty) {
+        List<String> categoryIds = categories!.map((category) => category.id).toList();
+        map["filter[category_id]"] = '[${categoryIds.join(",")}]';
       }
     }
 
