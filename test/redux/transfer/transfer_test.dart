@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:solarisdemo/models/currency/currency.dart';
 import 'package:solarisdemo/models/transfer/reference_account_transfer.dart';
+import 'package:solarisdemo/models/transfer/transfer_authorization_request.dart';
 import 'package:solarisdemo/redux/transfer/transfer_action.dart';
 import 'package:solarisdemo/redux/transfer/transfer_state.dart';
 
@@ -16,6 +17,12 @@ void main() {
       value: 100,
       currency: Currency.euro,
     ),
+  );
+  const transferAuthorizationRequest = TransferAuthorizationRequest(
+    id: "id",
+    status: "CONFIRMATION_REQUIRED",
+    confirmUrl: "/change_requests/id/confirm",
+    stringToSign: null,
   );
 
   group("Creating the transfer", () {
@@ -76,6 +83,7 @@ void main() {
       expect((await appState).transferState, isA<TransferFailedState>());
     });
   });
+
   group("Confirming the transfer", () {
     test("When is confirming a transfer the state should change to loading", () {
       //given
@@ -83,7 +91,7 @@ void main() {
         transferService: FakeTransferService(),
         changeRequestService: FakeChangeRequestService(),
         initialState: createAppState(
-          transferState: TransferNeedConfirmationState(),
+          transferState: TransferNeedConfirmationState(transferAuthorizationRequest: transferAuthorizationRequest),
         ),
       );
 
@@ -95,7 +103,7 @@ void main() {
       ));
 
       //then
-      expect(store.state.transferState, isA<TransferConfirmationLoadingState>());
+      expect(store.state.transferState, isA<TransferLoadingState>());
     });
 
     test("When is confirming a transfer successfully the state should change to confirmed", () async {
@@ -104,7 +112,7 @@ void main() {
         transferService: FakeTransferService(),
         changeRequestService: FakeChangeRequestService(),
         initialState: createAppState(
-          transferState: TransferNeedConfirmationState(),
+          transferState: TransferNeedConfirmationState(transferAuthorizationRequest: transferAuthorizationRequest),
         ),
       );
 
@@ -127,7 +135,9 @@ void main() {
         transferService: FakeTransferService(),
         changeRequestService: FakeFailingChangeRequestService(),
         initialState: createAppState(
-          transferState: TransferNeedConfirmationState(),
+          transferState: TransferNeedConfirmationState(
+            transferAuthorizationRequest: transferAuthorizationRequest,
+          ),
         ),
       );
 

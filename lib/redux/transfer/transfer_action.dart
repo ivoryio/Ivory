@@ -1,4 +1,5 @@
 import 'package:solarisdemo/models/transfer/reference_account_transfer.dart';
+import 'package:solarisdemo/models/transfer/transfer_authorization_request.dart';
 import 'package:solarisdemo/models/user.dart';
 
 class TransferCommandAction {
@@ -20,7 +21,11 @@ class ConfirmTransferCommandAction {
   });
 }
 
-class SendTransferSuccessEventAction {}
+class SendTransferSuccessEventAction {
+  final TransferAuthorizationRequest transferAuthorizationRequest;
+
+  SendTransferSuccessEventAction({required this.transferAuthorizationRequest});
+}
 
 class SendTransferFailedEventAction {}
 

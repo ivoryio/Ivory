@@ -131,7 +131,7 @@ class NotImplementedTransferService extends TransferService {
 
 class NotImplementedChangeRequestService extends ChangeRequestService {
   @override
-  Future<ChangeRequestServiceResponse> confirmChangeRequest({
+  Future<ChangeRequestServiceResponse> confirmTransferChangeRequest({
     User? user,
     required String changeRequestId,
     required String tan,

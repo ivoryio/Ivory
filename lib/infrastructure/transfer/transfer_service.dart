@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:solarisdemo/models/transfer/reference_account_transfer.dart';
+import 'package:solarisdemo/models/transfer/transfer_authorization_request.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/services/api_service.dart';
 
@@ -26,7 +27,14 @@ class TransferService extends ApiService {
         },
       );
 
-      return CreatePayoutTransferSuccessResponse();
+      return CreatePayoutTransferSuccessResponse(
+        transferAuthorizationRequest: TransferAuthorizationRequest(
+          id: data['authorizationRequest']['id'] as String,
+          status: data['authorizationRequest']['status'],
+          confirmUrl: data['confirmUrl'],
+          stringToSign: data['authorizationRequest']['string_to_sign'],
+        ),
+      );
     } catch (e) {
       return TransferServiceErrorResponse();
     }
@@ -40,6 +48,15 @@ abstract class TransferServiceResponse extends Equatable {
   List<Object> get props => [];
 }
 
-class CreatePayoutTransferSuccessResponse extends TransferServiceResponse {}
+class CreatePayoutTransferSuccessResponse extends TransferServiceResponse {
+  final TransferAuthorizationRequest transferAuthorizationRequest;
+
+  const CreatePayoutTransferSuccessResponse({
+    required this.transferAuthorizationRequest,
+  });
+
+  @override
+  List<Object> get props => [transferAuthorizationRequest];
+}
 
 class TransferServiceErrorResponse extends TransferServiceResponse {}

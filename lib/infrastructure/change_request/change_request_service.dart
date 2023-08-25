@@ -1,11 +1,12 @@
 import 'package:equatable/equatable.dart';
+import 'package:solarisdemo/models/transfer/transfer_confirmation.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/services/api_service.dart';
 
 class ChangeRequestService extends ApiService {
   ChangeRequestService({super.user});
 
-  Future<ChangeRequestServiceResponse> confirmChangeRequest({
+  Future<ChangeRequestServiceResponse> confirmTransferChangeRequest({
     User? user,
     required String changeRequestId,
     required String tan,
@@ -18,11 +19,13 @@ class ChangeRequestService extends ApiService {
         body: {"tan": tan},
       );
 
-      print(data);
-
-      return ChangeRequestConfirmSuccessResponse();
+      return ConfirmTransferChangeRequestSuccessResponse(
+        transferConfirmation: TransferConfirmation(
+          success: data['success'],
+        ),
+      );
     } catch (e) {
-      return ChangeRequestConfirmErrorResponse();
+      return ChangeRequestServiceErrorResponse();
     }
   }
 }
@@ -32,6 +35,15 @@ abstract class ChangeRequestServiceResponse extends Equatable {
   List<Object> get props => [];
 }
 
-class ChangeRequestConfirmSuccessResponse extends ChangeRequestServiceResponse {}
+class ConfirmTransferChangeRequestSuccessResponse extends ChangeRequestServiceResponse {
+  final TransferConfirmation transferConfirmation;
 
-class ChangeRequestConfirmErrorResponse extends ChangeRequestServiceResponse {}
+  ConfirmTransferChangeRequestSuccessResponse({
+    required this.transferConfirmation,
+  });
+
+  @override
+  List<Object> get props => [transferConfirmation];
+}
+
+class ChangeRequestServiceErrorResponse extends ChangeRequestServiceResponse {}

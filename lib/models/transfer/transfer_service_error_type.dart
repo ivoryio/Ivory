@@ -1,1 +1,1 @@
-enum TransferServiceErrorType { unknown }
+enum TransferServiceErrorType { unknown, referenceAccountUnavailable }

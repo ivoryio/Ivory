@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:solarisdemo/models/transfer/transfer_authorization_request.dart';
 
 abstract class TransferState extends Equatable {
   @override
@@ -9,9 +10,13 @@ class TransferInitialState extends TransferState {}
 
 class TransferLoadingState extends TransferState {}
 
-class TransferNeedConfirmationState extends TransferState {}
+class TransferNeedConfirmationState extends TransferState {
+  final TransferAuthorizationRequest transferAuthorizationRequest;
 
-class TransferConfirmationLoadingState extends TransferNeedConfirmationState {}
+  TransferNeedConfirmationState({
+    required this.transferAuthorizationRequest,
+  });
+}
 
 class TransferConfirmedState extends TransferState {}
 
