@@ -9,6 +9,10 @@ class TransferPresenter {
     required PersonAccountState personAccountState,
     required ReferenceAccountState referenceAccountState,
   }) {
+    if (personAccountState is! PersonAccountFetchedState || referenceAccountState is! ReferenceAccountFetchedState) {
+      return TransferFailedViewModel();
+    }
+
     return TransferInitialViewModel();
   }
 }

@@ -5,7 +5,6 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/infrastructure/transfer/transfer_accounts_presenter.dart';
-import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/person/person_account/person_account_action.dart';
 import 'package:solarisdemo/redux/person/reference_account/reference_account_action.dart';
@@ -15,7 +14,7 @@ import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/ivory_amount_field.dart';
 import 'package:solarisdemo/widgets/ivory_card.dart';
-import 'package:solarisdemo/widgets/ivory_generic_error.dart';
+import 'package:solarisdemo/widgets/ivory_error_widget.dart';
 import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
@@ -29,32 +28,20 @@ class TransferScreen extends StatefulWidget {
 }
 
 class _TransferScreenState extends State<TransferScreen> {
-  late AuthenticatedUser user;
   String? _errorText;
   bool _canContinue = false;
   final amountController = TextEditingController();
 
-  void onTapNext() {
-    FocusScope.of(context).unfocus();
-    Navigator.pushNamed(
-      context,
-      TransferReviewScreen.routeName,
-      arguments: TransferReviewScreenParams(
-        amount: double.parse(amountController.text),
-        toAccount: "DE12345678901234567890",
-      ),
-    );
-  }
-
   @override
-  void initState() {
-    super.initState();
-
-    user = context.read<AuthCubit>().state.user!;
+  void dispose() {
+    amountController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final user = context.read<AuthCubit>().state.user!;
+
     return ScreenScaffold(
       body: StoreConnector<AppState, TransferAccountsViewModel>(
         onInit: (store) {
@@ -88,108 +75,123 @@ class _TransferScreenState extends State<TransferScreen> {
         },
         distinct: true,
         builder: (context, viewModel) {
-          return Column(
-            children: [
-              AppToolbar(
-                title: "Transfer",
-                padding: EdgeInsets.symmetric(
-                  horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+          return ScreenScaffold(
+            body: Column(
+              children: [
+                AppToolbar(
+                  title: "Transfer",
+                  padding: EdgeInsets.symmetric(
+                    horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+                  ),
                 ),
-              ),
-              ...viewModel is TransferAccountsLoadingViewModel
-                  ? const [Expanded(child: Center(child: CircularProgressIndicator()))]
-                  : viewModel is TransferAccountsFetchedViewModel
-                      ? _buildBody(viewModel)
-                      : const [IvoryGenericError()],
-            ],
+                viewModel is TransferAccountsLoadingViewModel
+                    ? const Expanded(child: Center(child: CircularProgressIndicator()))
+                    : viewModel is TransferAccountsFetchedViewModel
+                        ? Expanded(child: _buildScreenBody(viewModel))
+                        : const IvoryErrorWidget("Could not load accounts"),
+              ],
+            ),
           );
         },
       ),
     );
   }
 
-  List<Widget> _buildBody(TransferAccountsFetchedViewModel viewModel) {
-    return [
-      Expanded(
-        child: SingleChildScrollView(
+  Widget _buildScreenBody(TransferAccountsFetchedViewModel viewModel) {
+    return Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+              ),
+              child: Column(
+                children: [
+                  _Card(
+                    title: "Porsche account",
+                    iban: viewModel.personAccount.iban!,
+                    balance: viewModel.personAccount.availableBalance!.value.toDouble(),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.all(4.0),
+                    child: Icon(Icons.arrow_downward),
+                  ),
+                  _Card(
+                    title: "Reference account",
+                    iban: viewModel.referenceAccount.iban,
+                    bankName: viewModel.referenceAccount.name,
+                  ),
+                  const SizedBox(height: 32),
+                  Text(
+                    "Enter transfer amount",
+                    style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(
+                          color: _errorText != null ? Colors.red : const Color(0xFF56555E),
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
+                  IvoryAmountField(
+                    controller: amountController,
+                    error: _errorText != null,
+                  ),
+                  if (_errorText != null) ...[
+                    const SizedBox(height: 8),
+                    Text(
+                      _errorText!,
+                      style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(
+                            color: Colors.red,
+                            fontWeight: FontWeight.w600,
+                          ),
+                    ),
+                  ],
+                  const SizedBox(height: 40),
+                  InkWell(
+                    onTap: () {
+                      showBottomModal(
+                        context: context,
+                        title: "How to top up your Ivory account?",
+                        content: _TopUpBottomSheetContent(iban: viewModel.personAccount.iban!),
+                      );
+                    },
+                    child: Text(
+                      "Want to top up your Ivory account?",
+                      style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold.copyWith(
+                            color: const Color(0xFF406FE6),
+                          ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        SizedBox(
+          width: double.infinity,
           child: Padding(
             padding: EdgeInsets.symmetric(
               horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
             ),
-            child: Column(
-              children: [
-                _Card(
-                  title: "Porsche account",
-                  iban: viewModel.personAccount.iban!,
-                  balance: viewModel.personAccount.availableBalance!.value.toDouble(),
-                ),
-                const Padding(
-                  padding: EdgeInsets.all(4.0),
-                  child: Icon(Icons.arrow_downward),
-                ),
-                _Card(
-                  title: "Reference account",
-                  iban: viewModel.referenceAccount.iban,
-                  bankName: viewModel.referenceAccount.name,
-                ),
-                const SizedBox(height: 32),
-                Text(
-                  "Enter transfer amount",
-                  style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(
-                        color: _errorText != null ? Colors.red : const Color(0xFF56555E),
-                        fontWeight: FontWeight.w600,
-                      ),
-                ),
-                IvoryAmountField(
-                  controller: amountController,
-                  error: _errorText != null,
-                ),
-                if (_errorText != null) ...[
-                  const SizedBox(height: 8),
-                  Text(
-                    _errorText!,
-                    style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(
-                          color: Colors.red,
-                          fontWeight: FontWeight.w600,
+            child: Button(
+              color: const Color(0xFF2575FC),
+              text: "Next",
+              onPressed: _canContinue
+                  ? () {
+                      FocusScope.of(context).unfocus();
+                      Navigator.pushNamed(
+                        context,
+                        TransferReviewScreen.routeName,
+                        arguments: TransferReviewScreenParams(
+                          transferAmountValue: double.parse(amountController.text),
                         ),
-                  ),
-                ],
-                const SizedBox(height: 40),
-                InkWell(
-                  onTap: () {
-                    showBottomModal(
-                      context: context,
-                      title: "How to top up your Ivory account?",
-                      content: _TopUpBottomSheetContent(iban: user.personAccount.iban!),
-                    );
-                  },
-                  child: Text(
-                    "Want to top up your Ivory account?",
-                    style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold.copyWith(
-                          color: const Color(0xFF406FE6),
-                        ),
-                  ),
-                ),
-              ],
+                      );
+                    }
+                  : null,
             ),
           ),
         ),
-      ),
-      SizedBox(
-        width: double.infinity,
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-          ),
-          child: Button(
-            color: const Color(0xFF2575FC),
-            text: "Next",
-            onPressed: _canContinue ? onTapNext : null,
-          ),
-        ),
-      ),
-      const SizedBox(height: 16),
-    ];
+        const SizedBox(height: 16),
+      ],
+    );
   }
 }
 
@@ -317,7 +319,7 @@ class _TopUpBottomSheetContent extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Icon(Icons.check, color: Color(0xFF2575FC)),
-        SizedBox(width: 16),
+        const SizedBox(width: 16),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -333,7 +335,7 @@ class _TopUpBottomSheetContent extends StatelessWidget {
                             color: const Color(0xFF15141E),
                           ),
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     InkWell(
                       onTap: () {
                         Clipboard.setData(ClipboardData(text: iban));

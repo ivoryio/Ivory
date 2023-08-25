@@ -9,13 +9,9 @@ import 'package:solarisdemo/widgets/ivory_text_field.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 class TransferReviewScreenParams {
-  final double amount;
-  final String toAccount;
+  final double transferAmountValue;
 
-  TransferReviewScreenParams({
-    required this.amount,
-    required this.toAccount,
-  });
+  TransferReviewScreenParams({required this.transferAmountValue});
 }
 
 class TransferReviewScreen extends StatelessWidget {
@@ -58,7 +54,7 @@ class TransferReviewScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            Format.euro(params.amount, digits: 2),
+                            Format.euro(params.transferAmountValue, digits: 2),
                             style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold.copyWith(
                                   color: Colors.black,
                                 ),
