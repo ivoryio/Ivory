@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
+import '../config.dart';
+
 class DateRangePicker extends StatelessWidget {
   final DateTimeRange? initialSelectedRange;
   final void Function(DateRangePickerSelectionChangedArgs)? onSelectionChanged;
@@ -19,7 +21,7 @@ class DateRangePicker extends StatelessWidget {
         : null;
 
     return SfDateRangePicker(
-      monthFormat: 'MMM',
+      monthFormat: 'MMMM',
       yearCellStyle: const DateRangePickerYearCellStyle(
         textStyle: TextStyle(
           fontWeight: FontWeight.w400,
@@ -38,43 +40,40 @@ class DateRangePicker extends StatelessWidget {
           color: Colors.white,
         ),
       ),
-      monthCellStyle: const DateRangePickerMonthCellStyle(
-        leadingDatesTextStyle: TextStyle(
+      monthCellStyle: DateRangePickerMonthCellStyle(
+        leadingDatesTextStyle: const TextStyle(
           fontWeight: FontWeight.w400,
           fontSize: 15,
           color: Color(0xFFD6D8E1),
         ),
-        trailingDatesTextStyle: TextStyle(
+        trailingDatesTextStyle: const TextStyle(
           fontWeight: FontWeight.w400,
           fontSize: 15,
           color: Color(0xFFD6D8E1),
         ),
-        todayTextStyle: TextStyle(
-          fontWeight: FontWeight.w600,
-          fontSize: 15,
-          color: Colors.black,
-        ),
+        todayTextStyle:  ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
         todayCellDecoration: BoxDecoration(
           color: Colors.white,
           shape: BoxShape.circle,
+          border: Border.all(
+            width: 1,
+            color: Colors.black,
+          ),
         ),
-        textStyle: TextStyle(
-          fontWeight: FontWeight.w400,
-          fontSize: 15,
-          color: Colors.black,
-        ),
+        textStyle: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
       ),
       monthViewSettings: const DateRangePickerMonthViewSettings(
         enableSwipeSelection: true,
         firstDayOfWeek: 1,
         showTrailingAndLeadingDates: true,
         dayFormat: 'EEE',
-        viewHeaderHeight: 35,
+        viewHeaderHeight: 30,
         viewHeaderStyle: DateRangePickerViewHeaderStyle(
           textStyle: TextStyle(
-            fontSize: 11,
+            fontSize: 16,
+            fontFamily: 'Proxima Nova',
             fontWeight: FontWeight.w600,
-            color: Colors.black,
+            color: Color(0xFF9B9EB2),
           ),
         ),
       ),
@@ -82,24 +81,22 @@ class DateRangePicker extends StatelessWidget {
         textAlign: TextAlign.center,
         textStyle: TextStyle(
           height: 1.5,
-          fontSize: 15,
+          fontSize: 16,
           fontWeight: FontWeight.w600,
           color: Colors.black,
         ),
       ),
       showNavigationArrow: true,
       selectionColor: Colors.black,
-      rangeSelectionColor: Colors.black,
+      rangeSelectionColor: const Color(0xFFDFE2E6),
       initialDisplayDate: DateTime.now(),
-      endRangeSelectionColor: Colors.black,
-      startRangeSelectionColor: Colors.black,
+      endRangeSelectionColor: ClientConfig.getColorScheme().secondary,
+      startRangeSelectionColor: ClientConfig.getColorScheme().secondary,
       selectionMode: DateRangePickerSelectionMode.range,
-      selectionShape: DateRangePickerSelectionShape.rectangle,
-      selectionTextStyle: const TextStyle(color: Colors.white),
+      selectionShape: DateRangePickerSelectionShape.circle,
+      selectionTextStyle: ClientConfig.getTextStyleScheme().bodyLargeRegularBold.copyWith(color: Colors.white),
       initialSelectedRange: selectedRange,
-      rangeTextStyle: const TextStyle(
-        color: Colors.white,
-      ),
+      rangeTextStyle: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
       onSelectionChanged: onSelectionChanged,
     );
   }

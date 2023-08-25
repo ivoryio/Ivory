@@ -9,6 +9,7 @@ class CustomSearchBar extends StatelessWidget {
   final void Function(String value)? onChangedSearch;
   final void Function(String value)? onSubmitSearch;
   final String? textLabel;
+  final String? hintText;
 
   const CustomSearchBar({
     super.key,
@@ -17,6 +18,7 @@ class CustomSearchBar extends StatelessWidget {
     required this.onChangedSearch,
     this.onSubmitSearch,
     this.textLabel,
+    this.hintText,
   });
 
   @override
@@ -25,7 +27,7 @@ class CustomSearchBar extends StatelessWidget {
       children: [
         Expanded(
           child: PlatformTextInput(
-            hintText: "Search here...",
+            hintText: hintText ?? "Search by name, date",
             icon: Icons.search,
             validator: (value) {
               if (value == null || value.isEmpty) {

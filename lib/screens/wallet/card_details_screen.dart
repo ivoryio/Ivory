@@ -704,7 +704,6 @@ class _ActionItemState extends State<ActionItem> {
       onToggle: (val) {
         setState(() {
           _isSpendingLimitEnabled = val;
-          print('Switch Value ===> $val');
         });
       },
     );

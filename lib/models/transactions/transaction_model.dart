@@ -1,5 +1,7 @@
 import 'package:solarisdemo/utilities/format.dart';
 
+import '../categories/category.dart';
+
 class Transaction {
   String? id;
   String? bookingType;
@@ -16,23 +18,26 @@ class Transaction {
   DateTime? recordedAt;
   String? senderIban;
   String? senderName;
+  Category? category;
 
-  Transaction(
-      {this.id,
-      this.bookingType,
-      this.amount,
-      this.description,
-      this.endToEndId,
-      this.recipientBic,
-      this.recipientIban,
-      this.recipientName,
-      this.reference,
-      this.bookingDate,
-      this.valutaDate,
-      this.metaInfo,
-      this.recordedAt,
-      this.senderIban,
-      this.senderName});
+  Transaction({
+    this.id,
+    this.bookingType,
+    this.amount,
+    this.description,
+    this.endToEndId,
+    this.recipientBic,
+    this.recipientIban,
+    this.recipientName,
+    this.reference,
+    this.bookingDate,
+    this.valutaDate,
+    this.metaInfo,
+    this.recordedAt,
+    this.senderIban,
+    this.senderName,
+    this.category,
+  });
 
   Transaction.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -50,10 +55,13 @@ class Transaction {
     recordedAt = DateTime.parse(json['recorded_at']);
     senderIban = json['sender_iban'];
     senderName = json['sender_name'] ?? "SOLARIS";
+    category =
+        json['category'] != null ? Category.fromJson(json['category']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
+
     data['id'] = id;
     data['booking_type'] = bookingType;
     if (amount != null) {
@@ -71,6 +79,8 @@ class Transaction {
     data['recorded_at'] = recordedAt!.toIso8601String();
     data['sender_iban'] = senderIban;
     data['sender_name'] = senderName;
+    data['category'] = category;
+
     return data;
   }
 }
@@ -104,7 +114,7 @@ class TransactionListFilter {
   final int? page;
   final int? size;
   final String? sort;
-  final List<String>? categoryIds;
+  final List<Category>? categories;
 
   const TransactionListFilter({
     this.bookingDateMin,
@@ -113,7 +123,7 @@ class TransactionListFilter {
     this.page,
     this.size,
     this.sort,
-    this.categoryIds,
+    this.categories,
   });
 
   Map<String, String> toMap() {
@@ -139,13 +149,14 @@ class TransactionListFilter {
       map["sort"] = sort!;
     }
 
-    if(searchString != null) {
+    if (searchString != null) {
       map["filter[description]"] = searchString!;
     }
 
-    if(categoryIds != null) {
-      for (int index = 0; index < categoryIds!.length; index++) {
-        map["filter[category_id]"] = categoryIds![index];
+    if (categories != null) {
+      if(categories!.isNotEmpty) {
+        List<String> categoryIds = categories!.map((category) => category.id).toList();
+        map["filter[category_id]"] = '[${categoryIds.join(",")}]';
       }
     }
 
