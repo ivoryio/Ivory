@@ -80,8 +80,14 @@ class _CountdownScreenState extends State<CountdownScreen>
   }
 
   Future<void> saveEndTime(int? endTime) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setInt('signup_countdown_end_time', endTime!);
+    if (endTime == null) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.remove('signup_countdown_end_time');
+      return;
+    } else {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setInt('signup_countdown_end_time', endTime);
+    }
   }
 
   @override

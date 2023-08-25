@@ -2,6 +2,8 @@ import 'package:redux/redux.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 
 import '../../../redux/bank_card/bank_card_action.dart';
+import '../../models/bank_card.dart';
+import '../device/device_service.dart';
 import 'bank_card_service.dart';
 
 class BankCardMiddleware extends MiddlewareClass<AppState> {
@@ -31,8 +33,7 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
     }
 
     if (action is BankCardChoosePinCommandAction) {
-      store.dispatch(BankCardPinChoosenEventAction(
-          pin: action.pin, user: action.user, bankcard: action.bankCard));
+      store.dispatch(BankCardPinChoosenEventAction(pin: action.pin, user: action.user, bankcard: action.bankCard));
     }
 
     if (action is BankCardActivateCommandAction) {
@@ -46,6 +47,23 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
         store.dispatch(BankCardActivatedEventAction(
           bankCard: response.bankCard,
           user: action.user,
+        ));
+      } else {
+        store.dispatch(BankCardFailedEventAction());
+      }
+    }
+
+    if (action is BankCardFetchDetailsCommandAction) {
+      store.dispatch(BankCardLoadingEventAction());
+      GetCardDetailsRequestBody reqBody = await DeviceService.createGetCardDetailsRequestBody();
+      final response = await _bankCardService.getCardDetails(
+          user: action.user.cognito, cardId: action.bankCard.id, reqBody: reqBody);
+
+      if (response is GetCardDetailsSuccessResponse) {
+        //TODO: Decode the data string and pass the card details to the event
+        store.dispatch(BankCardDetailsFetchedEventAction(
+          cardDetails: response.cardDetails,
+          bankCard: action.bankCard,
         ));
       } else {
         store.dispatch(BankCardFailedEventAction());

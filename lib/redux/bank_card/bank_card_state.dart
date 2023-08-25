@@ -46,3 +46,13 @@ class BankCardActivatedState extends BankCardState {
   @override
   List<Object?> get props => [user, card];
 }
+
+class BankCardDetailsFetchedState extends BankCardState {
+  final BankCardFetchedDetails cardDetails;
+  final BankCard bankCard;
+
+  BankCardDetailsFetchedState(this.cardDetails, this.bankCard);
+
+  @override
+  List<Object?> get props => [cardDetails, bankCard];
+}
