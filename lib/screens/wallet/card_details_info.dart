@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
 import 'package:solarisdemo/screens/wallet/card_details_choose_pin.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 
@@ -12,7 +13,6 @@ import '../../models/user.dart';
 import '../../redux/app_state.dart';
 import '../../widgets/button.dart';
 import '../../widgets/screen_scaffold.dart';
-import 'card_details_screen.dart';
 
 class BankCardDetailsInfoScreen extends StatelessWidget {
   static const routeName = '/cardDetailsInfoScreen';
@@ -57,13 +57,11 @@ class BankCardDetailsInfoScreen extends StatelessWidget {
                   ),
                   backButtonEnabled: true,
                   onBackButtonPressed: () {
-                    Navigator.pushNamed(
-                      context,
-                      BankCardDetailsScreen.routeName,
-                      arguments: CardDetailsScreenParams(
-                        card: viewModel.bankCard!,
-                      ),
-                    );
+                    Navigator.pop(context);
+                    StoreProvider.of<AppState>(context).dispatch(GetBankCardCommandAction(
+                      user: user,
+                      cardId: viewModel.bankCard!.id,
+                    ));
                   },
                 ),
                 const LinearProgressIndicator(
