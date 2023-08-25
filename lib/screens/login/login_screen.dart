@@ -9,7 +9,7 @@ import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../cubits/login_cubit/login_cubit.dart';
-import '../../infrastructure/devices/device_service.dart';
+import '../../infrastructure/device/device_service.dart';
 import '../../services/auth_service.dart';
 import '../../utilities/validator.dart';
 import '../../widgets/button.dart';

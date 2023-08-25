@@ -11,6 +11,7 @@ import 'package:solarisdemo/widgets/spaced_column.dart';
 import '../../config.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../infrastructure/bank_card/bank_card_presenter.dart';
+import '../../infrastructure/device/device_service.dart';
 import '../../models/bank_card.dart';
 import '../../models/user.dart';
 import '../../redux/bank_card/bank_card_action.dart';
@@ -453,11 +454,16 @@ class ActiveCard extends StatelessWidget {
                     icon: Icons.remove_red_eye_outlined,
                     textLabel: 'Details',
                     onPressed: () async {
-                      Navigator.pushNamed(
-                        context,
-                        BankCardViewDetailsScreen.routeName,
-                        arguments: CardDetailsScreenParams(card: viewModel.bankCard),
-                      );
+                      BiometricAuthentication biometricService =
+                          BiometricAuthentication(message: 'Please use biometric authentication to view card details.');
+                      if (await biometricService.authenticateWithBiometrics()) {
+                        // ignore: use_build_context_synchronously
+                        Navigator.pushNamed(
+                          context,
+                          BankCardViewDetailsScreen.routeName,
+                          arguments: CardDetailsScreenParams(card: viewModel.bankCard),
+                        );
+                      }                 
                     },
                   ),
                   CardOptionsButton(

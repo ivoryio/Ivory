@@ -8,7 +8,7 @@ import 'package:solarisdemo/models/device_activity.dart';
 import 'package:solarisdemo/models/device_consent.dart';
 import 'package:solarisdemo/services/device_service.dart';
 
-import '../../infrastructure/devices/device_service.dart';
+import '../../infrastructure/device/device_service.dart';
 import '../../models/person_account.dart';
 import '../../models/person_model.dart';
 import '../../models/user.dart';

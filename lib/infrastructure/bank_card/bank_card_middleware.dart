@@ -3,7 +3,7 @@ import 'package:solarisdemo/redux/app_state.dart';
 
 import '../../../redux/bank_card/bank_card_action.dart';
 import '../../models/bank_card.dart';
-import '../devices/device_service.dart';
+import '../device/device_service.dart';
 import 'bank_card_service.dart';
 
 class BankCardMiddleware extends MiddlewareClass<AppState> {

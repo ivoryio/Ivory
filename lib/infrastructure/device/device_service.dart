@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:solarisdemo/services/api_service.dart';
 
@@ -12,8 +13,8 @@ import '../../utilities/crypto/crypto_utils.dart';
 
 MethodChannel _platform = const MethodChannel('com.thinslices.solarisdemo/native');
 
-class DeviceService extends ApiService {
-  DeviceService({super.user});
+class DeviceService {
+  DeviceService();
 
   static Future<String?> getDeviceFingerprint(String consentId) async {
     if (defaultTargetPlatform == TargetPlatform.android) {
@@ -227,4 +228,40 @@ class CacheCredentials {
     required this.password,
     required this.deviceId,
   });
+}
+
+class BiometricAuthentication {
+  final LocalAuthentication auth = LocalAuthentication();
+  final String message;
+
+  BiometricAuthentication({required this.message});
+
+  Future<bool> _isBiometricAvailable() async {
+    bool isAvailable = await auth.canCheckBiometrics;
+    return isAvailable;
+  }
+
+  Future<bool> authenticateWithBiometrics() async {
+    try {
+      bool isAvailable = await _isBiometricAvailable();
+      if (!isAvailable) {
+        // Biometric authentication is not available on the device.
+        return false;
+      }
+
+      bool didAuthenticate = await auth.authenticate(
+        localizedReason: message,
+        options: const AuthenticationOptions(
+          biometricOnly: false,
+          stickyAuth: true,
+          sensitiveTransaction: true,
+        ),
+      );
+
+      return didAuthenticate;
+    } catch (e) {
+      print('Error during biometric authentication: $e');
+      return false;
+    }
+  }
 }

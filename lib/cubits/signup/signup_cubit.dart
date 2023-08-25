@@ -7,7 +7,7 @@ import 'package:solarisdemo/services/auth_service.dart';
 import 'package:solarisdemo/services/device_service.dart';
 import 'package:solarisdemo/services/person_service.dart';
 
-import '../../infrastructure/devices/device_service.dart';
+import '../../infrastructure/device/device_service.dart';
 import '../../models/device.dart';
 import '../../models/device_activity.dart';
 import '../../models/device_consent.dart';

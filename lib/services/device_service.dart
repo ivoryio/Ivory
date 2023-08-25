@@ -5,7 +5,7 @@ import 'package:solarisdemo/models/device_binding.dart';
 import 'package:solarisdemo/models/device_consent.dart';
 import 'package:solarisdemo/utilities/crypto/crypto_message_signer.dart';
 
-import '../infrastructure/devices/device_service.dart';
+import '../infrastructure/device/device_service.dart';
 import '../models/device.dart';
 import '../models/device_activity.dart';
 import '../utilities/crypto/crypto_key_generator.dart';
