@@ -1,7 +1,7 @@
 enum Currency { euro }
 
 extension CurrencyExtension on Currency {
-  String get name {
+  String get nameString {
     switch (this) {
       case Currency.euro:
         return 'EUR';

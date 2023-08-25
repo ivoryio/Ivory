@@ -26,6 +26,7 @@ import 'package:solarisdemo/screens/signup/signup_screen.dart';
 import 'package:solarisdemo/screens/splitpay/splitpay_screen.dart';
 import 'package:solarisdemo/screens/transactions/transactions_filtering_screen.dart';
 import 'package:solarisdemo/screens/transactions/transactions_screen.dart';
+import 'package:solarisdemo/screens/transfer/transfer_failed_screen.dart';
 import 'package:solarisdemo/screens/transfer/transfer_screen.dart';
 import 'package:solarisdemo/screens/transfer/transfer_sign_screen.dart';
 import 'package:solarisdemo/screens/wallet/card_details_activation_success_screen.dart';
@@ -138,6 +139,7 @@ class _IvoryAppState extends State<IvoryApp> {
               },
               TransferSignScreen.routeName: (context) => const TransferSignScreen(),
               TransferSuccessfulScreen.routeName: (context) => const TransferSuccessfulScreen(),
+              TransferFailedScreen.routeName: (context) => const TransferFailedScreen(),
               // account
               AccountDetailsScreen.routeName: (context) => const AccountDetailsScreen(),
               // splitpay

@@ -20,7 +20,7 @@ class ReferenceAccountTransferAmount extends Equatable {
 
   const ReferenceAccountTransferAmount({
     required this.value,
-    required this.currency,
+    this.currency = Currency.euro,
   });
 
   @override

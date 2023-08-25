@@ -1,8 +1,11 @@
 import 'package:equatable/equatable.dart';
+import 'package:solarisdemo/models/currency/currency.dart';
 import 'package:solarisdemo/models/transfer/reference_account_transfer.dart';
 import 'package:solarisdemo/models/transfer/transfer_authorization_request.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/services/api_service.dart';
+
+const _noDescriptionProvidedText = "-";
 
 class TransferService extends ApiService {
   TransferService({super.user});
@@ -19,10 +22,12 @@ class TransferService extends ApiService {
       var data = await post(
         '/transactions/reference_account_payouts',
         body: {
-          "description": transfer.description,
+          "description": transfer.description.isNotEmpty
+              ? transfer.description
+              : _noDescriptionProvidedText,
           "amount": {
             "value": transfer.amount.value,
-            "currency": transfer.amount.currency.name,
+            "currency": transfer.amount.currency.nameString,
           },
         },
       );

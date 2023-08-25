@@ -15,11 +15,14 @@ class TransferMiddleware extends MiddlewareClass<AppState> {
     next(action);
 
     if (action is TransferCommandAction) {
-      final response = await _transferService.createPayoutTransfer(user: action.user, transfer: action.transfer);
+      final response = await _transferService.createPayoutTransfer(
+          user: action.user, transfer: action.transfer);
 
       if (response is CreatePayoutTransferSuccessResponse) {
         store.dispatch(
-          SendTransferSuccessEventAction(transferAuthorizationRequest: response.transferAuthorizationRequest),
+          SendTransferSuccessEventAction(
+            transferAuthorizationRequest: response.transferAuthorizationRequest,
+          ),
         );
       } else {
         store.dispatch(SendTransferFailedEventAction());
@@ -31,7 +34,8 @@ class TransferMiddleware extends MiddlewareClass<AppState> {
         tan: action.tan,
       );
 
-      if (response is ConfirmTransferChangeRequestSuccessResponse) {
+      if (response is ConfirmTransferChangeRequestSuccessResponse &&
+          response.transferConfirmation.success) {
         store.dispatch(ConfirmTransferSuccessEventAction());
       } else {
         store.dispatch(ConfirmTransferFailedEventAction());
