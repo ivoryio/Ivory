@@ -7,6 +7,7 @@ import 'package:solarisdemo/redux/person/reference_account/reference_account_sta
 import 'package:solarisdemo/redux/repayments/bills/bills_state.dart';
 import 'package:solarisdemo/redux/repayments/reminder/repayment_reminder_state.dart';
 import 'package:solarisdemo/redux/transactions/transactions_state.dart';
+import 'package:solarisdemo/redux/transfer/transfer_state.dart';
 
 class AppState extends Equatable {
   final TransactionsState transactionsState;
@@ -17,6 +18,7 @@ class AppState extends Equatable {
   final CategoriesState categoriesState;
   final ReferenceAccountState referenceAccountState;
   final PersonAccountState personAccountState;
+  final TransferState transferState;
 
   const AppState({
     required this.transactionsState,
@@ -27,6 +29,7 @@ class AppState extends Equatable {
     required this.categoriesState,
     required this.referenceAccountState,
     required this.personAccountState,
+    required this.transferState,
   });
 
   factory AppState.initialState() {
@@ -39,6 +42,7 @@ class AppState extends Equatable {
       categoriesState: CategoriesInitialState(),
       referenceAccountState: ReferenceAccountInitialState(),
       personAccountState: PersonAccountInitialState(),
+      transferState: TransferInitialState(),
     );
   }
 
@@ -52,6 +56,7 @@ class AppState extends Equatable {
         categoriesState,
         referenceAccountState,
         personAccountState,
+        transferState,
       ];
 
   @override
