@@ -98,12 +98,12 @@ class BankCardDetailsScreen extends StatelessWidget {
                             return const Text("Something went wrong");
                           }
                           if (viewModel is BankCardFetchedViewModel) {
-                            if (viewModel.bankCard.status == BankCardStatus.ACTIVE) {
+                            if (viewModel.bankCard!.status == BankCardStatus.ACTIVE) {
                               return ActiveCard(
                                 viewModel: viewModel,
                               );
                             }
-                            if (viewModel.bankCard.status == BankCardStatus.INACTIVE) {
+                            if (viewModel.bankCard!.status == BankCardStatus.INACTIVE) {
                               return InactiveCard(
                                 viewModel: viewModel,
                               );
@@ -375,9 +375,9 @@ class InactiveCard extends StatelessWidget {
           space: 48,
           children: [
             BankCardWidget(
-              cardNumber: viewModel.bankCard.representation!.maskedPan ?? '',
-              cardHolder: viewModel.bankCard.representation!.line2 ?? '',
-              cardExpiry: viewModel.bankCard.representation!.formattedExpirationDate ?? '',
+              cardNumber: viewModel.bankCard!.representation!.maskedPan ?? '',
+              cardHolder: viewModel.bankCard!.representation!.line2 ?? '',
+              cardExpiry: viewModel.bankCard!.representation!.formattedExpirationDate ?? '',
               isViewable: false,
               cardType: 'Physical card',
             ),
@@ -438,9 +438,9 @@ class ActiveCard extends StatelessWidget {
             space: 16,
             children: [
               BankCardWidget(
-                cardNumber: viewModel.bankCard.representation!.maskedPan ?? '',
-                cardHolder: viewModel.bankCard.representation!.line2 ?? '',
-                cardExpiry: viewModel.bankCard.representation!.formattedExpirationDate ?? '',
+                cardNumber: viewModel.bankCard!.representation!.maskedPan ?? '',
+                cardHolder: viewModel.bankCard!.representation!.line2 ?? '',
+                cardExpiry: viewModel.bankCard!.representation!.formattedExpirationDate ?? '',
                 isViewable: false,
                 cardType: 'Physical card',
               ),
@@ -461,7 +461,7 @@ class ActiveCard extends StatelessWidget {
                         Navigator.pushNamed(
                           context,
                           BankCardViewDetailsScreen.routeName,
-                          arguments: CardDetailsScreenParams(card: viewModel.bankCard),
+                          arguments: CardDetailsScreenParams(card: viewModel.bankCard!),
                         );
                       }                 
                     },

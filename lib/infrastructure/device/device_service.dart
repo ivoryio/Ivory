@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:solarisdemo/services/api_service.dart';
 
 import '../../models/bank_card.dart';
 import '../../utilities/crypto/crypto_key_generator.dart';

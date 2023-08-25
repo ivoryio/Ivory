@@ -80,7 +80,7 @@ class BankCardViewDetailsScreen extends StatelessWidget {
                           height: 16,
                         ),
                         BankCardShowDetailsWidget(
-                          cardDetails: viewModel.cardDetails,
+                          cardDetails: viewModel.cardDetails!,
                           cardType: 'Physical card',
                         ),
                         const Spacer(),

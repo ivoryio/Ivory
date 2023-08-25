@@ -144,7 +144,7 @@ class BankCardDetailsAppleWalletScreen extends StatelessWidget {
                                 onPressed: () {
                                   StoreProvider.of<AppState>(context)
                                       .dispatch(BankCardActivateCommandAction(
-                                    cardId: viewModel.bankCard!.id,
+                                    cardId: (viewModel as BankCardPinChoosenViewModel).bankCard!.id,
                                     user: user,
                                   ));
                                 },
