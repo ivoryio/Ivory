@@ -63,19 +63,14 @@ class DateRangePicker extends StatelessWidget {
         ),
         textStyle: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
       ),
-      monthViewSettings: const DateRangePickerMonthViewSettings(
+      monthViewSettings: DateRangePickerMonthViewSettings(
         enableSwipeSelection: true,
         firstDayOfWeek: 1,
         showTrailingAndLeadingDates: true,
         dayFormat: 'EEE',
         viewHeaderHeight: 30,
         viewHeaderStyle: DateRangePickerViewHeaderStyle(
-          textStyle: TextStyle(
-            fontSize: 16,
-            fontFamily: 'Proxima Nova',
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF9B9EB2),
-          ),
+          textStyle:ClientConfig.getTextStyleScheme().bodyLargeRegularBold.copyWith(color: const Color(0xFF9B9EB2)),
         ),
       ),
       headerStyle: const DateRangePickerHeaderStyle(
