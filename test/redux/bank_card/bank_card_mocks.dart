@@ -1,6 +1,9 @@
+import 'package:mockito/mockito.dart';
 import 'package:solarisdemo/infrastructure/bank_card/bank_card_service.dart';
 import 'package:solarisdemo/models/bank_card.dart';
 import 'package:solarisdemo/models/user.dart';
+
+class MockGetCardDetailsRequestBody extends Mock implements GetCardDetailsRequestBody {}
 
 class FakeBankCardService extends BankCardService {
   @override
@@ -44,6 +47,22 @@ class FakeBankCardService extends BankCardService {
       ),
     );
   }
+  
+  @override
+  Future<BankCardServiceResponse> getCardDetails({
+    required String cardId,
+    required User? user,
+    required GetCardDetailsRequestBody reqBody,
+  }) async {
+    return GetCardDetailsSuccessResponse(
+      cardDetails: BankCardFetchedDetails(
+        cardHolder: 'John Doe',
+        cardExpiry: '11/24',
+        cvv: '8315',
+        cardNumber: '4526 1612 3862 1856',
+      ),
+    );
+  }
 }
 
 class FakeFailingBankCardService extends BankCardService {
@@ -60,6 +79,23 @@ class FakeFailingBankCardService extends BankCardService {
     required String cardId,
     required User? user,
   }) async {
+    return BankCardErrorResponse();
+  }
+
+  @override
+  Future<BankCardServiceResponse> getCardDetails({
+    required String cardId,
+    required User? user,
+    required GetCardDetailsRequestBody reqBody,
+  }) async {
+    return GetCardDetailsSuccessResponse(
+      cardDetails: BankCardFetchedDetails(
+        cardHolder: 'John Doe',
+        cardExpiry: '11/24',
+        cvv: '8315',
+        cardNumber: '4526 1612 3862 1856',
+      ),
+    );
     return BankCardErrorResponse();
   }
 }

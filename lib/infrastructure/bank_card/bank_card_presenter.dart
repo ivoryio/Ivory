@@ -22,7 +22,6 @@ class BankCardPresenter {
       );
     } else if (bankCardState is BankCardPinChoosenState) {
       return BankCardPinChoosenViewModel(
-        user: user,
         pin: bankCardState.pin,
         bankCard: bankCardState.bankCard,
       );
@@ -30,6 +29,11 @@ class BankCardPresenter {
       return BankCardActivatedViewModel(
         user: user,
         bankCard: bankCardState.card,
+      );
+    } else if (bankCardState is BankCardDetailsFetchedState) {
+      return BankCardDetailsFetchedViewModel(
+        cardDetails: bankCardState.cardDetails,
+        bankCard: bankCardState.bankCard,
       );
     }
     return BankCardInitialViewModel();
@@ -40,8 +44,9 @@ abstract class BankCardViewModel extends Equatable {
   final String? pin;
   final BankCard? bankCard;
   final AuthenticatedUser? user;
+  final BankCardFetchedDetails? cardDetails;
 
-  const BankCardViewModel({this.user, this.pin, this.bankCard});
+  const BankCardViewModel({this.user, this.pin, this.bankCard, this.cardDetails});
 
   @override
   List<Object?> get props => [pin];
@@ -54,34 +59,43 @@ class BankCardLoadingViewModel extends BankCardViewModel {}
 class BankCardErrorViewModel extends BankCardViewModel {}
 
 class BankCardFetchedViewModel extends BankCardViewModel {
-  final BankCard bankCard;
-  final AuthenticatedUser user;
 
-  const BankCardFetchedViewModel({required this.bankCard, required this.user});
+
+  const BankCardFetchedViewModel({
+    required BankCard bankCard,
+    required AuthenticatedUser user,
+  }) : super(bankCard: bankCard, user: user);
 
   @override
   List<Object?> get props => [bankCard];
 }
 
 class BankCardPinChoosenViewModel extends BankCardViewModel {
-  final BankCard bankCard;
-  final String pin;
-  final AuthenticatedUser user;
-
-  const BankCardPinChoosenViewModel(
-      {required this.pin, required this.user, required this.bankCard});
+  const BankCardPinChoosenViewModel({
+    required String pin,
+    required BankCard bankCard,
+  }) : super(pin: pin, bankCard: bankCard);
 
   @override
   List<Object?> get props => [pin];
 }
 
 class BankCardActivatedViewModel extends BankCardViewModel {
-  final BankCard bankCard;
-  final AuthenticatedUser user;
-
-  const BankCardActivatedViewModel(
-      {required this.bankCard, required this.user});
+  const BankCardActivatedViewModel({
+    required BankCard bankCard,
+    required AuthenticatedUser user,
+  }) : super(bankCard: bankCard, user: user);
 
   @override
   List<Object?> get props => [bankCard];
+}
+
+class BankCardDetailsFetchedViewModel extends BankCardViewModel {
+  const BankCardDetailsFetchedViewModel({
+    required BankCardFetchedDetails cardDetails,
+    required BankCard bankCard,
+  }) : super(bankCard: bankCard, cardDetails: cardDetails);
+
+  @override
+  List<Object?> get props => [cardDetails, bankCard];
 }

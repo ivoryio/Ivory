@@ -178,6 +178,20 @@ class BankCardRepresentation {
       };
 }
 
+class BankCardFetchedDetails {
+  final String cardNumber;
+  final String cardExpiry;
+  final String cvv;
+  final String cardHolder;
+
+  BankCardFetchedDetails({
+    required this.cardNumber,
+    required this.cardExpiry,
+    required this.cvv,
+    required this.cardHolder,
+  });
+}
+
 String createCardToJson(CreateBankCard data) => json.encode(data.toJson());
 
 class CreateBankCard {
@@ -209,3 +223,114 @@ class CreateBankCard {
         "reference": reference,
       };
 }
+
+String getCardDetailsRequestToJson(GetCardDetailsRequestBody data) =>
+    json.encode(data.toJson());
+
+class GetCardDetailsRequestBody {
+  String deviceId;
+  String deviceData;
+  String signature;
+  Jwk jwk;
+  Jwe jwe;
+
+  GetCardDetailsRequestBody({
+    required this.deviceId,
+    required this.deviceData,
+    required this.signature,
+    required this.jwk,
+    required this.jwe,
+  });
+
+  Map<String, dynamic> toJson() => {
+        "device_id": deviceId,
+        "device_data": deviceData,
+        "signature": signature,
+        "jwk": jwk.toJson(),
+        "jwe": jwe.toJson(),
+      };
+}
+
+class Jwe {
+  String alg;
+  String enc;
+
+  Jwe({
+    required this.alg,
+    required this.enc,
+  });
+  factory Jwe.defaultValues() {
+    return Jwe(
+      alg: _defaultJWKalg,
+      enc: _defaultJWEenc,
+    );
+  }
+  Map<String, dynamic> toJson() => {
+        "alg": alg,
+        "enc": enc,
+      };
+}
+
+class Jwk {
+  String kty = _defaultJWKkty;
+  // String use = _defaultJWKuse;
+  // String alg = _defaultJWKalg;
+  String n;
+  String e;
+
+  Jwk({
+    required this.n,
+    required this.e,
+  });
+
+  Map<String, dynamic> toJson() => {
+        "kty": kty,
+        // "use": use,
+        // "alg": alg,
+        "n": n,
+        "e": e,
+      };
+ 
+  String toAlphabeticJson() {
+    Map<String, dynamic> jwkMap = {
+      'kty': kty,
+      'n': n,
+      'e': e,
+      // 'use': use,
+      // 'alg': alg,
+    };
+
+    var sortedMap = Map.fromEntries(jwkMap.entries.toList()..sort((e1, e2) => e1.key.compareTo(e2.key)));
+
+    var jsonString = jsonEncode(sortedMap);
+
+    // Remove whitespace characters from the JSON string
+    var compactJsonString = jsonString.replaceAll(RegExp(r'\s+'), '');
+
+    return compactJsonString;
+  }
+}
+
+GetCardDetailsResponse getCardDetailsResponseFromJson(String str) =>
+    GetCardDetailsResponse.fromJson(json.decode(str));
+
+class GetCardDetailsResponse {
+  String data;
+
+  GetCardDetailsResponse({
+    required this.data,
+  });
+
+  factory GetCardDetailsResponse.fromJson(Map<String, dynamic> json) =>
+      GetCardDetailsResponse(
+        data: json["data"],
+      );
+}
+
+//default values for jwk and jwe
+String _defaultJWKalg = "RS256";
+String _defaultJWKuse = "enc";
+String _defaultJWKkty = "RSA";
+
+String _defaultJWEalg = "RSA1_5";
+String _defaultJWEenc = "A256GCM";
