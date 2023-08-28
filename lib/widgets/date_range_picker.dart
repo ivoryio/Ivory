@@ -22,22 +22,23 @@ class DateRangePicker extends StatelessWidget {
 
     return SfDateRangePicker(
       monthFormat: 'MMMM',
-      yearCellStyle: const DateRangePickerYearCellStyle(
-        textStyle: TextStyle(
-          fontWeight: FontWeight.w400,
-          fontSize: 15,
-          color: Colors.black,
-        ),
+      yearCellStyle: DateRangePickerYearCellStyle(
+        textStyle: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
         todayCellDecoration: BoxDecoration(
-          color: Colors.black,
-          borderRadius: BorderRadius.all(
-            Radius.circular(8),
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(
+            width: 1,
+            color: Colors.black,
           ),
         ),
-        todayTextStyle: TextStyle(
-          fontWeight: FontWeight.w600,
-          fontSize: 15,
+        todayTextStyle: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
+        cellDecoration: BoxDecoration(
           color: Colors.white,
+         borderRadius: BorderRadius.circular(4),
+          border: Border.all(
+            width: 1,
+            color: const Color(0xFFDFE2E6),
+          ),
         ),
       ),
       monthCellStyle: DateRangePickerMonthCellStyle(
@@ -62,19 +63,14 @@ class DateRangePicker extends StatelessWidget {
         ),
         textStyle: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
       ),
-      monthViewSettings: const DateRangePickerMonthViewSettings(
+      monthViewSettings: DateRangePickerMonthViewSettings(
         enableSwipeSelection: true,
         firstDayOfWeek: 1,
         showTrailingAndLeadingDates: true,
         dayFormat: 'EEE',
         viewHeaderHeight: 30,
         viewHeaderStyle: DateRangePickerViewHeaderStyle(
-          textStyle: TextStyle(
-            fontSize: 16,
-            fontFamily: 'Proxima Nova',
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF9B9EB2),
-          ),
+          textStyle:ClientConfig.getTextStyleScheme().bodyLargeRegularBold.copyWith(color: const Color(0xFF9B9EB2)),
         ),
       ),
       headerStyle: const DateRangePickerHeaderStyle(
