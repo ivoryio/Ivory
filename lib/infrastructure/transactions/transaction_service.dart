@@ -1,29 +1,12 @@
-import 'dart:developer';
-
 import 'package:equatable/equatable.dart';
 
-import '../../models/user.dart';
-import '../../services/api_service.dart';
-import '../../models/transfer.dart';
 import '../../models/transactions/transaction_model.dart';
 import '../../models/transactions/upcoming_transaction_model.dart';
-import '../../models/authorization_request.dart';
+import '../../models/user.dart';
+import '../../services/api_service.dart';
 
 class TransactionService extends ApiService {
   TransactionService({super.user});
-
-  Future<AuthorizationRequest> createTransfer(Transfer transfer) async {
-    try {
-      String path = 'transactions';
-
-      var data = await post(path, body: transfer.toJson());
-
-      return AuthorizationRequest.fromJson(data);
-    } catch (e) {
-      log(e.toString());
-      throw Exception("Failed to create transfer");
-    }
-  }
 
   Future<TransactionsServiceResponse> getTransactions({
     TransactionListFilter? filter,
@@ -38,9 +21,7 @@ class TransactionService extends ApiService {
         queryParameters: filter?.toMap() ?? {},
       );
 
-      List<Transaction> transactions = (data as List)
-          .map((transaction) => Transaction.fromJson(transaction))
-          .toList();
+      List<Transaction> transactions = (data as List).map((transaction) => Transaction.fromJson(transaction)).toList();
 
       return GetTransactionsSuccessResponse(transactions: transactions);
     } catch (e) {
@@ -58,27 +39,23 @@ class TransactionService extends ApiService {
     try {
       var data = await get('/bills/upcoming_bills');
 
-      List<UpcomingTransaction> upcomingTransactions = (data as List)
-          .map((transaction) => UpcomingTransaction.fromJson(transaction))
-          .toList();
+      List<UpcomingTransaction> upcomingTransactions =
+          (data as List).map((transaction) => UpcomingTransaction.fromJson(transaction)).toList();
 
       upcomingTransactions.addAll({
         UpcomingTransaction(
           statementDate: DateTime.now(),
           dueDate: DateTime.now(),
-          outstandingAmount:
-              CardBillAmount(value: 496.22, unit: "cents", currency: "EUR"),
+          outstandingAmount: CardBillAmount(value: 496.22, unit: "cents", currency: "EUR"),
         ),
         UpcomingTransaction(
           statementDate: DateTime.now().add(const Duration(days: 7)),
           dueDate: DateTime.now().add(const Duration(days: 7)),
-          outstandingAmount:
-              CardBillAmount(value: 123.45, unit: "cents", currency: "EUR"),
+          outstandingAmount: CardBillAmount(value: 123.45, unit: "cents", currency: "EUR"),
         ),
       });
 
-      return GetUpcomingTransactionsSuccessResponse(
-          upcomingTransactions: upcomingTransactions);
+      return GetUpcomingTransactionsSuccessResponse(upcomingTransactions: upcomingTransactions);
     } catch (e) {
       return UpcomingTransactionsServiceErrorResponse();
     }
@@ -106,8 +83,7 @@ abstract class UpcomingTransactionServiceResponse extends Equatable {
   List<Object?> get props => [];
 }
 
-class GetUpcomingTransactionsSuccessResponse
-    extends UpcomingTransactionServiceResponse {
+class GetUpcomingTransactionsSuccessResponse extends UpcomingTransactionServiceResponse {
   final List<UpcomingTransaction> upcomingTransactions;
 
   GetUpcomingTransactionsSuccessResponse({required this.upcomingTransactions});
@@ -116,5 +92,4 @@ class GetUpcomingTransactionsSuccessResponse
   List<Object?> get props => [upcomingTransactions];
 }
 
-class UpcomingTransactionsServiceErrorResponse
-    extends UpcomingTransactionServiceResponse {}
+class UpcomingTransactionsServiceErrorResponse extends UpcomingTransactionServiceResponse {}

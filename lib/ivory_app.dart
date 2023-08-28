@@ -26,7 +26,9 @@ import 'package:solarisdemo/screens/signup/signup_screen.dart';
 import 'package:solarisdemo/screens/splitpay/splitpay_screen.dart';
 import 'package:solarisdemo/screens/transactions/transactions_filtering_screen.dart';
 import 'package:solarisdemo/screens/transactions/transactions_screen.dart';
+import 'package:solarisdemo/screens/transfer/transfer_failed_screen.dart';
 import 'package:solarisdemo/screens/transfer/transfer_screen.dart';
+import 'package:solarisdemo/screens/transfer/transfer_sign_screen.dart';
 import 'package:solarisdemo/screens/wallet/card_details_activation_success_screen.dart';
 import 'package:solarisdemo/screens/wallet/card_details_apple_wallet.dart';
 import 'package:solarisdemo/screens/wallet/card_details_choose_pin.dart';
@@ -36,6 +38,9 @@ import 'package:solarisdemo/screens/wallet/card_details_screen.dart';
 import 'package:solarisdemo/screens/wallet/card_view_details_screen.dart';
 import 'package:solarisdemo/screens/wallet/cards_screen.dart';
 import 'package:solarisdemo/services/auth_service.dart';
+
+import 'screens/transfer/transfer_review_screen.dart';
+import 'screens/transfer/transfer_successful_screen.dart';
 
 class IvoryApp extends StatefulWidget {
   static final routeObserver = RouteObserver<PageRoute<dynamic>>();
@@ -116,7 +121,8 @@ class _IvoryAppState extends State<IvoryApp> {
               BankCardDetailsChoosePinScreen.routeName: (context) => const BankCardDetailsChoosePinScreen(),
               BankCardDetailsConfirmPinScreen.routeName: (context) => const BankCardDetailsConfirmPinScreen(),
               BankCardDetailsAppleWalletScreen.routeName: (context) => const BankCardDetailsAppleWalletScreen(),
-              BankCardDetailsActivationSuccessScreen.routeName: (context) => const BankCardDetailsActivationSuccessScreen(),
+              BankCardDetailsActivationSuccessScreen.routeName: (context) =>
+                  const BankCardDetailsActivationSuccessScreen(),
               BankCardDetailsInfoScreen.routeName: (context) => const BankCardDetailsInfoScreen(),
               BankCardViewDetailsScreen.routeName: (context) {
                 final cardDetailsScreenParams = ModalRoute.of(context)?.settings.arguments as CardDetailsScreenParams?;
@@ -133,13 +139,15 @@ class _IvoryAppState extends State<IvoryApp> {
               BillsScreen.routeName: (context) => const BillsScreen(),
               BillDetailScreen.routeName: (context) => const BillDetailScreen(),
               // transfer
-              TransferScreen.routeName: (context) {
-                final transferScreenParams = ModalRoute.of(context)?.settings.arguments as TransferScreenParams?;
-
-                return TransferScreen(
-                  transferScreenParams: transferScreenParams!,
+              TransferScreen.routeName: (context) => const TransferScreen(),
+              TransferReviewScreen.routeName: (context) {
+                return TransferReviewScreen(
+                  params: ModalRoute.of(context)?.settings.arguments as TransferReviewScreenParams,
                 );
               },
+              TransferSignScreen.routeName: (context) => const TransferSignScreen(),
+              TransferSuccessfulScreen.routeName: (context) => const TransferSuccessfulScreen(),
+              TransferFailedScreen.routeName: (context) => const TransferFailedScreen(),
               // account
               AccountDetailsScreen.routeName: (context) => const AccountDetailsScreen(),
               // splitpay
