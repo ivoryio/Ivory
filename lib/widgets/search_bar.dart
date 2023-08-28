@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:flutter_svg/svg.dart';
 
+import '../config.dart';
 import 'platform_text_input.dart';
 
 class CustomSearchBar extends StatelessWidget {
@@ -44,12 +46,18 @@ class CustomSearchBar extends StatelessWidget {
           child: Stack(children: [
             Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8.0),
-                color: Colors.black,
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(
+                  color:  ClientConfig.getColorScheme().primary,
+                ),
               ),
               child: PlatformIconButton(
-                padding: EdgeInsets.zero,
-                icon: const Icon(Icons.filter_alt, color: Colors.white),
+                icon: SvgPicture.asset(
+                  "assets/icons/filter_icon.svg",
+                  colorFilter: ColorFilter.mode(ClientConfig.getColorScheme().primary, BlendMode.srcIn),
+                  height: 16,
+                  width: 16,
+                ),
                 onPressed: onPressedFilterButton,
               ),
             ),

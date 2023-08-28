@@ -86,14 +86,13 @@ class PlatformTextInput extends StatelessWidget {
                   child: Icon(
                     icon,
                     color: const Color(0xFF667085),
-                    size: 20.0,
+                    size: 16,
                   ),
                 ),
               Expanded(
                 child: TextFormField(
                   textAlign: textAlign!,
                   controller: controller,
-                  // hintText: hintText,
                   obscureText: obscureText!,
                   keyboardType: keyboardType,
                   inputFormatters: [
@@ -115,10 +114,11 @@ class PlatformTextInput extends StatelessWidget {
                     fontSize: fontSize,
                     height: 1.5,
                   ),
-                  decoration: const InputDecoration(
-                    contentPadding: EdgeInsets.all(5),
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.all(5),
                     isDense: true,
                     border: InputBorder.none,
+                    hintText: hintText,
                   ),
                 ),
               ),

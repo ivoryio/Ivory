@@ -4,7 +4,6 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/transactions/transactions_action.dart';
-import 'package:solarisdemo/screens/home/home_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
@@ -69,9 +68,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const TransactionListTitle(
-                              displayShowAllButton: false,
-                            ),
                             const SizedBox(height: 16),
                             CustomSearchBar(
                               hintText: "Search by name, date",
