@@ -17,6 +17,7 @@ import 'package:solarisdemo/widgets/ivory_card.dart';
 import 'package:solarisdemo/widgets/ivory_error_widget.dart';
 import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
+import 'package:solarisdemo/widgets/snackbar.dart';
 
 class TransferScreen extends StatefulWidget {
   static const routeName = "/transferScreen";
@@ -307,17 +308,17 @@ class _TopUpBottomSheetContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _buildRow(text: "Copy your Ivory IBAN below:", iban: iban),
+        _buildRow(context, text: "Copy your Ivory IBAN below:", iban: iban),
         const SizedBox(height: 24),
-        _buildRow(text: "Log into your reference bank account."),
+        _buildRow(context, text: "Log into your reference bank account."),
         const SizedBox(height: 24),
-        _buildRow(text: "Make a transfer to your Ivory account using the IBAN you copied."),
+        _buildRow(context, text: "Make a transfer to your Ivory account using the IBAN you copied."),
         const SizedBox(height: 24),
       ],
     );
   }
 
-  Widget _buildRow({required String text, String? iban}) {
+  Widget _buildRow(BuildContext context, {required String text, String? iban}) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -341,7 +342,14 @@ class _TopUpBottomSheetContent extends StatelessWidget {
                     const SizedBox(width: 8),
                     InkWell(
                       onTap: () {
+                        Navigator.pop(context);
                         Clipboard.setData(ClipboardData(text: iban));
+
+                        showSnackbar(
+                          context,
+                          text: "Copied to clipboard",
+                          icon: const Icon(Icons.copy, color: Colors.white),
+                        );
                       },
                       child: const Icon(Icons.copy, color: Color(0xFF15141E)),
                     ),
