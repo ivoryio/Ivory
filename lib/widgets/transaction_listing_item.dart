@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:solarisdemo/models/amount_value.dart';
 import 'package:solarisdemo/screens/splitpay/splitpay_screen.dart';
+import 'package:solarisdemo/screens/transactions/transaction_detail_screen.dart';
 
 import '../config.dart';
 import '../cubits/auth_cubit/auth_cubit.dart';
@@ -11,7 +13,6 @@ import '../models/transactions/upcoming_transaction_model.dart';
 import '../models/user.dart';
 import '../utilities/format.dart';
 import 'button.dart';
-import 'modal.dart';
 import 'spaced_column.dart';
 import 'text_currency_value.dart';
 
@@ -36,33 +37,24 @@ class TransactionListItem extends StatelessWidget {
     var senderName = removeUnrelatedWords(transaction.senderName);
 
     final date = transaction.recordedAt!.toIso8601String();
-    final displayedName = user.personAccount.iban == transaction.senderIban
-        ? recipientName
-        : senderName;
+    final displayedName = user.personAccount.iban == transaction.senderIban ? recipientName : senderName;
     final description = transaction.description!;
     final amount = transaction.amount?.value ?? 0;
 
     final DateFormat dateFormatter = DateFormat('MMM d, HH:mm ');
     final String formattedDate = dateFormatter.format(DateTime.parse(date));
 
-    return GestureDetector(
-        onTap: () => isClickable!
-            ? showBottomModal(
-                isScrollControlled: true,
-                context: context,
-                title: 'Transaction Details',
-                content: TransactionBottomPopup(
-                  transaction: transaction,
-                ),
-              )
-            : {},
-        child: TransactionCard(
-          formattedDate: formattedDate,
-          amount: amount,
-          description: description,
-          recipientName: displayedName,
-          categoryIcon: transaction.category?.icon,
-        ));
+    return InkWell(
+      onTap: () =>
+          isClickable! ? Navigator.pushNamed(context, TransactionDetailScreen.routeName, arguments: transaction) : null,
+      child: TransactionCard(
+        formattedDate: formattedDate,
+        amount: amount,
+        description: description,
+        recipientName: displayedName,
+        categoryIcon: transaction.category?.icon,
+      ),
+    );
   }
 
   removeUnrelatedWords(fullName) {
@@ -100,48 +92,53 @@ class UpcomingTransactionListItem extends StatelessWidget {
     final DateFormat dateFormatter = DateFormat('MMM d, HH:mm ');
     final String formattedDate = dateFormatter.format(DateTime.parse(date));
 
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Icon(
-                Icons.currency_exchange,
-                size: 20,
-                color: ClientConfig.getColorScheme().secondary,
-              ),
-              const SizedBox(
-                width: 16,
-              ),
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                const Text('Automatic repayment',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                    )),
-                Text(
-                  formattedDate,
-                  style: const TextStyle(
-                    color: Color(0xFF667085),
-                  ),
-                )
-              ]),
-            ],
-          ),
-          Text(
-            amount == 0
-                ? Format.euro(amount)
-                : amount < 0
-                    ? (Format.euro(amount)).split(' ').join('')
-                    : '+ ${Format.euro(amount).split(' ').join('')}',
-            style: const TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 16,
+    return InkWell(
+      onTap: isClickable!
+          ? () => Navigator.pushNamed(context, TransactionDetailScreen.routeName, arguments: upcomingTransaction)
+          : null,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 10.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.currency_exchange,
+                  size: 20,
+                  color: ClientConfig.getColorScheme().secondary,
+                ),
+                const SizedBox(
+                  width: 16,
+                ),
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  const Text('Automatic repayment',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                      )),
+                  Text(
+                    formattedDate,
+                    style: const TextStyle(
+                      color: Color(0xFF667085),
+                    ),
+                  )
+                ]),
+              ],
             ),
-          )
-        ],
+            Text(
+              amount == 0
+                  ? Format.euro(amount)
+                  : amount < 0
+                      ? (Format.euro(amount)).split(' ').join('')
+                      : '+ ${Format.euro(amount).split(' ').join('')}',
+              style: const TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -190,10 +187,7 @@ class TransactionCard extends StatelessWidget {
                 width: 16,
               ),
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(
-                    recipientName.isNotEmpty
-                        ? recipientName
-                        : defaultTransactionRecipientName,
+                Text(recipientName.isNotEmpty ? recipientName : defaultTransactionRecipientName,
                     style: const TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 16,
@@ -229,8 +223,7 @@ class TransactionBottomPopup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final DateFormat dateFormatter = DateFormat('d MMMM yyyy, HH:Hm ');
-    final String formattedDate = dateFormatter
-        .format(DateTime.parse(transaction.recordedAt!.toIso8601String()));
+    final String formattedDate = dateFormatter.format(DateTime.parse(transaction.recordedAt!.toIso8601String()));
 
     return Column(
       children: [
@@ -504,9 +497,9 @@ class TransactionBottomPopup extends StatelessWidget {
     );
   }
 
-  String _formatAmountWithCurrency(Amount amount) {
-    double value = amount.value!;
-    String currencySymbolt = Format.getCurrencySymbol(amount.currency!);
+  String _formatAmountWithCurrency(AmountValue amount) {
+    double value = amount.value;
+    String currencySymbolt = Format.getCurrencySymbol(amount.currency);
 
     String formattedAmount = value.abs().toStringAsFixed(2);
     String sign = value < 0 ? '-' : '+';

@@ -7,9 +7,9 @@ import 'package:solarisdemo/infrastructure/repayments/bills/bill_detail_presente
 import 'package:solarisdemo/models/repayments/bills/bill.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/repayments/bills/bills_action.dart';
-import 'package:solarisdemo/screens/repayments/repayments_screen.dart';
 import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
+import 'package:solarisdemo/widgets/expanded_details_row.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/spaced_column.dart';
 
@@ -84,9 +84,15 @@ class BillDetailScreen extends StatelessWidget {
                                   child: CircularProgressIndicator(strokeWidth: 2),
                                 ),
                               ),
-                            const ExpandedDetailsRow(title: 'Fixed repayment rate', trailing: '500'),
+                            ExpandedDetailsRow(
+                              title: 'Fixed repayment rate',
+                              trailing: Format.euro(bill.currentBillAmount.value),
+                            ),
                             ExpandedDetailsRow(title: 'Interest rate', trailing: '${bill.interestRate}%'),
-                            const ExpandedDetailsRow(title: 'Interest amount', trailing: '500'),
+                            ExpandedDetailsRow(
+                              title: 'Interest amount',
+                              trailing: Format.euro(bill.currentBillAmount.value),
+                            ),
                           ],
                         ),
                       ),

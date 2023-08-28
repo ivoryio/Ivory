@@ -124,7 +124,7 @@ class _BillsScrollView extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             ...bills.map((bill) => _BillItem(bill: bill)),
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
           ],
         );
       },

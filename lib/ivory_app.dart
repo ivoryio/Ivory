@@ -24,6 +24,7 @@ import 'package:solarisdemo/screens/repayments/repayments_screen.dart';
 import 'package:solarisdemo/screens/settings/settings_screen.dart';
 import 'package:solarisdemo/screens/signup/signup_screen.dart';
 import 'package:solarisdemo/screens/splitpay/splitpay_screen.dart';
+import 'package:solarisdemo/screens/transactions/transaction_detail_screen.dart';
 import 'package:solarisdemo/screens/transactions/transactions_filtering_screen.dart';
 import 'package:solarisdemo/screens/transactions/transactions_screen.dart';
 import 'package:solarisdemo/screens/transfer/transfer_screen.dart';
@@ -103,6 +104,7 @@ class _IvoryAppState extends State<IvoryApp> {
                   transactionListFilter: transactionListFilter,
                 );
               },
+              TransactionDetailScreen.routeName: (context) => const TransactionDetailScreen(),
               // wallet
               BankCardsScreen.routeName: (context) =>
                   const MainNavigationScreen(initialScreen: MainNavigationScreens.cardsScreen),
@@ -116,7 +118,8 @@ class _IvoryAppState extends State<IvoryApp> {
               BankCardDetailsChoosePinScreen.routeName: (context) => const BankCardDetailsChoosePinScreen(),
               BankCardDetailsConfirmPinScreen.routeName: (context) => const BankCardDetailsConfirmPinScreen(),
               BankCardDetailsAppleWalletScreen.routeName: (context) => const BankCardDetailsAppleWalletScreen(),
-              BankCardDetailsActivationSuccessScreen.routeName: (context) => const BankCardDetailsActivationSuccessScreen(),
+              BankCardDetailsActivationSuccessScreen.routeName: (context) =>
+                  const BankCardDetailsActivationSuccessScreen(),
               BankCardDetailsInfoScreen.routeName: (context) => const BankCardDetailsInfoScreen(),
               BankCardViewDetailsScreen.routeName: (context) {
                 final cardDetailsScreenParams = ModalRoute.of(context)?.settings.arguments as CardDetailsScreenParams?;
