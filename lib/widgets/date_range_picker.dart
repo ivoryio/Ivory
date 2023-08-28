@@ -22,22 +22,23 @@ class DateRangePicker extends StatelessWidget {
 
     return SfDateRangePicker(
       monthFormat: 'MMMM',
-      yearCellStyle: const DateRangePickerYearCellStyle(
-        textStyle: TextStyle(
-          fontWeight: FontWeight.w400,
-          fontSize: 15,
-          color: Colors.black,
-        ),
+      yearCellStyle: DateRangePickerYearCellStyle(
+        textStyle: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
         todayCellDecoration: BoxDecoration(
-          color: Colors.black,
-          borderRadius: BorderRadius.all(
-            Radius.circular(8),
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(
+            width: 1,
+            color: Colors.black,
           ),
         ),
-        todayTextStyle: TextStyle(
-          fontWeight: FontWeight.w600,
-          fontSize: 15,
+        todayTextStyle: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
+        cellDecoration: BoxDecoration(
           color: Colors.white,
+         borderRadius: BorderRadius.circular(4),
+          border: Border.all(
+            width: 1,
+            color: const Color(0xFFDFE2E6),
+          ),
         ),
       ),
       monthCellStyle: DateRangePickerMonthCellStyle(
