@@ -9,9 +9,7 @@ abstract class ReferenceAccountState extends Equatable {
 
 class ReferenceAccountInitialState extends ReferenceAccountState {}
 
-class ReferenceAccountLoadingState extends ReferenceAccountState {
-  ReferenceAccountLoadingState();
-}
+class ReferenceAccountLoadingState extends ReferenceAccountState {}
 
 class ReferenceAccountFetchedState extends ReferenceAccountState {
   final PersonReferenceAccount referenceAccount;
