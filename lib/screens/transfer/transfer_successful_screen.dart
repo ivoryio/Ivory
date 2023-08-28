@@ -51,7 +51,7 @@ class TransferSuccessfulScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Spacer(),
+                    const Spacer(),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
@@ -60,7 +60,7 @@ class TransferSuccessfulScreen extends StatelessWidget {
                         textAlign: TextAlign.left,
                       ),
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     StoreConnector<AppState, TransferViewModel>(
                       converter: (store) => TransferPresenter.presentTransfer(
                         transferState: store.state.transferState,
@@ -76,35 +76,24 @@ class TransferSuccessfulScreen extends StatelessWidget {
                                   TextSpan(
                                     text: Format.euro(viewModel.amount, digits: 2),
                                     style: boldFont,
-                                    children: [
-                                      TextSpan(
-                                        text: " from your ",
-                                        style: regularFont,
-                                        children: [
-                                          TextSpan(text: "Reference account", style: boldFont, children: [
-                                            TextSpan(
-                                              text: " to your ",
-                                              style: regularFont,
-                                              children: [
-                                                TextSpan(text: "Porsche account", style: boldFont, children: [
-                                                  TextSpan(
-                                                    text: ".",
-                                                    style: regularFont,
-                                                  ),
-                                                ]),
-                                              ],
-                                            ),
-                                          ]),
-                                        ],
-                                      )
-                                    ],
+                                  ),
+                                  TextSpan(
+                                    text: " from your ",
+                                    style: regularFont,
+                                  ),
+                                  TextSpan(text: "Reference account", style: boldFont),
+                                  TextSpan(text: " to your ", style: regularFont),
+                                  TextSpan(text: "Porsche account", style: boldFont),
+                                  TextSpan(
+                                    text: ".",
+                                    style: regularFont,
                                   ),
                                 ],
                               ),
                             )
                           : Container(),
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     RichText(
                       text: TextSpan(
                         text: "Your can review the transfer in the ",
@@ -129,9 +118,9 @@ class TransferSuccessfulScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     Center(child: SvgPicture.asset("assets/images/transfer_successful_illustration.svg")),
-                    Spacer(),
+                    const Spacer(),
                   ],
                 ),
               ),

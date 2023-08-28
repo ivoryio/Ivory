@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:solarisdemo/models/change_request/change_request_error_type.dart';
 import 'package:solarisdemo/models/transfer/reference_account_transfer.dart';
 import 'package:solarisdemo/models/transfer/transfer_confirmation.dart';
 import 'package:solarisdemo/models/user.dart';
@@ -25,7 +26,7 @@ class ChangeRequestService extends ApiService {
       );
 
       if (data['success'] == false) {
-        return ChangeRequestServiceErrorResponse();
+        return ChangeRequestServiceErrorResponse(errorType: ChangeRequestErrorType.confirmationFailed);
       }
 
       return ConfirmTransferChangeRequestSuccessResponse(
@@ -34,9 +35,7 @@ class ChangeRequestService extends ApiService {
           transfer: ReferenceAccountTransfer(
             description: data['response']['response_body']['description'],
             amount: ReferenceAccountTransferAmount(
-              value: (data['response']['response_body']['amount']['value']
-                      as int) /
-                  100,
+              value: (data['response']['response_body']['amount']['value'] as int) / 100,
             ),
           ),
         ),
@@ -52,8 +51,7 @@ abstract class ChangeRequestServiceResponse extends Equatable {
   List<Object> get props => [];
 }
 
-class ConfirmTransferChangeRequestSuccessResponse
-    extends ChangeRequestServiceResponse {
+class ConfirmTransferChangeRequestSuccessResponse extends ChangeRequestServiceResponse {
   final TransferConfirmation transferConfirmation;
 
   ConfirmTransferChangeRequestSuccessResponse({
@@ -64,4 +62,13 @@ class ConfirmTransferChangeRequestSuccessResponse
   List<Object> get props => [transferConfirmation];
 }
 
-class ChangeRequestServiceErrorResponse extends ChangeRequestServiceResponse {}
+class ChangeRequestServiceErrorResponse extends ChangeRequestServiceResponse {
+  final ChangeRequestErrorType errorType;
+
+  ChangeRequestServiceErrorResponse({
+    this.errorType = ChangeRequestErrorType.unknown,
+  });
+
+  @override
+  List<Object> get props => [];
+}

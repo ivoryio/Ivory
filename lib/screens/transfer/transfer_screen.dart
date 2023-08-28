@@ -45,8 +45,8 @@ class _TransferScreenState extends State<TransferScreen> {
     return ScreenScaffold(
       body: StoreConnector<AppState, TransferAccountsViewModel>(
         onInit: (store) {
-          store.dispatch(GetReferenceAccountCommandAction(user: user.cognito));
           store.dispatch(GetPersonAccountCommandAction(user: user.cognito));
+          store.dispatch(GetReferenceAccountCommandAction(user: user.cognito));
         },
         converter: (store) => TransferAccountsPresenter.presentTransfer(
           referenceAccountState: store.state.referenceAccountState,
