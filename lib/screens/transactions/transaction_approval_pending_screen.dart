@@ -4,22 +4,25 @@ import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/models/amount_value.dart';
 import 'package:solarisdemo/models/categories/category.dart';
 import 'package:solarisdemo/models/transactions/transaction_model.dart';
+import 'package:solarisdemo/screens/transactions/transaction_approval_failed_screen.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/card_list_item.dart';
 import 'package:solarisdemo/widgets/circular_countdown_progress_widget.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/transaction_listing_item.dart';
 
-class TransactionPendingApprovalScreen extends StatelessWidget {
-  static const routeName = '/transactionPendingApproval';
+import 'transaction_approval_success_screen.dart';
 
-  const TransactionPendingApprovalScreen({super.key});
+class TransactionApprovalPendingScreen extends StatelessWidget {
+  static const routeName = '/transactionApprovalPendingScreen';
+
+  const TransactionApprovalPendingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return ScreenScaffold(
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
+        padding: EdgeInsets.symmetric(horizontal: 24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -32,13 +35,21 @@ class TransactionPendingApprovalScreen extends StatelessWidget {
                     const SizedBox(height: 24),
                     Row(children: [
                       Expanded(
-                          child:
-                              Text("Authorize your online payment", style: ClientConfig.getTextStyleScheme().heading2)),
-                      const SizedBox(
+                        child: Text("Authorize your online payment", style: ClientConfig.getTextStyleScheme().heading2),
+                      ),
+                      SizedBox(
                         height: 70,
                         width: 70,
                         child: CircularCountdownProgress(
-                          duration: Duration(seconds: 5),
+                          duration: const Duration(seconds: 10),
+                          onCompleted: () {
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              useRootNavigator: true,
+                              builder: (context) => _TimeoutAlertDialog(),
+                            );
+                          },
                         ),
                       )
                     ]),
@@ -51,7 +62,7 @@ class TransactionPendingApprovalScreen extends StatelessWidget {
                           recipientName: "Lufthansa",
                           description: "",
                           amount: AmountValue(
-                            value: 100,
+                            value: -710.49,
                             currency: "EUR",
                             unit: "cents",
                           ),
@@ -74,15 +85,22 @@ class TransactionPendingApprovalScreen extends StatelessWidget {
               width: double.infinity,
               child: SecondaryButton(
                 text: "Reject",
-                onPressed: () {},
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => _RejectionAlertDialog(),
+                  );
+                },
               ),
             ),
             const SizedBox(height: 16),
             SizedBox(
               width: double.infinity,
               child: PrimaryButton(
-                text: "Save",
-                onPressed: () {},
+                text: "Authorize",
+                onPressed: () {
+                  Navigator.pushNamed(context, TransactionApprovalSuccessScreen.routeName);
+                },
               ),
             ),
             const SizedBox(height: 16),
@@ -107,6 +125,72 @@ class _Appbar extends StatelessWidget {
           SvgPicture.asset("assets/icons/visa_logo_gradient_bg.svg"),
         ],
       ),
+    );
+  }
+}
+
+class _TimeoutAlertDialog extends StatelessWidget {
+  const _TimeoutAlertDialog({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: AlertDialog(
+        title: Text(
+          "Payment confirmation timed out",
+          style: ClientConfig.getTextStyleScheme().heading4,
+        ),
+        content: Text("The payment has been automatically rejected"),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text("OK"),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _RejectionAlertDialog extends StatelessWidget {
+  const _RejectionAlertDialog({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text(
+        "Reject this payment",
+        style: ClientConfig.getTextStyleScheme().heading4,
+      ),
+      content: Text("Are you sure you want to reject this payment?"),
+      actionsAlignment: MainAxisAlignment.center,
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text(
+            "Cancel",
+            style: ClientConfig.getTextStyleScheme()
+                .heading4
+                .copyWith(fontWeight: FontWeight.w400, color: ClientConfig.getColorScheme().secondary),
+          ),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.pushNamed(context, TransactionApprovalFailedScreen.routeName);
+          },
+          child: Text(
+            "Yes",
+            style: ClientConfig.getTextStyleScheme()
+                .heading4
+                .copyWith(fontWeight: FontWeight.w400, color: ClientConfig.getColorScheme().secondary),
+          ),
+        ),
+      ],
     );
   }
 }
