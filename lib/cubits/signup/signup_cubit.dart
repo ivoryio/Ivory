@@ -229,21 +229,5 @@ class SignupCubit extends Cubit<SignupState> {
         value: accountId,
       ),
     );
-
-    //create device binding and unrestricted key
-    OldDeviceService deviceService = OldDeviceService(
-      user: user,
-    );
-    await deviceService.createDeviceBinding(
-      user.personId!,
-    );
-
-    // //verify device binding signature with static TAN
-    await deviceService.verifyDeviceBindingSignature(
-      '212212',
-    );
-
-    //create restricted key
-    await deviceService.createRestrictedKey();
   }
 }

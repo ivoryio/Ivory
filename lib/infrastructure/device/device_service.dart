@@ -1,19 +1,37 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:solarisdemo/services/api_service.dart';
 
 import '../../models/bank_card.dart';
+import '../../models/device.dart';
 import '../../utilities/crypto/crypto_key_generator.dart';
 import '../../utilities/crypto/crypto_message_signer.dart';
 import '../../utilities/crypto/crypto_utils.dart';
 
 MethodChannel _platform = const MethodChannel('com.thinslices.solarisdemo/native');
 
-class DeviceService {
-  DeviceService();
+class DeviceService extends ApiService {
+  DeviceService({super.user});
+
+  //Helpers
+  static Future<String> getDeviceName() async {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    if (Platform.isAndroid) {
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      return androidInfo.model;
+    } else if (Platform.isIOS) {
+      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+      return iosInfo.utsname.machine;
+    }
+    return 'Unknown';
+  }
 
   static Future<String?> getDeviceFingerprint(String consentId) async {
     if (defaultTargetPlatform == TargetPlatform.android) {
@@ -58,7 +76,7 @@ class DeviceService {
     );
   }
 
-  static Future<String?> getDeviceIdFromCache() async {
+  static Future<String> getDeviceIdFromCache() async {
     return await _getDeviceIdFromCache();
   }
 
@@ -79,7 +97,7 @@ class DeviceService {
     prefs.setString('device_id', deviceId);
   }
 
-  static Future<String?> _getDeviceIdFromCache() async {
+  static Future<String> _getDeviceIdFromCache() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? deviceId = prefs.getString('device_id');
     return deviceId ?? '';
@@ -207,12 +225,133 @@ class DeviceService {
     );
 
     return GetCardDetailsRequestBody(
-      deviceId: deviceId!,
+      deviceId: deviceId,
       deviceData: deviceFingerprint!,
       signature: signature,
       jwk: jwk,
       jwe: Jwe.defaultValues(),
     );
+  }
+
+  //Service calls
+  Future<DeviceServiceResponse> createDeviceBinding(String personId) async {
+    try {
+      String consentId = await DeviceService.getDeviceConsentId();
+      String? deviceData = await DeviceService.getDeviceFingerprint(consentId);
+      if (deviceData == null || deviceData.isEmpty) {
+        throw Exception('Device Fingerprint not found');
+      }
+
+      CryptoKeyGenerator keyGenerator = CryptoKeyGenerator();
+      final keyPair = keyGenerator.generateECKeyPair();
+
+      await DeviceService.saveKeyPairIntoCache(
+        keyPair: keyPair,
+      );
+
+      String publicKey = keyPair.publicKey;
+
+      String deviceName = await getDeviceName();
+
+      CreateDeviceBindingRequest reqBody = CreateDeviceBindingRequest(
+        personId: personId,
+        key: publicKey,
+        name: deviceName,
+        deviceData: deviceData,
+      );
+
+      var data = await post(
+        'person/device/binding',
+        body: reqBody.toJson(),
+      );
+      await DeviceService.saveDeviceIdIntoCache(data['id']);
+
+      return CreateDeviceBindingSuccessResponse();
+    } catch (e) {
+      return DeviceServiceErrorResponse();
+    }
+  }
+
+  Future<DeviceServiceResponse> verifyDeviceBindingSignature(String tan) async {
+    try {
+      String deviceId = await DeviceService.getDeviceIdFromCache();
+      String consentId = await DeviceService.getDeviceConsentId();
+
+      String? privateKey = await DeviceService.getPrivateKeyFromCache();
+      if (privateKey == null) {
+        throw Exception('Private key not found');
+      }
+      CryptoMessageSigner messageSigner = CryptoMessageSigner();
+      final signature = messageSigner.signMessage(
+        message: tan,
+        encodedPrivateKey: privateKey,
+      );
+
+      String? deviceFingerPrint = await DeviceService.getDeviceFingerprint(consentId);
+      if (deviceFingerPrint == null || deviceFingerPrint.isEmpty) {
+        throw Exception('Device Fingerprint not found');
+      }
+
+      await post(
+        'person/device/verify_signature/$deviceId',
+        body: VerifyDeviceSignatureChallengeRequest(
+          deviceData: deviceFingerPrint,
+          signature: signature,
+        ).toJson(),
+      );
+
+      return VerifyDeviceBindingSignatureSuccessResponse();
+    } catch (e) {
+      return DeviceServiceErrorResponse();
+    }
+  }
+
+  Future<DeviceServiceResponse> createRestrictedKey() async {
+    try {
+      String deviceId = await DeviceService.getDeviceIdFromCache();
+      String consentId = await DeviceService.getDeviceConsentId();
+      String? deviceFingerprint = await DeviceService.getDeviceFingerprint(consentId);
+
+      CryptoMessageSigner messageSigner = CryptoMessageSigner();
+      CryptoKeyGenerator keyGenerator = CryptoKeyGenerator();
+
+      var newKeyPair = keyGenerator.generateECKeyPair();
+      String newPublicKey = newKeyPair.publicKey;
+
+      String? oldPrivateKey = await DeviceService.getPrivateKeyFromCache();
+
+      if (oldPrivateKey == null) {
+        throw Exception('Public/private key not found');
+      }
+
+      final signature = messageSigner.signMessage(
+        message: newPublicKey,
+        encodedPrivateKey: oldPrivateKey,
+      );
+
+      CreateRestrictedKeyRequest reqBody = CreateRestrictedKeyRequest(
+        deviceId: deviceId,
+        deviceData: deviceFingerprint!,
+        deviceSignature: DeviceSignature(
+          signature: signature,
+        ),
+        key: newPublicKey,
+      );
+
+      await post(
+        'person/device/key',
+        body: reqBody.toJson(),
+      );
+
+      await DeviceService.saveKeyPairIntoCache(
+        keyPair: newKeyPair,
+        restricted: true,
+      );
+
+      return CreateRestrictedKeySuccessResponse();
+    } catch (e) {
+      return DeviceServiceErrorResponse();
+    }
   }
 }
 
@@ -263,3 +402,18 @@ class BiometricAuthentication {
     }
   }
 }
+
+abstract class DeviceServiceResponse extends Equatable {
+  const DeviceServiceResponse();
+
+  @override
+  List<Object> get props => [];
+}
+
+class CreateDeviceBindingSuccessResponse extends DeviceServiceResponse {}
+
+class VerifyDeviceBindingSignatureSuccessResponse extends DeviceServiceResponse {}
+
+class CreateRestrictedKeySuccessResponse extends DeviceServiceResponse {}
+
+class DeviceServiceErrorResponse extends DeviceServiceResponse {}
