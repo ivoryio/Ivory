@@ -9,7 +9,6 @@ import 'package:solarisdemo/models/categories/category.dart';
 import 'package:solarisdemo/models/transactions/transaction_model.dart';
 import 'package:solarisdemo/models/transactions/upcoming_transaction_model.dart';
 import 'package:solarisdemo/screens/repayments/repayments_screen.dart';
-import 'package:solarisdemo/screens/splitpay/splitpay_screen.dart';
 import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/expanded_details_row.dart';
@@ -48,7 +47,9 @@ class TransactionDetailScreen extends StatelessWidget {
       dateTime = argument.recordedAt!;
 
       status = 'Completed';
-      category = argument.category!;
+      category = argument.bookingType == 'AUTOMATIC_REPAYMENT'
+          ? const Category(id: 'automaticRepayment', name: 'Automatic repayment')
+          : argument.category!;
       accountOwner = user.person.firstName;
       iban = argument.recipientIban;
       note = argument.description;
@@ -72,15 +73,15 @@ class TransactionDetailScreen extends StatelessWidget {
             hasTrailing: false,
             onTap: () {},
           ),
-          IvoryListTile(
-            title: 'Convert into installments',
-            startIcon: Icons.call_split_rounded,
-            onTap: () => Navigator.pushNamed(
-              context,
-              SplitpayScreen.routeName,
-              arguments: SplitpayScreenParams(transaction: argument),
-            ),
-          )
+          // IvoryListTile(
+          //   title: 'Convert into installments',
+          //   startIcon: Icons.call_split_rounded,
+          //   onTap: () => Navigator.pushNamed(
+          //     context,
+          //     SplitpayScreen.routeName,
+          //     arguments: SplitpayScreenParams(transaction: argument),
+          //   ),
+          // )
         ],
         if (argument.bookingType == 'AUTOMATIC_REPAYMENT')
           IvoryListTile(
@@ -93,7 +94,7 @@ class TransactionDetailScreen extends StatelessWidget {
           IvoryListTile(
             title: 'Report this transaction',
             subtitle: "If you did't make this transaction",
-            startIcon: Icons.warning_amber_rounded,
+            startIcon: Icons.report_gmailerrorred_rounded,
             hasTrailing: false,
             onTap: () {},
           )
@@ -109,7 +110,9 @@ class TransactionDetailScreen extends StatelessWidget {
           children: [
             TextSpan(
               text: 'This is an automatic repayment and does not include the 5% interest rate. ',
-              style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(fontWeight: FontWeight.bold),
+              style: ClientConfig.getTextStyleScheme()
+                  .bodySmallRegular
+                  .copyWith(fontWeight: FontWeight.bold, color: Colors.black),
             ),
             TextSpan(
               text: 'Go to “Repayments” ',
@@ -121,7 +124,7 @@ class TransactionDetailScreen extends StatelessWidget {
             ),
             TextSpan(
               text: 'to view the repayment to be debited from your reference account.',
-              style: ClientConfig.getTextStyleScheme().bodySmallRegular,
+              style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(color: Colors.black),
             ),
           ],
           style: ClientConfig.getTextStyleScheme()

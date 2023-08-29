@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:intl/intl.dart';
-import 'package:solarisdemo/models/amount_value.dart';
 import 'package:solarisdemo/screens/splitpay/splitpay_screen.dart';
 import 'package:solarisdemo/screens/transactions/transaction_detail_screen.dart';
 
@@ -87,7 +86,6 @@ class UpcomingTransactionListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final date = upcomingTransaction.statementDate!.toIso8601String();
-    final amount = upcomingTransaction.outstandingAmount?.value ?? 0;
 
     final DateFormat dateFormatter = DateFormat('MMM d, HH:mm ');
     final String formattedDate = dateFormatter.format(DateTime.parse(date));
@@ -127,11 +125,7 @@ class UpcomingTransactionListItem extends StatelessWidget {
               ],
             ),
             Text(
-              amount == 0
-                  ? Format.euro(amount)
-                  : amount < 0
-                      ? (Format.euro(amount)).split(' ').join('')
-                      : '+ ${Format.euro(amount).split(' ').join('')}',
+              Format.amountWithSign(upcomingTransaction.outstandingAmount!),
               style: const TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 16,
@@ -307,7 +301,7 @@ class TransactionBottomPopup extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  _formatAmountWithCurrency(transaction.amount!),
+                  Format.amountWithSign(transaction.amount!),
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -495,15 +489,5 @@ class TransactionBottomPopup extends StatelessWidget {
         )
       ],
     );
-  }
-
-  String _formatAmountWithCurrency(AmountValue amount) {
-    double value = amount.value;
-    String currencySymbolt = Format.getCurrencySymbol(amount.currency);
-
-    String formattedAmount = value.abs().toStringAsFixed(2);
-    String sign = value < 0 ? '-' : '+';
-
-    return '$sign $currencySymbolt $formattedAmount';
   }
 }
