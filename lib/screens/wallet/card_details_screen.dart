@@ -633,7 +633,7 @@ class ItemTitle extends StatelessWidget {
 class ItemName extends StatelessWidget {
   final IconData leftIcon;
   final String actionName;
-  final String actionDescription;
+  final String? actionDescription;
   final IconData rightIcon;
   final bool actionSwitch;
 
@@ -641,7 +641,7 @@ class ItemName extends StatelessWidget {
     super.key,
     required this.leftIcon,
     required this.actionName,
-    required this.actionDescription,
+    this.actionDescription,
     required this.rightIcon,
     this.actionSwitch = true,
   });
@@ -663,8 +663,9 @@ class ItemName extends StatelessWidget {
                 actionName,
                 style: const TextStyle(fontSize: 16, height: 1.5, fontWeight: FontWeight.w600),
               ),
+              if (actionDescription != null && actionDescription != '')
               Text(
-                actionDescription,
+                  actionDescription!,
                 style: const TextStyle(fontSize: 14, height: 1.29, fontWeight: FontWeight.w400),
               ),
             ],
