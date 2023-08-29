@@ -489,29 +489,7 @@ class ActiveCard extends StatelessWidget {
                 space: 32,
                 children: const [
                   ItemTitle(
-                    nameOfActionTitle: 'Spending settings',
-                  ),
-                  ItemName(
-                    leftIcon: Icons.speed_outlined,
-                    actionName: 'Spending cap',
-                    actionDescription: 'Set it up and get an alert if you exceed it',
-                    rightIcon: Icons.arrow_forward_ios,
-                    actionSwitch: false,
-                  ),
-                  ItemName(
-                    leftIcon: Icons.wifi_tethering_error,
-                    actionName: 'Contactless limit',
-                    actionDescription: 'For safe and mindful in-store payments',
-                    rightIcon: Icons.arrow_forward_ios,
-                    actionSwitch: false,
-                  ),
-                  ItemTitle(nameOfActionTitle: 'Security settings'),
-                  ItemName(
-                    leftIcon: Icons.key,
-                    actionName: 'View PIN',
-                    actionDescription: 'For security or personal reasons',
-                    rightIcon: Icons.arrow_forward_ios,
-                    actionSwitch: false,
+                    nameOfActionTitle: 'Security settings',
                   ),
                   ItemName(
                     leftIcon: Icons.dialpad,
@@ -524,6 +502,13 @@ class ActiveCard extends StatelessWidget {
                     leftIcon: Icons.lock_open,
                     actionName: 'Unblock card',
                     actionDescription: 'After 3 incorrect PIN/CVV attempts',
+                    rightIcon: Icons.arrow_forward_ios,
+                    actionSwitch: false,
+                  ),
+                  ItemName(
+                    leftIcon: Icons.speed,
+                    actionName: 'Contactless limit',
+                    actionDescription: 'For safe and mindful in-store payments',
                     rightIcon: Icons.arrow_forward_ios,
                     actionSwitch: false,
                   ),
