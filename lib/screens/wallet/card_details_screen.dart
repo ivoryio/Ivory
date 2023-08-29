@@ -491,14 +491,14 @@ class ActiveCard extends StatelessWidget {
                   ItemTitle(
                     nameOfActionTitle: 'Spending settings',
                   ),
-                  ItemName(
+                  IvoryActionItem(
                     leftIcon: Icons.speed_outlined,
                     actionName: 'Spending cap',
                     actionDescription: 'Set it up and get an alert if you exceed it',
                     rightIcon: Icons.arrow_forward_ios,
                     actionSwitch: false,
                   ),
-                  ItemName(
+                  IvoryActionItem(
                     leftIcon: Icons.wifi_tethering_error,
                     actionName: 'Contactless limit',
                     actionDescription: 'For safe and mindful in-store payments',
@@ -506,54 +506,54 @@ class ActiveCard extends StatelessWidget {
                     actionSwitch: false,
                   ),
                   ItemTitle(nameOfActionTitle: 'Security settings'),
-                  ItemName(
+                  IvoryActionItem(
                     leftIcon: Icons.key,
                     actionName: 'View PIN',
                     actionDescription: 'For security or personal reasons',
                     rightIcon: Icons.arrow_forward_ios,
                     actionSwitch: false,
                   ),
-                  ItemName(
+                  IvoryActionItem(
                     leftIcon: Icons.dialpad,
                     actionName: 'Change PIN',
                     actionDescription: 'For security or personal reasons',
                     rightIcon: Icons.arrow_forward_ios,
                     actionSwitch: false,
                   ),
-                  ItemName(
+                  IvoryActionItem(
                     leftIcon: Icons.lock_open,
                     actionName: 'Unblock card',
                     actionDescription: 'After 3 incorrect PIN/CVV attempts',
                     rightIcon: Icons.arrow_forward_ios,
                     actionSwitch: false,
                   ),
-                  ItemName(
+                  IvoryActionItem(
                     leftIcon: Icons.wifi_tethering,
                     actionName: 'Contactless payments',
                     actionDescription: 'Apple Pay won’t be affected',
                     rightIcon: Icons.arrow_forward_ios,
                   ),
-                  ItemName(
+                  IvoryActionItem(
                     leftIcon: Icons.language,
                     actionName: 'Online payments',
                     actionDescription: 'Apple Pay won’t be affected',
                     rightIcon: Icons.arrow_forward_ios,
                   ),
-                  ItemName(
+                  IvoryActionItem(
                     leftIcon: Icons.payments,
                     actionName: 'ATM withdrawals',
                     actionDescription: 'If you don’t plan to withdraw',
                     rightIcon: Icons.arrow_forward_ios,
                   ),
                   ItemTitle(nameOfActionTitle: 'Card management'),
-                  ItemName(
+                  IvoryActionItem(
                     leftIcon: Icons.credit_card,
                     actionName: 'Replace card',
                     actionDescription: 'If your card is damaged',
                     rightIcon: Icons.arrow_forward_ios,
                     actionSwitch: false,
                   ),
-                  ItemName(
+                  IvoryActionItem(
                     leftIcon: Icons.delete,
                     actionName: 'Close card',
                     actionDescription: 'The card will be permanently closed',
@@ -630,20 +630,22 @@ class ItemTitle extends StatelessWidget {
   }
 }
 
-class ItemName extends StatelessWidget {
+class IvoryActionItem extends StatelessWidget {
   final IconData leftIcon;
   final String actionName;
   final String? actionDescription;
   final IconData rightIcon;
   final bool actionSwitch;
+  final VoidCallback? onPressed;
 
-  const ItemName({
+  const IvoryActionItem({
     super.key,
     required this.leftIcon,
     required this.actionName,
     this.actionDescription,
     required this.rightIcon,
     this.actionSwitch = true,
+    this.onPressed,
   });
 
   @override
@@ -673,8 +675,12 @@ class ItemName extends StatelessWidget {
         ),
         Container(
           padding: const EdgeInsets.only(right: 0),
-          child:
-              (actionSwitch == true) ? const ActionItem() : Icon(rightIcon, color: const Color(0XFF2575FC), size: 24),
+          child: (actionSwitch == true)
+              ? const ActionItem()
+              : GestureDetector(
+                  onTap: onPressed,
+                  child: Icon(rightIcon, color: const Color(0XFF2575FC), size: 24),
+                ),
         ),
       ],
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:solarisdemo/screens/settings/settings_security_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
@@ -23,11 +24,15 @@ class SettingsScreen extends StatelessWidget {
         ),
         Expanded(
           child: Padding(
-              padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-              child: const Column(
+              padding: EdgeInsets.only(
+                left: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+                right: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+                bottom: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+              ),
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'Settings',
                     style: TextStyle(
                       fontSize: 32,
@@ -35,68 +40,69 @@ class SettingsScreen extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 24,
                   ),
-                  ItemName(
+                  const IvoryActionItem(
                     leftIcon: Icons.person_outline,
                     actionName: 'Account',
                     actionDescription: 'Personal info & account settings',
                     rightIcon: Icons.arrow_forward_ios,
                     actionSwitch: false,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 32,
                   ),
-                  ItemName(
+                  const IvoryActionItem(
                     leftIcon: Icons.settings_outlined,
                     actionName: 'App settings',
                     actionDescription: 'Language, FaceID, notifications, etc.',
                     rightIcon: Icons.arrow_forward_ios,
                     actionSwitch: false,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 32,
                   ),
-                  ItemName(
+                  IvoryActionItem(
                     leftIcon: Icons.security,
                     actionName: 'Security',
                     actionDescription: 'Password & device pairing',
                     rightIcon: Icons.arrow_forward_ios,
                     actionSwitch: false,
+                    onPressed: () => Navigator.of(context).pushNamed(SettingsSecurityScreen.routeName),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 32,
                   ),
-                  ItemName(
+                  const IvoryActionItem(
                     leftIcon: Icons.help_outline,
                     actionName: 'Help',
                     actionDescription: 'Contact us',
                     rightIcon: Icons.arrow_forward_ios,
                     actionSwitch: false,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 32,
                   ),
-                  ItemName(
+                  const IvoryActionItem(
                     leftIcon: Icons.article_outlined,
                     actionName: 'FAQ & legal documents',
                     actionDescription: 'FAQ, T&Cs, privacy policy',
                     rightIcon: Icons.arrow_forward_ios,
                     actionSwitch: false,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 32,
                   ),
-                  ItemName(
+                  const IvoryActionItem(
                     leftIcon: Icons.logout,
                     actionName: 'Log out',
                     actionDescription: '',
                     rightIcon: Icons.arrow_forward_ios,
                     actionSwitch: false,
                   ),
-                  Spacer(),
-                  Row(
+                  const Spacer(),
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text('App version 1.0'),
