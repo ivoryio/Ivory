@@ -36,6 +36,8 @@ class Category extends Equatable {
         return Icons.account_balance_outlined;
       case "other":
         return Icons.local_offer_outlined;
+      case "automaticRepayment":
+        return Icons.currency_exchange;
       default:
         return Icons.local_offer_outlined;
     }

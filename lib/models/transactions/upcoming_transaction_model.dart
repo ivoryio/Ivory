@@ -1,3 +1,5 @@
+import '../amount_value.dart';
+
 class UpcomingTransaction {
   String? id;
   String? applicationId;
@@ -7,19 +9,19 @@ class UpcomingTransaction {
   DateTime? statementDate;
   DateTime? dueDate;
   DateTime? sddCollectionDate;
-  CardBillAmount? previousBillAmount;
-  CardBillAmount? currentBillAmount;
-  CardBillAmount? totalOutstandingAmount;
-  CardBillAmount? minimumDueAmount;
-  CardBillAmount? outstandingSddrAmount;
-  CardBillAmount? outstandingAmount;
+  AmountValue? previousBillAmount;
+  AmountValue? currentBillAmount;
+  AmountValue? totalOutstandingAmount;
+  AmountValue? minimumDueAmount;
+  AmountValue? outstandingSddrAmount;
+  AmountValue? outstandingAmount;
   String? repaymentType;
-  CardBillAmount? minimumAmount;
+  AmountValue? minimumAmount;
   int? minimumPercentage;
   int? gracePeriodInDays;
-  CardBillAmount? dunningFees;
-  CardBillAmount? otherFees;
-  CardBillAmount? accumulatedInterestAmount;
+  AmountValue? dunningFees;
+  AmountValue? otherFees;
+  AmountValue? accumulatedInterestAmount;
   String? postboxItemId;
 
   UpcomingTransaction({
@@ -56,39 +58,23 @@ class UpcomingTransaction {
     statementDate = DateTime.parse(json['statement_date']);
     dueDate = DateTime.parse(json['due_date']);
     sddCollectionDate = DateTime.parse(json['sdd_collection_date']);
-    previousBillAmount = json['previous_bill_amount'] != null
-        ? CardBillAmount.fromJson(json['previous_bill_amount'])
-        : null;
-    currentBillAmount = json['current_bill_amount'] != null
-        ? CardBillAmount.fromJson(json['current_bill_amount'])
-        : null;
-    totalOutstandingAmount = json['total_outstanding_amount'] != null
-        ? CardBillAmount.fromJson(json['total_outstanding_amount'])
-        : null;
-    minimumDueAmount = json['minimum_due_amount'] != null
-        ? CardBillAmount.fromJson(json['minimum_due_amount'])
-        : null;
-    outstandingSddrAmount = json['outstanding_sddr_amount'] != null
-        ? CardBillAmount.fromJson(json['outstanding_sddr_amount'])
-        : null;
-    outstandingAmount = json['outstanding_amount'] != null
-        ? CardBillAmount.fromJson(json['outstanding_amount'])
-        : null;
+    previousBillAmount =
+        json['previous_bill_amount'] != null ? AmountValue.fromJson(json['previous_bill_amount']) : null;
+    currentBillAmount = json['current_bill_amount'] != null ? AmountValue.fromJson(json['current_bill_amount']) : null;
+    totalOutstandingAmount =
+        json['total_outstanding_amount'] != null ? AmountValue.fromJson(json['total_outstanding_amount']) : null;
+    minimumDueAmount = json['minimum_due_amount'] != null ? AmountValue.fromJson(json['minimum_due_amount']) : null;
+    outstandingSddrAmount =
+        json['outstanding_sddr_amount'] != null ? AmountValue.fromJson(json['outstanding_sddr_amount']) : null;
+    outstandingAmount = json['outstanding_amount'] != null ? AmountValue.fromJson(json['outstanding_amount']) : null;
     repaymentType = json['repayment_type'];
-    minimumAmount = json['minimum_amount'] != null
-        ? CardBillAmount.fromJson(json['minimum_amount'])
-        : null;
+    minimumAmount = json['minimum_amount'] != null ? AmountValue.fromJson(json['minimum_amount']) : null;
     minimumPercentage = json['minimum_percentage'];
     gracePeriodInDays = json['grace_period_in_days'];
-    dunningFees = json['dunning_fees'] != null
-        ? CardBillAmount.fromJson(json['dunning_fees'])
-        : null;
-    otherFees = json['other_fees'] != null
-        ? CardBillAmount.fromJson(json['other_fees'])
-        : null;
-    accumulatedInterestAmount = json['accumulated_interest_amount'] != null
-        ? CardBillAmount.fromJson(json['accumulated_interest_amount'])
-        : null;
+    dunningFees = json['dunning_fees'] != null ? AmountValue.fromJson(json['dunning_fees']) : null;
+    otherFees = json['other_fees'] != null ? AmountValue.fromJson(json['other_fees']) : null;
+    accumulatedInterestAmount =
+        json['accumulated_interest_amount'] != null ? AmountValue.fromJson(json['accumulated_interest_amount']) : null;
     postboxItemId = json['postbox_item_id'];
   }
 
@@ -137,34 +123,6 @@ class UpcomingTransaction {
       data['accumulated_interest_amount'] = accumulatedInterestAmount!.toJson();
     }
     data['postbox_item_id'] = postboxItemId;
-
-    return data;
-  }
-}
-
-class CardBillAmount {
-  String? unit;
-  double? value;
-  String? currency;
-
-  CardBillAmount({
-    this.unit,
-    this.value,
-    this.currency,
-  });
-
-  CardBillAmount.fromJson(Map<String, dynamic> json) {
-    unit = json['unit'];
-    value = json['value'] != null ? json['value'].toDouble() : 0;
-    currency = json['currency'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-
-    data['unit'] = unit;
-    data['value'] = value;
-    data['currency'] = currency;
 
     return data;
   }

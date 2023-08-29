@@ -185,30 +185,7 @@ class HomePageHeader extends StatelessWidget {
       value: accountSummaryCubit,
       child: BlocBuilder<AccountSummaryCubit, AccountSummaryCubitState>(
         builder: (context, state) {
-          if (state is AccountSummaryCubitLoading) {
-            return Container(
-              padding: EdgeInsets.symmetric(
-                vertical: 10,
-                horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-              ),
-              width: MediaQuery.of(context).size.width,
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(30),
-                  bottomRight: Radius.circular(30),
-                ),
-                color: Color(0xFF000000),
-              ),
-              child: const Center(
-                child: Padding(
-                  padding: EdgeInsets.all(20.0),
-                  child: CircularProgressIndicator(color: Colors.white),
-                ),
-              ),
-            );
-          }
-
-          if (state is AccountSummaryCubitLoaded) {
+          if (state is AccountSummaryCubitLoaded || state is AccountSummaryCubitLoading) {
             return Container(
               padding: EdgeInsets.symmetric(
                 horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
@@ -224,12 +201,20 @@ class HomePageHeader extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  AccountSummary(
-                    spending: state.data?.spending ?? 0,
-                    availableBalance: state.data?.availableBalance?.value ?? 0,
-                    outstandingAmount: state.data?.outstandingAmount ?? 0,
-                    creditLimit: state.data?.creditLimit ?? 0,
-                  ),
+                  if (state is AccountSummaryCubitLoaded)
+                    AccountSummary(
+                      spending: state.data?.spending ?? 0,
+                      availableBalance: state.data?.availableBalance?.value ?? 0,
+                      outstandingAmount: state.data?.outstandingAmount ?? 0,
+                      creditLimit: state.data?.creditLimit ?? 0,
+                    )
+                  else
+                    const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(20.0),
+                        child: CircularProgressIndicator(color: Colors.white),
+                      ),
+                    ),
                   const Divider(
                     color: Colors.white,
                     thickness: 0.5,
