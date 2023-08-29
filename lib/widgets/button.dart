@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:solarisdemo/config.dart';
 
 const double _defaultFontSize = 15;
 const double _defaultBorderRadius = 4.0;
@@ -74,25 +75,24 @@ class Button extends StatelessWidget {
   }
 }
 
-class PrimaryButton extends Button {
+class PrimaryButton extends StatelessWidget {
+  final String text;
+  final Function? onPressed;
+
   const PrimaryButton({
     super.key,
-    super.border,
-    super.padding,
-    super.fontSize,
-    super.fontFamily,
-    super.borderRadius,
-    required String text,
-    super.onPressed,
-    super.disabledColor = Colors.black12,
-    super.disabledTextColor = Colors.black26,
-    TextStyle? textStyle,
-  }) : super(
-          text: text,
-          textStyle: textStyle,
-          color: Colors.black,
-          textColor: Colors.white,
-        );
+    required this.text,
+    this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Button(
+      text: text,
+      onPressed: onPressed,
+      color: ClientConfig.getColorScheme().secondary,
+    );
+  }
 }
 
 class SecondaryButton extends Button {

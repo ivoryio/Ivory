@@ -25,6 +25,7 @@ import 'package:solarisdemo/screens/settings/settings_screen.dart';
 import 'package:solarisdemo/screens/signup/signup_screen.dart';
 import 'package:solarisdemo/screens/splitpay/splitpay_screen.dart';
 import 'package:solarisdemo/screens/transactions/transaction_detail_screen.dart';
+import 'package:solarisdemo/screens/transactions/transaction_pending_approval_screen.dart';
 import 'package:solarisdemo/screens/transactions/transactions_filtering_screen.dart';
 import 'package:solarisdemo/screens/transactions/transactions_screen.dart';
 import 'package:solarisdemo/screens/transfer/transfer_failed_screen.dart';
@@ -109,6 +110,7 @@ class _IvoryAppState extends State<IvoryApp> {
                   transactionListFilter: transactionListFilter,
                 );
               },
+              TransactionPendingApprovalScreen.routeName: (context) => const TransactionPendingApprovalScreen(),
               TransactionDetailScreen.routeName: (context) => const TransactionDetailScreen(),
               // wallet
               BankCardsScreen.routeName: (context) =>

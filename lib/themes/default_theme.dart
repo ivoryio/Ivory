@@ -52,6 +52,12 @@ class DefaultTheme {
         fontWeight: FontWeight.w600,
         color: Color(0xFF15141E),
       ),
+      heading2: const TextStyle(
+        fontSize: 24,
+        height: 1.33, // 32 / 24,
+        fontWeight: FontWeight.w600,
+        color: Color(0xFF15141E),
+      ),
       heading4: const TextStyle(
         fontSize: 18,
         height: 1.33, // 24 / 18,
@@ -113,6 +119,7 @@ class PorscheTheme {
 
 class TextStyleScheme {
   final TextStyle heading1;
+  final TextStyle heading2;
   final TextStyle heading4;
   final TextStyle bodySmallRegular;
   final TextStyle bodyLargeRegular;
@@ -124,6 +131,7 @@ class TextStyleScheme {
 
   TextStyleScheme({
     required this.heading1,
+    required this.heading2,
     required this.heading4,
     required this.bodySmallRegular,
     required this.bodyLargeRegular,
@@ -136,6 +144,7 @@ class TextStyleScheme {
 
   TextStyleScheme copyWith({
     TextStyle? heading1,
+    TextStyle? heading2,
     TextStyle? heading4,
     TextStyle? bodySmallRegular,
     TextStyle? bodyLargeRegular,
@@ -147,6 +156,7 @@ class TextStyleScheme {
   }) {
     return TextStyleScheme(
       heading1: heading1 ?? this.heading1,
+      heading2: heading2 ?? this.heading2,
       heading4: heading4 ?? this.heading4,
       bodySmallRegular: bodySmallRegular ?? this.bodySmallRegular,
       bodyLargeRegular: bodyLargeRegular ?? this.bodyLargeRegular,
@@ -172,12 +182,11 @@ class ClientUiSettings {
     required this.labelTextStyle,
   });
 
-  ClientUiSettings copyWith({
-    ColorScheme? colorscheme,
-    ThemeData? themeData,
-    CustomClientUiSettings? customSettings,
-    TextStyleScheme? labelTextStyle
-  }) {
+  ClientUiSettings copyWith(
+      {ColorScheme? colorscheme,
+      ThemeData? themeData,
+      CustomClientUiSettings? customSettings,
+      TextStyleScheme? labelTextStyle}) {
     return ClientUiSettings(
       colorscheme: colorscheme ?? this.colorscheme,
       themeData: themeData ?? this.themeData,
@@ -185,7 +194,6 @@ class ClientUiSettings {
       labelTextStyle: labelTextStyle ?? this.labelTextStyle,
     );
   }
-
 }
 
 class CustomClientUiSettings {
