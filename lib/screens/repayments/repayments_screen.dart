@@ -5,11 +5,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/infrastructure/credit_line/credit_line_presenter.dart';
+import 'package:solarisdemo/infrastructure/repayments/more_credit/more_credit_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/credit_line/credit_line_action.dart';
 import 'package:solarisdemo/screens/home/home_screen.dart';
 import 'package:solarisdemo/screens/repayments/bills/bills_screen.dart';
 import 'package:solarisdemo/screens/repayments/change_repayment_rate.dart';
+import 'package:solarisdemo/screens/repayments/more_credit/more_credit_screen.dart';
+import 'package:solarisdemo/screens/repayments/more_credit/more_credit_waitlist_screen.dart';
 import 'package:solarisdemo/screens/repayments/repayment_reminder.dart';
 import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/ivory_error_widget.dart';
@@ -19,8 +22,8 @@ import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/spaced_column.dart';
 
 import '../../config.dart';
+import '../../redux/repayments/more_credit/more_credit_action.dart';
 import '../../widgets/app_toolbar.dart';
-import 'repayment_more_credit.dart';
 
 class RepaymentsScreen extends StatelessWidget {
   static const routeName = "/repaymentsScreen";
@@ -130,13 +133,50 @@ class RepaymentsScreen extends StatelessWidget {
                 log('Repayments analytics');
               },
             ),
-            IvoryListTile(
-              startIcon: Icons.back_hand_outlined,
-              title: 'Need more credit?',
-              subtitle: 'Sign up for our waitlist',
-              onTap: () {
-                Navigator.pushNamed(
-                    context, RepaymentMoreCreditScreen.routeName);
+            StoreConnector<AppState, MoreCreditViewModel>(
+              converter: (store) => MoreCreditPresenter.presentMoreCredit(
+                moreCreditState: store.state.moreCreditState,
+                user: user,
+              ),
+              distinct: true,
+              builder: (context, viewModel) {
+                if (viewModel is MoreCreditInitialViewModel) {
+                  StoreProvider.of<AppState>(context).dispatch(
+                    GetMoreCreditCommandAction(
+                      user: user.cognito,
+                    ),
+                  );
+                }
+
+                if (viewModel is MoreCreditLoadingViewModel) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+
+                if (viewModel is MoreCreditErrorViewModel) {
+                  return const Text('Error loading more credit details');
+                }
+
+                return IvoryListTile(
+                  startIcon: Icons.back_hand_outlined,
+                  title: 'Need more credit?',
+                  subtitle: (viewModel is MoreCreditFetchedViewModel)
+                      ? (viewModel.waitlist == false)
+                          ? 'Sign up for our waitlist'
+                          : 'You\'re on our waitlist'
+                      : 'You\'re on our waitlist',
+                  onTap: () {
+                    (viewModel is MoreCreditFetchedViewModel)
+                        ? (viewModel.waitlist == false)
+                            ? Navigator.pushNamed(
+                                context, MoreCreditScreen.routeName)
+                            : Navigator.pushNamed(
+                                context, MoreCreditWaitlistScreen.routeName)
+                        : Navigator.pushNamed(
+                            context, MoreCreditWaitlistScreen.routeName);
+                  },
+                );
               },
             ),
           ],

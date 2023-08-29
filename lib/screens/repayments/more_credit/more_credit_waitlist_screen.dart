@@ -1,24 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
-import '../../config.dart';
-import '../../cubits/auth_cubit/auth_cubit.dart';
-import '../../widgets/app_toolbar.dart';
-import '../../widgets/button.dart';
-import 'repayments_screen.dart';
+import '../../../config.dart';
+import '../../../widgets/app_toolbar.dart';
+import '../../../widgets/button.dart';
+import '../repayments_screen.dart';
 
-class RepaymentMoreCreditWaitlistScreen extends StatelessWidget {
+class MoreCreditWaitlistScreen extends StatelessWidget {
   static const routeName = "/repaymentMoreCreditWaitlist";
 
-  const RepaymentMoreCreditWaitlistScreen({super.key});
+  const MoreCreditWaitlistScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // final user = context.read<AuthCubit>().state.user!;
-    bool _waitlist = false;
-
     return ScreenScaffold(
       body: Padding(
         padding: EdgeInsets.symmetric(

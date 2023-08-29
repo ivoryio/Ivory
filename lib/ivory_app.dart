@@ -18,8 +18,8 @@ import 'package:solarisdemo/screens/login/login_screen.dart';
 import 'package:solarisdemo/screens/repayments/bills/bill_detail_screen.dart';
 import 'package:solarisdemo/screens/repayments/bills/bills_screen.dart';
 import 'package:solarisdemo/screens/repayments/change_repayment_rate.dart';
-import 'package:solarisdemo/screens/repayments/repayment_more_credit.dart';
-import 'package:solarisdemo/screens/repayments/repayment_more_credit_waitlist.dart';
+import 'package:solarisdemo/screens/repayments/more_credit/more_credit_screen.dart';
+import 'package:solarisdemo/screens/repayments/more_credit/more_credit_waitlist_screen.dart';
 import 'package:solarisdemo/screens/repayments/repayment_reminder.dart';
 import 'package:solarisdemo/screens/repayments/repayment_successfully_changed.dart';
 import 'package:solarisdemo/screens/repayments/repayments_screen.dart';
@@ -140,10 +140,10 @@ class _IvoryAppState extends State<IvoryApp> {
                   const RepaymentSuccessfullyChanged(),
               RepaymentReminderScreen.routeName: (context) =>
                   const RepaymentReminderScreen(),
-              RepaymentMoreCreditScreen.routeName: (context) =>
-                  const RepaymentMoreCreditScreen(),
-              RepaymentMoreCreditWaitlistScreen.routeName: (context) =>
-                  const RepaymentMoreCreditWaitlistScreen(),
+
+              MoreCreditScreen.routeName: (context) => const MoreCreditScreen(),
+              MoreCreditWaitlistScreen.routeName: (context) =>
+                  const MoreCreditWaitlistScreen(),
 
               BillsScreen.routeName: (context) => const BillsScreen(),
               BillDetailScreen.routeName: (context) => const BillDetailScreen(),
