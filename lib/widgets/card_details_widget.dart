@@ -1,10 +1,8 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-// import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/models/bank_card.dart';
+import 'package:solarisdemo/widgets/snackbar.dart';
 
 import '../config.dart';
 import '../utilities/format.dart';
@@ -146,12 +144,10 @@ class BankCardShowDetailsWidget extends StatelessWidget {
                                       color: Colors.white,
                                     ),
                                     onPressed: () {
-                                      showAlertDialog(context,
-                                          cardNumberParts.join(' '), "Number");
-                                      inspect(
-                                        ClipboardData(
-                                          text: cardNumberParts.join(' '),
-                                        ),
+                                      showSnackbar(
+                                        context,
+                                        text: "Copied to clipboard",
+                                        icon: const Icon(Icons.copy, color: Colors.white),
                                       );
                                     },
                                   ),
@@ -225,12 +221,10 @@ class BankCardShowDetailsWidget extends StatelessWidget {
                                           color: Colors.white,
                                         ),
                                         onPressed: () {
-                                          showAlertDialog(
-                                              context, cardDetails.cvv, "CVV");
-                                          inspect(
-                                            ClipboardData(
-                                              text: cardDetails.cvv,
-                                            ),
+                                          showSnackbar(
+                                            context,
+                                            text: "Copied to clipboard",
+                                            icon: const Icon(Icons.copy, color: Colors.white),
                                           );
                                         },
                                       ),

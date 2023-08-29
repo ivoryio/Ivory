@@ -1,0 +1,1 @@
+enum ChangeRequestErrorType { unknown, confirmationFailed }

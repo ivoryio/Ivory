@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:solarisdemo/screens/splitpay/splitpay_screen.dart';
 import 'package:solarisdemo/screens/transactions/transaction_detail_screen.dart';
 
 import '../config.dart';
-import '../cubits/auth_cubit/auth_cubit.dart';
 import '../models/transactions/transaction_model.dart';
 import '../models/transactions/upcoming_transaction_model.dart';
-import '../models/user.dart';
 import '../utilities/format.dart';
 import 'button.dart';
 import 'spaced_column.dart';
@@ -30,13 +27,9 @@ class TransactionListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
-
     var recipientName = removeUnrelatedWords(transaction.recipientName);
-    var senderName = removeUnrelatedWords(transaction.senderName);
 
     final date = transaction.recordedAt!.toIso8601String();
-    final displayedName = user.personAccount.iban == transaction.senderIban ? recipientName : senderName;
     final description = transaction.description!;
     final amount = transaction.amount?.value ?? 0;
 
@@ -50,7 +43,7 @@ class TransactionListItem extends StatelessWidget {
         formattedDate: formattedDate,
         amount: amount,
         description: description,
-        recipientName: displayedName,
+        recipientName: recipientName,
         categoryIcon: transaction.category?.icon,
       ),
     );
