@@ -4,6 +4,7 @@ import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/models/amount_value.dart';
 import 'package:solarisdemo/models/categories/category.dart';
 import 'package:solarisdemo/models/transactions/transaction_model.dart';
+import 'package:solarisdemo/screens/home/home_screen.dart';
 import 'package:solarisdemo/screens/transactions/transaction_approval_failed_screen.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/card_list_item.dart';
@@ -22,7 +23,7 @@ class TransactionApprovalPendingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenScaffold(
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 24),
+        padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -47,7 +48,7 @@ class TransactionApprovalPendingScreen extends StatelessWidget {
                               context: context,
                               barrierDismissible: false,
                               useRootNavigator: true,
-                              builder: (context) => _TimeoutAlertDialog(),
+                              builder: (context) => const _TimeoutAlertDialog(),
                             );
                           },
                         ),
@@ -88,7 +89,7 @@ class TransactionApprovalPendingScreen extends StatelessWidget {
                 onPressed: () {
                   showDialog(
                     context: context,
-                    builder: (context) => _RejectionAlertDialog(),
+                    builder: (context) => const _RejectionAlertDialog(),
                   );
                 },
               ),
@@ -99,7 +100,7 @@ class TransactionApprovalPendingScreen extends StatelessWidget {
               child: PrimaryButton(
                 text: "Authorize",
                 onPressed: () {
-                  Navigator.pushNamed(context, TransactionApprovalSuccessScreen.routeName);
+                  Navigator.pushReplacementNamed(context, TransactionApprovalSuccessScreen.routeName);
                 },
               ),
             ),
@@ -130,7 +131,7 @@ class _Appbar extends StatelessWidget {
 }
 
 class _TimeoutAlertDialog extends StatelessWidget {
-  const _TimeoutAlertDialog({super.key});
+  const _TimeoutAlertDialog();
 
   @override
   Widget build(BuildContext context) {
@@ -141,13 +142,13 @@ class _TimeoutAlertDialog extends StatelessWidget {
           "Payment confirmation timed out",
           style: ClientConfig.getTextStyleScheme().heading4,
         ),
-        content: Text("The payment has been automatically rejected"),
+        content: const Text("The payment has been automatically rejected"),
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false);
             },
-            child: Text("OK"),
+            child: const Text("OK"),
           ),
         ],
       ),
@@ -156,7 +157,7 @@ class _TimeoutAlertDialog extends StatelessWidget {
 }
 
 class _RejectionAlertDialog extends StatelessWidget {
-  const _RejectionAlertDialog({super.key});
+  const _RejectionAlertDialog();
 
   @override
   Widget build(BuildContext context) {
@@ -165,7 +166,7 @@ class _RejectionAlertDialog extends StatelessWidget {
         "Reject this payment",
         style: ClientConfig.getTextStyleScheme().heading4,
       ),
-      content: Text("Are you sure you want to reject this payment?"),
+      content: const Text("Are you sure you want to reject this payment?"),
       actionsAlignment: MainAxisAlignment.center,
       actions: [
         TextButton(
@@ -181,7 +182,7 @@ class _RejectionAlertDialog extends StatelessWidget {
         ),
         TextButton(
           onPressed: () {
-            Navigator.pushNamed(context, TransactionApprovalFailedScreen.routeName);
+            Navigator.pushNamedAndRemoveUntil(context, TransactionApprovalFailedScreen.routeName, (route) => false);
           },
           child: Text(
             "Yes",

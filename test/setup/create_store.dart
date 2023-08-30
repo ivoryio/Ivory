@@ -45,12 +45,22 @@ Store<AppState> createTestStore({
 
 class NotImplementedPushNotificationService extends PushNotificationService {
   @override
-  void init(Store<AppState> store, {User? user}) {
+  Future<void> init(Store<AppState> store, {User? user}) {
     throw UnimplementedError();
   }
 
   @override
   Future<bool> hasPermission() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> handleSavedNotification() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> clearNotification() {
     throw UnimplementedError();
   }
 }

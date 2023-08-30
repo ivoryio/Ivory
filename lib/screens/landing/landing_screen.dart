@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:solarisdemo/screens/login/login_screen.dart';
 import 'package:solarisdemo/screens/signup/signup_screen.dart';
-import 'package:solarisdemo/screens/transactions/transaction_approval_pending_screen.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
 
@@ -89,15 +88,6 @@ class LandingScreenContent extends StatelessWidget {
                     text: "Signup",
                     onPressed: () {
                       Navigator.pushNamed(context, SignupScreen.routeName);
-                    },
-                  ),
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  child: SecondaryButton(
-                    text: "Transaction approval",
-                    onPressed: () {
-                      Navigator.pushNamed(context, TransactionApprovalPendingScreen.routeName);
                     },
                   ),
                 ),

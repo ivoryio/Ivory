@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/screens/home/home_screen.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
@@ -43,7 +44,9 @@ class TransactionApprovalSuccessScreen extends StatelessWidget {
               width: double.infinity,
               child: PrimaryButton(
                 text: "OK, I understand",
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false);
+                },
               ),
             ),
           ],

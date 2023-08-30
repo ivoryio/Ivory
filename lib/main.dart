@@ -9,6 +9,7 @@ import 'package:solarisdemo/infrastructure/categories/categories_service.dart';
 import 'package:solarisdemo/infrastructure/change_request/change_request_service.dart';
 import 'package:solarisdemo/infrastructure/credit_line/credit_line_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
+import 'package:solarisdemo/infrastructure/notifications/push_notification_storage_service.dart';
 import 'package:solarisdemo/infrastructure/person/person_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/bills/bill_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/reminder/repayment_reminder_service.dart';
@@ -43,7 +44,9 @@ Future<void> main() async {
 Store<AppState> _buildStore() {
   final store = createStore(
     initialState: AppState.initialState(),
-    pushNotificationService: FirebasePushNotificationService(),
+    pushNotificationService: FirebasePushNotificationService(
+      storageService: PushNotificationSharedPreferencesStorageService(),
+    ),
     transactionService: TransactionService(),
     creditLineService: CreditLineService(),
     repaymentReminderService: RepaymentReminderService(),
