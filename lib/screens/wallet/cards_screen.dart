@@ -39,12 +39,15 @@ class BankCardsScreen extends StatelessWidget {
             return ScreenScaffold(
               body: Column(
                 children: [
-                  AppToolbar(title: "Cards", actions: [
-                    IconButton(
-                      icon: const Icon(Icons.add_circle_rounded),
-                      onPressed: () => addNewCard(context),
-                    ),
-                  ]),
+                  const AppToolbar(
+                    title: "Cards",
+                    // actions: [
+                    //   IconButton(
+                    //     icon: const Icon(Icons.add_circle_rounded),
+                    //     onPressed: () => addNewCard(context),
+                    //   ),
+                    // ],
+                  ),
                   Expanded(
                     child: SingleChildScrollView(
                       child: _Content(cards: state.cards),
@@ -135,9 +138,7 @@ class _CardSlider extends StatelessWidget {
               String cardExpiry = card.representation?.formattedExpirationDate ?? emptyStringValue;
 
               return Padding(
-                padding: EdgeInsets.only(
-                  right: i == cards.length - 1 ? 0 : 16,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: GestureDetector(
                   onTap: () => pageController.animateToPage(
                     i,
