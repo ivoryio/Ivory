@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -96,17 +97,20 @@ class _CardSlider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (cards.isEmpty) {
-      return const Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(top: 50, bottom: 10),
-            child: TextMessageWithCircularImage(
-              title: "No cards added",
-              message: "There are no cards yet. Order a card here.",
+      return Padding(
+        padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
+        child: const Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(top: 50, bottom: 16),
+              child: TextMessageWithCircularImage(
+                title: "No cards added",
+                message: "There are no cards yet. Order a card here.",
+              ),
             ),
-          ),
-          _OrderCardButton(),
-        ],
+            _OrderCardButton(),
+          ],
+        ),
       );
     }
 
@@ -175,11 +179,14 @@ class _OrderCardButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PrimaryButton(
-      text: "Get new card",
-      onPressed: () => addNewCard(context),
-      textStyle: const TextStyle(
-        fontWeight: FontWeight.w600,
+    return SizedBox(
+      width: double.infinity,
+      child: PrimaryButton(
+        text: "Get new card",
+        onPressed: () => addNewCard(context),
+        textStyle: const TextStyle(
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
   }
