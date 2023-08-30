@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solarisdemo/models/transactions/transaction_model.dart';
-import 'package:solarisdemo/screens/home/modals/new_transfer_popup.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
+import 'package:solarisdemo/widgets/bordered_container.dart';
+import 'package:solarisdemo/widgets/radio_button.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/spaced_column.dart';
 import 'package:solarisdemo/widgets/transaction_listing_item.dart';
@@ -27,8 +28,7 @@ class SplitpaySelectionScreen extends StatefulWidget {
 
   @override
   @override
-  State<SplitpaySelectionScreen> createState() =>
-      _SplitpaySelectionScreenState();
+  State<SplitpaySelectionScreen> createState() => _SplitpaySelectionScreenState();
 }
 
 class _SplitpaySelectionScreenState extends State<SplitpaySelectionScreen> {
@@ -53,8 +53,7 @@ class _SplitpaySelectionScreenState extends State<SplitpaySelectionScreen> {
             ? optionTwoSplitpayInfo
             : optionThreeSplitpayInfo;
 
-    final String currencySymbol =
-        Format.getCurrencySymbol(widget.transaction.amount!.currency!);
+    final String currencySymbol = Format.getCurrencySymbol(widget.transaction.amount!.currency);
 
     return ScreenScaffold(
       body: Padding(
@@ -94,26 +93,20 @@ class _SplitpaySelectionScreenState extends State<SplitpaySelectionScreen> {
                                     widget._optionOneSelected = true;
                                     widget._optionTwoSelected = false;
                                     widget._optionThreeSelected = false;
-                                    selectedSplitpayInfo =
-                                        optionOneSplitpayInfo;
+                                    selectedSplitpayInfo = optionOneSplitpayInfo;
                                   });
                                 },
-                                borderColor: widget._optionOneSelected
-                                    ? Colors.black
-                                    : const Color(0xFFEAECF0),
+                                borderColor: widget._optionOneSelected ? Colors.black : const Color(0xFFEAECF0),
                                 customHeight: 90,
                                 customPadding: const EdgeInsets.symmetric(
                                   horizontal: 8,
                                 ),
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           'Pay in ${optionOneSplitpayInfo.nrOfMonths} months',
@@ -136,10 +129,8 @@ class _SplitpaySelectionScreenState extends State<SplitpaySelectionScreen> {
                                       ],
                                     ),
                                     Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.end,
                                       children: [
                                         Row(
                                           children: [
@@ -154,8 +145,7 @@ class _SplitpaySelectionScreenState extends State<SplitpaySelectionScreen> {
                                               width: 8,
                                             ),
                                             RadioButton(
-                                              checked:
-                                                  widget._optionOneSelected,
+                                              checked: widget._optionOneSelected,
                                             ),
                                           ],
                                         ),
@@ -170,26 +160,20 @@ class _SplitpaySelectionScreenState extends State<SplitpaySelectionScreen> {
                                     widget._optionOneSelected = false;
                                     widget._optionTwoSelected = true;
                                     widget._optionThreeSelected = false;
-                                    selectedSplitpayInfo =
-                                        optionTwoSplitpayInfo;
+                                    selectedSplitpayInfo = optionTwoSplitpayInfo;
                                   });
                                 },
-                                borderColor: widget._optionTwoSelected
-                                    ? Colors.black
-                                    : const Color(0xFFEAECF0),
+                                borderColor: widget._optionTwoSelected ? Colors.black : const Color(0xFFEAECF0),
                                 customHeight: 90,
                                 customPadding: const EdgeInsets.symmetric(
                                   horizontal: 8,
                                 ),
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           'Pay in ${optionTwoSplitpayInfo.nrOfMonths} months',
@@ -212,10 +196,8 @@ class _SplitpaySelectionScreenState extends State<SplitpaySelectionScreen> {
                                       ],
                                     ),
                                     Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.end,
                                       children: [
                                         Row(
                                           children: [
@@ -230,8 +212,7 @@ class _SplitpaySelectionScreenState extends State<SplitpaySelectionScreen> {
                                               width: 8,
                                             ),
                                             RadioButton(
-                                              checked:
-                                                  widget._optionTwoSelected,
+                                              checked: widget._optionTwoSelected,
                                             ),
                                           ],
                                         ),
@@ -246,26 +227,20 @@ class _SplitpaySelectionScreenState extends State<SplitpaySelectionScreen> {
                                     widget._optionOneSelected = false;
                                     widget._optionTwoSelected = false;
                                     widget._optionThreeSelected = true;
-                                    selectedSplitpayInfo =
-                                        optionThreeSplitpayInfo;
+                                    selectedSplitpayInfo = optionThreeSplitpayInfo;
                                   });
                                 },
-                                borderColor: widget._optionThreeSelected
-                                    ? Colors.black
-                                    : const Color(0xFFEAECF0),
+                                borderColor: widget._optionThreeSelected ? Colors.black : const Color(0xFFEAECF0),
                                 customHeight: 90,
                                 customPadding: const EdgeInsets.symmetric(
                                   horizontal: 8,
                                 ),
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           'Pay in ${optionThreeSplitpayInfo.nrOfMonths} months',
@@ -288,10 +263,8 @@ class _SplitpaySelectionScreenState extends State<SplitpaySelectionScreen> {
                                       ],
                                     ),
                                     Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.end,
                                       children: [
                                         Row(
                                           children: [
@@ -306,8 +279,7 @@ class _SplitpaySelectionScreenState extends State<SplitpaySelectionScreen> {
                                               width: 8,
                                             ),
                                             RadioButton(
-                                              checked:
-                                                  widget._optionThreeSelected,
+                                              checked: widget._optionThreeSelected,
                                             ),
                                           ],
                                         ),

@@ -1,11 +1,12 @@
 import 'package:solarisdemo/utilities/format.dart';
 
+import '../amount_value.dart';
 import '../categories/category.dart';
 
 class Transaction {
   String? id;
   String? bookingType;
-  Amount? amount;
+  AmountValue? amount;
   String? description;
   String? endToEndId;
   String? recipientBic;
@@ -42,7 +43,7 @@ class Transaction {
   Transaction.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     bookingType = json['booking_type'];
-    amount = json['amount'] != null ? Amount.fromJson(json['amount']) : null;
+    amount = json['amount'] != null ? AmountValue.fromJson(json['amount']) : null;
     description = json['description'];
     endToEndId = json['end_to_end_id'] ?? "ID";
     recipientBic = json['recipient_bic'];
@@ -55,8 +56,7 @@ class Transaction {
     recordedAt = DateTime.parse(json['recorded_at']);
     senderIban = json['sender_iban'];
     senderName = json['sender_name'] ?? "SOLARIS";
-    category =
-        json['category'] != null ? Category.fromJson(json['category']) : null;
+    category = json['category'] != null ? Category.fromJson(json['category']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -85,28 +85,6 @@ class Transaction {
   }
 }
 
-class Amount {
-  double? value;
-  String? unit;
-  String? currency;
-
-  Amount({this.value, this.unit, this.currency});
-
-  Amount.fromJson(Map<String, dynamic> json) {
-    value = json['value'] != null ? json['value'].toDouble() : 0;
-    unit = json['unit'];
-    currency = json['currency'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['value'] = value;
-    data['unit'] = unit;
-    data['currency'] = currency;
-    return data;
-  }
-}
-
 class TransactionListFilter {
   final DateTime? bookingDateMin;
   final DateTime? bookingDateMax;
@@ -114,7 +92,7 @@ class TransactionListFilter {
   final int? page;
   final int? size;
   final String? sort;
-  final List<String>? categoryIds;
+  final List<Category>? categories;
 
   const TransactionListFilter({
     this.bookingDateMin,
@@ -123,7 +101,7 @@ class TransactionListFilter {
     this.page,
     this.size,
     this.sort,
-    this.categoryIds,
+    this.categories,
   });
 
   Map<String, String> toMap() {
@@ -153,9 +131,10 @@ class TransactionListFilter {
       map["filter[description]"] = searchString!;
     }
 
-    if (categoryIds != null) {
-      for (int index = 0; index < categoryIds!.length; index++) {
-        map["filter[category_id]"] = categoryIds![index];
+    if (categories != null) {
+      if (categories!.isNotEmpty) {
+        List<String> categoryIds = categories!.map((category) => category.id).toList();
+        map["filter[category_id]"] = '[${categoryIds.join(",")}]';
       }
     }
 

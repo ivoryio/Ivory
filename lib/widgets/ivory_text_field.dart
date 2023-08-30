@@ -7,6 +7,8 @@ class IvoryTextField extends StatelessWidget {
   final Widget? prefix;
   final Widget? suffix;
   final TextInputType? keyboardType;
+  final int? minLines;
+  final int? maxLines;
 
   const IvoryTextField({
     Key? key,
@@ -16,6 +18,8 @@ class IvoryTextField extends StatelessWidget {
     this.prefix,
     this.suffix,
     this.keyboardType,
+    this.minLines,
+    this.maxLines,
   }) : super(key: key);
 
   @override
@@ -41,6 +45,8 @@ class IvoryTextField extends StatelessWidget {
           ? Padding(padding: const EdgeInsets.only(right: 8), child: suffix)
           : null,
       keyboardType: keyboardType,
+      minLines: minLines,
+      maxLines: maxLines ?? minLines ?? 1,
     );
   }
 }

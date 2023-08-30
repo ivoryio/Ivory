@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 class AmountValue {
-  final num value;
+  final double value;
   final String currency;
   final String unit;
 

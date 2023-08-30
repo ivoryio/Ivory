@@ -1,6 +1,6 @@
 package com.thinslices.solarisdemo
 
-import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import io.seon.androidsdk.exception.SeonException
@@ -12,8 +12,10 @@ import java.security.Signature
 import java.security.spec.PKCS8EncodedKeySpec
 import java.security.KeyFactory
 import android.util.Log
+import java.security.interfaces.ECPublicKey
+import java.security.interfaces.ECPrivateKey
 
-class MainActivity: FlutterActivity() {
+class MainActivity: FlutterFragmentActivity() {
     private val CHANNEL = "com.thinslices.solarisdemo/native"
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
@@ -39,46 +41,9 @@ class MainActivity: FlutterActivity() {
                     e.printStackTrace()
                     result.error("500", "Fingeprint error", e.toString())
                 }
-            } else if (call.method == "generateECDSAP256KeyPair") {
-                val keyPair = generateECDSAP256KeyPair()
-                result.success(keyPair)
-            } else if(call.method == "signMessage") {
-                val message = call.argument<String>("message")!!
-                val privateKey = call.argument<String>("privateKey")!!
-                val signature = signMessage(message, privateKey)
-                result.success(signature)
             } else {
                 result.notImplemented()
             }
         }
-    }
-
-    private fun generateECDSAP256KeyPair(): Map<String, String> {
-        val keyGen = KeyPairGenerator.getInstance("EC")
-        keyGen.initialize(ECGenParameterSpec("secp256r1"))
-
-        val keyPair = keyGen.generateKeyPair()
-        val publicKey = keyPair.public.encoded
-        val privateKey = keyPair.private.encoded
-
-        return mapOf(
-            "publicKey" to Base64.getEncoder().encodeToString(publicKey),
-            "privateKey" to Base64.getEncoder().encodeToString(privateKey)
-        )
-    }
-
-    private fun signMessage(message: String, privateKey: String): String? {
-        val privateKeyData = Base64.getDecoder().decode(privateKey)
-        val keySpec = PKCS8EncodedKeySpec(privateKeyData)
-
-        val keyFactory = KeyFactory.getInstance("EC")
-        val privateKey = keyFactory.generatePrivate(keySpec)
-
-        val signature = Signature.getInstance("SHA256withECDSA")
-        signature.initSign(privateKey)
-        signature.update(message.toByteArray())
-
-        val signatureBytes = signature.sign()
-        return Base64.getEncoder().encodeToString(signatureBytes)
     }
 }

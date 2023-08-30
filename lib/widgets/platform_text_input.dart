@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 const String _defaultHintText = '';
 const double _defaultFontSize = 16;
@@ -87,15 +86,14 @@ class PlatformTextInput extends StatelessWidget {
                   child: Icon(
                     icon,
                     color: const Color(0xFF667085),
-                    size: 20.0,
+                    size: 16,
                   ),
                 ),
               Expanded(
-                child: PlatformTextFormField(
-                  textAlign: textAlign,
+                child: TextFormField(
+                  textAlign: textAlign!,
                   controller: controller,
-                  hintText: hintText,
-                  obscureText: obscureText,
+                  obscureText: obscureText!,
                   keyboardType: keyboardType,
                   inputFormatters: [
                     if (keyboardType == TextInputType.phone)
@@ -116,12 +114,11 @@ class PlatformTextInput extends StatelessWidget {
                     fontSize: fontSize,
                     height: 1.5,
                   ),
-                  material: (context, platform) => MaterialTextFormFieldData(
-                    decoration: const InputDecoration(
-                      contentPadding: EdgeInsets.all(5),
-                      isDense: true,
-                      border: InputBorder.none,
-                    ),
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.all(5),
+                    isDense: true,
+                    border: InputBorder.none,
+                    hintText: hintText,
                   ),
                 ),
               ),

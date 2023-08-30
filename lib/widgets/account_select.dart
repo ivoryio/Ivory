@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solarisdemo/models/person_account.dart';
+import 'package:solarisdemo/widgets/radio_button.dart';
 
 import '../cubits/auth_cubit/auth_cubit.dart';
 import '../models/user.dart';
-import '../screens/home/modals/new_transfer_popup.dart';
 import '../utilities/format.dart';
 import 'spaced_column.dart';
 

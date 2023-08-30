@@ -26,8 +26,9 @@ class AppToolbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: padding != null ? padding! : EdgeInsets.zero,
+    return Container(
+      padding: padding != null ? padding! : null,
+      color: backgroundColor,
       child: AppBar(
         actions: actions,
         automaticallyImplyLeading: false,

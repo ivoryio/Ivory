@@ -7,6 +7,7 @@ import 'package:solarisdemo/services/auth_service.dart';
 import 'package:solarisdemo/services/device_service.dart';
 import 'package:solarisdemo/services/person_service.dart';
 
+import '../../infrastructure/device/device_service.dart';
 import '../../models/device.dart';
 import '../../models/device_activity.dart';
 import '../../models/device_consent.dart';
@@ -146,20 +147,20 @@ class SignupCubit extends Cubit<SignupState> {
         user: user,
       );
 
-      CreateDeviceConsentResponse? createdConsent = await DeviceService(
+      CreateDeviceConsentResponse? createdConsent = await OldDeviceService(
         user: user,
       ).createDeviceConsent();
 
       if (createdConsent != null) {
-        await DeviceUtilService.saveDeviceConsentId(
+        await DeviceService.saveDeviceConsentId(
           createdConsent.id,
         );
       }
 
-      await DeviceService(user: user)
+      await OldDeviceService(user: user)
           .createDeviceActivity(DeviceActivityType.CONSENT_PROVIDED);
 
-      String? deviceFingerPrint = await DeviceUtilService.getDeviceFingerprint(
+      String? deviceFingerPrint = await DeviceService.getDeviceFingerprint(
         createdConsent!.id,
       );
       if (deviceFingerPrint == null) {
@@ -170,15 +171,6 @@ class SignupCubit extends Cubit<SignupState> {
       await personService.createMobileNumber(CreateDeviceReqBody(
         deviceData: deviceFingerPrint,
       ));
-
-      //create device binding
-      // DeviceService deviceService = DeviceService(user: user);
-
-      // await deviceService.createDeviceBinding(user.personId!);
-
-      //verify device binding signature
-      // await deviceService.verifyDeviceBindingSignature(
-      //     '212212'); // verify device with static TAN - To be refactored
 
       //create tax identification
       CreateTaxIdentificationResponse? taxIdentificationResponse =
@@ -237,5 +229,21 @@ class SignupCubit extends Cubit<SignupState> {
         value: accountId,
       ),
     );
+
+    //create device binding and unrestricted key
+    OldDeviceService deviceService = OldDeviceService(
+      user: user,
+    );
+    await deviceService.createDeviceBinding(
+      user.personId!,
+    );
+
+    // //verify device binding signature with static TAN
+    await deviceService.verifyDeviceBindingSignature(
+      '212212',
+    );
+
+    //create restricted key
+    await deviceService.createRestrictedKey();
   }
 }
