@@ -52,7 +52,7 @@ void main() {
     );
 
     //then
-    expect(viewModel, TransferAccountsErrorViewModel());
+    expect(viewModel, const TransferAccountsErrorViewModel());
   });
 
   test("When fetching failed for reference account it should return error", () {
@@ -67,7 +67,7 @@ void main() {
     );
 
     //then
-    expect(viewModel, TransferAccountsErrorViewModel());
+    expect(viewModel, const TransferAccountsErrorViewModel());
   });
 
   test("When fetching succeeded for person account and reference account it should return fetched accounts", () {

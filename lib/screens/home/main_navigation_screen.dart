@@ -6,6 +6,8 @@ import 'package:solarisdemo/screens/transactions/transactions_screen.dart';
 import 'package:solarisdemo/screens/wallet/cards_screen.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
+import '../../config.dart';
+
 final List<MainNavigationScreens> mainNavigationScreens = [
   MainNavigationScreens.homeScreen,
   MainNavigationScreens.cardsScreen,
@@ -84,7 +86,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   Color _getStatusBarColor() {
     switch (mainNavigationScreens[currentPageIndex]) {
       case MainNavigationScreens.homeScreen:
-        return const Color(0xFF000000);
+        return ClientConfig.getColorScheme().primary;
       default:
         return Colors.transparent;
     }

@@ -25,7 +25,7 @@ class TransferFailedScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Spacer(),
+                    const Spacer(),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
@@ -34,12 +34,12 @@ class TransferFailedScreen extends StatelessWidget {
                         textAlign: TextAlign.left,
                       ),
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     Text("The transfer could not be completed.",
                         style: ClientConfig.getTextStyleScheme()
                             .bodyLargeRegular
                             .copyWith(color: const Color(0xFF15141E))),
-                    Spacer(),
+                    const Spacer(),
                   ],
                 ),
               ),
