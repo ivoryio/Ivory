@@ -6,15 +6,15 @@ import '../../../models/user.dart';
 class MoreCreditService extends ApiService {
   MoreCreditService({super.user});
 
-  Future<MoreCreditServiceResponse> addToWaitlist({User? user}) async {
-    // String path = 'repayment/more_credit/';
+  Future<MoreCreditServiceResponse> changeWaitlistStatus({User? user}) async {
+    // String path = 'repayment/waitlist';
 
     if (user != null) {
       this.user = user;
     }
 
     try {
-      // var data = await post(path);
+      // var data = await post(path, body: {isWaitlisted: true}});
 
       return GetMoreCreditSuccessResponse(waitlist: true);
     } catch (e) {
@@ -22,8 +22,8 @@ class MoreCreditService extends ApiService {
     }
   }
 
-  Future<MoreCreditServiceResponse> checkWaitlistStatus({User? user}) async {
-    // String path = 'repayment/more_credit/waitlist';
+  Future<MoreCreditServiceResponse> getWaitlistStatus({User? user}) async {
+    // String path = 'repayment/waitlist';
 
     if (user != null) {
       this.user = user;

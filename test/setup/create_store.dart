@@ -87,7 +87,7 @@ class NotImplementedBillService extends BillService {
 
 class NotImplementedMoreCreditService extends MoreCreditService {
   @override
-  Future<MoreCreditServiceResponse> addToWaitlist({
+  Future<MoreCreditServiceResponse> changeWaitlistStatus({
     User? user,
   }) {
     throw UnimplementedError();

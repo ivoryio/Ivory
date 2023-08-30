@@ -16,7 +16,7 @@ class GetMoreCreditMiddleware extends MiddlewareClass<AppState> {
 
     if (action is GetMoreCreditCommandAction) {
       store.dispatch(MoreCreditLoadingEventAction());
-      final response = await moreCreditService.checkWaitlistStatus(
+      final response = await moreCreditService.getWaitlistStatus(
         user: action.user,
       );
 
@@ -31,7 +31,7 @@ class GetMoreCreditMiddleware extends MiddlewareClass<AppState> {
 
     if (action is UpdateMoreCreditCommandAction) {
       store.dispatch(MoreCreditLoadingEventAction());
-      final response = await moreCreditService.addToWaitlist(
+      final response = await moreCreditService.changeWaitlistStatus(
         user: action.user,
       );
 

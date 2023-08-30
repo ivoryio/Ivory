@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -6,18 +7,26 @@ import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/infrastructure/repayments/more_credit/more_credit_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/repayments/more_credit/more_credit_action.dart';
+import 'package:solarisdemo/screens/login/login_screen.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../../config.dart';
 import '../../../widgets/app_toolbar.dart';
 import '../../../widgets/button.dart';
 import 'more_credit_waitlist_screen.dart';
 
-class MoreCreditScreen extends StatelessWidget {
+class MoreCreditScreen extends StatefulWidget {
   static const routeName = "/repaymentMoreCredit";
 
   const MoreCreditScreen({super.key});
 
+  @override
+  State<MoreCreditScreen> createState() => _MoreCreditScreenState();
+}
+
+class _MoreCreditScreenState extends State<MoreCreditScreen> {
   @override
   Widget build(BuildContext context) {
     final user = context.read<AuthCubit>().state.user!;
@@ -49,6 +58,19 @@ class MoreCreditScreen extends StatelessWidget {
                   ),
                   TextSpan(
                     text: '+49 151 23456789',
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () async {
+                        Uri phoneNumber = Uri(
+                          scheme: 'tel',
+                          path: '+4915123456789',
+                        );
+
+                        if (await canLaunchUrl(phoneNumber)) {
+                          await launchUrl(phoneNumber);
+                        } else {
+                          throw 'Could not launch $phoneNumber';
+                        }
+                      },
                     style:
                         ClientConfig.getTextStyleScheme().mixedStyles.copyWith(
                               color: const Color(0xFF406FE6),
