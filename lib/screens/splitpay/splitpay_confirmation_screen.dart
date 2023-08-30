@@ -27,7 +27,7 @@ class SplitpayConfirmationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String currencySymbol =
-        Format.getCurrencySymbol(transaction.amount!.currency!);
+        Format.getCurrencySymbol(transaction.amount!.currency);
 
     final state = context.read<SplitpayCubit>().state;
     final formattedMonth = DateFormat('MMM').format(
@@ -51,7 +51,7 @@ class SplitpayConfirmationScreen extends StatelessWidget {
                     space: 24,
                     children: [
                       Text(
-                        '$currencySymbol ${transaction.amount!.value!.abs()} ${transaction.recipientName} purchase into monthly instalments from your limit of € 8000',
+                        '$currencySymbol ${transaction.amount!.value.abs()} ${transaction.recipientName} purchase into monthly instalments from your limit of € 8000',
                         style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w400,

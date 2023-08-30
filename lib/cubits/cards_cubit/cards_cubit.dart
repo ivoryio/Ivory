@@ -9,8 +9,7 @@ part 'cards_state.dart';
 class BankCardsCubit extends Cubit<BankCardsState> {
   final BankCardsService cardsService;
 
-  BankCardsCubit({required this.cardsService})
-      : super(const BankCardsInitial());
+  BankCardsCubit({required this.cardsService}) : super(const BankCardsInitial());
 
   Future<void> getCards({BankCardsListFilter? filter}) async {
     try {
@@ -19,7 +18,7 @@ class BankCardsCubit extends Cubit<BankCardsState> {
       List<BankCard>? cards = await cardsService.getCards(filter: filter);
 
       if (cards is List<BankCard>) {
-        emit(BankCardsLoaded(physicalCards: cards));
+        emit(BankCardsLoaded(cards: cards));
       }
     } catch (e) {
       emit(BankCardsError(message: e.toString()));
@@ -35,7 +34,7 @@ class BankCardsCubit extends Cubit<BankCardsState> {
       List<BankCard>? cards = await cardsService.getCards();
 
       if (cards is List<BankCard>) {
-        emit(BankCardsLoaded(physicalCards: cards));
+        emit(BankCardsLoaded(cards: cards));
       }
     } catch (e) {
       emit(BankCardsError(message: e.toString()));
