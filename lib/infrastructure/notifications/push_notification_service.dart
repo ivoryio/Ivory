@@ -159,6 +159,7 @@ class FirebasePushNotificationService extends PushNotificationService {
 
     if (notificationType == NotificationType.scaChallenge) {
       store.dispatch(ReceivedTransactionApprovalNotificationEventAction(
+        user: user!,
         message: RemoteMessageUtils.getNotificationTransactionMessage(message),
       ));
       Navigator.pushNamed(context, TransactionApprovalPendingScreen.routeName);

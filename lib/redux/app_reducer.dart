@@ -6,6 +6,7 @@ import 'package:solarisdemo/redux/person/person_account/person_account_reducer.d
 import 'package:solarisdemo/redux/person/reference_account/reference_account_reducer.dart';
 import 'package:solarisdemo/redux/repayments/bills/bills_reducer.dart';
 import 'package:solarisdemo/redux/repayments/reminder/repayment_reminder_reducer.dart';
+import 'package:solarisdemo/redux/transactions/approval/transaction_approval_reducer.dart';
 import 'package:solarisdemo/redux/transactions/transactions_reducer.dart';
 import 'package:solarisdemo/redux/transfer/transfer_reducer.dart';
 
@@ -23,5 +24,6 @@ AppState appReducer(AppState currentState, dynamic action) {
     personAccountState: personAccountReducer(currentState.personAccountState, action),
     transferState: transferReducer(currentState.transferState, action),
     notificationState: notificationReducer(currentState.notificationState, action),
+    transactionApprovalState: transactionApprovalReducer(currentState.transactionApprovalState, action),
   );
 }

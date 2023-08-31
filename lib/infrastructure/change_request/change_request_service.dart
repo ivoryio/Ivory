@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:solarisdemo/models/change_request/change_request_delivery_method.dart';
 import 'package:solarisdemo/models/change_request/change_request_error_type.dart';
 import 'package:solarisdemo/models/transfer/reference_account_transfer.dart';
 import 'package:solarisdemo/models/transfer/transfer_confirmation.dart';
@@ -44,6 +45,34 @@ class ChangeRequestService extends ApiService {
       return ChangeRequestServiceErrorResponse();
     }
   }
+
+  Future<ChangeRequestServiceResponse> authorize({
+    User? user,
+    required String changeRequestId,
+    required ChangeRequestDeliveryMethod deliveryMethod,
+    required String deviceId,
+    required String deviceData,
+  }) async {
+    if (user != null) {
+      this.user = user;
+    }
+    try {
+      final data = await post(
+        '/change_requests/$changeRequestId/authorize',
+        authNeeded: true,
+        body: {
+          'delivery_method': deliveryMethod.name,
+          'device_data': deviceData,
+          'person_id': user?.personId,
+          'device_id': deviceId,
+        },
+      );
+
+      return AuthorizeChangeRequestSuccessResponse(stringToSign: data['string_to_sign'] as String);
+    } catch (e) {
+      return ChangeRequestServiceErrorResponse();
+    }
+  }
 }
 
 abstract class ChangeRequestServiceResponse extends Equatable {
@@ -60,6 +89,17 @@ class ConfirmTransferChangeRequestSuccessResponse extends ChangeRequestServiceRe
 
   @override
   List<Object> get props => [transferConfirmation];
+}
+
+class AuthorizeChangeRequestSuccessResponse extends ChangeRequestServiceResponse {
+  final String stringToSign;
+
+  AuthorizeChangeRequestSuccessResponse({
+    required this.stringToSign,
+  });
+
+  @override
+  List<Object> get props => [stringToSign];
 }
 
 class ChangeRequestServiceErrorResponse extends ChangeRequestServiceResponse {

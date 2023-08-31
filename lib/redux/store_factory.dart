@@ -15,6 +15,7 @@ import 'package:solarisdemo/infrastructure/repayments/bills/bill_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/bills/bills_middleware.dart';
 import 'package:solarisdemo/infrastructure/repayments/reminder/repayment_reminder_middleware.dart';
 import 'package:solarisdemo/infrastructure/repayments/reminder/repayment_reminder_service.dart';
+import 'package:solarisdemo/infrastructure/transactions/transaction_approval_middleware.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_middleware.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart';
 import 'package:solarisdemo/infrastructure/transfer/transfer_middleware.dart';
@@ -50,6 +51,7 @@ Store<AppState> createStore({
       ReferenceAccountMiddleware(personService),
       PersonAccountMiddleware(personService),
       TransferMiddleware(transferService, changeRequestService),
+      TransactionApprovalMiddleware(changeRequestService),
     ],
   );
 }

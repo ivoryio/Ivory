@@ -7,6 +7,7 @@ import 'package:solarisdemo/redux/person/person_account/person_account_state.dar
 import 'package:solarisdemo/redux/person/reference_account/reference_account_state.dart';
 import 'package:solarisdemo/redux/repayments/bills/bills_state.dart';
 import 'package:solarisdemo/redux/repayments/reminder/repayment_reminder_state.dart';
+import 'package:solarisdemo/redux/transactions/approval/transaction_approval_state.dart';
 import 'package:solarisdemo/redux/transactions/transactions_state.dart';
 import 'package:solarisdemo/redux/transfer/transfer_state.dart';
 
@@ -21,6 +22,7 @@ class AppState extends Equatable {
   final PersonAccountState personAccountState;
   final TransferState transferState;
   final NotificationState notificationState;
+  final TransactionApprovalState transactionApprovalState;
 
   const AppState({
     required this.transactionsState,
@@ -33,6 +35,7 @@ class AppState extends Equatable {
     required this.personAccountState,
     required this.transferState,
     required this.notificationState,
+    required this.transactionApprovalState,
   });
 
   factory AppState.initialState() {
@@ -47,6 +50,7 @@ class AppState extends Equatable {
       personAccountState: PersonAccountInitialState(),
       transferState: TransferInitialState(),
       notificationState: NotificationInitialState(),
+      transactionApprovalState: TransactionApprovalInitialState(),
     );
   }
 
@@ -62,6 +66,7 @@ class AppState extends Equatable {
         personAccountState,
         transferState,
         notificationState,
+        transactionApprovalState,
       ];
 
   @override
