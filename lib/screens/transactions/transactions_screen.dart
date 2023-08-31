@@ -83,6 +83,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                                     bookingDateMax: viewModel.transactionListFilter?.bookingDateMax,
                                     bookingDateMin: viewModel.transactionListFilter?.bookingDateMin,
                                     size: viewModel.transactionListFilter?.size,
+                                    categories: viewModel.transactionListFilter?.categories,
                                     searchString: null,
                                   );
                                 } else {
@@ -90,6 +91,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                                     bookingDateMax: viewModel.transactionListFilter?.bookingDateMax,
                                     bookingDateMin: viewModel.transactionListFilter?.bookingDateMin,
                                     size: viewModel.transactionListFilter?.size,
+                                    categories: viewModel.transactionListFilter?.categories,
                                     searchString: value,
                                   );
                                 }
