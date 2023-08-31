@@ -60,9 +60,9 @@ class IvoryListTile extends StatelessWidget {
             if (hasTrailing) ...[
               const SizedBox(width: 16),
               if (trailingWidget == null)
-                const Icon(
+                Icon(
                   Icons.arrow_forward_ios,
-                  color: Color(0xFF000000),
+                  color: ClientConfig.getColorScheme().tertiary,
                 )
               else
                 trailingWidget!,

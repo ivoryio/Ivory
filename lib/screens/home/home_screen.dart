@@ -57,7 +57,7 @@ class HomeScreen extends StatelessWidget {
       },
       title: 'Welcome ${user.cognito.firstName}!',
       hideBackButton: true,
-      appBarColor: Colors.black,
+      appBarColor: ClientConfig.getColorScheme().primary,
       trailingActions: [
         IconButton(
           padding: EdgeInsets.zero,
@@ -76,7 +76,7 @@ class HomeScreen extends StatelessWidget {
           onPressed: () {},
         )
       ],
-      titleTextStyle: const TextStyle(color: Colors.white),
+      titleTextStyle: ClientConfig.getTextStyleScheme().heading3.copyWith(color: Colors.white),
       centerTitle: false,
       child: HomePageContent(
         accountSummaryCubit: accountSummaryCubit,
@@ -191,12 +191,12 @@ class HomePageHeader extends StatelessWidget {
                 horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
               ),
               width: MediaQuery.of(context).size.width,
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(30),
                   bottomRight: Radius.circular(30),
                 ),
-                color: Colors.black,
+                color: ClientConfig.getColorScheme().primary,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -277,17 +277,17 @@ class AccountBalance extends StatelessWidget {
 
     return Column(
       children: [
-        const Row(
+         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               "Available Balance",
-              style: TextStyle(color: Colors.white),
+              style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: Colors.white),
             ),
-            SizedBox(
+            const SizedBox(
               width: 4,
             ),
-            Icon(
+            const Icon(
               Icons.info_outline,
               color: Colors.white,
             ),
@@ -314,7 +314,7 @@ class AccountBalance extends StatelessWidget {
               ? 0
               : (personAccountSummary.outstandingAmount ?? 0) / (personAccountSummary.creditLimit ?? 0.01),
           backgroundColor: const Color(0xFF313038),
-          progressColor: const Color(0xFFCC0000),
+          progressColor: ClientConfig.getColorScheme().secondary,
           curve: Curves.fastOutSlowIn,
         ),
       ],
@@ -344,38 +344,30 @@ class AccountStats extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 "Outstanding balance",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: Colors.white),
               ),
               const SizedBox(width: 5),
               AccountBalanceText(
                 value: outstandingAmount,
-                numberStyle: const TextStyle(color: Colors.white, fontSize: 18),
-                centsStyle: const TextStyle(color: Colors.white, fontSize: 14),
+                numberStyle: ClientConfig.getTextStyleScheme().labelLarge.copyWith(color: Colors.white),
+                centsStyle: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: Colors.white),
               ),
             ],
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              const Text(
+              Text(
                 "Credit limit",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: Colors.white),
               ),
               const SizedBox(width: 5),
               AccountBalanceText(
                 value: creditLimit,
-                numberStyle: const TextStyle(color: Colors.white, fontSize: 18),
-                centsStyle: const TextStyle(color: Colors.white, fontSize: 14),
+                numberStyle: ClientConfig.getTextStyleScheme().labelLarge.copyWith(color: Colors.white),
+                centsStyle: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: Colors.white),
               ),
             ],
           ),
@@ -461,11 +453,7 @@ class AccountOptionsButton extends StatelessWidget {
           padding: const EdgeInsets.only(top: 10),
           child: Text(
             textLabel,
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 12,
-            ),
+            style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: Colors.white),
           ),
         )
       ],
@@ -486,23 +474,16 @@ class TransactionListTitle extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Text(
+         Text(
           "Transactions",
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-          ),
+          style: ClientConfig.getTextStyleScheme().labelLarge,
         ),
         if (displayShowAllButton)
           TextButton(
-            child: const Text(
+            child: Text(
               "See all",
               textAlign: TextAlign.right,
-              style: TextStyle(
-                color: Color(0xFFCC0000),
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
+              style: ClientConfig.getTextStyleScheme().labelMedium.copyWith(color: ClientConfig.getColorScheme().secondary),
             ),
             onPressed: () {
               Navigator.pushReplacementNamed(

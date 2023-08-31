@@ -31,12 +31,8 @@ class TransferSuccessfulScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final regularFont = ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(
-          color: const Color(0xFF15141E),
-        );
-    final boldFont = ClientConfig.getTextStyleScheme().bodyLargeRegularBold.copyWith(
-          color: const Color(0xFF15141E),
-        );
+    final regularFont = ClientConfig.getTextStyleScheme().bodyLargeRegular;
+    final boldFont = ClientConfig.getTextStyleScheme().bodyLargeRegularBold;
 
     return ScreenScaffold(
       shouldPop: false,
@@ -101,7 +97,7 @@ class TransferSuccessfulScreen extends StatelessWidget {
                         children: [
                           TextSpan(
                             text: "Transactions ",
-                            style: boldFont.copyWith(color: const Color(0xFF406FE6)),
+                            style: boldFont.copyWith(color: ClientConfig.getColorScheme().secondary),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () => Navigator.pushNamedAndRemoveUntil(
                                     context,
@@ -132,8 +128,9 @@ class TransferSuccessfulScreen extends StatelessWidget {
               horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
             ),
             child: Button(
-              color: const Color(0xFF2575FC),
+              color: ClientConfig.getColorScheme().tertiary,
               text: "Back to \"Home\"",
+              textColor: ClientConfig.getColorScheme().surface,
               onPressed: () => Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false),
             ),
           ),

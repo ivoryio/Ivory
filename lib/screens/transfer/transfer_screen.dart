@@ -129,9 +129,8 @@ class _TransferScreenState extends State<TransferScreen> {
                   const SizedBox(height: 32),
                   Text(
                     "Enter transfer amount",
-                    style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(
+                    style: ClientConfig.getTextStyleScheme().bodySmallBold.copyWith(
                           color: _errorText != null ? Colors.red : const Color(0xFF56555E),
-                          fontWeight: FontWeight.w600,
                         ),
                   ),
                   IvoryAmountField(
@@ -142,9 +141,8 @@ class _TransferScreenState extends State<TransferScreen> {
                     const SizedBox(height: 8),
                     Text(
                       _errorText!,
-                      style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(
+                      style: ClientConfig.getTextStyleScheme().bodySmallBold.copyWith(
                             color: Colors.red,
-                            fontWeight: FontWeight.w600,
                           ),
                     ),
                   ],
@@ -160,7 +158,7 @@ class _TransferScreenState extends State<TransferScreen> {
                     child: Text(
                       "Want to top up your Ivory account?",
                       style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold.copyWith(
-                            color: const Color(0xFF406FE6),
+                            color: ClientConfig.getColorScheme().secondary,
                           ),
                     ),
                   ),
@@ -176,8 +174,9 @@ class _TransferScreenState extends State<TransferScreen> {
               horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
             ),
             child: Button(
-              color: const Color(0xFF2575FC),
+              color: ClientConfig.getColorScheme().tertiary,
               text: "Next",
+              textColor: ClientConfig.getColorScheme().surface,
               onPressed: _canContinue
                   ? () {
                       FocusScope.of(context).unfocus();
@@ -229,7 +228,7 @@ class _Card extends StatelessWidget {
                   "€${balance!.toStringAsFixed(2)}",
                   style: ClientConfig.getTextStyleScheme().heading4,
                 ),
-                Text("*", style: ClientConfig.getTextStyleScheme().heading4.copyWith(color: const Color(0xFF2575FC))),
+                Text("*", style: ClientConfig.getTextStyleScheme().heading4.copyWith(color: ClientConfig.getColorScheme().secondary)),
               ]
             ]),
           ),
@@ -240,13 +239,13 @@ class _Card extends StatelessWidget {
               children: [
                 Text(
                   Format.iban(iban),
-                  style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(color: const Color(0xFF56555E)),
+                  style: ClientConfig.getTextStyleScheme().bodySmallRegular,
                 ),
                 if (balance != null) ...[
                   const Spacer(),
                   Text(
                     "Balance",
-                    style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(color: const Color(0xFF56555E)),
+                    style: ClientConfig.getTextStyleScheme().bodySmallRegular,
                   ),
                 ]
               ],
@@ -260,7 +259,7 @@ class _Card extends StatelessWidget {
                 children: [
                   Text(
                     bankName!,
-                    style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(color: const Color(0xFF56555E)),
+                    style: ClientConfig.getTextStyleScheme().bodySmallRegular,
                   ),
                 ],
               ),
@@ -276,17 +275,13 @@ class _Card extends StatelessWidget {
                   children: [
                     TextSpan(
                       text: "*",
-                      style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(
-                            color: const Color(0xFF2575FC),
-                            fontWeight: FontWeight.w600,
+                      style: ClientConfig.getTextStyleScheme().bodySmallBold.copyWith(
+                            color: ClientConfig.getColorScheme().secondary,
                           ),
                     ),
                     TextSpan(
                       text: " You can only transfer the topped-up balance.",
-                      style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(
-                            color: const Color(0xFF15141E),
-                            fontWeight: FontWeight.w600,
-                          ),
+                      style: ClientConfig.getTextStyleScheme().bodySmallBold,
                     ),
                   ],
                 ),
@@ -322,7 +317,7 @@ class _TopUpBottomSheetContent extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Icon(Icons.check, color: Color(0xFF2575FC)),
+        Icon(Icons.check, color: ClientConfig.getColorScheme().secondary),
         const SizedBox(width: 16),
         Expanded(
           child: Column(

@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 
 class DefaultTheme {
   static ColorScheme colorScheme = const ColorScheme(
-    primary: Colors.black,
+    primary: Color(0xFF071034),
     secondary: Color(0xFF2575FC),
-    surface: Colors.white,
+    tertiary: Color(0xFF2575FC), // USE THIS FOR BUTTON BACKGROUNDS
+    surface: Colors.white, // USE THIS FOR BUTTON TEXTS
     background: Colors.white,
     error: Colors.red,
     onPrimary: Colors.black,
@@ -33,7 +34,7 @@ class DefaultTheme {
         ),
       ),
       buttonTheme: ButtonThemeData(
-        buttonColor: colorScheme.primary,
+        buttonColor: colorScheme.tertiary,
         textTheme: ButtonTextTheme.normal,
       ),
     ),
@@ -52,17 +53,35 @@ class DefaultTheme {
         fontWeight: FontWeight.w600,
         color: Color(0xFF15141E),
       ),
+      heading2: const TextStyle(
+        fontSize: 24,
+        height: 1.33, // 32 / 24,
+        fontWeight: FontWeight.w600,
+        color: Color(0xFF15141E),
+      ),
+      heading3: const TextStyle(
+        fontSize: 20,
+        height: 1.4, // 28 / 20,
+        fontWeight: FontWeight.w600,
+        color: Color(0xFF15141E),
+      ),
       heading4: const TextStyle(
         fontSize: 18,
         height: 1.33, // 24 / 18,
         fontWeight: FontWeight.w600,
-        color: Color.fromRGBO(21, 20, 30, 1),
+        color: Color(0xFF15141E),
       ),
       bodySmallRegular: const TextStyle(
         fontSize: 14,
         height: 1.285, // 18 / 14,
         fontWeight: FontWeight.w400,
         color: Color(0xFF56555E),
+      ),
+      bodySmallBold: const TextStyle(
+        fontSize: 14,
+        height: 1.285, // 18 / 14,
+        fontWeight: FontWeight.w600,
+        color: Color(0xFF15141E),
       ),
       bodyLargeRegular: const TextStyle(
         fontSize: 16,
@@ -74,7 +93,13 @@ class DefaultTheme {
         fontSize: 16,
         height: 1.5, // 24 / 16,
         fontWeight: FontWeight.w600,
-        color: Color.fromRGBO(21, 20, 30, 1),
+        color: Color(0xFF15141E),
+      ),
+      labelXSmall: const TextStyle(
+        fontSize: 12,
+        height: 1.5, // 18 / 12,
+        fontWeight: FontWeight.w600,
+        color: Color(0xFF56555E),
       ),
       labelSmall: const TextStyle(
         fontSize: 14,
@@ -92,6 +117,7 @@ class DefaultTheme {
         fontSize: 18,
         height: 1.33, // 24 / 18,
         fontWeight: FontWeight.w600,
+        color: Color(0xFF15141E),
       ),
       mixedStyles: const TextStyle(
         fontSize: 14,
@@ -113,10 +139,14 @@ class PorscheTheme {
 
 class TextStyleScheme {
   final TextStyle heading1;
+  final TextStyle heading2;
+  final TextStyle heading3;
   final TextStyle heading4;
   final TextStyle bodySmallRegular;
+  final TextStyle bodySmallBold;
   final TextStyle bodyLargeRegular;
   final TextStyle bodyLargeRegularBold;
+  final TextStyle labelXSmall;
   final TextStyle labelSmall;
   final TextStyle labelMedium;
   final TextStyle labelLarge;
@@ -124,10 +154,14 @@ class TextStyleScheme {
 
   TextStyleScheme({
     required this.heading1,
+    required this.heading2,
+    required this.heading3,
     required this.heading4,
     required this.bodySmallRegular,
+    required this.bodySmallBold,
     required this.bodyLargeRegular,
     required this.bodyLargeRegularBold,
+    required this.labelXSmall,
     required this.labelSmall,
     required this.labelMedium,
     required this.labelLarge,
@@ -136,10 +170,14 @@ class TextStyleScheme {
 
   TextStyleScheme copyWith({
     TextStyle? heading1,
+    TextStyle? heading2,
+    TextStyle? heading3,
     TextStyle? heading4,
     TextStyle? bodySmallRegular,
+    TextStyle? bodySmallBold,
     TextStyle? bodyLargeRegular,
     TextStyle? bodyLargeRegularBold,
+    TextStyle? labelXSmall,
     TextStyle? labelSmall,
     TextStyle? labelMedium,
     TextStyle? labelLarge,
@@ -147,10 +185,14 @@ class TextStyleScheme {
   }) {
     return TextStyleScheme(
       heading1: heading1 ?? this.heading1,
+      heading2: heading2 ?? this.heading2,
+      heading3: heading3 ?? this.heading3,
       heading4: heading4 ?? this.heading4,
       bodySmallRegular: bodySmallRegular ?? this.bodySmallRegular,
+      bodySmallBold: bodySmallBold ?? this.bodySmallBold,
       bodyLargeRegular: bodyLargeRegular ?? this.bodyLargeRegular,
       bodyLargeRegularBold: bodyLargeRegularBold ?? this.bodyLargeRegularBold,
+      labelXSmall: labelXSmall ?? this.labelXSmall,
       labelSmall: labelSmall ?? this.labelSmall,
       labelMedium: labelMedium ?? this.labelMedium,
       labelLarge: labelLarge ?? this.labelLarge,

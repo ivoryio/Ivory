@@ -111,20 +111,19 @@ class TransactionDetailScreen extends StatelessWidget {
             TextSpan(
               text: 'This is an automatic repayment and does not include the 5% interest rate. ',
               style: ClientConfig.getTextStyleScheme()
-                  .bodySmallRegular
-                  .copyWith(fontWeight: FontWeight.bold, color: Colors.black),
+                  .bodySmallBold,
             ),
             TextSpan(
               text: 'Go to “Repayments” ',
               style: ClientConfig.getTextStyleScheme()
-                  .bodySmallRegular
-                  .copyWith(fontWeight: FontWeight.bold, color: ClientConfig.getColorScheme().secondary),
+                  .bodySmallBold
+                  .copyWith(color: ClientConfig.getColorScheme().secondary),
               recognizer: TapGestureRecognizer()
                 ..onTap = () => Navigator.of(context).pushNamed(RepaymentsScreen.routeName),
             ),
             TextSpan(
               text: 'to view the repayment to be debited from your reference account.',
-              style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(color: Colors.black),
+              style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(color: const Color(0xFF15141E)),
             ),
           ],
           style: ClientConfig.getTextStyleScheme()
@@ -245,7 +244,7 @@ class _Content extends StatelessWidget {
                     ),
                     Text(subtitle,
                         style:
-                            ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(fontWeight: FontWeight.bold)),
+                            ClientConfig.getTextStyleScheme().bodySmallBold),
                     Text(
                       Format.date(dateTime, pattern: 'MMM dd, HH:mm'),
                       style: ClientConfig.getTextStyleScheme().bodySmallRegular,
