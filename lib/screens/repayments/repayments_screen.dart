@@ -162,11 +162,10 @@ class RepaymentsScreen extends StatelessWidget {
                 return IvoryListTile(
                   startIcon: Icons.back_hand_outlined,
                   title: 'Need more credit?',
-                  subtitle: (viewModel is MoreCreditFetchedViewModel)
-                      ? (viewModel.waitlist == false)
-                          ? 'Sign up for our waitlist'
-                          : 'You\'re on our waitlist'
-                      : 'You\'re on our waitlist',
+                  subtitle: (viewModel is MoreCreditFetchedViewModel) &&
+                          (viewModel.waitlist == false)
+                      ? ('Sign up for our waitlist')
+                      : ('You\'re on our waitlist'),
                   onTap: () {
                     (viewModel is MoreCreditFetchedViewModel)
                         ? (viewModel.waitlist == false)

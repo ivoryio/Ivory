@@ -7,10 +7,8 @@ import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/infrastructure/repayments/more_credit/more_credit_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/repayments/more_credit/more_credit_action.dart';
-import 'package:solarisdemo/screens/login/login_screen.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../../config.dart';
 import '../../../widgets/app_toolbar.dart';

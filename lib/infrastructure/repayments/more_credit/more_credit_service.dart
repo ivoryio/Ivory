@@ -7,32 +7,32 @@ class MoreCreditService extends ApiService {
   MoreCreditService({super.user});
 
   Future<MoreCreditServiceResponse> changeWaitlistStatus({User? user}) async {
-    // String path = 'repayment/waitlist';
+    String path = '/repayment/waitlist';
 
     if (user != null) {
       this.user = user;
     }
 
     try {
-      // var data = await post(path, body: {isWaitlisted: true}});
+      bool waitlist = await post(path);
 
-      return GetMoreCreditSuccessResponse(waitlist: true);
+      return GetMoreCreditSuccessResponse(waitlist: waitlist);
     } catch (e) {
       return MoreCreditServiceErrorResponse();
     }
   }
 
   Future<MoreCreditServiceResponse> getWaitlistStatus({User? user}) async {
-    // String path = 'repayment/waitlist';
+    String path = '/repayment/waitlist';
 
     if (user != null) {
       this.user = user;
     }
 
     try {
-      // var data = await get(path);
+      bool waitlist = await get(path);
 
-      return GetMoreCreditSuccessResponse(waitlist: false);
+      return GetMoreCreditSuccessResponse(waitlist: waitlist);
     } catch (e) {
       return MoreCreditServiceErrorResponse();
     }
