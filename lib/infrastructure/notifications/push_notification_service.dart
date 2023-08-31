@@ -10,6 +10,7 @@ import 'package:solarisdemo/infrastructure/notifications/push_notification_stora
 import 'package:solarisdemo/models/notifications/notification_type.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/navigator.dart';
+import 'package:solarisdemo/redux/notification/notification_action.dart';
 import 'package:solarisdemo/screens/transactions/transaction_approval_pending_screen.dart';
 import 'package:solarisdemo/services/api_service.dart';
 import 'package:solarisdemo/utilities/remote_message_utils.dart';
@@ -157,6 +158,9 @@ class FirebasePushNotificationService extends PushNotificationService {
     final notificationType = RemoteMessageUtils.getNotificationType(message.data["type"] as String);
 
     if (notificationType == NotificationType.scaChallenge) {
+      store.dispatch(ReceivedTransactionApprovalNotificationEventAction(
+        message: RemoteMessageUtils.getNotificationTransactionMessage(message),
+      ));
       Navigator.pushNamed(context, TransactionApprovalPendingScreen.routeName);
     } else {
       debugPrint("Unsupported notification type ${message.data["type"]}");

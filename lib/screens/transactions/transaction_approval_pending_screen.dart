@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/infrastructure/transactions/transaction_approval_presenter.dart';
 import 'package:solarisdemo/models/amount_value.dart';
 import 'package:solarisdemo/models/categories/category.dart';
 import 'package:solarisdemo/models/transactions/transaction_model.dart';
+import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/screens/home/home_screen.dart';
 import 'package:solarisdemo/screens/transactions/transaction_approval_failed_screen.dart';
 import 'package:solarisdemo/widgets/button.dart';
@@ -24,88 +27,95 @@ class TransactionApprovalPendingScreen extends StatelessWidget {
     return ScreenScaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const _Appbar(),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
+        child: StoreConnector<AppState, TransactionApprovalViewModel>(
+          converter: (store) => TransactionApprovalPresenter.present(notificationState: store.state.notificationState),
+          distinct: true,
+          builder: (context, viewModel) => viewModel is TransactionApprovalWithMessageViewModel
+              ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 24),
-                    Row(children: [
-                      Expanded(
-                        child: Text("Authorize your online payment", style: ClientConfig.getTextStyleScheme().heading2),
-                      ),
-                      SizedBox(
-                        height: 70,
-                        width: 70,
-                        child: CircularCountdownProgress(
-                          duration: const Duration(seconds: 10),
-                          onCompleted: () {
-                            showDialog(
-                              context: context,
-                              barrierDismissible: false,
-                              useRootNavigator: true,
-                              builder: (context) => const _TimeoutAlertDialog(),
-                            );
-                          },
-                        ),
-                      )
-                    ]),
-                    const SizedBox(height: 24),
-                    Text("Payment details", style: ClientConfig.getTextStyleScheme().labelLarge),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      child: TransactionListItem(
-                        transaction: Transaction(
-                          recipientName: "Lufthansa",
-                          description: "",
-                          amount: AmountValue(
-                            value: -710.49,
-                            currency: "EUR",
-                            unit: "cents",
-                          ),
-                          category: const Category(id: "transportationAndTravel", name: "Transportation and Travel"),
-                          recordedAt: DateTime.now(),
+                    const _Appbar(),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 24),
+                            Row(children: [
+                              Expanded(
+                                child: Text("Authorize your online payment",
+                                    style: ClientConfig.getTextStyleScheme().heading2),
+                              ),
+                              SizedBox(
+                                height: 70,
+                                width: 70,
+                                child: CircularCountdownProgress(
+                                  duration: const Duration(minutes: 4),
+                                  onCompleted: () {
+                                    showDialog(
+                                      context: context,
+                                      barrierDismissible: false,
+                                      useRootNavigator: true,
+                                      builder: (context) => const _TimeoutAlertDialog(),
+                                    );
+                                  },
+                                ),
+                              )
+                            ]),
+                            const SizedBox(height: 24),
+                            Text("Payment details", style: ClientConfig.getTextStyleScheme().labelLarge),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              child: TransactionListItem(
+                                transaction: Transaction(
+                                  recipientName: viewModel.message.merchantName,
+                                  description: "",
+                                  amount: AmountValue(
+                                    value: (double.tryParse(viewModel.message.amountValue) ?? 0) / 100 * -1,
+                                    currency: "EUR",
+                                    unit: "cents",
+                                  ),
+                                  category: const Category(id: "other", name: "Other"),
+                                  recordedAt: DateTime.now(),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 24),
+                            Text("Card details", style: ClientConfig.getTextStyleScheme().labelLarge),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 16),
+                              child: CardListItem(cardNumber: "*** 4573", expiryDate: "10/27"),
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                    const SizedBox(height: 24),
-                    Text("Card details", style: ClientConfig.getTextStyleScheme().labelLarge),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 16),
-                      child: CardListItem(cardNumber: "*** 4573", expiryDate: "10/27"),
+                    SizedBox(
+                      width: double.infinity,
+                      child: SecondaryButton(
+                        text: "Reject",
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => const _RejectionAlertDialog(),
+                          );
+                        },
+                      ),
                     ),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      width: double.infinity,
+                      child: PrimaryButton(
+                        text: "Authorize",
+                        onPressed: () {
+                          Navigator.pushReplacementNamed(context, TransactionApprovalSuccessScreen.routeName);
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 16),
                   ],
-                ),
-              ),
-            ),
-            SizedBox(
-              width: double.infinity,
-              child: SecondaryButton(
-                text: "Reject",
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) => const _RejectionAlertDialog(),
-                  );
-                },
-              ),
-            ),
-            const SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              child: PrimaryButton(
-                text: "Authorize",
-                onPressed: () {
-                  Navigator.pushReplacementNamed(context, TransactionApprovalSuccessScreen.routeName);
-                },
-              ),
-            ),
-            const SizedBox(height: 16),
-          ],
+                )
+              : Container(),
         ),
       ),
     );

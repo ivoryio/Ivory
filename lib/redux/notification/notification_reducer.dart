@@ -1,10 +1,12 @@
-import 'package:equatable/equatable.dart';
+import 'package:solarisdemo/redux/notification/notification_action.dart';
+import 'package:solarisdemo/redux/notification/notification_state.dart';
 
-abstract class NotificationState extends Equatable {
-  @override
-  List<Object?> get props => [];
+NotificationState notificationReducer(NotificationState currentState, dynamic action) {
+  if (action is ReceivedTransactionApprovalNotificationEventAction) {
+    return NotificationTransactionApprovalState(message: action.message);
+  } else if (action is ResetNotificationCommandAction) {
+    return NotificationInitialState();
+  }
+
+  return currentState;
 }
-
-class NotificationInitialState extends NotificationState {}
-
-class NotificationTransactionApprovalState extends NotificationState {}

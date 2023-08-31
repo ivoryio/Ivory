@@ -6,6 +6,7 @@ class NotificationTransactionMessage extends Equatable {
   final String amountCurrency;
   final String amountUnit;
   final String changeRequestId;
+  final String declineChangeRequestId;
 
   const NotificationTransactionMessage({
     required this.merchantName,
@@ -13,6 +14,7 @@ class NotificationTransactionMessage extends Equatable {
     required this.amountCurrency,
     required this.amountUnit,
     required this.changeRequestId,
+    required this.declineChangeRequestId,
   });
 
   @override
@@ -22,5 +24,6 @@ class NotificationTransactionMessage extends Equatable {
         amountCurrency,
         amountUnit,
         changeRequestId,
+        declineChangeRequestId,
       ];
 }
