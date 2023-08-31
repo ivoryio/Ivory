@@ -53,7 +53,7 @@ class Transaction {
     bookingDate = json['booking_date'];
     valutaDate = json['valuta_date'];
     metaInfo = json['meta_info'];
-    recordedAt = DateTime.parse(json['recorded_at']);
+    recordedAt = DateTime.parse(json['recorded_at']).toLocal();
     senderIban = json['sender_iban'];
     senderName = json['sender_name'] ?? "SOLARIS";
     category = json['category'] != null ? Category.fromJson(json['category']) : null;
