@@ -105,7 +105,8 @@ class FirebasePushNotificationService extends PushNotificationService {
 
     debugPrint('FCM Message received: ${message.toMap().toString()}');
 
-    _redirectFromNotification(message);
+    _redirect(message);
+    clearNotification();
   }
 
   Future<void> handleAndroidLocalNotifications() async {
@@ -150,7 +151,7 @@ class FirebasePushNotificationService extends PushNotificationService {
     return settings.authorizationStatus == AuthorizationStatus.authorized;
   }
 
-  void _redirectFromNotification(RemoteMessage message) {
+  void _redirect(RemoteMessage message) {
     debugPrint("Redirect from notification");
     final context = navigatorKey.currentContext as BuildContext;
     final notificationType = RemoteMessageUtils.getNotificationType(message.data["type"] as String);
@@ -170,8 +171,8 @@ class FirebasePushNotificationService extends PushNotificationService {
     debugPrint("Redirect from saved notification");
 
     final notification = RemoteMessage.fromMap(jsonDecode(message));
-    _redirectFromNotification(notification);
-    await clearNotification();
+    _redirect(notification);
+    clearNotification();
   }
 
   @override
