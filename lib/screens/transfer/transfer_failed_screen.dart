@@ -35,9 +35,9 @@ class TransferFailedScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    Text("The transfer could not be completed.",
-                        style: ClientConfig.getTextStyleScheme()
-                            .bodyLargeRegular,
+                    Text(
+                      "The transfer could not be completed.",
+                      style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
                     ),
                     const Spacer(),
                   ],
