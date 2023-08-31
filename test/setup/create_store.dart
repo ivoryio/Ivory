@@ -45,7 +45,8 @@ Store<AppState> createTestStore({
     categoriesService: categoriesService ?? NotImplementedCategoriesService(),
     personService: personService ?? NotImplementedPersonService(),
     transferService: transferService ?? NotImplementedTransferService(),
-    changeRequestService: changeRequestService ?? NotImplementedChangeRequestService(),
+    changeRequestService:
+        changeRequestService ?? NotImplementedChangeRequestService(),
   );
 }
 
@@ -98,6 +99,13 @@ class NotImplementedBillService extends BillService {
 class NotImplementedMoreCreditService extends MoreCreditService {
   @override
   Future<MoreCreditServiceResponse> changeWaitlistStatus({
+    User? user,
+  }) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<MoreCreditServiceResponse> getWaitlistStatus({
     User? user,
   }) {
     throw UnimplementedError();
