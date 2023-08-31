@@ -152,7 +152,7 @@ class SignupCubit extends Cubit<SignupState> {
       ).createDeviceConsent();
 
       if (createdConsent != null) {
-        await DeviceService.saveDeviceConsentId(
+        await DeviceBindingService.saveDeviceConsentId(
           createdConsent.id,
         );
       }
@@ -160,7 +160,7 @@ class SignupCubit extends Cubit<SignupState> {
       await OldDeviceService(user: user)
           .createDeviceActivity(DeviceActivityType.CONSENT_PROVIDED);
 
-      String? deviceFingerPrint = await DeviceService.getDeviceFingerprint(
+      String? deviceFingerPrint = await DeviceBindingService.getDeviceFingerprint(
         createdConsent!.id,
       );
       if (deviceFingerPrint == null) {

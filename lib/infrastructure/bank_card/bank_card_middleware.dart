@@ -55,7 +55,7 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
 
     if (action is BankCardFetchDetailsCommandAction) {
       store.dispatch(BankCardLoadingEventAction());
-      GetCardDetailsRequestBody reqBody = await DeviceService.createGetCardDetailsRequestBody();
+      GetCardDetailsRequestBody reqBody = await DeviceBindingService.createGetCardDetailsRequestBody();
       final response = await _bankCardService.getCardDetails(
           user: action.user.cognito, cardId: action.bankCard.id, reqBody: reqBody);
 

@@ -6,6 +6,8 @@ import 'package:solarisdemo/infrastructure/categories/categories_service.dart';
 import 'package:solarisdemo/infrastructure/change_request/change_request_service.dart';
 import 'package:solarisdemo/infrastructure/credit_line/credit_line_middleware.dart';
 import 'package:solarisdemo/infrastructure/credit_line/credit_line_service.dart';
+import 'package:solarisdemo/infrastructure/device/device_middleware.dart';
+import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/notifications_middleware.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
 import 'package:solarisdemo/infrastructure/person/person_account_middleware.dart';
@@ -35,6 +37,7 @@ Store<AppState> createStore({
   required PersonService personService,
   required TransferService transferService,
   required ChangeRequestService changeRequestService,
+  required DeviceBindingService deviceBindingService,
 }) {
   return Store<AppState>(
     appReducer,
@@ -50,6 +53,7 @@ Store<AppState> createStore({
       ReferenceAccountMiddleware(personService),
       PersonAccountMiddleware(personService),
       TransferMiddleware(transferService, changeRequestService),
+      DeviceBindingMiddleware(deviceBindingService),
     ],
   );
 }

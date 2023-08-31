@@ -39,13 +39,13 @@ class OldDeviceService extends ApiService {
     try {
       String path = 'person/device/activity';
 
-      String? consentId = await DeviceService.getDeviceConsentId();
+      String? consentId = await DeviceBindingService.getDeviceConsentId();
       if (consentId.isEmpty) {
         throw Exception('Consent Id not found');
       }
 
       String? deviceFingerprint =
-          await DeviceService.getDeviceFingerprint(consentId);
+          await DeviceBindingService.getDeviceFingerprint(consentId);
       if (deviceFingerprint == null || deviceFingerprint.isEmpty) {
         throw Exception('Device Fingerprint not found');
       }

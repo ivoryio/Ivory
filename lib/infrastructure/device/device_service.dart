@@ -17,8 +17,8 @@ import '../../utilities/crypto/crypto_utils.dart';
 
 MethodChannel _platform = const MethodChannel('com.thinslices.solarisdemo/native');
 
-class DeviceService extends ApiService {
-  DeviceService({super.user});
+class DeviceBindingService extends ApiService {
+  DeviceBindingService({super.user});
 
   //Helpers
   static Future<String> getDeviceName() async {
@@ -210,12 +210,12 @@ class DeviceService extends ApiService {
       rsaPublicKey: rsaKeyPair.publicKey,
     );
 
-    String? deviceId = await DeviceService.getDeviceIdFromCache();
-    String? consentId = await DeviceService.getDeviceConsentId();
-    String? deviceFingerprint = await DeviceService.getDeviceFingerprint(
+    String? deviceId = await DeviceBindingService.getDeviceIdFromCache();
+    String? consentId = await DeviceBindingService.getDeviceConsentId();
+    String? deviceFingerprint = await DeviceBindingService.getDeviceFingerprint(
       consentId,
     );
-    String? privateKey = await DeviceService.getPrivateKeyFromCache(
+    String? privateKey = await DeviceBindingService.getPrivateKeyFromCache(
       restricted: true,
     );
     String alphabeticJWK = jwk.toAlphabeticJson();
@@ -236,8 +236,8 @@ class DeviceService extends ApiService {
   //Service calls
   Future<DeviceServiceResponse> createDeviceBinding(String personId) async {
     try {
-      String consentId = await DeviceService.getDeviceConsentId();
-      String? deviceData = await DeviceService.getDeviceFingerprint(consentId);
+      String consentId = await DeviceBindingService.getDeviceConsentId();
+      String? deviceData = await DeviceBindingService.getDeviceFingerprint(consentId);
       if (deviceData == null || deviceData.isEmpty) {
         throw Exception('Device Fingerprint not found');
       }
@@ -245,7 +245,7 @@ class DeviceService extends ApiService {
       CryptoKeyGenerator keyGenerator = CryptoKeyGenerator();
       final keyPair = keyGenerator.generateECKeyPair();
 
-      await DeviceService.saveKeyPairIntoCache(
+      await DeviceBindingService.saveKeyPairIntoCache(
         keyPair: keyPair,
       );
 
@@ -264,7 +264,7 @@ class DeviceService extends ApiService {
         'person/device/binding',
         body: reqBody.toJson(),
       );
-      await DeviceService.saveDeviceIdIntoCache(data['id']);
+      await DeviceBindingService.saveDeviceIdIntoCache(data['id']);
 
       return CreateDeviceBindingSuccessResponse();
     } catch (e) {
@@ -274,10 +274,10 @@ class DeviceService extends ApiService {
 
   Future<DeviceServiceResponse> verifyDeviceBindingSignature(String tan) async {
     try {
-      String deviceId = await DeviceService.getDeviceIdFromCache();
-      String consentId = await DeviceService.getDeviceConsentId();
+      String deviceId = await DeviceBindingService.getDeviceIdFromCache();
+      String consentId = await DeviceBindingService.getDeviceConsentId();
 
-      String? privateKey = await DeviceService.getPrivateKeyFromCache();
+      String? privateKey = await DeviceBindingService.getPrivateKeyFromCache();
       if (privateKey == null) {
         throw Exception('Private key not found');
       }
@@ -287,7 +287,7 @@ class DeviceService extends ApiService {
         encodedPrivateKey: privateKey,
       );
 
-      String? deviceFingerPrint = await DeviceService.getDeviceFingerprint(consentId);
+      String? deviceFingerPrint = await DeviceBindingService.getDeviceFingerprint(consentId);
       if (deviceFingerPrint == null || deviceFingerPrint.isEmpty) {
         throw Exception('Device Fingerprint not found');
       }
@@ -308,9 +308,9 @@ class DeviceService extends ApiService {
 
   Future<DeviceServiceResponse> createRestrictedKey() async {
     try {
-      String deviceId = await DeviceService.getDeviceIdFromCache();
-      String consentId = await DeviceService.getDeviceConsentId();
-      String? deviceFingerprint = await DeviceService.getDeviceFingerprint(consentId);
+      String deviceId = await DeviceBindingService.getDeviceIdFromCache();
+      String consentId = await DeviceBindingService.getDeviceConsentId();
+      String? deviceFingerprint = await DeviceBindingService.getDeviceFingerprint(consentId);
 
       CryptoMessageSigner messageSigner = CryptoMessageSigner();
       CryptoKeyGenerator keyGenerator = CryptoKeyGenerator();
@@ -318,7 +318,7 @@ class DeviceService extends ApiService {
       var newKeyPair = keyGenerator.generateECKeyPair();
       String newPublicKey = newKeyPair.publicKey;
 
-      String? oldPrivateKey = await DeviceService.getPrivateKeyFromCache();
+      String? oldPrivateKey = await DeviceBindingService.getPrivateKeyFromCache();
 
       if (oldPrivateKey == null) {
         throw Exception('Public/private key not found');
@@ -343,7 +343,7 @@ class DeviceService extends ApiService {
         body: reqBody.toJson(),
       );
 
-      await DeviceService.saveKeyPairIntoCache(
+      await DeviceBindingService.saveKeyPairIntoCache(
         keyPair: newKeyPair,
         restricted: true,
       );

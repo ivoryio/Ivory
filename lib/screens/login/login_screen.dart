@@ -211,7 +211,7 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
                                 String phoneNumber = phoneController.text;
                                 String password = passwordInputController.text;
                                 String? deviceConsentId =
-                                    await DeviceService
+                                    await DeviceBindingService
                                         .getDeviceConsentId();
                                 if (deviceConsentId.isNotEmpty) {
                                   context.read<LoginCubit>().setCredentials(
@@ -271,7 +271,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
 
   Future<CacheCredentials?> getCredentials() async {
     CacheCredentials? credentials =
-        await DeviceService.getCredentialsFromCache();
+        await DeviceBindingService.getCredentialsFromCache();
 
     if (credentials != null) {
       emailInputController.text = credentials.email ?? "";
@@ -358,7 +358,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                                 String emailAddress = emailInputController.text;
                                 String password = passwordInputController.text;
                                 String? deviceConsentId =
-                                    await DeviceService
+                                    await DeviceBindingService
                                         .getDeviceConsentId();
                                 if (deviceConsentId.isNotEmpty) {
                                   context.read<LoginCubit>().setCredentials(

@@ -28,7 +28,7 @@ class LoginCubit extends Cubit<LoginState> {
   }) : super(LoginInitial());
 
   Future<void> getSavedCredentials() async {
-    final credentials = await DeviceService.getCredentialsFromCache();
+    final credentials = await DeviceBindingService.getCredentialsFromCache();
 
     if (credentials?.email != null && credentials?.password != null) {
       debugPrint('$credentials');
@@ -73,15 +73,15 @@ class LoginCubit extends Cubit<LoginState> {
           user: user,
         ));
 
-        await DeviceService.saveCredentialsInCache(email!, password);
+        await DeviceBindingService.saveCredentialsInCache(email!, password);
 
-        String? consentId = await DeviceService.getDeviceConsentId();
+        String? consentId = await DeviceBindingService.getDeviceConsentId();
         if (consentId.isEmpty) {
           log('consentId is null');
           CreateDeviceConsentResponse? createdConsent =
               await OldDeviceService(user: user).createDeviceConsent();
           if (createdConsent != null) {
-            await DeviceService.saveDeviceConsentId(createdConsent.id);
+            await DeviceBindingService.saveDeviceConsentId(createdConsent.id);
           }
           await OldDeviceService(user: user)
               .createDeviceActivity(DeviceActivityType.CONSENT_PROVIDED);
