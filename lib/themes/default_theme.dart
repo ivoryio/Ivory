@@ -4,8 +4,8 @@ class DefaultTheme {
   static ColorScheme colorScheme = const ColorScheme(
     primary: Color(0xFF071034),
     secondary: Color(0xFF2575FC),
-    tertiary: Color(0xFF2575FC),
-    surface: Colors.white,
+    tertiary: Color(0xFF2575FC), // USE THIS FOR BUTTON BACKGROUNDS
+    surface: Colors.white, // USE THIS FOR BUTTON TEXTS
     background: Colors.white,
     error: Colors.red,
     onPrimary: Colors.black,
@@ -77,6 +77,12 @@ class DefaultTheme {
         fontWeight: FontWeight.w400,
         color: Color(0xFF56555E),
       ),
+      bodySmallBold: const TextStyle(
+        fontSize: 14,
+        height: 1.285, // 18 / 14,
+        fontWeight: FontWeight.w600,
+        color: Color(0xFF15141E),
+      ),
       bodyLargeRegular: const TextStyle(
         fontSize: 16,
         height: 1.5, // 24 / 16,
@@ -137,6 +143,7 @@ class TextStyleScheme {
   final TextStyle heading3;
   final TextStyle heading4;
   final TextStyle bodySmallRegular;
+  final TextStyle bodySmallBold;
   final TextStyle bodyLargeRegular;
   final TextStyle bodyLargeRegularBold;
   final TextStyle labelXSmall;
@@ -151,6 +158,7 @@ class TextStyleScheme {
     required this.heading3,
     required this.heading4,
     required this.bodySmallRegular,
+    required this.bodySmallBold,
     required this.bodyLargeRegular,
     required this.bodyLargeRegularBold,
     required this.labelXSmall,
@@ -166,6 +174,7 @@ class TextStyleScheme {
     TextStyle? heading3,
     TextStyle? heading4,
     TextStyle? bodySmallRegular,
+    TextStyle? bodySmallBold,
     TextStyle? bodyLargeRegular,
     TextStyle? bodyLargeRegularBold,
     TextStyle? labelXSmall,
@@ -180,6 +189,7 @@ class TextStyleScheme {
       heading3: heading3 ?? this.heading3,
       heading4: heading4 ?? this.heading4,
       bodySmallRegular: bodySmallRegular ?? this.bodySmallRegular,
+      bodySmallBold: bodySmallBold ?? this.bodySmallBold,
       bodyLargeRegular: bodyLargeRegular ?? this.bodyLargeRegular,
       bodyLargeRegularBold: bodyLargeRegularBold ?? this.bodyLargeRegularBold,
       labelXSmall: labelXSmall ?? this.labelXSmall,

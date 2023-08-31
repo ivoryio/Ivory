@@ -148,7 +148,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
     if (viewModel is TransactionsFetchedViewModel) {
       bool isFilteringActive = (viewModel.transactionListFilter?.bookingDateMin != null ||
-          viewModel.transactionListFilter?.bookingDateMax != null);
+          viewModel.transactionListFilter?.bookingDateMax != null) ;
 
       List<Transaction> transactions = [];
 
@@ -159,14 +159,10 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       }
 
       if (transactions.isEmpty && isFilteringActive) {
-        return const Text(
-          "We couldn't find any results. Please try again by searching for other transactions.",
+        return Text(
+          "Please apply different filters and search again.",
           textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w400,
-            color: Color(0xff667085),
-          ),
+          style: ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(color: const Color(0xFF56555E)),
         );
       }
 
@@ -188,14 +184,10 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       }
 
       if (upcomingTransactions.isEmpty && isFilteringActive) {
-        return const Text(
-          "We couldn't find any results. Please try again by searching for other transactions.",
+        return Text(
+          "Please apply different filters and search again.",
           textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w400,
-            color: Color(0xff667085),
-          ),
+          style: ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(color: const Color(0xFF56555E)),
         );
       }
 
@@ -314,11 +306,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
               children: [
                 Text(
                   formattedDayMonthYear,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    color: Color(0xff414D63),
-                  ),
+                  style: ClientConfig.getTextStyleScheme().labelLarge,
                 ),
                 Text(_formatAmountWithCurrency(_sumOfDay(transactions)),
                     style: ClientConfig.getTextStyleScheme().labelSmall),
@@ -431,11 +419,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 children: [
                   Text(
                     formattedDayMonthYear,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: Color(0xff414D63),
-                    ),
+                    style: ClientConfig.getTextStyleScheme().labelLarge,
                   ),
                   Text(formatAmountWithCurrency(sumOfDay(transactions)),
                       style: ClientConfig.getTextStyleScheme().labelSmall),
