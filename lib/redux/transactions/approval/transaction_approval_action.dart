@@ -10,13 +10,27 @@ class RequestTransactionApprovalChallengeCommandAction {
   });
 }
 
+class ConfirmTransactionApprovalChallengeCommandAction {
+  final String changeRequestId;
+  final String signature;
+
+  ConfirmTransactionApprovalChallengeCommandAction({
+    required this.changeRequestId,
+    required this.signature,
+  });
+}
+
 class TransactionApprovalChallengeFetchedEventAction {
   final String changeRequestId;
   final String stringToSign;
+  final String deviceId;
+  final String deviceData;
 
   TransactionApprovalChallengeFetchedEventAction({
     required this.changeRequestId,
     required this.stringToSign,
+    required this.deviceId,
+    required this.deviceData,
   });
 }
 

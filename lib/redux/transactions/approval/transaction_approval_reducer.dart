@@ -5,7 +5,12 @@ TransactionApprovalState transactionApprovalReducer(TransactionApprovalState sta
   if (action is RequestTransactionApprovalChallengeCommandAction) {
     return TransactionApprovalLoadingState();
   } else if (action is TransactionApprovalChallengeFetchedEventAction) {
-    return TransactionApprovalChallengeFetchedState(stringToSign: action.stringToSign);
+    return TransactionApprovalChallengeFetchedState(
+      deviceId: action.deviceId,
+      deviceData: action.deviceData,
+      stringToSign: action.stringToSign,
+      changeRequestId: action.changeRequestId,
+    );
   } else if (action is TransactionApprovalFailedEventAction) {
     return TransactionApprovalFailedState();
   } else if (action is TransactionApprovalDeviceNotBoundedEventAction) {

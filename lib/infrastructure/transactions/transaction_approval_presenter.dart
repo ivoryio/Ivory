@@ -11,6 +11,15 @@ class TransactionApprovalPresenter {
     if (notificationState is NotificationTransactionApprovalState) {
       if (transactionApprovalState is TransactionApprovalLoadingState) {
         return TransactionApprovalWithMessageViewModel(message: notificationState.message, isLoading: true);
+      } else if (transactionApprovalState is TransactionApprovalChallengeFetchedState) {
+        return TransactionApprovalWithChallengeViewModel(
+          isLoading: false,
+          message: notificationState.message,
+          stringToSign: transactionApprovalState.stringToSign,
+          deviceId: transactionApprovalState.deviceId,
+          deviceData: transactionApprovalState.deviceData,
+          changeRequestId: transactionApprovalState.changeRequestId,
+        );
       }
 
       return TransactionApprovalWithMessageViewModel(message: notificationState.message);
@@ -35,6 +44,25 @@ class TransactionApprovalWithMessageViewModel extends TransactionApprovalViewMod
 
   @override
   List<Object> get props => [isLoading, message];
+}
+
+class TransactionApprovalWithChallengeViewModel extends TransactionApprovalWithMessageViewModel {
+  final String stringToSign;
+  final String deviceId;
+  final String deviceData;
+  final String changeRequestId;
+
+  TransactionApprovalWithChallengeViewModel({
+    required this.stringToSign,
+    required this.deviceId,
+    required this.deviceData,
+    required this.changeRequestId,
+    required super.isLoading,
+    required super.message,
+  });
+
+  @override
+  List<Object> get props => [stringToSign, deviceId, deviceData, isLoading, message, changeRequestId];
 }
 
 enum TransactionApprovalErrorType { unboundedDeviceError, unknownError }

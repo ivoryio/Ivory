@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_approval_presenter.dart';
 import 'package:solarisdemo/models/amount_value.dart';
 import 'package:solarisdemo/models/categories/category.dart';
@@ -9,13 +10,12 @@ import 'package:solarisdemo/models/transactions/transaction_model.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/screens/home/home_screen.dart';
 import 'package:solarisdemo/screens/transactions/transaction_approval_failed_screen.dart';
+import 'package:solarisdemo/utilities/crypto/crypto_message_signer.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/card_list_item.dart';
 import 'package:solarisdemo/widgets/circular_countdown_progress_widget.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/transaction_listing_item.dart';
-
-import 'transaction_approval_success_screen.dart';
 
 class TransactionApprovalPendingScreen extends StatelessWidget {
   static const routeName = '/transactionApprovalPendingScreen';
@@ -38,29 +38,9 @@ class TransactionApprovalPendingScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const _Appbar(),
-                    _buildPaymentInfo(context, viewModel),
-                    SizedBox(
-                      width: double.infinity,
-                      child: SecondaryButton(
-                        text: "Reject",
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) => const _RejectionAlertDialog(),
-                          );
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    SizedBox(
-                      width: double.infinity,
-                      child: PrimaryButton(
-                        text: "Authorize",
-                        onPressed: () {
-                          Navigator.pushReplacementNamed(context, TransactionApprovalSuccessScreen.routeName);
-                        },
-                      ),
-                    ),
+                    ...viewModel.isLoading
+                        ? [const Expanded(child: Center(child: CircularProgressIndicator()))]
+                        : _buildPageContent(context, viewModel),
                     const SizedBox(height: 16),
                   ],
                 )
@@ -68,6 +48,46 @@ class TransactionApprovalPendingScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  List<Widget> _buildPageContent(BuildContext context, TransactionApprovalWithMessageViewModel viewModel) {
+    return [
+      _buildPaymentInfo(context, viewModel),
+      SizedBox(
+        width: double.infinity,
+        child: SecondaryButton(
+          text: "Reject",
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) => const _RejectionAlertDialog(),
+            );
+          },
+        ),
+      ),
+      const SizedBox(height: 16),
+      SizedBox(
+        width: double.infinity,
+        child: PrimaryButton(
+          text: "Authorize",
+          onPressed: () async {
+            final isBiometricsAuthenticated =
+                await BiometricAuthentication(message: 'Please use biometric authentication.')
+                    .authenticateWithBiometrics();
+
+            if (isBiometricsAuthenticated && viewModel is TransactionApprovalWithChallengeViewModel) {
+              final privateKey = await DeviceService.getPrivateKeyFromCache(restricted: true);
+              final signedMessage = CryptoMessageSigner().signMessage(
+                message: viewModel.stringToSign,
+                encodedPrivateKey: privateKey!,
+              );
+
+              print("Signed message: $signedMessage");
+            }
+          },
+        ),
+      )
+    ];
   }
 
   Widget _buildPaymentInfo(BuildContext context, TransactionApprovalWithMessageViewModel viewModel) {
@@ -85,7 +105,7 @@ class TransactionApprovalPendingScreen extends StatelessWidget {
                 height: 70,
                 width: 70,
                 child: CircularCountdownProgress(
-                  duration: const Duration(minutes: 4),
+                  duration: const Duration(minutes: 10),
                   onCompleted: () {
                     showDialog(
                       context: context,
@@ -102,6 +122,7 @@ class TransactionApprovalPendingScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: TransactionListItem(
+                isClickable: false,
                 transaction: Transaction(
                   recipientName: viewModel.message.merchantName,
                   description: "",
@@ -111,7 +132,7 @@ class TransactionApprovalPendingScreen extends StatelessWidget {
                     unit: "cents",
                   ),
                   category: const Category(id: "other", name: "Other"),
-                  recordedAt: DateTime.now(),
+                  recordedAt: viewModel.message.dateTime,
                 ),
               ),
             ),

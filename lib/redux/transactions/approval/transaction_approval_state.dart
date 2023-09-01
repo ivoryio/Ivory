@@ -11,13 +11,19 @@ class TransactionApprovalLoadingState extends TransactionApprovalState {}
 
 class TransactionApprovalChallengeFetchedState extends TransactionApprovalState {
   final String stringToSign;
+  final String deviceId;
+  final String deviceData;
+  final String changeRequestId;
 
   TransactionApprovalChallengeFetchedState({
     required this.stringToSign,
+    required this.deviceId,
+    required this.deviceData,
+    required this.changeRequestId,
   });
 
   @override
-  List<Object> get props => [stringToSign];
+  List<Object> get props => [stringToSign, deviceId, deviceData, changeRequestId];
 }
 
 class TransactionApprovalSucceedState extends TransactionApprovalState {}

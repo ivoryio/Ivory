@@ -22,7 +22,7 @@ class TransactionApprovalMiddleware extends MiddlewareClass<AppState> {
       final isDeviceIdNotEmpty = deviceId != null && deviceId.isNotEmpty;
       final isDeviceDataNotEmpty = deviceData != null && deviceData.isNotEmpty;
 
-      if (consentId.isNotEmpty && isDeviceIdNotEmpty && isDeviceDataNotEmpty) {
+      if (isDeviceIdNotEmpty && isDeviceDataNotEmpty) {
         final response = await _changeRequestService.authorize(
           user: action.user,
           changeRequestId: action.changeRequestId,
@@ -35,6 +35,8 @@ class TransactionApprovalMiddleware extends MiddlewareClass<AppState> {
           store.dispatch(TransactionApprovalChallengeFetchedEventAction(
             changeRequestId: action.changeRequestId,
             stringToSign: response.stringToSign,
+            deviceId: deviceId,
+            deviceData: deviceData,
           ));
         } else {
           store.dispatch(TransactionApprovalFailedEventAction());
