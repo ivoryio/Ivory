@@ -1,12 +1,18 @@
 import 'package:equatable/equatable.dart';
 import 'package:solarisdemo/models/notifications/notification_transaction_message.dart';
 import 'package:solarisdemo/redux/notification/notification_state.dart';
+import 'package:solarisdemo/redux/transactions/approval/transaction_approval_state.dart';
 
 class TransactionApprovalPresenter {
   static TransactionApprovalViewModel present({
     required NotificationState notificationState,
+    required TransactionApprovalState transactionApprovalState,
   }) {
     if (notificationState is NotificationTransactionApprovalState) {
+      if (transactionApprovalState is TransactionApprovalLoadingState) {
+        return TransactionApprovalWithMessageViewModel(message: notificationState.message, isLoading: true);
+      }
+
       return TransactionApprovalWithMessageViewModel(message: notificationState.message);
     }
 

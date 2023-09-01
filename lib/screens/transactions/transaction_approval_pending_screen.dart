@@ -28,68 +28,17 @@ class TransactionApprovalPendingScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: StoreConnector<AppState, TransactionApprovalViewModel>(
-          converter: (store) => TransactionApprovalPresenter.present(notificationState: store.state.notificationState),
+          converter: (store) => TransactionApprovalPresenter.present(
+            notificationState: store.state.notificationState,
+            transactionApprovalState: store.state.transactionApprovalState,
+          ),
           distinct: true,
           builder: (context, viewModel) => viewModel is TransactionApprovalWithMessageViewModel
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const _Appbar(),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(height: 24),
-                            Row(children: [
-                              Expanded(
-                                child: Text("Authorize your online payment",
-                                    style: ClientConfig.getTextStyleScheme().heading2),
-                              ),
-                              SizedBox(
-                                height: 70,
-                                width: 70,
-                                child: CircularCountdownProgress(
-                                  duration: const Duration(minutes: 4),
-                                  onCompleted: () {
-                                    showDialog(
-                                      context: context,
-                                      barrierDismissible: false,
-                                      useRootNavigator: true,
-                                      builder: (context) => const _TimeoutAlertDialog(),
-                                    );
-                                  },
-                                ),
-                              )
-                            ]),
-                            const SizedBox(height: 24),
-                            Text("Payment details", style: ClientConfig.getTextStyleScheme().labelLarge),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              child: TransactionListItem(
-                                transaction: Transaction(
-                                  recipientName: viewModel.message.merchantName,
-                                  description: "",
-                                  amount: AmountValue(
-                                    value: (double.tryParse(viewModel.message.amountValue) ?? 0) / 100 * -1,
-                                    currency: "EUR",
-                                    unit: "cents",
-                                  ),
-                                  category: const Category(id: "other", name: "Other"),
-                                  recordedAt: DateTime.now(),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 24),
-                            Text("Card details", style: ClientConfig.getTextStyleScheme().labelLarge),
-                            const Padding(
-                              padding: EdgeInsets.symmetric(vertical: 16),
-                              child: CardListItem(cardNumber: "*** 4573", expiryDate: "10/27"),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    _buildPaymentInfo(context, viewModel),
                     SizedBox(
                       width: double.infinity,
                       child: SecondaryButton(
@@ -116,6 +65,63 @@ class TransactionApprovalPendingScreen extends StatelessWidget {
                   ],
                 )
               : Container(),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPaymentInfo(BuildContext context, TransactionApprovalWithMessageViewModel viewModel) {
+    return Expanded(
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 24),
+            Row(children: [
+              Expanded(
+                child: Text("Authorize your online payment", style: ClientConfig.getTextStyleScheme().heading2),
+              ),
+              SizedBox(
+                height: 70,
+                width: 70,
+                child: CircularCountdownProgress(
+                  duration: const Duration(minutes: 4),
+                  onCompleted: () {
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      useRootNavigator: true,
+                      builder: (context) => const _TimeoutAlertDialog(),
+                    );
+                  },
+                ),
+              )
+            ]),
+            const SizedBox(height: 24),
+            Text("Payment details", style: ClientConfig.getTextStyleScheme().labelLarge),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: TransactionListItem(
+                transaction: Transaction(
+                  recipientName: viewModel.message.merchantName,
+                  description: "",
+                  amount: AmountValue(
+                    value: (double.tryParse(viewModel.message.amountValue) ?? 0) / 100 * -1,
+                    currency: "EUR",
+                    unit: "cents",
+                  ),
+                  category: const Category(id: "other", name: "Other"),
+                  recordedAt: DateTime.now(),
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+            Text("Card details", style: ClientConfig.getTextStyleScheme().labelLarge),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 16),
+              child: CardListItem(cardNumber: "*** 4573", expiryDate: "10/27"),
+            ),
+          ],
         ),
       ),
     );
