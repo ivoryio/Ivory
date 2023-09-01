@@ -1,16 +1,12 @@
 import 'package:solarisdemo/models/user.dart';
 
-class TransactionApprovalRequestChallengeCommandAction {
+class RequestTransactionApprovalChallengeCommandAction {
   final User user;
   final String changeRequestId;
-  final String deviceId;
-  final String deviceData;
 
-  TransactionApprovalRequestChallengeCommandAction({
+  RequestTransactionApprovalChallengeCommandAction({
     required this.user,
     required this.changeRequestId,
-    required this.deviceId,
-    required this.deviceData,
   });
 }
 
@@ -27,3 +23,5 @@ class TransactionApprovalChallengeFetchedEventAction {
 class TransactionApprovalSucceededEventAction {}
 
 class TransactionApprovalFailedEventAction {}
+
+class TransactionApprovalDeviceNotBoundedEventAction {}

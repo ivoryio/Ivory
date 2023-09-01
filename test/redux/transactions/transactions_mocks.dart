@@ -1,5 +1,8 @@
+import 'package:solarisdemo/infrastructure/change_request/change_request_service.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart';
 import 'package:solarisdemo/models/amount_value.dart';
+import 'package:solarisdemo/models/change_request/change_request_delivery_method.dart';
+import 'package:solarisdemo/models/change_request/change_request_error_type.dart';
 import 'package:solarisdemo/models/transactions/transaction_model.dart';
 import 'package:solarisdemo/models/transactions/upcoming_transaction_model.dart';
 import 'package:solarisdemo/models/user.dart';
@@ -61,5 +64,33 @@ class FakeFailingTransactionService extends TransactionService {
   @override
   Future<TransactionsServiceResponse> getTransactions({TransactionListFilter? filter, User? user}) async {
     return TransactionsServiceErrorResponse();
+  }
+}
+
+class FakeChangeRequestService extends ChangeRequestService {
+  @override
+  Future<ChangeRequestServiceResponse> authorize({
+    User? user,
+    required String changeRequestId,
+    required ChangeRequestDeliveryMethod deliveryMethod,
+    required String deviceId,
+    required String deviceData,
+  }) async {
+    return AuthorizeChangeRequestSuccessResponse(
+      stringToSign: "stringToSign",
+    );
+  }
+}
+
+class FakeFailingChangeRequestService extends ChangeRequestService {
+  @override
+  Future<ChangeRequestServiceResponse> authorize({
+    User? user,
+    required String changeRequestId,
+    required ChangeRequestDeliveryMethod deliveryMethod,
+    required String deviceId,
+    required String deviceData,
+  }) async {
+    return ChangeRequestServiceErrorResponse(errorType: ChangeRequestErrorType.authorizationFailed);
   }
 }

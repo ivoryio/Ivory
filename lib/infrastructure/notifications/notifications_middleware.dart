@@ -1,5 +1,4 @@
 import 'package:redux/redux.dart';
-import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
 import 'package:solarisdemo/redux/auth/auth_action.dart';
 import 'package:solarisdemo/redux/notification/notification_action.dart';
@@ -22,21 +21,9 @@ class NotificationsMiddleware extends MiddlewareClass<AppState> {
     }
 
     if (action is ReceivedTransactionApprovalNotificationEventAction) {
-      final consentId = await DeviceService.getDeviceConsentId();
-
-      final deviceId = await DeviceService.getDeviceIdFromCache();
-
-      final deviceData = await DeviceService.getDeviceFingerprint(consentId);
-
-      if (deviceId == null || deviceData == null) {
-        return;
-      }
-
-      store.dispatch(TransactionApprovalRequestChallengeCommandAction(
+      store.dispatch(RequestTransactionApprovalChallengeCommandAction(
         user: action.user,
         changeRequestId: action.message.changeRequestId,
-        deviceData: deviceData,
-        deviceId: deviceId,
       ));
     }
   }

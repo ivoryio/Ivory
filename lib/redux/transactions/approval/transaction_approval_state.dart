@@ -23,3 +23,5 @@ class TransactionApprovalChallengeFetchedState extends TransactionApprovalState 
 class TransactionApprovalSucceedState extends TransactionApprovalState {}
 
 class TransactionApprovalFailedState extends TransactionApprovalState {}
+
+class TransactionApprovalDeviceNotBoundedState extends TransactionApprovalState {}

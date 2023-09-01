@@ -70,7 +70,7 @@ class ChangeRequestService extends ApiService {
 
       return AuthorizeChangeRequestSuccessResponse(stringToSign: data['string_to_sign'] as String);
     } catch (e) {
-      return ChangeRequestServiceErrorResponse();
+      return ChangeRequestServiceErrorResponse(errorType: ChangeRequestErrorType.authorizationFailed);
     }
   }
 }
