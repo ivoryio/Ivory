@@ -24,6 +24,7 @@ class RemoteMessageUtils {
       amountUnit: message.data["amount_unit"] as String,
       changeRequestId: message.data["change_request_id"] as String,
       declineChangeRequestId: message.data["decline_change_request_id"] as String,
+      dateTime: DateTime.parse(message.data["challenged_at"] as String).toLocal(),
     );
   }
 }

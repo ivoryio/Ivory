@@ -5,13 +5,14 @@ import 'package:solarisdemo/redux/notification/notification_state.dart';
 import 'package:solarisdemo/redux/transactions/approval/transaction_approval_state.dart';
 
 void main() {
-  const notificationMessage = NotificationTransactionMessage(
+  final notificationMessage = NotificationTransactionMessage(
     changeRequestId: "changeRequestId",
     declineChangeRequestId: "declineChangeRequestId",
     merchantName: "AMAZON",
     amountValue: "23",
     amountUnit: "cents",
     amountCurrency: "EUR",
+    dateTime: DateTime.now(),
   );
 
   test("present notification with details about the transaction", () {

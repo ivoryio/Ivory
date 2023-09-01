@@ -23,13 +23,14 @@ void main() {
     },
   );
 
-  const message = NotificationTransactionMessage(
+  final message = NotificationTransactionMessage(
     changeRequestId: "changeRequestId",
     declineChangeRequestId: "declineChangeRequestId",
     amountCurrency: "EUR",
     amountUnit: "cents",
     amountValue: "32",
     merchantName: "KFC",
+    dateTime: DateTime.now(),
   );
 
   test("When received a transaction approval notification the states should change accordingly", () async {
