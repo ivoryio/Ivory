@@ -1,17 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
 import 'package:solarisdemo/infrastructure/device/device_presenter.dart';
 import 'package:solarisdemo/models/device.dart';
-import 'package:solarisdemo/models/person_account.dart';
-import 'package:solarisdemo/models/person_model.dart';
-import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/device/device_state.dart';
 
-class MockUser extends Mock implements User {}
-
-class MockPerson extends Mock implements Person {}
-
-class MockPersonAccount extends Mock implements PersonAccount {}
 
 void main() {
   final device = Device(

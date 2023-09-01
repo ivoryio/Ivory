@@ -203,7 +203,6 @@ void main() {
         ),
       );
       final loadingState = store.onChange.firstWhere((element) => element.bankCardState is BankCardLoadingState);
-      // final appState = store.onChange.firstWhere((element) => element.bankCardState is BankCardErrorState);  //Uncomment this after and remove the row below after final implementation
       final appState = store.onChange.firstWhere((element) => element.bankCardState is BankCardDetailsFetchedState);
 
       // when
@@ -231,7 +230,6 @@ void main() {
 
       // then
       expect((await loadingState).bankCardState, isA<BankCardLoadingState>());
-      // expect((await appState).bankCardState, isA<BankCardErrorState>()); //Uncomment this after and remove the row below after final implementation
       expect((await appState).bankCardState, isA<BankCardDetailsFetchedState>());
     });
   });

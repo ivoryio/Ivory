@@ -144,5 +144,25 @@ class NotImplementedChangeRequestService extends ChangeRequestService {
 }
 
 class NotImplementedDeviceBindingService extends DeviceBindingService {
+  @override
+  Future<DeviceBindingServiceResponse> createDeviceBinding({required User user}) {
+    throw UnimplementedError();
+  }
 
+  @override
+  Future<DeviceBindingServiceResponse> verifyDeviceBindingSignature({
+    required User user,
+    required String tan,
+    required String deviceId,
+  }) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<DeviceBindingServiceResponse> createRestrictedKey({
+    required User user,
+    required String deviceId,
+  }) {
+    throw UnimplementedError();
+  }
 }

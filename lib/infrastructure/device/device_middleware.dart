@@ -20,6 +20,7 @@ class DeviceBindingMiddleware extends MiddlewareClass<AppState> {
       final createBindingResponse = await _deviceBindingService.createDeviceBinding(user: action.user);
       if (createBindingResponse is DeviceBindingServiceErrorResponse) {
         store.dispatch(DeviceBindingFailedEventAction());
+        return;
       }
 
       final verifyDeviceBindingChallenegeResponse = await _deviceBindingService.verifyDeviceBindingSignature(
@@ -29,6 +30,7 @@ class DeviceBindingMiddleware extends MiddlewareClass<AppState> {
       );
       if (verifyDeviceBindingChallenegeResponse is DeviceBindingServiceErrorResponse) {
         store.dispatch(DeviceBindingFailedEventAction());
+        return;
       }
 
       final createRestrictedKeyResponse = await _deviceBindingService.createRestrictedKey(
@@ -37,6 +39,7 @@ class DeviceBindingMiddleware extends MiddlewareClass<AppState> {
       );
       if (createRestrictedKeyResponse is DeviceBindingServiceErrorResponse) {
         store.dispatch(DeviceBindingFailedEventAction());
+        return;
       }
 
       List<Device> devices = [];
