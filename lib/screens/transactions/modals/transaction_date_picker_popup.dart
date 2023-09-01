@@ -56,7 +56,7 @@ class _TransactionDatePickerPopupState
           child: ElevatedButton(
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.resolveWith((states) {
-                return ClientConfig.getColorScheme().secondary;
+                return ClientConfig.getColorScheme().tertiary;
               }),
               shape: MaterialStateProperty.all(const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(4)))),
@@ -65,7 +65,7 @@ class _TransactionDatePickerPopupState
               "Apply dates",
               style: ClientConfig.getTextStyleScheme()
                   .bodyLargeRegularBold
-                  .copyWith(color: Colors.white),
+                  .copyWith(color: ClientConfig.getColorScheme().surface),
             ),
             onPressed: () {
               widget.onDateRangeSelected(_dateRange);

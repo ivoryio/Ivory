@@ -68,8 +68,9 @@ class _TransferReviewScreenState extends State<TransferReviewScreen> {
               child: viewModel is TransferLoadingViewModel
                   ? const Center(child: CircularProgressIndicator())
                   : Button(
-                      color: const Color(0xFF2575FC),
+                      color: ClientConfig.getColorScheme().tertiary,
                       text: "Sign & confirm",
+                      textColor: ClientConfig.getColorScheme().surface,
                       onPressed: () {
                         FocusScope.of(context).unfocus();
 
@@ -109,47 +110,32 @@ class _TransferReviewScreenState extends State<TransferReviewScreen> {
                   children: [
                     Text(
                       "Transferring:",
-                      style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(
-                            color: const Color(0xFF56555E),
-                            fontWeight: FontWeight.w600,
-                          ),
+                      style: ClientConfig.getTextStyleScheme().bodySmallBold,
                     ),
                     const SizedBox(height: 4),
                     Text(
                       Format.euro(widget.params.transferAmountValue, digits: 2),
-                      style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold.copyWith(
-                            color: Colors.black,
-                          ),
+                      style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
                     ),
                     const SizedBox(height: 16),
                     Text(
                       "From:",
-                      style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(
-                            color: const Color(0xFF56555E),
-                            fontWeight: FontWeight.w600,
-                          ),
+                      style: ClientConfig.getTextStyleScheme().bodySmallBold,
                     ),
                     const SizedBox(height: 4),
                     Text(
                       "Ivory account",
-                      style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold.copyWith(
-                            color: Colors.black,
-                          ),
+                      style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
                     ),
                     const SizedBox(height: 16),
                     Text(
                       "To:",
-                      style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(
-                            color: const Color(0xFF56555E),
-                            fontWeight: FontWeight.w600,
-                          ),
+                      style: ClientConfig.getTextStyleScheme().bodySmallBold,
                     ),
                     const SizedBox(height: 4),
                     Text(
                       "Reference account",
-                      style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold.copyWith(
-                            color: Colors.black,
-                          ),
+                      style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
                     ),
                   ],
                 ),
@@ -159,10 +145,7 @@ class _TransferReviewScreenState extends State<TransferReviewScreen> {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   "Add note (optional)",
-                  style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(
-                        color: const Color(0xFF56555E),
-                        fontWeight: FontWeight.w600,
-                      ),
+                  style: ClientConfig.getTextStyleScheme().bodySmallBold,
                 ),
               ),
               const SizedBox(height: 8),

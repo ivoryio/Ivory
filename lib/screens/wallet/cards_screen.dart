@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:solarisdemo/screens/wallet/card_details_screen.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
@@ -13,8 +17,7 @@ import '../../utilities/constants.dart';
 import '../../widgets/button.dart';
 import '../../widgets/card_widget.dart';
 import '../../widgets/empty_list_message.dart';
-import '../../widgets/spaced_column.dart';
-import '../../widgets/tab_view.dart';
+import 'card_actions.dart';
 
 class BankCardsScreen extends StatelessWidget {
   static const routeName = "/cardsScreen";
@@ -33,15 +36,21 @@ class BankCardsScreen extends StatelessWidget {
           }
 
           if (state is BankCardsLoaded) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Column(
+            return ScreenScaffold(
+              body: Column(
                 children: [
-                  const AppToolbar(title: "Cards"),
+                  const AppToolbar(
+                    title: "Cards",
+                    // actions: [
+                    //   IconButton(
+                    //     icon: const Icon(Icons.add_circle_rounded),
+                    //     onPressed: () => addNewCard(context),
+                    //   ),
+                    // ],
+                  ),
                   Expanded(
-                    child: WalletScreenBody(
-                      physicalCards: state.physicalCards,
-                      virtualCards: state.virtualCards,
+                    child: SingleChildScrollView(
+                      child: _Content(cards: state.cards),
                     ),
                   ),
                 ],
@@ -66,105 +75,128 @@ class BankCardsScreen extends StatelessWidget {
   }
 }
 
-class WalletScreenBody extends StatelessWidget {
-  final List<BankCard> physicalCards;
-  final List<BankCard> virtualCards;
+class _Content extends StatelessWidget {
+  final List<BankCard> cards;
 
-  const WalletScreenBody({
-    super.key,
-    required this.physicalCards,
-    required this.virtualCards,
-  });
+  const _Content({required this.cards});
 
   @override
   Widget build(BuildContext context) {
-    return TabView(
-      tabs: [
-        TabViewItem(
-          text: "Physical",
-          child: Expanded(child: SingleChildScrollView(child: CardList(cards: physicalCards))),
+    return Column(
+      children: [
+        _CardSlider(cards: cards),
+        const SizedBox(height: 4),
+        if (cards.isNotEmpty) CardActions(initialCardId: cards[0].id),
+      ],
+    );
+  }
+}
+
+class _CardSlider extends StatelessWidget {
+  final List<BankCard> cards;
+
+  const _CardSlider({required this.cards});
+
+  @override
+  Widget build(BuildContext context) {
+    if (cards.isEmpty) {
+      return Padding(
+        padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
+        child: const Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(top: 50, bottom: 16),
+              child: TextMessageWithCircularImage(
+                title: "No cards added",
+                message: "There are no cards yet. Order a card here.",
+              ),
+            ),
+            _OrderCardButton(),
+          ],
         ),
-        TabViewItem(
-          text: "Virtual",
-          child: Expanded(child: SingleChildScrollView(child: CardList(cards: virtualCards))),
+      );
+    }
+
+    final pageController = PageController(viewportFraction: 0.85);
+    return Column(
+      children: [
+        SizedBox(
+          height: 188,
+          child: PageView.builder(
+            controller: pageController,
+            clipBehavior: Clip.none,
+            itemCount: cards.length,
+            onPageChanged: (i) => StoreProvider.of<AppState>(context).dispatch(GetBankCardCommandAction(
+              user: context.read<AuthCubit>().state.user!,
+              cardId: cards[i].id,
+            )),
+            itemBuilder: (context, i) {
+              BankCard card = cards[i];
+
+              String cardNumber = card.representation?.maskedPan ?? emptyStringValue;
+              String cardHolder = card.representation?.line2 ?? emptyStringValue;
+              String cardExpiry = card.representation?.formattedExpirationDate ?? emptyStringValue;
+
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: GestureDetector(
+                  onTap: () => pageController.animateToPage(
+                    i,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                  ),
+                  child: BankCardWidget(
+                    cardNumber: cardNumber,
+                    cardHolder: cardHolder,
+                    cardExpiry: cardExpiry,
+                    isViewable: false,
+                    cardType: card.type.toString().toLowerCase().contains('virtual') ? 'Virtual card' : 'Physical card',
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 16),
+          child: SmoothPageIndicator(
+            controller: pageController,
+            count: cards.length,
+            effect: SlideEffect(
+              dotWidth: 8,
+              dotHeight: 4,
+              activeDotColor: Theme.of(context).colorScheme.secondary,
+              dotColor: Theme.of(context).colorScheme.onBackground.withOpacity(0.23),
+            ),
+          ),
         ),
       ],
     );
   }
 }
 
-class CardList extends StatelessWidget {
-  final List<BankCard> cards;
-
-  const CardList({
-    super.key,
-    required this.cards,
-  });
+class _OrderCardButton extends StatelessWidget {
+  const _OrderCardButton();
 
   @override
   Widget build(BuildContext context) {
-    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 15),
-      child: SpacedColumn(
-        space: 15,
-        children: [
-          if (cards.isEmpty)
-            const Padding(
-              padding: EdgeInsets.only(top: 50, bottom: 10),
-              child: TextMessageWithCircularImage(
-                title: "No cards added",
-                message: "There are no cards yet. Command a card here.",
-              ),
-            ),
-          if (cards.isNotEmpty)
-            ListView.separated(
-              shrinkWrap: true,
-              itemCount: cards.length,
-              physics: const ClampingScrollPhysics(),
-              separatorBuilder: (context, index) => const SizedBox(height: 10),
-              itemBuilder: (context, index) {
-                BankCard card = cards[index];
-
-                String cardNumber = card.representation?.maskedPan ?? emptyStringValue;
-                String cardHolder = card.representation?.line2 ?? emptyStringValue;
-                String cardExpiry = card.representation?.formattedExpirationDate ?? emptyStringValue;
-
-                return GestureDetector(
-                  onTap: card.status == BankCardStatus.ACTIVE || card.status == BankCardStatus.INACTIVE
-                      ? () {
-                          Navigator.pushNamed(context, BankCardDetailsScreen.routeName,
-                              arguments: CardDetailsScreenParams(card: card));
-                        }
-                      : null,
-                  child: BankCardWidget(
-                    cardNumber: cardNumber,
-                    cardHolder: cardHolder,
-                    cardExpiry: cardExpiry,
-                  ),
-                );
-              },
-            ),
-          Row(
-            children: [
-              Expanded(
-                child: PrimaryButton(
-                  text: "Get new card",
-                  onPressed: () {
-                    CreateBankCard card = CreateBankCard(
-                      user.person.firstName!,
-                      user.person.lastName!,
-                      BankCardType.VIRTUAL_VISA_CREDIT,
-                      user.personAccount.businessId ?? '',
-                    );
-                    context.read<BankCardsCubit>().createCard(card);
-                  },
-                ),
-              ),
-            ],
-          ),
-        ],
+    return SizedBox(
+      width: double.infinity,
+      child: PrimaryButton(
+        text: "Get new card",
+        onPressed: () => addNewCard(context),
       ),
     );
   }
+}
+
+void addNewCard(BuildContext context) {
+  final user = context.read<AuthCubit>().state.user!;
+  CreateBankCard card = CreateBankCard(
+    user.person.firstName!,
+    user.person.lastName!,
+    BankCardType.VIRTUAL_VISA_CREDIT,
+    user.personAccount.businessId ?? '',
+  );
+  context.read<BankCardsCubit>().createCard(card);
 }

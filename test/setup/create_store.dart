@@ -6,6 +6,7 @@ import 'package:solarisdemo/infrastructure/credit_line/credit_line_service.dart'
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
 import 'package:solarisdemo/infrastructure/person/person_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/bills/bill_service.dart';
+import 'package:solarisdemo/infrastructure/repayments/more_credit/more_credit_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/reminder/repayment_reminder_service.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart';
 import 'package:solarisdemo/infrastructure/transfer/transfer_service.dart';
@@ -22,6 +23,7 @@ Store<AppState> createTestStore({
   CreditLineService? creditLineService,
   RepaymentReminderService? repaymentReminderService,
   BillService? billService,
+  MoreCreditService? moreCreditService,
   BankCardService? bankCardService,
   CategoriesService? categoriesService,
   PersonService? personService,
@@ -30,16 +32,21 @@ Store<AppState> createTestStore({
 }) {
   return createStore(
     initialState: initialState,
-    pushNotificationService: pushNotificationService ?? NotImplementedPushNotificationService(),
-    transactionService: transactionService ?? NotImplementedTransactionService(),
+    pushNotificationService:
+        pushNotificationService ?? NotImplementedPushNotificationService(),
+    transactionService:
+        transactionService ?? NotImplementedTransactionService(),
     creditLineService: creditLineService ?? NotImplementedCreditLineService(),
-    repaymentReminderService: repaymentReminderService ?? NotImplementedRepaymentReminderService(),
+    repaymentReminderService:
+        repaymentReminderService ?? NotImplementedRepaymentReminderService(),
     billService: billService ?? NotImplementedBillService(),
+    moreCreditService: moreCreditService ?? NotImplementedMoreCreditService(),
     bankCardService: bankCardService ?? NotImplementedBankCardService(),
     categoriesService: categoriesService ?? NotImplementedCategoriesService(),
     personService: personService ?? NotImplementedPersonService(),
     transferService: transferService ?? NotImplementedTransferService(),
-    changeRequestService: changeRequestService ?? NotImplementedChangeRequestService(),
+    changeRequestService:
+        changeRequestService ?? NotImplementedChangeRequestService(),
   );
 }
 
@@ -67,7 +74,8 @@ class NotImplementedPushNotificationService extends PushNotificationService {
 
 class NotImplementedTransactionService extends TransactionService {
   @override
-  Future<TransactionsServiceResponse> getTransactions({TransactionListFilter? filter, User? user}) {
+  Future<TransactionsServiceResponse> getTransactions(
+      {TransactionListFilter? filter, User? user}) {
     throw UnimplementedError();
   }
 }
@@ -98,14 +106,32 @@ class NotImplementedBillService extends BillService {
   }
 }
 
-class NotImplementedBankCardService extends BankCardService {
+class NotImplementedMoreCreditService extends MoreCreditService {
   @override
-  Future<BankCardServiceResponse> getBankCardById({User? user, String? cardId}) {
+  Future<MoreCreditServiceResponse> changeWaitlistStatus({
+    User? user,
+  }) {
     throw UnimplementedError();
   }
 
   @override
-  Future<BankCardServiceResponse> activateBankCard({User? user, String? cardId}) {
+  Future<MoreCreditServiceResponse> getWaitlistStatus({
+    User? user,
+  }) {
+    throw UnimplementedError();
+  }
+}
+
+class NotImplementedBankCardService extends BankCardService {
+  @override
+  Future<BankCardServiceResponse> getBankCardById(
+      {User? user, String? cardId}) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<BankCardServiceResponse> activateBankCard(
+      {User? user, String? cardId}) {
     throw UnimplementedError();
   }
 }
