@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:solarisdemo/screens/settings/settings_security_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
+import 'package:solarisdemo/widgets/ivory_list_item_with_action.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../config.dart';
-import '../wallet/card_details_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   static const routeName = "/settingsScreen";
@@ -43,7 +43,7 @@ class SettingsScreen extends StatelessWidget {
                   const SizedBox(
                     height: 24,
                   ),
-                  const IvoryActionItem(
+                  const IvoryListItemWithAction(
                     leftIcon: Icons.person_outline,
                     actionName: 'Account',
                     actionDescription: 'Personal info & account settings',
@@ -53,7 +53,7 @@ class SettingsScreen extends StatelessWidget {
                   const SizedBox(
                     height: 32,
                   ),
-                  const IvoryActionItem(
+                  const IvoryListItemWithAction(
                     leftIcon: Icons.settings_outlined,
                     actionName: 'App settings',
                     actionDescription: 'Language, FaceID, notifications, etc.',
@@ -63,7 +63,7 @@ class SettingsScreen extends StatelessWidget {
                   const SizedBox(
                     height: 32,
                   ),
-                  IvoryActionItem(
+                  IvoryListItemWithAction(
                     leftIcon: Icons.security,
                     actionName: 'Security',
                     actionDescription: 'Password & device pairing',
@@ -74,7 +74,7 @@ class SettingsScreen extends StatelessWidget {
                   const SizedBox(
                     height: 32,
                   ),
-                  const IvoryActionItem(
+                  const IvoryListItemWithAction(
                     leftIcon: Icons.help_outline,
                     actionName: 'Help',
                     actionDescription: 'Contact us',
@@ -84,7 +84,7 @@ class SettingsScreen extends StatelessWidget {
                   const SizedBox(
                     height: 32,
                   ),
-                  const IvoryActionItem(
+                  const IvoryListItemWithAction(
                     leftIcon: Icons.article_outlined,
                     actionName: 'FAQ & legal documents',
                     actionDescription: 'FAQ, T&Cs, privacy policy',
@@ -94,7 +94,7 @@ class SettingsScreen extends StatelessWidget {
                   const SizedBox(
                     height: 32,
                   ),
-                  const IvoryActionItem(
+                  const IvoryListItemWithAction(
                     leftIcon: Icons.logout,
                     actionName: 'Log out',
                     actionDescription: '',

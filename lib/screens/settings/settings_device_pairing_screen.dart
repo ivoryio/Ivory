@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:solarisdemo/infrastructure/device/device_presenter.dart';
-import 'package:solarisdemo/screens/wallet/card_details_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
+import 'package:solarisdemo/widgets/ivory_list_item_with_action.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../config.dart';
@@ -234,6 +233,10 @@ class SettingsDevicePairingScreen extends StatelessWidget {
             ],
           ),
         ),
+        if (viewModel is DeviceBindingFetchedViewModel)
+          const SizedBox(
+            height: 24,
+          ),
         if (viewModel is DeviceBindingFetchedViewModel) _buildDeviceList(viewModel)
       ],
     );
@@ -244,9 +247,6 @@ class SettingsDevicePairingScreen extends StatelessWidget {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(
-            height: 24,
-          ),
           const Text(
             'Paired devices',
             style: TextStyle(
@@ -258,7 +258,7 @@ class SettingsDevicePairingScreen extends StatelessWidget {
           const SizedBox(
             height: 24,
           ),
-          IvoryActionItem(
+          IvoryListItemWithAction(
             leftIcon: Icons.phonelink_ring,
             actionName: device.deviceName,
             actionDescription: 'ID: ${device.deviceId}',

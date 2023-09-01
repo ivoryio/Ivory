@@ -15,6 +15,7 @@ import '../../models/bank_card.dart';
 import '../../redux/bank_card/bank_card_action.dart';
 import '../../widgets/button.dart';
 import '../../widgets/dialog.dart';
+import '../../widgets/ivory_list_item_with_action.dart';
 import 'card_details_info.dart';
 
 class CardActions extends StatelessWidget {
@@ -421,14 +422,14 @@ class ActiveCard extends StatelessWidget {
             ItemTitle(
               nameOfActionTitle: 'Spending settings',
             ),
-            ItemName(
+            IvoryListItemWithAction(
               leftIcon: Icons.speed_outlined,
               actionName: 'Spending cap',
               actionDescription: 'Set it up and get an alert if you exceed it',
               rightIcon: Icons.arrow_forward_ios,
               actionSwitch: false,
             ),
-            ItemName(
+            IvoryListItemWithAction(
               leftIcon: Icons.wifi_tethering_error,
               actionName: 'Contactless limit',
               actionDescription: 'For safe and mindful in-store payments',
@@ -436,54 +437,54 @@ class ActiveCard extends StatelessWidget {
               actionSwitch: false,
             ),
             ItemTitle(nameOfActionTitle: 'Security settings'),
-            ItemName(
+            IvoryListItemWithAction(
               leftIcon: Icons.key,
               actionName: 'View PIN',
               actionDescription: 'For security or personal reasons',
               rightIcon: Icons.arrow_forward_ios,
               actionSwitch: false,
             ),
-            ItemName(
+            IvoryListItemWithAction(
               leftIcon: Icons.dialpad,
               actionName: 'Change PIN',
               actionDescription: 'For security or personal reasons',
               rightIcon: Icons.arrow_forward_ios,
               actionSwitch: false,
             ),
-            ItemName(
+            IvoryListItemWithAction(
               leftIcon: Icons.lock_open,
               actionName: 'Unblock card',
               actionDescription: 'After 3 incorrect PIN/CVV attempts',
               rightIcon: Icons.arrow_forward_ios,
               actionSwitch: false,
             ),
-            ItemName(
+            IvoryListItemWithAction(
               leftIcon: Icons.wifi_tethering,
               actionName: 'Contactless payments',
               actionDescription: 'Apple Pay won’t be affected',
               rightIcon: Icons.arrow_forward_ios,
             ),
-            ItemName(
+            IvoryListItemWithAction(
               leftIcon: Icons.language,
               actionName: 'Online payments',
               actionDescription: 'Apple Pay won’t be affected',
               rightIcon: Icons.arrow_forward_ios,
             ),
-            ItemName(
+            IvoryListItemWithAction(
               leftIcon: Icons.payments,
               actionName: 'ATM withdrawals',
               actionDescription: 'If you don’t plan to withdraw',
               rightIcon: Icons.arrow_forward_ios,
             ),
             ItemTitle(nameOfActionTitle: 'Card management'),
-            ItemName(
+            IvoryListItemWithAction(
               leftIcon: Icons.credit_card,
               actionName: 'Replace card',
               actionDescription: 'If your card is damaged',
               rightIcon: Icons.arrow_forward_ios,
               actionSwitch: false,
             ),
-            ItemName(
+            IvoryListItemWithAction(
               leftIcon: Icons.delete,
               actionName: 'Close card',
               actionDescription: 'The card will be permanently closed',
@@ -553,86 +554,6 @@ class ItemTitle extends StatelessWidget {
         height: 1.4,
         fontWeight: FontWeight.w600,
       ),
-    );
-  }
-}
-
-class ItemName extends StatelessWidget {
-  final IconData leftIcon;
-  final String actionName;
-  final String actionDescription;
-  final IconData rightIcon;
-  final bool actionSwitch;
-
-  const ItemName({
-    super.key,
-    required this.leftIcon,
-    required this.actionName,
-    required this.actionDescription,
-    required this.rightIcon,
-    this.actionSwitch = true,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Icon(leftIcon, color: const Color(0XFF2575FC), size: 24),
-        const SizedBox(width: 16),
-        Expanded(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                actionName,
-                style: const TextStyle(fontSize: 16, height: 1.5, fontWeight: FontWeight.w600),
-              ),
-              Text(
-                actionDescription,
-                style: const TextStyle(fontSize: 14, height: 1.29, fontWeight: FontWeight.w400),
-              ),
-            ],
-          ),
-        ),
-        Container(
-          padding: const EdgeInsets.only(right: 0),
-          child:
-              (actionSwitch == true) ? const ActionItem() : Icon(rightIcon, color: const Color(0XFF2575FC), size: 24),
-        ),
-      ],
-    );
-  }
-}
-
-class ActionItem extends StatefulWidget {
-  const ActionItem({super.key});
-
-  @override
-  State<ActionItem> createState() => _ActionItemState();
-}
-
-class _ActionItemState extends State<ActionItem> {
-  bool _isSpendingLimitEnabled = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return FlutterSwitch(
-      width: 56.0,
-      height: 32.0,
-      activeColor: Theme.of(context).primaryColor,
-      inactiveColor: const Color(0xFFB0B0B0),
-      duration: const Duration(milliseconds: 50),
-      toggleSize: 24.0,
-      value: _isSpendingLimitEnabled,
-      padding: 4,
-      onToggle: (val) {
-        setState(() {
-          _isSpendingLimitEnabled = val;
-        });
-      },
     );
   }
 }
