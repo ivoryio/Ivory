@@ -50,18 +50,17 @@ class RepaymentSuccessfullyChangedScreen extends StatelessWidget {
               style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
               children: [
                 const TextSpan(
-                  text: 'You will start paying a fixed rate of €',
-                ),
-                TextSpan(text: params.fixedRate.toStringAsFixed(2)),
-                const TextSpan(
-                  text: '. The ',
+                  text: 'You will start paying a fixed rate of ',
                 ),
                 TextSpan(
-                  text: params.interestRate.toString(),
+                  text: '€${params.fixedRate.toStringAsFixed(2)}',
+                  style: ClientConfig.getTextStyleScheme()
+                      .bodyLargeRegular
+                      .copyWith(fontWeight: FontWeight.w600),
                 ),
-                const TextSpan(
+                TextSpan(
                   text:
-                      '% interest rate will be calculated and added to this amount.',
+                      '. The ${params.interestRate}% interest rate will be calculated and added to this amount.',
                 ),
               ],
             ),
