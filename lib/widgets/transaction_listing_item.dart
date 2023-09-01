@@ -12,7 +12,7 @@ const String defaultTransactionDescription = 'Transaction';
 const String defaultTransactionRecipientName = 'Recipient name';
 
 class TransactionListItem extends StatelessWidget {
-  final bool? isClickable;
+  final bool isClickable;
   final Transaction transaction;
 
   const TransactionListItem({
@@ -33,8 +33,9 @@ class TransactionListItem extends StatelessWidget {
     final String formattedDate = dateFormatter.format(DateTime.parse(date));
 
     return InkWell(
-      onTap: () =>
-          isClickable! ? Navigator.pushNamed(context, TransactionDetailScreen.routeName, arguments: transaction) : null,
+      onTap: isClickable
+          ? () => Navigator.pushNamed(context, TransactionDetailScreen.routeName, arguments: transaction)
+          : null,
       child: TransactionCard(
         formattedDate: formattedDate,
         amount: amount,
@@ -99,8 +100,9 @@ class UpcomingTransactionListItem extends StatelessWidget {
                   width: 16,
                 ),
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text('Automatic repayment',
-                      style: ClientConfig.getTextStyleScheme().heading4,
+                  Text(
+                    'Automatic repayment',
+                    style: ClientConfig.getTextStyleScheme().heading4,
                   ),
                   Text(
                     formattedDate,
@@ -151,6 +153,7 @@ class TransactionCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
@@ -163,8 +166,9 @@ class TransactionCard extends StatelessWidget {
                 width: 16,
               ),
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(recipientName.isNotEmpty ? recipientName : defaultTransactionRecipientName,
-                    style:ClientConfig.getTextStyleScheme().heading4,
+                Text(
+                  recipientName.isNotEmpty ? recipientName : defaultTransactionRecipientName,
+                  style: ClientConfig.getTextStyleScheme().heading4,
                 ),
                 Text(
                   formattedDate,
@@ -174,10 +178,10 @@ class TransactionCard extends StatelessWidget {
             ],
           ),
           TextCurrencyValue(
-              digits: 0,
-              value: amount,
-              maxDigits: 2,
-              style: ClientConfig.getTextStyleScheme().heading4,
+            digits: 0,
+            value: amount,
+            maxDigits: 2,
+            style: ClientConfig.getTextStyleScheme().heading4,
           ),
         ],
       ),
