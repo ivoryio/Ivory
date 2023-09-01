@@ -23,7 +23,9 @@ class NotificationsMiddleware extends MiddlewareClass<AppState> {
 
     if (action is ReceivedTransactionApprovalNotificationEventAction) {
       final consentId = await DeviceService.getDeviceConsentId();
+
       final deviceId = await DeviceService.getDeviceIdFromCache();
+
       final deviceData = await DeviceService.getDeviceFingerprint(consentId);
 
       if (deviceId == null || deviceData == null) {

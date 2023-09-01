@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:solarisdemo/models/notifications/notification_transaction_message.dart';
@@ -11,6 +12,22 @@ import '../../setup/create_store.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
+    const MethodChannel('com.thinslices.solarisdemo/native'),
+    (call) async {
+      if (call.method == 'getDeviceFingerprint') {
+        return "deviceFingerprintMock";
+      }
+
+      return null;
+    },
+  );
+
+  SharedPreferences.setMockInitialValues({
+    'device_id': "deviceId",
+    'device_consent_id': "deviceConsentId",
+  });
+
   const message = NotificationTransactionMessage(
     changeRequestId: "changeRequestId",
     declineChangeRequestId: "declineChangeRequestId",
@@ -22,8 +39,6 @@ void main() {
 
   test("When received a transaction approval notification the state should update", () async {
     // given
-    SharedPreferences.setMockInitialValues({'device_consent_id': "deviceConsentId"});
-
     final store = createTestStore(
       initialState: createAppState(
         notificationState: NotificationInitialState(),
