@@ -8,9 +8,9 @@ DeviceBindingState deviceBindingState(DeviceBindingState currentState, dynamic a
   } else if (action is DeviceBindingFailedEventAction) {
     return DeviceBindingErrorState();
   } else if (action is BoundDevicesFetchedEventAction) {
-    return DeviceBindingFetchedState(action.deviceId, action.deviceName);
+    return DeviceBindingFetchedState(action.devices);
   } else if (action is BoundDevicesFetchedButEmptyEventAction) {
-    return DeviceBindingFetchedButEmptyState(action.deviceName);
+    return DeviceBindingFetchedButEmptyState(action.devices);
   }
   return currentState;
 }

@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:solarisdemo/redux/device/device_state.dart';
 
+import '../../models/device.dart';
+
 class DeviceBindingPresenter {
   static DeviceBindingViewModel presentDeviceBinding({required DeviceBindingState deviceBindingState}) {
     if (deviceBindingState is DeviceBindingInitialState) {
@@ -10,30 +12,21 @@ class DeviceBindingPresenter {
     } else if (deviceBindingState is DeviceBindingErrorState) {
       return DeviceBindingErrorViewModel();
     } else if (deviceBindingState is DeviceBindingFetchedState) {
-      return DeviceBindingFetchedViewModel(
-        deviceId: deviceBindingState.deviceId,
-        deviceName: deviceBindingState.deviceName,
-      );
+      return DeviceBindingFetchedViewModel(devices: deviceBindingState.devices);
     } else if (deviceBindingState is DeviceBindingFetchedButEmptyState) {
-      return DeviceBindingFetchedButEmptyViewModel(
-        deviceName: deviceBindingState.deviceName,
-      );
+      return DeviceBindingFetchedButEmptyViewModel(devices: deviceBindingState.devices);
     }
     return DeviceBindingInitialViewModel();
   }
 }
 
 class DeviceBindingViewModel extends Equatable {
-  final String? deviceId;
-  final String? deviceName;
+  final List<Device>? devices;
 
-  const DeviceBindingViewModel({
-    this.deviceId,
-    this.deviceName,
-  });
+  const DeviceBindingViewModel({this.devices});
 
   @override
-  List<Object?> get props => [deviceId, deviceName];
+  List<Object?> get props => [devices];
 }
 
 class DeviceBindingInitialViewModel extends DeviceBindingViewModel {}
@@ -44,19 +37,18 @@ class DeviceBindingErrorViewModel extends DeviceBindingViewModel {}
 
 class DeviceBindingFetchedViewModel extends DeviceBindingViewModel {
   const DeviceBindingFetchedViewModel({
-    required String deviceId,
-    required String deviceName,
-  }) : super(deviceId: deviceId, deviceName: deviceName);
+    required List<Device> devices,
+  }) : super(devices: devices);
 
   @override
-  List<Object?> get props => [deviceId, deviceName];
+  List<Object?> get props => [devices];
 }
 
 class DeviceBindingFetchedButEmptyViewModel extends DeviceBindingViewModel {
   const DeviceBindingFetchedButEmptyViewModel({
-    required String deviceName,
-  }) : super(deviceName: deviceName);
+    required List<Device> devices,
+  }) : super(devices: devices);
 
   @override
-  List<Object?> get props => [deviceName];
+  List<Object?> get props => [devices];
 }

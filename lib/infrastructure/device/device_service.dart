@@ -11,6 +11,7 @@ import 'package:solarisdemo/services/api_service.dart';
 
 import '../../models/bank_card.dart';
 import '../../models/device.dart';
+import '../../models/user.dart';
 import '../../utilities/crypto/crypto_key_generator.dart';
 import '../../utilities/crypto/crypto_message_signer.dart';
 import '../../utilities/crypto/crypto_utils.dart';
@@ -234,7 +235,9 @@ class DeviceBindingService extends ApiService {
   }
 
   //Service calls
-  Future<DeviceServiceResponse> createDeviceBinding(String personId) async {
+  Future<DeviceBindingServiceResponse> createDeviceBinding({required User user}) async {
+    this.user = user;
+
     try {
       String consentId = await DeviceBindingService.getDeviceConsentId();
       String? deviceData = await DeviceBindingService.getDeviceFingerprint(consentId);
@@ -254,7 +257,7 @@ class DeviceBindingService extends ApiService {
       String deviceName = await getDeviceName();
 
       CreateDeviceBindingRequest reqBody = CreateDeviceBindingRequest(
-        personId: personId,
+        personId: user.personId!,
         key: publicKey,
         name: deviceName,
         deviceData: deviceData,
@@ -266,15 +269,22 @@ class DeviceBindingService extends ApiService {
       );
       await DeviceBindingService.saveDeviceIdIntoCache(data['id']);
 
-      return CreateDeviceBindingSuccessResponse();
+      return CreateDeviceBindingSuccessResponse(
+        deviceId: data['id'],
+        deviceName: deviceName,
+      );
     } catch (e) {
-      return DeviceServiceErrorResponse();
+      return const DeviceBindingServiceErrorResponse(errorType: DeviceBindingServiceErrorType.deviceBindingFailed);
     }
   }
 
-  Future<DeviceServiceResponse> verifyDeviceBindingSignature(String tan) async {
+  Future<DeviceBindingServiceResponse> verifyDeviceBindingSignature({
+    required User user,
+    required String tan,
+    required String deviceId,
+  }) async {
+    this.user = user;
     try {
-      String deviceId = await DeviceBindingService.getDeviceIdFromCache();
       String consentId = await DeviceBindingService.getDeviceConsentId();
 
       String? privateKey = await DeviceBindingService.getPrivateKeyFromCache();
@@ -302,13 +312,14 @@ class DeviceBindingService extends ApiService {
 
       return VerifyDeviceBindingSignatureSuccessResponse();
     } catch (e) {
-      return DeviceServiceErrorResponse();
+      return const DeviceBindingServiceErrorResponse(
+          errorType: DeviceBindingServiceErrorType.verifyDeviceBindingSignatureFailed);
     }
   }
 
-  Future<DeviceServiceResponse> createRestrictedKey() async {
+  Future<DeviceBindingServiceResponse> createRestrictedKey({required User user, required String deviceId}) async {
+    this.user = user;
     try {
-      String deviceId = await DeviceBindingService.getDeviceIdFromCache();
       String consentId = await DeviceBindingService.getDeviceConsentId();
       String? deviceFingerprint = await DeviceBindingService.getDeviceFingerprint(consentId);
 
@@ -350,7 +361,8 @@ class DeviceBindingService extends ApiService {
 
       return CreateRestrictedKeySuccessResponse();
     } catch (e) {
-      return DeviceServiceErrorResponse();
+      return const DeviceBindingServiceErrorResponse(
+          errorType: DeviceBindingServiceErrorType.createRestrictedKeyFailed);
     }
   }
 }
@@ -403,17 +415,37 @@ class BiometricAuthentication {
   }
 }
 
-abstract class DeviceServiceResponse extends Equatable {
-  const DeviceServiceResponse();
+abstract class DeviceBindingServiceResponse extends Equatable {
+  const DeviceBindingServiceResponse();
 
   @override
   List<Object> get props => [];
 }
 
-class CreateDeviceBindingSuccessResponse extends DeviceServiceResponse {}
+class CreateDeviceBindingSuccessResponse extends DeviceBindingServiceResponse {
+  final String deviceId;
+  final String deviceName;
 
-class VerifyDeviceBindingSignatureSuccessResponse extends DeviceServiceResponse {}
+  const CreateDeviceBindingSuccessResponse({
+    required this.deviceId,
+    required this.deviceName,
+  });
 
-class CreateRestrictedKeySuccessResponse extends DeviceServiceResponse {}
+  @override
+  List<Object> get props => [deviceId, deviceName];
+}
 
-class DeviceServiceErrorResponse extends DeviceServiceResponse {}
+class VerifyDeviceBindingSignatureSuccessResponse extends DeviceBindingServiceResponse {}
+
+class CreateRestrictedKeySuccessResponse extends DeviceBindingServiceResponse {}
+
+class DeviceBindingServiceErrorResponse extends DeviceBindingServiceResponse {
+  final DeviceBindingServiceErrorType errorType;
+
+  const DeviceBindingServiceErrorResponse({
+    this.errorType = DeviceBindingServiceErrorType.unknown,
+  });
+
+  @override
+  List<Object> get props => [];
+}

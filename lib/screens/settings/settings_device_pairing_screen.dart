@@ -1,6 +1,5 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:solarisdemo/infrastructure/device/device_presenter.dart';
@@ -9,6 +8,8 @@ import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../config.dart';
+import '../../cubits/auth_cubit/auth_cubit.dart';
+import '../../models/user.dart';
 import '../../redux/app_state.dart';
 import '../../redux/device/device_action.dart';
 
@@ -19,6 +20,7 @@ class SettingsDevicePairingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = context.read<AuthCubit>().state.user!.cognito;
     return ScreenScaffold(
         body: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,7 +59,6 @@ class SettingsDevicePairingScreen extends StatelessWidget {
                       deviceBindingState: store.state.deviceBindingState,
                     ),
                     builder: (context, viewModel) {
-                      log(viewModel.toString());
                       if (viewModel is DeviceBindingLoadingViewModel) {
                         return const Center(
                           child: CircularProgressIndicator(),
@@ -70,7 +71,11 @@ class SettingsDevicePairingScreen extends StatelessWidget {
                       }
                       if (viewModel is DeviceBindingFetchedViewModel ||
                           viewModel is DeviceBindingFetchedButEmptyViewModel) {
-                        return _buildPageContent(viewModel);
+                        return _buildPageContent(
+                          context: context,
+                          viewModel: viewModel,
+                          user: user,
+                        );
                       }
                       return const Center(
                         child: CircularProgressIndicator(),
@@ -84,7 +89,11 @@ class SettingsDevicePairingScreen extends StatelessWidget {
     ));
   }
 
-  Widget _buildPageContent(DeviceBindingViewModel viewModel) {
+  Widget _buildPageContent({
+    required BuildContext context,
+    required DeviceBindingViewModel viewModel,
+    required User user,
+  }) {
     return Column(
       children: [
         Container(
@@ -105,7 +114,7 @@ class SettingsDevicePairingScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          viewModel.deviceName!,
+                          viewModel.devices![0].deviceName,
                           style: const TextStyle(
                             fontSize: 24,
                             height: 24 / 32,
@@ -152,10 +161,10 @@ class SettingsDevicePairingScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(16),
                   child: Column(
                     children: [
-                      const Row(
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
+                          const Text(
                             'Paired devices limit',
                             style: TextStyle(
                               fontSize: 14,
@@ -163,8 +172,8 @@ class SettingsDevicePairingScreen extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            '3/5',
-                            style: TextStyle(
+                            '${viewModel.devices!.length}/5',
+                            style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
                             ),
@@ -175,40 +184,41 @@ class SettingsDevicePairingScreen extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(vertical: 8),
                         child: LinearPercentIndicator(
                           backgroundColor: const Color(0xFFE9EAEB),
-                          progressColor: const Color(0xFF2575FC),
+                          progressColor: ClientConfig.getColorScheme().secondary,
                           lineHeight: 8,
                           barRadius: const Radius.circular(1000),
-                          percent: 3 / 5,
+                          percent: viewModel.devices!.length / 5,
                           padding: EdgeInsets.zero,
                         ),
                       ),
-                      const Row(
+                      Row(
                         children: [
-                          Text('You can pair ${5 - 3} more devices'),
+                          Text('You can pair ${5 - viewModel.devices!.length} more devices'),
                         ],
                       ),
                     ],
                   ),
                 ),
               ),
-              if (viewModel is DeviceBindingFetchedViewModel)
+              if (viewModel is DeviceBindingFetchedButEmptyViewModel)
                 Container(
                   height: 1,
                   color: const Color(0xFFDFE2E6),
                 ),
-              if (viewModel is DeviceBindingFetchedViewModel)
+              
+              if (viewModel is DeviceBindingFetchedButEmptyViewModel)
                 GestureDetector(
                   onTap: () {
-                    print('Container clicked');
+                    StoreProvider.of<AppState>(context).dispatch(CreateDeviceBindingCommandAction(user: user));
                   },
-                  child: const SizedBox(
+                  child: SizedBox(
                     height: 48,
                     width: double.infinity,
                     child: Center(
                       child: Text(
                         'Pair device',
                         style: TextStyle(
-                          color: Color(0xFF2575FC),
+                          color: ClientConfig.getColorScheme().secondary,
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                         ),
@@ -225,13 +235,14 @@ class SettingsDevicePairingScreen extends StatelessWidget {
   }
 
   Widget _buildDeviceList(DeviceBindingViewModel viewModel) {
-    return const Column(
+    List<Widget> deviceWidgets = viewModel.devices!.map((device) {
+      return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
+          const SizedBox(
           height: 24,
         ),
-        Text(
+          const Text(
           'Paired devices',
           style: TextStyle(
             fontSize: 18,
@@ -239,27 +250,25 @@ class SettingsDevicePairingScreen extends StatelessWidget {
             fontWeight: FontWeight.w600,
           ),
         ),
-        SizedBox(
+          const SizedBox(
           height: 24,
         ),
         IvoryActionItem(
           leftIcon: Icons.phonelink_ring,
-          actionName: 'iPhone 13',
-          actionDescription: 'ID: 9476623',
+            actionName: device.deviceName,
+            actionDescription: 'ID: ${device.deviceId}',
           rightIcon: Icons.arrow_forward_ios,
           actionSwitch: false,
         ),
-        SizedBox(
+          const SizedBox(
           height: 32,
-        ),
-        IvoryActionItem(
-          leftIcon: Icons.lock_outline,
-          actionName: 'iPhone 11 Pro Max',
-          actionDescription: 'ID: 9476623',
-          rightIcon: Icons.arrow_forward_ios,
-          actionSwitch: false,
-        )
+          ),
       ],
     );
-  }
+    }).toList();
+
+    return Column(
+      children: deviceWidgets,
+    );
+}
 }

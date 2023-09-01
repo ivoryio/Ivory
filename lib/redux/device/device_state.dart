@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../../models/device.dart';
+
 abstract class DeviceBindingState extends Equatable {
   @override
   List<Object?> get props => [];
@@ -12,25 +14,19 @@ class DeviceBindingLoadingState extends DeviceBindingState {}
 class DeviceBindingErrorState extends DeviceBindingState {}
 
 class DeviceBindingFetchedState extends DeviceBindingState {
-  final String deviceId;
-  final String deviceName;
+  final List<Device> devices;
 
-  DeviceBindingFetchedState(
-    this.deviceId,
-    this.deviceName,
-  );
+  DeviceBindingFetchedState(this.devices);
 
   @override
-  List<Object?> get props => [deviceId, deviceName];
+  List<Object?> get props => [devices];
 }
 
 class DeviceBindingFetchedButEmptyState extends DeviceBindingState {
-  final String deviceName;
+  final List<Device> devices;
 
-  DeviceBindingFetchedButEmptyState(
-    this.deviceName,
-  );
+  DeviceBindingFetchedButEmptyState(this.devices);
 
   @override
-  List<Object?> get props => [deviceName];
+  List<Object?> get props => [devices];
 }

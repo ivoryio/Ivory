@@ -213,9 +213,16 @@ class VerifyDeviceSignatureChallengeRequest {
       };
 }
 
-enum DeviceServiceErrorType {
+enum DeviceBindingServiceErrorType {
   unknown,
   deviceBindingFailed,
   verifyDeviceBindingSignatureFailed,
   createRestrictedKeyFailed
+}
+
+class Device {
+  final String deviceId;
+  final String deviceName;
+
+  Device({required this.deviceId, required this.deviceName});
 }

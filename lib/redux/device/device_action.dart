@@ -1,41 +1,31 @@
+import '../../models/device.dart';
+import '../../models/user.dart';
+
 class DeviceBindingLoadingEventAction {}
 
 class DeviceBindingFailedEventAction {}
 
 class CreateDeviceBindingCommandAction {
-  final String personId;
+  final User user;
 
   CreateDeviceBindingCommandAction({
-    required this.personId,
+    required this.user,
   });
 }
 
 class FetchBoundDevicesCommandAction {}
 
 class BoundDevicesFetchedEventAction {
-  final String deviceId;
-  final String deviceName;
+  final List<Device> devices;
 
-  BoundDevicesFetchedEventAction({
-    required this.deviceId,
-    required this.deviceName,
-  });
+  BoundDevicesFetchedEventAction(this.devices);
 }
 
 class BoundDevicesFetchedButEmptyEventAction {
-  final String deviceName;
+  final List<Device> devices;
 
-  BoundDevicesFetchedButEmptyEventAction({
-    required this.deviceName,
-  });
+  BoundDevicesFetchedButEmptyEventAction(this.devices);
 }
 
-class VerifyDeviceBindingEventAction {
-  final String tan;
+class DeviceBoundedEventAction {}
 
-  VerifyDeviceBindingEventAction({
-    required this.tan,
-  });
-}
-
-class CreateRestrictedKeyEventAction {}
