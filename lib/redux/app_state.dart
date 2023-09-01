@@ -5,6 +5,7 @@ import 'package:solarisdemo/redux/credit_line/credit_line_state.dart';
 import 'package:solarisdemo/redux/person/person_account/person_account_state.dart';
 import 'package:solarisdemo/redux/person/reference_account/reference_account_state.dart';
 import 'package:solarisdemo/redux/repayments/bills/bills_state.dart';
+import 'package:solarisdemo/redux/repayments/more_credit/more_credit_state.dart';
 import 'package:solarisdemo/redux/repayments/reminder/repayment_reminder_state.dart';
 import 'package:solarisdemo/redux/transactions/transactions_state.dart';
 import 'package:solarisdemo/redux/transfer/transfer_state.dart';
@@ -14,6 +15,7 @@ class AppState extends Equatable {
   final CreditLineState creditLineState;
   final RepaymentReminderState repaymentReminderState;
   final BillsState billsState;
+  final MoreCreditState moreCreditState;
   final BankCardState bankCardState;
   final CategoriesState categoriesState;
   final ReferenceAccountState referenceAccountState;
@@ -25,6 +27,7 @@ class AppState extends Equatable {
     required this.creditLineState,
     required this.repaymentReminderState,
     required this.billsState,
+    required this.moreCreditState,
     required this.bankCardState,
     required this.categoriesState,
     required this.referenceAccountState,
@@ -38,6 +41,7 @@ class AppState extends Equatable {
       creditLineState: CreditLineInitialState(),
       repaymentReminderState: RepaymentReminderInitialState(),
       billsState: BillsInitialState(),
+      moreCreditState: MoreCreditInitialState(),
       bankCardState: BankCardInitialState(),
       categoriesState: CategoriesInitialState(),
       referenceAccountState: ReferenceAccountInitialState(),
@@ -52,6 +56,7 @@ class AppState extends Equatable {
         creditLineState,
         repaymentReminderState,
         billsState,
+        moreCreditState,
         bankCardState,
         categoriesState,
         referenceAccountState,
