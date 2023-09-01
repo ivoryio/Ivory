@@ -48,7 +48,6 @@ class DeviceBindingMiddleware extends MiddlewareClass<AppState> {
         deviceName: createBindingResponse.deviceName,
       );
 
-      //refactor this logic after final implementation
       devices.add(thisDevice);
       store.dispatch(BoundDevicesFetchedEventAction(devices, thisDevice));
     }
@@ -63,7 +62,6 @@ class DeviceBindingMiddleware extends MiddlewareClass<AppState> {
           deviceId: deviceId,
           deviceName: deviceName,
         );
-        //refactor this logic after final implementation
         devices.add(thisDevice);
         store.dispatch(BoundDevicesFetchedEventAction(devices, thisDevice));
       } else {
