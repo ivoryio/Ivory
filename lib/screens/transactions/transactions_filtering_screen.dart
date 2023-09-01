@@ -188,7 +188,7 @@ class _TransactionsFilteringScreenState
               child: ElevatedButton(
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.resolveWith((states) {
-                    return ClientConfig.getColorScheme().secondary;
+                    return ClientConfig.getColorScheme().tertiary;
                   }),
                   shape: MaterialStateProperty.all(const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(4)))),
@@ -204,7 +204,7 @@ class _TransactionsFilteringScreenState
                   "Apply filters",
                   style: ClientConfig.getTextStyleScheme()
                       .bodyLargeRegularBold
-                      .copyWith(color: Colors.white),
+                      .copyWith(color: ClientConfig.getColorScheme().surface),
                 ),
               ),
             ),

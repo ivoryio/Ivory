@@ -1,5 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:solarisdemo/models/amount_value.dart';
 
 class Format {
   static String currency(
@@ -15,8 +16,7 @@ class Format {
     );
 
     if (number % 1 != 0 && digits == 0) {
-      return formatter
-          .format(number.isNegative ? number.ceil() : number.floor());
+      return formatter.format(number.isNegative ? number.ceil() : number.floor());
     }
 
     return formatter.format(number);
@@ -32,6 +32,16 @@ class Format {
     }
 
     return Format.currency(value, digits: digits);
+  }
+
+  static String amountWithSign(AmountValue amount) {
+    double value = amount.value;
+    String currencySymbolt = getCurrencySymbol(amount.currency);
+
+    String formattedAmount = value.abs().toStringAsFixed(2);
+    String sign = value < 0 ? '-' : '+';
+
+    return '$sign $currencySymbolt$formattedAmount';
   }
 
   static String cents(num value) {

@@ -53,7 +53,7 @@ class _SplitpaySelectionScreenState extends State<SplitpaySelectionScreen> {
             ? optionTwoSplitpayInfo
             : optionThreeSplitpayInfo;
 
-    final String currencySymbol = Format.getCurrencySymbol(widget.transaction.amount!.currency!);
+    final String currencySymbol = Format.getCurrencySymbol(widget.transaction.amount!.currency);
 
     return ScreenScaffold(
       body: Padding(

@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:solarisdemo/models/amount_value.dart';
 
 import '../../models/transactions/transaction_model.dart';
 import '../../models/transactions/upcoming_transaction_model.dart';
@@ -46,12 +47,12 @@ class TransactionService extends ApiService {
         UpcomingTransaction(
           statementDate: DateTime.now(),
           dueDate: DateTime.now(),
-          outstandingAmount: CardBillAmount(value: 496.22, unit: "cents", currency: "EUR"),
+          outstandingAmount: AmountValue(value: 496.22, unit: "cents", currency: "EUR"),
         ),
         UpcomingTransaction(
           statementDate: DateTime.now().add(const Duration(days: 7)),
           dueDate: DateTime.now().add(const Duration(days: 7)),
-          outstandingAmount: CardBillAmount(value: 123.45, unit: "cents", currency: "EUR"),
+          outstandingAmount: AmountValue(value: 123.45, unit: "cents", currency: "EUR"),
         ),
       });
 

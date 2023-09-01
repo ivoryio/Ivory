@@ -41,7 +41,7 @@ class PillButton extends StatelessWidget {
                 buttonText,
                 style: active?
                 ClientConfig.getTextStyleScheme().labelSmall:
-                ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: ClientConfig.getColorScheme().secondary),
+                ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: ClientConfig.getColorScheme().tertiary),
               ),
               if (icon != null)
                 Padding(

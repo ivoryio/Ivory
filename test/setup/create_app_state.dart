@@ -6,6 +6,7 @@ import 'package:solarisdemo/redux/device/device_state.dart';
 import 'package:solarisdemo/redux/person/person_account/person_account_state.dart';
 import 'package:solarisdemo/redux/person/reference_account/reference_account_state.dart';
 import 'package:solarisdemo/redux/repayments/bills/bills_state.dart';
+import 'package:solarisdemo/redux/repayments/more_credit/more_credit_state.dart';
 import 'package:solarisdemo/redux/repayments/reminder/repayment_reminder_state.dart';
 import 'package:solarisdemo/redux/transactions/transactions_state.dart';
 import 'package:solarisdemo/redux/transfer/transfer_state.dart';
@@ -15,6 +16,7 @@ AppState createAppState({
   CreditLineState? creditLineState,
   RepaymentReminderState? repaymentReminderState,
   BillsState? billsState,
+  MoreCreditState? moreCreditState,
   BankCardState? bankCardState,
   CategoriesState? categoriesState,
   ReferenceAccountState? referenceAccountState,
@@ -23,13 +25,16 @@ AppState createAppState({
   DeviceBindingState? deviceBindingState,
 }) {
   return AppState(
-    bankCardState: bankCardState ?? BankCardInitialState(),
     transactionsState: transactionsState ?? TransactionsInitialState(),
     creditLineState: creditLineState ?? CreditLineInitialState(),
-    repaymentReminderState: repaymentReminderState ?? RepaymentReminderInitialState(),
+    repaymentReminderState:
+        repaymentReminderState ?? RepaymentReminderInitialState(),
     billsState: billsState ?? BillsInitialState(),
+    moreCreditState: moreCreditState ?? MoreCreditInitialState(),
+    bankCardState: bankCardState ?? BankCardInitialState(),
     categoriesState: categoriesState ?? CategoriesInitialState(),
-    referenceAccountState: referenceAccountState ?? ReferenceAccountInitialState(),
+    referenceAccountState:
+        referenceAccountState ?? ReferenceAccountInitialState(),
     personAccountState: personAccountState ?? PersonAccountInitialState(),
     transferState: transferState ?? TransferInitialState(),
     deviceBindingState: deviceBindingState ?? DeviceBindingInitialState(),

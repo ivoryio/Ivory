@@ -39,7 +39,7 @@ class SplitpayInfo {
   SplitpayInfo(Transaction transaction, int numberOfMonths) {
     nrOfMonths = numberOfMonths;
     totalAmount = _calculateTotalAmount(
-      transaction.amount!.value!,
+      transaction.amount!.value,
       numberOfMonths,
     );
     monthlyAmount = _calculateMonthlyAmount(
@@ -48,8 +48,8 @@ class SplitpayInfo {
     );
   }
 
-  _calculateTotalAmount(double originalAmount, int nrOfMonths) {
-    double totalAmount = 0;
+  _calculateTotalAmount(num originalAmount, int nrOfMonths) {
+    num totalAmount = 0;
     switch (nrOfMonths) {
       case 3:
         totalAmount = originalAmount.abs() * 1.0765;

@@ -6,8 +6,10 @@ class IvoryListTile extends StatelessWidget {
   final String? title;
   final String? subtitle;
   final IconData? startIcon;
+  final Widget? trailingWidget;
   final EdgeInsets? padding;
   final bool rounded;
+  final bool hasTrailing;
 
   const IvoryListTile({
     Key? key,
@@ -15,8 +17,10 @@ class IvoryListTile extends StatelessWidget {
     this.title,
     this.subtitle,
     this.startIcon,
+    this.trailingWidget,
     this.padding,
     this.rounded = false,
+    this.hasTrailing = true,
   }) : super(key: key);
 
   @override
@@ -53,11 +57,16 @@ class IvoryListTile extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(width: 16),
-            const Icon(
-              Icons.arrow_forward_ios,
-              color: Color(0xFF000000),
-            )
+            if (hasTrailing) ...[
+              const SizedBox(width: 16),
+              if (trailingWidget == null)
+                Icon(
+                  Icons.arrow_forward_ios,
+                  color: ClientConfig.getColorScheme().tertiary,
+                )
+              else
+                trailingWidget!,
+            ],
           ],
         ),
       ),
