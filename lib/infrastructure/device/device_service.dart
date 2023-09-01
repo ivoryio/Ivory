@@ -365,6 +365,19 @@ class DeviceBindingService extends ApiService {
           errorType: DeviceBindingServiceErrorType.createRestrictedKeyFailed);
     }
   }
+
+  Future<DeviceBindingServiceResponse> deleteDeviceBinding({required String deviceId}) async {
+    try {
+      await delete(
+        'person/device/binding/$deviceId',
+      );
+
+      return DeleteDeviceBindingSuccessResponse();
+    } catch (e) {
+      return const DeviceBindingServiceErrorResponse(
+          errorType: DeviceBindingServiceErrorType.deletingDeviceBindingFailed);
+    }
+  }
 }
 
 class CacheCredentials {
@@ -438,6 +451,8 @@ class CreateDeviceBindingSuccessResponse extends DeviceBindingServiceResponse {
 class VerifyDeviceBindingSignatureSuccessResponse extends DeviceBindingServiceResponse {}
 
 class CreateRestrictedKeySuccessResponse extends DeviceBindingServiceResponse {}
+
+class DeleteDeviceBindingSuccessResponse extends DeviceBindingServiceResponse {}
 
 class DeviceBindingServiceErrorResponse extends DeviceBindingServiceResponse {
   final DeviceBindingServiceErrorType errorType;

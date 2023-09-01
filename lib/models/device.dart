@@ -217,7 +217,8 @@ enum DeviceBindingServiceErrorType {
   unknown,
   deviceBindingFailed,
   verifyDeviceBindingSignatureFailed,
-  createRestrictedKeyFailed
+  createRestrictedKeyFailed,
+  deletingDeviceBindingFailed
 }
 
 class Device {

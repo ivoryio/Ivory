@@ -418,8 +418,8 @@ class ActiveCard extends StatelessWidget {
         SpacedColumn(
           crossAxisAlignment: CrossAxisAlignment.start,
           space: 28,
-          children: const [
-            ItemTitle(
+          children: [
+            const ItemTitle(
               nameOfActionTitle: 'Spending settings',
             ),
             IvoryListItemWithAction(
@@ -436,7 +436,7 @@ class ActiveCard extends StatelessWidget {
               rightIcon: Icons.arrow_forward_ios,
               actionSwitch: false,
             ),
-            ItemTitle(nameOfActionTitle: 'Security settings'),
+            const ItemTitle(nameOfActionTitle: 'Security settings'),
             IvoryListItemWithAction(
               leftIcon: Icons.key,
               actionName: 'View PIN',
@@ -476,7 +476,7 @@ class ActiveCard extends StatelessWidget {
               actionDescription: 'If you don’t plan to withdraw',
               rightIcon: Icons.arrow_forward_ios,
             ),
-            ItemTitle(nameOfActionTitle: 'Card management'),
+            const ItemTitle(nameOfActionTitle: 'Card management'),
             IvoryListItemWithAction(
               leftIcon: Icons.credit_card,
               actionName: 'Replace card',

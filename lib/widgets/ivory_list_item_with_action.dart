@@ -1,26 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 
+import '../config.dart';
+
 class IvoryListItemWithAction extends StatelessWidget {
   final IconData leftIcon;
+  late Color? leftIconColor;
   final String actionName;
   final String? actionDescription;
   final IconData rightIcon;
+  late Color? rightIconColor;
   final bool actionSwitch;
   final VoidCallback? onPressed;
 
-  const IvoryListItemWithAction({
+  IvoryListItemWithAction({
     super.key,
     required this.leftIcon,
+    this.leftIconColor,
     required this.actionName,
     this.actionDescription,
     required this.rightIcon,
+    this.rightIconColor,
     this.actionSwitch = true,
     this.onPressed,
   });
 
   @override
   Widget build(BuildContext context) {
+
+    leftIconColor ??= ClientConfig.getColorScheme().secondary;
+    rightIconColor ??= ClientConfig.getColorScheme().secondary;
+
     return GestureDetector(
       onTap: () {
         if (onPressed != null) {
@@ -31,7 +41,7 @@ class IvoryListItemWithAction extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Icon(leftIcon, color: const Color(0XFF2575FC), size: 24),
+          Icon(leftIcon, color: leftIconColor, size: 24),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
@@ -53,7 +63,13 @@ class IvoryListItemWithAction extends StatelessWidget {
           Container(
             padding: const EdgeInsets.only(right: 0),
             child:
-                (actionSwitch == true) ? const ActionItem() : Icon(rightIcon, color: const Color(0XFF2575FC), size: 24),
+                (actionSwitch == true)
+                ? const ActionItem()
+                : Icon(
+                    rightIcon,
+                    color: rightIconColor,
+                    size: 24,
+                  ),
           ),
         ],
       ),

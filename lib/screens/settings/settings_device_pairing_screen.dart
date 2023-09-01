@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:solarisdemo/infrastructure/device/device_presenter.dart';
+import 'package:solarisdemo/screens/settings/settings_paired_device_details_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/ivory_list_item_with_action.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
@@ -237,12 +238,19 @@ class SettingsDevicePairingScreen extends StatelessWidget {
           const SizedBox(
             height: 24,
           ),
-        if (viewModel is DeviceBindingFetchedViewModel) _buildDeviceList(viewModel)
+        if (viewModel is DeviceBindingFetchedViewModel)
+          _buildDeviceList(
+            context: context,
+            viewModel: viewModel,
+          )
       ],
     );
   }
 
-  Widget _buildDeviceList(DeviceBindingViewModel viewModel) {
+  Widget _buildDeviceList({
+    required BuildContext context,
+    required DeviceBindingViewModel viewModel,
+  }) {
     List<Widget> deviceWidgets = viewModel.devices!.map((device) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -264,6 +272,13 @@ class SettingsDevicePairingScreen extends StatelessWidget {
             actionDescription: 'ID: ${device.deviceId}',
             rightIcon: Icons.arrow_forward_ios,
             actionSwitch: false,
+            onPressed: () {
+              Navigator.pushNamed(
+                context,
+                SettingsPairedDeviceDetailsScreen.routeName,
+                arguments: SettingsPairedDeviceDetailsScreenParams(device: device),
+              );
+            },
           ),
           const SizedBox(
             height: 32,

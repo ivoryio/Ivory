@@ -43,7 +43,7 @@ class SettingsScreen extends StatelessWidget {
                   const SizedBox(
                     height: 24,
                   ),
-                  const IvoryListItemWithAction(
+                  IvoryListItemWithAction(
                     leftIcon: Icons.person_outline,
                     actionName: 'Account',
                     actionDescription: 'Personal info & account settings',
@@ -53,7 +53,7 @@ class SettingsScreen extends StatelessWidget {
                   const SizedBox(
                     height: 32,
                   ),
-                  const IvoryListItemWithAction(
+                  IvoryListItemWithAction(
                     leftIcon: Icons.settings_outlined,
                     actionName: 'App settings',
                     actionDescription: 'Language, FaceID, notifications, etc.',
@@ -74,7 +74,7 @@ class SettingsScreen extends StatelessWidget {
                   const SizedBox(
                     height: 32,
                   ),
-                  const IvoryListItemWithAction(
+                  IvoryListItemWithAction(
                     leftIcon: Icons.help_outline,
                     actionName: 'Help',
                     actionDescription: 'Contact us',
@@ -84,7 +84,7 @@ class SettingsScreen extends StatelessWidget {
                   const SizedBox(
                     height: 32,
                   ),
-                  const IvoryListItemWithAction(
+                  IvoryListItemWithAction(
                     leftIcon: Icons.article_outlined,
                     actionName: 'FAQ & legal documents',
                     actionDescription: 'FAQ, T&Cs, privacy policy',
@@ -94,7 +94,7 @@ class SettingsScreen extends StatelessWidget {
                   const SizedBox(
                     height: 32,
                   ),
-                  const IvoryListItemWithAction(
+                  IvoryListItemWithAction(
                     leftIcon: Icons.logout,
                     actionName: 'Log out',
                     actionDescription: '',
