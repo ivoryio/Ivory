@@ -28,7 +28,7 @@ class FakeFailingTransferService extends TransferService {
     User? user,
     required ReferenceAccountTransfer transfer,
   }) async {
-    return TransferServiceErrorResponse();
+    return const TransferServiceErrorResponse();
   }
 }
 

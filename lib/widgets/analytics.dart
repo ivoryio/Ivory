@@ -5,6 +5,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_presenter.dart';
 import 'package:solarisdemo/widgets/account_balance_text.dart';
 
+import '../config.dart';
 import '../models/transactions/transaction_model.dart';
 import '../redux/app_state.dart';
 
@@ -35,34 +36,24 @@ class AnalyticsState extends State<Analytics> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
+                Text(
                   "Spending analytics",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: ClientConfig.getTextStyleScheme().labelLarge,
                 ),
                 PlatformTextButton(
                   padding: EdgeInsets.zero,
-                  child: const Text(
+                  child: Text(
                     "See all expenses",
                     textAlign: TextAlign.right,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFFCC0000),
-                    ),
+                    style:ClientConfig.getTextStyleScheme().labelMedium.copyWith(color:ClientConfig.getColorScheme().secondary,),
                   ),
                   onPressed: () {},
                 )
               ],
             ),
-            const Text(
+            Text(
               "No analytics available. Start spending and you will see your analytics displayed here.",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w400,
-              ),
+              style: ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(color: const Color(0xFF56555E)),
             ),
           ],
         );
@@ -80,23 +71,16 @@ class AnalyticsState extends State<Analytics> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                    Text(
                       "Spending analytics",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: ClientConfig.getTextStyleScheme().labelLarge,
                     ),
                     PlatformTextButton(
                       padding: EdgeInsets.zero,
-                      child: const Text(
+                      child: Text(
                         "See all expenses",
                         textAlign: TextAlign.right,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFFCC0000),
-                        ),
+                        style: ClientConfig.getTextStyleScheme().labelMedium.copyWith(color:ClientConfig.getColorScheme().secondary,),
                       ),
                       onPressed: () {},
                     )
@@ -143,12 +127,9 @@ class AnalyticsState extends State<Analytics> {
                           )
                         ],
                       )
-                    : const Text(
+                    : Text(
                         "No analytics available. Start spending and you will see your analytics displayed here.",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                        ),
+                        style: ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(color: const Color(0xFF56555E)),
                       ),
               ],
             );

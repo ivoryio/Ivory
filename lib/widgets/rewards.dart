@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:solarisdemo/models/reward.dart';
 
+import '../config.dart';
+
 class Rewards extends StatelessWidget {
   const Rewards({Key? key}) : super(key: key);
 
@@ -39,23 +41,16 @@ class Rewards extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
+            Text(
               "Rewards",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-              ),
+              style: ClientConfig.getTextStyleScheme().labelLarge,
             ),
             PlatformTextButton(
               padding: EdgeInsets.zero,
-              child: const Text(
+              child: Text(
                 "See all",
                 textAlign: TextAlign.right,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFFCC0000),
-                ),
+                style: ClientConfig.getTextStyleScheme().labelMedium.copyWith(color:ClientConfig.getColorScheme().secondary,),
               ),
               onPressed: () {},
             )
@@ -127,22 +122,14 @@ class RewardCard extends StatelessWidget {
                   ),
                   Text(
                     reward.provider,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
+                    style: ClientConfig.getTextStyleScheme().labelXSmall.copyWith(color: Colors.white),
                   ),
                   const SizedBox(
                     height: 8,
                   ),
                   Text(
                     reward.description,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
+                    style:  ClientConfig.getTextStyleScheme().heading2.copyWith(color: Colors.white),
                   )
                 ],
               ),

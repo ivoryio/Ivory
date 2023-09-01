@@ -25,7 +25,7 @@ class TransferFailedScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Spacer(),
+                    const Spacer(),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
@@ -34,12 +34,12 @@ class TransferFailedScreen extends StatelessWidget {
                         textAlign: TextAlign.left,
                       ),
                     ),
-                    SizedBox(height: 16),
-                    Text("The transfer could not be completed.",
-                        style: ClientConfig.getTextStyleScheme()
-                            .bodyLargeRegular
-                            .copyWith(color: const Color(0xFF15141E))),
-                    Spacer(),
+                    const SizedBox(height: 16),
+                    Text(
+                      "The transfer could not be completed.",
+                      style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                    ),
+                    const Spacer(),
                   ],
                 ),
               ),
@@ -51,8 +51,9 @@ class TransferFailedScreen extends StatelessWidget {
               horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
             ),
             child: Button(
-              color: const Color(0xFF2575FC),
+              color: ClientConfig.getColorScheme().tertiary,
               text: "Back to \"Home\"",
+              textColor: ClientConfig.getColorScheme().surface,
               onPressed: () => Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false),
             ),
           ),

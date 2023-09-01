@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:solarisdemo/screens/home/home_screen.dart';
-import 'package:solarisdemo/screens/wallet/card_details_screen.dart';
+import 'package:solarisdemo/screens/wallet/cards_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
@@ -81,14 +80,7 @@ class BankCardDetailsActivationSuccessScreen extends StatelessWidget {
                       onPressed: () {
                         Navigator.popUntil(
                           context,
-                          ModalRoute.withName(HomeScreen.routeName),
-                        );
-                        Navigator.pushNamed(
-                          context,
-                          BankCardDetailsScreen.routeName,
-                          arguments: CardDetailsScreenParams(
-                            card: viewModel.bankCard!,
-                          ),
+                          ModalRoute.withName(BankCardsScreen.routeName),
                         );
                       },
                     ),

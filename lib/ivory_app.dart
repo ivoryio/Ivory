@@ -38,7 +38,6 @@ import 'package:solarisdemo/screens/wallet/card_details_choose_pin.dart';
 import 'package:solarisdemo/screens/wallet/card_details_confirm_pin_screen.dart';
 import 'package:solarisdemo/screens/wallet/card_details_info.dart';
 import 'package:solarisdemo/screens/wallet/card_details_screen.dart';
-import 'package:solarisdemo/screens/wallet/card_view_details_screen.dart';
 import 'package:solarisdemo/screens/wallet/cards_screen.dart';
 import 'package:solarisdemo/services/auth_service.dart';
 
@@ -122,15 +121,6 @@ class _IvoryAppState extends State<IvoryApp> {
               BankCardsScreen.routeName: (context) =>
                   const MainNavigationScreen(
                       initialScreen: MainNavigationScreens.cardsScreen),
-              BankCardDetailsScreen.routeName: (context) {
-                final cardDetailsScreenParams = ModalRoute.of(context)
-                    ?.settings
-                    .arguments as CardDetailsScreenParams?;
-
-                return BankCardDetailsScreen(
-                  params: cardDetailsScreenParams!,
-                );
-              },
               BankCardDetailsChoosePinScreen.routeName: (context) =>
                   const BankCardDetailsChoosePinScreen(),
               BankCardDetailsConfirmPinScreen.routeName: (context) =>
@@ -141,12 +131,12 @@ class _IvoryAppState extends State<IvoryApp> {
                   const BankCardDetailsActivationSuccessScreen(),
               BankCardDetailsInfoScreen.routeName: (context) =>
                   const BankCardDetailsInfoScreen(),
-              BankCardViewDetailsScreen.routeName: (context) {
+              BankCardDetailsScreen.routeName: (context) {
                 final cardDetailsScreenParams = ModalRoute.of(context)
                     ?.settings
                     .arguments as CardDetailsScreenParams?;
 
-                return BankCardViewDetailsScreen(
+                return BankCardDetailsScreen(
                   params: cardDetailsScreenParams!,
                 );
               },
