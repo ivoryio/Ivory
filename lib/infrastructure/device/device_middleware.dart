@@ -40,12 +40,14 @@ class DeviceBindingMiddleware extends MiddlewareClass<AppState> {
       }
 
       List<Device> devices = [];
-      devices.add(Device(
+      Device thisDevice = Device(
         deviceId: createBindingResponse.deviceId,
         deviceName: createBindingResponse.deviceName,
-      ));
+      );
 
-      store.dispatch(BoundDevicesFetchedEventAction(devices));
+      //refactor this logic after final implementation
+      devices.add(thisDevice);
+      store.dispatch(BoundDevicesFetchedEventAction(devices, thisDevice));
     }
 
     if (action is FetchBoundDevicesCommandAction) {
@@ -54,17 +56,18 @@ class DeviceBindingMiddleware extends MiddlewareClass<AppState> {
       final deviceId = await DeviceBindingService.getDeviceIdFromCache();
       List<Device> devices = [];
       if (deviceId != '') {
-        devices.add(Device(
+        Device thisDevice = Device(
           deviceId: deviceId,
           deviceName: deviceName,
-        ));
-        store.dispatch(BoundDevicesFetchedEventAction(devices));
+        );
+        //refactor this logic after final implementation
+        devices.add(thisDevice);
+        store.dispatch(BoundDevicesFetchedEventAction(devices, thisDevice));
       } else {
-        devices.add(Device(
+        store.dispatch(BoundDevicesFetchedButEmptyEventAction(Device(
           deviceId: '',
           deviceName: deviceName,
-        ));
-        store.dispatch(BoundDevicesFetchedButEmptyEventAction(devices));
+        )));
       }
     }
   }

@@ -12,9 +12,10 @@ class DeviceBindingPresenter {
     } else if (deviceBindingState is DeviceBindingErrorState) {
       return DeviceBindingErrorViewModel();
     } else if (deviceBindingState is DeviceBindingFetchedState) {
-      return DeviceBindingFetchedViewModel(devices: deviceBindingState.devices);
+      return DeviceBindingFetchedViewModel(
+          devices: deviceBindingState.devices, thisDevice: deviceBindingState.thisDevice);
     } else if (deviceBindingState is DeviceBindingFetchedButEmptyState) {
-      return DeviceBindingFetchedButEmptyViewModel(devices: deviceBindingState.devices);
+      return DeviceBindingFetchedButEmptyViewModel(thisDevice: deviceBindingState.thisDevice);
     }
     return DeviceBindingInitialViewModel();
   }
@@ -22,11 +23,12 @@ class DeviceBindingPresenter {
 
 class DeviceBindingViewModel extends Equatable {
   final List<Device>? devices;
+  final Device? thisDevice;
 
-  const DeviceBindingViewModel({this.devices});
+  const DeviceBindingViewModel({this.devices, this.thisDevice});
 
   @override
-  List<Object?> get props => [devices];
+  List<Object?> get props => [devices, thisDevice];
 }
 
 class DeviceBindingInitialViewModel extends DeviceBindingViewModel {}
@@ -38,7 +40,8 @@ class DeviceBindingErrorViewModel extends DeviceBindingViewModel {}
 class DeviceBindingFetchedViewModel extends DeviceBindingViewModel {
   const DeviceBindingFetchedViewModel({
     required List<Device> devices,
-  }) : super(devices: devices);
+    required Device thisDevice,
+  }) : super(devices: devices, thisDevice: thisDevice);
 
   @override
   List<Object?> get props => [devices];
@@ -46,9 +49,9 @@ class DeviceBindingFetchedViewModel extends DeviceBindingViewModel {
 
 class DeviceBindingFetchedButEmptyViewModel extends DeviceBindingViewModel {
   const DeviceBindingFetchedButEmptyViewModel({
-    required List<Device> devices,
-  }) : super(devices: devices);
+    required Device thisDevice,
+  }) : super(thisDevice: thisDevice);
 
   @override
-  List<Object?> get props => [devices];
+  List<Object?> get props => [thisDevice];
 }

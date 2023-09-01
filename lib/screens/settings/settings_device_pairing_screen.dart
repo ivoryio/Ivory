@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:solarisdemo/infrastructure/device/device_presenter.dart';
 import 'package:solarisdemo/screens/wallet/card_details_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -60,8 +61,10 @@ class SettingsDevicePairingScreen extends StatelessWidget {
                     ),
                     builder: (context, viewModel) {
                       if (viewModel is DeviceBindingLoadingViewModel) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
+                        return const Expanded(
+                          child: Center(
+                            child: CircularProgressIndicator(),
+                          ),
                         );
                       }
                       if (viewModel is DeviceBindingErrorViewModel) {
@@ -77,8 +80,10 @@ class SettingsDevicePairingScreen extends StatelessWidget {
                           user: user,
                         );
                       }
-                      return const Center(
-                        child: CircularProgressIndicator(),
+                      return const Expanded(
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
                       );
                     },
                   ),
@@ -114,7 +119,7 @@ class SettingsDevicePairingScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          viewModel.devices![0].deviceName,
+                          viewModel.thisDevice!.deviceName,
                           style: const TextStyle(
                             fontSize: 24,
                             height: 24 / 32,
@@ -172,7 +177,7 @@ class SettingsDevicePairingScreen extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            '${viewModel.devices!.length}/5',
+                            '${viewModel.devices != null ? viewModel.devices!.length : 0}/5',
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
@@ -187,13 +192,14 @@ class SettingsDevicePairingScreen extends StatelessWidget {
                           progressColor: ClientConfig.getColorScheme().secondary,
                           lineHeight: 8,
                           barRadius: const Radius.circular(1000),
-                          percent: viewModel.devices!.length / 5,
+                          percent: (viewModel.devices != null ? viewModel.devices!.length : 0) / 5,
                           padding: EdgeInsets.zero,
                         ),
                       ),
                       Row(
                         children: [
-                          Text('You can pair ${5 - viewModel.devices!.length} more devices'),
+                          Text(
+                              'You can pair ${5 - (viewModel.devices != null ? viewModel.devices!.length : 0)} more devices'),
                         ],
                       ),
                     ],
@@ -205,7 +211,6 @@ class SettingsDevicePairingScreen extends StatelessWidget {
                   height: 1,
                   color: const Color(0xFFDFE2E6),
                 ),
-              
               if (viewModel is DeviceBindingFetchedButEmptyViewModel)
                 GestureDetector(
                   onTap: () {
@@ -237,38 +242,38 @@ class SettingsDevicePairingScreen extends StatelessWidget {
   Widget _buildDeviceList(DeviceBindingViewModel viewModel) {
     List<Widget> deviceWidgets = viewModel.devices!.map((device) {
       return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
           const SizedBox(
-          height: 24,
-        ),
-          const Text(
-          'Paired devices',
-          style: TextStyle(
-            fontSize: 18,
-            height: 24 / 18,
-            fontWeight: FontWeight.w600,
+            height: 24,
           ),
-        ),
+          const Text(
+            'Paired devices',
+            style: TextStyle(
+              fontSize: 18,
+              height: 24 / 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
           const SizedBox(
-          height: 24,
-        ),
-        IvoryActionItem(
-          leftIcon: Icons.phonelink_ring,
+            height: 24,
+          ),
+          IvoryActionItem(
+            leftIcon: Icons.phonelink_ring,
             actionName: device.deviceName,
             actionDescription: 'ID: ${device.deviceId}',
-          rightIcon: Icons.arrow_forward_ios,
-          actionSwitch: false,
-        ),
-          const SizedBox(
-          height: 32,
+            rightIcon: Icons.arrow_forward_ios,
+            actionSwitch: false,
           ),
-      ],
-    );
+          const SizedBox(
+            height: 32,
+          ),
+        ],
+      );
     }).toList();
 
     return Column(
       children: deviceWidgets,
     );
-}
+  }
 }

@@ -15,18 +15,19 @@ class DeviceBindingErrorState extends DeviceBindingState {}
 
 class DeviceBindingFetchedState extends DeviceBindingState {
   final List<Device> devices;
+  final Device thisDevice;
 
-  DeviceBindingFetchedState(this.devices);
+  DeviceBindingFetchedState(this.devices, this.thisDevice);
 
   @override
-  List<Object?> get props => [devices];
+  List<Object?> get props => [devices, thisDevice];
 }
 
 class DeviceBindingFetchedButEmptyState extends DeviceBindingState {
-  final List<Device> devices;
+  final Device thisDevice;
 
-  DeviceBindingFetchedButEmptyState(this.devices);
+  DeviceBindingFetchedButEmptyState(this.thisDevice);
 
   @override
-  List<Object?> get props => [devices];
+  List<Object?> get props => [thisDevice];
 }

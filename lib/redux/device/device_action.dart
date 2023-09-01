@@ -17,15 +17,15 @@ class FetchBoundDevicesCommandAction {}
 
 class BoundDevicesFetchedEventAction {
   final List<Device> devices;
+  final Device thisDevice;
 
-  BoundDevicesFetchedEventAction(this.devices);
+  BoundDevicesFetchedEventAction(this.devices, this.thisDevice);
 }
 
 class BoundDevicesFetchedButEmptyEventAction {
-  final List<Device> devices;
+  final Device thisDevice;
 
-  BoundDevicesFetchedButEmptyEventAction(this.devices);
+  BoundDevicesFetchedButEmptyEventAction(this.thisDevice);
 }
 
 class DeviceBoundedEventAction {}
-
