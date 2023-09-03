@@ -33,6 +33,14 @@ class FakeDeviceBindingService extends DeviceBindingService {
   }) async {
     return CreateRestrictedKeySuccessResponse();
   }
+
+  @override
+  Future<DeviceBindingServiceResponse> deleteDeviceBinding({
+    required User user,
+    required String deviceId,
+  }) async {
+    return DeleteDeviceBindingSuccessResponse();
+  }
 }
 
 class FakeFailingDeviceBindingService extends DeviceBindingService {
@@ -57,5 +65,14 @@ class FakeFailingDeviceBindingService extends DeviceBindingService {
     required String deviceId,
   }) async {
     return const DeviceBindingServiceErrorResponse(errorType: DeviceBindingServiceErrorType.createRestrictedKeyFailed);
+  }
+
+  @override
+  Future<DeviceBindingServiceResponse> deleteDeviceBinding({
+    required User user,
+    required String deviceId,
+  }) async {
+    return const DeviceBindingServiceErrorResponse(
+        errorType: DeviceBindingServiceErrorType.deletingDeviceBindingFailed);
   }
 }

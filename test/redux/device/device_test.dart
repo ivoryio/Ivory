@@ -50,4 +50,48 @@ void main() {
       expect((await appState).deviceBindingState, isA<DeviceBindingErrorState>());
     });
   });
+
+  group('Deleting device binding', () {
+    test('When deleting device binding successfully should be succesful', () async {
+      // given
+      final store = createTestStore(
+        deviceBindingService: FakeDeviceBindingService(),
+        initialState: createAppState(
+          deviceBindingState: DeviceBindingInitialState(),
+        ),
+      );
+
+      final loadingState =
+          store.onChange.firstWhere((element) => element.deviceBindingState is DeviceBindingLoadingState);
+      final appState = store.onChange.firstWhere((element) => element.deviceBindingState is DeviceBindingDeletedState);
+      // when
+      store.dispatch(
+        DeleteBoundDeviceCommandAction(user: MockUser(), deviceId: 'deviceId'),
+      );
+
+      // then
+      expect((await loadingState).deviceBindingState, isA<DeviceBindingLoadingState>());
+      expect((await appState).deviceBindingState, isA<DeviceBindingDeletedState>());
+    });
+
+    test('When deleting device binding is failing should update with error', () async {
+      // given
+      final store = createTestStore(
+        deviceBindingService: FakeFailingDeviceBindingService(),
+        initialState: createAppState(
+          deviceBindingState: DeviceBindingInitialState(),
+        ),
+      );
+      final loadingState =
+          store.onChange.firstWhere((element) => element.deviceBindingState is DeviceBindingLoadingState);
+      final appState = store.onChange.firstWhere((element) => element.deviceBindingState is DeviceBindingErrorState);
+      // when
+      store.dispatch(
+        DeleteBoundDeviceCommandAction(user: MockUser(), deviceId: 'deviceId'),
+      );
+      // then
+      expect((await loadingState).deviceBindingState, isA<DeviceBindingLoadingState>());
+      expect((await appState).deviceBindingState, isA<DeviceBindingErrorState>());
+    });
+  });
 }
