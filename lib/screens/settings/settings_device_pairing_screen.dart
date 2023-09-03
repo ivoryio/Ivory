@@ -269,7 +269,7 @@ class SettingsDevicePairingScreen extends StatelessWidget {
           IvoryListItemWithAction(
             leftIcon: Icons.phonelink_ring,
             actionName: device.deviceName,
-            actionDescription: 'ID: ${device.deviceId}',
+            actionDescription: 'ID: ${device.deviceId.substring(0, 13)}',
             rightIcon: Icons.arrow_forward_ios,
             actionSwitch: false,
             onPressed: () {
