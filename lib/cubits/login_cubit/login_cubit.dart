@@ -7,8 +7,8 @@ import 'package:flutter/rendering.dart';
 import 'package:solarisdemo/models/device_activity.dart';
 import 'package:solarisdemo/models/device_consent.dart';
 import 'package:solarisdemo/services/device_service.dart';
+import 'package:solarisdemo/utilities/device_info/device_utils.dart';
 
-import '../../infrastructure/device/device_service.dart';
 import '../../models/person_account.dart';
 import '../../models/person_model.dart';
 import '../../models/user.dart';
@@ -28,7 +28,7 @@ class LoginCubit extends Cubit<LoginState> {
   }) : super(LoginInitial());
 
   Future<void> getSavedCredentials() async {
-    final credentials = await DeviceBindingService.getCredentialsFromCache();
+    final credentials = await DeviceUtils.getCredentialsFromCache();
 
     if (credentials?.email != null && credentials?.password != null) {
       debugPrint('$credentials');
@@ -73,15 +73,15 @@ class LoginCubit extends Cubit<LoginState> {
           user: user,
         ));
 
-        await DeviceBindingService.saveCredentialsInCache(email!, password);
+        await DeviceUtils.saveCredentialsInCache(email!, password);
 
-        String? consentId = await DeviceBindingService.getDeviceConsentId();
+        String? consentId = await DeviceUtils.getDeviceConsentId();
         if (consentId.isEmpty) {
           log('consentId is null');
           CreateDeviceConsentResponse? createdConsent =
               await OldDeviceService(user: user).createDeviceConsent();
           if (createdConsent != null) {
-            await DeviceBindingService.saveDeviceConsentId(createdConsent.id);
+            await DeviceUtils.saveDeviceConsentId(createdConsent.id);
           }
           await OldDeviceService(user: user)
               .createDeviceActivity(DeviceActivityType.CONSENT_PROVIDED);

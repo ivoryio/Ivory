@@ -1,7 +1,7 @@
 // ignore_for_file: depend_on_referenced_packages
 
 import 'package:solarisdemo/models/device_consent.dart';
-import '../infrastructure/device/device_service.dart';
+import 'package:solarisdemo/utilities/device_info/device_utils.dart';
 import '../models/device.dart';
 import '../models/device_activity.dart';
 import 'api_service.dart';
@@ -39,13 +39,13 @@ class OldDeviceService extends ApiService {
     try {
       String path = 'person/device/activity';
 
-      String? consentId = await DeviceBindingService.getDeviceConsentId();
+      String? consentId = await DeviceUtils.getDeviceConsentId();
       if (consentId.isEmpty) {
         throw Exception('Consent Id not found');
       }
 
       String? deviceFingerprint =
-          await DeviceBindingService.getDeviceFingerprint(consentId);
+          await DeviceUtils.getDeviceFingerprint(consentId);
       if (deviceFingerprint == null || deviceFingerprint.isEmpty) {
         throw Exception('Device Fingerprint not found');
       }

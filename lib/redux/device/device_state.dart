@@ -31,3 +31,5 @@ class DeviceBindingFetchedButEmptyState extends DeviceBindingState {
   @override
   List<Object?> get props => [thisDevice];
 }
+
+class DeviceBindingDeletedState extends DeviceBindingState {}

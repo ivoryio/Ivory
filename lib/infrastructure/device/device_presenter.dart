@@ -13,9 +13,15 @@ class DeviceBindingPresenter {
       return DeviceBindingErrorViewModel();
     } else if (deviceBindingState is DeviceBindingFetchedState) {
       return DeviceBindingFetchedViewModel(
-          devices: deviceBindingState.devices, thisDevice: deviceBindingState.thisDevice);
+        devices: deviceBindingState.devices,
+        thisDevice: deviceBindingState.thisDevice,
+      );
     } else if (deviceBindingState is DeviceBindingFetchedButEmptyState) {
-      return DeviceBindingFetchedButEmptyViewModel(thisDevice: deviceBindingState.thisDevice);
+      return DeviceBindingFetchedButEmptyViewModel(
+        thisDevice: deviceBindingState.thisDevice,
+      );
+    } else if (deviceBindingState is DeviceBindingDeletedState) {
+      return DeviceBindingDeletedViewModel();
     }
     return DeviceBindingInitialViewModel();
   }
@@ -55,3 +61,5 @@ class DeviceBindingFetchedButEmptyViewModel extends DeviceBindingViewModel {
   @override
   List<Object?> get props => [thisDevice];
 }
+
+class DeviceBindingDeletedViewModel extends DeviceBindingViewModel {}

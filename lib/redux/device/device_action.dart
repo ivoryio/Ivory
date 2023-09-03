@@ -13,6 +13,16 @@ class CreateDeviceBindingCommandAction {
   });
 }
 
+class DeleteBoundDeviceCommandAction {
+  final User user;
+  final String deviceId;
+
+  DeleteBoundDeviceCommandAction({
+    required this.user,
+    required this.deviceId,
+  });
+}
+
 class FetchBoundDevicesCommandAction {}
 
 class BoundDevicesFetchedEventAction {
@@ -29,3 +39,5 @@ class BoundDevicesFetchedButEmptyEventAction {
 }
 
 class DeviceBoundedEventAction {}
+
+class BoundDeviceDeletedEventAction {}

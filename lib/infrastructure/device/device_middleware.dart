@@ -1,6 +1,7 @@
 import 'package:redux/redux.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/device/device_action.dart';
+import 'package:solarisdemo/utilities/device_info/device_utils.dart';
 
 import '../../models/device.dart';
 import 'device_service.dart';
@@ -54,8 +55,8 @@ class DeviceBindingMiddleware extends MiddlewareClass<AppState> {
 
     if (action is FetchBoundDevicesCommandAction) {
       store.dispatch(DeviceBindingLoadingEventAction());
-      final deviceName = await DeviceBindingService.getDeviceName();
-      final deviceId = await DeviceBindingService.getDeviceIdFromCache();
+      final deviceName = await _deviceBindingService.deviceInfo.getDeviceName();
+      final deviceId = await DeviceUtils.getDeviceIdFromCache();
       List<Device> devices = [];
       if (deviceId != '') {
         Device thisDevice = Device(
@@ -69,6 +70,19 @@ class DeviceBindingMiddleware extends MiddlewareClass<AppState> {
           deviceId: '',
           deviceName: deviceName,
         )));
+      }
+    }
+
+    if (action is DeleteBoundDeviceCommandAction) {
+      store.dispatch(DeviceBindingLoadingEventAction());
+      final unpairDeviceResponse = await _deviceBindingService.deleteDeviceBinding(
+        user: action.user,
+        deviceId: action.deviceId,
+      );
+      if (unpairDeviceResponse is DeleteDeviceBindingSuccessResponse) {
+        store.dispatch(BoundDeviceDeletedEventAction());
+      } else {
+        store.dispatch(DeviceBindingFailedEventAction());
       }
     }
   }

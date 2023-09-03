@@ -4,7 +4,7 @@ import 'package:pointycastle/pointycastle.dart';
 import 'package:solarisdemo/models/bank_card.dart';
 
 class CryptoUtils {
-  Jwk convertRSAPublicKeyToJWK({
+  static Jwk convertRSAPublicKeyToJWK({
     required RSAPublicKey rsaPublicKey,
   }) {
     return Jwk(
@@ -13,12 +13,12 @@ class CryptoUtils {
     );
   }
 
-  String _base64UrlEncodeBigInt(BigInt number) {
+  static String _base64UrlEncodeBigInt(BigInt number) {
     List<int> byteArray = bigIntToBytes(number);
     return base64UrlEncode(byteArray);
   }
 
-  List<int> bigIntToBytes(BigInt number) {
+  static List<int> bigIntToBytes(BigInt number) {
     var size = (number.bitLength + 7) >> 3;
     var result = List<int>.filled(size, 0);
     for (var i = 0; i < size; i++) {

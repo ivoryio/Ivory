@@ -7,8 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:solarisdemo/services/auth_service.dart';
 import 'package:solarisdemo/services/device_service.dart';
 import 'package:solarisdemo/services/person_service.dart';
+import 'package:solarisdemo/utilities/device_info/device_utils.dart';
 
-import '../../infrastructure/device/device_service.dart';
 import '../../models/device.dart';
 import '../../models/device_activity.dart';
 import '../../models/device_consent.dart';
@@ -154,14 +154,14 @@ class SignupCubit extends Cubit<SignupState> {
       ).createDeviceConsent();
 
       if (createdConsent != null) {
-        await DeviceBindingService.saveDeviceConsentId(
+        await DeviceUtils.saveDeviceConsentId(
           createdConsent.id,
         );
       }
 
       await OldDeviceService(user: user).createDeviceActivity(DeviceActivityType.CONSENT_PROVIDED);
 
-      String? deviceFingerPrint = await DeviceBindingService.getDeviceFingerprint(
+      String? deviceFingerPrint = await DeviceUtils.getDeviceFingerprint(
         createdConsent!.id,
       );
       if (deviceFingerPrint == null) {

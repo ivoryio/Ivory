@@ -7,7 +7,7 @@ import 'package:pointycastle/export.dart';
 import 'package:pointycastle/pointycastle.dart';
 
 class CryptoMessageSigner {
-  String signMessage(
+  static String signMessage(
       {required String message, required String encodedPrivateKey}) {
     final utf8EncodedMessage = utf8.encode(message);
 
@@ -19,7 +19,7 @@ class CryptoMessageSigner {
     return _convertSignatureToAsn1String(ecSignature);
   }
 
-  ECSignature _signUtf8MessageWithEcPrivateKey(
+  static ECSignature _signUtf8MessageWithEcPrivateKey(
       ECPrivateKey privateKey, List<int> utf8EncodedMessage) {
     final signer = ECDSASigner(SHA256Digest());
     signer.init(true,
@@ -30,7 +30,7 @@ class CryptoMessageSigner {
     return signedMessage;
   }
 
-  String _convertSignatureToAsn1String(ECSignature signature) {
+  static String _convertSignatureToAsn1String(ECSignature signature) {
     final asn1Sequence = ASN1Sequence();
     asn1Sequence.add(ASN1Integer(signature.r));
     asn1Sequence.add(ASN1Integer(signature.s));
@@ -39,7 +39,7 @@ class CryptoMessageSigner {
     return hex.encode(asn1Bytes!.toList());
   }
 
-  SecureRandom _secureRandom() {
+  static SecureRandom _secureRandom() {
     final seedSource = Random.secure();
     final seeds = <int>[];
     for (int i = 0; i < 32; i++) {
