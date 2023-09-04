@@ -97,18 +97,14 @@ class SettingsPairedDeviceDetailsScreen extends StatelessWidget {
                                     children: [
                                       Text(
                                         params.device.deviceName,
-                                        style: const TextStyle(
-                                          fontSize: 24,
-                                          height: 24 / 32,
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                                        style: ClientConfig.getTextStyleScheme().heading2,
                                       ),
                                       Container(
                                         width: 48,
                                         height: 48,
                                         padding: const EdgeInsets.all(8),
                                         decoration: BoxDecoration(
-                                          color: Colors.white,
+                                          color: ClientConfig.getColorScheme().surface,
                                           borderRadius: BorderRadius.circular(1000),
                                         ),
                                         child: const Icon(
@@ -122,104 +118,69 @@ class SettingsPairedDeviceDetailsScreen extends StatelessWidget {
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        const Text(
+                                        Text(
                                           'ID',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w400,
-                                            height: 24 / 16,
-                                          ),
+                                          style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
                                         ),
                                         Text(
                                           params.device.deviceId.substring(0, 13),
-                                          style: const TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                            height: 24 / 16,
-                                          ),
+                                          style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
                                         ),
                                       ],
                                     ),
                                   ),
-                                  const Padding(
-                                    padding: EdgeInsets.only(bottom: 4.0),
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 4.0),
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
                                           'Brand',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w400,
-                                            height: 24 / 16,
-                                          ),
+                                          style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+
                                         ),
                                         Text(
                                           'IOS',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                            height: 24 / 16,
-                                          ),
+                                          style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
                                         ),
                                       ],
                                     ),
                                   ),
-                                  const Padding(
-                                    padding: EdgeInsets.only(bottom: 4.0),
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 4.0),
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
                                           'Version',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w400,
-                                            height: 24 / 16,
-                                          ),
+                                          style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
                                         ),
                                         Text(
                                           '15.4.1',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                            height: 24 / 16,
-                                          ),
+                                          style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
                                         ),
                                       ],
                                     ),
                                   ),
-                                  const Padding(
-                                    padding: EdgeInsets.only(bottom: 4.0),
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 4.0),
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
                                           'Last login',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w400,
-                                            height: 24 / 16,
-                                          ),
+                                          style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
                                         ),
                                         Column(
                                           crossAxisAlignment: CrossAxisAlignment.end,
                                           children: [
                                             Text(
                                               '16:21, 13 Apr 2022',
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w600,
-                                                height: 24 / 16,
-                                              ),
+                                              style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
                                             ),
                                             Text(
                                               'near Berlin, Germany',
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w600,
-                                                height: 24 / 16,
-                                              ),
+                                              style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
                                             ),
                                           ],
                                         ),
@@ -235,13 +196,9 @@ class SettingsPairedDeviceDetailsScreen extends StatelessWidget {
                       const SizedBox(
                         height: 24,
                       ),
-                      const Text(
+                      Text(
                         'Actions',
-                        style: TextStyle(
-                          fontSize: 18,
-                          height: 24 / 18,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: ClientConfig.getTextStyleScheme().labelLarge,
                       ),
                       const SizedBox(
                         height: 24,

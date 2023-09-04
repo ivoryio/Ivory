@@ -41,13 +41,9 @@ class SettingsDevicePairingScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'Device pairing',
-                    style: TextStyle(
-                      fontSize: 32,
-                      height: 24 / 16,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: ClientConfig.getTextStyleScheme().heading1,
                   ),
                   const SizedBox(
                     height: 24,
@@ -120,18 +116,14 @@ class SettingsDevicePairingScreen extends StatelessWidget {
                       children: [
                         Text(
                           viewModel.thisDevice!.deviceName,
-                          style: const TextStyle(
-                            fontSize: 24,
-                            height: 24 / 32,
-                            fontWeight: FontWeight.w600,
-                          ),
+                          style: ClientConfig.getTextStyleScheme().heading2,
                         ),
                         Container(
                           width: 48,
                           height: 48,
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: ClientConfig.getColorScheme().background,
                             borderRadius: BorderRadius.circular(1000),
                           ),
                           child: const Icon(
@@ -169,19 +161,13 @@ class SettingsDevicePairingScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
+                          Text(
                             'Paired devices limit',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                            ),
+                            style: ClientConfig.getTextStyleScheme().bodySmallBold,
                           ),
                           Text(
                             '${viewModel.devices != null ? viewModel.devices!.length : 0}/5',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                            ),
+                            style: ClientConfig.getTextStyleScheme().bodySmallBold,
                           ),
                         ],
                       ),
@@ -222,11 +208,9 @@ class SettingsDevicePairingScreen extends StatelessWidget {
                     child: Center(
                       child: Text(
                         'Pair device',
-                        style: TextStyle(
-                          color: ClientConfig.getColorScheme().secondary,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: ClientConfig.getTextStyleScheme().labelMedium.copyWith(
+                              color: ClientConfig.getColorScheme().secondary,
+                            ),
                       ),
                     ),
                   ),
@@ -255,13 +239,9 @@ class SettingsDevicePairingScreen extends StatelessWidget {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Paired devices',
-            style: TextStyle(
-              fontSize: 18,
-              height: 24 / 18,
-              fontWeight: FontWeight.w600,
-            ),
+            style: ClientConfig.getTextStyleScheme().labelLarge,
           ),
           const SizedBox(
             height: 24,

@@ -50,13 +50,13 @@ class IvoryListItemWithAction extends StatelessWidget {
               children: [
                 Text(
                   actionName,
-                  style: const TextStyle(fontSize: 16, height: 1.5, fontWeight: FontWeight.w600),
+                  style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
                 ),
                 if (actionDescription != null)
                   Text(
                     actionDescription!,
-                    style: const TextStyle(fontSize: 14, height: 1.29, fontWeight: FontWeight.w400),
-                  ),
+                    style: ClientConfig.getTextStyleScheme().labelSmall,
+                  ),         
               ],
             ),
           ),
