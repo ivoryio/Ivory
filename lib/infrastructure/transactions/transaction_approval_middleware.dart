@@ -14,7 +14,7 @@ class TransactionApprovalMiddleware extends MiddlewareClass<AppState> {
   call(Store<AppState> store, action, NextDispatcher next) async {
     next(action);
 
-    if (action is RequestTransactionApprovalChallengeCommandAction) {
+    if (action is AuthorizeTransactionApprovalChallengeCommandAction) {
       final consentId = await DeviceService.getDeviceConsentId();
       final deviceId = await DeviceService.getDeviceIdFromCache();
       final deviceData = await DeviceService.getDeviceFingerprint(consentId);
@@ -32,7 +32,7 @@ class TransactionApprovalMiddleware extends MiddlewareClass<AppState> {
         );
 
         if (response is AuthorizeChangeRequestSuccessResponse) {
-          store.dispatch(TransactionApprovalChallengeFetchedEventAction(
+          store.dispatch(TransactionApprovalChallengeAuthorizedEventAction(
             changeRequestId: action.changeRequestId,
             stringToSign: response.stringToSign,
             deviceId: deviceId,
@@ -43,6 +43,24 @@ class TransactionApprovalMiddleware extends MiddlewareClass<AppState> {
         }
       } else {
         store.dispatch(TransactionApprovalDeviceNotBoundedEventAction());
+      }
+    }
+
+    if (action is ConfirmTransactionApprovalChallengeCommandAction) {
+      final signature = "toSign: ${action.stringToSign}";
+
+      final response = await _changeRequestService.confirm(
+        user: action.user,
+        changeRequestId: action.changeRequestId,
+        deviceData: action.deviceData,
+        deviceId: action.deviceId,
+        signature: signature,
+      );
+
+      if (response is ConfirmChangeRequestSuccessResponse) {
+        store.dispatch(TransactionApprovalSucceededEventAction());
+      } else {
+        store.dispatch(TransactionApprovalFailedEventAction());
       }
     }
   }

@@ -36,7 +36,7 @@ void main() {
 
     // when
     store.dispatch(
-      RequestTransactionApprovalChallengeCommandAction(
+      AuthorizeTransactionApprovalChallengeCommandAction(
         user: MockUser(),
         changeRequestId: "changeRequestId",
       ),
@@ -46,7 +46,7 @@ void main() {
     expect((await appState).transactionApprovalState, isA<TransactionApprovalLoadingState>());
   });
 
-  test("When transaction approval challenge is successfully fetched", () async {
+  test("When transaction approval challenge is successfully authorized", () async {
     // given
     final store = createTestStore(
       changeRequestService: FakeChangeRequestService(),
@@ -56,12 +56,12 @@ void main() {
     );
     final loadingState =
         store.onChange.firstWhere((element) => element.transactionApprovalState is TransactionApprovalLoadingState);
-    final appState = store.onChange
-        .firstWhere((element) => element.transactionApprovalState is TransactionApprovalChallengeFetchedState);
+    final appState =
+        store.onChange.firstWhere((element) => element.transactionApprovalState is TransactionApprovalAuthorizedState);
 
     // when
     store.dispatch(
-      RequestTransactionApprovalChallengeCommandAction(
+      AuthorizeTransactionApprovalChallengeCommandAction(
         user: MockUser(),
         changeRequestId: "changeRequestId",
       ),
@@ -69,10 +69,10 @@ void main() {
 
     // then
     expect((await loadingState).transactionApprovalState, isA<TransactionApprovalLoadingState>());
-    expect((await appState).transactionApprovalState, isA<TransactionApprovalChallengeFetchedState>());
+    expect((await appState).transactionApprovalState, isA<TransactionApprovalAuthorizedState>());
   });
 
-  test("When transaction approval challenge failed fetching", () async {
+  test("When transaction approval challenge failed authorization", () async {
     // given
     final store = createTestStore(
       changeRequestService: FakeFailingChangeRequestService(),
@@ -87,7 +87,7 @@ void main() {
 
     // when
     store.dispatch(
-      RequestTransactionApprovalChallengeCommandAction(
+      AuthorizeTransactionApprovalChallengeCommandAction(
         user: MockUser(),
         changeRequestId: "changeRequestId",
       ),
@@ -98,7 +98,7 @@ void main() {
     expect((await appState).transactionApprovalState, isA<TransactionApprovalFailedState>());
   });
 
-  test("When requesting for transaction approval challenge and device is not bounded", () async {
+  test("When requesting for transaction approval and device is not bounded", () async {
     // given
     SharedPreferences.setMockInitialValues({});
 
@@ -120,7 +120,7 @@ void main() {
 
     // when
     store.dispatch(
-      RequestTransactionApprovalChallengeCommandAction(
+      AuthorizeTransactionApprovalChallengeCommandAction(
         user: MockUser(),
         changeRequestId: "changeRequestId",
       ),
@@ -129,5 +129,56 @@ void main() {
     // then
     expect((await loadingState).transactionApprovalState, isA<TransactionApprovalLoadingState>());
     expect((await appState).transactionApprovalState, isA<TransactionApprovalDeviceNotBoundedState>());
+  });
+
+  test("When requesting for transaction challenge confirmation the state should change to loading first", () async {
+    // given
+    final store = createTestStore(
+      changeRequestService: FakeChangeRequestService(),
+      initialState: createAppState(
+        transactionApprovalState: TransactionApprovalInitialState(),
+      ),
+    );
+    final appState =
+        store.onChange.firstWhere((element) => element.transactionApprovalState is TransactionApprovalLoadingState);
+
+    // when
+    store.dispatch(ConfirmTransactionApprovalChallengeCommandAction(
+      user: MockUser(),
+      changeRequestId: "changeRequestId",
+      deviceData: "deviceData",
+      deviceId: "deviceId",
+      stringToSign: "stringToSign",
+    ));
+
+    // then
+    expect((await appState).transactionApprovalState, isA<TransactionApprovalLoadingState>());
+  });
+
+  test("When transaction challenge is confirmed successfully", () async {
+    // given
+    final store = createTestStore(
+      changeRequestService: FakeChangeRequestService(),
+      initialState: createAppState(
+        transactionApprovalState: TransactionApprovalInitialState(),
+      ),
+    );
+    final loadingState =
+        store.onChange.firstWhere((element) => element.transactionApprovalState is TransactionApprovalLoadingState);
+    final appState =
+        store.onChange.firstWhere((element) => element.transactionApprovalState is TransactionApprovalSucceededState);
+
+    // when
+    store.dispatch(ConfirmTransactionApprovalChallengeCommandAction(
+      user: MockUser(),
+      changeRequestId: "changeRequestId",
+      deviceData: "deviceData",
+      deviceId: "deviceId",
+      stringToSign: "stringToSign",
+    ));
+
+    // then
+    expect((await loadingState).transactionApprovalState, isA<TransactionApprovalLoadingState>());
+    expect((await appState).transactionApprovalState, isA<TransactionApprovalSucceededState>());
   });
 }

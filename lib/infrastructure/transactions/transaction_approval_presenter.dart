@@ -11,7 +11,7 @@ class TransactionApprovalPresenter {
     if (notificationState is NotificationTransactionApprovalState) {
       if (transactionApprovalState is TransactionApprovalLoadingState) {
         return TransactionApprovalWithMessageViewModel(message: notificationState.message, isLoading: true);
-      } else if (transactionApprovalState is TransactionApprovalChallengeFetchedState) {
+      } else if (transactionApprovalState is TransactionApprovalAuthorizedState) {
         return TransactionApprovalWithChallengeViewModel(
           isLoading: false,
           message: notificationState.message,

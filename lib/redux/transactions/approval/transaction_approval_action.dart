@@ -1,36 +1,42 @@
 import 'package:solarisdemo/models/user.dart';
 
-class RequestTransactionApprovalChallengeCommandAction {
+class AuthorizeTransactionApprovalChallengeCommandAction {
   final User user;
   final String changeRequestId;
 
-  RequestTransactionApprovalChallengeCommandAction({
+  AuthorizeTransactionApprovalChallengeCommandAction({
     required this.user,
     required this.changeRequestId,
   });
 }
 
-class ConfirmTransactionApprovalChallengeCommandAction {
+class TransactionApprovalChallengeAuthorizedEventAction {
+  final String deviceId;
+  final String deviceData;
+  final String stringToSign;
   final String changeRequestId;
-  final String signature;
 
-  ConfirmTransactionApprovalChallengeCommandAction({
+  TransactionApprovalChallengeAuthorizedEventAction({
+    required this.deviceId,
+    required this.deviceData,
+    required this.stringToSign,
     required this.changeRequestId,
-    required this.signature,
   });
 }
 
-class TransactionApprovalChallengeFetchedEventAction {
-  final String changeRequestId;
-  final String stringToSign;
+class ConfirmTransactionApprovalChallengeCommandAction {
+  final User user;
   final String deviceId;
   final String deviceData;
+  final String stringToSign;
+  final String changeRequestId;
 
-  TransactionApprovalChallengeFetchedEventAction({
-    required this.changeRequestId,
-    required this.stringToSign,
+  ConfirmTransactionApprovalChallengeCommandAction({
+    required this.user,
     required this.deviceId,
     required this.deviceData,
+    required this.stringToSign,
+    required this.changeRequestId,
   });
 }
 

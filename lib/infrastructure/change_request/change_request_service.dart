@@ -68,9 +68,31 @@ class ChangeRequestService extends ApiService {
         },
       );
 
+      if (data['status'] != "CONFIRMATION_REQUIRED") {
+        return ChangeRequestServiceErrorResponse(errorType: ChangeRequestErrorType.authorizationFailed);
+      }
+
       return AuthorizeChangeRequestSuccessResponse(stringToSign: data['string_to_sign'] as String);
     } catch (e) {
       return ChangeRequestServiceErrorResponse(errorType: ChangeRequestErrorType.authorizationFailed);
+    }
+  }
+
+  Future<ChangeRequestServiceResponse> confirm({
+    User? user,
+    required String changeRequestId,
+    required String deviceId,
+    required String signature,
+    required String deviceData,
+  }) async {
+    if (user != null) {
+      this.user = user;
+    }
+
+    try {
+      return ConfirmChangeRequestSuccessResponse();
+    } catch (e) {
+      return ChangeRequestServiceErrorResponse(errorType: ChangeRequestErrorType.confirmationFailed);
     }
   }
 }
@@ -101,6 +123,8 @@ class AuthorizeChangeRequestSuccessResponse extends ChangeRequestServiceResponse
   @override
   List<Object> get props => [stringToSign];
 }
+
+class ConfirmChangeRequestSuccessResponse extends ChangeRequestServiceResponse {}
 
 class ChangeRequestServiceErrorResponse extends ChangeRequestServiceResponse {
   final ChangeRequestErrorType errorType;

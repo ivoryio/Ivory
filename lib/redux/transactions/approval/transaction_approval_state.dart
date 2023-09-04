@@ -9,13 +9,13 @@ class TransactionApprovalInitialState extends TransactionApprovalState {}
 
 class TransactionApprovalLoadingState extends TransactionApprovalState {}
 
-class TransactionApprovalChallengeFetchedState extends TransactionApprovalState {
+class TransactionApprovalAuthorizedState extends TransactionApprovalState {
   final String stringToSign;
   final String deviceId;
   final String deviceData;
   final String changeRequestId;
 
-  TransactionApprovalChallengeFetchedState({
+  TransactionApprovalAuthorizedState({
     required this.stringToSign,
     required this.deviceId,
     required this.deviceData,
@@ -26,7 +26,7 @@ class TransactionApprovalChallengeFetchedState extends TransactionApprovalState 
   List<Object> get props => [stringToSign, deviceId, deviceData, changeRequestId];
 }
 
-class TransactionApprovalSucceedState extends TransactionApprovalState {}
+class TransactionApprovalSucceededState extends TransactionApprovalState {}
 
 class TransactionApprovalFailedState extends TransactionApprovalState {}
 

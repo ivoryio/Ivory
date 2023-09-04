@@ -80,6 +80,17 @@ class FakeChangeRequestService extends ChangeRequestService {
       stringToSign: "stringToSign",
     );
   }
+
+  @override
+  Future<ChangeRequestServiceResponse> confirm({
+    User? user,
+    required String changeRequestId,
+    required String deviceId,
+    required String signature,
+    required String deviceData,
+  }) async {
+    return ConfirmChangeRequestSuccessResponse();
+  }
 }
 
 class FakeFailingChangeRequestService extends ChangeRequestService {
@@ -92,5 +103,16 @@ class FakeFailingChangeRequestService extends ChangeRequestService {
     required String deviceData,
   }) async {
     return ChangeRequestServiceErrorResponse(errorType: ChangeRequestErrorType.authorizationFailed);
+  }
+
+  @override
+  Future<ChangeRequestServiceResponse> confirm({
+    User? user,
+    required String changeRequestId,
+    required String deviceId,
+    required String signature,
+    required String deviceData,
+  }) async {
+    return ChangeRequestServiceErrorResponse(errorType: ChangeRequestErrorType.confirmationFailed);
   }
 }
