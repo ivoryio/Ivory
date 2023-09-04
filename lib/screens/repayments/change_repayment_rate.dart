@@ -24,21 +24,20 @@ class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
   final TextEditingController _controller =
       TextEditingController(text: '500.00');
   bool _canContinue = false;
-
-  void _updateCanContinue() {
-    if (_canContinue == true) {
-      return;
-    }
-
-    setState(() {
-      _canContinue = true;
-    });
-  }
+  int _procentualValue = 5;
 
   @override
   void initState() {
     super.initState();
-    _controller.addListener(_updateCanContinue);
+    _controller.addListener(() {
+      if (_canContinue == true) {
+        return;
+      }
+
+      setState(() {
+        _canContinue = true;
+      });
+    });
   }
 
   @override
@@ -79,7 +78,17 @@ class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
             const SizedBox(height: 24),
             ChooseRepaymentType(
                 controller: _controller,
-                onPercentageChanged: _updateCanContinue),
+                onFixedChanged: (value) {
+                  setState(() {
+                    _canContinue = value > 500 && value < 9000;
+                  });
+                },
+                onPercentageChanged: (value) {
+                  setState(() {
+                    _procentualValue = value.toInt();
+                    _canContinue = true;
+                  });
+                }),
             const Spacer(),
             SizedBox(
               width: double.infinity,
@@ -90,10 +99,18 @@ class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
                 color: const Color(0xFF2575FC),
                 onPressed: _canContinue
                     ? () {
-                        Navigator.pushNamed(
-                          context,
-                          RepaymentSuccessfullyChanged.routeName,
-                        );
+                        final valueForRepayment = _controller.text;
+                        final procentualValue = _procentualValue;
+
+                        print('valueForRepayment ===> $valueForRepayment');
+                        print('procentualValue ===> $procentualValue');
+
+                        Navigator.pushNamed(context,
+                            RepaymentSuccessfullyChangedScreen.routeName,
+                            arguments: RepaymentSuccessfullyScreenParams(
+                              fixedRate: double.parse(valueForRepayment),
+                              interestRate: procentualValue,
+                            ));
                       }
                     : null,
               ),
@@ -196,12 +213,14 @@ class CustomAction extends StatelessWidget {
 
 class ChooseRepaymentType extends StatefulWidget {
   final TextEditingController controller;
-  final void Function() onPercentageChanged;
+  final void Function(double) onPercentageChanged;
+  final void Function(double) onFixedChanged;
 
   const ChooseRepaymentType({
     super.key,
     required this.controller,
     required this.onPercentageChanged,
+    required this.onFixedChanged,
   });
 
   @override
@@ -348,7 +367,7 @@ class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
                               sliderValue = newValue;
                             });
 
-                            widget.onPercentageChanged();
+                            widget.onPercentageChanged(newValue);
                           },
                           min: min,
                           max: max,
@@ -388,7 +407,16 @@ class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                CustomTextField(controller: widget.controller),
+                CustomTextField(
+                  controller: widget.controller,
+                  onChanged: (textValue) {
+                    final value = double.tryParse(textValue);
+
+                    if (value != null) {
+                      widget.onFixedChanged(value);
+                    }
+                  },
+                ),
               ],
             ),
         ],

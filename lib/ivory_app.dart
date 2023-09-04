@@ -157,8 +157,12 @@ class _IvoryAppState extends State<IvoryApp> {
               RepaymentsScreen.routeName: (context) => const RepaymentsScreen(),
               ChangeRepaymentRateScreen.routeName: (context) =>
                   const ChangeRepaymentRateScreen(),
-              RepaymentSuccessfullyChanged.routeName: (context) =>
-                  const RepaymentSuccessfullyChanged(),
+              RepaymentSuccessfullyChangedScreen.routeName: (context) {
+                final params = ModalRoute.of(context)?.settings.arguments
+                    as RepaymentSuccessfullyScreenParams;
+
+                return RepaymentSuccessfullyChangedScreen(params: params);
+              },
               RepaymentReminderScreen.routeName: (context) =>
                   const RepaymentReminderScreen(),
 
