@@ -46,10 +46,9 @@ class ChangeRequestService extends ApiService {
     }
   }
 
-  Future<ChangeRequestServiceResponse> authorize({
+  Future<ChangeRequestServiceResponse> authorizeWithDevice({
     User? user,
     required String changeRequestId,
-    required ChangeRequestDeliveryMethod deliveryMethod,
     required String deviceId,
     required String deviceData,
   }) async {
@@ -61,7 +60,7 @@ class ChangeRequestService extends ApiService {
         '/change_requests/$changeRequestId/authorize',
         authNeeded: true,
         body: {
-          'delivery_method': deliveryMethod.name,
+          'delivery_method': ChangeRequestDeliveryMethod.deviceSigning.name,
           'device_data': deviceData,
           'person_id': user?.personId,
           'device_id': deviceId,
@@ -78,7 +77,7 @@ class ChangeRequestService extends ApiService {
     }
   }
 
-  Future<ChangeRequestServiceResponse> confirm({
+  Future<ChangeRequestServiceResponse> confirmWithDevice({
     User? user,
     required String changeRequestId,
     required String deviceId,

@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
-import 'package:solarisdemo/infrastructure/device/device_service.dart';
+import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_approval_presenter.dart';
 import 'package:solarisdemo/models/amount_value.dart';
 import 'package:solarisdemo/models/categories/category.dart';
 import 'package:solarisdemo/models/transactions/transaction_model.dart';
+import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/transactions/approval/transaction_approval_action.dart';
 import 'package:solarisdemo/screens/home/home_screen.dart';
 import 'package:solarisdemo/screens/transactions/transaction_approval_failed_screen.dart';
-import 'package:solarisdemo/utilities/crypto/crypto_message_signer.dart';
+import 'package:solarisdemo/screens/transactions/transaction_approval_success_screen.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/card_list_item.dart';
 import 'package:solarisdemo/widgets/circular_countdown_progress_widget.dart';
@@ -33,6 +36,13 @@ class TransactionApprovalPendingScreen extends StatelessWidget {
             transactionApprovalState: store.state.transactionApprovalState,
           ),
           distinct: true,
+          onWillChange: (previousViewModel, newViewModel) {
+            if (newViewModel is TransactionApprovalSucceededViewModel) {
+              Navigator.pushReplacementNamed(context, TransactionApprovalSuccessScreen.routeName);
+            } else if (newViewModel is TransactionApprovalFailedViewModel) {
+              Navigator.pushReplacementNamed(context, TransactionApprovalFailedScreen.routeName);
+            }
+          },
           builder: (context, viewModel) => viewModel is TransactionApprovalWithMessageViewModel
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,18 +81,18 @@ class TransactionApprovalPendingScreen extends StatelessWidget {
         child: PrimaryButton(
           text: "Authorize",
           onPressed: () async {
-            final isBiometricsAuthenticated =
-                await BiometricAuthentication(message: 'Please use biometric authentication.')
-                    .authenticateWithBiometrics();
+            AuthenticatedUser user = context.read<AuthCubit>().state.user!;
 
-            if (isBiometricsAuthenticated && viewModel is TransactionApprovalWithChallengeViewModel) {
-              final privateKey = await DeviceService.getPrivateKeyFromCache(restricted: true);
-              final signedMessage = CryptoMessageSigner().signMessage(
-                message: viewModel.stringToSign,
-                encodedPrivateKey: privateKey!,
+            if (viewModel is TransactionApprovalWithChallengeViewModel) {
+              StoreProvider.of<AppState>(context).dispatch(
+                ConfirmTransactionApprovalChallengeCommandAction(
+                  user: user.cognito,
+                  changeRequestId: viewModel.changeRequestId,
+                  deviceData: viewModel.deviceData,
+                  deviceId: viewModel.deviceId,
+                  stringToSign: viewModel.stringToSign,
+                ),
               );
-
-              print("Signed message: $signedMessage");
             }
           },
         ),

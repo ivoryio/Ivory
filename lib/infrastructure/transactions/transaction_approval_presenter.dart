@@ -20,6 +20,10 @@ class TransactionApprovalPresenter {
           deviceData: transactionApprovalState.deviceData,
           changeRequestId: transactionApprovalState.changeRequestId,
         );
+      } else if (transactionApprovalState is TransactionApprovalSucceededState) {
+        return TransactionApprovalSucceededViewModel();
+      } else if (transactionApprovalState is TransactionApprovalFailedState) {
+        return TransactionApprovalFailedViewModel(errorType: TransactionApprovalErrorType.unknownError);
       }
 
       return TransactionApprovalWithMessageViewModel(message: notificationState.message);
@@ -65,4 +69,15 @@ class TransactionApprovalWithChallengeViewModel extends TransactionApprovalWithM
   List<Object> get props => [stringToSign, deviceId, deviceData, isLoading, message, changeRequestId];
 }
 
-enum TransactionApprovalErrorType { unboundedDeviceError, unknownError }
+class TransactionApprovalSucceededViewModel extends TransactionApprovalViewModel {}
+
+class TransactionApprovalFailedViewModel extends TransactionApprovalViewModel {
+  final TransactionApprovalErrorType errorType;
+
+  TransactionApprovalFailedViewModel({this.errorType = TransactionApprovalErrorType.unknownError});
+
+  @override
+  List<Object> get props => [errorType];
+}
+
+enum TransactionApprovalErrorType { unboundedDeviceError, biometricsError, unknownError }
