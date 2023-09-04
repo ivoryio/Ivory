@@ -89,6 +89,22 @@ class ChangeRequestService extends ApiService {
     }
 
     try {
+      final data = await post(
+        '/change_requests/$changeRequestId/confirm',
+        authNeeded: true,
+        body: {
+          'delivery_method': ChangeRequestDeliveryMethod.deviceSigning.name,
+          'device_data': deviceData,
+          'person_id': user?.personId,
+          'device_id': deviceId,
+          'signature': signature,
+        },
+      );
+
+      if (data['success'] == false) {
+        return ChangeRequestServiceErrorResponse(errorType: ChangeRequestErrorType.confirmationFailed);
+      }
+
       return ConfirmChangeRequestSuccessResponse();
     } catch (e) {
       return ChangeRequestServiceErrorResponse(errorType: ChangeRequestErrorType.confirmationFailed);
