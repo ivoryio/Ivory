@@ -2,6 +2,7 @@ import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_state.dart';
 import 'package:solarisdemo/redux/categories/category_state.dart';
 import 'package:solarisdemo/redux/credit_line/credit_line_state.dart';
+import 'package:solarisdemo/redux/device/device_state.dart';
 import 'package:solarisdemo/redux/person/person_account/person_account_state.dart';
 import 'package:solarisdemo/redux/person/reference_account/reference_account_state.dart';
 import 'package:solarisdemo/redux/repayments/bills/bills_state.dart';
@@ -21,6 +22,7 @@ AppState createAppState({
   ReferenceAccountState? referenceAccountState,
   PersonAccountState? personAccountState,
   TransferState? transferState,
+  DeviceBindingState? deviceBindingState,
 }) {
   return AppState(
     transactionsState: transactionsState ?? TransactionsInitialState(),
@@ -35,5 +37,6 @@ AppState createAppState({
         referenceAccountState ?? ReferenceAccountInitialState(),
     personAccountState: personAccountState ?? PersonAccountInitialState(),
     transferState: transferState ?? TransferInitialState(),
+    deviceBindingState: deviceBindingState ?? DeviceBindingInitialState(),
   );
 }

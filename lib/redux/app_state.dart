@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_state.dart';
 import 'package:solarisdemo/redux/categories/category_state.dart';
 import 'package:solarisdemo/redux/credit_line/credit_line_state.dart';
+import 'package:solarisdemo/redux/device/device_state.dart';
 import 'package:solarisdemo/redux/person/person_account/person_account_state.dart';
 import 'package:solarisdemo/redux/person/reference_account/reference_account_state.dart';
 import 'package:solarisdemo/redux/repayments/bills/bills_state.dart';
@@ -21,6 +22,7 @@ class AppState extends Equatable {
   final ReferenceAccountState referenceAccountState;
   final PersonAccountState personAccountState;
   final TransferState transferState;
+  final DeviceBindingState deviceBindingState;
 
   const AppState({
     required this.transactionsState,
@@ -33,6 +35,7 @@ class AppState extends Equatable {
     required this.referenceAccountState,
     required this.personAccountState,
     required this.transferState,
+    required this.deviceBindingState,
   });
 
   factory AppState.initialState() {
@@ -47,6 +50,7 @@ class AppState extends Equatable {
       referenceAccountState: ReferenceAccountInitialState(),
       personAccountState: PersonAccountInitialState(),
       transferState: TransferInitialState(),
+        deviceBindingState: DeviceBindingInitialState()
     );
   }
 
@@ -62,6 +66,7 @@ class AppState extends Equatable {
         referenceAccountState,
         personAccountState,
         transferState,
+        deviceBindingState,
       ];
 
   @override
