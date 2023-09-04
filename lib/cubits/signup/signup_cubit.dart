@@ -3,11 +3,12 @@ import 'dart:developer';
 import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:solarisdemo/services/auth_service.dart';
 import 'package:solarisdemo/services/device_service.dart';
 import 'package:solarisdemo/services/person_service.dart';
+import 'package:solarisdemo/utilities/device_info/device_utils.dart';
 
-import '../../infrastructure/device/device_service.dart';
 import '../../models/device.dart';
 import '../../models/device_activity.dart';
 import '../../models/device_consent.dart';
@@ -34,12 +35,14 @@ class SignupCubit extends Cubit<SignupState> {
   }) async {
     emit(const SignupLoading());
 
+    //clear cache at signup
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.clear();
+    
     try {
-      PersonService personService =
-          PersonService(); //personService without auth
+      PersonService personService = PersonService(); //personService without auth
 
-      CreatePersonResponse? createPersonResponse =
-          await personService.createPerson(CreatePersonReqBody(
+      CreatePersonResponse? createPersonResponse = await personService.createPerson(CreatePersonReqBody(
         email: email,
         firstName: firstName,
         lastName: lastName,
@@ -128,8 +131,7 @@ class SignupCubit extends Cubit<SignupState> {
             lastName: lastName,
             phoneNumber: phoneNumber,
             passcode: passcode,
-            errorMessage:
-                'Failed to confirm email, please enter the code again!',
+            errorMessage: 'Failed to confirm email, please enter the code again!',
           ),
         );
       }
@@ -152,15 +154,14 @@ class SignupCubit extends Cubit<SignupState> {
       ).createDeviceConsent();
 
       if (createdConsent != null) {
-        await DeviceService.saveDeviceConsentId(
+        await DeviceUtils.saveDeviceConsentId(
           createdConsent.id,
         );
       }
 
-      await OldDeviceService(user: user)
-          .createDeviceActivity(DeviceActivityType.CONSENT_PROVIDED);
+      await OldDeviceService(user: user).createDeviceActivity(DeviceActivityType.CONSENT_PROVIDED);
 
-      String? deviceFingerPrint = await DeviceService.getDeviceFingerprint(
+      String? deviceFingerPrint = await DeviceUtils.getDeviceFingerprint(
         createdConsent!.id,
       );
       if (deviceFingerPrint == null) {
@@ -173,8 +174,7 @@ class SignupCubit extends Cubit<SignupState> {
       ));
 
       //create tax identification
-      CreateTaxIdentificationResponse? taxIdentificationResponse =
-          await personService.createTaxIdentification(
+      CreateTaxIdentificationResponse? taxIdentificationResponse = await personService.createTaxIdentification(
         CreateTaxIdentificationReqBody(
           number: "48954371207",
           country: "DE",
@@ -215,8 +215,7 @@ class SignupCubit extends Cubit<SignupState> {
     PersonService personService = PersonService(user: user);
 
     //create bank account and update cognitoUser with newly created accountId
-    CreateAccountResponse? createAccountResponse =
-        await personService.createAccount();
+    CreateAccountResponse? createAccountResponse = await personService.createAccount();
 
     if (createAccountResponse == null) {
       throw Exception("Failed to create account");
@@ -229,21 +228,5 @@ class SignupCubit extends Cubit<SignupState> {
         value: accountId,
       ),
     );
-
-    //create device binding and unrestricted key
-    OldDeviceService deviceService = OldDeviceService(
-      user: user,
-    );
-    await deviceService.createDeviceBinding(
-      user.personId!,
-    );
-
-    // //verify device binding signature with static TAN
-    await deviceService.verifyDeviceBindingSignature(
-      '212212',
-    );
-
-    //create restricted key
-    await deviceService.createRestrictedKey();
   }
 }

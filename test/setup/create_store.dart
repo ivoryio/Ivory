@@ -3,6 +3,7 @@ import 'package:solarisdemo/infrastructure/bank_card/bank_card_service.dart';
 import 'package:solarisdemo/infrastructure/categories/categories_service.dart';
 import 'package:solarisdemo/infrastructure/change_request/change_request_service.dart';
 import 'package:solarisdemo/infrastructure/credit_line/credit_line_service.dart';
+import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
 import 'package:solarisdemo/infrastructure/person/person_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/bills/bill_service.dart';
@@ -29,6 +30,7 @@ Store<AppState> createTestStore({
   PersonService? personService,
   TransferService? transferService,
   ChangeRequestService? changeRequestService,
+  DeviceBindingService? deviceBindingService,
 }) {
   return createStore(
     initialState: initialState,
@@ -45,8 +47,8 @@ Store<AppState> createTestStore({
     categoriesService: categoriesService ?? NotImplementedCategoriesService(),
     personService: personService ?? NotImplementedPersonService(),
     transferService: transferService ?? NotImplementedTransferService(),
-    changeRequestService:
-        changeRequestService ?? NotImplementedChangeRequestService(),
+    changeRequestService: changeRequestService ?? NotImplementedChangeRequestService(),
+    deviceBindingService: deviceBindingService ?? NotImplementedDeviceBindingService(),
   );
 }
 
@@ -171,6 +173,30 @@ class NotImplementedChangeRequestService extends ChangeRequestService {
     User? user,
     required String changeRequestId,
     required String tan,
+  }) {
+    throw UnimplementedError();
+  }
+}
+
+class NotImplementedDeviceBindingService extends DeviceBindingService {
+  @override
+  Future<DeviceBindingServiceResponse> createDeviceBinding({required User user}) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<DeviceBindingServiceResponse> verifyDeviceBindingSignature({
+    required User user,
+    required String tan,
+    required String deviceId,
+  }) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<DeviceBindingServiceResponse> createRestrictedKey({
+    required User user,
+    required String deviceId,
   }) {
     throw UnimplementedError();
   }

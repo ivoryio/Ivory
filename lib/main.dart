@@ -8,6 +8,7 @@ import 'package:solarisdemo/infrastructure/bank_card/bank_card_service.dart';
 import 'package:solarisdemo/infrastructure/categories/categories_service.dart';
 import 'package:solarisdemo/infrastructure/change_request/change_request_service.dart';
 import 'package:solarisdemo/infrastructure/credit_line/credit_line_service.dart';
+import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_storage_service.dart';
 import 'package:solarisdemo/infrastructure/person/person_service.dart';
@@ -59,6 +60,7 @@ Store<AppState> _buildStore() {
     personService: PersonService(),
     transferService: TransferService(),
     changeRequestService: ChangeRequestService(),
+    deviceBindingService: DeviceBindingService(),
   );
 
   return store;

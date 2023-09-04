@@ -23,7 +23,10 @@ import 'package:solarisdemo/screens/repayments/more_credit/more_credit_waitlist_
 import 'package:solarisdemo/screens/repayments/repayment_reminder.dart';
 import 'package:solarisdemo/screens/repayments/repayment_successfully_changed.dart';
 import 'package:solarisdemo/screens/repayments/repayments_screen.dart';
+import 'package:solarisdemo/screens/settings/settings_device_pairing_screen.dart';
+import 'package:solarisdemo/screens/settings/settings_paired_device_details_screen.dart';
 import 'package:solarisdemo/screens/settings/settings_screen.dart';
+import 'package:solarisdemo/screens/settings/settings_security_screen.dart';
 import 'package:solarisdemo/screens/signup/signup_screen.dart';
 import 'package:solarisdemo/screens/splitpay/splitpay_screen.dart';
 import 'package:solarisdemo/screens/transactions/transaction_approval_failed_screen.dart';
@@ -99,6 +102,16 @@ class _IvoryAppState extends State<IvoryApp> {
               // settings
               SettingsScreen.routeName: (context) =>
                   const MainNavigationScreen(initialScreen: MainNavigationScreens.settingsScreen),
+              SettingsSecurityScreen.routeName: (context) => const SettingsSecurityScreen(),
+              SettingsDevicePairingScreen.routeName: (context) => const SettingsDevicePairingScreen(),
+              SettingsPairedDeviceDetailsScreen.routeName: (context) {
+                final pairedDeviceDetailsScreenParams =
+                    ModalRoute.of(context)?.settings.arguments as SettingsPairedDeviceDetailsScreenParams?;
+
+                return SettingsPairedDeviceDetailsScreen(
+                  params: pairedDeviceDetailsScreenParams!,
+                );
+              },
               //transactions
               TransactionsScreen.routeName: (context) {
                 final transactionListFilter = ModalRoute.of(context)?.settings.arguments as TransactionListFilter?;
@@ -136,7 +149,11 @@ class _IvoryAppState extends State<IvoryApp> {
               // repayments
               RepaymentsScreen.routeName: (context) => const RepaymentsScreen(),
               ChangeRepaymentRateScreen.routeName: (context) => const ChangeRepaymentRateScreen(),
-              RepaymentSuccessfullyChanged.routeName: (context) => const RepaymentSuccessfullyChanged(),
+              RepaymentSuccessfullyChangedScreen.routeName: (context) {
+                final params = ModalRoute.of(context)?.settings.arguments as RepaymentSuccessfullyScreenParams;
+
+                return RepaymentSuccessfullyChangedScreen(params: params);
+              },
               RepaymentReminderScreen.routeName: (context) => const RepaymentReminderScreen(),
 
               MoreCreditScreen.routeName: (context) => const MoreCreditScreen(),
