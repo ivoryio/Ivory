@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const double _defaultFontSize = 15;
+const double _defaultFontSize = 16;
 const double _defaultBorderRadius = 4.0;
 
 class Button extends StatelessWidget {

@@ -95,7 +95,7 @@ class _RepaymentReminderScreenState extends State<RepaymentReminderScreen> {
                               .map(
                                 (reminder) => ListTile(
                                   minLeadingWidth: 0,
-                                  leading: const Icon(Icons.notifications_none_rounded, color: Color(0xFFCC0000)),
+                                  leading: Icon(Icons.notifications_none_rounded, color: ClientConfig.getColorScheme().secondary),
                                   title: Text(
                                     reminder.description,
                                     style: ClientConfig.getTextStyleScheme().heading4,
@@ -132,16 +132,18 @@ class _RepaymentReminderScreenState extends State<RepaymentReminderScreen> {
                           dashPattern: const [5, 5],
                           child: TextButton.icon(
                             style: TextButton.styleFrom(
-                              foregroundColor: const Color(0xFFCC0000),
+                              foregroundColor: ClientConfig.getColorScheme().secondary,
                               minimumSize: const Size(double.infinity, 0),
                               padding: const EdgeInsets.symmetric(
                                 vertical: 22,
                                 horizontal: 24,
                               ),
-                              textStyle: const TextStyle(fontWeight: FontWeight.w600),
                             ),
-                            icon: const Icon(Icons.notifications_active_outlined),
-                            label: const Text('Add reminder'),
+                            icon: Icon(Icons.notifications_active_outlined, color: ClientConfig.getColorScheme().secondary,),
+                            label: Text(
+                              'Add reminder',
+                              style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold.copyWith(color: ClientConfig.getColorScheme().secondary),
+                            ),
                             onPressed: () async {
                               final value = await showBottomModal(
                                 context: context,
@@ -173,9 +175,12 @@ class _RepaymentReminderScreenState extends State<RepaymentReminderScreen> {
             const SizedBox(height: 16),
             SizedBox(
               width: double.infinity,
-              child: PrimaryButton(
-                text: 'Save',
+              height: 48,
+              child: Button(
+                text: "Save",
                 onPressed: _reminders.isNotEmpty ? () => _onSaveTap(user.cognito) : null,
+                color: ClientConfig.getColorScheme().tertiary,
+                textColor: ClientConfig.getColorScheme().surface,
               ),
             ),
             const SizedBox(height: 16),
@@ -304,26 +309,13 @@ class _CustomReminderPopUpContentState extends State<_CustomReminderPopUpContent
           groupValue: _timePeriod,
           onChanged: onChangedTimePeriod,
         ),
-        // const Divider(height: 16),
-        // _ReminderListTile(
-        //   title: 'As push notification',
-        //   value: NotificationType.push,
-        //   groupValue: _notificationType,
-        //   onChanged: onChangedNotificationType,
-        // ),
-        // _ReminderListTile(
-        //   title: 'As email',
-        //   value: NotificationType.email,
-        //   groupValue: _notificationType,
-        //   onChanged: onChangedNotificationType,
-        // ),
         const Divider(height: 24),
         SizedBox(
           width: double.infinity,
           child: Button(
             text: 'Done',
-            color: const Color(0xFFCC0000),
-            textColor: Colors.white,
+            color: ClientConfig.getColorScheme().tertiary,
+            textColor:ClientConfig.getColorScheme().surface,
             onPressed: () {
               Navigator.of(context).pop((int.parse(_textController.text), _timePeriod));
             },
@@ -395,7 +387,7 @@ class _ReminderListTile<T> extends StatelessWidget {
                   onChanged!(value as T);
                 }
               },
-              activeColor: const Color(0xFFCC0000),
+              activeColor: ClientConfig.getColorScheme().secondary,
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               visualDensity: VisualDensity.compact,
             ),

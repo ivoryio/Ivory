@@ -96,14 +96,12 @@ class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
               child: Button(
                 text: "Save changes",
                 disabledColor: const Color(0xFFDFE2E6),
-                color: const Color(0xFF2575FC),
+                color: ClientConfig.getColorScheme().tertiary,
+                textColor: ClientConfig.getColorScheme().surface,
                 onPressed: _canContinue
                     ? () {
                         final valueForRepayment = _controller.text;
                         final procentualValue = _procentualValue;
-
-                        print('valueForRepayment ===> $valueForRepayment');
-                        print('procentualValue ===> $procentualValue');
 
                         Navigator.pushNamed(context,
                             RepaymentSuccessfullyChangedScreen.routeName,
@@ -255,7 +253,7 @@ class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
           BorderSide(
             width: 1,
             color: _selectedOption == type
-                ? const Color(0xFF2575FC)
+                ? ClientConfig.getColorScheme().secondary
                 : const Color(0xFFE9EAEB),
             style: BorderStyle.solid,
           ),
@@ -271,7 +269,7 @@ class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Radio(
-                  activeColor: const Color(0xFF2575FC),
+                  activeColor: ClientConfig.getColorScheme().secondary,
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   visualDensity: const VisualDensity(
                     horizontal: VisualDensity.minimumDensity,
@@ -342,17 +340,13 @@ class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
                       data: SliderThemeData(
                         trackHeight: 8,
                         trackShape: const RoundedRectSliderTrackShape(),
-                        activeTrackColor: const Color(0xFF2575FC),
+                        activeTrackColor: ClientConfig.getColorScheme().secondary,
                         inactiveTrackColor: const Color(0xFFE9EAEB),
-                        thumbColor: const Color(0xFF071034),
+                        thumbColor: ClientConfig.getColorScheme().primary,
                         thumbShape: CustomThumb(label: sliderValue),
                         overlayColor: const Color(0x00FFFF00),
-                        valueIndicatorColor: const Color(0xFF2575FC),
-                        valueIndicatorTextStyle: const TextStyle(
-                          color: Color(0xFFFFFFFF),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
+                        valueIndicatorColor: ClientConfig.getColorScheme().secondary,
+                        valueIndicatorTextStyle: ClientConfig.getTextStyleScheme().bodySmallBold,
                       ),
                       child: Expanded(
                         child: Slider(
@@ -433,12 +427,7 @@ class RepaymentConditions extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       message,
-      style: const TextStyle(
-        fontSize: 14,
-        height: 1.285,
-        fontWeight: FontWeight.w400,
-        color: Color(0xFF15141E),
-      ),
+      style:  ClientConfig.getTextStyleScheme().bodySmallRegular,
     );
   }
 }
@@ -469,6 +458,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
+              height: 48,
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
                 border: Border.all(
@@ -481,17 +471,14 @@ class _CustomTextFieldState extends State<CustomTextField> {
                     bottomLeft: Radius.circular(8)),
                 color: const Color(0xFFF8F9FA),
               ),
-              child: const Text(
+              child: Text(
                 '€',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFFADADB4),
-                ),
+                style:  ClientConfig.getTextStyleScheme().heading2.copyWith(color: const Color(0xFFADADB4)),
               ),
             ),
             Expanded(
               child: TextField(
+                style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
                 controller: widget.controller,
                 onChanged: (text) {
                   if (text.isEmpty) text = '0';
@@ -612,15 +599,9 @@ class CustomThumb extends SliderComponentShape {
       ..style = PaintingStyle.fill;
     canvas.drawCircle(center, 20, paint);
 
-    const TextStyle textStyle = TextStyle(
-      color: Colors.white,
-      fontSize: 14,
-      fontWeight: FontWeight.bold,
-    );
-
     final textSpan = TextSpan(
       text: '${label.round()}%',
-      style: textStyle,
+      style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: Colors.white),
     );
 
     final textPainter = TextPainter(

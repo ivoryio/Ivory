@@ -237,7 +237,7 @@ class _DetailsContentState extends State<_DetailsContent> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
               'Due on ${Format.date(widget.viewModel.creditLine.dueDate, pattern: 'MMM dd')}',
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+              style:ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: const Color(0xFF15141E)),
             ),
           ),
           const SizedBox(height: 12),
@@ -270,12 +270,9 @@ class _DetailsContentState extends State<_DetailsContent> {
               children: [
                 Text(
                   !_detailsExpanded ? 'View Details' : 'View less',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: ClientConfig.getColorScheme().secondary,
-                  ),
-                ),
+                  style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold.copyWith(
+                      color: ClientConfig.getColorScheme().secondary,
+                  ),),
                 const SizedBox(width: 8),
                 Transform.rotate(
                   angle: !_detailsExpanded ? 1.57 : -1.57,
@@ -327,7 +324,7 @@ class _DetailsItem extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             subtitle,
-            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 24),
+            style: ClientConfig.getTextStyleScheme().heading2,
           ),
         ],
       ),

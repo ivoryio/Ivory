@@ -48,7 +48,8 @@ class MoreCreditWaitlistScreen extends StatelessWidget {
               child: Button(
                 text: 'Back to “Repayments”',
                 disabledColor: const Color(0xFFDFE2E6),
-                color: const Color(0xFF2575FC),
+                color: ClientConfig.getColorScheme().tertiary,
+                textColor: ClientConfig.getColorScheme().surface,
                 onPressed: () {
                   Navigator.pushNamed(
                     context,

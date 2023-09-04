@@ -19,7 +19,7 @@ void main() {
     personAccount: MockPersonAccount(),
   );
 
-  final waitlist = true;
+  const waitlist = true;
 
   test('When fetching is in progress it should return loading', () {
     // given
@@ -42,7 +42,7 @@ void main() {
       user: user,
     );
     // then
-    expect(viewModel, MoreCreditFetchedViewModel(waitlist: waitlist));
+    expect(viewModel, const MoreCreditFetchedViewModel(waitlist: waitlist));
   });
 
   test('"when fetching is failed should return error', () {
