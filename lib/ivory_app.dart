@@ -28,7 +28,6 @@ import 'package:solarisdemo/screens/settings/settings_paired_device_details_scre
 import 'package:solarisdemo/screens/settings/settings_screen.dart';
 import 'package:solarisdemo/screens/settings/settings_security_screen.dart';
 import 'package:solarisdemo/screens/signup/signup_screen.dart';
-import 'package:solarisdemo/screens/splitpay/splitpay_screen.dart';
 import 'package:solarisdemo/screens/transactions/transaction_detail_screen.dart';
 import 'package:solarisdemo/screens/transactions/transactions_filtering_screen.dart';
 import 'package:solarisdemo/screens/transactions/transactions_screen.dart';
@@ -189,15 +188,6 @@ class _IvoryAppState extends State<IvoryApp> {
               // account
               AccountDetailsScreen.routeName: (context) =>
                   const AccountDetailsScreen(),
-              // splitpay
-              SplitpayScreen.routeName: (context) {
-                final splitpayScreenParams = ModalRoute.of(context)
-                    ?.settings
-                    .arguments as SplitpayScreenParams?;
-                return SplitpayScreen(
-                  params: splitpayScreenParams!,
-                );
-              }
             },
           );
         }),
