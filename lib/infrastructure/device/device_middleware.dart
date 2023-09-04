@@ -4,7 +4,7 @@ import 'package:solarisdemo/redux/device/device_action.dart';
 import 'package:solarisdemo/utilities/device_info/device_utils.dart';
 
 import '../../models/device.dart';
-import 'device_service.dart';
+import 'device_binding_service.dart';
 
 class DeviceBindingMiddleware extends MiddlewareClass<AppState> {
   final DeviceBindingService _deviceBindingService;

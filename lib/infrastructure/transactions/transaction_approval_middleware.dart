@@ -1,23 +1,30 @@
 import 'package:redux/redux.dart';
 import 'package:solarisdemo/infrastructure/change_request/change_request_service.dart';
+import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/transactions/approval/transaction_approval_action.dart';
-import 'package:solarisdemo/utilities/crypto/crypto_message_signer.dart';
+import 'package:solarisdemo/utilities/device_info/device_utils.dart';
 
 class TransactionApprovalMiddleware extends MiddlewareClass<AppState> {
   final ChangeRequestService _changeRequestService;
+  final DeviceService _deviceService;
+  final BiometricsService _biometricsService;
 
-  TransactionApprovalMiddleware(this._changeRequestService);
+  TransactionApprovalMiddleware(
+    this._changeRequestService,
+    this._deviceService,
+    this._biometricsService,
+  );
 
   @override
   call(Store<AppState> store, action, NextDispatcher next) async {
     next(action);
 
     if (action is AuthorizeTransactionApprovalChallengeCommandAction) {
-      final consentId = await DeviceService.getDeviceConsentId();
-      final deviceId = await DeviceService.getDeviceIdFromCache();
-      final deviceData = await DeviceService.getDeviceFingerprint(consentId);
+      final consentId = await _deviceService.getConsentId();
+      final deviceId = await _deviceService.getDeviceId();
+      final deviceData = await _deviceService.getDeviceFingerprint(consentId!);
 
       final isDeviceIdNotEmpty = deviceId != null && deviceId.isNotEmpty;
       final isDeviceDataNotEmpty = deviceData != null && deviceData.isNotEmpty;
@@ -46,25 +53,32 @@ class TransactionApprovalMiddleware extends MiddlewareClass<AppState> {
     }
 
     if (action is ConfirmTransactionApprovalChallengeCommandAction) {
+      String? consentId = await _deviceService.getConsentId();
+
       final isBiometricsAuthenticated =
-          await BiometricAuthentication(message: 'Please use biometric authentication.').authenticateWithBiometrics();
+          await _biometricsService.authenticateWithBiometrics(message: "Please use biometric authentication.");
 
-      if (!isBiometricsAuthenticated) {
+      if (consentId == null || !isBiometricsAuthenticated) {
         store.dispatch(TransactionApprovalFailedEventAction());
         return;
       }
 
-      final privateKey = await DeviceService.getPrivateKeyFromCache(restricted: true);
+      final keyPairs = await _deviceService.getDeviceKeyPairs(restricted: true);
 
-      if (privateKey == null) {
+      if (keyPairs == null) {
         store.dispatch(TransactionApprovalFailedEventAction());
         return;
       }
 
-      final signature = CryptoMessageSigner().signMessage(
-        message: action.stringToSign,
-        encodedPrivateKey: privateKey,
+      final signature = _deviceService.generateSignature(
+        privateKey: keyPairs.privateKey,
+        stringToSign: action.stringToSign,
       );
+
+      if (signature == null) {
+        store.dispatch(TransactionApprovalFailedEventAction());
+        return;
+      }
 
       final response = await _changeRequestService.confirmWithDevice(
         user: action.user,

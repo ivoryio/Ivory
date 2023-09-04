@@ -1,6 +1,9 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:local_auth/local_auth.dart';
+import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:solarisdemo/infrastructure/device/device_binding_service.dart';
 import 'package:solarisdemo/redux/transactions/approval/transaction_approval_action.dart';
 import 'package:solarisdemo/redux/transactions/approval/transaction_approval_state.dart';
 
@@ -155,9 +158,9 @@ void main() {
     expect((await appState).transactionApprovalState, isA<TransactionApprovalLoadingState>());
   });
 
-  // TODO: this test is skipped
   test("When transaction challenge is confirmed successfully", () async {
     // given
+    print("this test is running");
 
     final store = createTestStore(
       changeRequestService: FakeChangeRequestService(),
@@ -182,5 +185,5 @@ void main() {
     // then
     expect((await loadingState).transactionApprovalState, isA<TransactionApprovalLoadingState>());
     expect((await appState).transactionApprovalState, isA<TransactionApprovalSucceededState>());
-  }, skip: true);
+  });
 }

@@ -10,7 +10,7 @@ import 'package:solarisdemo/widgets/spaced_column.dart';
 import '../../config.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../infrastructure/bank_card/bank_card_presenter.dart';
-import '../../infrastructure/device/device_service.dart';
+import '../../infrastructure/device/device_binding_service.dart';
 import '../../models/bank_card.dart';
 import '../../redux/bank_card/bank_card_action.dart';
 import '../../widgets/button.dart';
