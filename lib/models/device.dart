@@ -14,7 +14,7 @@ enum DeviceBindingLanguageType {
 const String _defaultKeyType = 'ecdsa-p256';
 const String _defaultChallengeType = 'sms';
 const DeviceBindingLanguageType _defaultLanguageType = DeviceBindingLanguageType.en;
-late SmsChallenge _defaultSmsChallenge = SmsChallenge(appSignature: 'e2e-e2e-e2e');
+SmsChallenge _defaultSmsChallenge = SmsChallenge(appSignature: 'e2e-e2e-e2e');
 
 String createDeviceToJson(CreateDeviceReqBody data) =>
     json.encode(data.toJson());

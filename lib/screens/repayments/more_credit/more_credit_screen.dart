@@ -70,9 +70,8 @@ class _MoreCreditScreenState extends State<MoreCreditScreen> {
                         }
                       },
                     style:
-                        ClientConfig.getTextStyleScheme().mixedStyles.copyWith(
-                              color: const Color(0xFF406FE6),
-                              fontWeight: FontWeight.w600,
+                        ClientConfig.getTextStyleScheme().labelLarge.copyWith(
+                              color: ClientConfig.getColorScheme().secondary,
                             ),
                   ),
                   const TextSpan(
@@ -101,7 +100,8 @@ class _MoreCreditScreenState extends State<MoreCreditScreen> {
                 builder: (context, viewModel) => Button(
                   text: 'Get on the waitlist',
                   disabledColor: const Color(0xFFDFE2E6),
-                  color: const Color(0xFF2575FC),
+                  color:ClientConfig.getColorScheme().tertiary,
+                  textColor: ClientConfig.getColorScheme().surface,
                   onPressed: () {
                     StoreProvider.of<AppState>(context).dispatch(
                       UpdateMoreCreditCommandAction(

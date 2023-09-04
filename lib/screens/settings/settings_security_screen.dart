@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:solarisdemo/screens/settings/settings_device_pairing_screen.dart';
-import 'package:solarisdemo/screens/wallet/card_details_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/ivory_list_item_with_action.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';

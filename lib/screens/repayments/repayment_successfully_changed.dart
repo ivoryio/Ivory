@@ -28,8 +28,6 @@ class RepaymentSuccessfullyChangedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('SUCCES ===> $params');
-
     return ScreenScaffold(
         body: Padding(
       padding: EdgeInsets.symmetric(
@@ -54,9 +52,7 @@ class RepaymentSuccessfullyChangedScreen extends StatelessWidget {
                 ),
                 TextSpan(
                   text: '€${params.fixedRate.toStringAsFixed(2)}',
-                  style: ClientConfig.getTextStyleScheme()
-                      .bodyLargeRegular
-                      .copyWith(fontWeight: FontWeight.w600),
+                  style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
                 ),
                 TextSpan(
                   text:
@@ -68,7 +64,8 @@ class RepaymentSuccessfullyChangedScreen extends StatelessWidget {
           const SizedBox(height: 24),
           Expanded(
             child: SvgPicture.asset(
-                'assets/images/repayment_successfully_changed.svg'),
+                'assets/images/repayment_successfully_changed.svg',
+            ),
           ),
           SizedBox(
             width: double.infinity,
@@ -76,7 +73,8 @@ class RepaymentSuccessfullyChangedScreen extends StatelessWidget {
             child: Button(
               text: 'Back to "Repayments"',
               disabledColor: const Color(0xFFDFE2E6),
-              color: const Color(0xFF2575FC),
+              color: ClientConfig.getColorScheme().tertiary,
+              textColor: ClientConfig.getColorScheme().surface,
               onPressed: () {
                 Navigator.popUntil(
                   context,
