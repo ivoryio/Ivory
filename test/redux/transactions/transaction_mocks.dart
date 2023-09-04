@@ -1,10 +1,14 @@
 import 'package:solarisdemo/infrastructure/change_request/change_request_service.dart';
+import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
+import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart';
 import 'package:solarisdemo/models/amount_value.dart';
 import 'package:solarisdemo/models/change_request/change_request_error_type.dart';
 import 'package:solarisdemo/models/transactions/transaction_model.dart';
 import 'package:solarisdemo/models/transactions/upcoming_transaction_model.dart';
 import 'package:solarisdemo/models/user.dart';
+
+import '../../setup/create_store.dart';
 
 class FakeTransactionService extends TransactionService {
   @override
@@ -111,5 +115,58 @@ class FakeFailingChangeRequestService extends ChangeRequestService {
     required String deviceData,
   }) async {
     return ChangeRequestServiceErrorResponse(errorType: ChangeRequestErrorType.confirmationFailed);
+  }
+}
+
+class FakeBiometricsService extends BiometricsService {
+  FakeBiometricsService() : super(auth: MockLocalAutentication());
+
+  @override
+  Future<bool> authenticateWithBiometrics({required String message}) async {
+    return true;
+  }
+}
+
+class FakeDeviceService extends DeviceService {
+  @override
+  Future<String?> getConsentId() async {
+    return "consentId";
+  }
+
+  @override
+  Future<String?> getDeviceId() async {
+    return "deviceId";
+  }
+
+  @override
+  Future<String?> getDeviceFingerprint(String? consentId) async {
+    return "deviceFingerprint";
+  }
+
+  @override
+  Future<DeviceKeyPairs?> getDeviceKeyPairs({bool restricted = false}) async {
+    return DeviceKeyPairs(publicKey: "publicKey", privateKey: "privateKey");
+  }
+
+  @override
+  String? generateSignature({required String privateKey, required String stringToSign}) {
+    return "signature";
+  }
+}
+
+class FakeFailingDeviceService extends DeviceService {
+  @override
+  Future<String?> getConsentId() async {
+    return null;
+  }
+
+  @override
+  Future<String?> getDeviceId() async {
+    return null;
+  }
+
+  @override
+  Future<String?> getDeviceFingerprint(String? consentId) async {
+    return null;
   }
 }

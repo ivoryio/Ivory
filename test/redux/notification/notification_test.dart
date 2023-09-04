@@ -1,6 +1,4 @@
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:solarisdemo/models/notifications/notification_transaction_message.dart';
 import 'package:solarisdemo/redux/notification/notification_action.dart';
 import 'package:solarisdemo/redux/notification/notification_state.dart';
@@ -9,20 +7,9 @@ import 'package:solarisdemo/redux/transactions/approval/transaction_approval_sta
 import '../../infrastructure/bank_card/bank_card_presenter_test.dart';
 import '../../setup/create_app_state.dart';
 import '../../setup/create_store.dart';
-import '../transactions/transactions_mocks.dart';
+import '../transactions/transaction_mocks.dart';
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-
-  SharedPreferences.setMockInitialValues({});
-
-  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-    const MethodChannel('com.thinslices.solarisdemo/native'),
-    (call) async {
-      return '';
-    },
-  );
-
   final message = NotificationTransactionMessage(
     changeRequestId: "changeRequestId",
     declineChangeRequestId: "declineChangeRequestId",
@@ -36,12 +23,15 @@ void main() {
   test("When received a transaction approval notification the states should change accordingly", () async {
     // given
     final store = createTestStore(
+      deviceService: FakeDeviceService(),
+      biometricsService: FakeBiometricsService(),
       changeRequestService: FakeChangeRequestService(),
       initialState: createAppState(
         notificationState: NotificationInitialState(),
         transactionApprovalState: TransactionApprovalInitialState(),
       ),
     );
+
     final appState = store.onChange.firstWhere(
       (element) => element.notificationState is NotificationTransactionApprovalState,
     );
@@ -60,6 +50,9 @@ void main() {
   test("When using the reset command the state should reset to initial", () async {
     // given
     final store = createTestStore(
+      deviceService: FakeDeviceService(),
+      biometricsService: FakeBiometricsService(),
+      changeRequestService: FakeChangeRequestService(),
       initialState: createAppState(
         notificationState: NotificationTransactionApprovalState(message: message),
       ),

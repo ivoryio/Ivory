@@ -1,8 +1,11 @@
+import 'package:local_auth/local_auth.dart';
+import 'package:mockito/mockito.dart';
 import 'package:redux/redux.dart';
 import 'package:solarisdemo/infrastructure/bank_card/bank_card_service.dart';
 import 'package:solarisdemo/infrastructure/categories/categories_service.dart';
 import 'package:solarisdemo/infrastructure/change_request/change_request_service.dart';
 import 'package:solarisdemo/infrastructure/credit_line/credit_line_service.dart';
+import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_binding_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
@@ -33,6 +36,7 @@ Store<AppState> createTestStore({
   ChangeRequestService? changeRequestService,
   DeviceBindingService? deviceBindingService,
   DeviceService? deviceService,
+  BiometricsService? biometricsService,
 }) {
   return createStore(
     initialState: initialState,
@@ -49,6 +53,7 @@ Store<AppState> createTestStore({
     changeRequestService: changeRequestService ?? NotImplementedChangeRequestService(),
     deviceBindingService: deviceBindingService ?? NotImplementedDeviceBindingService(),
     deviceService: deviceService ?? NotImplementedDeviceService(),
+    biometricsService: biometricsService ?? NotImplementedBiometricsService(),
   );
 }
 
@@ -199,4 +204,35 @@ class NotImplementedDeviceBindingService extends DeviceBindingService {
   }
 }
 
-class NotImplementedDeviceService extends DeviceService {}
+class NotImplementedDeviceService extends DeviceService {
+  @override
+  Future<String?> getConsentId() async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> getDeviceId() async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> getDeviceFingerprint(String? consentId) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<DeviceKeyPairs?> getDeviceKeyPairs({bool restricted = false}) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  String? generateSignature({required String privateKey, required String stringToSign}) {
+    throw UnimplementedError();
+  }
+}
+
+class MockLocalAutentication extends Mock implements LocalAuthentication {}
+
+class NotImplementedBiometricsService extends BiometricsService {
+  NotImplementedBiometricsService() : super(auth: MockLocalAutentication());
+}

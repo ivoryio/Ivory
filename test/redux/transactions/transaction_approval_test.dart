@@ -1,35 +1,21 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:local_auth/local_auth.dart';
-import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:solarisdemo/infrastructure/device/device_binding_service.dart';
 import 'package:solarisdemo/redux/transactions/approval/transaction_approval_action.dart';
 import 'package:solarisdemo/redux/transactions/approval/transaction_approval_state.dart';
 
 import '../../infrastructure/repayments/more_credit/more_credit_presenter_test.dart';
 import '../../setup/create_app_state.dart';
 import '../../setup/create_store.dart';
-import 'transactions_mocks.dart';
+import 'transaction_mocks.dart';
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-
-  SharedPreferences.setMockInitialValues({
-    'device_consent_id': 'consentId',
-    'device_id': 'deviceId',
-  });
-
-  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-    const MethodChannel('com.thinslices.solarisdemo/native'),
-    (call) async {
-      return 'deviceData';
-    },
-  );
-
   test("When requesting transaction approval challenge the state should change to loading", () async {
     // given
     final store = createTestStore(
+      deviceService: FakeDeviceService(),
+      biometricsService: FakeBiometricsService(),
+      changeRequestService: FakeChangeRequestService(),
       initialState: createAppState(
         transactionApprovalState: TransactionApprovalInitialState(),
       ),
@@ -52,6 +38,8 @@ void main() {
   test("When transaction approval challenge is successfully authorized", () async {
     // given
     final store = createTestStore(
+      deviceService: FakeDeviceService(),
+      biometricsService: FakeBiometricsService(),
       changeRequestService: FakeChangeRequestService(),
       initialState: createAppState(
         transactionApprovalState: TransactionApprovalInitialState(),
@@ -78,6 +66,8 @@ void main() {
   test("When transaction approval challenge failed authorization", () async {
     // given
     final store = createTestStore(
+      deviceService: FakeDeviceService(),
+      biometricsService: FakeBiometricsService(),
       changeRequestService: FakeFailingChangeRequestService(),
       initialState: createAppState(
         transactionApprovalState: TransactionApprovalInitialState(),
@@ -103,15 +93,9 @@ void main() {
 
   test("When requesting for transaction approval and device is not bounded", () async {
     // given
-    SharedPreferences.setMockInitialValues({});
-
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-      const MethodChannel('com.thinslices.solarisdemo/native'),
-      (call) async => '',
-    );
-
     final store = createTestStore(
       changeRequestService: FakeChangeRequestService(),
+      deviceService: FakeFailingDeviceService(),
       initialState: createAppState(
         transactionApprovalState: TransactionApprovalInitialState(),
       ),
@@ -137,6 +121,8 @@ void main() {
   test("When requesting for transaction challenge confirmation the state should change to loading first", () async {
     // given
     final store = createTestStore(
+      deviceService: FakeDeviceService(),
+      biometricsService: FakeBiometricsService(),
       changeRequestService: FakeChangeRequestService(),
       initialState: createAppState(
         transactionApprovalState: TransactionApprovalInitialState(),
@@ -160,9 +146,9 @@ void main() {
 
   test("When transaction challenge is confirmed successfully", () async {
     // given
-    print("this test is running");
-
     final store = createTestStore(
+      deviceService: FakeDeviceService(),
+      biometricsService: FakeBiometricsService(),
       changeRequestService: FakeChangeRequestService(),
       initialState: createAppState(
         transactionApprovalState: TransactionApprovalInitialState(),

@@ -34,7 +34,11 @@ class DeviceService {
     }
   }
 
-  Future<String?> getDeviceFingerprint(String consentId) async {
+  Future<String?> getDeviceFingerprint(String? consentId) async {
+    if (consentId == null) {
+      return null;
+    }
+
     try {
       if (defaultTargetPlatform == TargetPlatform.android) {
         return _platform.invokeMethod(
