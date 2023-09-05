@@ -94,10 +94,10 @@ class BankCardDetailsScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            const Flexible(
+                            Flexible(
                               child: Text(
                                 'This information will be displayed for 60 seconds.',
-                                style: TextStyle(fontSize: 16, height: 24 / 16, fontWeight: FontWeight.w400),
+                                style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
                               ),
                             ),
                             const SizedBox(width: 16),
@@ -128,7 +128,8 @@ class BankCardDetailsScreen extends StatelessWidget {
                           height: 48,
                           child: Button(
                             disabledColor: const Color(0xFFDFE2E6),
-                            color: const Color(0xFF2575FC),
+                            color: ClientConfig.getColorScheme().tertiary,
+                            textColor: ClientConfig.getColorScheme().surface,
                             text: 'Back to "Card"',
                             onPressed: () {
                               Navigator.pop(context);

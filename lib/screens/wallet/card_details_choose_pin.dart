@@ -48,15 +48,11 @@ class _BankCardDetailsChoosePinScreenState
             children: [
               AppToolbar(
                 richTextTitle: RichText(
-                    text: const TextSpan(
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  children: <TextSpan>[
+                    text: TextSpan(
+                  style: ClientConfig.getTextStyleScheme().heading4,
+                  children: const <TextSpan>[
                     TextSpan(
                       text: 'Step 2 ',
-                      style: TextStyle(color: Color(0xFF15141E)),
                     ),
                     TextSpan(
                       text: 'out of 4',
@@ -73,10 +69,10 @@ class _BankCardDetailsChoosePinScreenState
                   Navigator.pop(context);
                 },
               ),
-              const LinearProgressIndicator(
+              LinearProgressIndicator(
                 value: 2 / 3,
-                color: Color(0xFF2575FC),
-                backgroundColor: Color(0xFFE9EAEB),
+                color: ClientConfig.getColorScheme().secondary,
+                backgroundColor: const Color(0xFFE9EAEB),
               ),
               Padding(
                 padding: EdgeInsets.symmetric(
@@ -89,22 +85,14 @@ class _BankCardDetailsChoosePinScreenState
                     const SizedBox(
                       height: 24,
                     ),
-                    const Text(
+                    Text(
                       'Choose PIN',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w600,
-                        height: 1.33,
-                      ),
+                      style: ClientConfig.getTextStyleScheme().heading2,
                     ),
                     const SizedBox(height: 16),
-                    const Text(
+                    Text(
                       'Remember your PIN as you will use it for all future card purchases.',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        height: 1.5,
-                      ),
+                      style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
                     ),
                     const SizedBox(height: 32),
                     Row(
@@ -153,14 +141,10 @@ class _BankCardDetailsChoosePinScreenState
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         'Your PIN should not contain:',
                         textAlign: TextAlign.left,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          height: 1.5,
-                        ),
+                        style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
                       ),
                       const SizedBox(height: 10),
                       PinValidityRule(
@@ -335,12 +319,7 @@ class PinValidityRule extends StatelessWidget {
         ),
         Text(
           text,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w400,
-            height: 1.5,
-            color: isValid ? validColor : invalidColor,
-          ),
+          style: ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(color: isValid ? validColor : invalidColor),
         ),
       ],
     );

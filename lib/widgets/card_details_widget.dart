@@ -60,15 +60,13 @@ class BankCardShowDetailsWidget extends StatelessWidget {
           ),
           child: Container(
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                begin: Alignment.bottomRight,
-                end: Alignment.topLeft,
-                stops: [0.0, 0.5629],
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
                 colors: [
-                  Color(0xFF1D26A7),
-                  Color(0xFF6300BB),
+                  ClientConfig.getColorScheme().surfaceVariant,
+                  ClientConfig.getColorScheme().outline,
                 ],
-                transform: GradientRotation(135 * (3.1415926 / 180.0)),
               ),
               image: DecorationImage(
                 image:
@@ -106,14 +104,9 @@ class BankCardShowDetailsWidget extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
+                            Text(
                               "CARD NUMBER",
-                              style: TextStyle(
-                                fontSize: 12,
-                                height: 16 / 12,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600,
-                              ),
+                              style: ClientConfig.getTextStyleScheme().labelCaps.copyWith(color: Colors.white),
                             ),
                             Row(
                               children: [
@@ -123,12 +116,7 @@ class BankCardShowDetailsWidget extends StatelessWidget {
                                   children: [
                                     Text(
                                       cardNumberParts.join(' '),
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        height: 24 / 16,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                                      style: ClientConfig.getTextStyleScheme().labelMedium.copyWith(color: Colors.white),
                                     )
                                   ],
                                 ),
@@ -164,23 +152,13 @@ class BankCardShowDetailsWidget extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
+                                Text(
                                   "EXPIRY DATE",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    height: 16 / 12,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                                  style: ClientConfig.getTextStyleScheme().labelCaps.copyWith(color: Colors.white),
                                 ),
                                 Text(
                                   cardDetails.cardExpiry,
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    height: 24 / 16,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                                  style: ClientConfig.getTextStyleScheme().labelMedium.copyWith(color: Colors.white),
                                 ),
                               ],
                             ),
@@ -188,26 +166,16 @@ class BankCardShowDetailsWidget extends StatelessWidget {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
+                                Text(
                                   "CVV",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    height: 16 / 12,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                                  style: ClientConfig.getTextStyleScheme().labelCaps.copyWith(color: Colors.white),
                                 ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Text(
                                       cardDetails.cvv,
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        height: 24 / 16,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                                      style: ClientConfig.getTextStyleScheme().labelMedium.copyWith(color: Colors.white),
                                     ),
                                     const SizedBox(width: 8),
                                     SizedBox(
@@ -306,11 +274,7 @@ class CardTypeLabel extends StatelessWidget {
       ),
       child: Text(
         cardType,
-        style: const TextStyle(
-          fontSize: 12,
-          height: 18 / 12,
-          fontWeight: FontWeight.w600,
-        ),
+        style: ClientConfig.getTextStyleScheme().labelXSmall.copyWith(color: Colors.black),
       ),
     );
   }

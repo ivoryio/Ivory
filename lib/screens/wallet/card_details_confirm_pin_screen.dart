@@ -45,15 +45,11 @@ class _BankCardDetailsConfirmPinScreenState
             children: [
               AppToolbar(
                 richTextTitle: RichText(
-                    text: const TextSpan(
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  children: <TextSpan>[
+                    text: TextSpan(
+                  style: ClientConfig.getTextStyleScheme().heading4,
+                  children: const <TextSpan>[
                     TextSpan(
                       text: 'Step 3 ',
-                      style: TextStyle(color: Color(0xFF15141E)),
                     ),
                     TextSpan(
                       text: 'out of 4',
@@ -70,10 +66,10 @@ class _BankCardDetailsConfirmPinScreenState
                   Navigator.pop(context, );
                 },
               ),
-              const LinearProgressIndicator(
+              LinearProgressIndicator(
                 value: 3 / 3,
-                color: Color(0xFF2575FC),
-                backgroundColor: Color(0xFFE9EAEB),
+                color:  ClientConfig.getColorScheme().secondary,
+                backgroundColor: const Color(0xFFE9EAEB),
               ),
               Padding(
                 padding: EdgeInsets.only(
@@ -86,7 +82,7 @@ class _BankCardDetailsConfirmPinScreenState
                 ),
                 child: Column(
                   children: [
-                    const Column(
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
@@ -94,15 +90,11 @@ class _BankCardDetailsConfirmPinScreenState
                           children: [
                             Text(
                               'Confirm PIN',
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.w600,
-                                height: 32 / 24,
-                              ),
+                              style: ClientConfig.getTextStyleScheme().heading2,
                             ),
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 16,
                         ),
                         Row(
@@ -110,11 +102,7 @@ class _BankCardDetailsConfirmPinScreenState
                           children: [
                             Text(
                               'Confirm your PIN by typing it again.',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
-                                height: 24 / 16,
-                              ),
+                              style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
                             ),
                           ],
                         ),

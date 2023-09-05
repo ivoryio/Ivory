@@ -6,6 +6,8 @@ class DefaultTheme {
     secondary: Color(0xFF2575FC),
     tertiary: Color(0xFF2575FC), // USE THIS FOR BUTTON BACKGROUNDS
     surface: Colors.white, // USE THIS FOR BUTTON TEXTS
+    surfaceVariant: Color(0xFF1D26A7),//USED TO CALCULATE GRADIENT,
+    outline: Color(0xFF6300BB),//ALSO USED TO CALCULATE GRADIENT,
     background: Colors.white,
     error: Colors.red,
     onPrimary: Colors.black,
@@ -95,6 +97,12 @@ class DefaultTheme {
         fontWeight: FontWeight.w600,
         color: Color(0xFF15141E),
       ),
+      labelCaps: const TextStyle(
+        fontSize: 12,
+        height: 1.33, // 16 / 12,
+        fontWeight: FontWeight.w600,
+        color: Color(0xFF15141E),
+      ),
       labelXSmall: const TextStyle(
         fontSize: 12,
         height: 1.5, // 18 / 12,
@@ -146,6 +154,7 @@ class TextStyleScheme {
   final TextStyle bodySmallBold;
   final TextStyle bodyLargeRegular;
   final TextStyle bodyLargeRegularBold;
+  final TextStyle labelCaps;
   final TextStyle labelXSmall;
   final TextStyle labelSmall;
   final TextStyle labelMedium;
@@ -161,6 +170,7 @@ class TextStyleScheme {
     required this.bodySmallBold,
     required this.bodyLargeRegular,
     required this.bodyLargeRegularBold,
+    required this.labelCaps,
     required this.labelXSmall,
     required this.labelSmall,
     required this.labelMedium,
@@ -177,6 +187,7 @@ class TextStyleScheme {
     TextStyle? bodySmallBold,
     TextStyle? bodyLargeRegular,
     TextStyle? bodyLargeRegularBold,
+    TextStyle? labelCaps,
     TextStyle? labelXSmall,
     TextStyle? labelSmall,
     TextStyle? labelMedium,
@@ -192,6 +203,7 @@ class TextStyleScheme {
       bodySmallBold: bodySmallBold ?? this.bodySmallBold,
       bodyLargeRegular: bodyLargeRegular ?? this.bodyLargeRegular,
       bodyLargeRegularBold: bodyLargeRegularBold ?? this.bodyLargeRegularBold,
+      labelCaps: labelCaps ?? this.labelCaps,
       labelXSmall: labelXSmall ?? this.labelXSmall,
       labelSmall: labelSmall ?? this.labelSmall,
       labelMedium: labelMedium ?? this.labelMedium,
