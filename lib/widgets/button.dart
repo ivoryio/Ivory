@@ -95,25 +95,28 @@ class PrimaryButton extends StatelessWidget {
   }
 }
 
-class SecondaryButton extends Button {
-  SecondaryButton({
+class SecondaryButton extends StatelessWidget {
+  final String text;
+  final Function? onPressed;
+  final double borderWidth;
+
+  const SecondaryButton({
     super.key,
-    super.padding,
-    super.fontSize,
-    super.fontFamily,
-    super.borderRadius,
-    required String text,
-    super.onPressed,
-    super.disabledColor = Colors.black12,
-    super.disabledTextColor = Colors.black26,
-    TextStyle? textStyle,
-  }) : super(
-          text: text,
-          textStyle: textStyle,
-          color: Colors.transparent,
-          textColor: Colors.black,
-          border: Border.all(color: Colors.black),
-        );
+    required this.text,
+    this.onPressed,
+    this.borderWidth = 1,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Button(
+      text: text,
+      onPressed: onPressed,
+      color: Colors.transparent,
+      textColor: Colors.black,
+      border: Border.all(color: Colors.black, width: borderWidth),
+    );
+  }
 }
 
 class TabExpandedButton extends StatelessWidget {
