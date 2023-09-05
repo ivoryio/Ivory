@@ -23,6 +23,7 @@ import 'package:solarisdemo/screens/repayments/more_credit/more_credit_waitlist_
 import 'package:solarisdemo/screens/repayments/repayment_reminder.dart';
 import 'package:solarisdemo/screens/repayments/repayment_successfully_changed.dart';
 import 'package:solarisdemo/screens/repayments/repayments_screen.dart';
+import 'package:solarisdemo/screens/settings/settings_device_pairing_activate_faceid_screen.dart';
 import 'package:solarisdemo/screens/settings/settings_device_pairing_screen.dart';
 import 'package:solarisdemo/screens/settings/settings_paired_device_details_screen.dart';
 import 'package:solarisdemo/screens/settings/settings_screen.dart';
@@ -108,6 +109,9 @@ class _IvoryAppState extends State<IvoryApp> {
                   params: pairedDeviceDetailsScreenParams!,
                 );
               },
+              SettingsDevicePairingActivateFaceidScreen.routeName: (context) =>
+                  const SettingsDevicePairingActivateFaceidScreen(),
+                  
               //transactions
               TransactionsScreen.routeName: (context) {
                 final transactionListFilter = ModalRoute.of(context)
