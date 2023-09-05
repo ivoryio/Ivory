@@ -118,6 +118,29 @@ class FakeFailingChangeRequestService extends ChangeRequestService {
   }
 }
 
+class FakeFailingConfirmChangeRequestService extends ChangeRequestService {
+  @override
+  Future<ChangeRequestServiceResponse> authorizeWithDevice({
+    User? user,
+    required String changeRequestId,
+    required String deviceId,
+    required String deviceData,
+  }) async {
+    return ChangeRequestServiceErrorResponse(errorType: ChangeRequestErrorType.authorizationFailed);
+  }
+
+  @override
+  Future<ChangeRequestServiceResponse> confirmWithDevice({
+    User? user,
+    required String changeRequestId,
+    required String deviceId,
+    required String signature,
+    required String deviceData,
+  }) async {
+    return ChangeRequestServiceErrorResponse(errorType: ChangeRequestErrorType.confirmationFailed);
+  }
+}
+
 class FakeBiometricsService extends BiometricsService {
   FakeBiometricsService() : super(auth: MockLocalAutentication());
 

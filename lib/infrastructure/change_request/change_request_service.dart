@@ -62,7 +62,6 @@ class ChangeRequestService extends ApiService {
         body: {
           'delivery_method': ChangeRequestDeliveryMethod.deviceSigning.name,
           'device_data': deviceData,
-          'person_id': user?.personId,
           'device_id': deviceId,
         },
       );
