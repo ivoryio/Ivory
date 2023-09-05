@@ -38,22 +38,14 @@ class BankCardDetailsActivationSuccessScreen extends StatelessWidget {
                   const AppToolbar(
                     backButtonEnabled: false,
                   ),
-                  const Text(
+                  Text(
                     'Physical card successfully activated!',
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.w600,
-                      height: 1.25,
-                    ),
+                    style: ClientConfig.getTextStyleScheme().heading1,
                   ),
                   const SizedBox(height: 16),
-                  const Text(
+                  Text(
                     'You can now start using your PIN to make in-store purchases, make withdrawals and more.',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                      height: 1.5,
-                    ),
+                    style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
                   ),
                   const Spacer(),
                   const Row(
@@ -75,7 +67,8 @@ class BankCardDetailsActivationSuccessScreen extends StatelessWidget {
                     width: double.infinity,
                     child: Button(
                       disabledColor: const Color(0xFFDFE2E6),
-                      color: const Color(0xFF2575FC),
+                      color:  ClientConfig.getColorScheme().tertiary,
+                      textColor:  ClientConfig.getColorScheme().surface,
                       text: 'Back to "Card"',
                       onPressed: () {
                         Navigator.popUntil(

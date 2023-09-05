@@ -36,15 +36,11 @@ class BankCardDetailsInfoScreen extends StatelessWidget {
               children: [
                 AppToolbar(
                   richTextTitle: RichText(
-                      text: const TextSpan(
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    children: <TextSpan>[
+                      text: TextSpan(
+                    style: ClientConfig.getTextStyleScheme().heading4,
+                    children: const <TextSpan>[
                       TextSpan(
                         text: 'Step 1 ',
-                        style: TextStyle(color: Color(0xFF15141E)),
                       ),
                       TextSpan(
                         text: 'out of 4',
@@ -64,10 +60,10 @@ class BankCardDetailsInfoScreen extends StatelessWidget {
                     ));
                   },
                 ),
-                const LinearProgressIndicator(
+                LinearProgressIndicator(
                   value: 1 / 3,
-                  color: Color(0xFF2575FC),
-                  backgroundColor: Color(0xFFE9EAEB),
+                  color: ClientConfig.getColorScheme().secondary,
+                  backgroundColor: const Color(0xFFE9EAEB),
                 ),
                 Expanded(
                   child: Padding(
@@ -75,24 +71,16 @@ class BankCardDetailsInfoScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                        Text(
                           'Activate your physical card',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w600,
-                            height: 1.33,
-                          ),
+                          style: ClientConfig.getTextStyleScheme().heading2,
                         ),
                         const SizedBox(
                           height: 16,
                         ),
-                        const Text(
+                        Text(
                           'In order to activate your physical card you will have to choose a PIN and confirm it. You can also add it to your Apple Wallet. \n\nIt\'ll take only 1 minute.',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            height: 1.5,
-                          ),
+                          style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
                         ),
                         Expanded(
                           child: Center(
@@ -106,7 +94,8 @@ class BankCardDetailsInfoScreen extends StatelessWidget {
                           child: Button(
                             text: "Choose PIN",
                             disabledColor: const Color(0xFFDFE2E6),
-                            color: const Color(0xFF2575FC),
+                            color: ClientConfig.getColorScheme().tertiary,
+                            textColor: ClientConfig.getColorScheme().surface,
                             onPressed: () {
                               Navigator.pushNamed(
                                 context,
