@@ -30,6 +30,7 @@ import 'package:solarisdemo/screens/settings/settings_security_screen.dart';
 import 'package:solarisdemo/screens/signup/signup_screen.dart';
 import 'package:solarisdemo/screens/transactions/transaction_approval_failed_screen.dart';
 import 'package:solarisdemo/screens/transactions/transaction_approval_pending_screen.dart';
+import 'package:solarisdemo/screens/transactions/transaction_approval_rejected_screen.dart';
 import 'package:solarisdemo/screens/transactions/transaction_approval_success_screen.dart';
 import 'package:solarisdemo/screens/transactions/transaction_detail_screen.dart';
 import 'package:solarisdemo/screens/transactions/transactions_filtering_screen.dart';
@@ -128,6 +129,7 @@ class _IvoryAppState extends State<IvoryApp> {
               TransactionDetailScreen.routeName: (context) => const TransactionDetailScreen(),
               TransactionApprovalPendingScreen.routeName: (context) => const TransactionApprovalPendingScreen(),
               TransactionApprovalSuccessScreen.routeName: (context) => const TransactionApprovalSuccessScreen(),
+              TransactionApprovalRejectedScreen.routeName: (context) => const TransactionApprovalRejectedScreen(),
               TransactionApprovalFailedScreen.routeName: (context) => const TransactionApprovalFailedScreen(),
               // wallet
               BankCardsScreen.routeName: (context) =>

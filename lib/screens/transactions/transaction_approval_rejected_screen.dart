@@ -5,10 +5,10 @@ import 'package:solarisdemo/screens/home/home_screen.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
-class TransactionApprovalSuccessScreen extends StatelessWidget {
-  static const routeName = '/transactionApprovalSuccessScreen';
+class TransactionApprovalRejectedScreen extends StatelessWidget {
+  static const routeName = '/transactionApprovalRejectedScreen';
 
-  const TransactionApprovalSuccessScreen({super.key});
+  const TransactionApprovalRejectedScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,28 +22,19 @@ class TransactionApprovalSuccessScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Spacer(),
-            Text("Payment Authorized!\nOne more step left...", style: ClientConfig.getTextStyleScheme().heading1),
+            Text("Payment rejected!", style: ClientConfig.getTextStyleScheme().heading1),
             const SizedBox(height: 16),
-            RichText(
-              text: TextSpan(
-                text: "Now you can ",
-                style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                children: [
-                  TextSpan(
-                    text: "return to the merchant's app or website",
-                    style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
-                  ),
-                  const TextSpan(text: " you ordered from and complete the checkout.")
-                ],
-              ),
+            Text(
+              "You rejected this payment. No money was taken from your account.",
+              style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
             ),
             const Spacer(),
-            Align(child: SvgPicture.asset("assets/images/transaction_approved_illustration.svg")),
+            Align(child: SvgPicture.asset("assets/icons/error_icon.svg")),
             const Spacer(),
             SizedBox(
               width: double.infinity,
               child: PrimaryButton(
-                text: "OK, I understand",
+                text: "Back to \"Home\"",
                 onPressed: () {
                   Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false);
                 },

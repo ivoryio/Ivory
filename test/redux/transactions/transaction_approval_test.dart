@@ -24,7 +24,7 @@ void main() {
 
       // when
       store.dispatch(
-        AuthorizeTransactionApprovalChallengeCommandAction(
+        AuthorizeTransactionCommandAction(
           user: MockUser(),
           changeRequestId: "changeRequestId",
         ),
@@ -51,7 +51,7 @@ void main() {
 
       // when
       store.dispatch(
-        AuthorizeTransactionApprovalChallengeCommandAction(
+        AuthorizeTransactionCommandAction(
           user: MockUser(),
           changeRequestId: "changeRequestId",
         ),
@@ -79,7 +79,7 @@ void main() {
 
       // when
       store.dispatch(
-        AuthorizeTransactionApprovalChallengeCommandAction(
+        AuthorizeTransactionCommandAction(
           user: MockUser(),
           changeRequestId: "changeRequestId",
         ),
@@ -106,7 +106,7 @@ void main() {
 
       // when
       store.dispatch(
-        AuthorizeTransactionApprovalChallengeCommandAction(
+        AuthorizeTransactionCommandAction(
           user: MockUser(),
           changeRequestId: "changeRequestId",
         ),
@@ -132,7 +132,7 @@ void main() {
           store.onChange.firstWhere((element) => element.transactionApprovalState is TransactionApprovalLoadingState);
 
       // when
-      store.dispatch(ConfirmTransactionApprovalChallengeCommandAction(
+      store.dispatch(ConfirmTransactionCommandAction(
         user: MockUser(),
         changeRequestId: "changeRequestId",
         deviceData: "deviceData",
@@ -160,7 +160,7 @@ void main() {
           store.onChange.firstWhere((element) => element.transactionApprovalState is TransactionApprovalSucceededState);
 
       // when
-      store.dispatch(ConfirmTransactionApprovalChallengeCommandAction(
+      store.dispatch(ConfirmTransactionCommandAction(
         user: MockUser(),
         changeRequestId: "changeRequestId",
         deviceData: "deviceData",
@@ -195,9 +195,69 @@ void main() {
           store.onChange.firstWhere((element) => element.transactionApprovalState is TransactionApprovalFailedState);
 
       // when
-      store.dispatch(ConfirmTransactionApprovalChallengeCommandAction(
+      store.dispatch(ConfirmTransactionCommandAction(
         user: MockUser(),
         changeRequestId: "changeRequestId",
+        deviceData: "deviceData",
+        deviceId: "deviceId",
+        stringToSign: "stringToSign",
+      ));
+
+      // then
+      expect((await loadingState).transactionApprovalState, isA<TransactionApprovalLoadingState>());
+      expect((await appState).transactionApprovalState, isA<TransactionApprovalFailedState>());
+    });
+  });
+
+  group("Declining", () {
+    test("When declining transaction challenge", () async {
+      // given
+      final store = createTestStore(
+        deviceService: FakeDeviceService(),
+        biometricsService: FakeBiometricsService(),
+        changeRequestService: FakeChangeRequestService(),
+        initialState: createAppState(
+          transactionApprovalState: TransactionApprovalInitialState(),
+        ),
+      );
+      final loadingState =
+          store.onChange.firstWhere((element) => element.transactionApprovalState is TransactionApprovalLoadingState);
+      final appState =
+          store.onChange.firstWhere((element) => element.transactionApprovalState is TransactionApprovalRejectedState);
+
+      // when
+      store.dispatch(RejectTransactionCommandAction(
+        user: MockUser(),
+        declineChangeRequestId: "declineChangeRequestId",
+        deviceData: "deviceData",
+        deviceId: "deviceId",
+        stringToSign: "stringToSign",
+      ));
+
+      // then
+      expect((await loadingState).transactionApprovalState, isA<TransactionApprovalLoadingState>());
+      expect((await appState).transactionApprovalState, isA<TransactionApprovalRejectedState>());
+    });
+
+    test("When failed declining transaction challenge", () async {
+      // given
+      final store = createTestStore(
+        deviceService: FakeDeviceService(),
+        biometricsService: FakeBiometricsService(),
+        changeRequestService: FakeFailingChangeRequestService(),
+        initialState: createAppState(
+          transactionApprovalState: TransactionApprovalInitialState(),
+        ),
+      );
+      final loadingState =
+          store.onChange.firstWhere((element) => element.transactionApprovalState is TransactionApprovalLoadingState);
+      final appState =
+          store.onChange.firstWhere((element) => element.transactionApprovalState is TransactionApprovalFailedState);
+
+      // when
+      store.dispatch(RejectTransactionCommandAction(
+        user: MockUser(),
+        declineChangeRequestId: "declineChangeRequestId",
         deviceData: "deviceData",
         deviceId: "deviceId",
         stringToSign: "stringToSign",

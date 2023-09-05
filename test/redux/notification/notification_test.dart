@@ -11,13 +11,14 @@ import '../transactions/transaction_mocks.dart';
 
 void main() {
   final message = NotificationTransactionMessage(
+    cardId: "cardId",
+    amountValue: "32",
+    amountUnit: "cents",
+    merchantName: "KFC",
+    amountCurrency: "EUR",
+    dateTime: DateTime.now(),
     changeRequestId: "changeRequestId",
     declineChangeRequestId: "declineChangeRequestId",
-    amountCurrency: "EUR",
-    amountUnit: "cents",
-    amountValue: "32",
-    merchantName: "KFC",
-    dateTime: DateTime.now(),
   );
 
   test("When received a transaction approval notification the states should change accordingly", () async {

@@ -28,6 +28,8 @@ class TransactionApprovalAuthorizedState extends TransactionApprovalState {
 
 class TransactionApprovalSucceededState extends TransactionApprovalState {}
 
+class TransactionApprovalRejectedState extends TransactionApprovalState {}
+
 class TransactionApprovalFailedState extends TransactionApprovalState {}
 
 class TransactionApprovalDeviceNotBoundedState extends TransactionApprovalState {}

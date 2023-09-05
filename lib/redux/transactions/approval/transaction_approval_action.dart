@@ -1,22 +1,22 @@
 import 'package:solarisdemo/models/user.dart';
 
-class AuthorizeTransactionApprovalChallengeCommandAction {
+class AuthorizeTransactionCommandAction {
   final User user;
   final String changeRequestId;
 
-  AuthorizeTransactionApprovalChallengeCommandAction({
+  AuthorizeTransactionCommandAction({
     required this.user,
     required this.changeRequestId,
   });
 }
 
-class TransactionApprovalChallengeAuthorizedEventAction {
+class AuthorizedTransactionEventAction {
   final String deviceId;
   final String deviceData;
   final String stringToSign;
   final String changeRequestId;
 
-  TransactionApprovalChallengeAuthorizedEventAction({
+  AuthorizedTransactionEventAction({
     required this.deviceId,
     required this.deviceData,
     required this.stringToSign,
@@ -24,14 +24,14 @@ class TransactionApprovalChallengeAuthorizedEventAction {
   });
 }
 
-class ConfirmTransactionApprovalChallengeCommandAction {
+class ConfirmTransactionCommandAction {
   final User user;
   final String deviceId;
   final String deviceData;
   final String stringToSign;
   final String changeRequestId;
 
-  ConfirmTransactionApprovalChallengeCommandAction({
+  ConfirmTransactionCommandAction({
     required this.user,
     required this.deviceId,
     required this.deviceData,
@@ -40,7 +40,25 @@ class ConfirmTransactionApprovalChallengeCommandAction {
   });
 }
 
-class TransactionApprovalSucceededEventAction {}
+class RejectTransactionCommandAction {
+  final User user;
+  final String deviceId;
+  final String deviceData;
+  final String stringToSign;
+  final String declineChangeRequestId;
+
+  RejectTransactionCommandAction({
+    required this.user,
+    required this.deviceId,
+    required this.deviceData,
+    required this.stringToSign,
+    required this.declineChangeRequestId,
+  });
+}
+
+class TransactionConfirmedEventAction {}
+
+class TransactionRejectedEventAction {}
 
 class TransactionApprovalFailedEventAction {}
 

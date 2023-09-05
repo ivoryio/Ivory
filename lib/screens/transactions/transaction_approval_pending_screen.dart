@@ -10,9 +10,12 @@ import 'package:solarisdemo/models/categories/category.dart';
 import 'package:solarisdemo/models/transactions/transaction_model.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
+import 'package:solarisdemo/redux/notification/notification_state.dart';
 import 'package:solarisdemo/redux/transactions/approval/transaction_approval_action.dart';
 import 'package:solarisdemo/screens/home/home_screen.dart';
 import 'package:solarisdemo/screens/transactions/transaction_approval_failed_screen.dart';
+import 'package:solarisdemo/screens/transactions/transaction_approval_rejected_screen.dart';
 import 'package:solarisdemo/screens/transactions/transaction_approval_success_screen.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/card_list_item.dart';
@@ -27,50 +30,77 @@ class TransactionApprovalPendingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = context.read<AuthCubit>().state.user!;
+
     return ScreenScaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: StoreConnector<AppState, TransactionApprovalViewModel>(
-          converter: (store) => TransactionApprovalPresenter.present(
-            notificationState: store.state.notificationState,
-            transactionApprovalState: store.state.transactionApprovalState,
-          ),
-          distinct: true,
-          onWillChange: (previousViewModel, newViewModel) {
-            if (newViewModel is TransactionApprovalSucceededViewModel) {
-              Navigator.pushReplacementNamed(context, TransactionApprovalSuccessScreen.routeName);
-            } else if (newViewModel is TransactionApprovalFailedViewModel) {
-              Navigator.pushReplacementNamed(context, TransactionApprovalFailedScreen.routeName);
-            }
-          },
-          builder: (context, viewModel) => viewModel is TransactionApprovalWithMessageViewModel
-              ? Column(
+            onInit: (store) {
+              if (store.state.notificationState is NotificationTransactionApprovalState) {
+                store.dispatch(
+                  GetBankCardCommandAction(
+                    user: user,
+                    cardId: (store.state.notificationState as NotificationTransactionApprovalState).message.cardId,
+                  ),
+                );
+              }
+            },
+            converter: (store) => TransactionApprovalPresenter.present(
+                  bankCardState: store.state.bankCardState,
+                  notificationState: store.state.notificationState,
+                  transactionApprovalState: store.state.transactionApprovalState,
+                ),
+            distinct: true,
+            onWillChange: (previousViewModel, newViewModel) {
+              if (newViewModel is TransactionApprovalSucceededViewModel) {
+                Navigator.pushReplacementNamed(context, TransactionApprovalSuccessScreen.routeName);
+              } else if (newViewModel is TransactionApprovalFailedViewModel) {
+                Navigator.pushReplacementNamed(context, TransactionApprovalFailedScreen.routeName);
+              } else if (newViewModel is TransactionApprovalRejectedViewModel) {
+                Navigator.pushReplacementNamed(context, TransactionApprovalRejectedScreen.routeName);
+              }
+            },
+            builder: (context, viewModel) => Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const _Appbar(),
-                    ...viewModel.isLoading
-                        ? [const Expanded(child: Center(child: CircularProgressIndicator()))]
-                        : _buildPageContent(context, viewModel),
+                    ...(viewModel is WithApprovalChallengeViewModel && !viewModel.isLoading)
+                        ? _buildPageContent(context, user, viewModel)
+                        : [const Expanded(child: Center(child: CircularProgressIndicator()))],
                     const SizedBox(height: 16),
                   ],
-                )
-              : Container(),
-        ),
+                )),
       ),
     );
   }
 
-  List<Widget> _buildPageContent(BuildContext context, TransactionApprovalWithMessageViewModel viewModel) {
+  List<Widget> _buildPageContent(
+    BuildContext context,
+    AuthenticatedUser user,
+    WithApprovalChallengeViewModel viewModel,
+  ) {
     return [
-      _buildPaymentInfo(context, viewModel),
+      _buildPaymentInfo(context, user, viewModel),
       SizedBox(
         width: double.infinity,
         child: SecondaryButton(
           text: "Reject",
+          borderWidth: 2,
           onPressed: () {
             showDialog(
               context: context,
-              builder: (context) => const _RejectionAlertDialog(),
+              builder: (context) => _RejectionAlertDialog(
+                onConfirm: () => StoreProvider.of<AppState>(context).dispatch(
+                  RejectTransactionCommandAction(
+                    user: user.cognito,
+                    declineChangeRequestId: viewModel.message.declineChangeRequestId,
+                    deviceData: viewModel.deviceData,
+                    deviceId: viewModel.deviceId,
+                    stringToSign: viewModel.stringToSign,
+                  ),
+                ),
+              ),
             );
           },
         ),
@@ -81,27 +111,26 @@ class TransactionApprovalPendingScreen extends StatelessWidget {
         child: PrimaryButton(
           text: "Authorize",
           onPressed: () async {
-            AuthenticatedUser user = context.read<AuthCubit>().state.user!;
-
-            if (viewModel is TransactionApprovalWithChallengeViewModel) {
-              StoreProvider.of<AppState>(context).dispatch(
-                ConfirmTransactionApprovalChallengeCommandAction(
-                  user: user.cognito,
-                  changeRequestId: viewModel.changeRequestId,
-                  deviceData: viewModel.deviceData,
-                  deviceId: viewModel.deviceId,
-                  stringToSign: viewModel.stringToSign,
-                ),
-              );
-            }
+            StoreProvider.of<AppState>(context).dispatch(
+              ConfirmTransactionCommandAction(
+                user: user.cognito,
+                changeRequestId: viewModel.changeRequestId,
+                deviceData: viewModel.deviceData,
+                deviceId: viewModel.deviceId,
+                stringToSign: viewModel.stringToSign,
+              ),
+            );
           },
         ),
       )
     ];
   }
 
-  Widget _buildPaymentInfo(BuildContext context, TransactionApprovalWithMessageViewModel viewModel) {
-    print("_buildPaymentInfo");
+  Widget _buildPaymentInfo(
+    BuildContext context,
+    AuthenticatedUser user,
+    WithApprovalChallengeViewModel viewModel,
+  ) {
     return Expanded(
       child: SingleChildScrollView(
         child: Column(
@@ -116,7 +145,7 @@ class TransactionApprovalPendingScreen extends StatelessWidget {
                 height: 70,
                 width: 70,
                 child: CircularCountdownProgress(
-                  duration: const Duration(minutes: 10),
+                  duration: const Duration(minutes: 4),
                   onCompleted: () {
                     showDialog(
                       context: context,
@@ -149,9 +178,12 @@ class TransactionApprovalPendingScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text("Card details", style: ClientConfig.getTextStyleScheme().labelLarge),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 16),
-              child: CardListItem(cardNumber: "*** 4573", expiryDate: "10/27"),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: CardListItem(
+                cardNumber: viewModel.bankCard.representation?.maskedPan ?? "",
+                expiryDate: viewModel.bankCard.representation?.formattedExpirationDate ?? "",
+              ),
             ),
           ],
         ),
@@ -205,7 +237,9 @@ class _TimeoutAlertDialog extends StatelessWidget {
 }
 
 class _RejectionAlertDialog extends StatelessWidget {
-  const _RejectionAlertDialog();
+  final void Function() onConfirm;
+
+  const _RejectionAlertDialog({required this.onConfirm});
 
   @override
   Widget build(BuildContext context) {
@@ -218,9 +252,7 @@ class _RejectionAlertDialog extends StatelessWidget {
       actionsAlignment: MainAxisAlignment.center,
       actions: [
         TextButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: () => Navigator.pop(context),
           child: Text(
             "Cancel",
             style: ClientConfig.getTextStyleScheme()
@@ -230,7 +262,8 @@ class _RejectionAlertDialog extends StatelessWidget {
         ),
         TextButton(
           onPressed: () {
-            Navigator.pushNamedAndRemoveUntil(context, TransactionApprovalFailedScreen.routeName, (route) => false);
+            Navigator.pop(context);
+            onConfirm();
           },
           child: Text(
             "Yes",

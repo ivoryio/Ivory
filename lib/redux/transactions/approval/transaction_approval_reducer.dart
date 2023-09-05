@@ -2,10 +2,11 @@ import 'package:solarisdemo/redux/transactions/approval/transaction_approval_act
 import 'package:solarisdemo/redux/transactions/approval/transaction_approval_state.dart';
 
 TransactionApprovalState transactionApprovalReducer(TransactionApprovalState state, dynamic action) {
-  if (action is AuthorizeTransactionApprovalChallengeCommandAction ||
-      action is ConfirmTransactionApprovalChallengeCommandAction) {
+  if (action is AuthorizeTransactionCommandAction ||
+      action is ConfirmTransactionCommandAction ||
+      action is RejectTransactionCommandAction) {
     return TransactionApprovalLoadingState();
-  } else if (action is TransactionApprovalChallengeAuthorizedEventAction) {
+  } else if (action is AuthorizedTransactionEventAction) {
     return TransactionApprovalAuthorizedState(
       deviceId: action.deviceId,
       deviceData: action.deviceData,
@@ -14,8 +15,10 @@ TransactionApprovalState transactionApprovalReducer(TransactionApprovalState sta
     );
   } else if (action is TransactionApprovalFailedEventAction) {
     return TransactionApprovalFailedState();
-  } else if (action is TransactionApprovalSucceededEventAction) {
+  } else if (action is TransactionConfirmedEventAction) {
     return TransactionApprovalSucceededState();
+  } else if (action is TransactionRejectedEventAction) {
+    return TransactionApprovalRejectedState();
   } else if (action is TransactionApprovalDeviceNotBoundedEventAction) {
     return TransactionApprovalDeviceNotBoundedState();
   }

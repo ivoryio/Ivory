@@ -21,7 +21,7 @@ class NotificationsMiddleware extends MiddlewareClass<AppState> {
     }
 
     if (action is ReceivedTransactionApprovalNotificationEventAction) {
-      store.dispatch(AuthorizeTransactionApprovalChallengeCommandAction(
+      store.dispatch(AuthorizeTransactionCommandAction(
         user: action.user,
         changeRequestId: action.message.changeRequestId,
       ));

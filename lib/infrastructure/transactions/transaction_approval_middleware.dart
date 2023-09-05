@@ -2,6 +2,7 @@ import 'package:redux/redux.dart';
 import 'package:solarisdemo/infrastructure/change_request/change_request_service.dart';
 import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
+import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/transactions/approval/transaction_approval_action.dart';
 
@@ -20,7 +21,7 @@ class TransactionApprovalMiddleware extends MiddlewareClass<AppState> {
   call(Store<AppState> store, action, NextDispatcher next) async {
     next(action);
 
-    if (action is AuthorizeTransactionApprovalChallengeCommandAction) {
+    if (action is AuthorizeTransactionCommandAction) {
       final consentId = await _deviceService.getConsentId();
       final deviceId = await _deviceService.getDeviceId();
       final deviceData = await _deviceService.getDeviceFingerprint(consentId);
@@ -37,7 +38,7 @@ class TransactionApprovalMiddleware extends MiddlewareClass<AppState> {
         );
 
         if (response is AuthorizeChangeRequestSuccessResponse) {
-          store.dispatch(TransactionApprovalChallengeAuthorizedEventAction(
+          store.dispatch(AuthorizedTransactionEventAction(
             changeRequestId: action.changeRequestId,
             stringToSign: response.stringToSign,
             deviceId: deviceId,
@@ -51,47 +52,93 @@ class TransactionApprovalMiddleware extends MiddlewareClass<AppState> {
       }
     }
 
-    if (action is ConfirmTransactionApprovalChallengeCommandAction) {
-      String? consentId = await _deviceService.getConsentId();
-
-      final isBiometricsAuthenticated =
-          await _biometricsService.authenticateWithBiometrics(message: "Please use biometric authentication.");
-
-      if (consentId == null || !isBiometricsAuthenticated) {
-        store.dispatch(TransactionApprovalFailedEventAction());
-        return;
-      }
-
-      final keyPairs = await _deviceService.getDeviceKeyPairs(restricted: true);
-
-      if (keyPairs == null) {
-        store.dispatch(TransactionApprovalFailedEventAction());
-        return;
-      }
-
-      final signature = _deviceService.generateSignature(
-        privateKey: keyPairs.privateKey,
+    if (action is ConfirmTransactionCommandAction) {
+      final response = await _confirmWithDevice(
+        store,
         stringToSign: action.stringToSign,
-      );
-
-      if (signature == null) {
-        store.dispatch(TransactionApprovalFailedEventAction());
-        return;
-      }
-
-      final response = await _changeRequestService.confirmWithDevice(
         user: action.user,
         changeRequestId: action.changeRequestId,
         deviceData: action.deviceData,
         deviceId: action.deviceId,
-        signature: signature,
       );
 
       if (response is ConfirmChangeRequestSuccessResponse) {
-        store.dispatch(TransactionApprovalSucceededEventAction());
+        store.dispatch(TransactionConfirmedEventAction());
       } else {
         store.dispatch(TransactionApprovalFailedEventAction());
       }
     }
+
+    if (action is RejectTransactionCommandAction) {
+      final authorizeResponse = await _changeRequestService.authorizeWithDevice(
+        user: action.user,
+        changeRequestId: action.declineChangeRequestId,
+        deviceId: action.deviceId,
+        deviceData: action.deviceData,
+      );
+
+      if (authorizeResponse is AuthorizeChangeRequestSuccessResponse) {
+        final response = await _confirmWithDevice(
+          store,
+          stringToSign: authorizeResponse.stringToSign,
+          user: action.user,
+          changeRequestId: action.declineChangeRequestId,
+          deviceData: action.deviceData,
+          deviceId: action.deviceId,
+        );
+
+        if (response is ConfirmChangeRequestSuccessResponse) {
+          store.dispatch(TransactionRejectedEventAction());
+        } else {
+          store.dispatch(TransactionApprovalFailedEventAction());
+        }
+      } else {
+        store.dispatch(TransactionApprovalFailedEventAction());
+      }
+    }
+  }
+
+  Future<ChangeRequestServiceResponse?> _confirmWithDevice(
+    Store<AppState> store, {
+    required String stringToSign,
+    required User user,
+    required String changeRequestId,
+    required String deviceData,
+    required String deviceId,
+  }) async {
+    String? consentId = await _deviceService.getConsentId();
+
+    final isBiometricsAuthenticated =
+        await _biometricsService.authenticateWithBiometrics(message: "Please use biometric authentication.");
+
+    if (consentId == null || !isBiometricsAuthenticated) {
+      store.dispatch(TransactionApprovalFailedEventAction());
+      return null;
+    }
+
+    final keyPairs = await _deviceService.getDeviceKeyPairs(restricted: true);
+
+    if (keyPairs == null) {
+      store.dispatch(TransactionApprovalFailedEventAction());
+      return null;
+    }
+
+    final signature = _deviceService.generateSignature(
+      privateKey: keyPairs.privateKey,
+      stringToSign: stringToSign,
+    );
+
+    if (signature == null) {
+      store.dispatch(TransactionApprovalFailedEventAction());
+      return null;
+    }
+
+    return await _changeRequestService.confirmWithDevice(
+      user: user,
+      changeRequestId: changeRequestId,
+      deviceData: deviceData,
+      deviceId: deviceId,
+      signature: signature,
+    );
   }
 }
