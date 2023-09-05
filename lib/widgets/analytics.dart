@@ -120,9 +120,9 @@ class AnalyticsState extends State<Analytics> {
                               ),
                             ),
                           ),
-                          const Center(
+                          Center(
                             child: AccountBalanceText(
-                              value: 1234.56,
+                              value: 2481.13,
                             ),
                           )
                         ],
