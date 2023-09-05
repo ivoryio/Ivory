@@ -1,30 +1,33 @@
 import 'package:equatable/equatable.dart';
 
 class NotificationTransactionMessage extends Equatable {
-  final String merchantName;
-  final String amountValue;
-  final String amountCurrency;
+  final String cardId;
   final String amountUnit;
+  final DateTime dateTime;
+  final String amountValue;
+  final String merchantName;
+  final String amountCurrency;
   final String changeRequestId;
   final String declineChangeRequestId;
-  final DateTime dateTime;
 
   const NotificationTransactionMessage({
-    required this.merchantName,
-    required this.amountValue,
-    required this.amountCurrency,
+    required this.cardId,
+    required this.dateTime,
     required this.amountUnit,
+    required this.amountValue,
+    required this.merchantName,
+    required this.amountCurrency,
     required this.changeRequestId,
     required this.declineChangeRequestId,
-    required this.dateTime,
   });
 
   @override
   List<Object?> get props => [
-        merchantName,
-        amountValue,
-        amountCurrency,
+        cardId,
         amountUnit,
+        amountValue,
+        merchantName,
+        amountCurrency,
         changeRequestId,
         declineChangeRequestId,
       ];

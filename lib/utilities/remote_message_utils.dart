@@ -17,11 +17,13 @@ class RemoteMessageUtils {
   }
 
   static NotificationTransactionMessage getNotificationTransactionMessage(RemoteMessage message) {
+    // card_id
     return NotificationTransactionMessage(
-      merchantName: message.data["merchant_name"] as String,
-      amountValue: message.data["amount_value"] as String,
-      amountCurrency: message.data["amount_currency"] as String,
+      cardId: message.data["card_id"] as String,
       amountUnit: message.data["amount_unit"] as String,
+      amountValue: message.data["amount_value"] as String,
+      merchantName: message.data["merchant_name"] as String,
+      amountCurrency: message.data["amount_currency"] as String,
       changeRequestId: message.data["change_request_id"] as String,
       declineChangeRequestId: message.data["decline_change_request_id"] as String,
       dateTime: DateTime.parse(message.data["challenged_at"] as String).toLocal(),

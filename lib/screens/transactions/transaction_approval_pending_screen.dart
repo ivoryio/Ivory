@@ -101,6 +101,7 @@ class TransactionApprovalPendingScreen extends StatelessWidget {
   }
 
   Widget _buildPaymentInfo(BuildContext context, TransactionApprovalWithMessageViewModel viewModel) {
+    print("_buildPaymentInfo");
     return Expanded(
       child: SingleChildScrollView(
         child: Column(
