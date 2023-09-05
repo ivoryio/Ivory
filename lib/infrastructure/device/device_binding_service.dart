@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:local_auth/local_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:solarisdemo/services/api_service.dart';
 import 'package:solarisdemo/utilities/device_info/device_info.dart';
@@ -161,42 +160,6 @@ class DeviceBindingService extends ApiService {
     } catch (e) {
       return const DeviceBindingServiceErrorResponse(
           errorType: DeviceBindingServiceErrorType.deletingDeviceBindingFailed);
-    }
-  }
-}
-
-class BiometricAuthentication {
-  final LocalAuthentication auth = LocalAuthentication();
-  final String message;
-
-  BiometricAuthentication({required this.message});
-
-  Future<bool> _isBiometricAvailable() async {
-    bool isAvailable = await auth.canCheckBiometrics;
-    return isAvailable;
-  }
-
-  Future<bool> authenticateWithBiometrics() async {
-    try {
-      bool isAvailable = await _isBiometricAvailable();
-      if (!isAvailable) {
-        // Biometric authentication is not available on the device.
-        return false;
-      }
-
-      bool didAuthenticate = await auth.authenticate(
-        localizedReason: message,
-        options: const AuthenticationOptions(
-          biometricOnly: false,
-          stickyAuth: true,
-          sensitiveTransaction: true,
-        ),
-      );
-
-      return didAuthenticate;
-    } catch (e) {
-      print('Error during biometric authentication: $e');
-      return false;
     }
   }
 }
