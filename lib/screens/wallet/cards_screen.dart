@@ -41,12 +41,6 @@ class BankCardsScreen extends StatelessWidget {
                 children: [
                   const AppToolbar(
                     title: "Cards",
-                    // actions: [
-                    //   IconButton(
-                    //     icon: const Icon(Icons.add_circle_rounded),
-                    //     onPressed: () => addNewCard(context),
-                    //   ),
-                    // ],
                   ),
                   Expanded(
                     child: SingleChildScrollView(
@@ -165,7 +159,7 @@ class _CardSlider extends StatelessWidget {
             effect: SlideEffect(
               dotWidth: 8,
               dotHeight: 4,
-              activeDotColor: Theme.of(context).colorScheme.secondary,
+              activeDotColor: ClientConfig.getColorScheme().secondary,
               dotColor: Theme.of(context).colorScheme.onBackground.withOpacity(0.23),
             ),
           ),
@@ -182,12 +176,12 @@ class _OrderCardButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      child: PrimaryButton(
+      child: Button(
         text: "Get new card",
         onPressed: () => addNewCard(context),
-        textStyle: const TextStyle(
-          fontWeight: FontWeight.w600,
-        ),
+        color: ClientConfig.getColorScheme().tertiary,
+        textColor: ClientConfig.getColorScheme().surface,
+        textStyle: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
       ),
     );
   }

@@ -31,15 +31,11 @@ class BankCardDetailsAppleWalletScreen extends StatelessWidget {
         children: [
           AppToolbar(
             richTextTitle: RichText(
-              text: const TextSpan(
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-                children: <TextSpan>[
+              text: TextSpan(
+                style: ClientConfig.getTextStyleScheme().heading4,
+                children: const <TextSpan>[
                   TextSpan(
                     text: 'Step 4 ',
-                    style: TextStyle(color: Color(0xFF15141E)),
                   ),
                   TextSpan(
                     text: 'out of 4',
@@ -57,10 +53,10 @@ class BankCardDetailsAppleWalletScreen extends StatelessWidget {
               Navigator.pop(context);
             },
           ),
-          const LinearProgressIndicator(
+          LinearProgressIndicator(
             value: 4 / 4,
-            color: Color(0xFF2575FC),
-            backgroundColor: Color(0xFFE9EAEB),
+            color: ClientConfig.getColorScheme().secondary,
+            backgroundColor: const Color(0xFFE9EAEB),
           ),
           
           StoreConnector<AppState, BankCardViewModel>(
@@ -95,24 +91,16 @@ class BankCardDetailsAppleWalletScreen extends StatelessWidget {
                         .defaultScreenPadding,
                     child: Column(
                       children: [
-                        const Text(
+                        Text(
                           'Add your credit card to Apple Wallet',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w600,
-                            height: 32 / 24,
-                          ),
+                          style: ClientConfig.getTextStyleScheme().heading2,
                         ),
                         const SizedBox(
                           height: 16,
                         ),
-                        const Text(
+                        Text(
                           'Add your Porsche credit card to Apple Wallet to start making seamless POS purchases.',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            height: 24 / 16,
-                          ),
+                          style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
                         ),
                         const SizedBox(
                           height: 160,
@@ -122,7 +110,8 @@ class BankCardDetailsAppleWalletScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             SvgPicture.asset(
-                                'assets/images/apple_wallet_logo.svg')
+                                'assets/images/apple_wallet_logo.svg',
+                            )
                           ],
                         ),
                         const Spacer(),
@@ -136,11 +125,7 @@ class BankCardDetailsAppleWalletScreen extends StatelessWidget {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 0, vertical: 23.0),
                                 text: 'Maybe later',
-                                textStyle: const TextStyle(
-                                  color: Color(0xFF2575FC),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                                textStyle: ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(color: ClientConfig.getColorScheme().tertiary),
                                 onPressed: () {
                                   StoreProvider.of<AppState>(context)
                                       .dispatch(BankCardActivateCommandAction(
