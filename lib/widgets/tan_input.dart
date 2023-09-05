@@ -1,103 +1,172 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
-class InputCodeBox extends StatelessWidget {
+import '../config.dart';
+
+class InputCodeBox extends StatefulWidget {
   final bool? obscureText;
+  final String? hintText;
   final FocusNode? focusNode;
   final TextEditingController? controller;
   final Function(String value)? onChanged;
+  final bool isFocused;
 
   const InputCodeBox({
-    super.key,
+    Key? key,
     this.controller,
     this.focusNode,
+    this.hintText,
     this.obscureText = false,
     this.onChanged,
-  });
+    required this.isFocused,
+  }) : super(key: key);
 
   @override
+  _InputCodeBoxState createState() => _InputCodeBoxState();
+}
+
+class _InputCodeBoxState extends State<InputCodeBox> {
+  @override
   Widget build(BuildContext context) {
+    final borderColor = widget.isFocused ? ClientConfig.getColorScheme().primary : const Color(0xFFCFD4D9);
+
     return Container(
-      width: 50,
+      padding: const EdgeInsets.only(left: 4),
+      width: 48,
+      height: 64,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4),
         border: Border.all(
           width: 1,
-          color: const Color(0xffC4C4C4),
+          color: borderColor,
         ),
+        color: const Color(0xFFF8F9FA),
       ),
-      child: PlatformTextFormField(
-        focusNode: focusNode,
-        controller: controller,
-        textAlign: TextAlign.center,
-        obscureText: obscureText,
-        keyboardType: TextInputType.number,
-        onChanged: onChanged,
-        inputFormatters: [
-          FilteringTextInputFormatter.digitsOnly,
-          LengthLimitingTextInputFormatter(1),
-        ],
+      child: Center(
+        child: TextFormField(
+          focusNode: widget.focusNode,
+          controller: widget.controller,
+          textAlign: TextAlign.center,
+          obscureText: widget.obscureText!,
+          keyboardType: TextInputType.number,
+          inputFormatters: [
+            FilteringTextInputFormatter.digitsOnly,
+            LengthLimitingTextInputFormatter(1),
+          ],
+          onChanged: widget.onChanged,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            contentPadding: EdgeInsets.zero,
+            hintText: widget.hintText ?? '',
+            hintStyle: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: Color(0xFFADADB4),
+            ),
+          ),
+        ),
       ),
     );
   }
 }
 
-class TanInput extends StatelessWidget {
+class TanInput extends StatefulWidget {
   final int length;
   final Function(String tan) onCompleted;
+  final String? hintText;
 
   const TanInput({
-    super.key,
+    Key? key,
     required this.length,
     required this.onCompleted,
-  });
+    this.hintText,
+  }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  _TanInputState createState() => _TanInputState();
+}
 
-    List<TextEditingController> controllers =
-        List.from([for (var i = 0; i < length; i++) TextEditingController()]);
+class _TanInputState extends State<TanInput> {
+  late GlobalKey<FormState> formKey;
 
-    List<FocusNode> focusNodes =
-        List.from([for (var i = 0; i < length; i++) FocusNode()]);
+  late List<TextEditingController> controllers;
+  late List<FocusNode> focusNodes;
+  bool anyInputFocused = false;
 
-    void onChange(int inputIndex) {
-      String tan = controllers.map((controller) => controller.text).join("");
+  @override
+  void initState() {
+    super.initState();
 
-      if (controllers[inputIndex].text.isEmpty) {
-        return;
-      }
+    formKey = GlobalKey<FormState>();
 
-      for (var i = 0; i < controllers.length - 1; i++) {
-        if (controllers[i].text.isNotEmpty) {
-          int nextIndex =
-              controllers.indexWhere((controller) => controller.text.isEmpty);
-          if (nextIndex != -1) {
-            FocusScope.of(context).unfocus(
-                disposition: UnfocusDisposition.previouslyFocusedChild);
-            FocusScope.of(context).requestFocus(focusNodes[nextIndex]);
-          }
+    controllers = List.from(
+      [for (var i = 0; i < widget.length; i++) TextEditingController()],
+    );
+
+    focusNodes = List.from(
+      [for (var i = 0; i < widget.length; i++) FocusNode()],
+    );
+
+    for (var focusNode in focusNodes) {
+      focusNode.addListener(_updateFocusStatus);
+    }
+  }
+
+  void _updateFocusStatus() {
+    setState(() {
+      anyInputFocused = focusNodes.any((node) => node.hasFocus);
+    });
+  }
+
+  void onChange(int inputIndex) {
+    String tan = controllers.map((controller) => controller.text).join("");
+
+    if (controllers[inputIndex].text.isEmpty) {
+      return;
+    }
+
+    for (var i = 0; i < controllers.length - 1; i++) {
+      if (controllers[i].text.isNotEmpty) {
+        int nextIndex = controllers.indexWhere((controller) => controller.text.isEmpty);
+        if (nextIndex != -1) {
+          FocusScope.of(context).unfocus(disposition: UnfocusDisposition.previouslyFocusedChild);
+          FocusScope.of(context).requestFocus(focusNodes[nextIndex]);
         }
-      }
-
-      if (tan.length == length) {
-        onCompleted(tan);
       }
     }
 
+    if (tan.length == widget.length) {
+      widget.onCompleted(tan);
+    }
+  }
+
+  @override
+  void dispose() {
+    for (var controller in controllers) {
+      controller.dispose();
+    }
+    for (var focusNode in focusNodes) {
+      focusNode.dispose();
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Form(
       key: formKey,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          for (var inputIndex = 0; inputIndex < length; inputIndex++)
+          for (var inputIndex = 0; inputIndex < widget.length; inputIndex++)
             InputCodeBox(
               controller: controllers[inputIndex],
               focusNode: focusNodes[inputIndex],
               onChanged: (value) => onChange(inputIndex),
-            )
+              hintText: widget.hintText,
+              isFocused: anyInputFocused,
+            ),
         ],
       ),
     );

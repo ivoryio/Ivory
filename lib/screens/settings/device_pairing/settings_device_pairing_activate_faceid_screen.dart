@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
+import 'package:solarisdemo/screens/settings/device_pairing/settings_device_pairing_verify_faceid_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
-import '../../config.dart';
+import '../../../config.dart';
 
 class SettingsDevicePairingActivateFaceidScreen extends StatelessWidget {
   static const routeName = "/settingsDevicePairingActivateFaceidScreen";
@@ -73,7 +74,9 @@ class SettingsDevicePairingActivateFaceidScreen extends StatelessWidget {
                       disabledColor: const Color(0xFFDFE2E6),
                       color: ClientConfig.getColorScheme().surface,
                       textColor: ClientConfig.getColorScheme().tertiary,
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushNamed(context, SettingsDevicePairingVerifyFaceidScreen.routeName);
+                      },
                     ),
                   ),
                   const SizedBox(

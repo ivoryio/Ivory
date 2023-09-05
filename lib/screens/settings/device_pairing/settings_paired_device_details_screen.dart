@@ -4,13 +4,13 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/infrastructure/device/device_presenter.dart';
 import 'package:solarisdemo/models/device.dart';
+import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/device/device_action.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/ivory_list_item_with_action.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
-import '../../config.dart';
-import '../../redux/app_state.dart';
+import '../../../config.dart';
 
 class SettingsPairedDeviceDetailsScreenParams {
   final Device device;
