@@ -6,8 +6,14 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:redux/redux.dart';
+import 'package:solarisdemo/infrastructure/notifications/push_notification_storage_service.dart';
+import 'package:solarisdemo/models/notifications/notification_type.dart';
 import 'package:solarisdemo/models/user.dart';
+import 'package:solarisdemo/navigator.dart';
+import 'package:solarisdemo/redux/notification/notification_action.dart';
+import 'package:solarisdemo/screens/transactions/transaction_approval_pending_screen.dart';
 import 'package:solarisdemo/services/api_service.dart';
+import 'package:solarisdemo/utilities/remote_message_utils.dart';
 
 import '../../redux/app_state.dart';
 
@@ -16,26 +22,37 @@ const String highImportanceChannelId = 'high_importance_channel';
 @pragma('vm:entry-point')
 Future<void> _onBackgroundMessage(RemoteMessage message) async {
   debugPrint("FCM Background Message Received: ${message.notification?.title}");
+  saveNotificationMessage(message);
+}
+
+void saveNotificationMessage(RemoteMessage message) async {
+  debugPrint("Save notification message");
+  await PushNotificationSharedPreferencesStorageService().add(jsonEncode(message.toMap()));
 }
 
 abstract class PushNotificationService extends ApiService {
   PushNotificationService({super.user});
 
-  void init(Store<AppState> store, {User? user});
+  Future<void> init(Store<AppState> store, {User? user});
 
   Future<bool> hasPermission();
+
+  Future<void> handleSavedNotification();
+
+  Future<void> clearNotification();
 }
 
 class FirebasePushNotificationService extends PushNotificationService {
   final _messaging = FirebaseMessaging.instance;
   late final Store<AppState> store;
+  final PushNotificationStorageService storageService;
 
-  FirebasePushNotificationService({super.user}) {
+  FirebasePushNotificationService({super.user, required this.storageService}) {
     handleAndroidLocalNotifications();
   }
 
   @override
-  void init(Store<AppState> store, {User? user}) async {
+  Future<void> init(Store<AppState> store, {User? user}) async {
     this.store = store;
     if (user != null) this.user = user;
 
@@ -88,6 +105,9 @@ class FirebasePushNotificationService extends PushNotificationService {
     if (message == null) return;
 
     debugPrint('FCM Message received: ${message.toMap().toString()}');
+
+    _redirect(message);
+    clearNotification();
   }
 
   Future<void> handleAndroidLocalNotifications() async {
@@ -130,5 +150,40 @@ class FirebasePushNotificationService extends PushNotificationService {
   Future<bool> hasPermission() async {
     final settings = await _messaging.requestPermission();
     return settings.authorizationStatus == AuthorizationStatus.authorized;
+  }
+
+  void _redirect(RemoteMessage message) {
+    debugPrint("Redirect from notification");
+    final context = navigatorKey.currentContext as BuildContext;
+    final notificationType = RemoteMessageUtils.getNotificationType(message.data["type"] as String);
+
+    if (notificationType == NotificationType.scaChallenge) {
+      store.dispatch(ReceivedTransactionApprovalNotificationEventAction(
+        user: user!,
+        message: RemoteMessageUtils.getNotificationTransactionMessage(message),
+      ));
+      Navigator.pushNamed(context, TransactionApprovalPendingScreen.routeName);
+    } else {
+      debugPrint("Unsupported notification type ${message.data["type"]}");
+    }
+  }
+
+  @override
+  Future<void> handleSavedNotification() async {
+    final message = await storageService.find();
+    if (message == null) return;
+
+    debugPrint("Redirect from saved notification");
+
+    final notification = RemoteMessage.fromMap(jsonDecode(message));
+    _redirect(notification);
+    clearNotification();
+  }
+
+  @override
+  Future<void> clearNotification() async {
+    debugPrint("Clear notification");
+    await storageService.delete();
+    await FlutterLocalNotificationsPlugin().cancelAll();
   }
 }

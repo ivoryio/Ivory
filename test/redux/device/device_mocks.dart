@@ -1,5 +1,5 @@
 import 'package:mockito/mockito.dart';
-import 'package:solarisdemo/infrastructure/device/device_service.dart';
+import 'package:solarisdemo/infrastructure/device/device_binding_service.dart';
 import 'package:solarisdemo/models/device.dart';
 import 'package:solarisdemo/models/person_account.dart';
 import 'package:solarisdemo/models/person_model.dart';

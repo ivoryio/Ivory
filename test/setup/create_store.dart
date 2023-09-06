@@ -1,8 +1,12 @@
+import 'package:local_auth/local_auth.dart';
+import 'package:mockito/mockito.dart';
 import 'package:redux/redux.dart';
 import 'package:solarisdemo/infrastructure/bank_card/bank_card_service.dart';
 import 'package:solarisdemo/infrastructure/categories/categories_service.dart';
 import 'package:solarisdemo/infrastructure/change_request/change_request_service.dart';
 import 'package:solarisdemo/infrastructure/credit_line/credit_line_service.dart';
+import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
+import 'package:solarisdemo/infrastructure/device/device_binding_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
 import 'package:solarisdemo/infrastructure/person/person_service.dart';
@@ -31,16 +35,15 @@ Store<AppState> createTestStore({
   TransferService? transferService,
   ChangeRequestService? changeRequestService,
   DeviceBindingService? deviceBindingService,
+  DeviceService? deviceService,
+  BiometricsService? biometricsService,
 }) {
   return createStore(
     initialState: initialState,
-    pushNotificationService:
-        pushNotificationService ?? NotImplementedPushNotificationService(),
-    transactionService:
-        transactionService ?? NotImplementedTransactionService(),
+    pushNotificationService: pushNotificationService ?? NotImplementedPushNotificationService(),
+    transactionService: transactionService ?? NotImplementedTransactionService(),
     creditLineService: creditLineService ?? NotImplementedCreditLineService(),
-    repaymentReminderService:
-        repaymentReminderService ?? NotImplementedRepaymentReminderService(),
+    repaymentReminderService: repaymentReminderService ?? NotImplementedRepaymentReminderService(),
     billService: billService ?? NotImplementedBillService(),
     moreCreditService: moreCreditService ?? NotImplementedMoreCreditService(),
     bankCardService: bankCardService ?? NotImplementedBankCardService(),
@@ -49,12 +52,14 @@ Store<AppState> createTestStore({
     transferService: transferService ?? NotImplementedTransferService(),
     changeRequestService: changeRequestService ?? NotImplementedChangeRequestService(),
     deviceBindingService: deviceBindingService ?? NotImplementedDeviceBindingService(),
+    deviceService: deviceService ?? NotImplementedDeviceService(),
+    biometricsService: biometricsService ?? NotImplementedBiometricsService(),
   );
 }
 
 class NotImplementedPushNotificationService extends PushNotificationService {
   @override
-  void init(Store<AppState> store, {User? user}) {
+  Future<void> init(Store<AppState> store, {User? user}) {
     throw UnimplementedError();
   }
 
@@ -62,12 +67,21 @@ class NotImplementedPushNotificationService extends PushNotificationService {
   Future<bool> hasPermission() {
     throw UnimplementedError();
   }
+
+  @override
+  Future<void> handleSavedNotification() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> clearNotification() {
+    throw UnimplementedError();
+  }
 }
 
 class NotImplementedTransactionService extends TransactionService {
   @override
-  Future<TransactionsServiceResponse> getTransactions(
-      {TransactionListFilter? filter, User? user}) {
+  Future<TransactionsServiceResponse> getTransactions({TransactionListFilter? filter, User? user}) {
     throw UnimplementedError();
   }
 }
@@ -116,14 +130,12 @@ class NotImplementedMoreCreditService extends MoreCreditService {
 
 class NotImplementedBankCardService extends BankCardService {
   @override
-  Future<BankCardServiceResponse> getBankCardById(
-      {User? user, String? cardId}) {
+  Future<BankCardServiceResponse> getBankCardById({User? user, String? cardId}) {
     throw UnimplementedError();
   }
 
   @override
-  Future<BankCardServiceResponse> activateBankCard(
-      {User? user, String? cardId}) {
+  Future<BankCardServiceResponse> activateBankCard({User? user, String? cardId}) {
     throw UnimplementedError();
   }
 }
@@ -190,4 +202,37 @@ class NotImplementedDeviceBindingService extends DeviceBindingService {
   }) {
     throw UnimplementedError();
   }
+}
+
+class NotImplementedDeviceService extends DeviceService {
+  @override
+  Future<String?> getConsentId() async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> getDeviceId() async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> getDeviceFingerprint(String? consentId) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<DeviceKeyPairs?> getDeviceKeyPairs({bool restricted = false}) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  String? generateSignature({required String privateKey, required String stringToSign}) {
+    throw UnimplementedError();
+  }
+}
+
+class MockLocalAutentication extends Mock implements LocalAuthentication {}
+
+class NotImplementedBiometricsService extends BiometricsService {
+  NotImplementedBiometricsService() : super(auth: MockLocalAutentication());
 }

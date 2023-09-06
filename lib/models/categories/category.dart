@@ -38,6 +38,8 @@ class Category extends Equatable {
         return Icons.local_offer_outlined;
       case "automaticRepayment":
         return Icons.currency_exchange;
+      case "transactionApproval":
+        return Icons.euro;
       default:
         return Icons.local_offer_outlined;
     }
