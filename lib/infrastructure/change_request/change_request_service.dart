@@ -23,7 +23,7 @@ class ChangeRequestService extends ApiService {
 
       final data = await post(
         path,
-        body: {"tan": tan},
+        body: {"delivery_method": "mobile_number" ,"tan": tan},
       );
 
       if (data['success'] == false) {
