@@ -201,7 +201,6 @@ class SettingsDevicePairingScreen extends StatelessWidget {
               if (viewModel is DeviceBindingFetchedButEmptyViewModel)
                 GestureDetector(
                   onTap: () {
-                    // StoreProvider.of<AppState>(context).dispatch(CreateDeviceBindingCommandAction(user: user));
                     Navigator.pushNamed(context, SettingsDevicePairingActivateFaceidScreen.routeName);
                   },
                   child: SizedBox(

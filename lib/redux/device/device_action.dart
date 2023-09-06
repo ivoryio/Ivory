@@ -13,6 +13,16 @@ class CreateDeviceBindingCommandAction {
   });
 }
 
+class VerifyDeviceBindingSignatureCommandAction {
+  final User user;
+  final String tan;
+
+  VerifyDeviceBindingSignatureCommandAction({
+    required this.user,
+    required this.tan,
+  });
+}
+
 class DeleteBoundDeviceCommandAction {
   final User user;
   final String deviceId;
@@ -31,6 +41,10 @@ class BoundDevicesFetchedEventAction {
 
   BoundDevicesFetchedEventAction(this.devices, this.thisDevice);
 }
+
+class DeviceBindingCreatedEventAction {}
+
+class DeviceBindingChallengeVerifiedEventAction {}
 
 class BoundDevicesFetchedButEmptyEventAction {
   final Device thisDevice;

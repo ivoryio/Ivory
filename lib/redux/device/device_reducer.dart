@@ -13,6 +13,10 @@ DeviceBindingState deviceBindingState(DeviceBindingState currentState, dynamic a
     return DeviceBindingFetchedButEmptyState(action.thisDevice);
   } else if (action is BoundDeviceDeletedEventAction) {
     return DeviceBindingDeletedState();
+  } else if (action is DeviceBindingCreatedEventAction) {
+    return DeviceBindingCreatedState();
+  } else if (action is DeviceBindingChallengeVerifiedEventAction) {
+    return DeviceBindingChallengeVerifiedState();
   }
   return currentState;
 }

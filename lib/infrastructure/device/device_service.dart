@@ -150,14 +150,15 @@ class DeviceBindingService extends ApiService {
   Future<DeviceBindingServiceResponse> deleteDeviceBinding({required User user, required String deviceId}) async {
     this.user = user;
     try {
-      await delete(
-        'person/device/binding/$deviceId',
-      );
-
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.remove('device_id');
       prefs.remove('restrictedKeyPair');
       prefs.remove('unrestrictedKeyPair');
+      
+      await delete(
+        'person/device/binding/$deviceId',
+      );
+
 
       return DeleteDeviceBindingSuccessResponse();
     } catch (e) {
