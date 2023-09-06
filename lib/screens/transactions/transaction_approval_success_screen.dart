@@ -21,7 +21,8 @@ class TransactionApprovalSuccessScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Spacer(),
+            const SizedBox(height: kToolbarHeight),
+            const SizedBox(height: 24),
             Text("Payment Authorized!\nOne more step left...", style: ClientConfig.getTextStyleScheme().heading1),
             const SizedBox(height: 16),
             RichText(

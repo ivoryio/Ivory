@@ -21,16 +21,17 @@ class TransactionApprovalFailedScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Spacer(),
+            const SizedBox(height: kToolbarHeight),
+            const SizedBox(height: 24),
             Text("Online payment was unsuccessful!", style: ClientConfig.getTextStyleScheme().heading1),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               "Due to a technical issue, your online payment was unsuccessful. Please try again.",
               style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
             ),
-            Spacer(),
+            const Spacer(),
             Align(child: SvgPicture.asset("assets/icons/error_icon.svg")),
-            Spacer(),
+            const Spacer(),
             SizedBox(
               width: double.infinity,
               child: PrimaryButton(
