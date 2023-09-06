@@ -20,6 +20,7 @@ import 'package:solarisdemo/screens/transactions/transaction_approval_success_sc
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/card_list_item.dart';
 import 'package:solarisdemo/widgets/circular_countdown_progress_widget.dart';
+import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/transaction_listing_item.dart';
 
@@ -87,10 +88,12 @@ class TransactionApprovalPendingScreen extends StatelessWidget {
         child: SecondaryButton(
           text: "Reject",
           borderWidth: 2,
-          onPressed: () {
-            showDialog(
+          onPressed: () async {
+            showBottomModal(
               context: context,
-              builder: (context) => _RejectionAlertDialog(
+              title: 'Reject this payment',
+              message: "Are you sure you want to reject this payment?",
+              content: _RejectPopUp(
                 onConfirm: () => StoreProvider.of<AppState>(context).dispatch(
                   RejectTransactionCommandAction(
                     user: user.cognito,
@@ -131,6 +134,8 @@ class TransactionApprovalPendingScreen extends StatelessWidget {
     AuthenticatedUser user,
     WithApprovalChallengeViewModel viewModel,
   ) {
+    final cardMaskedPan = viewModel.bankCard.representation?.maskedPan ?? "";
+
     return Expanded(
       child: SingleChildScrollView(
         child: Column(
@@ -146,13 +151,20 @@ class TransactionApprovalPendingScreen extends StatelessWidget {
                 width: 70,
                 child: CircularCountdownProgress(
                   duration: const Duration(minutes: 4),
-                  onCompleted: () {
-                    showDialog(
+                  onCompleted: () async {
+                    final bottomSheet = await showBottomModal(
                       context: context,
-                      barrierDismissible: false,
-                      useRootNavigator: true,
-                      builder: (context) => const _TimeoutAlertDialog(),
+                      title: "Payment confirmation timed out",
+                      message: "The payment has been automatically rejected.",
+                      content: const _TimeoutPopUp(),
                     );
+
+                    final isDismissed = bottomSheet == null;
+
+                    if (isDismissed) {
+                      // ignore: use_build_context_synchronously
+                      Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false);
+                    }
                   },
                 ),
               )
@@ -171,7 +183,7 @@ class TransactionApprovalPendingScreen extends StatelessWidget {
                     currency: "EUR",
                     unit: "cents",
                   ),
-                  category: const Category(id: "other", name: "Other"),
+                  category: const Category(id: "transactionApproval", name: "Transaction Approval"),
                   recordedAt: viewModel.message.dateTime,
                 ),
               ),
@@ -181,7 +193,7 @@ class TransactionApprovalPendingScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: CardListItem(
-                cardNumber: viewModel.bankCard.representation?.maskedPan ?? "",
+                cardNumber: "\u2217\u2217\u2217\u2217 ${cardMaskedPan.substring(cardMaskedPan.length - 4)}",
                 expiryDate: viewModel.bankCard.representation?.formattedExpirationDate ?? "",
               ),
             ),
@@ -210,66 +222,56 @@ class _Appbar extends StatelessWidget {
   }
 }
 
-class _TimeoutAlertDialog extends StatelessWidget {
-  const _TimeoutAlertDialog();
+class _TimeoutPopUp extends StatelessWidget {
+  const _TimeoutPopUp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => false,
-      child: AlertDialog(
-        title: Text(
-          "Payment confirmation timed out",
-          style: ClientConfig.getTextStyleScheme().heading4,
-        ),
-        content: const Text("The payment has been automatically rejected"),
-        actions: [
-          TextButton(
+    return Column(
+      children: [
+        const SizedBox(height: 24),
+        SizedBox(
+          width: double.infinity,
+          child: PrimaryButton(
+            text: 'OK',
             onPressed: () {
-              Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false);
+              Navigator.pop(context);
             },
-            child: const Text("OK"),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
 
-class _RejectionAlertDialog extends StatelessWidget {
+class _RejectPopUp extends StatelessWidget {
   final void Function() onConfirm;
-
-  const _RejectionAlertDialog({required this.onConfirm});
+  const _RejectPopUp({required this.onConfirm});
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text(
-        "Reject this payment",
-        style: ClientConfig.getTextStyleScheme().heading4,
-      ),
-      content: const Text("Are you sure you want to reject this payment?"),
-      actionsAlignment: MainAxisAlignment.center,
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text(
-            "Cancel",
-            style: ClientConfig.getTextStyleScheme()
-                .heading4
-                .copyWith(fontWeight: FontWeight.w400, color: ClientConfig.getColorScheme().secondary),
+    return Column(
+      children: [
+        const SizedBox(height: 24),
+        SizedBox(
+          width: double.infinity,
+          child: SecondaryButton(
+            text: 'Cancel',
+            borderWidth: 2,
+            onPressed: () => Navigator.of(context).pop(),
           ),
         ),
-        TextButton(
-          onPressed: () {
-            Navigator.pop(context);
-            onConfirm();
-          },
-          child: Text(
-            "Yes",
-            style: ClientConfig.getTextStyleScheme()
-                .heading4
-                .copyWith(fontWeight: FontWeight.w400, color: ClientConfig.getColorScheme().secondary),
+        const SizedBox(height: 16),
+        SizedBox(
+          width: double.infinity,
+          child: Button(
+            text: 'Yes, reject',
+            color: const Color(0xFFCC0000),
+            textColor: Colors.white,
+            onPressed: () {
+              Navigator.pop(context);
+              onConfirm();
+            },
           ),
         ),
       ],

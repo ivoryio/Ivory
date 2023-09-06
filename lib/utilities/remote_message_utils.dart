@@ -17,7 +17,6 @@ class RemoteMessageUtils {
   }
 
   static NotificationTransactionMessage getNotificationTransactionMessage(RemoteMessage message) {
-    // card_id
     return NotificationTransactionMessage(
       cardId: message.data["card_id"] as String,
       amountUnit: message.data["amount_unit"] as String,

@@ -12,7 +12,7 @@ class CardListItem extends StatelessWidget {
     return Row(
       children: [
         Icon(Icons.credit_card, color: ClientConfig.getColorScheme().secondary),
-        SizedBox(width: 16),
+        const SizedBox(width: 16),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -21,7 +21,7 @@ class CardListItem extends StatelessWidget {
               "Expiry date: $expiryDate",
               style: ClientConfig.getTextStyleScheme()
                   .bodySmallRegular
-                  .copyWith(fontWeight: FontWeight.w400, color: Color(0xFF56555E)),
+                  .copyWith(fontWeight: FontWeight.w400, color: const Color(0xFF56555E)),
             ),
           ],
         ),
