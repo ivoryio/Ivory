@@ -74,13 +74,17 @@ class _InputCodeBoxState extends State<InputCodeBox> {
 class TanInput extends StatefulWidget {
   final int length;
   final Function(String tan) onCompleted;
+  final Function(bool)? updateInputComplete;
   final String? hintText;
+  final TextEditingController? controller;
 
   const TanInput({
     Key? key,
     required this.length,
     required this.onCompleted,
     this.hintText,
+    this.controller,
+    this.updateInputComplete,
   }) : super(key: key);
 
   @override
@@ -111,6 +115,15 @@ class _TanInputState extends State<TanInput> {
     for (var focusNode in focusNodes) {
       focusNode.addListener(_updateFocusStatus);
     }
+
+    if (widget.controller != null) {
+      for (var i = 0; i < widget.length; i++) {
+        controllers[i].text = widget.controller!.text.length > i ? widget.controller!.text[i] : '';
+        controllers[i].addListener(() {
+          widget.controller!.text = controllers.map((controller) => controller.text).join();
+        });
+      }
+    }
   }
 
   void _updateFocusStatus() {
@@ -121,6 +134,12 @@ class _TanInputState extends State<TanInput> {
 
   void onChange(int inputIndex) {
     String tan = controllers.map((controller) => controller.text).join("");
+
+    if (widget.updateInputComplete != null) {
+      if (tan.length < widget.length) {
+        widget.updateInputComplete!(false);
+      }
+    }
 
     if (controllers[inputIndex].text.isEmpty) {
       return;

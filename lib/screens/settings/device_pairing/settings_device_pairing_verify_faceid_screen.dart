@@ -12,10 +12,23 @@ import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/tan_input.dart';
 
-class SettingsDevicePairingVerifyFaceidScreen extends StatelessWidget {
+class SettingsDevicePairingVerifyFaceidScreen extends StatefulWidget {
   static const routeName = "/settingsDevicePairingVerifyFaceidScreen";
   const SettingsDevicePairingVerifyFaceidScreen({super.key});
 
+  @override
+  State<SettingsDevicePairingVerifyFaceidScreen> createState() => _SettingsDevicePairingVerifyFaceidScreenState();
+}
+
+class _SettingsDevicePairingVerifyFaceidScreenState extends State<SettingsDevicePairingVerifyFaceidScreen> {
+  final TextEditingController _tanInputController = TextEditingController();
+  bool _isInputComplete = false;
+
+  void updateInputComplete(bool isComplete) {
+    setState(() {
+      _isInputComplete = isComplete;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     final user = context.read<AuthCubit>().state.user!.cognito;
@@ -90,9 +103,17 @@ class SettingsDevicePairingVerifyFaceidScreen extends StatelessWidget {
                       TanInput(
                         hintText: '#',
                         length: 6,
-                        onCompleted: (String tan) {},
+                        onCompleted: (String tan) {
+                          setState(() {
+                            if (tan.length == 6) {
+                              updateInputComplete(true);
+                            }
+                          });
+                        },
+                        controller: _tanInputController,
+                        updateInputComplete: updateInputComplete,
                       ),
-                      Spacer(),
+                      const Spacer(),
                       SizedBox(
                         width: double.infinity,
                         height: 48,
@@ -101,12 +122,15 @@ class SettingsDevicePairingVerifyFaceidScreen extends StatelessWidget {
                           disabledColor: const Color(0xFFDFE2E6),
                           color: ClientConfig.getColorScheme().tertiary,
                           textColor: ClientConfig.getColorScheme().surface,
-                          onPressed: () {
-                            StoreProvider.of<AppState>(context).dispatch(VerifyDeviceBindingSignatureCommandAction(
-                              user: user,
-                              tan: '212212', //static tan
-                            ));
-                          },
+                          onPressed: _isInputComplete
+                              ? () {
+                                  StoreProvider.of<AppState>(context)
+                                      .dispatch(VerifyDeviceBindingSignatureCommandAction(
+                                    user: user,
+                                    tan: '212212', //static tan
+                                  ));
+                                }
+                              : null,
                         ),
                       ),
                     ],

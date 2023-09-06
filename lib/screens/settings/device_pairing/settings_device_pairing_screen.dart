@@ -85,7 +85,8 @@ class SettingsDevicePairingScreen extends StatelessWidget {
                     },
                   ),
                 ],
-              )),
+            ),
+          ),
         ),
       ],
     ));
