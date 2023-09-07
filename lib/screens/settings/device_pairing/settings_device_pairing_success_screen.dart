@@ -53,8 +53,31 @@ class SettingsDevicePairingSuccessScreen extends StatelessWidget {
                   ),
                   Expanded(
                     child: Center(
-                      child: SvgPicture.asset(
-                        'assets/images/biometric_faceid.svg',
+                      child: SizedBox(
+                        width: 300,
+                        height: 300,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            SvgPicture.asset(
+                              'assets/images/biometric_faceid.svg',
+                            ),
+                            Positioned(
+                              left: 170,
+                              bottom: 180,
+                              child: Container(
+                                height: 64,
+                                width: 64,
+                                decoration: const BoxDecoration(shape: BoxShape.circle, color: Color(0xFF00774C)),
+                                child: Icon(
+                                  Icons.check,
+                                  color: ClientConfig.getColorScheme().surface,
+                                  size: 48,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

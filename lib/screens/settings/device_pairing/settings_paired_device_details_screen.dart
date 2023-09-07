@@ -6,8 +6,11 @@ import 'package:solarisdemo/infrastructure/device/device_presenter.dart';
 import 'package:solarisdemo/models/device.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/device/device_action.dart';
+import 'package:solarisdemo/screens/settings/device_pairing/settings_device_pairing_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
+import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/ivory_list_item_with_action.dart';
+import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../../config.dart';
@@ -45,7 +48,7 @@ class SettingsPairedDeviceDetailsScreen extends StatelessWidget {
           StoreConnector<AppState, DeviceBindingViewModel>(
             onDidChange: (previousViewModel, newViewModel) {
               if (previousViewModel is DeviceBindingLoadingViewModel && newViewModel is DeviceBindingDeletedViewModel) {
-                Navigator.pop(context);
+                Navigator.popUntil(context, ModalRoute.withName(SettingsDevicePairingScreen.routeName));
                 StoreProvider.of<AppState>(context).dispatch(
                   FetchBoundDevicesCommandAction(),
                 );
@@ -211,11 +214,46 @@ class SettingsPairedDeviceDetailsScreen extends StatelessWidget {
                         rightIconColor: ClientConfig.getClientConfig().uiSettings.colorscheme.error,
                         actionSwitch: false,
                         onPressed: () {
-                          StoreProvider.of<AppState>(context).dispatch(
-                            DeleteBoundDeviceCommandAction(
-                              user: user,
-                              deviceId: params.device.deviceId,
-                            ),
+                          showBottomModal(
+                              context: context,
+                              title:
+                                  'Are you sure you want to unpair ${viewModel.thisDevice!.deviceName} (ID: ${viewModel.thisDevice!.deviceId.substring(0, 13)})?',
+                              message:
+                                  'You will not be able to make any transactions or other complex actions with this device.',
+                              content: Column(
+                                children: [
+                                  const SizedBox(
+                                    height: 24,
+                                  ),
+                                  Button(
+                                    text: 'No, go back',
+                                    textColor: ClientConfig.getColorScheme().primary,
+                                    border: Border.all(
+                                      width: 2,
+                                      color: ClientConfig.getColorScheme().primary,
+                                      style: BorderStyle.solid,
+                                    ),
+                                    color: ClientConfig.getColorScheme().background,
+                                    onPressed: () => Navigator.pop(context),
+                                  ),
+                                  const SizedBox(
+                                    height: 16,
+                                  ),
+                                  Button(
+                                    text: 'Yes, unpair',
+                                    color: const Color(0xFFE61F27),
+                                    onPressed: () {
+                                      Navigator.pop(context);                          
+                                      StoreProvider.of<AppState>(context).dispatch(
+                                        DeleteBoundDeviceCommandAction(
+                                          user: user,
+                                          deviceId: params.device.deviceId,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ],
+                              )
                           );
                         },
                       ),
