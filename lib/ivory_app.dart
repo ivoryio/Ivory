@@ -31,6 +31,10 @@ import 'package:solarisdemo/screens/settings/device_pairing/settings_paired_devi
 import 'package:solarisdemo/screens/settings/settings_screen.dart';
 import 'package:solarisdemo/screens/settings/settings_security_screen.dart';
 import 'package:solarisdemo/screens/signup/signup_screen.dart';
+import 'package:solarisdemo/screens/transactions/transaction_approval_failed_screen.dart';
+import 'package:solarisdemo/screens/transactions/transaction_approval_pending_screen.dart';
+import 'package:solarisdemo/screens/transactions/transaction_approval_rejected_screen.dart';
+import 'package:solarisdemo/screens/transactions/transaction_approval_success_screen.dart';
 import 'package:solarisdemo/screens/transactions/transaction_detail_screen.dart';
 import 'package:solarisdemo/screens/transactions/transactions_filtering_screen.dart';
 import 'package:solarisdemo/screens/transactions/transactions_screen.dart';
@@ -96,8 +100,8 @@ class _IvoryAppState extends State<IvoryApp> {
               // signup
               SignupScreen.routeName: (context) => const SignupScreen(),
               // home
-              HomeScreen.routeName: (context) => const MainNavigationScreen(
-                  initialScreen: MainNavigationScreens.homeScreen),
+              HomeScreen.routeName: (context) =>
+                  const MainNavigationScreen(initialScreen: MainNavigationScreens.homeScreen),
               // settings
               SettingsScreen.routeName: (context) =>
                   const MainNavigationScreen(initialScreen: MainNavigationScreens.settingsScreen),
@@ -119,43 +123,34 @@ class _IvoryAppState extends State<IvoryApp> {
                   
               //transactions
               TransactionsScreen.routeName: (context) {
-                final transactionListFilter = ModalRoute.of(context)
-                    ?.settings
-                    .arguments as TransactionListFilter?;
+                final transactionListFilter = ModalRoute.of(context)?.settings.arguments as TransactionListFilter?;
 
                 return MainNavigationScreen(
-                    initialScreen: MainNavigationScreens.transactionsScreen,
-                    screenParams: transactionListFilter);
+                    initialScreen: MainNavigationScreens.transactionsScreen, screenParams: transactionListFilter);
               },
               TransactionsFilteringScreen.routeName: (context) {
-                final transactionListFilter = ModalRoute.of(context)
-                    ?.settings
-                    .arguments as TransactionListFilter?;
+                final transactionListFilter = ModalRoute.of(context)?.settings.arguments as TransactionListFilter?;
 
                 return TransactionsFilteringScreen(
                   transactionListFilter: transactionListFilter,
                 );
               },
-              TransactionDetailScreen.routeName: (context) =>
-                  const TransactionDetailScreen(),
+              TransactionDetailScreen.routeName: (context) => const TransactionDetailScreen(),
+              TransactionApprovalPendingScreen.routeName: (context) => const TransactionApprovalPendingScreen(),
+              TransactionApprovalSuccessScreen.routeName: (context) => const TransactionApprovalSuccessScreen(),
+              TransactionApprovalRejectedScreen.routeName: (context) => const TransactionApprovalRejectedScreen(),
+              TransactionApprovalFailedScreen.routeName: (context) => const TransactionApprovalFailedScreen(),
               // wallet
               BankCardsScreen.routeName: (context) =>
-                  const MainNavigationScreen(
-                      initialScreen: MainNavigationScreens.cardsScreen),
-              BankCardDetailsChoosePinScreen.routeName: (context) =>
-                  const BankCardDetailsChoosePinScreen(),
-              BankCardDetailsConfirmPinScreen.routeName: (context) =>
-                  const BankCardDetailsConfirmPinScreen(),
-              BankCardDetailsAppleWalletScreen.routeName: (context) =>
-                  const BankCardDetailsAppleWalletScreen(),
+                  const MainNavigationScreen(initialScreen: MainNavigationScreens.cardsScreen),
+              BankCardDetailsChoosePinScreen.routeName: (context) => const BankCardDetailsChoosePinScreen(),
+              BankCardDetailsConfirmPinScreen.routeName: (context) => const BankCardDetailsConfirmPinScreen(),
+              BankCardDetailsAppleWalletScreen.routeName: (context) => const BankCardDetailsAppleWalletScreen(),
               BankCardDetailsActivationSuccessScreen.routeName: (context) =>
                   const BankCardDetailsActivationSuccessScreen(),
-              BankCardDetailsInfoScreen.routeName: (context) =>
-                  const BankCardDetailsInfoScreen(),
+              BankCardDetailsInfoScreen.routeName: (context) => const BankCardDetailsInfoScreen(),
               BankCardDetailsScreen.routeName: (context) {
-                final cardDetailsScreenParams = ModalRoute.of(context)
-                    ?.settings
-                    .arguments as CardDetailsScreenParams?;
+                final cardDetailsScreenParams = ModalRoute.of(context)?.settings.arguments as CardDetailsScreenParams?;
 
                 return BankCardDetailsScreen(
                   params: cardDetailsScreenParams!,
@@ -163,20 +158,16 @@ class _IvoryAppState extends State<IvoryApp> {
               },
               // repayments
               RepaymentsScreen.routeName: (context) => const RepaymentsScreen(),
-              ChangeRepaymentRateScreen.routeName: (context) =>
-                  const ChangeRepaymentRateScreen(),
+              ChangeRepaymentRateScreen.routeName: (context) => const ChangeRepaymentRateScreen(),
               RepaymentSuccessfullyChangedScreen.routeName: (context) {
-                final params = ModalRoute.of(context)?.settings.arguments
-                    as RepaymentSuccessfullyScreenParams;
+                final params = ModalRoute.of(context)?.settings.arguments as RepaymentSuccessfullyScreenParams;
 
                 return RepaymentSuccessfullyChangedScreen(params: params);
               },
-              RepaymentReminderScreen.routeName: (context) =>
-                  const RepaymentReminderScreen(),
+              RepaymentReminderScreen.routeName: (context) => const RepaymentReminderScreen(),
 
               MoreCreditScreen.routeName: (context) => const MoreCreditScreen(),
-              MoreCreditWaitlistScreen.routeName: (context) =>
-                  const MoreCreditWaitlistScreen(),
+              MoreCreditWaitlistScreen.routeName: (context) => const MoreCreditWaitlistScreen(),
 
               BillsScreen.routeName: (context) => const BillsScreen(),
               BillDetailScreen.routeName: (context) => const BillDetailScreen(),
@@ -184,19 +175,14 @@ class _IvoryAppState extends State<IvoryApp> {
               TransferScreen.routeName: (context) => const TransferScreen(),
               TransferReviewScreen.routeName: (context) {
                 return TransferReviewScreen(
-                  params: ModalRoute.of(context)?.settings.arguments
-                      as TransferReviewScreenParams,
+                  params: ModalRoute.of(context)?.settings.arguments as TransferReviewScreenParams,
                 );
               },
-              TransferSignScreen.routeName: (context) =>
-                  const TransferSignScreen(),
-              TransferSuccessfulScreen.routeName: (context) =>
-                  const TransferSuccessfulScreen(),
-              TransferFailedScreen.routeName: (context) =>
-                  const TransferFailedScreen(),
+              TransferSignScreen.routeName: (context) => const TransferSignScreen(),
+              TransferSuccessfulScreen.routeName: (context) => const TransferSuccessfulScreen(),
+              TransferFailedScreen.routeName: (context) => const TransferFailedScreen(),
               // account
-              AccountDetailsScreen.routeName: (context) =>
-                  const AccountDetailsScreen(),
+              AccountDetailsScreen.routeName: (context) => const AccountDetailsScreen(),
             },
           );
         }),

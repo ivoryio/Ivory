@@ -54,7 +54,7 @@ class _TransferReviewScreenState extends State<TransferReviewScreen> {
         body: Column(
           children: [
             AppToolbar(
-              title: "Review",
+              title: "Review transfer",
               padding: EdgeInsets.symmetric(
                 horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
               ),

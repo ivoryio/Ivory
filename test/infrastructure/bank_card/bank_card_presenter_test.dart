@@ -13,6 +13,8 @@ class MockPerson extends Mock implements Person {}
 
 class MockPersonAccount extends Mock implements PersonAccount {}
 
+class MockAuthenticatedUser extends Mock implements AuthenticatedUser {}
+
 void main() {
   final bankCard1 = BankCard(
     id: "inactive-card-id",

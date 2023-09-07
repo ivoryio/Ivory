@@ -1,1 +1,1 @@
-enum ChangeRequestErrorType { unknown, confirmationFailed }
+enum ChangeRequestErrorType { unknown, confirmationFailed, authorizationFailed }

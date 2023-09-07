@@ -79,7 +79,7 @@ class TransferSuccessfulScreen extends StatelessWidget {
                                   ),
                                   TextSpan(text: "Reference account", style: boldFont),
                                   TextSpan(text: " to your ", style: regularFont),
-                                  TextSpan(text: "Porsche account", style: boldFont),
+                                  TextSpan(text: "Ivory account", style: boldFont),
                                   TextSpan(
                                     text: ".",
                                     style: regularFont,

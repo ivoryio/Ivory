@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:local_auth/local_auth.dart';
+import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/screens/wallet/card_details_screen.dart';
 import 'package:solarisdemo/widgets/spaced_column.dart';
@@ -8,7 +10,6 @@ import 'package:solarisdemo/widgets/spaced_column.dart';
 import '../../config.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../infrastructure/bank_card/bank_card_presenter.dart';
-import '../../infrastructure/device/device_service.dart';
 import '../../models/bank_card.dart';
 import '../../redux/bank_card/bank_card_action.dart';
 import '../../widgets/button.dart';
@@ -112,8 +113,8 @@ class InactiveCard extends StatelessWidget {
           child: Button(
             text: "Activate my card",
             disabledColor: const Color(0xFFDFE2E6),
-            color:  ClientConfig.getColorScheme().tertiary,
-            textColor:  ClientConfig.getColorScheme().surface,
+            color: ClientConfig.getColorScheme().tertiary,
+            textColor: ClientConfig.getColorScheme().surface,
             onPressed: () {
               Navigator.pushNamed(
                 context,
@@ -142,10 +143,11 @@ class ActiveCard extends StatelessWidget {
               icon: Icons.remove_red_eye_outlined,
               textLabel: 'Details',
               onPressed: () async {
-                BiometricAuthentication biometricService =
-                    BiometricAuthentication(message: 'Please use biometric authentication to view card details.');
-                if (await biometricService.authenticateWithBiometrics()) {
-                 // ignore: use_build_context_synchronously
+                BiometricsService biometricService = BiometricsService(auth: LocalAuthentication());
+
+                if (await biometricService.authenticateWithBiometrics(
+                    message: 'Please use biometric authentication to view card details.')) {
+                  // ignore: use_build_context_synchronously
                   Navigator.pushNamed(
                     context,
                     BankCardDetailsScreen.routeName,
@@ -277,7 +279,7 @@ class CardOptionsButton extends StatelessWidget {
           child: Icon(
             icon,
             size: 24,
-            color:  ClientConfig.getColorScheme().surface,
+            color: ClientConfig.getColorScheme().surface,
           ),
         ),
         Padding(

@@ -6,11 +6,10 @@ import 'package:solarisdemo/redux/transactions/transactions_state.dart';
 import '../../cubits/login_cubit_test.dart';
 import '../../setup/create_app_state.dart';
 import '../../setup/create_store.dart';
-import 'transactions_mocks.dart';
+import 'transaction_mocks.dart';
 
 void main() {
-  test(
-      "When asking to fetch transactions the first time you enter the screen it should have a loading state",
+  test("When asking to fetch transactions the first time you enter the screen it should have a loading state",
       () async {
     //given
     final store = createTestStore(
@@ -20,8 +19,7 @@ void main() {
       ),
     );
 
-    final appState = store.onChange.firstWhere(
-        (element) => element.transactionsState is TransactionsLoadingState);
+    final appState = store.onChange.firstWhere((element) => element.transactionsState is TransactionsLoadingState);
     //when
     store.dispatch(
       GetTransactionsCommandAction(
@@ -37,9 +35,7 @@ void main() {
     expect((await appState).transactionsState, isA<TransactionsLoadingState>());
   });
 
-  test(
-      "When fetching transactions successfully should update with transactions",
-      () async {
+  test("When fetching transactions successfully should update with transactions", () async {
     //given
     final store = createTestStore(
       transactionService: FakeTransactionService(),
@@ -48,8 +44,7 @@ void main() {
       ),
     );
 
-    final appState = store.onChange.firstWhere(
-        (element) => element.transactionsState is TransactionsFetchedState);
+    final appState = store.onChange.firstWhere((element) => element.transactionsState is TransactionsFetchedState);
     //when
     store.dispatch(
       GetTransactionsCommandAction(
@@ -62,13 +57,11 @@ void main() {
       ),
     );
     //then
-    final TransactionsFetchedState transactionsState =
-        (await appState).transactionsState as TransactionsFetchedState;
+    final TransactionsFetchedState transactionsState = (await appState).transactionsState as TransactionsFetchedState;
     expect(transactionsState.transactions, hasLength(2));
   });
 
-  test("When fetching transactions is failing should update with error",
-      () async {
+  test("When fetching transactions is failing should update with error", () async {
     //given
     final store = createTestStore(
       transactionService: FakeFailingTransactionService(),
@@ -77,8 +70,7 @@ void main() {
       ),
     );
 
-    final appState = store.onChange.firstWhere(
-        (element) => element.transactionsState is TransactionsErrorState);
+    final appState = store.onChange.firstWhere((element) => element.transactionsState is TransactionsErrorState);
     //when
     store.dispatch(
       GetTransactionsCommandAction(
@@ -94,8 +86,7 @@ void main() {
     expect((await appState).transactionsState, isA<TransactionsErrorState>());
   });
 
-  test(
-      "When asking to fetch upcoming transactions the first time you enter the screen it should have a loading state",
+  test("When asking to fetch upcoming transactions the first time you enter the screen it should have a loading state",
       () async {
     //given
     final store = createTestStore(
@@ -105,8 +96,7 @@ void main() {
       ),
     );
 
-    final appState = store.onChange.firstWhere(
-        (element) => element.transactionsState is TransactionsLoadingState);
+    final appState = store.onChange.firstWhere((element) => element.transactionsState is TransactionsLoadingState);
     //when
     store.dispatch(
       GetUpcomingTransactionsCommandAction(
@@ -122,9 +112,7 @@ void main() {
     expect((await appState).transactionsState, isA<TransactionsLoadingState>());
   });
 
-  test(
-      "When fetching upcoming transactions successfully should update with transactions",
-      () async {
+  test("When fetching upcoming transactions successfully should update with transactions", () async {
     //given
     final store = createTestStore(
       transactionService: FakeTransactionService(),
@@ -133,8 +121,8 @@ void main() {
       ),
     );
 
-    final appState = store.onChange.firstWhere((element) =>
-        element.transactionsState is UpcomingTransactionsFetchedState);
+    final appState =
+        store.onChange.firstWhere((element) => element.transactionsState is UpcomingTransactionsFetchedState);
     //when
     store.dispatch(
       GetUpcomingTransactionsCommandAction(
