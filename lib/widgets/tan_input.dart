@@ -88,10 +88,10 @@ class TanInput extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _TanInputState createState() => _TanInputState();
+  TanInputState createState() => TanInputState();
 }
 
-class _TanInputState extends State<TanInput> {
+class TanInputState extends State<TanInput> {
   late GlobalKey<FormState> formKey;
 
   late List<TextEditingController> controllers;
