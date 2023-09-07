@@ -157,6 +157,7 @@ class TanInputState extends State<TanInput> {
 
     if (tan.length == widget.length) {
       widget.onCompleted(tan);
+      FocusScope.of(context).unfocus(disposition: UnfocusDisposition.previouslyFocusedChild);
     }
   }
 
