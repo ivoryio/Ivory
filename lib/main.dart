@@ -23,6 +23,7 @@ import 'package:solarisdemo/infrastructure/transfer/transfer_service.dart';
 import 'package:solarisdemo/ivory_app.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/store_factory.dart';
+import 'package:solarisdemo/utilities/device_info/device_info.dart';
 
 import '../config.dart';
 import 'firebase_options.dart';
@@ -64,7 +65,10 @@ Store<AppState> _buildStore() {
     changeRequestService: ChangeRequestService(),
     deviceBindingService: DeviceBindingService(),
     deviceService: DeviceService(),
-    biometricsService: BiometricsService(auth: LocalAuthentication()),
+    biometricsService: BiometricsService(
+      auth: LocalAuthentication(),
+    ),
+    deviceInfoService: DeviceInfoService(),
   );
 
   return store;

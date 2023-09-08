@@ -32,13 +32,9 @@ class SettingsScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'Settings',
-                    style: TextStyle(
-                      fontSize: 32,
-                      height: 24 / 16,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: ClientConfig.getTextStyleScheme().heading1,
                   ),
                   const SizedBox(
                     height: 24,
@@ -97,7 +93,6 @@ class SettingsScreen extends StatelessWidget {
                   IvoryListItemWithAction(
                     leftIcon: Icons.logout,
                     actionName: 'Log out',
-                    actionDescription: '',
                     rightIcon: Icons.arrow_forward_ios,
                     actionSwitch: false,
                   ),

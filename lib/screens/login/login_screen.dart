@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solarisdemo/screens/landing/landing_screen.dart';
 import 'package:solarisdemo/screens/login/login_consent_screen.dart';
-import 'package:solarisdemo/utilities/device_info/device_utils.dart';
+import 'package:solarisdemo/services/device_service.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
@@ -211,7 +211,7 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
                                 String phoneNumber = phoneController.text;
                                 String password = passwordInputController.text;
                                 String? deviceConsentId =
-                                    await DeviceUtils
+                                    await OldDeviceService
                                         .getDeviceConsentId();
                                 if (deviceConsentId.isNotEmpty) {
                                   context.read<LoginCubit>().setCredentials(
@@ -271,7 +271,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
 
   Future<CacheCredentials?> getCredentials() async {
     CacheCredentials? credentials =
-        await DeviceUtils.getCredentialsFromCache();
+        await OldDeviceService.getCredentialsFromCache();
 
     if (credentials != null) {
       emailInputController.text = credentials.email ?? "";
@@ -358,7 +358,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                                 String emailAddress = emailInputController.text;
                                 String password = passwordInputController.text;
                                 String? deviceConsentId =
-                                    await DeviceUtils
+                                    await OldDeviceService
                                         .getDeviceConsentId();
                                 if (deviceConsentId.isNotEmpty) {
                                   context.read<LoginCubit>().setCredentials(

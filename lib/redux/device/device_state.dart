@@ -33,3 +33,7 @@ class DeviceBindingFetchedButEmptyState extends DeviceBindingState {
 }
 
 class DeviceBindingDeletedState extends DeviceBindingState {}
+
+class DeviceBindingCreatedState extends DeviceBindingState {}
+
+class DeviceBindingChallengeVerifiedState extends DeviceBindingState {}

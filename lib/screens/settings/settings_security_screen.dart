@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:solarisdemo/screens/settings/settings_device_pairing_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/ivory_list_item_with_action.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../config.dart';
+import 'device_pairing/settings_device_pairing_screen.dart';
 
 class SettingsSecurityScreen extends StatelessWidget {
   static const routeName = "/securitySettingsScreen";
@@ -32,13 +32,9 @@ class SettingsSecurityScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'Security',
-                    style: TextStyle(
-                      fontSize: 32,
-                      height: 24 / 16,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: ClientConfig.getTextStyleScheme().heading1,
                   ),
                   const SizedBox(
                     height: 24,

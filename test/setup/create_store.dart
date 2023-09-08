@@ -15,11 +15,14 @@ import 'package:solarisdemo/infrastructure/repayments/more_credit/more_credit_se
 import 'package:solarisdemo/infrastructure/repayments/reminder/repayment_reminder_service.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart';
 import 'package:solarisdemo/infrastructure/transfer/transfer_service.dart';
+import 'package:solarisdemo/models/device.dart';
 import 'package:solarisdemo/models/transactions/transaction_model.dart';
 import 'package:solarisdemo/models/transfer/reference_account_transfer.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/store_factory.dart';
+import 'package:solarisdemo/utilities/crypto/crypto_key_generator.dart';
+import 'package:solarisdemo/utilities/device_info/device_info.dart';
 
 Store<AppState> createTestStore({
   required AppState initialState,
@@ -37,6 +40,7 @@ Store<AppState> createTestStore({
   DeviceBindingService? deviceBindingService,
   DeviceService? deviceService,
   BiometricsService? biometricsService,
+  DeviceInfoService? deviceInfoService,
 }) {
   return createStore(
     initialState: initialState,
@@ -54,7 +58,15 @@ Store<AppState> createTestStore({
     deviceBindingService: deviceBindingService ?? NotImplementedDeviceBindingService(),
     deviceService: deviceService ?? NotImplementedDeviceService(),
     biometricsService: biometricsService ?? NotImplementedBiometricsService(),
+    deviceInfoService: deviceInfoService ?? NotImplementedDeviceInfoService(),
   );
+}
+
+class NotImplementedDeviceInfoService extends DeviceInfoService {
+  @override
+  Future<String> getDeviceName() {
+    throw UnimplementedError();
+  }
 }
 
 class NotImplementedPushNotificationService extends PushNotificationService {
@@ -182,23 +194,23 @@ class NotImplementedChangeRequestService extends ChangeRequestService {
 
 class NotImplementedDeviceBindingService extends DeviceBindingService {
   @override
-  Future<DeviceBindingServiceResponse> createDeviceBinding({required User user}) {
+  Future<DeviceBindingServiceResponse> createDeviceBinding({
+    required User user,
+    required CreateDeviceBindingRequest reqBody,
+  }) {
     throw UnimplementedError();
   }
 
   @override
-  Future<DeviceBindingServiceResponse> verifyDeviceBindingSignature({
-    required User user,
-    required String tan,
-    required String deviceId,
-  }) {
+  Future<DeviceBindingServiceResponse> verifyDeviceBindingSignature(
+      {required User user, required String deviceId, required String deviceFingerPrint, required String signature}) {
     throw UnimplementedError();
   }
 
   @override
   Future<DeviceBindingServiceResponse> createRestrictedKey({
     required User user,
-    required String deviceId,
+    required CreateRestrictedKeyRequest reqBody,
   }) {
     throw UnimplementedError();
   }
@@ -222,6 +234,29 @@ class NotImplementedDeviceService extends DeviceService {
 
   @override
   Future<DeviceKeyPairs?> getDeviceKeyPairs({bool restricted = false}) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> saveKeyPairIntoCache({
+    required DeviceKeyPairs keyPair,
+    bool restricted = false,
+  }) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> saveDeviceIdIntoCache(String deviceId) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  DeviceKeyPairs? generateECKey() {
+    throw UnimplementedError();
+  }
+
+  @override
+  RSAKeyPair? generateRSAKey() {
     throw UnimplementedError();
   }
 

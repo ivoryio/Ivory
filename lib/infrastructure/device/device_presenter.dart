@@ -22,6 +22,10 @@ class DeviceBindingPresenter {
       );
     } else if (deviceBindingState is DeviceBindingDeletedState) {
       return DeviceBindingDeletedViewModel();
+    } else if (deviceBindingState is DeviceBindingCreatedState) {
+      return DeviceBindingCreatedViewModel();
+    } else if (deviceBindingState is DeviceBindingChallengeVerifiedState) {
+      return DeviceBindingChallengeVerifiedViewModel();
     }
     return DeviceBindingInitialViewModel();
   }
@@ -42,6 +46,10 @@ class DeviceBindingInitialViewModel extends DeviceBindingViewModel {}
 class DeviceBindingLoadingViewModel extends DeviceBindingViewModel {}
 
 class DeviceBindingErrorViewModel extends DeviceBindingViewModel {}
+
+class DeviceBindingCreatedViewModel extends DeviceBindingViewModel {}
+
+class DeviceBindingChallengeVerifiedViewModel extends DeviceBindingViewModel {}
 
 class DeviceBindingFetchedViewModel extends DeviceBindingViewModel {
   const DeviceBindingFetchedViewModel({

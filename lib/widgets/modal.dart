@@ -43,6 +43,7 @@ Future<dynamic> showBottomModal({
           ),
           const SizedBox(height: 24),
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (title != null)
                 Expanded(

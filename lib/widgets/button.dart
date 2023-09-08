@@ -16,11 +16,11 @@ class Button extends StatelessWidget {
   final BoxBorder? border;
   final Color? disabledColor;
   final Color? disabledTextColor;
-
   final Function? onPressed;
+  final bool isLoading;
 
   const Button({
-    super.key,
+    Key? key,
     required this.text,
     this.onPressed,
     this.border,
@@ -33,11 +33,12 @@ class Button extends StatelessWidget {
     this.fontSize = _defaultFontSize,
     this.fontFamily = "Proxima Nova",
     this.padding = const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+    this.isLoading = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    bool isDisabled = onPressed == null;
+    bool isDisabled = onPressed == null || isLoading;
     TextStyle defaultTextStyle = TextStyle(
       color: isDisabled ? disabledTextColor : textColor,
       fontSize: fontSize,
@@ -45,24 +46,45 @@ class Button extends StatelessWidget {
       fontFamily: fontFamily,
     );
 
-    Widget widget = ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          elevation: 0,
-          padding: padding,
-          backgroundColor: color,
-          foregroundColor: textColor,
-          minimumSize: const Size(0, 0),
-          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(borderRadius!)),
+Widget buttonChild = Stack(
+      alignment: Alignment.centerRight,
+      children: [
+        SizedBox(
+          width: double.infinity,
+          child: Text(
+            text,
+            textAlign: TextAlign.center,
+            style: textStyle != null ? defaultTextStyle.merge(textStyle) : defaultTextStyle,
           ),
         ),
-        onPressed: onPressed as void Function()?,
-        child: Text(
-          text,
-          style: textStyle != null ? defaultTextStyle.merge(textStyle) : defaultTextStyle,
-        ));
+        if (isLoading)
+          const Positioned(
+            right: 100,
+            child: SizedBox(
+              width: 16,
+              height: 16,
+              child: CircularProgressIndicator(),
+            ),
+          )
+      ],
+    );
+
+    Widget widget = ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        elevation: 0,
+        padding: padding,
+        backgroundColor: color,
+        foregroundColor: textColor,
+        minimumSize: const Size(0, 0),
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(borderRadius!)),
+        ),
+      ),
+      onPressed: isDisabled ? null : (onPressed as void Function()?),
+      child: buttonChild,
+    );
 
     if (border != null) {
       return Container(

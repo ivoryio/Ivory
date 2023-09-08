@@ -34,7 +34,7 @@ class IvoryListItemWithAction extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         if (onPressed != null) {
-          onPressed!(); // Call the onPressed callback if it's not null
+          onPressed!();
         }
       },
       child: Row(
