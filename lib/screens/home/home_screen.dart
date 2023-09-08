@@ -313,7 +313,7 @@ class AccountBalance extends StatelessWidget {
           percent: ((personAccountSummary.outstandingAmount ?? 0) / (personAccountSummary.creditLimit ?? 0)).isInfinite
               ? 0
               : (personAccountSummary.outstandingAmount ?? 0) / (personAccountSummary.creditLimit ?? 0.01),
-          backgroundColor: const Color(0xFF313038),
+          backgroundColor: const Color(0x26F8F9FA),
           progressColor: ClientConfig.getColorScheme().secondary,
           curve: Curves.fastOutSlowIn,
         ),
