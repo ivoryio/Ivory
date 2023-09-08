@@ -7,10 +7,10 @@ import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
-class ChangePinScreen extends StatelessWidget {
-  static const routeName = "/changePinScreen";
+class BankCardChangePinScreen extends StatelessWidget {
+  static const routeName = "/bankCardChangePinScreen";
 
-  const ChangePinScreen({Key? key}) : super(key: key);
+  const BankCardChangePinScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

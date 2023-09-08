@@ -11,7 +11,7 @@ import 'package:solarisdemo/navigator.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/auth/auth_action.dart';
 import 'package:solarisdemo/screens/account/account_details_screen.dart';
-import 'package:solarisdemo/screens/change_pin/change_pin_screen.dart';
+import 'package:solarisdemo/screens/wallet/change_pin/card_change_pin_screen.dart';
 import 'package:solarisdemo/screens/home/home_screen.dart';
 import 'package:solarisdemo/screens/home/main_navigation_screen.dart';
 import 'package:solarisdemo/screens/landing/landing_screen.dart';
@@ -148,6 +148,7 @@ class _IvoryAppState extends State<IvoryApp> {
                   params: cardDetailsScreenParams!,
                 );
               },
+              BankCardChangePinScreen.routeName: (context) => const BankCardChangePinScreen(),
               // repayments
               RepaymentsScreen.routeName: (context) => const RepaymentsScreen(),
               ChangeRepaymentRateScreen.routeName: (context) => const ChangeRepaymentRateScreen(),

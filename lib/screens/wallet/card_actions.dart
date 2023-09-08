@@ -4,6 +4,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
 import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/screens/wallet/change_pin/card_change_pin_screen.dart';
 import 'package:solarisdemo/screens/wallet/card_details_screen.dart';
 import 'package:solarisdemo/widgets/spaced_column.dart';
 
@@ -209,6 +210,10 @@ class ActiveCard extends StatelessWidget {
               actionDescription: 'For security or personal reasons',
               rightIcon: Icons.arrow_forward_ios,
               actionSwitch: false,
+              onPressed: () => Navigator.pushNamed(
+                context,
+                BankCardChangePinScreen.routeName,
+              ),
             ),
             IvoryListItemWithAction(
               leftIcon: Icons.lock_open,
