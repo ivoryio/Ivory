@@ -145,7 +145,25 @@ class DefaultTheme {
 
 class PorscheTheme {
   static ColorScheme colorScheme = DefaultTheme.colorScheme.copyWith(
-    secondary: Colors.yellow,
+      primary: Colors.black,
+      secondary: const Color(0xFFCC0000),
+      tertiary: Colors.black, // USE THIS FOR BUTTON BACKGROUNDS
+      surface: Colors.white, // USE THIS FOR BUTTON TEXTS
+      surfaceVariant: const Color(0xFF3D3D3D), //USED TO CALCULATE GRADIENT,
+      outline: Colors.black, //ALSO USED TO CALCULATE GRADIENT,
+  );
+
+  static ClientUiSettings clientUiSettings = DefaultTheme.clientUiSettings;
+}
+
+class SolarisTheme {
+  static ColorScheme colorScheme = DefaultTheme.colorScheme.copyWith(
+    primary: const Color(0xFF1D2637),
+    secondary: const Color(0xFFFF6432),
+    tertiary: const Color(0xFFFF6432), // USE THIS FOR BUTTON BACKGROUNDS
+    surface: Colors.white, // USE THIS FOR BUTTON TEXTS
+    surfaceVariant: const Color(0xFFF8623A),//USED TO CALCULATE GRADIENT,
+    outline: const Color(0xFF9D2801), //ALSO USED TO CALCULATE GRADIENT,
   );
 
   static ClientUiSettings clientUiSettings = DefaultTheme.clientUiSettings;

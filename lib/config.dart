@@ -22,6 +22,8 @@ class ClientConfig {
       switch (client) {
         case 'porsche':
           _clientConfigData = ClientConfigData(uiSettings: PorscheTheme.clientUiSettings);
+        case 'solaris':
+          _clientConfigData = ClientConfigData(uiSettings: SolarisTheme.clientUiSettings);
         default:
           _clientConfigData = ClientConfigData(uiSettings: DefaultTheme.clientUiSettings);
       }
