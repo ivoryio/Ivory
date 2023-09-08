@@ -50,13 +50,13 @@ class IvoryListItemWithAction extends StatelessWidget {
               children: [
                 Text(
                   actionName,
-                  style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
+                  style: ClientConfig.getTextStyleScheme().heading4,
                 ),
                 if (actionDescription != null)
                   Text(
                     actionDescription!,
-                    style: ClientConfig.getTextStyleScheme().labelSmall,
-                  ),         
+                    style: ClientConfig.getTextStyleScheme().bodySmallRegular,
+                  ),
               ],
             ),
           ),
@@ -92,7 +92,7 @@ class _ActionItemState extends State<ActionItem> {
     return FlutterSwitch(
       width: 56.0,
       height: 32.0,
-      activeColor: Theme.of(context).primaryColor,
+      activeColor: ClientConfig.getColorScheme().secondary,
       inactiveColor: const Color(0xFFB0B0B0),
       duration: const Duration(milliseconds: 50),
       toggleSize: 24.0,

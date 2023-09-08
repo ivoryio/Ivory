@@ -37,7 +37,7 @@ class _CheckboxWidgetState extends State<CheckboxWidget> {
           side: MaterialStateBorderSide.resolveWith(
                   (states) {
                     if(states.contains((MaterialState.selected))) {
-                      return const BorderSide(width: 1.0, color: Color(0xFF2575FC));
+                      return BorderSide(width: 1.0, color: ClientConfig.getColorScheme().secondary);
                     }
                     return const BorderSide(width: 1.0, color: Color.fromRGBO(110, 117, 124, 1));
                   }),

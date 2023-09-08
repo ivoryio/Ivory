@@ -27,6 +27,7 @@ class ApiService<T> {
         },
       );
 
+      print(response.body);
       if (response.statusCode != 200) {
         throw Exception("GET request response code: ${response.statusCode}");
       }

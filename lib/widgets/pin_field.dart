@@ -107,9 +107,7 @@ class PinFieldState extends State<PinField> {
     } else if (_hasText) {
       return const Color(0xFF15141E);
     } else {
-      return const Color(
-        0xFFADADB4,
-      );
+      return const Color(0xFFADADB4);
     }
   }
 }

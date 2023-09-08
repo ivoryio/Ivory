@@ -19,9 +19,7 @@ class CardListItem extends StatelessWidget {
             Text(cardNumber, style: ClientConfig.getTextStyleScheme().heading4),
             Text(
               "Expiry date: $expiryDate",
-              style: ClientConfig.getTextStyleScheme()
-                  .bodySmallRegular
-                  .copyWith(fontWeight: FontWeight.w400, color: const Color(0xFF56555E)),
+              style: ClientConfig.getTextStyleScheme().bodySmallRegular,
             ),
           ],
         ),
