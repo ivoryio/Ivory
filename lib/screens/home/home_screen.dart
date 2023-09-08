@@ -301,7 +301,7 @@ class AccountBalance extends StatelessWidget {
             children: [
               AccountBalanceText(
                 value: value,
-                numberStyle: const TextStyle(color: Colors.white, fontSize: 40),
+                numberStyle: ClientConfig.getTextStyleScheme().display.copyWith(color: Colors.white),
                 centsStyle: const TextStyle(color: Colors.white, fontSize: 24),
               ),
             ],

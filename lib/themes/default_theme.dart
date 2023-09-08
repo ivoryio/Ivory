@@ -49,6 +49,12 @@ class DefaultTheme {
       ),
     ),
     labelTextStyle: TextStyleScheme(
+      display: const TextStyle(
+        fontSize: 40,
+        height: 1.2, // 48 / 48,
+        fontWeight: FontWeight.w600,
+        color: Color(0xFF15141E),
+      ),
       heading1: const TextStyle(
         fontSize: 32,
         height: 1.25, // 40 / 32,
@@ -68,8 +74,8 @@ class DefaultTheme {
         color: Color(0xFF15141E),
       ),
       heading4: const TextStyle(
-        fontSize: 18,
-        height: 1.33, // 24 / 18,
+        fontSize: 16,
+        height: 1.5, // 24 / 16,
         fontWeight: FontWeight.w600,
         color: Color(0xFF15141E),
       ),
@@ -146,6 +152,7 @@ class PorscheTheme {
 }
 
 class TextStyleScheme {
+  final TextStyle display;
   final TextStyle heading1;
   final TextStyle heading2;
   final TextStyle heading3;
@@ -162,6 +169,7 @@ class TextStyleScheme {
   final TextStyle mixedStyles;
 
   TextStyleScheme({
+    required this.display,
     required this.heading1,
     required this.heading2,
     required this.heading3,
@@ -179,6 +187,7 @@ class TextStyleScheme {
   });
 
   TextStyleScheme copyWith({
+    TextStyle? display,
     TextStyle? heading1,
     TextStyle? heading2,
     TextStyle? heading3,
@@ -195,6 +204,7 @@ class TextStyleScheme {
     TextStyle? mixedStyles,
   }) {
     return TextStyleScheme(
+      display: display ?? this.display,
       heading1: heading1 ?? this.heading1,
       heading2: heading2 ?? this.heading2,
       heading3: heading3 ?? this.heading3,
