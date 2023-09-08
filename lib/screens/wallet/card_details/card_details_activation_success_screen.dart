@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
+import 'package:solarisdemo/infrastructure/bank_card/bank_card_presenter.dart';
+import 'package:solarisdemo/models/user.dart';
+import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/screens/wallet/cards_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
+import 'package:solarisdemo/widgets/button.dart';
+import 'package:solarisdemo/widgets/card_widget.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
-import '../../config.dart';
-import '../../cubits/auth_cubit/auth_cubit.dart';
-import '../../infrastructure/bank_card/bank_card_presenter.dart';
-import '../../models/user.dart';
-import '../../redux/app_state.dart';
-import '../../widgets/button.dart';
-import '../../widgets/card_widget.dart';
+
+
 
 class BankCardDetailsActivationSuccessScreen extends StatelessWidget {
   static const routeName = '/bankCardDetailsActivationSuccessScreen';
