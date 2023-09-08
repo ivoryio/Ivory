@@ -143,17 +143,11 @@ class ActiveCard extends StatelessWidget {
               icon: Icons.remove_red_eye_outlined,
               textLabel: 'Details',
               onPressed: () async {
-                BiometricsService biometricService = BiometricsService(auth: LocalAuthentication());
-
-                if (await biometricService.authenticateWithBiometrics(
-                    message: 'Please use biometric authentication to view card details.')) {
-                  // ignore: use_build_context_synchronously
                   Navigator.pushNamed(
                     context,
                     BankCardDetailsScreen.routeName,
                     arguments: CardDetailsScreenParams(card: viewModel.bankCard!),
-                  );
-                }
+                );       
               },
             ),
             CardOptionsButton(

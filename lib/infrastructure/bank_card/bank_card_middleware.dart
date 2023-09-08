@@ -1,4 +1,5 @@
 import 'package:redux/redux.dart';
+import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 
@@ -9,8 +10,9 @@ import 'bank_card_service.dart';
 class BankCardMiddleware extends MiddlewareClass<AppState> {
   final BankCardService _bankCardService;
   final DeviceService _deviceService;
+  final BiometricsService _biometricsService;
 
-  BankCardMiddleware(this._bankCardService, this._deviceService);
+  BankCardMiddleware(this._bankCardService, this._deviceService, this._biometricsService);
 
   @override
   call(Store<AppState> store, action, NextDispatcher next) async {
@@ -57,65 +59,68 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
     if (action is BankCardFetchDetailsCommandAction) {
       store.dispatch(BankCardLoadingEventAction());
 
-      //UNCOMMENT THIS AFTER THERE IS FINAL SOLUTION FOR VIEW CARD DETAILS
-      // final rsaKeyPair = _deviceService.generateRSAKey();
-      // if (rsaKeyPair == null) {
-      //   store.dispatch(BankCardFailedEventAction());
-      //   return null;
-      // }
+      final deviceId = await _deviceService.getDeviceId();
+      if (deviceId == '') {
+        store.dispatch(BankCardNoBoundedDevicesEventAction());
+        return null;
+      }
 
-      // final jwk = _deviceService.convertRSAPublicKeyToJWK(rsaPublicKey: rsaKeyPair.publicKey);
-      // if (jwk == null) {
-      //   store.dispatch(BankCardFailedEventAction());
-      //   return null;
-      // }
+      final isBiometricsAuthenticated = await _biometricsService.authenticateWithBiometrics(
+          message: "'Please use biometric authentication to view card details.'");
 
-      // final deviceId = await _deviceService.getDeviceId();
-      // String? consentId = await _deviceService.getConsentId();
+      if (!isBiometricsAuthenticated) {
+        store.dispatch(BankCardFailedEventAction());
+        return null;
+      }
 
-      // if (consentId == null) {
-      //   store.dispatch(BankCardFailedEventAction());
-      //   return null;
-      // }
+      final rsaKeyPair = _deviceService.generateRSAKey();
+      if (rsaKeyPair == null) {
+        store.dispatch(BankCardFailedEventAction());
+        return null;
+      }
 
-      // String? deviceFingerPrint = await _deviceService.getDeviceFingerprint(consentId);
+      final jwk = _deviceService.convertRSAPublicKeyToJWK(rsaPublicKey: rsaKeyPair.publicKey);
+      if (jwk == null) {
+        store.dispatch(BankCardFailedEventAction());
+        return null;
+      }
 
-      // if (deviceFingerPrint == null || deviceFingerPrint.isEmpty) {
-      //   store.dispatch(BankCardFailedEventAction());
-      //   return null;
-      // }
+      String? consentId = await _deviceService.getConsentId();
 
-      // final existingRestrictedKeyPair = await _deviceService.getDeviceKeyPairs(restricted: true);
+      if (consentId == null) {
+        store.dispatch(BankCardFailedEventAction());
+        return null;
+      }
 
-      // if (existingRestrictedKeyPair == null) {
-      //   store.dispatch(BankCardFailedEventAction());
-      //   return null;
-      // }
+      String? deviceFingerPrint = await _deviceService.getDeviceFingerprint(consentId);
 
-      // String alphabeticJWK = jwk.toAlphabeticJson();
+      if (deviceFingerPrint == null || deviceFingerPrint.isEmpty) {
+        store.dispatch(BankCardFailedEventAction());
+        return null;
+      }
 
-      // final signature = _deviceService.generateSignature(
-      //     privateKey: existingRestrictedKeyPair.privateKey, stringToSign: alphabeticJWK);
+      final existingRestrictedKeyPair = await _deviceService.getDeviceKeyPairs(restricted: true);
 
-      // if (signature == null) {
-      //   store.dispatch(BankCardFailedEventAction());
-      //   return null;
-      // }
+      if (existingRestrictedKeyPair == null) {
+        store.dispatch(BankCardFailedEventAction());
+        return null;
+      }
 
-      // final reqBody = GetCardDetailsRequestBody(
-      //   deviceData: deviceFingerPrint,
-      //   deviceId: deviceId!,
-      //   signature: signature,
-      //   jwk: jwk,
-      //   jwe: Jwe.defaultValues(),
-      // );
+      String alphabeticJWK = jwk.toAlphabeticJson();
 
-      //DELETE THIS AFTER FINAL VIEW CARD DETAILS IMPLEMENTATION
+      final signature = _deviceService.generateSignature(
+          privateKey: existingRestrictedKeyPair.privateKey, stringToSign: alphabeticJWK);
+
+      if (signature == null) {
+        store.dispatch(BankCardFailedEventAction());
+        return null;
+      }
+
       final reqBody = GetCardDetailsRequestBody(
-        deviceData: 'mockDeviceFingerPrint',
-        deviceId: 'a1f9e6c1-1045-4d54-8381-ff9dd4142e88',
-        signature: 'mockSignature',
-        jwk: Jwk(e: 'AQAB', n: 'mockPublicKey'),
+        deviceData: deviceFingerPrint,
+        deviceId: deviceId!,
+        signature: signature,
+        jwk: jwk,
         jwe: Jwe.defaultValues(),
       );
 

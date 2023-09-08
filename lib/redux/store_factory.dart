@@ -59,7 +59,7 @@ Store<AppState> createStore({
       RepaymentRemindersMiddleware(repaymentReminderService),
       GetBillsMiddleware(billService),
       GetMoreCreditMiddleware(moreCreditService),
-      BankCardMiddleware(bankCardService, deviceService),
+      BankCardMiddleware(bankCardService, deviceService, biometricsService),
       GetCategoriesMiddleware(categoriesService),
       ReferenceAccountMiddleware(personService),
       PersonAccountMiddleware(personService),
