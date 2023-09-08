@@ -50,15 +50,13 @@ class BankCardWidget extends StatelessWidget {
         ),
         child: Container(
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              begin: Alignment.bottomRight,
-              end: Alignment.topLeft,
-              stops: [0.0, 1.0],
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
               colors: [
-                Color(0xFF1D26A7),
-                Color(0xFF6300BB),
+                ClientConfig.getColorScheme().surfaceVariant,
+                ClientConfig.getColorScheme().outline,
               ],
-              transform: GradientRotation(135 * (3.1415926 / 180.0)),
             ),
             image: DecorationImage(
               image:
@@ -98,12 +96,7 @@ class BankCardWidget extends StatelessWidget {
                         ...cardNumberParts.map((cardNumberPart) {
                           Text textContent = Text(
                             cardNumberPart,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 24,
-                              letterSpacing: 3,
-                            ),
+                            style: ClientConfig.getTextStyleScheme().heading2.copyWith(color: Colors.white),
                           );
                           if (cardNumberPart == "****") {
                             return SizedBox(height: 29, child: textContent);
@@ -127,23 +120,14 @@ class BankCardWidget extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             if (cardHolder != null)
-                              const Text(
+                              Text(
                                 "CARD HOLDER",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                  height: 15 / 12,
-                                ),
+                                style: ClientConfig.getTextStyleScheme().labelCaps.copyWith(color: Colors.white),
                               ),
                             if (cardHolder != null) const SizedBox(height: 3),
                             Text(
                               cardHolder ?? '',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                height: 20 / 16,
-                                fontWeight: FontWeight.w600,
-                              ),
+                              style: ClientConfig.getTextStyleScheme().labelMedium.copyWith(color: Colors.white),
                             )
                           ],
                         ),
@@ -151,23 +135,14 @@ class BankCardWidget extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             if (cardExpiry != null)
-                              const Text(
-                                "EXPIRES",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                  height: 15 / 12,
-                                ),
+                              Text(
+                                "EXPIRY DATE",
+                                style: ClientConfig.getTextStyleScheme().labelCaps.copyWith(color: Colors.white),
                               ),
                             if (cardExpiry != null) const SizedBox(height: 3),
                             Text(
                               cardExpiry ?? '',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                height: 20 / 16,
-                                fontWeight: FontWeight.w600,
-                              ),
+                              style: ClientConfig.getTextStyleScheme().labelMedium.copyWith(color: Colors.white),
                             ),
                           ],
                         ),
@@ -241,11 +216,7 @@ class CardTypeLabel extends StatelessWidget {
       ),
       child: Text(
         cardType,
-        style: const TextStyle(
-          fontSize: 12,
-          height: 18 / 12,
-          fontWeight: FontWeight.w600,
-        ),
+        style: ClientConfig.getTextStyleScheme().labelXSmall.copyWith(color: Colors.black),
       ),
     );
   }
