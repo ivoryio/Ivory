@@ -1,0 +1,1 @@
+enum PersonServiceErrorType { unknown, referenceAccountUnavailable }

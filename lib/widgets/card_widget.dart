@@ -2,35 +2,44 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
 
-import 'spaced_column.dart';
 import '../utilities/format.dart';
 
 const double defaultCardHorizontalPadding = 20;
 const double defaultCardVerticalPadding = 15;
+const double defaultHeigth = 202;
+const double defaultWidth = 343;
 
 class BankCardWidget extends StatelessWidget {
-  final String cardHolder;
-  final String cardNumber;
-  final String cardExpiry;
+  final bool? isCardEmpty;
+  final String? cardHolder;
+  final String? cardNumber;
+  final String? cardExpiry;
   final bool? isViewable;
   final String? cardType;
+  final double? customHeight;
+  final double? customWidth;
+  final double? imageScaledownFactor;
 
   const BankCardWidget({
     super.key,
-    required this.cardExpiry,
-    required this.cardHolder,
-    required this.cardNumber,
+    this.isCardEmpty = false,
+    this.customHeight,
+    this.customWidth,
+    this.cardExpiry,
+    this.cardHolder,
+    this.cardNumber,
     this.isViewable = true,
     this.cardType,
+    this.imageScaledownFactor,
   });
 
   @override
   Widget build(BuildContext context) {
-    List<String> cardNumberParts = Format.iban(cardNumber).split(" ");
+    List<String> cardNumberParts = Format.iban(cardNumber ?? '').split(" ");
 
     return SizedBox(
-      width: double.infinity,
-      height: 202,
+      width: customWidth ?? defaultWidth,
+      height: customHeight ?? defaultHeigth,
       child: Card(
         clipBehavior: Clip.antiAlias,
         elevation: 0,
@@ -44,10 +53,10 @@ class BankCardWidget extends StatelessWidget {
             gradient: const LinearGradient(
               begin: Alignment.bottomRight,
               end: Alignment.topLeft,
-              stops: [0.0, 0.5629],
+              stops: [0.0, 1.0],
               colors: [
-                Color(0xFF585858),
-                Color(0xFF000000),
+                Color(0xFF1D26A7),
+                Color(0xFF6300BB),
               ],
               transform: GradientRotation(135 * (3.1415926 / 180.0)),
             ),
@@ -55,11 +64,12 @@ class BankCardWidget extends StatelessWidget {
               image:
                   AssetImage(ClientConfig.getAssetImagePath('card_logo.png')),
               fit: BoxFit.scaleDown,
+              scale: imageScaledownFactor ?? 1,
             ),
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(
-              vertical: defaultCardVerticalPadding,
+              vertical: 16,
             ),
             child: Column(
               children: [
@@ -69,7 +79,7 @@ class BankCardWidget extends StatelessWidget {
                   children: [
                     const Padding(
                       padding: EdgeInsets.only(
-                        left: defaultCardHorizontalPadding,
+                        left: 16,
                       ),
                       child: VisaSvgIcon(),
                     ),
@@ -77,92 +87,93 @@ class BankCardWidget extends StatelessWidget {
                     if (cardType != null) CardTypeLabel(cardType: cardType!),
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                    defaultCardHorizontalPadding,
-                    15,
-                    defaultCardHorizontalPadding,
-                    25,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      ...cardNumberParts.map((cardNumberPart) {
-                        Text textContent = Text(
-                          cardNumberPart,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 24,
-                            letterSpacing: 3,
-                          ),
-                        );
-                        if (cardNumberPart == "****") {
-                          return SizedBox(height: 20, child: textContent);
-                        }
+                const Spacer(),
+                if (isCardEmpty != true)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        ...cardNumberParts.map((cardNumberPart) {
+                          Text textContent = Text(
+                            cardNumberPart,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 24,
+                              letterSpacing: 3,
+                            ),
+                          );
+                          if (cardNumberPart == "****") {
+                            return SizedBox(height: 29, child: textContent);
+                          }
 
-                        return textContent;
-                      })
-                    ],
+                          return textContent;
+                        })
+                      ],
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SpacedColumn(
-                        space: 3,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "CARD HOLDER",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                              height: 15 / 12,
+                if (isCardEmpty != true) const Spacer(),
+                if (isCardEmpty != true)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (cardHolder != null)
+                              const Text(
+                                "CARD HOLDER",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  height: 15 / 12,
+                                ),
+                              ),
+                            if (cardHolder != null) const SizedBox(height: 3),
+                            Text(
+                              cardHolder ?? '',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                height: 20 / 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            )
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            if (cardExpiry != null)
+                              const Text(
+                                "EXPIRES",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  height: 15 / 12,
+                                ),
+                              ),
+                            if (cardExpiry != null) const SizedBox(height: 3),
+                            Text(
+                              cardExpiry ?? '',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                height: 20 / 16,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
-                          ),
-                          Text(
-                            cardHolder,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              height: 20 / 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          )
-                        ],
-                      ),
-                      SpacedColumn(
-                        space: 3,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          const Text(
-                            "EXPIRES",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                              height: 15 / 12,
-                            ),
-                          ),
-                          Text(
-                            cardExpiry,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              height: 20 / 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                )
+                          ],
+                        ),
+                      ],
+                    ),
+                  )
               ],
             ),
           ),
@@ -218,8 +229,8 @@ class CardTypeLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(
-        horizontal: 10,
-        vertical: 2,
+        horizontal: 16,
+        vertical: 4,
       ),
       decoration: const BoxDecoration(
         color: Colors.white,

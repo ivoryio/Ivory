@@ -38,7 +38,7 @@ void main() {
 
       final expected = [
         const BankCardsLoading(),
-        BankCardsLoaded(physicalCards: cards),
+        BankCardsLoaded(cards: cards),
       ];
 
       expectLater(cubit.stream, emitsInOrder(expected));

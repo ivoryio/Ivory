@@ -1,27 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart';
 import 'package:solarisdemo/models/person_account_summary.dart';
 import 'package:solarisdemo/models/person_model.dart';
 import 'package:solarisdemo/screens/account/account_details_screen.dart';
 import 'package:solarisdemo/screens/repayments/repayments_screen.dart';
 import 'package:solarisdemo/screens/transactions/transactions_screen.dart';
+import 'package:solarisdemo/screens/transfer/transfer_screen.dart';
 import 'package:solarisdemo/widgets/rewards.dart';
 import 'package:solarisdemo/widgets/screen.dart';
-import 'package:solarisdemo/widgets/transaction_list.dart';
 
 import '../../config.dart';
 import '../../cubits/account_summary_cubit/account_summary_cubit.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
-import '../../cubits/transaction_list_cubit/transaction_list_cubit.dart';
-import '../../models/transaction_model.dart';
+import '../../infrastructure/transactions/transaction_presenter.dart';
+import '../../models/transactions/transaction_model.dart';
 import '../../models/user.dart';
+import '../../redux/app_state.dart';
+import '../../redux/transactions/transactions_action.dart';
 import '../../services/person_service.dart';
 import '../../widgets/account_balance_text.dart';
 import '../../widgets/analytics.dart';
-import '../../widgets/modal.dart';
-import 'modals/new_transfer_popup.dart';
+import '../../widgets/transaction_listing_item.dart';
 
 const _defaultCountTransactionsDisplayed = 3;
 const _defaultPage = 1;
@@ -44,20 +45,19 @@ class HomeScreen extends StatelessWidget {
     AccountSummaryCubit accountSummaryCubit = AccountSummaryCubit(personService: PersonService(user: user.cognito))
       ..getAccountSummary();
 
-    TransactionListCubit transactionListCubit = TransactionListCubit(
-      transactionService: TransactionService(user: user.cognito),
-    )..getTransactions(filter: _defaultTransactionListFilter);
-
     return Screen(
       onRefresh: () async {
         accountSummaryCubit.getAccountSummary();
-        transactionListCubit.getTransactions(
-          filter: _defaultTransactionListFilter,
+        StoreProvider.of<AppState>(context).dispatch(
+          GetTransactionsCommandAction(
+            filter: _defaultTransactionListFilter,
+            user: user.cognito,
+          ),
         );
       },
       title: 'Welcome ${user.cognito.firstName}!',
       hideBackButton: true,
-      appBarColor: Colors.black,
+      appBarColor: ClientConfig.getColorScheme().primary,
       trailingActions: [
         IconButton(
           padding: EdgeInsets.zero,
@@ -76,11 +76,10 @@ class HomeScreen extends StatelessWidget {
           onPressed: () {},
         )
       ],
-      titleTextStyle: const TextStyle(color: Colors.white),
+      titleTextStyle: ClientConfig.getTextStyleScheme().heading3.copyWith(color: Colors.white),
       centerTitle: false,
       child: HomePageContent(
         accountSummaryCubit: accountSummaryCubit,
-        transactionListCubit: transactionListCubit,
         user: user,
       ),
     );
@@ -89,14 +88,12 @@ class HomeScreen extends StatelessWidget {
 
 class HomePageContent extends StatelessWidget {
   final AccountSummaryCubit accountSummaryCubit;
-  final TransactionListCubit transactionListCubit;
   final AuthenticatedUser user;
 
   const HomePageContent({
     super.key,
     required this.user,
     required this.accountSummaryCubit,
-    required this.transactionListCubit,
   });
 
   @override
@@ -114,26 +111,56 @@ class HomePageContent extends StatelessWidget {
             padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
             child: Column(
               children: [
-                TransactionList(
-                  transactionListCubit: transactionListCubit,
-                  header: const TransactionListTitle(
-                    displayShowAllButton: true,
+                const TransactionListTitle(
+                  displayShowAllButton: true,
+                ),
+                StoreConnector<AppState, TransactionsViewModel>(
+                  onInit: (store) => store.dispatch(
+                    GetTransactionsCommandAction(
+                      filter: _defaultTransactionListFilter,
+                      user: user.cognito,
+                    ),
                   ),
-                  filter: const TransactionListFilter(
-                    size: _defaultCountTransactionsDisplayed,
-                  ),
+                  converter: (store) =>
+                      TransactionPresenter.presentTransactions(transactionsState: store.state.transactionsState),
+                  builder: (context, viewModel) {
+                    if (viewModel is TransactionsErrorViewModel) {
+                      return const Center(
+                        child: Text('Could not load transactions'),
+                      );
+                    }
+
+                    if (viewModel is TransactionsFetchedViewModel) {
+                      return Column(
+                        children: [
+                          for (var transaction in viewModel.transactions!)
+                            TransactionListItem(
+                              transaction: transaction,
+                            ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 0,
+                              vertical: ClientConfig.getCustomClientUiSettings().defaultScreenVerticalPadding,
+                            ),
+                            child: Analytics(
+                              transactions: viewModel.transactions!,
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+
+                    return const Center(child: CircularProgressIndicator());
+                  },
                 ),
               ],
             ),
           ),
           Padding(
-            padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-            child: Analytics(
-              transactionListCubit: transactionListCubit,
+            padding: EdgeInsets.symmetric(
+              horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+              vertical: 0,
             ),
-          ),
-          Padding(
-            padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
             child: const Rewards(),
           ),
         ],
@@ -158,51 +185,36 @@ class HomePageHeader extends StatelessWidget {
       value: accountSummaryCubit,
       child: BlocBuilder<AccountSummaryCubit, AccountSummaryCubitState>(
         builder: (context, state) {
-          if (state is AccountSummaryCubitLoading) {
-            return Container(
-              padding: EdgeInsets.symmetric(
-                vertical: 10,
-                horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-              ),
-              width: MediaQuery.of(context).size.width,
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(30),
-                  bottomRight: Radius.circular(30),
-                ),
-                color: Color(0xFF000000),
-              ),
-              child: const Center(
-                child: Padding(
-                  padding: EdgeInsets.all(20.0),
-                  child: CircularProgressIndicator(color: Colors.white),
-                ),
-              ),
-            );
-          }
-
-          if (state is AccountSummaryCubitLoaded) {
+          if (state is AccountSummaryCubitLoaded || state is AccountSummaryCubitLoading) {
             return Container(
               padding: EdgeInsets.symmetric(
                 horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
               ),
               width: MediaQuery.of(context).size.width,
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(30),
                   bottomRight: Radius.circular(30),
                 ),
-                color: Colors.black,
+                color: ClientConfig.getColorScheme().primary,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  AccountSummary(
-                    spending: state.data?.spending ?? 0,
-                    availableBalance: state.data?.availableBalance?.value ?? 0,
-                    outstandingAmount: state.data?.outstandingAmount ?? 0,
-                    creditLimit: state.data?.creditLimit ?? 0,
-                  ),
+                  if (state is AccountSummaryCubitLoaded)
+                    AccountSummary(
+                      spending: state.data?.spending ?? 0,
+                      availableBalance: state.data?.availableBalance?.value ?? 0,
+                      outstandingAmount: state.data?.outstandingAmount ?? 0,
+                      creditLimit: state.data?.creditLimit ?? 0,
+                    )
+                  else
+                    const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(20.0),
+                        child: CircularProgressIndicator(color: Colors.white),
+                      ),
+                    ),
                   const Divider(
                     color: Colors.white,
                     thickness: 0.5,
@@ -265,17 +277,17 @@ class AccountBalance extends StatelessWidget {
 
     return Column(
       children: [
-        const Row(
+         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               "Available Balance",
-              style: TextStyle(color: Colors.white),
+              style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: Colors.white),
             ),
-            SizedBox(
+            const SizedBox(
               width: 4,
             ),
-            Icon(
+            const Icon(
               Icons.info_outline,
               color: Colors.white,
             ),
@@ -302,7 +314,7 @@ class AccountBalance extends StatelessWidget {
               ? 0
               : (personAccountSummary.outstandingAmount ?? 0) / (personAccountSummary.creditLimit ?? 0.01),
           backgroundColor: const Color(0xFF313038),
-          progressColor: const Color(0xFFCC0000),
+          progressColor: ClientConfig.getColorScheme().secondary,
           curve: Curves.fastOutSlowIn,
         ),
       ],
@@ -332,38 +344,30 @@ class AccountStats extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 "Outstanding balance",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: Colors.white),
               ),
               const SizedBox(width: 5),
               AccountBalanceText(
                 value: outstandingAmount,
-                numberStyle: const TextStyle(color: Colors.white, fontSize: 18),
-                centsStyle: const TextStyle(color: Colors.white, fontSize: 14),
+                numberStyle: ClientConfig.getTextStyleScheme().labelLarge.copyWith(color: Colors.white),
+                centsStyle: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: Colors.white),
               ),
             ],
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              const Text(
+              Text(
                 "Credit limit",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: Colors.white),
               ),
               const SizedBox(width: 5),
               AccountBalanceText(
                 value: creditLimit,
-                numberStyle: const TextStyle(color: Colors.white, fontSize: 18),
-                centsStyle: const TextStyle(color: Colors.white, fontSize: 14),
+                numberStyle: ClientConfig.getTextStyleScheme().labelLarge.copyWith(color: Colors.white),
+                centsStyle: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: Colors.white),
               ),
             ],
           ),
@@ -392,11 +396,7 @@ class AccountOptions extends StatelessWidget {
               AssetImage('assets/icons/compare_arrows.png'),
               size: 24,
             ),
-            onPressed: () => showBottomModal(
-              context: context,
-              title: 'New Transfer',
-              content: const NewTransferPopup(),
-            ),
+            onPressed: () => Navigator.pushNamed(context, TransferScreen.routeName),
           ),
           AccountOptionsButton(
             textLabel: "Repayments",
@@ -453,11 +453,7 @@ class AccountOptionsButton extends StatelessWidget {
           padding: const EdgeInsets.only(top: 10),
           child: Text(
             textLabel,
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 12,
-            ),
+            style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: Colors.white),
           ),
         )
       ],
@@ -478,23 +474,16 @@ class TransactionListTitle extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Text(
+         Text(
           "Transactions",
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-          ),
+          style: ClientConfig.getTextStyleScheme().labelLarge,
         ),
         if (displayShowAllButton)
           TextButton(
-            child: const Text(
+            child: Text(
               "See all",
               textAlign: TextAlign.right,
-              style: TextStyle(
-                color: Color(0xFFCC0000),
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
+              style: ClientConfig.getTextStyleScheme().labelMedium.copyWith(color: ClientConfig.getColorScheme().secondary),
             ),
             onPressed: () {
               Navigator.pushReplacementNamed(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../config.dart';
 import '../utilities/format.dart';
 
 class AccountBalanceText extends StatelessWidget {
@@ -8,19 +9,10 @@ class AccountBalanceText extends StatelessWidget {
 
   final num value;
 
-  final TextStyle defaultNumberStyle = const TextStyle(
-    color: Colors.black,
-    fontSize: 24,
-    fontWeight: FontWeight.w600,
-    fontFamily: "Proxima Nova",
-  );
-  final TextStyle defaultCentsStyle = const TextStyle(
-    color: Colors.black,
-    fontSize: 16,
-    fontWeight: FontWeight.w600,
-    fontFamily: "Proxima Nova",
-  );
-  const AccountBalanceText({
+  final TextStyle defaultNumberStyle =  ClientConfig.getTextStyleScheme().heading4;
+  final TextStyle defaultCentsStyle = ClientConfig.getTextStyleScheme().heading4;
+
+  AccountBalanceText({
     super.key,
     required this.value,
     this.numberStyle,

@@ -7,10 +7,24 @@ import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../widgets/button.dart';
 
-class RepaymentSuccessfullyChanged extends StatelessWidget {
-  static const routeName = "/repaymentSuccessfullyChangedScreen";
+class RepaymentSuccessfullyScreenParams {
+  final double fixedRate;
+  final int interestRate;
 
-  const RepaymentSuccessfullyChanged({super.key});
+  RepaymentSuccessfullyScreenParams({
+    required this.fixedRate,
+    required this.interestRate,
+  });
+}
+
+class RepaymentSuccessfullyChangedScreen extends StatelessWidget {
+  static const routeName = "/repaymentSuccessfullyChangedScreen";
+  final RepaymentSuccessfullyScreenParams params;
+
+  const RepaymentSuccessfullyChangedScreen({
+    super.key,
+    required this.params,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,14 +43,29 @@ class RepaymentSuccessfullyChanged extends StatelessWidget {
             style: ClientConfig.getTextStyleScheme().heading1,
           ),
           const SizedBox(height: 16),
-          Text(
-            'You will start paying a fixed rate of €500.00. The 5% interest rate will be calculated and added to this amount.',
-            style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+          Text.rich(
+            TextSpan(
+              style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+              children: [
+                const TextSpan(
+                  text: 'You will start paying a fixed rate of ',
+                ),
+                TextSpan(
+                  text: '€${params.fixedRate.toStringAsFixed(2)}',
+                  style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
+                ),
+                TextSpan(
+                  text:
+                      '. The ${params.interestRate}% interest rate will be calculated and added to this amount.',
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 24),
           Expanded(
             child: SvgPicture.asset(
-                'assets/images/repayment_successfully_changed.svg'),
+                'assets/images/repayment_successfully_changed.svg',
+            ),
           ),
           SizedBox(
             width: double.infinity,
@@ -44,7 +73,8 @@ class RepaymentSuccessfullyChanged extends StatelessWidget {
             child: Button(
               text: 'Back to "Repayments"',
               disabledColor: const Color(0xFFDFE2E6),
-              color: const Color(0xFF2575FC),
+              color: ClientConfig.getColorScheme().tertiary,
+              textColor: ClientConfig.getColorScheme().surface,
               onPressed: () {
                 Navigator.popUntil(
                   context,
