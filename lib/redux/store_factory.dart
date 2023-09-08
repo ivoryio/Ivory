@@ -27,6 +27,7 @@ import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart
 import 'package:solarisdemo/infrastructure/transfer/transfer_middleware.dart';
 import 'package:solarisdemo/infrastructure/transfer/transfer_service.dart';
 import 'package:solarisdemo/redux/app_reducer.dart';
+import 'package:solarisdemo/utilities/device_info/device_info.dart';
 
 import 'app_state.dart';
 
@@ -46,6 +47,7 @@ Store<AppState> createStore({
   required DeviceBindingService deviceBindingService,
   required DeviceService deviceService,
   required BiometricsService biometricsService,
+  required DeviceInfoService deviceInfoService,
 }) {
   return Store<AppState>(
     appReducer,
@@ -57,12 +59,12 @@ Store<AppState> createStore({
       RepaymentRemindersMiddleware(repaymentReminderService),
       GetBillsMiddleware(billService),
       GetMoreCreditMiddleware(moreCreditService),
-      BankCardMiddleware(bankCardService),
+      BankCardMiddleware(bankCardService, deviceService),
       GetCategoriesMiddleware(categoriesService),
       ReferenceAccountMiddleware(personService),
       PersonAccountMiddleware(personService),
       TransferMiddleware(transferService, changeRequestService),
-      DeviceBindingMiddleware(deviceBindingService),
+      DeviceBindingMiddleware(deviceBindingService, deviceService, deviceInfoService),
       TransactionApprovalMiddleware(changeRequestService, deviceService, biometricsService),
     ],
   );

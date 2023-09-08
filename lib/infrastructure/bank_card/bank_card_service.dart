@@ -7,7 +7,10 @@ import '../../../services/api_service.dart';
 class BankCardService extends ApiService {
   BankCardService({super.user});
 
-  Future<BankCardServiceResponse> getBankCardById({required String cardId, required User? user}) async {
+  Future<BankCardServiceResponse> getBankCardById({
+    required String cardId,
+    required User? user,
+  }) async {
     if (user != null) {
       this.user = user;
     }
@@ -22,7 +25,10 @@ class BankCardService extends ApiService {
     }
   }
 
-  Future<BankCardServiceResponse> activateBankCard({required String cardId, required User? user}) async {
+  Future<BankCardServiceResponse> activateBankCard({
+    required String cardId,
+    required User? user,
+  }) async {
     if (user != null) {
       this.user = user;
     }

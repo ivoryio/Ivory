@@ -1,6 +1,6 @@
 import 'package:redux/redux.dart';
+import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/redux/app_state.dart';
-import 'package:solarisdemo/utilities/device_info/device_utils.dart';
 
 import '../../../redux/bank_card/bank_card_action.dart';
 import '../../models/bank_card.dart';
@@ -8,8 +8,9 @@ import 'bank_card_service.dart';
 
 class BankCardMiddleware extends MiddlewareClass<AppState> {
   final BankCardService _bankCardService;
+  final DeviceService _deviceService;
 
-  BankCardMiddleware(this._bankCardService);
+  BankCardMiddleware(this._bankCardService, this._deviceService);
 
   @override
   call(Store<AppState> store, action, NextDispatcher next) async {
@@ -55,9 +56,64 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
 
     if (action is BankCardFetchDetailsCommandAction) {
       store.dispatch(BankCardLoadingEventAction());
-      GetCardDetailsRequestBody reqBody = await DeviceUtils.createGetCardDetailsRequestBody();
+
+      final rsaKeyPair = _deviceService.generateRSAKey();
+      if (rsaKeyPair == null) {
+        store.dispatch(BankCardFailedEventAction());
+        return null;
+      }
+
+      final jwk = _deviceService.convertRSAPublicKeyToJWK(rsaPublicKey: rsaKeyPair.publicKey);
+      if (jwk == null) {
+        store.dispatch(BankCardFailedEventAction());
+        return null;
+      }
+
+      final deviceId = await _deviceService.getDeviceId();
+      String? consentId = await _deviceService.getConsentId();
+
+      if (consentId == null) {
+        store.dispatch(BankCardFailedEventAction());
+        return null;
+      }
+
+      String? deviceFingerPrint = await _deviceService.getDeviceFingerprint(consentId);
+
+      if (deviceFingerPrint == null || deviceFingerPrint.isEmpty) {
+        store.dispatch(BankCardFailedEventAction());
+        return null;
+      }
+
+      final existingRestrictedKeyPair = await _deviceService.getDeviceKeyPairs(restricted: true);
+
+      if (existingRestrictedKeyPair == null) {
+        store.dispatch(BankCardFailedEventAction());
+        return null;
+      }
+
+      String alphabeticJWK = jwk.toAlphabeticJson();
+
+      final signature = _deviceService.generateSignature(
+          privateKey: existingRestrictedKeyPair.privateKey, stringToSign: alphabeticJWK);
+
+      if (signature == null) {
+        store.dispatch(BankCardFailedEventAction());
+        return null;
+      }
+
+      final reqBody = GetCardDetailsRequestBody(
+        deviceData: deviceFingerPrint,
+        deviceId: deviceId!,
+        signature: signature,
+        jwk: jwk,
+        jwe: Jwe.defaultValues(),
+      );
+
       final response = await _bankCardService.getCardDetails(
-          user: action.user.cognito, cardId: action.bankCard.id, reqBody: reqBody);
+        user: action.user.cognito,
+        cardId: action.bankCard.id,
+        reqBody: reqBody,
+      );
 
       if (response is GetCardDetailsSuccessResponse) {
         //TODO: Decode the data string and pass the card details to the event

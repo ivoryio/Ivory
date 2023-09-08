@@ -1,9 +1,19 @@
 import 'package:mockito/mockito.dart';
+import 'package:pointycastle/pointycastle.dart';
 import 'package:solarisdemo/infrastructure/bank_card/bank_card_service.dart';
+import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/models/bank_card.dart';
 import 'package:solarisdemo/models/user.dart';
+import 'package:solarisdemo/utilities/crypto/crypto_key_generator.dart';
 
 class MockGetCardDetailsRequestBody extends Mock implements GetCardDetailsRequestBody {}
+
+class MockRSAKeyPair extends Mock implements RSAKeyPair {
+  @override
+  RSAPublicKey get publicKey => MockRSAPublicKey();
+}
+
+class MockRSAPublicKey extends Mock implements RSAPublicKey {}
 
 class FakeBankCardService extends BankCardService {
   @override
@@ -97,5 +107,23 @@ class FakeFailingBankCardService extends BankCardService {
       ),
     );
     return BankCardErrorResponse();
+  }
+}
+
+
+class FakeDeviceService extends DeviceService {
+  @override
+  RSAKeyPair? generateRSAKey() {
+    return RSAKeyPair(
+        publicKey: RSAPublicKey(
+          BigInt.zero,
+          BigInt.zero,
+        ),
+        privateKey: RSAPrivateKey(
+          BigInt.zero,
+          BigInt.zero,
+          BigInt.zero,
+          BigInt.zero,
+        ));
   }
 }

@@ -2,8 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:pointycastle/pointycastle.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:solarisdemo/models/bank_card.dart';
+import 'package:solarisdemo/utilities/crypto/crypto_key_generator.dart';
 import 'package:solarisdemo/utilities/crypto/crypto_message_signer.dart';
+import 'package:solarisdemo/utilities/crypto/crypto_utils.dart';
 
 MethodChannel _platform = const MethodChannel('com.thinslices.solarisdemo/native');
 
@@ -28,9 +32,9 @@ class DeviceService {
   Future<String?> getDeviceId() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      return prefs.getString(deviceIdKey);
+      return prefs.getString(deviceIdKey) ?? '';
     } catch (e) {
-      return null;
+      return '';
     }
   }
 
@@ -58,6 +62,30 @@ class DeviceService {
     }
   }
 
+  Future<void> saveKeyPairIntoCache({
+    required DeviceKeyPairs keyPair,
+    bool restricted = false,
+  }) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    Map<String, String> keypair = {
+      'publicKey': keyPair.publicKey,
+      'privateKey': keyPair.privateKey,
+    };
+
+    String keyPairData = json.encode(keypair);
+
+    prefs.setString(
+      restricted ? 'restrictedKeyPair' : 'unrestrictedKeyPair',
+      keyPairData,
+    );
+  }
+
+  Future<void> saveDeviceIdIntoCache(String deviceId) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('device_id', deviceId);
+  }
+
   Future<DeviceKeyPairs?> getDeviceKeyPairs({bool restricted = false}) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -80,6 +108,34 @@ class DeviceService {
   String? generateSignature({required String privateKey, required String stringToSign}) {
     try {
       return CryptoMessageSigner.signMessage(message: stringToSign, encodedPrivateKey: privateKey);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  DeviceKeyPairs? generateECKey() {
+    try {
+      var newKeyPair = CryptoKeyGenerator.generateECKeyPair();
+      return DeviceKeyPairs(
+        publicKey: newKeyPair.publicKey,
+        privateKey: newKeyPair.privateKey,
+      );
+    } catch (e) {
+      return null;
+    }
+  }
+
+  RSAKeyPair? generateRSAKey() {
+    try {
+      return CryptoKeyGenerator.generateRSAKeyPair();
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Jwk? convertRSAPublicKeyToJWK({required RSAPublicKey rsaPublicKey}) {
+    try {
+      return CryptoUtils.convertRSAPublicKeyToJWK(rsaPublicKey: rsaPublicKey);
     } catch (e) {
       return null;
     }

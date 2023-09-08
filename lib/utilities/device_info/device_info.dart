@@ -2,16 +2,11 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 
-class DeviceInfo {
-  static DeviceInfo? _instance;
+class DeviceInfoService {
   final DeviceInfoPlugin _deviceInfoPlugin = DeviceInfoPlugin();
 
-  DeviceInfo._();
+  DeviceInfoService();
 
-  static DeviceInfo get instance {
-    _instance ??= DeviceInfo._();
-    return _instance!;
-  }
 
   Future<String> getDeviceName() async {
     if (Platform.isAndroid) {
