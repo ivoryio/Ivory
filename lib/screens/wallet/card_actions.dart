@@ -179,7 +179,7 @@ class ActiveCard extends StatelessWidget {
           space: 28,
           children: [
             const ItemTitle(
-              nameOfActionTitle: 'Spending settings',
+              nameOfActionTitle: 'Security settings',
             ),
             IvoryListItemWithAction(
               leftIcon: Icons.dialpad,
