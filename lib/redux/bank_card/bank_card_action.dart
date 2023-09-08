@@ -37,6 +37,8 @@ class BankCardLoadingEventAction {}
 
 class BankCardFailedEventAction {}
 
+class BankCardNoBoundedDevicesEventAction {}
+
 class BankCardPinChoosenEventAction {
   final String pin;
   final BankCard bankcard;

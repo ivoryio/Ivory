@@ -1,4 +1,5 @@
 import 'package:redux/redux.dart';
+import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 
@@ -9,8 +10,9 @@ import 'bank_card_service.dart';
 class BankCardMiddleware extends MiddlewareClass<AppState> {
   final BankCardService _bankCardService;
   final DeviceService _deviceService;
+  final BiometricsService _biometricsService;
 
-  BankCardMiddleware(this._bankCardService, this._deviceService);
+  BankCardMiddleware(this._bankCardService, this._deviceService, this._biometricsService);
 
   @override
   call(Store<AppState> store, action, NextDispatcher next) async {
@@ -57,6 +59,20 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
     if (action is BankCardFetchDetailsCommandAction) {
       store.dispatch(BankCardLoadingEventAction());
 
+      final deviceId = await _deviceService.getDeviceId();
+      if (deviceId == '') {
+        store.dispatch(BankCardNoBoundedDevicesEventAction());
+        return null;
+      }
+
+      final isBiometricsAuthenticated = await _biometricsService.authenticateWithBiometrics(
+          message: "'Please use biometric authentication to view card details.'");
+
+      if (!isBiometricsAuthenticated) {
+        store.dispatch(BankCardFailedEventAction());
+        return null;
+      }
+
       final rsaKeyPair = _deviceService.generateRSAKey();
       if (rsaKeyPair == null) {
         store.dispatch(BankCardFailedEventAction());
@@ -69,7 +85,6 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
         return null;
       }
 
-      final deviceId = await _deviceService.getDeviceId();
       String? consentId = await _deviceService.getConsentId();
 
       if (consentId == null) {

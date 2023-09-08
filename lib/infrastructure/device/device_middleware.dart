@@ -192,5 +192,20 @@ class DeviceBindingMiddleware extends MiddlewareClass<AppState> {
         store.dispatch(DeviceBindingFailedEventAction());
       }
     }
+
+    if (action is DeleteIncompleteDeviceBindingCommandAction) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.remove('device_id');
+      prefs.remove('restrictedKeyPair');
+      prefs.remove('unrestrictedKeyPair');
+
+      final deviceName = await _deviceInfoService.getDeviceName();
+
+      Device thisDevice = Device(
+        deviceId: '',
+        deviceName: deviceName,
+      );
+      store.dispatch(BoundDevicesFetchedButEmptyEventAction(thisDevice));
+    }
   }
 }

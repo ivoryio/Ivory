@@ -33,6 +33,8 @@ class DeleteBoundDeviceCommandAction {
   });
 }
 
+class DeleteIncompleteDeviceBindingCommandAction {}
+
 class FetchBoundDevicesCommandAction {}
 
 class BoundDevicesFetchedEventAction {
@@ -55,3 +57,5 @@ class BoundDevicesFetchedButEmptyEventAction {
 class DeviceBoundedEventAction {}
 
 class BoundDeviceDeletedEventAction {}
+
+class TemporaryDeviceBindingDeletedEventAction {}
