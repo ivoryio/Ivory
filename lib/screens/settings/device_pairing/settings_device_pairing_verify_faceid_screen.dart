@@ -30,39 +30,42 @@ class _SettingsDevicePairingVerifyFaceidScreenState extends State<SettingsDevice
       _isInputComplete = isComplete;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     final user = context.read<AuthCubit>().state.user!.cognito;
     return ScreenScaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          AppToolbar(
-              padding: EdgeInsets.symmetric(
-                horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                vertical: ClientConfig.getCustomClientUiSettings().defaultScreenVerticalPadding,
+      body: StoreConnector<AppState, DeviceBindingViewModel>(
+        onDidChange: (previousViewModel, viewModel) {
+          if (previousViewModel is DeviceBindingLoadingViewModel &&
+              viewModel is DeviceBindingChallengeVerifiedViewModel) {
+            Navigator.pushNamed(context, SettingsDevicePairingSuccessScreen.routeName);
+          }
+        },
+        converter: (store) => DeviceBindingPresenter.presentDeviceBinding(
+          deviceBindingState: store.state.deviceBindingState,
+        ),
+        builder: (context, viewModel) {
+          if (viewModel is DeviceBindingErrorViewModel) {
+            return const Center(
+              child: Text('Error'),
+            );
+          }
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AppToolbar(
+                backButtonEnabled: viewModel is! DeviceBindingLoadingViewModel,
+                padding: EdgeInsets.symmetric(
+                  horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+                  vertical: ClientConfig.getCustomClientUiSettings().defaultScreenVerticalPadding,
+                ),
+                onBackButtonPressed: () {
+                  Navigator.popUntil(context, ModalRoute.withName(SettingsDevicePairingScreen.routeName));
+                  StoreProvider.of<AppState>(context).dispatch(FetchBoundDevicesCommandAction());
+                },
               ),
-              onBackButtonPressed: () {
-                Navigator.popUntil(context, ModalRoute.withName(SettingsDevicePairingScreen.routeName));
-                StoreProvider.of<AppState>(context).dispatch(FetchBoundDevicesCommandAction());
-              }),
-          StoreConnector<AppState, DeviceBindingViewModel>(
-            onDidChange: (previousViewModel, viewModel) {
-              if (previousViewModel is DeviceBindingLoadingViewModel &&
-                  viewModel is DeviceBindingChallengeVerifiedViewModel) {
-                Navigator.pushNamed(context, SettingsDevicePairingSuccessScreen.routeName);
-              }
-            },
-            converter: (store) => DeviceBindingPresenter.presentDeviceBinding(
-              deviceBindingState: store.state.deviceBindingState,
-            ),
-            builder: (context, viewModel) {
-              if (viewModel is DeviceBindingErrorViewModel) {
-                return const Center(
-                  child: Text('Error'),
-                );
-              }
-              return Expanded(
+              Expanded(
                 child: Padding(
                   padding: EdgeInsets.only(
                     left: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
@@ -134,10 +137,10 @@ class _SettingsDevicePairingVerifyFaceidScreenState extends State<SettingsDevice
                     ],
                   ),
                 ),
-              );
-            },
-          )
-        ],
+              )
+            ],
+          );
+        },
       ),
     );
   }

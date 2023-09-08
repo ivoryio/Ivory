@@ -36,42 +36,51 @@ class SettingsPairedDeviceDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = context.read<AuthCubit>().state.user!.cognito;
     return ScreenScaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          AppToolbar(
-            title: '',
-            padding: EdgeInsets.symmetric(
-              horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-            ),
-          ),
-          StoreConnector<AppState, DeviceBindingViewModel>(
-            onDidChange: (previousViewModel, newViewModel) {
-              if (previousViewModel is DeviceBindingLoadingViewModel && newViewModel is DeviceBindingDeletedViewModel) {
-                Navigator.popUntil(context, ModalRoute.withName(SettingsDevicePairingScreen.routeName));
-                StoreProvider.of<AppState>(context).dispatch(
-                  FetchBoundDevicesCommandAction(),
-                );
-              }
-            },
-            converter: (store) => DeviceBindingPresenter.presentDeviceBinding(
-              deviceBindingState: store.state.deviceBindingState,
-            ),
-            builder: (context, viewModel) {
-              if (viewModel is DeviceBindingLoadingViewModel) {
-                return const Expanded(
+      body: StoreConnector<AppState, DeviceBindingViewModel>(
+        onDidChange: (previousViewModel, newViewModel) {
+          if (previousViewModel is DeviceBindingLoadingViewModel && newViewModel is DeviceBindingDeletedViewModel) {
+            Navigator.popUntil(context, ModalRoute.withName(SettingsDevicePairingScreen.routeName));
+            StoreProvider.of<AppState>(context).dispatch(
+              FetchBoundDevicesCommandAction(),
+            );
+          }
+        },
+        converter: (store) => DeviceBindingPresenter.presentDeviceBinding(
+          deviceBindingState: store.state.deviceBindingState,
+        ),
+        builder: (context, viewModel) {
+          if (viewModel is DeviceBindingLoadingViewModel) {
+            return const Column(
+              children: [
+                Expanded(
                   child: Center(
                     child: CircularProgressIndicator(),
                   ),
-                );
-              } else if (viewModel is DeviceBindingErrorViewModel) {
-                return const Expanded(
+                ),
+              ],
+            );
+          } else if (viewModel is DeviceBindingErrorViewModel) {
+            return const Column(
+              children: [
+                Expanded(
                   child: Center(
                     child: Text('Error'),
                   ),
-                );
-              }
-              return Expanded(
+                ),
+              ],
+            );
+          }
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AppToolbar(
+                backButtonEnabled: viewModel is! DeviceBindingLoadingViewModel,
+                title: '',
+                padding: EdgeInsets.symmetric(
+                  horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+                ),
+              ),
+              Expanded(
                 child: Padding(
                   padding: EdgeInsets.only(
                     left: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
@@ -140,7 +149,6 @@ class SettingsPairedDeviceDetailsScreen extends StatelessWidget {
                                         Text(
                                           'Brand',
                                           style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-
                                         ),
                                         Text(
                                           'IOS',
@@ -243,7 +251,7 @@ class SettingsPairedDeviceDetailsScreen extends StatelessWidget {
                                     text: 'Yes, unpair',
                                     color: const Color(0xFFE61F27),
                                     onPressed: () {
-                                      Navigator.pop(context);                          
+                                      Navigator.pop(context);
                                       StoreProvider.of<AppState>(context).dispatch(
                                         DeleteBoundDeviceCommandAction(
                                           user: user,
@@ -253,17 +261,16 @@ class SettingsPairedDeviceDetailsScreen extends StatelessWidget {
                                     },
                                   ),
                                 ],
-                              )
-                          );
+                              ));
                         },
                       ),
                     ],
                   ),
                 ),
-              );
-            },
-          ),
-        ],
+              ),
+            ],
+          );
+        },
       ),
     );
   }
