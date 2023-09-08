@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../config.dart';
+
 class CircularCountdownProgress extends StatefulWidget {
   final Duration? duration;
   final Function? onCompleted;
@@ -110,12 +112,7 @@ class _CircularCountdownProgressState extends State<CircularCountdownProgress> {
           child: Center(
             child: Text(
               _isRunning ? _showValue : '00:00',
-              style: const TextStyle(
-                fontSize: 14,
-                height: 18 / 14,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF15141E),
-              ),
+              style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: const Color(0xFF15141E)),
             ),
           ),
         ),
@@ -126,7 +123,7 @@ class _CircularCountdownProgressState extends State<CircularCountdownProgress> {
                 ? _remainingTime / widget.duration!.inSeconds
                 : 0,
             backgroundColor: const Color(0xFFE9EAEB),
-            valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF2575FC)),
+            valueColor: AlwaysStoppedAnimation<Color>( ClientConfig.getColorScheme().secondary),
             
           ),
         ),

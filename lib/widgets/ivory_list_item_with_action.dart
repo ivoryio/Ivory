@@ -34,7 +34,7 @@ class IvoryListItemWithAction extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         if (onPressed != null) {
-          onPressed!(); // Call the onPressed callback if it's not null
+          onPressed!();
         }
       },
       child: Row(
@@ -50,12 +50,12 @@ class IvoryListItemWithAction extends StatelessWidget {
               children: [
                 Text(
                   actionName,
-                  style: const TextStyle(fontSize: 16, height: 1.5, fontWeight: FontWeight.w600),
+                  style: ClientConfig.getTextStyleScheme().heading4,
                 ),
                 if (actionDescription != null)
                   Text(
                     actionDescription!,
-                    style: const TextStyle(fontSize: 14, height: 1.29, fontWeight: FontWeight.w400),
+                    style: ClientConfig.getTextStyleScheme().bodySmallRegular,
                   ),
               ],
             ),
@@ -92,7 +92,7 @@ class _ActionItemState extends State<ActionItem> {
     return FlutterSwitch(
       width: 56.0,
       height: 32.0,
-      activeColor: Theme.of(context).primaryColor,
+      activeColor: ClientConfig.getColorScheme().secondary,
       inactiveColor: const Color(0xFFB0B0B0),
       duration: const Duration(milliseconds: 50),
       toggleSize: 24.0,

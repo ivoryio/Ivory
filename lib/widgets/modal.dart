@@ -43,6 +43,7 @@ Future<dynamic> showBottomModal({
           ),
           const SizedBox(height: 24),
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (title != null)
                 Expanded(
@@ -66,12 +67,7 @@ Future<dynamic> showBottomModal({
           if (message != null)
             Text(
               message,
-              style: const TextStyle(
-                fontSize: 16,
-                height: 24 / 16,
-                fontWeight: FontWeight.w400,
-                color: Color(0xFF15141E),
-              ),
+              style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
             ),
           if (content != null) content,
         ],

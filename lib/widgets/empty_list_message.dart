@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../config.dart';
+
 class TextMessageWithCircularImage extends StatelessWidget {
   final String title;
   final String message;
@@ -36,10 +38,7 @@ class TextMessageWithCircularImage extends StatelessWidget {
           ),
           Text(
             title,
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w600,
-            ),
+            style: ClientConfig.getTextStyleScheme().heading2,
           ),
           const SizedBox(
             height: 16,
@@ -47,10 +46,7 @@ class TextMessageWithCircularImage extends StatelessWidget {
           Text(
             message,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 16,
-              color: Color(0XFF667085),
-            ),
+            style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
           ),
         ],
       ),

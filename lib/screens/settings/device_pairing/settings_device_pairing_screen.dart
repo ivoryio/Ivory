@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/infrastructure/device/device_presenter.dart';
-import 'package:solarisdemo/screens/settings/settings_paired_device_details_screen.dart';
+import 'package:solarisdemo/models/user.dart';
+import 'package:solarisdemo/redux/device/device_action.dart';
+import 'package:solarisdemo/screens/settings/device_pairing/settings_device_pairing_activate_faceid_screen.dart';
+import 'package:solarisdemo/screens/settings/device_pairing/settings_paired_device_details_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/ivory_list_item_with_action.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
-import '../../config.dart';
-import '../../cubits/auth_cubit/auth_cubit.dart';
-import '../../models/user.dart';
-import '../../redux/app_state.dart';
-import '../../redux/device/device_action.dart';
+import '../../../config.dart';
+import '../../../redux/app_state.dart';
 
 class SettingsDevicePairingScreen extends StatelessWidget {
   static const routeName = "/settingsDevicePairingScreen";
@@ -41,13 +42,9 @@ class SettingsDevicePairingScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'Device pairing',
-                    style: TextStyle(
-                      fontSize: 32,
-                      height: 24 / 16,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: ClientConfig.getTextStyleScheme().heading1,
                   ),
                   const SizedBox(
                     height: 24,
@@ -88,7 +85,8 @@ class SettingsDevicePairingScreen extends StatelessWidget {
                     },
                   ),
                 ],
-              )),
+            ),
+          ),
         ),
       ],
     ));
@@ -120,18 +118,14 @@ class SettingsDevicePairingScreen extends StatelessWidget {
                       children: [
                         Text(
                           viewModel.thisDevice!.deviceName,
-                          style: const TextStyle(
-                            fontSize: 24,
-                            height: 24 / 32,
-                            fontWeight: FontWeight.w600,
-                          ),
+                          style: ClientConfig.getTextStyleScheme().heading2,
                         ),
                         Container(
                           width: 48,
                           height: 48,
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: ClientConfig.getColorScheme().background,
                             borderRadius: BorderRadius.circular(1000),
                           ),
                           child: const Icon(
@@ -169,19 +163,13 @@ class SettingsDevicePairingScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
+                          Text(
                             'Paired devices limit',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                            ),
+                            style: ClientConfig.getTextStyleScheme().bodySmallBold,
                           ),
                           Text(
                             '${viewModel.devices != null ? viewModel.devices!.length : 0}/5',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                            ),
+                            style: ClientConfig.getTextStyleScheme().bodySmallBold,
                           ),
                         ],
                       ),
@@ -214,7 +202,7 @@ class SettingsDevicePairingScreen extends StatelessWidget {
               if (viewModel is DeviceBindingFetchedButEmptyViewModel)
                 GestureDetector(
                   onTap: () {
-                    StoreProvider.of<AppState>(context).dispatch(CreateDeviceBindingCommandAction(user: user));
+                    Navigator.pushNamed(context, SettingsDevicePairingActivateFaceidScreen.routeName);
                   },
                   child: SizedBox(
                     height: 48,
@@ -222,11 +210,9 @@ class SettingsDevicePairingScreen extends StatelessWidget {
                     child: Center(
                       child: Text(
                         'Pair device',
-                        style: TextStyle(
-                          color: ClientConfig.getColorScheme().secondary,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: ClientConfig.getTextStyleScheme().labelMedium.copyWith(
+                              color: ClientConfig.getColorScheme().secondary,
+                            ),
                       ),
                     ),
                   ),
@@ -255,13 +241,9 @@ class SettingsDevicePairingScreen extends StatelessWidget {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Paired devices',
-            style: TextStyle(
-              fontSize: 18,
-              height: 24 / 18,
-              fontWeight: FontWeight.w600,
-            ),
+            style: ClientConfig.getTextStyleScheme().labelLarge,
           ),
           const SizedBox(
             height: 24,
