@@ -62,7 +62,7 @@ class _SettingsDevicePairingVerifyFaceidScreenState extends State<SettingsDevice
                 ),
                 onBackButtonPressed: () {
                   Navigator.popUntil(context, ModalRoute.withName(SettingsDevicePairingScreen.routeName));
-                  StoreProvider.of<AppState>(context).dispatch(FetchBoundDevicesCommandAction());
+                  StoreProvider.of<AppState>(context).dispatch(DeleteIncompleteDeviceBindingCommandAction());
                 },
               ),
               Expanded(
