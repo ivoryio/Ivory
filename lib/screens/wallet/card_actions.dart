@@ -88,26 +88,26 @@ class InactiveCard extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SpacedColumn(
-          space: 48,
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SpacedColumn(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              space: 16,
-              children: [
-                Text(
-                  'Activate your card',
-                  style: ClientConfig.getTextStyleScheme().heading3,
-                ),
-                Text(
-                  'Your card is currently inactive. \n\nOnce it arrives to your address, click on the "Activate my card" to active it and start using. \n\nIt will take only 1 minute.',
-                  style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                ),
-              ],
-            )
+            Text(
+              'Activate your card',
+              style: ClientConfig.getTextStyleScheme().heading3,
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            Text(
+              'Your card is currently inactive. \n\nOnce it arrives to your address, click on the "Activate my card" to active it and start using. \n\nIt will take only 1 minute.',
+              style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+            ),
+            const SizedBox(height: 60),
           ],
         ),
-        const SizedBox(height: 40),
+        const SizedBox(
+          height: 70,
+        ),
         SizedBox(
           width: double.infinity,
           child: Button(
