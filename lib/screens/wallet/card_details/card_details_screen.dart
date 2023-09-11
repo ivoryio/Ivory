@@ -31,6 +31,7 @@ class BankCardDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AuthenticatedUser user = context.read<AuthCubit>().state.user!;
+    bool devicePairedBottomSheetConfirmed = false;
 
     return ScreenScaffold(
       body: Padding(
@@ -55,10 +56,11 @@ class BankCardDetailsScreen extends StatelessWidget {
                 bankCardState: store.state.bankCardState,
                 user: user,
               ),
-              onDidChange: (previousViewModel, viewModel) => {
+              onDidChange: (previousViewModel, viewModel) async => {
                 if (previousViewModel is BankCardLoadingViewModel && viewModel is BankCardNoBoundedDevicesViewModel)
                   {
-                    showBottomModal(
+                    await showBottomModal(
+                      showCloseButton: false,
                       context: context,
                       title: "Device pairing required",
                       message:
@@ -71,6 +73,7 @@ class BankCardDetailsScreen extends StatelessWidget {
                             child: PrimaryButton(
                               text: 'OK',
                               onPressed: () {
+                                devicePairedBottomSheetConfirmed = true;
                                 Navigator.popUntil(context, ModalRoute.withName(HomeScreen.routeName));
                                 StoreProvider.of<AppState>(context).dispatch(GetBankCardCommandAction(
                                   user: context.read<AuthCubit>().state.user!,
@@ -81,8 +84,16 @@ class BankCardDetailsScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                    )
-                  }
+                    ),
+                    if (devicePairedBottomSheetConfirmed == false)
+                      {
+                        Navigator.popUntil(context, ModalRoute.withName(HomeScreen.routeName)),
+                        StoreProvider.of<AppState>(context).dispatch(GetBankCardCommandAction(
+                          user: context.read<AuthCubit>().state.user!,
+                          cardId: params.card.id,
+                        )),
+                      },
+                  },
               },
               onInit: (store) => {
                 store.dispatch(
@@ -178,7 +189,7 @@ class BankCardDetailsScreen extends StatelessWidget {
                 }
                 return const Expanded(
                   child: Center(
-                      child: CircularProgressIndicator(),
+                    child: CircularProgressIndicator(),
                   ),
                 );
               },
