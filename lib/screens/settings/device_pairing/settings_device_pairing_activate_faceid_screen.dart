@@ -13,6 +13,7 @@ import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../../config.dart';
+import '../../../utilities/ivory_color_mapper.dart';
 
 class SettingsDevicePairingActivateFaceidScreen extends StatelessWidget {
   static const routeName = "/settingsDevicePairingActivateFaceidScreen";
@@ -91,8 +92,11 @@ class SettingsDevicePairingActivateFaceidScreen extends StatelessWidget {
                       ),
                       Expanded(
                         child: Center(
-                          child: SvgPicture.asset(
-                            'assets/images/biometric_faceid.svg',
+                          child:  SvgPicture(
+                            SvgAssetLoader(
+                              'assets/images/biometric_faceid.svg',
+                              colorMapper: IvoryColorMapper(baseColor: ClientConfig.getColorScheme().secondary,),
+                            ),
                           ),
                         ),
                       ),

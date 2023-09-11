@@ -11,6 +11,7 @@ import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../infrastructure/bank_card/bank_card_presenter.dart';
 import '../../models/user.dart';
 import '../../redux/app_state.dart';
+import '../../utilities/ivory_color_mapper.dart';
 import '../../widgets/button.dart';
 import '../../widgets/screen_scaffold.dart';
 
@@ -84,8 +85,11 @@ class BankCardDetailsInfoScreen extends StatelessWidget {
                         ),
                         Expanded(
                           child: Center(
-                            child: SvgPicture.asset(
-                              'assets/images/choose_pin.svg',
+                            child:  SvgPicture(
+                              SvgAssetLoader(
+                                'assets/images/choose_pin.svg',
+                                colorMapper: IvoryColorMapper(baseColor: ClientConfig.getColorScheme().secondary,),
+                              ),
                             ),
                           ),
                         ),

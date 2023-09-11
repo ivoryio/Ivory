@@ -9,6 +9,8 @@ import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
+import '../../../utilities/ivory_color_mapper.dart';
+
 class SettingsDevicePairingSuccessScreen extends StatelessWidget {
   static const routeName = "/settingsDevicePairingSuccessScreen";
   const SettingsDevicePairingSuccessScreen({super.key});
@@ -59,8 +61,11 @@ class SettingsDevicePairingSuccessScreen extends StatelessWidget {
                         child: Stack(
                           alignment: Alignment.center,
                           children: [
-                            SvgPicture.asset(
-                              'assets/images/biometric_faceid.svg',
+                            SvgPicture(
+                              SvgAssetLoader(
+                                'assets/images/biometric_faceid.svg',
+                                colorMapper: IvoryColorMapper(baseColor: ClientConfig.getColorScheme().secondary,),
+                              ),
                             ),
                             Positioned(
                               left: 170,

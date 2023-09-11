@@ -223,7 +223,7 @@ class _Appbar extends StatelessWidget {
 }
 
 class _TimeoutPopUp extends StatelessWidget {
-  const _TimeoutPopUp({super.key});
+  const _TimeoutPopUp();
 
   @override
   Widget build(BuildContext context) {

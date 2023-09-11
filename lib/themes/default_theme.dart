@@ -153,7 +153,7 @@ class PorscheTheme {
       outline: Colors.black, //ALSO USED TO CALCULATE GRADIENT,
   );
 
-  static ClientUiSettings clientUiSettings = DefaultTheme.clientUiSettings;
+  static ClientUiSettings clientUiSettings = DefaultTheme.clientUiSettings.copyWith(colorscheme: colorScheme);
 }
 
 class SolarisTheme {
@@ -166,7 +166,7 @@ class SolarisTheme {
     outline: const Color(0xFF9D2801), //ALSO USED TO CALCULATE GRADIENT,
   );
 
-  static ClientUiSettings clientUiSettings = DefaultTheme.clientUiSettings;
+  static ClientUiSettings clientUiSettings = DefaultTheme.clientUiSettings.copyWith(colorscheme: colorScheme);
 }
 
 class TextStyleScheme {

@@ -11,6 +11,7 @@ import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../config.dart';
+import '../../../utilities/ivory_color_mapper.dart';
 import '../../../widgets/app_toolbar.dart';
 import '../../../widgets/button.dart';
 import 'more_credit_waitlist_screen.dart';
@@ -83,8 +84,12 @@ class _MoreCreditScreenState extends State<MoreCreditScreen> {
             const SizedBox(height: 24),
             Expanded(
               child: Center(
-                child:
-                    SvgPicture.asset('assets/images/repayment_more_credit.svg'),
+                child: SvgPicture(
+                  SvgAssetLoader(
+                    'assets/images/repayment_more_credit.svg',
+                    colorMapper: IvoryColorMapper(baseColor: ClientConfig.getColorScheme().secondary,),
+                  ),
+                ),
               ),
             ),
             SizedBox(
