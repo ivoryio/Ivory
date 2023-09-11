@@ -49,6 +49,12 @@ class DefaultTheme {
       ),
     ),
     labelTextStyle: TextStyleScheme(
+      display: const TextStyle(
+        fontSize: 40,
+        height: 1.2, // 48 / 48,
+        fontWeight: FontWeight.w600,
+        color: Color(0xFF15141E),
+      ),
       heading1: const TextStyle(
         fontSize: 32,
         height: 1.25, // 40 / 32,
@@ -68,8 +74,8 @@ class DefaultTheme {
         color: Color(0xFF15141E),
       ),
       heading4: const TextStyle(
-        fontSize: 18,
-        height: 1.33, // 24 / 18,
+        fontSize: 16,
+        height: 1.5, // 24 / 16,
         fontWeight: FontWeight.w600,
         color: Color(0xFF15141E),
       ),
@@ -139,13 +145,32 @@ class DefaultTheme {
 
 class PorscheTheme {
   static ColorScheme colorScheme = DefaultTheme.colorScheme.copyWith(
-    secondary: Colors.yellow,
+      primary: Colors.black,
+      secondary: const Color(0xFFCC0000),
+      tertiary: Colors.black, // USE THIS FOR BUTTON BACKGROUNDS
+      surface: Colors.white, // USE THIS FOR BUTTON TEXTS
+      surfaceVariant: const Color(0xFF3D3D3D), //USED TO CALCULATE GRADIENT,
+      outline: Colors.black, //ALSO USED TO CALCULATE GRADIENT,
+  );
+
+  static ClientUiSettings clientUiSettings = DefaultTheme.clientUiSettings;
+}
+
+class SolarisTheme {
+  static ColorScheme colorScheme = DefaultTheme.colorScheme.copyWith(
+    primary: const Color(0xFF1D2637),
+    secondary: const Color(0xFFFF6432),
+    tertiary: const Color(0xFFFF6432), // USE THIS FOR BUTTON BACKGROUNDS
+    surface: Colors.white, // USE THIS FOR BUTTON TEXTS
+    surfaceVariant: const Color(0xFFF8623A),//USED TO CALCULATE GRADIENT,
+    outline: const Color(0xFF9D2801), //ALSO USED TO CALCULATE GRADIENT,
   );
 
   static ClientUiSettings clientUiSettings = DefaultTheme.clientUiSettings;
 }
 
 class TextStyleScheme {
+  final TextStyle display;
   final TextStyle heading1;
   final TextStyle heading2;
   final TextStyle heading3;
@@ -162,6 +187,7 @@ class TextStyleScheme {
   final TextStyle mixedStyles;
 
   TextStyleScheme({
+    required this.display,
     required this.heading1,
     required this.heading2,
     required this.heading3,
@@ -179,6 +205,7 @@ class TextStyleScheme {
   });
 
   TextStyleScheme copyWith({
+    TextStyle? display,
     TextStyle? heading1,
     TextStyle? heading2,
     TextStyle? heading3,
@@ -195,6 +222,7 @@ class TextStyleScheme {
     TextStyle? mixedStyles,
   }) {
     return TextStyleScheme(
+      display: display ?? this.display,
       heading1: heading1 ?? this.heading1,
       heading2: heading2 ?? this.heading2,
       heading3: heading3 ?? this.heading3,

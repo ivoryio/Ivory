@@ -6,7 +6,8 @@ import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/infrastructure/bank_card/bank_card_presenter.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
-import 'package:solarisdemo/screens/wallet/cards_screen.dart';
+import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
+import 'package:solarisdemo/screens/home/home_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/card_widget.dart';
@@ -75,8 +76,12 @@ class BankCardDetailsActivationSuccessScreen extends StatelessWidget {
                       onPressed: () {
                         Navigator.popUntil(
                           context,
-                          ModalRoute.withName(BankCardsScreen.routeName),
+                          ModalRoute.withName(HomeScreen.routeName),
                         );
+                        StoreProvider.of<AppState>(context).dispatch(GetBankCardCommandAction(
+                          user: user,
+                          cardId: viewModel.bankCard!.id,
+                        ));
                       },
                     ),
                   ),

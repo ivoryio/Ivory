@@ -159,6 +159,7 @@ void main() {
       final store = createTestStore(
         bankCardService: FakeBankCardService(),
         deviceService: FakeDeviceService(),
+        biometricsService: FakeBiometricsService(),
         initialState: createAppState(
           bankCardState: BankCardInitialState(),
         ),
@@ -200,6 +201,7 @@ void main() {
       final store = createTestStore(
         bankCardService: FakeFailingBankCardService(),
         deviceService: FakeDeviceService(),
+        biometricsService: FakeBiometricsService(),
         initialState: createAppState(
           bankCardState: BankCardInitialState(),
         ),

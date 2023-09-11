@@ -12,6 +12,8 @@ import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/card_details_widget.dart';
 import 'package:solarisdemo/widgets/circular_countdown_progress_widget.dart';
+import 'package:solarisdemo/screens/home/home_screen.dart';
+import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 class CardDetailsScreenParams {
@@ -39,7 +41,7 @@ class BankCardDetailsScreen extends StatelessWidget {
             AppToolbar(
               title: 'View card details',
               onBackButtonPressed: () {
-                Navigator.pop(context);
+                Navigator.popUntil(context, ModalRoute.withName(HomeScreen.routeName));
                 StoreProvider.of<AppState>(context).dispatch(
                   GetBankCardCommandAction(
                     user: user,
@@ -53,6 +55,35 @@ class BankCardDetailsScreen extends StatelessWidget {
                 bankCardState: store.state.bankCardState,
                 user: user,
               ),
+              onDidChange: (previousViewModel, viewModel) => {
+                if (previousViewModel is BankCardLoadingViewModel && viewModel is BankCardNoBoundedDevicesViewModel)
+                  {
+                    showBottomModal(
+                      context: context,
+                      title: "Device pairing required",
+                      message:
+                          "In order to access the card details you need to pair your device first. You can do this from the “Security” menu in the Settings tab.",
+                      content: Column(
+                        children: [
+                          const SizedBox(height: 24),
+                          SizedBox(
+                            width: double.infinity,
+                            child: PrimaryButton(
+                              text: 'OK',
+                              onPressed: () {
+                                Navigator.popUntil(context, ModalRoute.withName(HomeScreen.routeName));
+                                StoreProvider.of<AppState>(context).dispatch(GetBankCardCommandAction(
+                                  user: context.read<AuthCubit>().state.user!,
+                                  cardId: params.card.id,
+                                ));
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  }
+              },
               onInit: (store) => {
                 store.dispatch(
                   BankCardFetchDetailsCommandAction(
@@ -145,13 +176,10 @@ class BankCardDetailsScreen extends StatelessWidget {
                     ),
                   );
                 }
-                return const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Center(
+                return const Expanded(
+                  child: Center(
                       child: CircularProgressIndicator(),
-                    ),
-                  ],
+                  ),
                 );
               },
             )

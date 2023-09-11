@@ -6,6 +6,8 @@ BankCardState bankCardReducer(BankCardState currentState, dynamic action) {
     return BankCardLoadingState();
   } else if (action is BankCardFailedEventAction) {
     return BankCardErrorState();
+  } else if (action is BankCardNoBoundedDevicesEventAction) {
+    return BankCardNoBoundedDevicesState();
   } else if (action is BankCardFetchedEventAction) {
     return BankCardFetchedState(action.bankCard, action.user);
   } else if (action is BankCardPinChoosenEventAction) {

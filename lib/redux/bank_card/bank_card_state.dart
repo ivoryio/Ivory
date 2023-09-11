@@ -16,6 +16,8 @@ class BankCardLoadingState extends BankCardState {
 
 class BankCardErrorState extends BankCardState {}
 
+class BankCardNoBoundedDevicesState extends BankCardState {}
+
 class BankCardFetchedState extends BankCardState {
   final AuthenticatedUser user;
   final BankCard bankCard;

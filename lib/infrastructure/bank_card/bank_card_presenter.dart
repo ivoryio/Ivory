@@ -15,6 +15,8 @@ class BankCardPresenter {
       return BankCardLoadingViewModel();
     } else if (bankCardState is BankCardErrorState) {
       return BankCardErrorViewModel();
+    } else if (bankCardState is BankCardNoBoundedDevicesState) {
+      return BankCardNoBoundedDevicesViewModel();
     } else if (bankCardState is BankCardFetchedState) {
       return BankCardFetchedViewModel(
         user: user,
@@ -57,6 +59,8 @@ class BankCardInitialViewModel extends BankCardViewModel {}
 class BankCardLoadingViewModel extends BankCardViewModel {}
 
 class BankCardErrorViewModel extends BankCardViewModel {}
+
+class BankCardNoBoundedDevicesViewModel extends BankCardViewModel {}
 
 class BankCardFetchedViewModel extends BankCardViewModel {
 

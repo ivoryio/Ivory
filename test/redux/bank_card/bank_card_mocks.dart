@@ -1,10 +1,13 @@
 import 'package:mockito/mockito.dart';
 import 'package:pointycastle/pointycastle.dart';
 import 'package:solarisdemo/infrastructure/bank_card/bank_card_service.dart';
+import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/models/bank_card.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/utilities/crypto/crypto_key_generator.dart';
+
+import '../../setup/create_store.dart';
 
 class MockGetCardDetailsRequestBody extends Mock implements GetCardDetailsRequestBody {}
 
@@ -125,5 +128,14 @@ class FakeDeviceService extends DeviceService {
           BigInt.zero,
           BigInt.zero,
         ));
+  }
+}
+
+class FakeBiometricsService extends BiometricsService {
+  FakeBiometricsService() : super(auth: MockLocalAutentication());
+
+  @override
+  Future<bool> authenticateWithBiometrics({required String message}) async {
+    return true;
   }
 }

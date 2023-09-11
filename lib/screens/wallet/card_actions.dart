@@ -88,26 +88,26 @@ class InactiveCard extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SpacedColumn(
-          space: 48,
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SpacedColumn(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              space: 16,
-              children: [
-                Text(
-                  'Activate your card',
-                  style: ClientConfig.getTextStyleScheme().heading3,
-                ),
-                Text(
-                  'Your card is currently inactive. \n\nOnce it arrives to your address, click on the "Activate my card" to active it and start using. \n\nIt will take only 1 minute.',
-                  style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                ),
-              ],
-            )
+            Text(
+              'Activate your card',
+              style: ClientConfig.getTextStyleScheme().heading3,
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            Text(
+              'Your card is currently inactive. \n\nOnce it arrives to your address, click on the "Activate my card" to active it and start using. \n\nIt will take only 1 minute.',
+              style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+            ),
+            const SizedBox(height: 60),
           ],
         ),
-        const SizedBox(height: 40),
+        const SizedBox(
+          height: 70,
+        ),
         SizedBox(
           width: double.infinity,
           child: Button(
@@ -143,17 +143,11 @@ class ActiveCard extends StatelessWidget {
               icon: Icons.remove_red_eye_outlined,
               textLabel: 'Details',
               onPressed: () async {
-                BiometricsService biometricService = BiometricsService(auth: LocalAuthentication());
-
-                if (await biometricService.authenticateWithBiometrics(
-                    message: 'Please use biometric authentication to view card details.')) {
-                  // ignore: use_build_context_synchronously
                   Navigator.pushNamed(
                     context,
                     BankCardDetailsScreen.routeName,
                     arguments: CardDetailsScreenParams(card: viewModel.bankCard!),
-                  );
-                }
+                );       
               },
             ),
             CardOptionsButton(
@@ -179,29 +173,7 @@ class ActiveCard extends StatelessWidget {
           space: 28,
           children: [
             const ItemTitle(
-              nameOfActionTitle: 'Spending settings',
-            ),
-            IvoryListItemWithAction(
-              leftIcon: Icons.speed_outlined,
-              actionName: 'Spending cap',
-              actionDescription: 'Set it up and get an alert if you exceed it',
-              rightIcon: Icons.arrow_forward_ios,
-              actionSwitch: false,
-            ),
-            IvoryListItemWithAction(
-              leftIcon: Icons.wifi_tethering_error,
-              actionName: 'Contactless limit',
-              actionDescription: 'For safe and mindful in-store payments',
-              rightIcon: Icons.arrow_forward_ios,
-              actionSwitch: false,
-            ),
-            const ItemTitle(nameOfActionTitle: 'Security settings'),
-            IvoryListItemWithAction(
-              leftIcon: Icons.key,
-              actionName: 'View PIN',
-              actionDescription: 'For security or personal reasons',
-              rightIcon: Icons.arrow_forward_ios,
-              actionSwitch: false,
+              nameOfActionTitle: 'Security settings',
             ),
             IvoryListItemWithAction(
               leftIcon: Icons.dialpad,
@@ -218,6 +190,13 @@ class ActiveCard extends StatelessWidget {
               leftIcon: Icons.lock_open,
               actionName: 'Unblock card',
               actionDescription: 'After 3 incorrect PIN/CVV attempts',
+              rightIcon: Icons.arrow_forward_ios,
+              actionSwitch: false,
+            ),
+            IvoryListItemWithAction(
+              leftIcon: Icons.wifi_tethering_error,
+              actionName: 'Contactless limit',
+              actionDescription: 'For safe and mindful in-store payments',
               rightIcon: Icons.arrow_forward_ios,
               actionSwitch: false,
             ),
