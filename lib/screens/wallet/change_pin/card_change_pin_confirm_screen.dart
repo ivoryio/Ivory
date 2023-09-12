@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/screens/wallet/change_pin/card_change_pin_success_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
@@ -73,7 +74,6 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> {
   bool hasError = false;
 
   bool isPinMatching(String oldPIN, String newPIN) {
-    print('isPinMatching $oldPIN $newPIN');
     if (newPIN.length != 4) {
       widget.matchingPinErrorNotifier.value = false;
       return true;
@@ -167,13 +167,12 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> {
               cursorRadius: const Radius.circular(0),
               cursorWidth: 0,
               onChanged: (text) {
-                // print('onchaNGED $text');
                 if (text.length <= 4) {
                   setState(
                     () {
                       print('setting state to $text');
                       _newPIN = text;
-                      hasError = !isPinMatching('1234', _newPIN);
+                      hasError = !isPinMatching('1245', _newPIN);
                       if (hasError && text.length == 4) {
                         Future.delayed(
                           const Duration(seconds: 1),
@@ -188,7 +187,7 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> {
                         );
                       } else if (!hasError && text.length == 4) {
                         _focusPin.unfocus();
-                        // Navigator.pushNamed(context, BankCardConfirmPinConfirmScreen.routeName);
+                        Navigator.pushNamed(context, BankCardChangePinSuccessScreen.routeName);
                         print('pin is ok, go success screen');
                       }
                     },

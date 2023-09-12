@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/models/user.dart';
-import 'package:solarisdemo/screens/wallet/change_pin/card_confirm_pin_screen.dart';
+import 'package:solarisdemo/screens/wallet/change_pin/card_change_pin_confirm_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
