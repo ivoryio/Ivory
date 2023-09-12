@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:local_auth/local_auth.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/infrastructure/bank_card/bank_card_presenter.dart';
-import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
 import 'package:solarisdemo/models/bank_card.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
@@ -183,7 +181,7 @@ class ActiveCard extends StatelessWidget {
               actionSwitch: false,
               onPressed: () => Navigator.pushNamed(
                 context,
-                BankCardChangePinScreen.routeName,
+                BankCardChangePinChooseScreen.routeName,
               ),
             ),
             IvoryListItemWithAction(

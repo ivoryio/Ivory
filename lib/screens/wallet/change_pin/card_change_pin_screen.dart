@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/models/user.dart';
+import 'package:solarisdemo/screens/wallet/change_pin/card_confirm_pin_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
-class BankCardChangePinScreen extends StatelessWidget {
-  static const routeName = "/bankCardChangePinScreen";
+class BankCardChangePinChooseScreen extends StatelessWidget {
+  static const routeName = "/bankCardChangePinChooseScreen";
 
-  const BankCardChangePinScreen({Key? key}) : super(key: key);
+  const BankCardChangePinChooseScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,35 +28,28 @@ class BankCardChangePinScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: AppToolbar(
               richTextTitle: RichText(
-                text: const TextSpan(
+                text: TextSpan(
                   children: [
                     TextSpan(
                       text: 'Step 1',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF15141E),
-                      ),
+                      style: ClientConfig.getTextStyleScheme().heading4,
                     ),
                     TextSpan(
                       text: " out of 2",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF56555E),
-                      ),
+                      style: ClientConfig.getTextStyleScheme().heading4.copyWith(color: const Color(0xFF56555E)),
+
                     ),
                   ],
                 ),
               ),
             ),
           ),
-          const PreferredSize(
-            preferredSize: Size.fromHeight(4),
+          PreferredSize(
+            preferredSize: const Size.fromHeight(4),
             child: LinearProgressIndicator(
               value: 0.05,
-              color: Color(0xFF2575FC),
-              backgroundColor: Color(0xFFADADB4),
+              color: ClientConfig.getColorScheme().secondary,
+              backgroundColor: const Color(0xFFADADB4),
             ),
           ),
           ChangePinBody(
@@ -170,6 +165,20 @@ class _ChangePinBodyState extends State<ChangePinBody> {
     return true;
   }
 
+  void resetErrorNotifiers() {
+    hasError = false;
+    widget.birthdayErrorNotifier.value = false;
+    widget.postalCodeErrorNotifier.value = false;
+    widget.sequenceErrorNotifier.value = false;
+    widget.repeatingErrorNotifier.value = false;
+  }
+
+  void clearPinAndResetFocus() {
+    _newPIN = '';
+    _controller.clear();
+    _focusPin.requestFocus();
+  }
+
   @override
   Widget build(BuildContext context) {
     AuthenticatedUser user = context.read<AuthCubit>().state.user!;
@@ -180,22 +189,16 @@ class _ChangePinBodyState extends State<ChangePinBody> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             "Choose PIN",
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w600,
-            ),
+            style: ClientConfig.getTextStyleScheme().heading2,
           ),
           const SizedBox(
             height: 16,
           ),
-          const Text(
+          Text(
             "Remember your PIN as you will use it for all future card purchases.",
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-            ),
+            style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
           ),
           const SizedBox(
             height: 32,
@@ -206,21 +209,24 @@ class _ChangePinBodyState extends State<ChangePinBody> {
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(4, (index) {
-                return Container(
-                  width: 10,
-                  height: 10,
-                  margin: const EdgeInsets.symmetric(horizontal: 12),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    color: hasError
-                        ? const Color(0xffE61F27)
-                        : index >= _newPIN.length
-                            ? const Color(0xffadadb4)
-                            : const Color(0xff15141E),
-                  ),
-                );
-              }),
+              children: List.generate(
+                4,
+                (index) {
+                  return Container(
+                    width: 10,
+                    height: 10,
+                    margin: const EdgeInsets.symmetric(horizontal: 12),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      color: hasError
+                          ? const Color(0xffE61F27)
+                          : index >= _newPIN.length
+                              ? const Color(0xffadadb4)
+                              : const Color(0xff15141E),
+                    ),
+                  );
+                },
+              ),
             ),
           ),
           SizedBox(
@@ -237,21 +243,38 @@ class _ChangePinBodyState extends State<ChangePinBody> {
               decoration: const InputDecoration.collapsed(
                 hintText: 'PIN',
               ),
-              style: TextStyle(
-                color: Colors.grey.withOpacity(0),
+              style: const TextStyle(
+                color: Color(0xFFADADB4),
               ),
               cursorColor: Colors.transparent,
               cursorRadius: const Radius.circular(0),
               cursorWidth: 0,
               onChanged: (text) {
+                // print('onchaNGED $text');
                 if (text.length <= 4) {
-                  setState(() {
-                    _newPIN = text;
-                    hasError = !hasConsecutiveDigits(_newPIN) ||
-                        !containsPostalCode(_newPIN, user.person.address?.postalCode ?? 'postalCode') ||
-                        !hasRepeatingDigits(_newPIN) ||
-                        !containsBirthDate(_newPIN, user.person.birthDate ?? DateTime.now());
-                  });
+                  setState(
+                    () {
+                      // print('setting state to $text');
+                      _newPIN = text;
+                      hasError = !hasConsecutiveDigits(_newPIN) ||
+                          !containsPostalCode(_newPIN, user.person.address?.postalCode ?? 'postalCode') ||
+                          !hasRepeatingDigits(_newPIN) ||
+                          !containsBirthDate(_newPIN, user.person.birthDate ?? DateTime.now());
+
+
+                      if (hasError && text.length == 4) {
+                        Future.delayed(const Duration(seconds: 1), () {
+                          setState(() {
+                            resetErrorNotifiers();
+                            clearPinAndResetFocus();
+                          });
+                        });
+                      } else if (!hasError && text.length == 4) {
+                        _focusPin.unfocus();
+                        Navigator.pushNamed(context, BankCardConfirmPinConfirmScreen.routeName);
+                      }
+                    },
+                  );
                 }
               },
             ),
@@ -284,12 +307,9 @@ class ChangePinChecks extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             "Your PIN should not contain:",
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
+            style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
           ),
           const SizedBox(
             height: 8,
@@ -302,18 +322,15 @@ class ChangePinChecks extends StatelessWidget {
                     Icon(
                       Icons.close,
                       size: 24,
-                      color: birthdayErrorNotifier.value ? const Color(0xffE61F27) : Colors.black,
+                      color: birthdayErrorNotifier.value ? const Color(0xffE61F27) : const Color(0xFF56555E),
                     ),
                     const SizedBox(
                       width: 4,
                     ),
                     Text(
                       "Your date of birth",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: birthdayErrorNotifier.value ? const Color(0xffE61F27) : Colors.black,
-                      ),
+                      style: ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(
+                          color: birthdayErrorNotifier.value ? const Color(0xffE61F27) : const Color(0xFF56555E)),
                     ),
                   ],
                 );
@@ -326,18 +343,15 @@ class ChangePinChecks extends StatelessWidget {
                     Icon(
                       Icons.close,
                       size: 24,
-                      color: postalCodeErrorNotifier.value ? const Color(0xffE61F27) : Colors.black,
+                      color: postalCodeErrorNotifier.value ? const Color(0xffE61F27) : const Color(0xFF56555E),
                     ),
                     const SizedBox(
                       width: 4,
                     ),
                     Text(
                       "Your postal code",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: postalCodeErrorNotifier.value ? const Color(0xffE61F27) : Colors.black,
-                      ),
+                      style: ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(
+                          color: postalCodeErrorNotifier.value ? const Color(0xffE61F27) : const Color(0xFF56555E)),
                     ),
                   ],
                 );
@@ -350,18 +364,15 @@ class ChangePinChecks extends StatelessWidget {
                     Icon(
                       Icons.close,
                       size: 24,
-                      color: sequenceErrorNotifier.value ? const Color(0xffE61F27) : Colors.black,
+                      color: sequenceErrorNotifier.value ? const Color(0xffE61F27) : const Color(0xFF56555E),
                     ),
                     const SizedBox(
                       width: 4,
                     ),
                     Text(
                       "Number sequences, e.g. 1234",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: sequenceErrorNotifier.value ? const Color(0xffE61F27) : Colors.black,
-                      ),
+                      style: ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(
+                          color: sequenceErrorNotifier.value ? const Color(0xffE61F27) : const Color(0xFF56555E)),
                     ),
                   ],
                 );
@@ -374,18 +385,15 @@ class ChangePinChecks extends StatelessWidget {
                     Icon(
                       Icons.close,
                       size: 24,
-                      color: repeatingErrorNotifier.value ? const Color(0xffE61F27) : Colors.black,
+                      color: repeatingErrorNotifier.value ? const Color(0xffE61F27) : const Color(0xFF56555E),
                     ),
                     const SizedBox(
                       width: 4,
                     ),
                     Text(
                       "More than two digits repeating",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: repeatingErrorNotifier.value ? const Color(0xffE61F27) : Colors.black,
-                      ),
+                      style: ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(
+                          color: repeatingErrorNotifier.value ? const Color(0xffE61F27) : const Color(0xFF56555E)),
                     ),
                   ],
                 );

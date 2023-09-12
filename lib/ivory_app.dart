@@ -49,6 +49,7 @@ import 'package:solarisdemo/screens/transfer/transfer_failed_screen.dart';
 import 'package:solarisdemo/screens/transfer/transfer_screen.dart';
 import 'package:solarisdemo/screens/transfer/transfer_sign_screen.dart';
 import 'package:solarisdemo/screens/wallet/cards_screen.dart';
+import 'package:solarisdemo/screens/wallet/change_pin/card_confirm_pin_screen.dart';
 import 'package:solarisdemo/services/auth_service.dart';
 
 import 'screens/transfer/transfer_review_screen.dart';
@@ -157,7 +158,9 @@ class _IvoryAppState extends State<IvoryApp> {
                   params: cardDetailsScreenParams!,
                 );
               },
-              BankCardChangePinScreen.routeName: (context) => const BankCardChangePinScreen(),
+              BankCardChangePinChooseScreen.routeName: (context) => const BankCardChangePinChooseScreen(),
+              BankCardConfirmPinConfirmScreen.routeName: (context) => const BankCardConfirmPinConfirmScreen(),
+              
               // repayments
               RepaymentsScreen.routeName: (context) => const RepaymentsScreen(),
               ChangeRepaymentRateScreen.routeName: (context) => const ChangeRepaymentRateScreen(),
