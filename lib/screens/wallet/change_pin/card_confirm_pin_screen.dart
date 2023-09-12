@@ -160,8 +160,8 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> {
               decoration: const InputDecoration.collapsed(
                 hintText: 'PIN',
               ),
-              style: const TextStyle(
-                color: Color(0xFFADADB4),
+              style: TextStyle(
+                color: Colors.grey.withOpacity(0),
               ),
               cursorColor: Colors.transparent,
               cursorRadius: const Radius.circular(0),
