@@ -45,10 +45,7 @@ class RepaymentsScreen extends StatelessWidget {
           children: [
             AppToolbar(
               onBackButtonPressed: () {
-                Navigator.popAndPushNamed(
-                  context,
-                  HomeScreen.routeName,
-                );
+                Navigator.pop(context);
               },
             ),
             Text(

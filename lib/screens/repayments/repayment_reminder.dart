@@ -109,10 +109,6 @@ class _RepaymentReminderScreenState extends State<RepaymentReminderScreen> {
                                         content: const _RemoveReminderPopUp(),
                                       );
                                       if (value == true) {
-                                        setState(() {
-                                          _reminders.remove(reminder);
-                                        });
-
                                         _onDeleteReminder(reminder);
                                       }
                                     },

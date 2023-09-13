@@ -12,5 +12,5 @@ class RepaymentReminder extends Equatable {
   });
 
   @override
-  List<Object?> get props => [datetime, description];
+  List<Object?> get props => [id, datetime, description];
 }
