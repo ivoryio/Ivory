@@ -148,7 +148,10 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
     if (viewModel is TransactionsFetchedViewModel) {
       bool isFilteringActive = (viewModel.transactionListFilter?.bookingDateMin != null ||
-          viewModel.transactionListFilter?.bookingDateMax != null) ;
+          viewModel.transactionListFilter?.bookingDateMax != null);
+      if(viewModel.transactionListFilter?.searchString != null) {
+        isFilteringActive = isFilteringActive || (viewModel.transactionListFilter!.searchString!.isNotEmpty);
+      }
 
       List<Transaction> transactions = [];
 
@@ -159,10 +162,19 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       }
 
       if (transactions.isEmpty && isFilteringActive) {
-        return Text(
-          "Please apply different filters and search again.",
-          textAlign: TextAlign.center,
-          style: ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(color: const Color(0xFF56555E)),
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "No results",
+              style: ClientConfig.getTextStyleScheme().heading3,
+            ),
+            const SizedBox(height: 16,),
+            Text(
+              "Please apply different filters or search terms.",
+              style: ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(color: const Color(0xFF56555E)),
+            ),
+          ],
         );
       }
 
