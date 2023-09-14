@@ -144,7 +144,7 @@ class ActiveCard extends StatelessWidget {
                   Navigator.pushNamed(
                     context,
                     BankCardDetailsScreen.routeName,
-                    arguments: CardDetailsScreenParams(card: viewModel.bankCard!),
+                  arguments: CardScreenParams(card: viewModel.bankCard!),
                 );       
               },
             ),
@@ -182,6 +182,7 @@ class ActiveCard extends StatelessWidget {
               onPressed: () => Navigator.pushNamed(
                 context,
                 BankCardChangePinChooseScreen.routeName,
+                arguments: CardScreenParams(card: viewModel.bankCard!),
               ),
             ),
             IvoryListItemWithAction(

@@ -19,6 +19,14 @@ class BankCardChoosePinCommandAction {
   BankCardChoosePinCommandAction({required this.pin, required this.user, required this.bankCard});
 }
 
+class BankCardConfirmPinCommandAction {
+  final AuthenticatedUser user;
+  final BankCard bankCard;
+  final String pin;
+
+  BankCardConfirmPinCommandAction({required this.pin, required this.user, required this.bankCard});
+}
+
 class BankCardActivateCommandAction {
   final AuthenticatedUser user;
   final String cardId;
@@ -45,6 +53,15 @@ class BankCardPinChoosenEventAction {
   final AuthenticatedUser user;
   BankCardPinChoosenEventAction({required this.pin, required this.user, required this.bankcard});
 }
+
+class BankCardPinConfirmedEventAction {
+  final String pin;
+  final BankCard bankcard;
+  final AuthenticatedUser user;
+  BankCardPinConfirmedEventAction({required this.pin, required this.user, required this.bankcard});
+}
+
+class BankCardPinChangedEventAction {}
 
 class BankCardFetchedEventAction {
   final AuthenticatedUser user;

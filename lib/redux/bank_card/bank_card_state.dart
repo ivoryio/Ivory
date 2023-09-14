@@ -39,6 +39,16 @@ class BankCardPinChoosenState extends BankCardState {
   List<Object?> get props => [pin];
 }
 
+class BankCardPinConfirmedState extends BankCardState {
+  final AuthenticatedUser user;
+  final BankCard bankCard;
+
+  BankCardPinConfirmedState(this.user, this.bankCard);
+
+  @override
+  List<Object?> get props => [user, bankCard];
+}
+
 class BankCardActivatedState extends BankCardState {
   final BankCard card;
   final AuthenticatedUser user;
@@ -58,3 +68,5 @@ class BankCardDetailsFetchedState extends BankCardState {
   @override
   List<Object?> get props => [cardDetails, bankCard];
 }
+
+class BankCardPinChangedState extends BankCardState {}

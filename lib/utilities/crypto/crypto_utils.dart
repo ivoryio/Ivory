@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:pointycastle/pointycastle.dart';
-import 'package:solarisdemo/models/bank_card.dart';
+import 'package:solarisdemo/models/crypto/jwk.dart';
 
 class CryptoUtils {
   static Jwk convertRSAPublicKeyToJWK({

@@ -153,7 +153,7 @@ class _IvoryAppState extends State<IvoryApp> {
                   const BankCardDetailsActivationSuccessScreen(),
               BankCardDetailsInfoScreen.routeName: (context) => const BankCardDetailsInfoScreen(),
               BankCardDetailsScreen.routeName: (context) {
-                final cardDetailsScreenParams = ModalRoute.of(context)?.settings.arguments as CardDetailsScreenParams?;
+                final cardDetailsScreenParams = ModalRoute.of(context)?.settings.arguments as CardScreenParams?;
 
                 return BankCardDetailsScreen(
                   params: cardDetailsScreenParams!,

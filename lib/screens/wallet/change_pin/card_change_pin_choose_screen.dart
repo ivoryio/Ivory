@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
+import 'package:solarisdemo/infrastructure/bank_card/bank_card_presenter.dart';
 import 'package:solarisdemo/models/user.dart';
+import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
 import 'package:solarisdemo/screens/wallet/change_pin/card_change_pin_confirm_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
@@ -16,69 +20,110 @@ class BankCardChangePinChooseScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = context.read<AuthCubit>().state.user!;
+    final GlobalKey<_ChangePinBodyState> _changePinBodyKey = GlobalKey<_ChangePinBodyState>();
     ValueNotifier<bool> birthdayErrorNotifier = ValueNotifier<bool>(false);
     ValueNotifier<bool> postalCodeErrorNotifier = ValueNotifier<bool>(false);
     ValueNotifier<bool> sequenceErrorNotifier = ValueNotifier<bool>(false);
     ValueNotifier<bool> repeatingErrorNotifier = ValueNotifier<bool>(false);
 
-    return ScreenScaffold(
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: AppToolbar(
-              richTextTitle: RichText(
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text: 'Step 1',
-                      style: ClientConfig.getTextStyleScheme().heading4,
-                    ),
-                    TextSpan(
-                      text: " out of 2",
-                      style: ClientConfig.getTextStyleScheme().heading4.copyWith(color: const Color(0xFF56555E)),
+    return StoreConnector<AppState, BankCardViewModel>(
+      onDidChange: (previousViewModel, viewModel) {
+        if (previousViewModel is BankCardFetchedViewModel && viewModel is BankCardPinChoosenViewModel) {
+          Future.delayed(const Duration(milliseconds: 500), () {
+            Navigator.pushNamed(
+              context,
+              BankCardConfirmPinConfirmScreen.routeName,
+            );
+          });
+        }
 
+        //TODO: fix the following hack
+        if (previousViewModel is BankCardLoadingViewModel && viewModel is BankCardLoadingViewModel) {
+          _changePinBodyKey.currentState?.clearPinAndResetFocus();
+        }
+      },
+      converter: (store) {
+        return BankCardPresenter.presentBankCard(
+          bankCardState: store.state.bankCardState,
+          user: user,
+        );
+      },
+      builder: (context, viewModel) {
+        return ScreenScaffold(
+          body: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: AppToolbar(
+                  onBackButtonPressed: () {
+                    Navigator.pop(context);
+                    StoreProvider.of<AppState>(context).dispatch(
+                      GetBankCardCommandAction(
+                        user: user,
+                        cardId: viewModel.bankCard!.id,
+                      ),
+                    );
+                  },
+                  richTextTitle: RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'Step 1',
+                          style: ClientConfig.getTextStyleScheme().heading4,
+                        ),
+                        TextSpan(
+                          text: " out of 2",
+                          style: ClientConfig.getTextStyleScheme().heading4.copyWith(color: const Color(0xFF56555E)),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
-            ),
+              PreferredSize(
+                preferredSize: const Size.fromHeight(4),
+                child: LinearProgressIndicator(
+                  value: 0.05,
+                  color: ClientConfig.getColorScheme().secondary,
+                  backgroundColor: const Color(0xFFADADB4),
+                ),
+              ),
+              ChangePinBody(
+                key: _changePinBodyKey,
+                viewModel: viewModel,
+                birthdayErrorNotifier: birthdayErrorNotifier,
+                postalCodeErrorNotifier: postalCodeErrorNotifier,
+                sequenceErrorNotifier: sequenceErrorNotifier,
+                repeatingErrorNotifier: repeatingErrorNotifier,
+              ),
+              const Spacer(),
+              if (viewModel is! BankCardPinChoosenViewModel)
+                ChangePinChecks(
+                  viewModel: viewModel,
+                  birthdayErrorNotifier: birthdayErrorNotifier,
+                  postalCodeErrorNotifier: postalCodeErrorNotifier,
+                  sequenceErrorNotifier: sequenceErrorNotifier,
+                  repeatingErrorNotifier: repeatingErrorNotifier,
+                ),
+            ],
           ),
-          PreferredSize(
-            preferredSize: const Size.fromHeight(4),
-            child: LinearProgressIndicator(
-              value: 0.05,
-              color: ClientConfig.getColorScheme().secondary,
-              backgroundColor: const Color(0xFFADADB4),
-            ),
-          ),
-          ChangePinBody(
-            birthdayErrorNotifier: birthdayErrorNotifier,
-            postalCodeErrorNotifier: postalCodeErrorNotifier,
-            sequenceErrorNotifier: sequenceErrorNotifier,
-            repeatingErrorNotifier: repeatingErrorNotifier,
-          ),
-          const Spacer(),
-          ChangePinChecks(
-            birthdayErrorNotifier: birthdayErrorNotifier,
-            postalCodeErrorNotifier: postalCodeErrorNotifier,
-            sequenceErrorNotifier: sequenceErrorNotifier,
-            repeatingErrorNotifier: repeatingErrorNotifier,
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
 
 class ChangePinBody extends StatefulWidget {
+  BankCardViewModel viewModel;
   final ValueNotifier<bool> birthdayErrorNotifier;
   final ValueNotifier<bool> postalCodeErrorNotifier;
   final ValueNotifier<bool> sequenceErrorNotifier;
   final ValueNotifier<bool> repeatingErrorNotifier;
 
-  const ChangePinBody({
+  ChangePinBody({
     Key? key,
+    required this.viewModel,
     required this.birthdayErrorNotifier,
     required this.postalCodeErrorNotifier,
     required this.sequenceErrorNotifier,
@@ -174,9 +219,11 @@ class _ChangePinBodyState extends State<ChangePinBody> {
   }
 
   void clearPinAndResetFocus() {
-    _newPIN = '';
-    _controller.clear();
-    _focusPin.requestFocus();
+    setState(() {
+      _newPIN = '';
+      _controller.clear();
+      _focusPin.requestFocus();
+    });
   }
 
   @override
@@ -220,9 +267,11 @@ class _ChangePinBodyState extends State<ChangePinBody> {
                       borderRadius: BorderRadius.circular(16),
                       color: hasError
                           ? const Color(0xffE61F27)
-                          : index >= _newPIN.length
-                              ? const Color(0xffadadb4)
-                              : const Color(0xff15141E),
+                          : widget.viewModel is BankCardPinChoosenViewModel
+                              ? const Color(0xff00774C)
+                              : index >= _newPIN.length
+                                  ? const Color(0xffadadb4)
+                                  : const Color(0xff15141E),
                     ),
                   );
                 },
@@ -250,17 +299,14 @@ class _ChangePinBodyState extends State<ChangePinBody> {
               cursorRadius: const Radius.circular(0),
               cursorWidth: 0,
               onChanged: (text) {
-                // print('onchaNGED $text');
                 if (text.length <= 4) {
                   setState(
                     () {
-                      // print('setting state to $text');
                       _newPIN = text;
                       hasError = !hasConsecutiveDigits(_newPIN) ||
                           !containsPostalCode(_newPIN, user.person.address?.postalCode ?? 'postalCode') ||
                           !hasRepeatingDigits(_newPIN) ||
                           !containsBirthDate(_newPIN, user.person.birthDate ?? DateTime.now());
-
 
                       if (hasError && text.length == 4) {
                         Future.delayed(const Duration(seconds: 1), () {
@@ -271,7 +317,13 @@ class _ChangePinBodyState extends State<ChangePinBody> {
                         });
                       } else if (!hasError && text.length == 4) {
                         _focusPin.unfocus();
-                        Navigator.pushNamed(context, BankCardConfirmPinConfirmScreen.routeName);
+                        StoreProvider.of<AppState>(context).dispatch(
+                          BankCardChoosePinCommandAction(
+                            pin: _newPIN,
+                            user: user,
+                            bankCard: widget.viewModel.bankCard!,
+                          ),
+                        );
                       }
                     },
                   );
@@ -286,13 +338,15 @@ class _ChangePinBodyState extends State<ChangePinBody> {
 }
 
 class ChangePinChecks extends StatelessWidget {
+  BankCardViewModel viewModel;
   final ValueNotifier<bool> birthdayErrorNotifier;
   final ValueNotifier<bool> postalCodeErrorNotifier;
   final ValueNotifier<bool> sequenceErrorNotifier;
   final ValueNotifier<bool> repeatingErrorNotifier;
 
-  const ChangePinChecks({
+  ChangePinChecks({
     Key? key,
+    required this.viewModel,
     required this.birthdayErrorNotifier,
     required this.postalCodeErrorNotifier,
     required this.sequenceErrorNotifier,

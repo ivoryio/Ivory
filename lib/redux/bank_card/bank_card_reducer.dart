@@ -12,10 +12,14 @@ BankCardState bankCardReducer(BankCardState currentState, dynamic action) {
     return BankCardFetchedState(action.bankCard, action.user);
   } else if (action is BankCardPinChoosenEventAction) {
     return BankCardPinChoosenState(action.pin, action.user, action.bankcard);
+  } else if (action is BankCardPinConfirmedEventAction) {
+    return BankCardPinConfirmedState(action.user, action.bankcard);
   } else if (action is BankCardActivatedEventAction) {
     return BankCardActivatedState(action.bankCard, action.user);
   } else if (action is BankCardDetailsFetchedEventAction) {
     return BankCardDetailsFetchedState(action.cardDetails, action.bankCard);
+  } else if (action is BankCardPinChangedEventAction) {
+    return BankCardPinChangedState();
   }
 
   return currentState;

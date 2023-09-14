@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:solarisdemo/models/crypto/jwk.dart';
 
 import '../../../models/bank_card.dart';
 import '../../../models/user.dart';
@@ -79,6 +80,40 @@ class BankCardService extends ApiService {
       return BankCardErrorResponse();
     }
   }
+
+  Future<BankCardServiceResponse> getLatestPinKey({
+    required String cardId,
+    required User? user,
+  }) async {
+    if (user != null) {
+      this.user = user;
+    }
+    try {
+      final data = await get('/account/cards/$cardId/pin_keys/latest');
+
+      return GetLatestPinKeySuccessResponse(
+        jwkJson: data,
+      );
+    } catch (e) {
+      return BankCardErrorResponse();
+    }
+  }
+
+  Future<BankCardServiceResponse> changePin({
+    required String cardId,
+    required User? user,
+    required ChangePinRequestBody reqBody,
+  }) async {
+    if (user != null) {
+      this.user = user;
+    }
+    try {
+      final data = await get('/account/cards/{card_id}/change_card_pin');
+      return ChangePinSuccessResponse();
+    } catch (e) {
+      return BankCardErrorResponse();
+    }
+  }
 }
 
 abstract class BankCardServiceResponse extends Equatable {
@@ -112,5 +147,16 @@ class GetCardDetailsSuccessResponse extends BankCardServiceResponse {
   @override
   List<Object?> get props => [cardDetails];
 }
+
+class GetLatestPinKeySuccessResponse extends BankCardServiceResponse {
+  final Map<String, dynamic> jwkJson;
+
+  GetLatestPinKeySuccessResponse({required this.jwkJson});
+
+  @override
+  List<Object?> get props => [jwkJson];
+}
+
+class ChangePinSuccessResponse extends BankCardServiceResponse {}
 
 class BankCardErrorResponse extends BankCardServiceResponse {}

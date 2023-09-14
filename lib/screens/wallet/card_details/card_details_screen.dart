@@ -16,14 +16,14 @@ import 'package:solarisdemo/screens/home/home_screen.dart';
 import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
-class CardDetailsScreenParams {
+class CardScreenParams {
   final BankCard card;
 
-  CardDetailsScreenParams({required this.card});
+  CardScreenParams({required this.card});
 }
 
 class BankCardDetailsScreen extends StatelessWidget {
-  final CardDetailsScreenParams params;
+  final CardScreenParams params;
   static const routeName = '/cardDetailsScreen';
 
   const BankCardDetailsScreen({super.key, required this.params});

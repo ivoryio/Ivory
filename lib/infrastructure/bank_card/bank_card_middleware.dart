@@ -1,10 +1,12 @@
 import 'package:redux/redux.dart';
 import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
+import 'package:solarisdemo/models/bank_card.dart';
+import 'package:solarisdemo/models/crypto/jwe.dart';
 import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/utilities/crypto/crypto_encrypt.dart';
 
 import '../../../redux/bank_card/bank_card_action.dart';
-import '../../models/bank_card.dart';
 import 'bank_card_service.dart';
 
 class BankCardMiddleware extends MiddlewareClass<AppState> {
@@ -37,6 +39,72 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
 
     if (action is BankCardChoosePinCommandAction) {
       store.dispatch(BankCardPinChoosenEventAction(pin: action.pin, user: action.user, bankcard: action.bankCard));
+    }
+
+    if (action is BankCardConfirmPinCommandAction) {
+      store.dispatch(BankCardLoadingEventAction());
+      final deviceId = await _deviceService.getDeviceId();
+      if (deviceId == '') {
+        store.dispatch(BankCardFailedEventAction());
+        return null;
+      }
+      final consentId = await _deviceService.getConsentId();
+      final deviceFingerprint = await _deviceService.getDeviceFingerprint(consentId);
+      if (deviceFingerprint == null) {
+        store.dispatch(BankCardFailedEventAction());
+        return null;
+      }
+
+      final getLatestPinKeyResponse = await _bankCardService.getLatestPinKey(
+        user: action.user.cognito,
+        cardId: action.bankCard.id,
+      );
+
+      if (getLatestPinKeyResponse is BankCardErrorResponse) {
+        store.dispatch(BankCardFailedEventAction());
+        return null;
+      }
+
+      final pinToEncrypt = '{"pin": "${action.pin}"}';
+      final jwkJson = (getLatestPinKeyResponse as GetLatestPinKeySuccessResponse).jwkJson;
+      final encryptedPin =
+          await CryptoEncrypt.encryptAndCreateJWEforChangePin(jwkJson: jwkJson, payloadToEncrypt: pinToEncrypt);
+
+      final restrictedKeypair = await _deviceService.getDeviceKeyPairs(restricted: true);
+      if (restrictedKeypair == null) {
+        store.dispatch(BankCardFailedEventAction());
+      }
+
+      final restrictedPrivateKey = restrictedKeypair!.privateKey;
+      final signature = _deviceService.generateSignature(
+        privateKey: restrictedPrivateKey,
+        stringToSign: encryptedPin,
+      );
+      if (signature == null) {
+        store.dispatch(BankCardFailedEventAction());
+        return null;
+      }
+
+      ChangePinRequestBody reqBody = ChangePinRequestBody(
+        signature: signature,
+        deviceData: deviceFingerprint,
+        deviceId: deviceId!,
+        encryptedPin: encryptedPin,
+        keyId: jwkJson["kid"],
+      );
+
+      final changePinResponse = await _bankCardService.changePin(
+        user: action.user.cognito,
+        cardId: action.bankCard.id,
+        reqBody: reqBody,
+      );
+
+      if (changePinResponse is BankCardErrorResponse) {
+        store.dispatch(BankCardFailedEventAction());
+        return null;
+      }
+
+      store.dispatch(BankCardPinConfirmedEventAction(pin: action.pin, user: action.user, bankcard: action.bankCard));
     }
 
     if (action is BankCardActivateCommandAction) {

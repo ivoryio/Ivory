@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:pointycastle/pointycastle.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:solarisdemo/models/bank_card.dart';
+import 'package:solarisdemo/models/crypto/jwk.dart';
 import 'package:solarisdemo/utilities/crypto/crypto_key_generator.dart';
 import 'package:solarisdemo/utilities/crypto/crypto_message_signer.dart';
 import 'package:solarisdemo/utilities/crypto/crypto_utils.dart';

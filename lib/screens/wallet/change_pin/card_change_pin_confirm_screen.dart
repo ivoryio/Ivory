@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
+import 'package:solarisdemo/infrastructure/bank_card/bank_card_presenter.dart';
+import 'package:solarisdemo/models/user.dart';
+import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
 import 'package:solarisdemo/screens/wallet/change_pin/card_change_pin_success_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
@@ -12,54 +19,94 @@ class BankCardConfirmPinConfirmScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = context.read<AuthCubit>().state.user!;
     ValueNotifier<bool> matchingPinErrorNotifier = ValueNotifier<bool>(false);
-    return ScreenScaffold(
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: AppToolbar(
-              richTextTitle: RichText(
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text: 'Step 2',
-                      style: ClientConfig.getTextStyleScheme().heading4,
+
+    return StoreConnector<AppState, BankCardViewModel>(
+      onDidChange: (previousViewModel, viewModel) {
+        if (previousViewModel is BankCardPinChoosenViewModel && viewModel is BankCardPinConfirmedViewModel) {
+          Navigator.of(context).pushNamed(
+            BankCardChangePinSuccessScreen.routeName,
+          );
+        }
+      },
+      converter: (store) {
+        return BankCardPresenter.presentBankCard(
+          bankCardState: store.state.bankCardState,
+          user: user,
+        );
+      },
+      builder: (context, viewModel) {
+        if (viewModel is BankCardLoadingViewModel) {
+          return const Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(),
+            ],
+          );
+        }
+        return ScreenScaffold(
+          body: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: AppToolbar(
+                  onBackButtonPressed: () {
+                    Navigator.pop(context);
+                    StoreProvider.of<AppState>(context).dispatch(
+                      GetBankCardCommandAction(
+                        user: user,
+                        cardId: viewModel.bankCard!.id,
+                      ),
+                    );
+                  },
+                  richTextTitle: RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'Step 2',
+                          style: ClientConfig.getTextStyleScheme().heading4,
+                        ),
+                        TextSpan(
+                          text: " out of 2",
+                          style: ClientConfig.getTextStyleScheme().heading4.copyWith(color: const Color(0xFF56555E)),
+                        ),
+                      ],
                     ),
-                    TextSpan(
-                      text: " out of 2",
-                      style: ClientConfig.getTextStyleScheme().heading4.copyWith(color: const Color(0xFF56555E)),
-                    ),
-                  ],
+                  ),
                 ),
               ),
-            ),
+              PreferredSize(
+                preferredSize: const Size.fromHeight(4),
+                child: LinearProgressIndicator(
+                  value: 0.5,
+                  color: ClientConfig.getColorScheme().secondary,
+                  backgroundColor: const Color(0xFFADADB4),
+                ),
+              ),
+              ConfirmPinBody(
+                viewModel: viewModel,
+                matchingPinErrorNotifier: matchingPinErrorNotifier,
+              ),
+              const Spacer(),
+              if (viewModel is! BankCardPinConfirmedViewModel)
+                ConfirmPinChecks(
+                  matchingPinErrorNotifier: matchingPinErrorNotifier,
+                ),
+            ],
           ),
-          PreferredSize(
-            preferredSize: const Size.fromHeight(4),
-            child: LinearProgressIndicator(
-              value: 0.5,
-              color: ClientConfig.getColorScheme().secondary,
-              backgroundColor: const Color(0xFFADADB4),
-            ),
-          ),
-          ConfirmPinBody(
-            matchingPinErrorNotifier: matchingPinErrorNotifier,
-          ),
-          const Spacer(),
-          ConfirmPinChecks(
-            matchingPinErrorNotifier: matchingPinErrorNotifier,
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
 
 class ConfirmPinBody extends StatefulWidget {
+  BankCardViewModel viewModel;
   final ValueNotifier<bool> matchingPinErrorNotifier;
-  const ConfirmPinBody({
+  ConfirmPinBody({
     Key? key,
+    required this.viewModel,
     required this.matchingPinErrorNotifier,
   }) : super(key: key);
 
@@ -100,6 +147,7 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> {
 
   @override
   Widget build(BuildContext context) {
+    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: Column(
@@ -137,9 +185,11 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> {
                       borderRadius: BorderRadius.circular(16),
                       color: hasError
                           ? const Color(0xffE61F27)
-                          : index >= _newPIN.length
-                              ? const Color(0xffadadb4)
-                              : const Color(0xff15141E),
+                          : widget.viewModel is BankCardPinConfirmedViewModel
+                              ? const Color(0xff00774C)
+                              : index >= _newPIN.length
+                                  ? const Color(0xffadadb4)
+                                  : const Color(0xff15141E),
                     ),
                   );
                 },
@@ -170,9 +220,8 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> {
                 if (text.length <= 4) {
                   setState(
                     () {
-                      print('setting state to $text');
                       _newPIN = text;
-                      hasError = !isPinMatching('1245', _newPIN);
+                      hasError = !isPinMatching(widget.viewModel.pin!, _newPIN);
                       if (hasError && text.length == 4) {
                         Future.delayed(
                           const Duration(seconds: 1),
@@ -187,8 +236,13 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> {
                         );
                       } else if (!hasError && text.length == 4) {
                         _focusPin.unfocus();
-                        Navigator.pushNamed(context, BankCardChangePinSuccessScreen.routeName);
-                        print('pin is ok, go success screen');
+                        StoreProvider.of<AppState>(context).dispatch(
+                          BankCardConfirmPinCommandAction(
+                            pin: _newPIN,
+                            user: user,
+                            bankCard: widget.viewModel.bankCard!,
+                          ),
+                        );
                       }
                     },
                   );

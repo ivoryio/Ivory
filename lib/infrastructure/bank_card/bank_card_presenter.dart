@@ -27,6 +27,13 @@ class BankCardPresenter {
         pin: bankCardState.pin,
         bankCard: bankCardState.bankCard,
       );
+    } else if (bankCardState is BankCardPinConfirmedState) {
+      return BankCardPinConfirmedViewModel(
+        user: user,
+        bankCard: bankCardState.bankCard,
+      );
+    } else if (bankCardState is BankCardPinChangedState) {
+      return BankCardPinChangedViewModel();
     } else if (bankCardState is BankCardActivatedState) {
       return BankCardActivatedViewModel(
         user: user,
@@ -84,6 +91,16 @@ class BankCardPinChoosenViewModel extends BankCardViewModel {
   List<Object?> get props => [pin];
 }
 
+class BankCardPinConfirmedViewModel extends BankCardViewModel {
+  const BankCardPinConfirmedViewModel({
+    required BankCard bankCard,
+    required AuthenticatedUser user,
+  }) : super(bankCard: bankCard, user: user);
+
+  @override
+  List<Object?> get props => [bankCard];
+}
+
 class BankCardActivatedViewModel extends BankCardViewModel {
   const BankCardActivatedViewModel({
     required BankCard bankCard,
@@ -103,3 +120,5 @@ class BankCardDetailsFetchedViewModel extends BankCardViewModel {
   @override
   List<Object?> get props => [cardDetails, bankCard];
 }
+
+class BankCardPinChangedViewModel extends BankCardViewModel {}
