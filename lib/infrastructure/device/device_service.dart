@@ -62,6 +62,21 @@ class DeviceService {
     }
   }
 
+  Future<String?> encryptPin({required String pinToEncrypt, required Map<String, dynamic> pinKey}) async {
+    try {
+      if (defaultTargetPlatform == TargetPlatform.android) {
+        return _platform.invokeMethod(
+          'encryptPin',
+          {'pinKey': pinKey, 'pinToEncrypt': pinToEncrypt},
+        );
+      } else {
+        return 'we are on IOS';
+      }
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future<void> saveKeyPairIntoCache({
     required DeviceKeyPairs keyPair,
     bool restricted = false,

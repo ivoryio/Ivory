@@ -86,4 +86,5 @@ dependencies {
     implementation('io.seon.androidsdk:androidsdk:5.0.3') {
         transitive = true
     }
+    implementation("com.nimbusds:nimbus-jose-jwt:9.23")
 }

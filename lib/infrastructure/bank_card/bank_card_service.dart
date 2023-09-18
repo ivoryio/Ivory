@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:solarisdemo/models/crypto/jwk.dart';
 
 import '../../../models/bank_card.dart';
 import '../../../models/user.dart';
@@ -108,7 +107,7 @@ class BankCardService extends ApiService {
       this.user = user;
     }
     try {
-      final data = await get('/account/cards/{card_id}/change_card_pin');
+      final data = await post('/account/cards/$cardId/change_card_pin', body: reqBody.toJson());
       return ChangePinSuccessResponse();
     } catch (e) {
       return BankCardErrorResponse();

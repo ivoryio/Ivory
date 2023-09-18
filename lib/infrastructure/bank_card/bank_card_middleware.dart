@@ -4,7 +4,6 @@ import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/models/bank_card.dart';
 import 'package:solarisdemo/models/crypto/jwe.dart';
 import 'package:solarisdemo/redux/app_state.dart';
-import 'package:solarisdemo/utilities/crypto/crypto_encrypt.dart';
 
 import '../../../redux/bank_card/bank_card_action.dart';
 import 'bank_card_service.dart';
@@ -67,8 +66,12 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
 
       final pinToEncrypt = '{"pin": "${action.pin}"}';
       final jwkJson = (getLatestPinKeyResponse as GetLatestPinKeySuccessResponse).jwkJson;
-      final encryptedPin =
-          await CryptoEncrypt.encryptAndCreateJWEforChangePin(jwkJson: jwkJson, payloadToEncrypt: pinToEncrypt);
+
+      final encryptedPin = await _deviceService.encryptPin(pinToEncrypt: pinToEncrypt, pinKey: jwkJson);
+      if (encryptedPin is! String) {
+        store.dispatch(BankCardFailedEventAction());
+        return null;
+      } 
 
       final restrictedKeypair = await _deviceService.getDeviceKeyPairs(restricted: true);
       if (restrictedKeypair == null) {
