@@ -24,7 +24,7 @@ class BankCardConfirmPinConfirmScreen extends StatelessWidget {
 
     return StoreConnector<AppState, BankCardViewModel>(
       onDidChange: (previousViewModel, viewModel) {
-        if (previousViewModel is BankCardPinChoosenViewModel && viewModel is BankCardPinConfirmedViewModel) {
+        if (previousViewModel is BankCardLoadingViewModel && viewModel is BankCardPinConfirmedViewModel) {
           Navigator.of(context).pushNamed(
             BankCardChangePinSuccessScreen.routeName,
           );
@@ -38,11 +38,16 @@ class BankCardConfirmPinConfirmScreen extends StatelessWidget {
       },
       builder: (context, viewModel) {
         if (viewModel is BankCardLoadingViewModel) {
-          return const Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircularProgressIndicator(),
-            ],
+          return const ScreenScaffold(
+            body: Column(
+              children: [
+                Expanded(
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+              ],
+            ),
           );
         }
         return ScreenScaffold(
