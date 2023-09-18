@@ -15,6 +15,7 @@ const deviceIdKey = 'device_id';
 const deviceConsentIdKey = 'device_consent_id';
 const getDeviceFingerprintMethod = 'getDeviceFingerprint';
 const getIosDeviceFingerprintMethod = 'getIosDeviceFingerprint';
+const encryptPinMethod = 'encryptPin';
 
 class DeviceService {
   DeviceService();
@@ -66,11 +67,14 @@ class DeviceService {
     try {
       if (defaultTargetPlatform == TargetPlatform.android) {
         return _platform.invokeMethod(
-          'encryptPin',
+          encryptPinMethod,
           {'pinKey': pinKey, 'pinToEncrypt': pinToEncrypt},
         );
       } else {
-        return 'we are on IOS';
+        return _platform.invokeMethod(
+          encryptPinMethod,
+          {'pinKey': jsonEncode(pinKey), 'pinToEncrypt': pinToEncrypt},
+        );
       }
     } catch (e) {
       return null;

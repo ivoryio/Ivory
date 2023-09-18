@@ -41,3 +41,4 @@ post_install do |installer|
 end
 
 pod 'SeonSDK'
+pod 'JOSESwift'
