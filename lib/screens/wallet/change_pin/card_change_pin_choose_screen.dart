@@ -143,24 +143,33 @@ class _ChangePinBodyState extends State<ChangePinBody> {
   bool hasConsecutiveDigits(String pin) {
     if (pin.length < 4) {
       widget.sequenceErrorNotifier.value = false;
+      widget.repeatingErrorNotifier.value = false;
       return true;
     }
-    for (int i = 0; i < pin.length - 1; i++) {
-      int currentDigit = int.parse(pin[i]);
-      int nextDigit = int.parse(pin[i + 1]);
 
-      if (nextDigit != currentDigit + 1) {
-        widget.sequenceErrorNotifier.value = false;
-        return true;
+    for (int i = 0; i < pin.length - 3; i++) {
+      int digit1 = int.parse(pin[i]);
+      int digit2 = int.parse(pin[i + 1]);
+      int digit3 = int.parse(pin[i + 2]);
+      int digit4 = int.parse(pin[i + 3]);
+
+      if ((digit2 == digit1 + 1 && digit3 == digit2 + 1 && digit4 == digit3 + 1) ||
+          (digit2 == digit1 - 1 && digit3 == digit2 - 1 && digit4 == digit3 - 1)) {
+        widget.sequenceErrorNotifier.value = true;
+        widget.repeatingErrorNotifier.value = false;
+        return false;
       }
     }
-    widget.sequenceErrorNotifier.value = true;
-    return false;
+
+    widget.sequenceErrorNotifier.value = false;
+    widget.repeatingErrorNotifier.value = false;
+    return true;
   }
 
   bool hasRepeatingDigits(String pin) {
     if (pin.length < 4) {
       widget.repeatingErrorNotifier.value = false;
+      widget.sequenceErrorNotifier.value = false;
       return true;
     }
 
@@ -174,11 +183,13 @@ class _ChangePinBodyState extends State<ChangePinBody> {
     for (var value in digitCount.values) {
       if (value > 2) {
         widget.repeatingErrorNotifier.value = true;
+        widget.sequenceErrorNotifier.value = false;
         return false;
       }
     }
 
     widget.repeatingErrorNotifier.value = false;
+    widget.sequenceErrorNotifier.value = false;
     return true;
   }
 
@@ -309,7 +320,7 @@ class _ChangePinBodyState extends State<ChangePinBody> {
                           !containsBirthDate(_newPIN, user.person.birthDate ?? DateTime.now());
 
                       if (hasError && text.length == 4) {
-                        Future.delayed(const Duration(seconds: 1), () {
+                        Future.delayed(const Duration(seconds: 2), () {
                           setState(() {
                             resetErrorNotifiers();
                             clearPinAndResetFocus();
