@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:solarisdemo/utilities/ivory_color_mapper.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../../config.dart';
@@ -38,8 +39,10 @@ class MoreCreditWaitlistScreen extends StatelessWidget {
             const SizedBox(height: 24),
             Expanded(
               child: Center(
-                child: SvgPicture.asset(
-                    'assets/images/repayment_more_credit_waitlist.svg'),
+                child: SvgPicture(SvgAssetLoader(
+                  'assets/images/repayment_more_credit_waitlist.svg',
+                  colorMapper: IvoryColorMapper(baseColor: ClientConfig.getColorScheme().secondary,)
+                ),),
               ),
             ),
             SizedBox(

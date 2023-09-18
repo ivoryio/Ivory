@@ -5,6 +5,8 @@ import 'package:solarisdemo/screens/home/home_screen.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
+import '../../utilities/ivory_color_mapper.dart';
+
 class TransactionApprovalSuccessScreen extends StatelessWidget {
   static const routeName = '/transactionApprovalSuccessScreen';
 
@@ -39,7 +41,12 @@ class TransactionApprovalSuccessScreen extends StatelessWidget {
               ),
             ),
             const Spacer(),
-            Align(child: SvgPicture.asset("assets/images/transaction_approved_illustration.svg")),
+            Align(child: SvgPicture(
+              SvgAssetLoader(
+                "assets/images/transaction_approved_illustration.svg",
+                colorMapper: IvoryColorMapper(baseColor: ClientConfig.getColorScheme().secondary,),
+              ),
+            ),),
             const Spacer(),
             SizedBox(
               width: double.infinity,

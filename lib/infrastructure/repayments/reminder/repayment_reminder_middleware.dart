@@ -24,10 +24,12 @@ class RepaymentRemindersMiddleware extends MiddlewareClass<AppState> {
         store.dispatch(RepaymentReminderFailedEventAction());
       }
     } else if (action is UpdateRepaymentRemindersCommandAction) {
-      final response = await _repaymentReminderService.batchAddRepaymentReminders(reminders: action.reminders);
       final currentReminders = store.state.repaymentReminderState is RepaymentReminderFetchedState
           ? (store.state.repaymentReminderState as RepaymentReminderFetchedState).repaymentReminders
           : List<RepaymentReminder>.empty();
+
+      store.dispatch(RepaymentReminderLoadingEventAction());
+      final response = await _repaymentReminderService.batchAddRepaymentReminders(reminders: action.reminders);
 
       if (response is BatchAddRepaymentReminderSuccessResponse) {
         store.dispatch(RepaymentReminderFetchedEventAction(
@@ -37,10 +39,12 @@ class RepaymentRemindersMiddleware extends MiddlewareClass<AppState> {
         store.dispatch(RepaymentReminderFailedEventAction());
       }
     } else if (action is DeleteRepaymentReminderCommandAction) {
-      final response = await _repaymentReminderService.deleteRepaymentReminder(reminder: action.reminder);
       final currentReminders = store.state.repaymentReminderState is RepaymentReminderFetchedState
           ? (store.state.repaymentReminderState as RepaymentReminderFetchedState).repaymentReminders
           : List<RepaymentReminder>.empty();
+
+      store.dispatch(RepaymentReminderLoadingEventAction());
+      final response = await _repaymentReminderService.deleteRepaymentReminder(reminder: action.reminder);
 
       if (response is DeleteRepaymentReminderSuccessResponse) {
         store.dispatch(RepaymentReminderFetchedEventAction(

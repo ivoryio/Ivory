@@ -20,7 +20,7 @@ class Button extends StatelessWidget {
   final bool isLoading;
 
   const Button({
-    Key? key,
+    super.key,
     required this.text,
     this.onPressed,
     this.border,

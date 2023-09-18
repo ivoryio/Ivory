@@ -4,15 +4,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:solarisdemo/models/device_consent.dart';
-import '../models/device.dart';
 import '../models/device_activity.dart';
 import 'api_service.dart';
 
 MethodChannel _platform = const MethodChannel('com.thinslices.solarisdemo/native');
-
-const DeviceBindingKeyPurposeType _defaultKeyPurposeType =
-    DeviceBindingKeyPurposeType.unrestricted;
-
 
 class OldDeviceService extends ApiService {
   OldDeviceService({required super.user});

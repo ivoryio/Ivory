@@ -9,9 +9,11 @@ import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
 import 'package:solarisdemo/screens/wallet/card_details/card_details_choose_pin.dart';
+import 'package:solarisdemo/utilities/ivory_color_mapper.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
+
 
 class BankCardDetailsInfoScreen extends StatelessWidget {
   static const routeName = '/cardDetailsInfoScreen';
@@ -83,8 +85,11 @@ class BankCardDetailsInfoScreen extends StatelessWidget {
                         ),
                         Expanded(
                           child: Center(
-                            child: SvgPicture.asset(
-                              'assets/images/choose_pin.svg',
+                            child:  SvgPicture(
+                              SvgAssetLoader(
+                                'assets/images/choose_pin.svg',
+                                colorMapper: IvoryColorMapper(baseColor: ClientConfig.getColorScheme().secondary,),
+                              ),
                             ),
                           ),
                         ),

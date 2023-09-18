@@ -5,6 +5,7 @@ import 'package:solarisdemo/screens/repayments/repayments_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
+import '../../utilities/ivory_color_mapper.dart';
 import '../../widgets/button.dart';
 
 class RepaymentSuccessfullyScreenParams {
@@ -63,8 +64,11 @@ class RepaymentSuccessfullyChangedScreen extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           Expanded(
-            child: SvgPicture.asset(
+            child: SvgPicture(
+              SvgAssetLoader(
                 'assets/images/repayment_successfully_changed.svg',
+                colorMapper: IvoryColorMapper(baseColor: ClientConfig.getColorScheme().secondary,),
+              ),
             ),
           ),
           SizedBox(
