@@ -37,9 +37,9 @@ class BankCardChangePinChooseScreen extends StatelessWidget {
             );
           });
         }
-
-        //TODO: fix the following hack
-        if (previousViewModel is BankCardLoadingViewModel && viewModel is BankCardLoadingViewModel) {
+      },
+      onWillChange: (previousViewModel, newViewModel) {
+        if (previousViewModel is BankCardLoadingViewModel && newViewModel is BankCardFetchedViewModel) {
           _changePinBodyKey.currentState?.clearPinAndResetFocus();
         }
       },
@@ -222,7 +222,11 @@ class _ChangePinBodyState extends State<ChangePinBody> {
   }
 
   void resetErrorNotifiers() {
-    hasError = false;
+    setState(
+      () {
+        hasError = false;
+      },
+    );
     widget.birthdayErrorNotifier.value = false;
     widget.postalCodeErrorNotifier.value = false;
     widget.sequenceErrorNotifier.value = false;
@@ -320,12 +324,13 @@ class _ChangePinBodyState extends State<ChangePinBody> {
                           !containsBirthDate(_newPIN, user.person.birthDate ?? DateTime.now());
 
                       if (hasError && text.length == 4) {
-                        Future.delayed(const Duration(seconds: 2), () {
-                          setState(() {
+                        Future.delayed(
+                          const Duration(seconds: 2),
+                          () {
                             resetErrorNotifiers();
                             clearPinAndResetFocus();
-                          });
-                        });
+                          },
+                        );
                       } else if (!hasError && text.length == 4) {
                         _focusPin.unfocus();
                         StoreProvider.of<AppState>(context).dispatch(

@@ -20,6 +20,8 @@ class BankCardConfirmPinConfirmScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = context.read<AuthCubit>().state.user!;
+    final GlobalKey<_ConfirmPinBodyState> _confirmPinBodyKey = GlobalKey<_ConfirmPinBodyState>();
+
     ValueNotifier<bool> matchingPinErrorNotifier = ValueNotifier<bool>(false);
 
     return StoreConnector<AppState, BankCardViewModel>(
@@ -37,67 +39,68 @@ class BankCardConfirmPinConfirmScreen extends StatelessWidget {
         );
       },
       builder: (context, viewModel) {
-        if (viewModel is BankCardLoadingViewModel) {
-          return const ScreenScaffold(
+        if (viewModel is BankCardPinChoosenViewModel) {
+          return ScreenScaffold(
             body: Column(
               children: [
-                Expanded(
-                  child: Center(
-                    child: CircularProgressIndicator(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  child: AppToolbar(
+                    onBackButtonPressed: () {
+                      Navigator.pop(context);
+                      StoreProvider.of<AppState>(context).dispatch(
+                        GetBankCardCommandAction(
+                          user: user,
+                          cardId: viewModel.bankCard!.id,
+                        ),
+                      );
+                    },
+                    richTextTitle: RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: 'Step 2',
+                            style: ClientConfig.getTextStyleScheme().heading4,
+                          ),
+                          TextSpan(
+                            text: " out of 2",
+                            style: ClientConfig.getTextStyleScheme().heading4.copyWith(color: const Color(0xFF56555E)),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
+                PreferredSize(
+                  preferredSize: const Size.fromHeight(4),
+                  child: LinearProgressIndicator(
+                    value: 0.5,
+                    color: ClientConfig.getColorScheme().secondary,
+                    backgroundColor: const Color(0xFFADADB4),
+                  ),
+                ),
+                ConfirmPinBody(
+                  key: _confirmPinBodyKey,
+                  viewModel: viewModel,
+                  matchingPinErrorNotifier: matchingPinErrorNotifier,
+                ),
+                const Spacer(),
+                if (viewModel is! BankCardPinConfirmedViewModel)
+                  ConfirmPinChecks(
+                    matchingPinErrorNotifier: matchingPinErrorNotifier,
+                  ),
               ],
             ),
           );
         }
-        return ScreenScaffold(
+        return const ScreenScaffold(
           body: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: AppToolbar(
-                  onBackButtonPressed: () {
-                    Navigator.pop(context);
-                    StoreProvider.of<AppState>(context).dispatch(
-                      GetBankCardCommandAction(
-                        user: user,
-                        cardId: viewModel.bankCard!.id,
-                      ),
-                    );
-                  },
-                  richTextTitle: RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: 'Step 2',
-                          style: ClientConfig.getTextStyleScheme().heading4,
-                        ),
-                        TextSpan(
-                          text: " out of 2",
-                          style: ClientConfig.getTextStyleScheme().heading4.copyWith(color: const Color(0xFF56555E)),
-                        ),
-                      ],
-                    ),
-                  ),
+              Expanded(
+                child: Center(
+                  child: CircularProgressIndicator(),
                 ),
               ),
-              PreferredSize(
-                preferredSize: const Size.fromHeight(4),
-                child: LinearProgressIndicator(
-                  value: 0.5,
-                  color: ClientConfig.getColorScheme().secondary,
-                  backgroundColor: const Color(0xFFADADB4),
-                ),
-              ),
-              ConfirmPinBody(
-                viewModel: viewModel,
-                matchingPinErrorNotifier: matchingPinErrorNotifier,
-              ),
-              const Spacer(),
-              if (viewModel is! BankCardPinConfirmedViewModel)
-                ConfirmPinChecks(
-                  matchingPinErrorNotifier: matchingPinErrorNotifier,
-                ),
             ],
           ),
         );
@@ -123,6 +126,7 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> {
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusPin = FocusNode();
   String _newPIN = '';
+  bool isCompleted = false;
   bool hasError = false;
 
   bool isPinMatching(String oldPIN, String newPIN) {
@@ -140,7 +144,11 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> {
   }
 
   void resetErrorNotifiers() {
-    hasError = false;
+    setState(
+      () {
+        hasError = false;
+      },
+    );
     widget.matchingPinErrorNotifier.value = false;
   }
 
@@ -190,7 +198,7 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> {
                       borderRadius: BorderRadius.circular(16),
                       color: hasError
                           ? const Color(0xffE61F27)
-                          : widget.viewModel is BankCardPinConfirmedViewModel
+                          : isCompleted == true
                               ? const Color(0xff00774C)
                               : index >= _newPIN.length
                                   ? const Color(0xffadadb4)
@@ -229,24 +237,26 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> {
                       hasError = !isPinMatching(widget.viewModel.pin!, _newPIN);
                       if (hasError && text.length == 4) {
                         Future.delayed(
-                          const Duration(seconds: 1),
+                          const Duration(seconds: 2),
                           () {
-                            setState(
-                              () {
-                                resetErrorNotifiers();
-                                clearPinAndResetFocus();
-                              },
-                            );
+                            resetErrorNotifiers();
+                            clearPinAndResetFocus();
                           },
                         );
                       } else if (!hasError && text.length == 4) {
-                        _focusPin.unfocus();
-                        StoreProvider.of<AppState>(context).dispatch(
-                          BankCardConfirmPinCommandAction(
-                            pin: _newPIN,
-                            user: user,
-                            bankCard: widget.viewModel.bankCard!,
-                          ),
+                        isCompleted = true;
+                        Future.delayed(
+                          const Duration(milliseconds: 500),
+                          () {
+                            _focusPin.unfocus();
+                            StoreProvider.of<AppState>(context).dispatch(
+                              BankCardConfirmPinCommandAction(
+                                pin: _newPIN,
+                                user: user,
+                                bankCard: widget.viewModel.bankCard!,
+                              ),
+                            );
+                          },
                         );
                       }
                     },
