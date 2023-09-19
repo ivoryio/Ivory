@@ -29,10 +29,10 @@ class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
       if (_canContinue == true) {
         return;
       }
+    });
 
-      setState(() {
-        _canContinue = true;
-      });
+    setState(() {
+      _canContinue = true;
     });
   }
 
@@ -106,7 +106,7 @@ class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
                           controller: _initialFixedRepayment,
                           onFixedChanged: (value) {
                             setState(() {
-                              _canContinue = value > 500 && value < 9000;
+                              _canContinue = value > 500 && value <= 9000;
                             });
                           },
                         ),
@@ -236,7 +236,7 @@ class CustomAction extends StatelessWidget {
   }
 }
 
-class FixedRepayment extends StatefulWidget {
+class FixedRepayment extends StatelessWidget {
   final TextEditingController controller;
   final void Function(double) onFixedChanged;
 
@@ -246,11 +246,6 @@ class FixedRepayment extends StatefulWidget {
     required this.onFixedChanged,
   });
 
-  @override
-  State<FixedRepayment> createState() => _FixedRepaymentState();
-}
-
-class _FixedRepaymentState extends State<FixedRepayment> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -266,12 +261,12 @@ class _FixedRepaymentState extends State<FixedRepayment> {
         ),
         const SizedBox(height: 16),
         CustomTextField(
-          controller: widget.controller,
+          controller: controller,
           onChanged: (textValue) {
             final value = double.tryParse(textValue);
 
             if (value != null) {
-              widget.onFixedChanged(value);
+              onFixedChanged(value);
             }
           },
         ),
@@ -291,7 +286,7 @@ class CustomTextField extends StatefulWidget {
 }
 
 class _CustomTextFieldState extends State<CustomTextField> {
-  bool _rangeError = false;
+  bool _inRange = false;
   String errorMessage = '';
 
   @override
@@ -311,7 +306,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
               decoration: BoxDecoration(
                 border: Border.all(
                   width: 1,
-                  color: _rangeError ? Colors.red : const Color(0xFFADADB4),
+                  color: _inRange ? Colors.red : const Color(0xFFADADB4),
                   style: BorderStyle.solid,
                 ),
                 borderRadius: const BorderRadius.only(topLeft: Radius.circular(8), bottomLeft: Radius.circular(8)),
@@ -325,6 +320,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
             Expanded(
               child: TextField(
                 style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                // onTap: () {
+                //   setState(() {
+                //     _inRange = false;
+                //   });
+                // },
                 controller: widget.controller,
                 onChanged: (text) {
                   if (text.isEmpty) text = '0';
@@ -334,7 +334,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                   }
 
                   setState(() {
-                    _rangeError = (double.parse(text) < 500 || double.parse(text) > 9000);
+                    _inRange = (double.parse(text) < 500 || double.parse(text) > 9000);
                   });
 
                   if (double.parse(text) < 500) {
@@ -374,7 +374,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                     ),
                     borderSide: BorderSide(
                       width: 1,
-                      color: _rangeError ? Colors.red : const Color(0xFFADADB4),
+                      color: _inRange ? Colors.red : const Color(0xFFADADB4),
                       style: BorderStyle.solid,
                     ),
                   ),
@@ -385,7 +385,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                     ),
                     borderSide: BorderSide(
                       width: 1,
-                      color: _rangeError ? Colors.red : const Color(0xFFADADB4),
+                      color: _inRange ? Colors.red : const Color(0xFFADADB4),
                       style: BorderStyle.solid,
                     ),
                   ),
@@ -394,7 +394,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             ),
           ],
         ),
-        _rangeError
+        _inRange
             ? Text(
                 errorMessage,
                 style: const TextStyle(
