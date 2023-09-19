@@ -6,7 +6,6 @@ import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import '../../../config.dart';
 import '../../../widgets/app_toolbar.dart';
 import '../../../widgets/button.dart';
-import '../repayments_screen.dart';
 
 class MoreCreditWaitlistScreen extends StatelessWidget {
   static const routeName = "/repaymentMoreCreditWaitlist";
