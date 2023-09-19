@@ -55,15 +55,17 @@ class CardActions extends StatelessWidget {
             }
             if (viewModel is BankCardFetchedViewModel) {
               if (viewModel.bankCard!.status == BankCardStatus.ACTIVE) {
-                // return ActiveCard(
-                //   viewModel: viewModel,
-                // );
-                return FrozenCard(
+                return ActiveCard(
                   viewModel: viewModel,
                 );
               }
               if (viewModel.bankCard!.status == BankCardStatus.INACTIVE) {
                 return InactiveCard(
+                  viewModel: viewModel,
+                );
+              }
+              if (viewModel.bankCard!.status == BankCardStatus.BLOCKED) {
+                return FrozenCard(
                   viewModel: viewModel,
                 );
               }
