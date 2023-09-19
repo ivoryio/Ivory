@@ -54,10 +54,7 @@ class MoreCreditWaitlistScreen extends StatelessWidget {
                 color: ClientConfig.getColorScheme().tertiary,
                 textColor: ClientConfig.getColorScheme().surface,
                 onPressed: () {
-                  Navigator.pushNamed(
-                    context,
-                    RepaymentsScreen.routeName,
-                  );
+                  Navigator.pop(context);
                 },
               ),
             ),
