@@ -175,10 +175,7 @@ class ShowBottomModalActions extends StatelessWidget {
           const SizedBox(height: 16),
           CustomAction(
             path: () {
-              Navigator.pushNamed(
-                context,
-                RepaymentsScreen.routeName,
-              );
+              Navigator.popUntil(context, (route) => route.settings.name == RepaymentsScreen.routeName);
             },
             message: 'Yes, discard changes',
             backgroundColor: Colors.red,
