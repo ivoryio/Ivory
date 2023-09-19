@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/utilities/ivory_color_mapper.dart';
 
 import '../utilities/format.dart';
 
@@ -19,9 +20,10 @@ class BankCardWidget extends StatelessWidget {
   final double? customHeight;
   final double? customWidth;
   final double? imageScaledownFactor;
+  final bool? isFrozen;
 
   const BankCardWidget({
-    super.key,
+    Key? key,
     this.isCardEmpty = false,
     this.customHeight,
     this.customWidth,
@@ -30,8 +32,9 @@ class BankCardWidget extends StatelessWidget {
     this.cardNumber,
     this.isViewable = true,
     this.cardType,
-    this.imageScaledownFactor,
-  });
+    this.imageScaledownFactor = 1,
+    this.isFrozen = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -44,117 +47,176 @@ class BankCardWidget extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         elevation: 0,
         margin: EdgeInsets.zero,
-        color: Colors.black,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
         child: Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                ClientConfig.getColorScheme().surfaceVariant,
-                ClientConfig.getColorScheme().outline,
-              ],
-            ),
-            image: DecorationImage(
-              image:
-                  AssetImage(ClientConfig.getAssetImagePath('card_logo.png')),
-              fit: BoxFit.scaleDown,
-              scale: imageScaledownFactor ?? 1,
-            ),
+            gradient: buildGradient(isFrozen!),
           ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: 16,
-            ),
-            child: Column(
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(
-                        left: 16,
-                      ),
-                      child: VisaSvgIcon(),
-                    ),
-                    if (isViewable!) const EyeIcon(),
-                    if (cardType != null) CardTypeLabel(cardType: cardType!),
-                  ],
-                ),
-                const Spacer(),
-                if (isCardEmpty != true)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        ...cardNumberParts.map((cardNumberPart) {
-                          Text textContent = Text(
-                            cardNumberPart,
-                            style: ClientConfig.getTextStyleScheme().heading2.copyWith(color: Colors.white),
-                          );
-                          if (cardNumberPart == "****") {
-                            return SizedBox(height: 29, child: textContent);
-                          }
-
-                          return textContent;
-                        })
-                      ],
-                    ),
-                  ),
-                if (isCardEmpty != true) const Spacer(),
-                if (isCardEmpty != true)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if (cardHolder != null)
-                              Text(
-                                "CARD HOLDER",
-                                style: ClientConfig.getTextStyleScheme().labelCaps.copyWith(color: Colors.white),
-                              ),
-                            if (cardHolder != null) const SizedBox(height: 3),
-                            Text(
-                              cardHolder ?? '',
-                              style: ClientConfig.getTextStyleScheme().labelMedium.copyWith(color: Colors.white),
-                            )
-                          ],
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            if (cardExpiry != null)
-                              Text(
-                                "EXPIRY DATE",
-                                style: ClientConfig.getTextStyleScheme().labelCaps.copyWith(color: Colors.white),
-                              ),
-                            if (cardExpiry != null) const SizedBox(height: 3),
-                            Text(
-                              cardExpiry ?? '',
-                              style: ClientConfig.getTextStyleScheme().labelMedium.copyWith(color: Colors.white),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  )
-              ],
-            ),
+          child: buildStackWithPositionedWidgetsAndContent(
+            isFrozen!,
+            imageScaledownFactor!,
+            isViewable!,
+            cardType,
+            isCardEmpty,
+            cardNumberParts,
+            cardHolder,
+            cardExpiry,
           ),
         ),
       ),
     );
+  }
+
+  Widget buildStackWithPositionedWidgetsAndContent(
+    bool isFrozen,
+    double imageScaledownFactor,
+    bool isViewable,
+    String? cardType,
+    bool? isCardEmpty,
+    List<String> cardNumberParts,
+    String? cardHolder,
+    String? cardExpiry,
+  ) {
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: Image.asset(
+            ClientConfig.getAssetImagePath('card_logo.png'),
+            fit: BoxFit.scaleDown,
+            scale: imageScaledownFactor,
+          ),
+        ),
+        if (isFrozen == true)
+          Positioned.fill(
+            child: SvgPicture.asset(
+              'assets/images/default/card_logo_frozen.svg',
+              fit: BoxFit.scaleDown,
+            ),
+          ),
+        if (isFrozen == true)
+          Positioned.fill(
+            child: Opacity(
+              opacity: 0.6,
+              child: Image.asset(
+                'assets/images/frozen_card.png',
+                fit: BoxFit.fill,
+              ),
+            ),
+          ),
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: 16,
+          ),
+          child: Column(
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(
+                      left: 16,
+                    ),
+                    child: VisaSvgIcon(),
+                  ),
+                  if (isViewable!) const EyeIcon(),
+                  if (cardType != null) CardTypeLabel(cardType: cardType!),
+                ],
+              ),
+              const Spacer(),
+              if (isCardEmpty != true)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      ...cardNumberParts.map((cardNumberPart) {
+                        Text textContent = Text(
+                          cardNumberPart,
+                          style: ClientConfig.getTextStyleScheme().heading2.copyWith(color: Colors.white),
+                        );
+                        if (cardNumberPart == "****") {
+                          return SizedBox(height: 29, child: textContent);
+                        }
+                        return textContent;
+                      })
+                    ],
+                  ),
+                ),
+              if (isCardEmpty != true) const Spacer(),
+              if (isCardEmpty != true)
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (cardHolder != null)
+                            Text(
+                              "CARD HOLDER",
+                              style: ClientConfig.getTextStyleScheme().labelCaps.copyWith(color: Colors.white),
+                            ),
+                          if (cardHolder != null) const SizedBox(height: 3),
+                          Text(
+                            cardHolder ?? '',
+                            style: ClientConfig.getTextStyleScheme().labelMedium.copyWith(color: Colors.white),
+                          )
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          if (cardExpiry != null)
+                            Text(
+                              "EXPIRY DATE",
+                              style: ClientConfig.getTextStyleScheme().labelCaps.copyWith(color: Colors.white),
+                            ),
+                          if (cardExpiry != null) const SizedBox(height: 3),
+                          Text(
+                            cardExpiry ?? '',
+                            style: ClientConfig.getTextStyleScheme().labelMedium.copyWith(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                )
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  LinearGradient buildGradient(bool isFrozen) {
+    if (isFrozen) {
+      return const LinearGradient(
+        begin: Alignment(-1.0, -1.0),
+        end: Alignment(1.0, 1.0),
+        colors: [
+          Color(0xFFCFD4D9),
+          Color(0xFF56555E),
+        ],
+        stops: [0.0, 1.0],
+      );
+    } else {
+      return LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          ClientConfig.getColorScheme().surfaceVariant,
+          ClientConfig.getColorScheme().outline,
+        ],
+        stops: const [0.0, 1.0],
+      );
+    }
   }
 }
 

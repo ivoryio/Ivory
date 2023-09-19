@@ -55,7 +55,10 @@ class CardActions extends StatelessWidget {
             }
             if (viewModel is BankCardFetchedViewModel) {
               if (viewModel.bankCard!.status == BankCardStatus.ACTIVE) {
-                return ActiveCard(
+                // return ActiveCard(
+                //   viewModel: viewModel,
+                // );
+                return FrozenCard(
                   viewModel: viewModel,
                 );
               }
@@ -141,11 +144,11 @@ class ActiveCard extends StatelessWidget {
               icon: Icons.remove_red_eye_outlined,
               textLabel: 'Details',
               onPressed: () async {
-                  Navigator.pushNamed(
-                    context,
-                    BankCardDetailsScreen.routeName,
+                Navigator.pushNamed(
+                  context,
+                  BankCardDetailsScreen.routeName,
                   arguments: CardScreenParams(card: viewModel.bankCard!),
-                );       
+                );
               },
             ),
             CardOptionsButton(
@@ -226,7 +229,57 @@ class ActiveCard extends StatelessWidget {
               actionSwitch: false,
             ),
             IvoryListItemWithAction(
-              leftIcon: Icons.delete,
+              leftIcon: Icons.delete_outline,
+              actionName: 'Close card',
+              actionDescription: 'The card will be permanently closed',
+              rightIcon: Icons.arrow_forward_ios,
+              actionSwitch: false,
+            ),
+          ],
+        )
+      ],
+    );
+  }
+}
+
+class FrozenCard extends StatelessWidget {
+  final BankCardFetchedViewModel viewModel;
+  const FrozenCard({super.key, required this.viewModel});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CardOptionsButton(
+              icon: Icons.ac_unit,
+              textLabel: 'Unfreeze',
+              onPressed: () async {
+                print('unfreeze card');
+              },
+            ),
+          ],
+        ),
+        const SizedBox(height: 40),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const ItemTitle(
+              nameOfActionTitle: 'If your card is compromised',
+            ),
+            const SizedBox(height: 28),
+            IvoryListItemWithAction(
+              leftIcon: Icons.credit_card,
+              actionName: 'Replace card',
+              actionDescription: 'If your card is damaged',
+              rightIcon: Icons.arrow_forward_ios,
+              actionSwitch: false,
+            ),
+            const SizedBox(height: 32),
+            IvoryListItemWithAction(
+              leftIcon: Icons.delete_outline,
               actionName: 'Close card',
               actionDescription: 'The card will be permanently closed',
               rightIcon: Icons.arrow_forward_ios,
