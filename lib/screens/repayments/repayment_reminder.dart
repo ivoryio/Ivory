@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
@@ -201,7 +203,9 @@ class _RepaymentReminderScreenState extends State<RepaymentReminderScreen> {
       );
     }
 
-    Navigator.pop(context);
+    Timer(const Duration(seconds: 1), (){
+      Navigator.pop(context);
+    });
   }
 }
 
