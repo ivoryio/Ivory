@@ -16,7 +16,9 @@ class BankCardPresenter {
     } else if (bankCardState is BankCardErrorState) {
       return BankCardErrorViewModel();
     } else if (bankCardState is BankCardNoBoundedDevicesState) {
-      return BankCardNoBoundedDevicesViewModel();
+      return BankCardNoBoundedDevicesViewModel(
+        bankCard: bankCardState.bankCard,
+      );
     } else if (bankCardState is BankCardFetchedState) {
       return BankCardFetchedViewModel(
         user: user,
@@ -67,7 +69,14 @@ class BankCardLoadingViewModel extends BankCardViewModel {}
 
 class BankCardErrorViewModel extends BankCardViewModel {}
 
-class BankCardNoBoundedDevicesViewModel extends BankCardViewModel {}
+class BankCardNoBoundedDevicesViewModel extends BankCardViewModel {
+  const BankCardNoBoundedDevicesViewModel({
+    required BankCard bankCard,
+  }) : super(bankCard: bankCard);
+
+  @override
+  List<Object?> get props => [bankCard];
+}
 
 class BankCardFetchedViewModel extends BankCardViewModel {
 

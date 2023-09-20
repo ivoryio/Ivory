@@ -36,6 +36,18 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
       }
     }
 
+    if (action is BankCardInitiatePinChangeCommandAction) {
+      store.dispatch(BankCardLoadingEventAction());
+
+      final deviceId = await _deviceService.getDeviceId();
+      if (deviceId == '') {
+        store.dispatch(BankCardNoBoundedDevicesEventAction(bankCard: action.bankCard));
+        return null;
+      }
+
+      store.dispatch(BankCardFetchedEventAction(bankCard: action.bankCard, user: action.user));
+    }
+
     if (action is BankCardChoosePinCommandAction) {
       store.dispatch(BankCardPinChoosenEventAction(pin: action.pin, user: action.user, bankcard: action.bankCard));
     }
@@ -71,7 +83,7 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
       if (encryptedPin is! String) {
         store.dispatch(BankCardFailedEventAction());
         return null;
-      } 
+      }
 
       final restrictedKeypair = await _deviceService.getDeviceKeyPairs(restricted: true);
       if (restrictedKeypair == null) {
@@ -132,7 +144,7 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
 
       final deviceId = await _deviceService.getDeviceId();
       if (deviceId == '') {
-        store.dispatch(BankCardNoBoundedDevicesEventAction());
+        store.dispatch(BankCardNoBoundedDevicesEventAction(bankCard: action.bankCard));
         return null;
       }
 

@@ -16,7 +16,14 @@ class BankCardLoadingState extends BankCardState {
 
 class BankCardErrorState extends BankCardState {}
 
-class BankCardNoBoundedDevicesState extends BankCardState {}
+class BankCardNoBoundedDevicesState extends BankCardState {
+  final BankCard bankCard;
+
+  BankCardNoBoundedDevicesState(this.bankCard);
+
+  @override
+  List<Object?> get props => [bankCard];
+}
 
 class BankCardFetchedState extends BankCardState {
   final AuthenticatedUser user;
