@@ -360,4 +360,167 @@ void main() {
       );
     },
   );
+
+  group(
+    "Freeze/unfreeze card",
+    () {
+      test("When freezing card successfully should update with bank card", () async {
+        // given
+        final store = createTestStore(
+          bankCardService: FakeBankCardService(),
+          initialState: createAppState(
+            bankCardState: BankCardInitialState(),
+          ),
+        );
+
+        final loadingState = store.onChange.firstWhere((element) => element.bankCardState is BankCardLoadingState);
+        final appState = store.onChange.firstWhere((element) => element.bankCardState is BankCardFetchedState);
+
+        // when
+        store.dispatch(
+          BankCardFreezeCommandAction(
+            bankCard: BankCard(
+              id: "active-card-id",
+              accountId: "62a8f478184ae7cba59c633373c53286cacc",
+              status: BankCardStatus.BLOCKED,
+              type: BankCardType.VIRTUAL_VISA_CREDIT,
+              representation: BankCardRepresentation(
+                line1: "ACTIVE JOE",
+                line2: "ACTIVE JOE",
+                maskedPan: '493441******9641',
+                formattedExpirationDate: '06/26',
+              ),
+            ),
+            user: AuthenticatedUser(
+              person: MockPerson(),
+              cognito: MockUser(),
+              personAccount: MockPersonAccount(),
+            ),
+          ),
+        );
+
+        // then
+        expect((await loadingState).bankCardState, isA<BankCardLoadingState>());
+        expect((await appState).bankCardState, isA<BankCardFetchedState>());
+      });
+
+      test("When freezing card is failing should update with error", () async {
+        // given
+        final store = createTestStore(
+          bankCardService: FakeFailingBankCardService(),
+          initialState: createAppState(
+            bankCardState: BankCardInitialState(),
+          ),
+        );
+        final loadingState = store.onChange.firstWhere((element) => element.bankCardState is BankCardLoadingState);
+        final appState = store.onChange.firstWhere((element) => element.bankCardState is BankCardErrorState);
+
+        // when
+        store.dispatch(
+          BankCardFreezeCommandAction(
+            bankCard: BankCard(
+              id: "active-card-id",
+              accountId: "62a8f478184ae7cba59c633373c53286cacc",
+              status: BankCardStatus.ACTIVE,
+              type: BankCardType.VIRTUAL_VISA_CREDIT,
+              representation: BankCardRepresentation(
+                line1: "ACTIVE JOE",
+                line2: "ACTIVE JOE",
+                maskedPan: '493441******9641',
+                formattedExpirationDate: '06/26',
+              ),
+            ),
+            user: AuthenticatedUser(
+              person: MockPerson(),
+              cognito: MockUser(),
+              personAccount: MockPersonAccount(),
+            ),
+          ),
+        );
+
+        // then
+        expect((await loadingState).bankCardState, isA<BankCardLoadingState>());
+        expect((await appState).bankCardState, isA<BankCardErrorState>());
+      });
+
+      test("  When unfreezing card successfully should update with bank card", () async {
+        // given
+        final store = createTestStore(
+          bankCardService: FakeBankCardService(),
+          initialState: createAppState(
+            bankCardState: BankCardInitialState(),
+          ),
+        );
+
+        final loadingState = store.onChange.firstWhere((element) => element.bankCardState is BankCardLoadingState);
+        final appState = store.onChange.firstWhere((element) => element.bankCardState is BankCardFetchedState);
+
+        // when
+        store.dispatch(
+          BankCardUnfreezeCommandAction(
+            bankCard: BankCard(
+              id: "active-card-id",
+              accountId: "62a8f478184ae7cba59c633373c53286cacc",
+              status: BankCardStatus.ACTIVE,
+              type: BankCardType.VIRTUAL_VISA_CREDIT,
+              representation: BankCardRepresentation(
+                line1: "ACTIVE JOE",
+                line2: "ACTIVE JOE",
+                maskedPan: '493441******9641',
+                formattedExpirationDate: '06/26',
+              ),
+            ),
+            user: AuthenticatedUser(
+              person: MockPerson(),
+              cognito: MockUser(),
+              personAccount: MockPersonAccount(),
+            ),
+          ),
+        );
+
+        // then
+        expect((await loadingState).bankCardState, isA<BankCardLoadingState>());
+        expect((await appState).bankCardState, isA<BankCardFetchedState>());
+      });
+
+      test("When unfreezing card is failing should update with error", () async {
+        // given
+        final store = createTestStore(
+          bankCardService: FakeFailingBankCardService(),
+          initialState: createAppState(
+            bankCardState: BankCardInitialState(),
+          ),
+        );
+        final loadingState = store.onChange.firstWhere((element) => element.bankCardState is BankCardLoadingState);
+        final appState = store.onChange.firstWhere((element) => element.bankCardState is BankCardErrorState);
+
+        // when
+        store.dispatch(
+          BankCardUnfreezeCommandAction(
+            bankCard: BankCard(
+              id: "active-card-id",
+              accountId: "62a8f478184ae7cba59c633373c53286cacc",
+              status: BankCardStatus.ACTIVE,
+              type: BankCardType.VIRTUAL_VISA_CREDIT,
+              representation: BankCardRepresentation(
+                line1: "ACTIVE JOE",
+                line2: "ACTIVE JOE",
+                maskedPan: '493441******9641',
+                formattedExpirationDate: '06/26',
+              ),
+            ),
+            user: AuthenticatedUser(
+              person: MockPerson(),
+              cognito: MockUser(),
+              personAccount: MockPersonAccount(),
+            ),
+          ),
+        );
+
+        // then
+        expect((await loadingState).bankCardState, isA<BankCardLoadingState>());
+        expect((await appState).bankCardState, isA<BankCardErrorState>());
+      });
+    },
+  );
 }

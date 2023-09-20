@@ -103,6 +103,48 @@ class FakeBankCardService extends BankCardService {
   }) async {
     return ChangePinSuccessResponse();
   }
+
+  @override
+  Future<BankCardServiceResponse> freezeCard({
+    required String cardId,
+    required User? user,
+  }) async {
+    return FreezeBankCardSuccessResponse(
+      bankCard: BankCard(
+        id: "active-card-id",
+        accountId: "62a8f478184ae7cba59c633373c53286cacc",
+        status: BankCardStatus.BLOCKED,
+        type: BankCardType.VIRTUAL_VISA_CREDIT,
+        representation: BankCardRepresentation(
+          line1: "ACTIVE JOE",
+          line2: "ACTIVE JOE",
+          maskedPan: '493441******9641',
+          formattedExpirationDate: '06/26',
+        ),
+      ),
+    );
+  }
+
+  @override
+  Future<BankCardServiceResponse> unfreezeCard({
+    required String cardId,
+    required User? user,
+  }) async {
+    return UnfreezeBankCardSuccessResponse(
+      bankCard: BankCard(
+        id: "active-card-id",
+        accountId: "62a8f478184ae7cba59c633373c53286cacc",
+        status: BankCardStatus.ACTIVE,
+        type: BankCardType.VIRTUAL_VISA_CREDIT,
+        representation: BankCardRepresentation(
+          line1: "ACTIVE JOE",
+          line2: "ACTIVE JOE",
+          maskedPan: '493441******9641',
+          formattedExpirationDate: '06/26',
+        ),
+      ),
+    );
+  }
 }
 
 class FakeFailingBankCardService extends BankCardService {
@@ -155,6 +197,22 @@ class FakeFailingBankCardService extends BankCardService {
   }) async {
     return BankCardErrorResponse();
   }
+
+  @override
+  Future<BankCardServiceResponse> freezeCard({
+    required String cardId,
+    required User? user,
+  }) async {
+    return BankCardErrorResponse();
+  }
+
+  @override
+  Future<BankCardServiceResponse> unfreezeCard({
+    required String cardId,
+    required User? user,
+  }) async {
+    return BankCardErrorResponse();
+  }
 }
 
 class FakeDeviceService extends DeviceService {
@@ -182,7 +240,7 @@ class FakeDeviceService extends DeviceService {
   String? generateSignature({required String privateKey, required String stringToSign}) {
     return "signature";
   }
-  
+
   @override
   RSAKeyPair? generateRSAKey() {
     return RSAKeyPair(
