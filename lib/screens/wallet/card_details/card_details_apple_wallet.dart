@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
+import 'package:solarisdemo/infrastructure/bank_card/bank_card_presenter.dart';
 import 'package:solarisdemo/models/user.dart';
+import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
+import 'package:solarisdemo/screens/wallet/card_details/card_details_activation_success_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
+import 'package:solarisdemo/widgets/button_with_icon.dart';
+import 'package:solarisdemo/widgets/ivory_error_widget.dart';
+import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
-import '../../config.dart';
-import '../../cubits/auth_cubit/auth_cubit.dart';
-import '../../infrastructure/bank_card/bank_card_presenter.dart';
-import '../../redux/app_state.dart';
-import '../../redux/bank_card/bank_card_action.dart';
-import '../../widgets/button_with_icon.dart';
-import '../../widgets/ivory_error_widget.dart';
-import '../../widgets/screen_scaffold.dart';
-import 'card_details_activation_success_screen.dart';
 
 class BankCardDetailsAppleWalletScreen extends StatelessWidget {
   static const routeName = '/bankCardDetailsAppleWalletScreen';

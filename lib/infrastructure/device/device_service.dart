@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:pointycastle/pointycastle.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:solarisdemo/models/bank_card.dart';
+import 'package:solarisdemo/models/crypto/jwk.dart';
 import 'package:solarisdemo/utilities/crypto/crypto_key_generator.dart';
 import 'package:solarisdemo/utilities/crypto/crypto_message_signer.dart';
 import 'package:solarisdemo/utilities/crypto/crypto_utils.dart';
@@ -15,6 +15,7 @@ const deviceIdKey = 'device_id';
 const deviceConsentIdKey = 'device_consent_id';
 const getDeviceFingerprintMethod = 'getDeviceFingerprint';
 const getIosDeviceFingerprintMethod = 'getIosDeviceFingerprint';
+const encryptPinMethod = 'encryptPin';
 
 class DeviceService {
   DeviceService();
@@ -57,6 +58,24 @@ class DeviceService {
       }
 
       return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<String?> encryptPin({required String pinToEncrypt, required Map<String, dynamic> pinKey}) async {
+    try {
+      if (defaultTargetPlatform == TargetPlatform.android) {
+        return _platform.invokeMethod(
+          encryptPinMethod,
+          {'pinKey': pinKey, 'pinToEncrypt': pinToEncrypt},
+        );
+      } else {
+        return _platform.invokeMethod(
+          encryptPinMethod,
+          {'pinKey': jsonEncode(pinKey), 'pinToEncrypt': pinToEncrypt},
+        );
+      }
     } catch (e) {
       return null;
     }

@@ -2,6 +2,8 @@
 
 import 'dart:convert';
 
+import 'package:solarisdemo/models/crypto/jwe.dart';
+import 'package:solarisdemo/models/crypto/jwk.dart';
 import 'package:uuid/uuid.dart';
 
 enum BankCardStatus {
@@ -251,66 +253,6 @@ class GetCardDetailsRequestBody {
       };
 }
 
-class Jwe {
-  String alg;
-  String enc;
-
-  Jwe({
-    required this.alg,
-    required this.enc,
-  });
-  factory Jwe.defaultValues() {
-    return Jwe(
-      alg: _defaultJWKalg,
-      enc: _defaultJWEenc,
-    );
-  }
-  Map<String, dynamic> toJson() => {
-        "alg": alg,
-        "enc": enc,
-      };
-}
-
-class Jwk {
-  String kty = _defaultJWKkty;
-  // String use = _defaultJWKuse;
-  // String alg = _defaultJWKalg;
-  String n;
-  String e;
-
-  Jwk({
-    required this.n,
-    required this.e,
-  });
-
-  Map<String, dynamic> toJson() => {
-        "kty": kty,
-        // "use": use,
-        // "alg": alg,
-        "n": n,
-        "e": e,
-      };
- 
-  String toAlphabeticJson() {
-    Map<String, dynamic> jwkMap = {
-      'kty': kty,
-      'n': n,
-      'e': e,
-      // 'use': use,
-      // 'alg': alg,
-    };
-
-    var sortedMap = Map.fromEntries(jwkMap.entries.toList()..sort((e1, e2) => e1.key.compareTo(e2.key)));
-
-    var jsonString = jsonEncode(sortedMap);
-
-    // Remove whitespace characters from the JSON string
-    var compactJsonString = jsonString.replaceAll(RegExp(r'\s+'), '');
-
-    return compactJsonString;
-  }
-}
-
 GetCardDetailsResponse getCardDetailsResponseFromJson(String str) =>
     GetCardDetailsResponse.fromJson(json.decode(str));
 
@@ -327,10 +269,28 @@ class GetCardDetailsResponse {
       );
 }
 
-//default values for jwk and jwe
-String _defaultJWKalg = "RS256";
-String _defaultJWKuse = "enc";
-String _defaultJWKkty = "RSA";
+String changePinRequestBodyToJson(ChangePinRequestBody data) => json.encode(data.toJson());
 
-String _defaultJWEalg = "RSA1_5";
-String _defaultJWEenc = "A256GCM";
+class ChangePinRequestBody {
+    String encryptedPin;
+    String keyId;
+    String deviceId;
+    String deviceData;
+    String signature;
+
+    ChangePinRequestBody({
+        required this.encryptedPin,
+        required this.keyId,
+        required this.deviceId,
+        required this.deviceData,
+        required this.signature,
+    });
+
+    Map<String, dynamic> toJson() => {
+        "encrypted_pin": encryptedPin,
+        "key_id": keyId,
+        "device_id": deviceId,
+        "device_data": deviceData,
+        "signature": signature,
+    };
+}

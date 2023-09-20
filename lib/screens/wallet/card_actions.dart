@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
+import 'package:solarisdemo/infrastructure/bank_card/bank_card_presenter.dart';
+import 'package:solarisdemo/models/bank_card.dart';
 import 'package:solarisdemo/redux/app_state.dart';
-import 'package:solarisdemo/screens/wallet/card_details_screen.dart';
+import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
+import 'package:solarisdemo/screens/wallet/card_details/card_details_info.dart';
+import 'package:solarisdemo/screens/wallet/card_details/card_details_screen.dart';
+import 'package:solarisdemo/screens/wallet/change_pin/card_change_pin_choose_screen.dart';
+import 'package:solarisdemo/widgets/button.dart';
+import 'package:solarisdemo/widgets/ivory_list_item_with_action.dart';
 import 'package:solarisdemo/widgets/spaced_column.dart';
-
-import '../../config.dart';
-import '../../cubits/auth_cubit/auth_cubit.dart';
-import '../../infrastructure/bank_card/bank_card_presenter.dart';
-import '../../models/bank_card.dart';
-import '../../redux/bank_card/bank_card_action.dart';
-import '../../widgets/button.dart';
-import '../../widgets/ivory_list_item_with_action.dart';
-import 'card_details_info.dart';
 
 class CardActions extends StatelessWidget {
   final String initialCardId;
@@ -144,7 +144,7 @@ class ActiveCard extends StatelessWidget {
                   Navigator.pushNamed(
                     context,
                     BankCardDetailsScreen.routeName,
-                    arguments: CardDetailsScreenParams(card: viewModel.bankCard!),
+                  arguments: CardScreenParams(card: viewModel.bankCard!),
                 );       
               },
             ),
@@ -179,6 +179,11 @@ class ActiveCard extends StatelessWidget {
               actionDescription: 'For security or personal reasons',
               rightIcon: Icons.arrow_forward_ios,
               actionSwitch: false,
+              onPressed: () => Navigator.pushNamed(
+                context,
+                BankCardChangePinChooseScreen.routeName,
+                arguments: CardScreenParams(card: viewModel.bankCard!),
+              ),
             ),
             IvoryListItemWithAction(
               leftIcon: Icons.lock_open,
