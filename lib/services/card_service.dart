@@ -20,15 +20,6 @@ class BankCardsService extends ApiService {
     }
   }
 
-  Future<BankCard?> getBankCardById(String id) async {
-    try {
-      var data = await get('/account/cards/$id');
-      BankCard card = BankCard.fromJson(data);
-      return card;
-    } catch (e) {
-      throw Exception("Failed to load card by id");
-    }
-  }
 
   Future<dynamic> createCard(CreateBankCard card) async {
     try {
@@ -41,55 +32,6 @@ class BankCardsService extends ApiService {
     }
   }
 
-  Future<dynamic> activateCard(String id) async {
-    String path = '/account/cards/$id';
-
-    try {
-      var data = await post(path, body: {id: id});
-      return data;
-    } catch (e) {
-      throw Exception("Failed to activate card");
-    }
-  }
-
-  Future<BankCard> freezeBankCard(String cardId) async {
-    try {
-      String path = 'account/cards/$cardId/block';
-      var data = await post(path);
-      BankCard card = BankCard.fromJson(data);
-      return card;
-    } catch (e) {
-      throw Exception("Failed to freeze card");
-    }
-  }
-
-  Future<BankCard> unfreezeCard(String cardId) async {
-    try {
-      String path = 'account/cards/$cardId/unblock';
-      var data = await post(path);
-      BankCard card = BankCard.fromJson(data);
-
-      return card;
-    } catch (e) {
-      throw Exception("Failed to unfreeze card");
-    }
-  }
-
-  Future<GetCardDetailsResponse> getCardDetails({
-    required String cardId,
-    required GetCardDetailsRequestBody requestBody,
-  }) async {
-    try {
-      String path = '/account/cards/$cardId/details';
-      var data = await post(
-        path,
-        body: requestBody.toJson(),
-      );
-      return data;
-    } catch (e) {
-      throw Exception("Failed to get card details");
-    }
-  }
 }
 
 class BankCardsListFilter {
