@@ -41,6 +41,20 @@ class BankCardFetchDetailsCommandAction {
   BankCardFetchDetailsCommandAction({required this.bankCard, required this.user});
 }
 
+class BankCardFreezeCommandAction {
+  final AuthenticatedUser user;
+  final BankCard bankCard;
+
+  BankCardFreezeCommandAction({required this.bankCard, required this.user});
+}
+
+class BankCardUnfreezeCommandAction {
+  final AuthenticatedUser user;
+  final BankCard bankCard;
+
+  BankCardUnfreezeCommandAction({required this.bankCard, required this.user});
+}
+
 class BankCardLoadingEventAction {}
 
 class BankCardFailedEventAction {}

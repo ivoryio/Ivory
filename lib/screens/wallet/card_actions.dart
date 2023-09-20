@@ -166,7 +166,14 @@ class ActiveCard extends StatelessWidget {
             CardOptionsButton(
               icon: Icons.ac_unit,
               textLabel: 'Freeze',
-              onPressed: () {},
+              onPressed: () {
+                StoreProvider.of<AppState>(context).dispatch(
+                  BankCardFreezeCommandAction(
+                    user: viewModel.user!,
+                    bankCard: viewModel.bankCard!,
+                  ),
+                );
+              },
             ),
           ],
         ),
@@ -259,7 +266,12 @@ class FrozenCard extends StatelessWidget {
               icon: Icons.ac_unit,
               textLabel: 'Unfreeze',
               onPressed: () async {
-                print('unfreeze card');
+                StoreProvider.of<AppState>(context).dispatch(
+                  BankCardUnfreezeCommandAction(
+                    user: viewModel.user!,
+                    bankCard: viewModel.bankCard!,
+                  ),
+                );
               },
             ),
           ],

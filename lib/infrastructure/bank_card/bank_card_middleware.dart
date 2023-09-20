@@ -71,7 +71,7 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
       if (encryptedPin is! String) {
         store.dispatch(BankCardFailedEventAction());
         return null;
-      } 
+      }
 
       final restrictedKeypair = await _deviceService.getDeviceKeyPairs(restricted: true);
       if (restrictedKeypair == null) {
@@ -206,6 +206,40 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
         store.dispatch(BankCardDetailsFetchedEventAction(
           cardDetails: response.cardDetails,
           bankCard: action.bankCard,
+        ));
+      } else {
+        store.dispatch(BankCardFailedEventAction());
+      }
+    }
+
+    if (action is BankCardFreezeCommandAction) {
+      store.dispatch(BankCardLoadingEventAction());
+      final response = await _bankCardService.freezeCard(
+        cardId: action.bankCard.id,
+        user: action.user.cognito,
+      );
+
+      if (response is FreezeBankCardSuccessResponse) {
+        store.dispatch(BankCardFetchedEventAction(
+          bankCard: response.bankCard,
+          user: action.user,
+        ));
+      } else {
+        store.dispatch(BankCardFailedEventAction());
+      }
+    }
+
+    if (action is BankCardUnfreezeCommandAction) {
+      store.dispatch(BankCardLoadingEventAction());
+      final response = await _bankCardService.unfreezeCard(
+        cardId: action.bankCard.id,
+        user: action.user.cognito,
+      );
+
+      if (response is UnfreezeBankCardSuccessResponse) {
+        store.dispatch(BankCardFetchedEventAction(
+          bankCard: response.bankCard,
+          user: action.user,
         ));
       } else {
         store.dispatch(BankCardFailedEventAction());

@@ -107,8 +107,44 @@ class BankCardService extends ApiService {
       this.user = user;
     }
     try {
-      final data = await post('/account/cards/$cardId/change_card_pin', body: reqBody.toJson());
+      await post('/account/cards/$cardId/change_card_pin', body: reqBody.toJson());
       return ChangePinSuccessResponse();
+    } catch (e) {
+      return BankCardErrorResponse();
+    }
+  }
+
+  Future<BankCardServiceResponse> freezeCard({
+    required String cardId,
+    required User? user,
+  }) async {
+    if (user != null) {
+      this.user = user;
+    }
+    try {
+      final data = await post('/account/cards/$cardId/block');
+
+      return FreezeBankCardSuccessResponse(
+        bankCard: BankCard.fromJson(data),
+      );
+    } catch (e) {
+      return BankCardErrorResponse();
+    }
+  }
+
+  Future<BankCardServiceResponse> unfreezeCard({
+    required String cardId,
+    required User? user,
+  }) async {
+    if (user != null) {
+      this.user = user;
+    }
+    try {
+      final data = await post('/account/cards/$cardId/unblock');
+
+      return UnfreezeBankCardSuccessResponse(
+        bankCard: BankCard.fromJson(data),
+      );
     } catch (e) {
       return BankCardErrorResponse();
     }
@@ -157,5 +193,23 @@ class GetLatestPinKeySuccessResponse extends BankCardServiceResponse {
 }
 
 class ChangePinSuccessResponse extends BankCardServiceResponse {}
+
+class FreezeBankCardSuccessResponse extends BankCardServiceResponse {
+  final BankCard bankCard;
+
+  FreezeBankCardSuccessResponse({required this.bankCard});
+
+  @override
+  List<Object?> get props => [bankCard];
+}
+
+class UnfreezeBankCardSuccessResponse extends BankCardServiceResponse {
+  final BankCard bankCard;
+
+  UnfreezeBankCardSuccessResponse({required this.bankCard});
+
+  @override
+  List<Object?> get props => [bankCard];
+}
 
 class BankCardErrorResponse extends BankCardServiceResponse {}
