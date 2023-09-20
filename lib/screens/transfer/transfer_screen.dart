@@ -113,7 +113,7 @@ class _TransferScreenState extends State<TransferScreen> {
               child: Column(
                 children: [
                   _Card(
-                    title: "Porsche account",
+                    title: "Ivory account",
                     iban: viewModel.personAccount.iban!,
                     balance: viewModel.personAccount.availableBalance!.value.toDouble(),
                   ),

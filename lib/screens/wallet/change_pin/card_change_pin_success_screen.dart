@@ -13,6 +13,8 @@ import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
+import '../../../utilities/ivory_color_mapper.dart';
+
 class BankCardChangePinSuccessScreen extends StatelessWidget {
   static const routeName = "/bankCardChangePinSuccessScreen";
 
@@ -56,9 +58,11 @@ class BankCardChangePinSuccessScreen extends StatelessWidget {
                       child: Stack(
                         alignment: Alignment.center,
                         children: [
-                          SvgPicture.asset(
+                        SvgPicture(
+                          SvgAssetLoader(
                             'assets/images/choose_pin.svg',
-                          ),
+                            colorMapper: IvoryColorMapper(baseColor: ClientConfig.getColorScheme().secondary,),
+                          ),),
                           Positioned(
                             left: 217,
                             bottom: 197,

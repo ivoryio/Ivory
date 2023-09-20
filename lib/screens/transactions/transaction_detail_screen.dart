@@ -73,15 +73,6 @@ class TransactionDetailScreen extends StatelessWidget {
             hasTrailing: false,
             onTap: () {},
           ),
-          // IvoryListTile(
-          //   title: 'Convert into installments',
-          //   startIcon: Icons.call_split_rounded,
-          //   onTap: () => Navigator.pushNamed(
-          //     context,
-          //     SplitpayScreen.routeName,
-          //     arguments: SplitpayScreenParams(transaction: argument),
-          //   ),
-          // )
         ],
         if (argument.bookingType == 'AUTOMATIC_REPAYMENT')
           IvoryListTile(
@@ -280,7 +271,21 @@ class _Content extends StatelessWidget {
                 ],
               ),
             ),
-            if (accountOwner != null) ExpandedDetailsRow(title: 'Reference account owner', trailing: accountOwner),
+            if (accountOwner != null)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Reference account owner',
+                    style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    accountOwner!,
+                    style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
+                  ),
+                ],
+              ),
             if (iban != null) ExpandedDetailsRow(title: 'IBAN', trailing: iban),
             if (note != null) ...[
               Text('Note', style: ClientConfig.getTextStyleScheme().bodyLargeRegular),
