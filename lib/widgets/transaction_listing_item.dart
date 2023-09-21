@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:solarisdemo/screens/transactions/transaction_detail_screen.dart';
 
@@ -91,10 +92,11 @@ class UpcomingTransactionListItem extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(
-                  Icons.currency_exchange,
-                  size: 20,
-                  color: ClientConfig.getColorScheme().secondary,
+                SvgPicture.asset(
+                  "assets/images/currency_exchange_euro.svg",
+                  width: 20,
+                  height: 20,
+                  colorFilter: ColorFilter.mode(ClientConfig.getColorScheme().secondary, BlendMode.srcIn),
                 ),
                 const SizedBox(
                   width: 16,

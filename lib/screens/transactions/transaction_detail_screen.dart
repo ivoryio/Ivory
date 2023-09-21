@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/models/amount_value.dart';
@@ -27,7 +28,7 @@ class TransactionDetailScreen extends StatelessWidget {
     final user = context.read<AuthCubit>().state.user!;
 
     AmountValue amountValue;
-    IconData mainIcon;
+    IconData? mainIcon;
     String subtitle;
     DateTime dateTime;
     Widget? amountExplainerWidget;
@@ -40,7 +41,7 @@ class TransactionDetailScreen extends StatelessWidget {
 
     if (argument is Transaction) {
       amountValue = argument.amount!;
-      mainIcon = Icons.shopping_bag_outlined;
+      mainIcon = argument.category!.icon;
       subtitle = argument.bookingType == 'SEPA_CREDIT_TRANSFER_RETURN'
           ? 'From ${argument.senderName}'
           : 'To ${argument.recipientName!}';
@@ -92,7 +93,7 @@ class TransactionDetailScreen extends StatelessWidget {
       ];
     } else if (argument is UpcomingTransaction) {
       amountValue = argument.outstandingAmount!;
-      mainIcon = Icons.currency_exchange;
+      mainIcon = null;
       subtitle = 'From Reference account';
       dateTime = argument.dueDate!;
       amountExplainerWidget = RichText(
@@ -164,7 +165,7 @@ class TransactionDetailScreen extends StatelessWidget {
 
 class _Content extends StatelessWidget {
   final AmountValue amountValue;
-  final IconData mainIcon;
+  final IconData? mainIcon;
   final String subtitle;
   final DateTime dateTime;
   final Widget? amountExplainerWidget;
@@ -179,7 +180,7 @@ class _Content extends StatelessWidget {
 
   const _Content({
     required this.amountValue,
-    required this.mainIcon,
+    this.mainIcon,
     required this.subtitle,
     required this.dateTime,
     this.amountExplainerWidget,
@@ -229,7 +230,7 @@ class _Content extends StatelessWidget {
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(30),
                           ),
-                          child: Icon(mainIcon, size: 26),
+                          child: (mainIcon != null) ? Icon(mainIcon, size: 26) : SvgPicture.asset("assets/images/currency_exchange_euro.svg"),
                         ),
                       ],
                     ),
@@ -265,7 +266,12 @@ class _Content extends StatelessWidget {
               trailing: null,
               trailingWidget: Row(
                 children: [
-                  Icon(category.icon, size: 16),
+                  mainIcon != null ? Icon(
+                      category.icon,
+                      size: 16) : SvgPicture.asset(
+                      "assets/images/currency_exchange_euro.svg",
+                  width: 16,
+                  height: 16,),
                   const SizedBox(width: 8),
                   Text(category.name, style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold),
                 ],
