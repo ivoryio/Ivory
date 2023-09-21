@@ -5,12 +5,20 @@ class GetChangeRepaymentAction {
   GetChangeRepaymentAction({required this.user});
 }
 
-class UpdateChangeRepaymentAction {
+class UpdateChangeRepaymentCommandAction {
   final AuthenticatedUser user;
   final double fixedRate;
 
-  UpdateChangeRepaymentAction({
+  UpdateChangeRepaymentCommandAction({
     required this.user,
+    required this.fixedRate,
+  });
+}
+
+class UpdateChangeRepaymentEventAction {
+  final double fixedRate;
+
+  UpdateChangeRepaymentEventAction({
     required this.fixedRate,
   });
 }

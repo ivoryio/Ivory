@@ -134,7 +134,7 @@ class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
                                     final procentualValue = 5;
 
                                     StoreProvider.of<AppState>(context).dispatch(
-                                      UpdateChangeRepaymentAction(
+                                      UpdateChangeRepaymentCommandAction(
                                         user: user,
                                         fixedRate: double.parse(valueForRepayment),
                                       ),

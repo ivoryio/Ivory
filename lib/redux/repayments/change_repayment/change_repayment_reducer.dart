@@ -6,8 +6,11 @@ ChangeRepaymentState changeRepaymentReducer(ChangeRepaymentState currentState, d
     return ChangeRepaymentLoadingState();
   } else if (action is ChangeRepaymentFailedAction) {
     return ChangeRepaymentErrorState();
-  } else if (action is UpdateChangeRepaymentAction) {
+  } else if (action is UpdateChangeRepaymentCommandAction) {
+    return ChangeRepaymentUpdateState(action.fixedRate);
+  } else if (action is UpdateChangeRepaymentEventAction) {
     return ChangeRepaymentUpdateState(action.fixedRate);
   }
+
   return currentState;
 }
