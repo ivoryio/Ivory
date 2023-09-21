@@ -115,13 +115,13 @@ class BankCardChangePinChooseScreen extends StatelessWidget {
 }
 
 class ChangePinBody extends StatefulWidget {
-  BankCardViewModel viewModel;
+  final BankCardViewModel viewModel;
   final ValueNotifier<bool> birthdayErrorNotifier;
   final ValueNotifier<bool> postalCodeErrorNotifier;
   final ValueNotifier<bool> sequenceErrorNotifier;
   final ValueNotifier<bool> repeatingErrorNotifier;
 
-  ChangePinBody({
+  const ChangePinBody({
     Key? key,
     required this.viewModel,
     required this.birthdayErrorNotifier,
@@ -354,13 +354,13 @@ class _ChangePinBodyState extends State<ChangePinBody> {
 }
 
 class ChangePinChecks extends StatelessWidget {
-  BankCardViewModel viewModel;
+  final BankCardViewModel viewModel;
   final ValueNotifier<bool> birthdayErrorNotifier;
   final ValueNotifier<bool> postalCodeErrorNotifier;
   final ValueNotifier<bool> sequenceErrorNotifier;
   final ValueNotifier<bool> repeatingErrorNotifier;
 
-  ChangePinChecks({
+  const ChangePinChecks({
     Key? key,
     required this.viewModel,
     required this.birthdayErrorNotifier,

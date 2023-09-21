@@ -105,6 +105,13 @@ class BankCardsFetchedEventAction {
   });
 }
 
+class UpdateBankCardsEventAction {
+  final BankCard bankCard;
+  UpdateBankCardsEventAction({
+    required this.bankCard,
+  });
+}
+
 class BankCardActivatedEventAction {
   final BankCard bankCard;
   final AuthenticatedUser user;

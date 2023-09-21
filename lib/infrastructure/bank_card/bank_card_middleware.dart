@@ -240,6 +240,9 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
           bankCard: response.bankCard,
           user: action.user,
         ));
+        store.dispatch(UpdateBankCardsEventAction(
+          bankCard: response.bankCard,
+        ));
       } else {
         store.dispatch(BankCardFailedEventAction());
       }
@@ -256,6 +259,9 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
         store.dispatch(BankCardFetchedEventAction(
           bankCard: response.bankCard,
           user: action.user,
+        ));
+        store.dispatch(UpdateBankCardsEventAction(
+          bankCard: response.bankCard,
         ));
       } else {
         store.dispatch(BankCardFailedEventAction());

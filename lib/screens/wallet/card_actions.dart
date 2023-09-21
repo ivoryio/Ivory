@@ -284,6 +284,7 @@ class FrozenCard extends StatelessWidget {
               nameOfActionTitle: 'If your card is compromised',
             ),
             const SizedBox(height: 28),
+            if (viewModel.bankCard!.type.toString().contains('virtual'))
             IvoryListItemWithAction(
               leftIcon: Icons.credit_card,
               actionName: 'Replace card',
