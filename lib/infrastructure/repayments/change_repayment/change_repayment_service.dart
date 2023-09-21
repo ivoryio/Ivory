@@ -13,7 +13,7 @@ class ChangeRepaymentService extends ApiService {
       this.user = user;
     }
 
-    Uri url = '/credit_card_applications' as Uri;
+    Uri url = Uri.parse('/credit_card_applications/1');
     Object body = {
       'repayment_options': {
         'minimum_amount': fixedRate,
