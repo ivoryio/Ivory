@@ -331,11 +331,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
             Expanded(
               child: TextField(
                 style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                // onTap: () {
-                //   setState(() {
-                //     _inRange = false;
-                //   });
-                // },
                 controller: widget.controller,
                 onChanged: (text) {
                   if (text.isEmpty) text = '0';

@@ -332,7 +332,7 @@ class _ExpandedDetails extends StatelessWidget {
                   title: 'Amount spent', trailing: Format.currency(viewModel.creditLine.spentAmount.value)),
               ExpandedDetailsRow(
                 title: 'Fixed repayment rate',
-                trailing: Format.currency(500), // '${viewModel.creditLine.repaymentRatePercentage}%',
+                trailing: Format.currency(500),
                 onInfoIconTap: () {
                   showBottomModal(
                     context: context,
@@ -344,11 +344,9 @@ class _ExpandedDetails extends StatelessWidget {
                   );
                 },
               ),
-              // ExpandedDetailsRow(
-              //     title: 'Repayment amount', trailing: Format.euro(viewModel.creditLine.previousBillAmount.value)),
               ExpandedDetailsRow(
                 title: 'Interest rate',
-                trailing: '5%', // '${viewModel.creditLine.interestRate}%',
+                trailing: '5%',
                 onInfoIconTap: () {
                   showBottomModal(
                     context: context,
