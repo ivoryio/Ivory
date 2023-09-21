@@ -9,8 +9,12 @@ import 'package:solarisdemo/infrastructure/bank_card/bank_card_presenter.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
+import 'package:solarisdemo/redux/bank_card/bank_card_state.dart';
+import 'package:solarisdemo/screens/home/home_screen.dart';
 import 'package:solarisdemo/screens/wallet/change_pin/card_change_pin_confirm_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
+import 'package:solarisdemo/widgets/button.dart';
+import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 class BankCardChangePinChooseScreen extends StatelessWidget {
@@ -27,31 +31,46 @@ class BankCardChangePinChooseScreen extends StatelessWidget {
     ValueNotifier<bool> sequenceErrorNotifier = ValueNotifier<bool>(false);
     ValueNotifier<bool> repeatingErrorNotifier = ValueNotifier<bool>(false);
 
-    return StoreConnector<AppState, BankCardViewModel>(
-      onDidChange: (previousViewModel, viewModel) {
-        if (previousViewModel is BankCardFetchedViewModel && viewModel is BankCardPinChoosenViewModel) {
-          Future.delayed(const Duration(milliseconds: 500), () {
-            Navigator.pushNamed(
-              context,
-              BankCardConfirmPinConfirmScreen.routeName,
+    return ScreenScaffold(
+      body: StoreConnector<AppState, BankCardViewModel>(
+        onInit: (store) => store.dispatch(
+          BankCardInitiatePinChangeCommandAction(
+            user: user,
+            bankCard: (store.state.bankCardState as BankCardFetchedState).bankCard,
+          ),
+        ),
+        converter: (store) {
+          return BankCardPresenter.presentBankCard(
+            bankCardState: store.state.bankCardState,
+            user: user,
+          );
+        },
+        onWillChange: (previousViewModel, newViewModel) {
+          if (previousViewModel is BankCardLoadingViewModel && newViewModel is BankCardFetchedViewModel) {
+            _changePinBodyKey.currentState?.clearPinAndResetFocus();
+          }
+        },
+        onDidChange: (previousViewModel, viewModel) {
+          if (previousViewModel is BankCardFetchedViewModel && viewModel is BankCardPinChoosenViewModel) {
+            Future.delayed(const Duration(milliseconds: 500), () {
+              Navigator.pushNamed(
+                context,
+                BankCardConfirmPinConfirmScreen.routeName,
+              );
+            });
+          }
+          if (previousViewModel is BankCardLoadingViewModel && viewModel is BankCardNoBoundedDevicesViewModel) {
+            // ignore: use_build_context_synchronously
+            handleDevicePairing(context, user, viewModel);
+          }
+        },
+        builder: (context, viewModel) {
+          if (viewModel is BankCardLoadingViewModel || viewModel is BankCardNoBoundedDevicesViewModel) {
+            return const Center(
+              child: CircularProgressIndicator(),
             );
-          });
-        }
-      },
-      onWillChange: (previousViewModel, newViewModel) {
-        if (previousViewModel is BankCardLoadingViewModel && newViewModel is BankCardFetchedViewModel) {
-          _changePinBodyKey.currentState?.clearPinAndResetFocus();
-        }
-      },
-      converter: (store) {
-        return BankCardPresenter.presentBankCard(
-          bankCardState: store.state.bankCardState,
-          user: user,
-        );
-      },
-      builder: (context, viewModel) {
-        return ScreenScaffold(
-          body: Column(
+          }
+          return Column(
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -107,10 +126,54 @@ class BankCardChangePinChooseScreen extends StatelessWidget {
                   repeatingErrorNotifier: repeatingErrorNotifier,
                 ),
             ],
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
+  }
+
+  Future<void> handleDevicePairing(
+    BuildContext context,
+    AuthenticatedUser user,
+    BankCardViewModel viewModel,
+  ) async {
+    bool devicePairedBottomSheetConfirmed = false;
+    await showBottomModal(
+      showCloseButton: false,
+      context: context,
+      title: "Device pairing required",
+      message:
+          "In order to access the card details you need to pair your device first. You can do this from the “Security” menu in the Settings tab.",
+      content: Column(
+        children: [
+          const SizedBox(height: 24),
+          SizedBox(
+            width: double.infinity,
+            child: PrimaryButton(
+              text: 'OK',
+              onPressed: () {
+                devicePairedBottomSheetConfirmed = true;
+                Navigator.popUntil(context, ModalRoute.withName(HomeScreen.routeName));
+                StoreProvider.of<AppState>(context).dispatch(GetBankCardCommandAction(
+                  user: user,
+                  cardId: viewModel.bankCard!.id,
+                ));
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (devicePairedBottomSheetConfirmed == false) {
+      // ignore: use_build_context_synchronously
+      Navigator.pop(context);
+      // ignore: use_build_context_synchronously
+      StoreProvider.of<AppState>(context).dispatch(GetBankCardCommandAction(
+        user: user,
+        cardId: viewModel.bankCard!.id,
+      ));
+    }
   }
 }
 

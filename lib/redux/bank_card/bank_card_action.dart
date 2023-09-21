@@ -79,6 +79,13 @@ class BankCardUnfreezeCommandAction {
   BankCardUnfreezeCommandAction({required this.bankCard, required this.user});
 }
 
+class BankCardInitiatePinChangeCommandAction {
+  final AuthenticatedUser user;
+  final BankCard bankCard;
+
+  BankCardInitiatePinChangeCommandAction({required this.bankCard, required this.user});
+}
+
 class BankCardLoadingEventAction {}
 
 class BankCardsLoadingEventAction {}
@@ -87,7 +94,11 @@ class BankCardFailedEventAction {}
 
 class BankCardsFailedEventAction {}
 
-class BankCardNoBoundedDevicesEventAction {}
+class BankCardNoBoundedDevicesEventAction {
+  final BankCard bankCard;
+
+  BankCardNoBoundedDevicesEventAction({required this.bankCard});
+}
 
 class BankCardPinChoosenEventAction {
   final String pin;
