@@ -1,6 +1,6 @@
-import 'package:http/http.dart';
-import 'package:solarisdemo/services/api_service.dart';
 import 'package:solarisdemo/models/user.dart';
+
+import '../../../services/api_service.dart';
 
 class ChangeRepaymentService extends ApiService {
   ChangeRepaymentService({super.user});
@@ -13,17 +13,17 @@ class ChangeRepaymentService extends ApiService {
       this.user = user;
     }
 
-    Uri url = Uri.parse('/credit_card_applications/1');
-    Object body = {
+    String url = '/credit_card_applications';
+    Map<String, dynamic> body = {
       'repayment_options': {
-        'minimum_amount': fixedRate,
+        'minimum_amount': {'value': fixedRate},
       },
     };
 
     try {
       await patch(url, body: body);
 
-      return ChangeRepaymentSuccessResponse();
+      return ChangeRepaymentSuccessResponse(fixedRate: fixedRate);
     } catch (e) {
       return ChangeRepaymentErrorResponse();
     }
@@ -35,6 +35,12 @@ abstract class ChangeRepaymentResponse {
   List<Object?> get props => [];
 }
 
-class ChangeRepaymentSuccessResponse extends ChangeRepaymentResponse {}
+class ChangeRepaymentSuccessResponse extends ChangeRepaymentResponse {
+  final double fixedRate;
+  ChangeRepaymentSuccessResponse({required this.fixedRate});
+
+  @override
+  List<Object?> get props => [fixedRate];
+}
 
 class ChangeRepaymentErrorResponse extends ChangeRepaymentResponse {}

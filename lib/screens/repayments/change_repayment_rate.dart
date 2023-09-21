@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/repayments/change_repayment/change_repayment_action.dart';
 import 'package:solarisdemo/screens/repayments/repayment_successfully_changed.dart';
@@ -41,6 +43,8 @@ class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final user = context.read<AuthCubit>().state.user!;
+
     backWithoutSaving() {
       showBottomModal(
         context: context,
@@ -131,6 +135,7 @@ class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
 
                                     StoreProvider.of<AppState>(context).dispatch(
                                       UpdateChangeRepaymentAction(
+                                        user: user,
                                         fixedRate: double.parse(valueForRepayment),
                                       ),
                                     );

@@ -16,10 +16,11 @@ class ChangeRepaymentMiddleware extends MiddlewareClass<AppState> {
       store.dispatch(ChangeRepaymentLoadingAction());
 
       final response = await _changeRepaymentService.updateChangeRepayment(
+        user: action.user.cognito,
         fixedRate: action.fixedRate,
       );
       if (response is ChangeRepaymentSuccessResponse) {
-        store.dispatch(UpdateChangeRepaymentAction(fixedRate: action.fixedRate));
+        store.dispatch(UpdateChangeRepaymentAction(user: action.user, fixedRate: action.fixedRate));
       } else {
         store.dispatch(ChangeRepaymentFailedAction());
       }
