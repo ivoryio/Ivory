@@ -28,27 +28,37 @@ class BankCardsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     AuthenticatedUser user = context.read<AuthCubit>().state.user!;
 
-    return StoreConnector<AppState, BankCardViewModel>(
+    return StoreConnector<AppState, BankCardsViewModel>(
       onInit: (store) {
         store.dispatch(GetBankCardsCommandAction(user: user));
       },
       converter: (store) {
-        return BankCardPresenter.presentBankCard(
-          bankCardState: store.state.bankCardState,
+        return BankCardPresenter.presentBankCards(
+          bankCardsState: store.state.bankCardsState,
           user: user,
         );
       },
       builder: (context, viewModel) {
-        if (viewModel is BankCardLoadingViewModel && viewModel.bankCards == null) {
+        if (viewModel is BankCardsLoadingViewModel) {
           return const GenericLoadingScreen(title: "Cards");
         }
         if (viewModel is BankCardsFetchedViewModel) {
           return ScreenScaffold(
             body: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const AppToolbar(
-                  title: "Cards",
+                const AppToolbar(),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+                  ),
+                  child: Text(
+                    'Cards',
+                    style: ClientConfig.getTextStyleScheme().heading1,
+                    textAlign: TextAlign.left,
+                  ),
                 ),
+                const SizedBox(height: 16),
                 Expanded(
                   child: SingleChildScrollView(
                     child: _Content(cards: viewModel.bankCards!),

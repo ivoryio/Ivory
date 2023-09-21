@@ -10,8 +10,6 @@ BankCardState bankCardReducer(BankCardState currentState, dynamic action) {
     return BankCardNoBoundedDevicesState();
   } else if (action is BankCardFetchedEventAction) {
     return BankCardFetchedState(action.bankCard, action.user);
-  } else if (action is BankCardsFetchedEventAction) {
-    return BankCardsFetchedState(action.bankCards);
   } else if (action is BankCardPinChoosenEventAction) {
     return BankCardPinChoosenState(action.pin, action.user, action.bankcard);
   } else if (action is BankCardPinConfirmedEventAction) {
@@ -22,6 +20,17 @@ BankCardState bankCardReducer(BankCardState currentState, dynamic action) {
     return BankCardDetailsFetchedState(action.cardDetails, action.bankCard);
   } else if (action is BankCardPinChangedEventAction) {
     return BankCardPinChangedState();
+  } 
+  return currentState;
+}
+
+BankCardsState bankCardsReducer(BankCardsState currentState, dynamic action) {
+  if (action is BankCardsLoadingEventAction) {
+    return BankCardsLoadingState();
+  } else if (action is BankCardsFetchedEventAction) {
+    return BankCardsFetchedState(action.bankCards);
+  } else if (action is BankCardFailedEventAction) {
+    return BankCardsErrorState();
   }
 
   return currentState;

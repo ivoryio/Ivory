@@ -65,7 +65,11 @@ class BankCardUnfreezeCommandAction {
 
 class BankCardLoadingEventAction {}
 
+class BankCardsLoadingEventAction {}
+
 class BankCardFailedEventAction {}
+
+class BankCardsFailedEventAction {}
 
 class BankCardNoBoundedDevicesEventAction {}
 

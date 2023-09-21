@@ -37,7 +37,7 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
     }
 
     if (action is GetBankCardsCommandAction) {
-      store.dispatch(BankCardLoadingEventAction());
+      store.dispatch(BankCardsLoadingEventAction());
 
       final response = await _bankCardService.getBankCards(
         user: action.user.cognito,
@@ -48,7 +48,7 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
           bankCards: response.bankCards,
         ));
       } else {
-        store.dispatch(BankCardFailedEventAction());
+        store.dispatch(BankCardsFailedEventAction());
       }
     }
 
