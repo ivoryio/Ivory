@@ -25,6 +25,23 @@ class BankCardService extends ApiService {
     }
   }
 
+  Future<BankCardServiceResponse> getBankCards({
+    required User? user,
+  }) async {
+    if (user != null) {
+      this.user = user;
+    }
+    try {
+      final data = await get('/account/cards');
+
+      return GetBankCardsServiceResponse(
+        bankCards: (data as List).map((e) => BankCard.fromJson(e)).toList(),
+      );
+    } catch (e) {
+      return BankCardErrorResponse();
+    }
+  }
+
   Future<BankCardServiceResponse> activateBankCard({
     required String cardId,
     required User? user,
@@ -163,6 +180,15 @@ class GetBankCardSuccessResponse extends BankCardServiceResponse {
 
   @override
   List<Object?> get props => [bankCard];
+}
+
+class GetBankCardsServiceResponse extends BankCardServiceResponse {
+  final List<BankCard> bankCards;
+
+  GetBankCardsServiceResponse({required this.bankCards});
+
+  @override
+  List<Object?> get props => [bankCards];
 }
 
 class ActivateBankCardSuccessResponse extends BankCardServiceResponse {

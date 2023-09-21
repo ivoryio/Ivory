@@ -36,6 +36,22 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
       }
     }
 
+    if (action is GetBankCardsCommandAction) {
+      store.dispatch(BankCardLoadingEventAction());
+
+      final response = await _bankCardService.getBankCards(
+        user: action.user.cognito,
+      );
+
+      if (response is GetBankCardsServiceResponse) {
+        store.dispatch(BankCardsFetchedEventAction(
+          bankCards: response.bankCards,
+        ));
+      } else {
+        store.dispatch(BankCardFailedEventAction());
+      }
+    }
+
     if (action is BankCardChoosePinCommandAction) {
       store.dispatch(BankCardPinChoosenEventAction(pin: action.pin, user: action.user, bankcard: action.bankCard));
     }

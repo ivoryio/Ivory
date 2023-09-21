@@ -28,6 +28,15 @@ class BankCardFetchedState extends BankCardState {
   List<Object?> get props => [bankCard, user];
 }
 
+class BankCardsFetchedState extends BankCardState {
+  final List<BankCard> bankCards;
+
+  BankCardsFetchedState(this.bankCards);
+
+  @override
+  List<Object?> get props => [bankCards];
+}
+
 class BankCardPinChoosenState extends BankCardState {
   final AuthenticatedUser user;
   final BankCard bankCard;

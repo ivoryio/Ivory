@@ -11,6 +11,14 @@ class GetBankCardCommandAction {
   });
 }
 
+class GetBankCardsCommandAction {
+  final AuthenticatedUser user;
+
+  GetBankCardsCommandAction({
+    required this.user,
+  });
+}
+
 class BankCardChoosePinCommandAction {
   final AuthenticatedUser user;
   final BankCard bankCard;
@@ -83,6 +91,13 @@ class BankCardFetchedEventAction {
   BankCardFetchedEventAction({
     required this.bankCard,
     required this.user,
+  });
+}
+
+class BankCardsFetchedEventAction {
+  final List<BankCard> bankCards;
+  BankCardsFetchedEventAction({
+    required this.bankCards,
   });
 }
 
