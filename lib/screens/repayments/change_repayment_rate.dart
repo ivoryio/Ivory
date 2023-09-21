@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/repayments/change_repayment/change_repayment_action.dart';
 import 'package:solarisdemo/screens/repayments/repayment_successfully_changed.dart';
 import 'package:solarisdemo/screens/repayments/repayments_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -125,6 +128,12 @@ class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
                                 ? () {
                                     final valueForRepayment = _initialFixedRepayment.text;
                                     final procentualValue = 5;
+
+                                    StoreProvider.of<AppState>(context).dispatch(
+                                      UpdateChangeRepaymentAction(
+                                        fixedRate: double.parse(valueForRepayment),
+                                      ),
+                                    );
 
                                     Navigator.pushNamed(context, RepaymentSuccessfullyChangedScreen.routeName,
                                         arguments: RepaymentSuccessfullyScreenParams(

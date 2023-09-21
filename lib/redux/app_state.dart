@@ -7,6 +7,7 @@ import 'package:solarisdemo/redux/notification/notification_state.dart';
 import 'package:solarisdemo/redux/person/person_account/person_account_state.dart';
 import 'package:solarisdemo/redux/person/reference_account/reference_account_state.dart';
 import 'package:solarisdemo/redux/repayments/bills/bills_state.dart';
+import 'package:solarisdemo/redux/repayments/change_repayment/change_repayment_state.dart';
 import 'package:solarisdemo/redux/repayments/more_credit/more_credit_state.dart';
 import 'package:solarisdemo/redux/repayments/reminder/repayment_reminder_state.dart';
 import 'package:solarisdemo/redux/transactions/approval/transaction_approval_state.dart';
@@ -17,6 +18,7 @@ class AppState extends Equatable {
   final TransactionsState transactionsState;
   final CreditLineState creditLineState;
   final RepaymentReminderState repaymentReminderState;
+  final ChangeRepaymentState changeRepaymentState;
   final BillsState billsState;
   final MoreCreditState moreCreditState;
   final BankCardState bankCardState;
@@ -32,6 +34,7 @@ class AppState extends Equatable {
     required this.transactionsState,
     required this.creditLineState,
     required this.repaymentReminderState,
+    required this.changeRepaymentState,
     required this.billsState,
     required this.moreCreditState,
     required this.bankCardState,
@@ -49,6 +52,7 @@ class AppState extends Equatable {
       transactionsState: TransactionsInitialState(),
       creditLineState: CreditLineInitialState(),
       repaymentReminderState: RepaymentReminderInitialState(),
+      changeRepaymentState: ChangeRepaymentInitialState(),
       billsState: BillsInitialState(),
       moreCreditState: MoreCreditInitialState(),
       bankCardState: BankCardInitialState(),
@@ -67,6 +71,7 @@ class AppState extends Equatable {
         transactionsState,
         creditLineState,
         repaymentReminderState,
+        changeRepaymentState,
         billsState,
         moreCreditState,
         bankCardState,
