@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
-import 'package:solarisdemo/utilities/ivory_color_mapper.dart';
 
 import '../utilities/format.dart';
 
@@ -90,18 +89,34 @@ class BankCardWidget extends StatelessWidget {
         ),
         if (isFrozen == true)
           Positioned.fill(
-            child: SvgPicture.asset(
-              'assets/images/default/card_logo_frozen.svg',
+            child: Image.asset(
+              ClientConfig.getAssetImagePath('frozen_card_logo.png'),
               fit: BoxFit.scaleDown,
+              scale: imageScaledownFactor,
             ),
           ),
         if (isFrozen == true)
           Positioned.fill(
             child: Opacity(
-              opacity: 0.6,
+              opacity: 0.5,
               child: Image.asset(
                 'assets/images/frozen_card.png',
                 fit: BoxFit.fill,
+              ),
+            ),
+          ),
+        if (isFrozen == true)
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.white.withOpacity(0.20),
+                    Colors.white.withOpacity(0.20),
+                  ],
+                ),
               ),
             ),
           ),
@@ -121,8 +136,8 @@ class BankCardWidget extends StatelessWidget {
                     ),
                     child: VisaSvgIcon(),
                   ),
-                  if (isViewable!) const EyeIcon(),
-                  if (cardType != null) CardTypeLabel(cardType: cardType!),
+                  if (isViewable) const EyeIcon(),
+                  if (cardType != null) CardTypeLabel(cardType: cardType),
                 ],
               ),
               const Spacer(),

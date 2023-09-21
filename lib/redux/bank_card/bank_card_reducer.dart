@@ -30,9 +30,16 @@ BankCardsState bankCardsReducer(BankCardsState currentState, dynamic action) {
   } else if (action is BankCardsFetchedEventAction) {
     return BankCardsFetchedState(action.bankCards);
   } else if (action is UpdateBankCardsEventAction) {
+
     final bankCards = (currentState as BankCardsFetchedState).bankCards;
-    final index = bankCards.indexWhere((element) => element.id == action.bankCard.id);
-    bankCards[index] = action.bankCard;
+
+    if (bankCards.indexWhere((element) => element.id == action.bankCard.id) == -1) {
+      bankCards.add(action.bankCard);
+    } else {
+      final index = bankCards.indexWhere((element) => element.id == action.bankCard.id);
+      bankCards[index] = action.bankCard;
+    }
+    
     return BankCardsFetchedState(bankCards);
   } else if (action is BankCardFailedEventAction) {
     return BankCardsErrorState();

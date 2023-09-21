@@ -1,6 +1,22 @@
 import '../../../models/bank_card.dart';
 import '../../../models/user.dart';
 
+class CreateCardCommandAction {
+  final AuthenticatedUser user;
+  final String firstName;
+  final String lastName;
+  final BankCardType type;
+  final String businessId;
+
+  CreateCardCommandAction({
+    required this.user,
+    required this.firstName,
+    required this.lastName,
+    required this.type,
+    required this.businessId,
+  });
+}
+
 class GetBankCardCommandAction {
   final String cardId;
   final AuthenticatedUser user;

@@ -7,6 +7,24 @@ import '../../../services/api_service.dart';
 class BankCardService extends ApiService {
   BankCardService({super.user});
 
+  Future<BankCardServiceResponse> createBankCard({
+    required CreateBankCardReqBody reqBody,
+    required User? user,
+  }) async {
+    if (user != null) {
+      this.user = user;
+    }
+    try {
+      final data = await post('/account/cards', body: reqBody.toJson());
+
+      return CreateBankCardSuccessResponse(
+        bankCard: BankCard.fromJson(data),
+      );
+    } catch (e) {
+      return BankCardErrorResponse();
+    }
+  }
+
   Future<BankCardServiceResponse> getBankCardById({
     required String cardId,
     required User? user,
@@ -171,6 +189,12 @@ class BankCardService extends ApiService {
 abstract class BankCardServiceResponse extends Equatable {
   @override
   List<Object?> get props => [];
+}
+
+class CreateBankCardSuccessResponse extends BankCardServiceResponse {
+  final BankCard bankCard;
+
+  CreateBankCardSuccessResponse({required this.bankCard});
 }
 
 class GetBankCardSuccessResponse extends BankCardServiceResponse {

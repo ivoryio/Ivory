@@ -19,6 +19,27 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
   call(Store<AppState> store, action, NextDispatcher next) async {
     next(action);
 
+    if (action is CreateCardCommandAction) {
+      store.dispatch(BankCardsLoadingEventAction());
+      final response = await _bankCardService.createBankCard(
+        user: action.user.cognito,
+        reqBody: CreateBankCardReqBody(
+          action.firstName,
+          action.lastName,
+          action.type,
+          action.businessId,
+        ),
+      );
+
+      if (response is CreateBankCardSuccessResponse) {
+        store.dispatch(UpdateBankCardsEventAction(
+          bankCard: response.bankCard,
+        ));
+      } else {
+        store.dispatch(BankCardFailedEventAction());
+      }
+    }
+
     if (action is GetBankCardCommandAction) {
       store.dispatch(BankCardLoadingEventAction());
       final response = await _bankCardService.getBankCardById(

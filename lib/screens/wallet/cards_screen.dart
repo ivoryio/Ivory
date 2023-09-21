@@ -10,7 +10,6 @@ import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../cubits/auth_cubit/auth_cubit.dart';
-import '../../cubits/cards_cubit/cards_cubit.dart';
 import '../../models/bank_card.dart';
 import '../../models/user.dart';
 import '../../utilities/constants.dart';
@@ -74,46 +73,6 @@ class BankCardsScreen extends StatelessWidget {
         );
       },
     );
-
-    // return BlocProvider.value(
-    //   value: BankCardsCubit(cardsService: BankCardsService(user: user.cognito))..getCards(),
-    //   child: BlocBuilder<BankCardsCubit, BankCardsState>(
-    //     builder: (context, state) {
-    //       if (state is BankCardsLoading) {
-    //         return const GenericLoadingScreen(title: "Cards");
-    //       }
-
-    //       if (state is BankCardsLoaded) {
-    //         return ScreenScaffold(
-    //           body: Column(
-    //             children: [
-    //               const AppToolbar(
-    //                 title: "Cards",
-    //               ),
-    //               Expanded(
-    //                 child: SingleChildScrollView(
-    //                   child: _Content(cards: state.cards),
-    //                 ),
-    //               ),
-    //             ],
-    //           ),
-    //         );
-    //       }
-
-    //       if (state is BankCardsError) {
-    //         return GenericErrorScreen(
-    //           title: "Cards",
-    //           message: state.message,
-    //         );
-    //       }
-
-    //       return const GenericErrorScreen(
-    //         title: "Cards",
-    //         message: "Cards could not be loaded",
-    //       );
-    //     },
-    //   ),
-    // );
   }
 }
 
@@ -238,11 +197,13 @@ class _OrderCardButton extends StatelessWidget {
 
 void addNewCard(BuildContext context) {
   final user = context.read<AuthCubit>().state.user!;
-  CreateBankCard card = CreateBankCard(
-    user.person.firstName!,
-    user.person.lastName!,
-    BankCardType.VIRTUAL_VISA_CREDIT,
-    user.personAccount.businessId ?? '',
+  StoreProvider.of<AppState>(context).dispatch(
+    CreateCardCommandAction(
+      user: user,
+      firstName: user.person.firstName!,
+      lastName: user.person.lastName!,
+      type: BankCardType.VIRTUAL_VISA_CREDIT,
+      businessId: user.personAccount.businessId ?? '',
+    ),
   );
-  context.read<BankCardsCubit>().createCard(card);
 }

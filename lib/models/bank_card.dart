@@ -194,16 +194,16 @@ class BankCardFetchedDetails {
   });
 }
 
-String createCardToJson(CreateBankCard data) => json.encode(data.toJson());
+String createCardToJson(CreateBankCardReqBody data) => json.encode(data.toJson());
 
-class CreateBankCard {
+class CreateBankCardReqBody {
   late String line1;
   late String line2;
   BankCardType type;
   String businessId;
   late String reference;
 
-  CreateBankCard(
+  CreateBankCardReqBody(
     String firstName,
     String lastName,
     this.type,
