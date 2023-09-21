@@ -68,6 +68,37 @@ class ApiService<T> {
     }
   }
 
+  Future<T> patch(
+    String path, {
+    Map<String, String> queryParameters = const {},
+    Map<String, dynamic> body = const {},
+    bool authNeeded = true,
+  }) async {
+    try {
+      String? accessToken = authNeeded ? await this.getAccessToken() : "";
+
+      final response = await http.patch(
+        ApiService.url(path, queryParameters: queryParameters),
+        headers: authNeeded & accessToken.isNotEmpty
+            ? {
+                "Authorization": "Bearer $accessToken",
+              }
+            : {},
+        body: jsonEncode(body),
+      );
+
+      print(response.body);
+      if (![200, 204].contains(response.statusCode)) {
+        throw Exception("PATCH request response code: ${response.statusCode}");
+      }
+
+      return jsonDecode(response.body);
+    } catch (e) {
+      log(e.toString());
+      throw Exception("PATCH request failed");
+    }
+  }
+
   Future<T> delete(
     String path, {
     Map<String, String> queryParameters = const {},
