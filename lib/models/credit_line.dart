@@ -1,3 +1,4 @@
+import 'account_data.dart';
 import 'amount_value.dart';
 
 class CreditLine {
@@ -6,10 +7,11 @@ class CreditLine {
   final AmountValue previousBillAmount;
   final AmountValue currentBillAmount;
   final AmountValue outstandingAmount;
-  final AmountValue spentAmount;
+  final num spentAmount;
   final AmountValue accumulatedInterestAmount;
-  final num repaymentRatePercentage;
   final num interestRate;
+  final AmountValue fixedRate;
+  final AccountData referenceAccount;
 
   const CreditLine({
     required this.id,
@@ -19,20 +21,22 @@ class CreditLine {
     required this.outstandingAmount,
     required this.spentAmount,
     required this.accumulatedInterestAmount,
-    required this.repaymentRatePercentage,
     required this.interestRate,
+    required this.fixedRate,
+    required this.referenceAccount,
   });
 
   factory CreditLine.fromJson(Map<String, dynamic> json) => CreditLine(
-        id: json['id'],
+        id: json['application_id'],
         dueDate: DateTime.parse(json['due_date']),
         previousBillAmount: AmountValue.fromJson(json['previous_bill_amount']),
         currentBillAmount: AmountValue.fromJson(json['current_bill_amount']),
         outstandingAmount: AmountValue.fromJson(json['outstanding_amount']),
-        spentAmount: AmountValue.fromJson(json['amount_spent']),
+        spentAmount: json['amount_spent'],
         accumulatedInterestAmount: AmountValue.fromJson(json['accumulated_interest_amount']),
-        repaymentRatePercentage: json['minimum_percentage'],
         interestRate: json['interest_rate'],
+        fixedRate: AmountValue.fromJson(json['fixed_repayment_rate']),
+        referenceAccount: AccountData.fromJson(json['reference_account']),
       );
 
   factory CreditLine.empty() => CreditLine(
@@ -41,9 +45,10 @@ class CreditLine {
         previousBillAmount: AmountValue.empty(),
         currentBillAmount: AmountValue.empty(),
         outstandingAmount: AmountValue.empty(),
-        spentAmount: AmountValue.empty(),
+        spentAmount: 0.0,
         accumulatedInterestAmount: AmountValue.empty(),
-        repaymentRatePercentage: 0.0,
         interestRate: 0.0,
+        fixedRate: AmountValue.empty(),
+        referenceAccount: AccountData.empty(),
       );
 }

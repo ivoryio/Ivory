@@ -16,7 +16,7 @@ class ChangeRepaymentService extends ApiService {
     String url = '/credit_card_applications';
     Map<String, dynamic> body = {
       'repayment_options': {
-        'minimum_amount': {'value': fixedRate},
+        'minimum_amount': {'value': fixedRate * 100},
       },
     };
 

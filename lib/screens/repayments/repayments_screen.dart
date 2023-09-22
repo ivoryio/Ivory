@@ -328,11 +328,10 @@ class _ExpandedDetails extends StatelessWidget {
           child: SpacedColumn(
             space: 8,
             children: [
-              ExpandedDetailsRow(
-                  title: 'Amount spent', trailing: Format.currency(viewModel.creditLine.spentAmount.value)),
+              ExpandedDetailsRow(title: 'Amount spent', trailing: Format.currency(viewModel.creditLine.spentAmount)),
               ExpandedDetailsRow(
                 title: 'Fixed repayment rate',
-                trailing: Format.currency(500),
+                trailing: Format.currency(viewModel.creditLine.fixedRate.value),
                 onInfoIconTap: () {
                   showBottomModal(
                     context: context,
@@ -346,7 +345,7 @@ class _ExpandedDetails extends StatelessWidget {
               ),
               ExpandedDetailsRow(
                 title: 'Interest rate',
-                trailing: '5%',
+                trailing: '5%', //'${viewModel.creditLine.interestRate}%',
                 onInfoIconTap: () {
                   showBottomModal(
                     context: context,
@@ -387,8 +386,8 @@ class _ExpandedDetails extends StatelessWidget {
                   }),
                 ],
               ),
-              ExpandedDetailsRow(title: 'Account owner', trailing: viewModel.ownerName),
-              ExpandedDetailsRow(title: 'IBAN', trailing: Format.iban(viewModel.iban)),
+              ExpandedDetailsRow(title: 'Account owner', trailing: viewModel.creditLine.referenceAccount.ownerName),
+              ExpandedDetailsRow(title: 'IBAN', trailing: Format.iban(viewModel.creditLine.referenceAccount.iban)),
             ],
           ),
         ),

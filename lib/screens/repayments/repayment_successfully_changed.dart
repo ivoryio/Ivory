@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
+import 'package:solarisdemo/models/user.dart';
+import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/credit_line/credit_line_action.dart';
 import 'package:solarisdemo/screens/repayments/repayments_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
@@ -29,11 +35,12 @@ class RepaymentSuccessfullyChangedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
+
     return ScreenScaffold(
         body: Padding(
-      padding: EdgeInsets.symmetric(
-          horizontal: ClientConfig.getCustomClientUiSettings()
-              .defaultScreenHorizontalPadding),
+      padding:
+          EdgeInsets.symmetric(horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding),
       child: Column(
         children: [
           const AppToolbar(
@@ -56,8 +63,7 @@ class RepaymentSuccessfullyChangedScreen extends StatelessWidget {
                   style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
                 ),
                 TextSpan(
-                  text:
-                      '. The ${params.interestRate}% interest rate will be calculated and added to this amount.',
+                  text: '. The ${params.interestRate}% interest rate will be calculated and added to this amount.',
                 ),
               ],
             ),
@@ -67,7 +73,9 @@ class RepaymentSuccessfullyChangedScreen extends StatelessWidget {
             child: SvgPicture(
               SvgAssetLoader(
                 'assets/images/repayment_successfully_changed.svg',
-                colorMapper: IvoryColorMapper(baseColor: ClientConfig.getColorScheme().secondary,),
+                colorMapper: IvoryColorMapper(
+                  baseColor: ClientConfig.getColorScheme().secondary,
+                ),
               ),
             ),
           ),
@@ -80,6 +88,7 @@ class RepaymentSuccessfullyChangedScreen extends StatelessWidget {
               color: ClientConfig.getColorScheme().tertiary,
               textColor: ClientConfig.getColorScheme().surface,
               onPressed: () {
+                StoreProvider.of<AppState>(context).dispatch(GetCreditLineCommandAction(user: user.cognito));
                 Navigator.popUntil(
                   context,
                   ModalRoute.withName(RepaymentsScreen.routeName),
