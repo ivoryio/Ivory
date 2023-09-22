@@ -1,3 +1,4 @@
+
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -281,7 +282,7 @@ void main() {
             ),
           );
           final loadingState = store.onChange.firstWhere((element) => element.bankCardState is BankCardLoadingState);
-          final appState = store.onChange.firstWhere((element) => element.bankCardState is BankCardPinChangedState);
+          final appState = store.onChange.firstWhere((element) => element.bankCardState is BankCardPinConfirmedState);
 
           //when
           store.dispatch(
@@ -309,7 +310,7 @@ void main() {
 
           //then
           expect((await loadingState).bankCardState, isA<BankCardLoadingState>());
-          expect((await appState).bankCardState, isA<BankCardPinChangedState>());
+          expect((await appState).bankCardState, isA<BankCardPinConfirmedState>());
         },
       );
 
@@ -396,6 +397,20 @@ void main() {
               cognito: MockUser(),
               personAccount: MockPersonAccount(),
             ),
+              bankCards: [
+                BankCard(
+                  id: "active-card-id",
+                  accountId: "62a8f478184ae7cba59c633373c53286cacc",
+                  status: BankCardStatus.BLOCKED,
+                  type: BankCardType.VIRTUAL_VISA_CREDIT,
+                  representation: BankCardRepresentation(
+                    line1: "ACTIVE JOE",
+                    line2: "ACTIVE JOE",
+                    maskedPan: '493441******9641',
+                    formattedExpirationDate: '06/26',
+                  ),
+                ),
+              ]
           ),
         );
 
@@ -435,6 +450,20 @@ void main() {
               cognito: MockUser(),
               personAccount: MockPersonAccount(),
             ),
+              bankCards: [
+                BankCard(
+                  id: "active-card-id",
+                  accountId: "62a8f478184ae7cba59c633373c53286cacc",
+                  status: BankCardStatus.BLOCKED,
+                  type: BankCardType.VIRTUAL_VISA_CREDIT,
+                  representation: BankCardRepresentation(
+                    line1: "ACTIVE JOE",
+                    line2: "ACTIVE JOE",
+                    maskedPan: '493441******9641',
+                    formattedExpirationDate: '06/26',
+                  ),
+                ),
+              ]
           ),
         );
 
@@ -449,6 +478,22 @@ void main() {
           bankCardService: FakeBankCardService(),
           initialState: createAppState(
             bankCardState: BankCardInitialState(),
+            bankCardsState: BankCardsFetchedState(
+              [
+                BankCard(
+                  id: "active-card-id",
+                  accountId: "62a8f478184ae7cba59c633373c53286cacc",
+                  status: BankCardStatus.ACTIVE,
+                  type: BankCardType.VIRTUAL_VISA_CREDIT,
+                  representation: BankCardRepresentation(
+                    line1: "ACTIVE JOE",
+                    line2: "ACTIVE JOE",
+                    maskedPan: '493441******9641',
+                    formattedExpirationDate: '06/26',
+                  ),
+                ),
+              ],
+            ),
           ),
         );
 
@@ -475,6 +520,20 @@ void main() {
               cognito: MockUser(),
               personAccount: MockPersonAccount(),
             ),
+            bankCards: [
+              BankCard(
+                id: "active-card-id",
+                accountId: "62a8f478184ae7cba59c633373c53286cacc",
+                status: BankCardStatus.BLOCKED,
+                type: BankCardType.VIRTUAL_VISA_CREDIT,
+                representation: BankCardRepresentation(
+                  line1: "ACTIVE JOE",
+                  line2: "ACTIVE JOE",
+                  maskedPan: '493441******9641',
+                  formattedExpirationDate: '06/26',
+                ),
+              ),
+            ],
           ),
         );
 
@@ -489,6 +548,22 @@ void main() {
           bankCardService: FakeFailingBankCardService(),
           initialState: createAppState(
             bankCardState: BankCardInitialState(),
+            bankCardsState: BankCardsFetchedState(
+              [
+                BankCard(
+                  id: "active-card-id",
+                  accountId: "62a8f478184ae7cba59c633373c53286cacc",
+                  status: BankCardStatus.ACTIVE,
+                  type: BankCardType.VIRTUAL_VISA_CREDIT,
+                  representation: BankCardRepresentation(
+                    line1: "ACTIVE JOE",
+                    line2: "ACTIVE JOE",
+                    maskedPan: '493441******9641',
+                    formattedExpirationDate: '06/26',
+                  ),
+                ),
+              ],
+            ),
           ),
         );
         final loadingState = store.onChange.firstWhere((element) => element.bankCardState is BankCardLoadingState);
@@ -514,12 +589,95 @@ void main() {
               cognito: MockUser(),
               personAccount: MockPersonAccount(),
             ),
+            bankCards: [
+              BankCard(
+                id: "active-card-id",
+                accountId: "62a8f478184ae7cba59c633373c53286cacc",
+                status: BankCardStatus.BLOCKED,
+                type: BankCardType.VIRTUAL_VISA_CREDIT,
+                representation: BankCardRepresentation(
+                  line1: "ACTIVE JOE",
+                  line2: "ACTIVE JOE",
+                  maskedPan: '493441******9641',
+                  formattedExpirationDate: '06/26',
+                ),
+              ),
+            ],
           ),
         );
 
         // then
         expect((await loadingState).bankCardState, isA<BankCardLoadingState>());
         expect((await appState).bankCardState, isA<BankCardErrorState>());
+      });
+
+      test("When creating a card is succesfull should update with bank card", () async {
+        // given
+        List<BankCard> bankCards = [];
+        final store = createTestStore(
+          bankCardService: FakeBankCardService(),
+          initialState: createAppState(
+            bankCardsState: BankCardsFetchedState(bankCards),
+          ),
+        );
+
+        final loadingState = store.onChange.firstWhere(
+          (element) => element.bankCardsState is BankCardsLoadingState,
+        );
+        final appState = store.onChange.firstWhere(
+          (element) => element.bankCardsState is BankCardsFetchedState,
+        );
+
+        // when
+        store.dispatch(
+          CreateCardCommandAction(
+            user: AuthenticatedUser(
+              person: MockPerson(),
+              cognito: MockUser(),
+              personAccount: MockPersonAccount(),
+            ),
+            firstName: 'Joe',
+            lastName: 'Doe',
+            type: BankCardType.VIRTUAL_VISA_CREDIT,
+            businessId: 'businessId',
+          ),
+        );
+
+        // then
+        expect((await loadingState).bankCardsState, isA<BankCardsLoadingState>());
+        expect((await appState).bankCardsState, isA<BankCardsFetchedState>());
+      });
+
+      test("When creating a card is failing should update with error", () async {
+        // given
+        List<BankCard> bankCards = [];
+        final store = createTestStore(
+          bankCardService: FakeFailingBankCardService(),
+          initialState: createAppState(
+            bankCardsState: BankCardsFetchedState(bankCards),
+          ),
+        );
+        final loadingState = store.onChange.firstWhere((element) => element.bankCardsState is BankCardsLoadingState);
+        final appState = store.onChange.firstWhere((element) => element.bankCardsState is BankCardsErrorState);
+
+        // when
+        store.dispatch(
+          CreateCardCommandAction(
+            user: AuthenticatedUser(
+              person: MockPerson(),
+              cognito: MockUser(),
+              personAccount: MockPersonAccount(),
+            ),
+            firstName: 'Joe',
+            lastName: 'Doe',
+            type: BankCardType.VIRTUAL_VISA_CREDIT,
+            businessId: 'businessId',
+          ),
+        );
+
+        // then
+        expect((await loadingState).bankCardsState, isA<BankCardsLoadingState>());
+        expect((await appState).bankCardsState, isA<BankCardsErrorState>());
       });
     },
   );

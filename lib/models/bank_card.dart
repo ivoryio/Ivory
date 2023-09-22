@@ -70,7 +70,7 @@ class BankCard {
 
   factory BankCard.fromJson(Map<String, dynamic> json) => BankCard(
         id: json["id"],
-        accountId: json["account_id"],
+        accountId: json["account_id"] ?? '',
         status: getCardStatus(json["status"] ?? BankCardStatus.INACTIVE.name),
         type:
             getCardType(json["type"] ?? BankCardType.VIRTUAL_VISA_CREDIT.name),

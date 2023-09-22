@@ -33,7 +33,8 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
 
       if (response is CreateBankCardSuccessResponse) {
         store.dispatch(UpdateBankCardsEventAction(
-          bankCard: response.bankCard,
+          bankCards: [],
+          updatedCard: response.bankCard,
         ));
       } else {
         store.dispatch(BankCardFailedEventAction());
@@ -72,7 +73,7 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
         store.dispatch(BankCardsFailedEventAction());
       }
     }
-    
+
     if (action is BankCardInitiatePinChangeCommandAction) {
       store.dispatch(BankCardLoadingEventAction());
 
@@ -125,9 +126,10 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
       final restrictedKeypair = await _deviceService.getDeviceKeyPairs(restricted: true);
       if (restrictedKeypair == null) {
         store.dispatch(BankCardFailedEventAction());
+        return null;
       }
 
-      final restrictedPrivateKey = restrictedKeypair!.privateKey;
+      final restrictedPrivateKey = restrictedKeypair.privateKey;
       final signature = _deviceService.generateSignature(
         privateKey: restrictedPrivateKey,
         stringToSign: encryptedPin,
@@ -274,7 +276,8 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
           user: action.user,
         ));
         store.dispatch(UpdateBankCardsEventAction(
-          bankCard: response.bankCard,
+          bankCards: action.bankCards,
+          updatedCard: response.bankCard,
         ));
       } else {
         store.dispatch(BankCardFailedEventAction());
@@ -294,7 +297,8 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
           user: action.user,
         ));
         store.dispatch(UpdateBankCardsEventAction(
-          bankCard: response.bankCard,
+          bankCards: action.bankCards,
+          updatedCard: response.bankCard,
         ));
       } else {
         store.dispatch(BankCardFailedEventAction());

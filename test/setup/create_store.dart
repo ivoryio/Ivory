@@ -15,6 +15,7 @@ import 'package:solarisdemo/infrastructure/repayments/more_credit/more_credit_se
 import 'package:solarisdemo/infrastructure/repayments/reminder/repayment_reminder_service.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart';
 import 'package:solarisdemo/infrastructure/transfer/transfer_service.dart';
+import 'package:solarisdemo/models/bank_card.dart';
 import 'package:solarisdemo/models/device.dart';
 import 'package:solarisdemo/models/transactions/transaction_model.dart';
 import 'package:solarisdemo/models/transfer/reference_account_transfer.dart';
@@ -148,6 +149,52 @@ class NotImplementedBankCardService extends BankCardService {
 
   @override
   Future<BankCardServiceResponse> activateBankCard({User? user, String? cardId}) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<BankCardServiceResponse> createBankCard({
+    required User? user,
+    required CreateBankCardReqBody reqBody,
+  }) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<BankCardServiceResponse> freezeCard({
+    required String cardId,
+    required User? user,
+  }) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<BankCardServiceResponse> unfreezeCard({
+    required String cardId,
+    required User? user,
+  }) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<BankCardServiceResponse> getLatestPinKey({
+    required String cardId,
+    required User? user,
+  }) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<BankCardServiceResponse> changePin({
+    required String cardId,
+    required User? user,
+    required ChangePinRequestBody reqBody,
+  }) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<BankCardServiceResponse> getBankCards({User? user}) {
     throw UnimplementedError();
   }
 }

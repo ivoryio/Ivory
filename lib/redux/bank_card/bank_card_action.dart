@@ -68,15 +68,17 @@ class BankCardFetchDetailsCommandAction {
 class BankCardFreezeCommandAction {
   final AuthenticatedUser user;
   final BankCard bankCard;
+  final List<BankCard> bankCards;
 
-  BankCardFreezeCommandAction({required this.bankCard, required this.user});
+  BankCardFreezeCommandAction({required this.bankCard, required this.user, required this.bankCards});
 }
 
 class BankCardUnfreezeCommandAction {
   final AuthenticatedUser user;
   final BankCard bankCard;
+  final List<BankCard> bankCards;
 
-  BankCardUnfreezeCommandAction({required this.bankCard, required this.user});
+  BankCardUnfreezeCommandAction({required this.bankCard, required this.user, required this.bankCards});
 }
 
 class BankCardInitiatePinChangeCommandAction {
@@ -133,9 +135,11 @@ class BankCardsFetchedEventAction {
 }
 
 class UpdateBankCardsEventAction {
-  final BankCard bankCard;
+  final List<BankCard> bankCards;
+  final BankCard updatedCard;
   UpdateBankCardsEventAction({
-    required this.bankCard,
+    required this.bankCards,
+    required this.updatedCard,
   });
 }
 

@@ -7,6 +7,7 @@ import 'package:solarisdemo/infrastructure/bank_card/bank_card_presenter.dart';
 import 'package:solarisdemo/models/bank_card.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
+import 'package:solarisdemo/redux/bank_card/bank_card_state.dart';
 import 'package:solarisdemo/screens/wallet/card_details/card_details_info.dart';
 import 'package:solarisdemo/screens/wallet/card_details/card_details_screen.dart';
 import 'package:solarisdemo/screens/wallet/change_pin/card_change_pin_choose_screen.dart';
@@ -169,6 +170,8 @@ class ActiveCard extends StatelessWidget {
               onPressed: () {
                 StoreProvider.of<AppState>(context).dispatch(
                   BankCardFreezeCommandAction(
+                    bankCards:
+                        (StoreProvider.of<AppState>(context).state.bankCardsState as BankCardsFetchedState).bankCards,
                     user: viewModel.user!,
                     bankCard: viewModel.bankCard!,
                   ),
@@ -270,6 +273,9 @@ class FrozenCard extends StatelessWidget {
                   BankCardUnfreezeCommandAction(
                     user: viewModel.user!,
                     bankCard: viewModel.bankCard!,
+                    bankCards:
+                        (StoreProvider.of<AppState>(context).state.bankCardsState as BankCardsFetchedState).bankCards,
+
                   ),
                 );
               },
@@ -283,6 +289,7 @@ class FrozenCard extends StatelessWidget {
             const ItemTitle(
               nameOfActionTitle: 'If your card is compromised',
             ),
+            if (viewModel.bankCard!.type.toString().contains('virtual'))
             const SizedBox(height: 28),
             if (viewModel.bankCard!.type.toString().contains('virtual'))
             IvoryListItemWithAction(

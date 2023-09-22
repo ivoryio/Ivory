@@ -80,6 +80,7 @@ class BankCardWidget extends StatelessWidget {
   ) {
     return Stack(
       children: [
+        if (isFrozen == false)
         Positioned.fill(
           child: Image.asset(
             ClientConfig.getAssetImagePath('card_logo.png'),
@@ -219,7 +220,6 @@ class BankCardWidget extends StatelessWidget {
           Color(0xFFCFD4D9),
           Color(0xFF56555E),
         ],
-        stops: [0.0, 1.0],
       );
     } else {
       return LinearGradient(
@@ -229,7 +229,6 @@ class BankCardWidget extends StatelessWidget {
           ClientConfig.getColorScheme().surfaceVariant,
           ClientConfig.getColorScheme().outline,
         ],
-        stops: const [0.0, 1.0],
       );
     }
   }

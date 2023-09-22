@@ -145,6 +145,27 @@ class FakeBankCardService extends BankCardService {
       ),
     );
   }
+
+  @override
+  Future<BankCardServiceResponse> createBankCard({
+    required CreateBankCardReqBody reqBody,
+    required User? user,
+  }) async {
+    return CreateBankCardSuccessResponse(
+      bankCard: BankCard(
+        id: "active-card-id",
+        accountId: "62a8f478184ae7cba59c633373c53286cacc",
+        status: BankCardStatus.ACTIVE,
+        type: BankCardType.VIRTUAL_VISA_CREDIT,
+        representation: BankCardRepresentation(
+          line1: "ACTIVE JOE",
+          line2: "ACTIVE JOE",
+          maskedPan: '493441******9641',
+          formattedExpirationDate: '06/26',
+        ),
+      ),
+    );
+  }
 }
 
 class FakeFailingBankCardService extends BankCardService {
@@ -209,6 +230,14 @@ class FakeFailingBankCardService extends BankCardService {
   @override
   Future<BankCardServiceResponse> unfreezeCard({
     required String cardId,
+    required User? user,
+  }) async {
+    return BankCardErrorResponse();
+  }
+
+  @override
+  Future<BankCardServiceResponse> createBankCard({
+    required CreateBankCardReqBody reqBody,
     required User? user,
   }) async {
     return BankCardErrorResponse();
