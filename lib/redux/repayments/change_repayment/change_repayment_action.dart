@@ -1,28 +1,38 @@
+import 'package:solarisdemo/models/transfer/credit_card_application.dart';
 import 'package:solarisdemo/models/user.dart';
 
-class GetChangeRepaymentAction {
-  final AuthenticatedUser user;
-  GetChangeRepaymentAction({required this.user});
-}
-
-class UpdateChangeRepaymentCommandAction {
+class UpdateCardApplicationCommandAction {
   final AuthenticatedUser user;
   final double fixedRate;
+  final String id;
 
-  UpdateChangeRepaymentCommandAction({
+  UpdateCardApplicationCommandAction({
     required this.user,
     required this.fixedRate,
+    required this.id,
   });
 }
 
-class UpdateChangeRepaymentEventAction {
-  final double fixedRate;
+class UpdateCardApplicationEventAction {
+  final CreditCardApplication creditCardApplication;
 
-  UpdateChangeRepaymentEventAction({
-    required this.fixedRate,
+  UpdateCardApplicationEventAction({
+    required this.creditCardApplication,
   });
 }
 
-class ChangeRepaymentLoadingAction {}
+class GetCardApplicationCommandAction {
+  final AuthenticatedUser user;
 
-class ChangeRepaymentFailedAction {}
+  GetCardApplicationCommandAction({required this.user});
+}
+
+class CardApplicationFetchedEventAction {
+  final CreditCardApplication creditCardApplication;
+
+  CardApplicationFetchedEventAction({required this.creditCardApplication});
+}
+
+class CardApplicationLoadingEventAction {}
+
+class CardApplicationFailedEventAction {}

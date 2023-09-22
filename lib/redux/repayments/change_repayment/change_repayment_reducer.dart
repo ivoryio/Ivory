@@ -1,15 +1,15 @@
 import 'package:solarisdemo/redux/repayments/change_repayment/change_repayment_action.dart';
 import 'package:solarisdemo/redux/repayments/change_repayment/change_repayment_state.dart';
 
-ChangeRepaymentState changeRepaymentReducer(ChangeRepaymentState currentState, dynamic action) {
-  if (action is ChangeRepaymentLoadingAction) {
-    return ChangeRepaymentLoadingState();
-  } else if (action is ChangeRepaymentFailedAction) {
-    return ChangeRepaymentErrorState();
-  } else if (action is UpdateChangeRepaymentCommandAction) {
-    return ChangeRepaymentUpdateState(action.fixedRate);
-  } else if (action is UpdateChangeRepaymentEventAction) {
-    return ChangeRepaymentUpdateState(action.fixedRate);
+CardApplicationState cardApplicationReducer(CardApplicationState currentState, dynamic action) {
+  if (action is CardApplicationLoadingEventAction) {
+    return CardApplicationLoadingState();
+  } else if (action is CardApplicationFailedEventAction) {
+    return CardApplicationErrorState();
+  } else if (action is CardApplicationFetchedEventAction) {
+    return CardApplicationFetchedState(action.creditCardApplication);
+  } else if (action is UpdateCardApplicationEventAction) {
+    return CardApplicationUpdatedState(action.creditCardApplication);
   }
 
   return currentState;

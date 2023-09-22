@@ -20,7 +20,7 @@ AppState appReducer(AppState currentState, dynamic action) {
     transactionsState: transactionsReducer(currentState.transactionsState, action),
     creditLineState: creditLineReducer(currentState.creditLineState, action),
     repaymentReminderState: repaymentReminderReducer(currentState.repaymentReminderState, action),
-    changeRepaymentState: changeRepaymentReducer(currentState.changeRepaymentState, action),
+    cardApplicationState: cardApplicationReducer(currentState.cardApplicationState, action),
     billsState: billsReducer(currentState.billsState, action),
     moreCreditState: moreCreditReducer(currentState.moreCreditState, action),
     bankCardState: bankCardReducer(currentState.bankCardState, action),

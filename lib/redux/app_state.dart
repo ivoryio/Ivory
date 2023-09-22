@@ -18,7 +18,7 @@ class AppState extends Equatable {
   final TransactionsState transactionsState;
   final CreditLineState creditLineState;
   final RepaymentReminderState repaymentReminderState;
-  final ChangeRepaymentState changeRepaymentState;
+  final CardApplicationState cardApplicationState;
   final BillsState billsState;
   final MoreCreditState moreCreditState;
   final BankCardState bankCardState;
@@ -34,7 +34,7 @@ class AppState extends Equatable {
     required this.transactionsState,
     required this.creditLineState,
     required this.repaymentReminderState,
-    required this.changeRepaymentState,
+    required this.cardApplicationState,
     required this.billsState,
     required this.moreCreditState,
     required this.bankCardState,
@@ -52,7 +52,7 @@ class AppState extends Equatable {
       transactionsState: TransactionsInitialState(),
       creditLineState: CreditLineInitialState(),
       repaymentReminderState: RepaymentReminderInitialState(),
-      changeRepaymentState: ChangeRepaymentInitialState(),
+      cardApplicationState: CardApplicationInitialState(),
       billsState: BillsInitialState(),
       moreCreditState: MoreCreditInitialState(),
       bankCardState: BankCardInitialState(),
@@ -71,7 +71,7 @@ class AppState extends Equatable {
         transactionsState,
         creditLineState,
         repaymentReminderState,
-        changeRepaymentState,
+        cardApplicationState,
         billsState,
         moreCreditState,
         bankCardState,

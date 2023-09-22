@@ -57,7 +57,7 @@ Store<AppState> _buildStore() {
     transactionService: TransactionService(),
     creditLineService: CreditLineService(),
     repaymentReminderService: RepaymentReminderService(),
-    changeRepaymentService: ChangeRepaymentService(),
+    cardApplicationService: CardApplicationService(),
     billService: BillService(),
     moreCreditService: MoreCreditService(),
     bankCardService: BankCardService(),

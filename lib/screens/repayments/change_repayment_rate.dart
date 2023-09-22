@@ -5,10 +5,12 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
+import 'package:solarisdemo/infrastructure/repayments/change_repayment/change_repayment_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/repayments/change_repayment/change_repayment_action.dart';
 import 'package:solarisdemo/screens/repayments/repayment_successfully_changed.dart';
 import 'package:solarisdemo/screens/repayments/repayments_screen.dart';
+import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/modal.dart';
@@ -24,7 +26,7 @@ class ChangeRepaymentRateScreen extends StatefulWidget {
 }
 
 class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
-  final TextEditingController _initialFixedRepayment = TextEditingController(text: '500.00');
+  final TextEditingController _initialFixedRepayment = TextEditingController(text: '1');
   bool _canContinue = false;
 
   @override
@@ -54,112 +56,150 @@ class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
       );
     }
 
-    return ScreenScaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverFillRemaining(
-            hasScrollBody: false,
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  AppToolbar(
-                    onBackButtonPressed: (_canContinue == true) ? backWithoutSaving : null,
-                  ),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            'Change repayment rate',
-                            style: ClientConfig.getTextStyleScheme().heading1,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        Text.rich(
-                          TextSpan(
-                            style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                            children: [
-                              const TextSpan(
-                                text:
-                                    'We provide fixed repayment options with flexibility. You can select your preferred fixed rate, ranging from a minimum of ',
-                              ),
-                              TextSpan(
-                                text: '€500',
-                                style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
-                              ),
-                              const TextSpan(
-                                text: ' to a maximum of ',
-                              ),
-                              TextSpan(
-                                text: '€9,000',
-                                style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
-                              ),
-                              const TextSpan(
-                                text: '.',
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                        FixedRepayment(
-                          controller: _initialFixedRepayment,
-                          onFixedChanged: (value) {
-                            setState(() {
-                              _canContinue = value > 500 && value <= 9000;
-                            });
-                          },
-                        ),
-                        const SizedBox(height: 24),
-                        const PercentageRepayment(),
-                        const Spacer(),
-                        SizedBox(
-                          width: double.infinity,
-                          height: 48,
-                          child: Button(
-                            text: "Save changes",
-                            disabledColor: const Color(0xFFDFE2E6),
-                            color: ClientConfig.getColorScheme().tertiary,
-                            textColor: ClientConfig.getColorScheme().surface,
-                            onPressed: _canContinue
-                                ? () {
-                                    final valueForRepayment = _initialFixedRepayment.text;
-                                    final procentualValue = 5;
+    return StoreConnector<AppState, CardApplicationViewModel>(
+        onInit: (store) => store.dispatch(GetCardApplicationCommandAction(user: user)),
+        converter: (store) => CardApplicationPresenter.presentCardApplication(
+              cardApplicationState: store.state.cardApplicationState,
+              user: user,
+            ),
+        // onDidChange: (previousViewModel, newViewModel) {
+        //   if (previousViewModel is CardApplicationLoadingViewModel && newViewModel is CardApplicationUpdatedViewModel) {
+        //     Navigator.pushNamed(context, RepaymentSuccessfullyChangedScreen.routeName,
+        //         arguments: RepaymentSuccessfullyScreenParams(
+        //           fixedRate: newViewModel.cardApplication.repaymentOptions!.minimumAmountLowerThreshold.value / 100,
+        //           interestRate: 5,
+        //         ));
+        //   }
+        // },
+        builder: (context, viewModel) {
+          if (viewModel is CardApplicationErrorViewModel) {
+            return const Center(child: Text("Error"));
+          }
 
-                                    StoreProvider.of<AppState>(context).dispatch(
-                                      UpdateChangeRepaymentCommandAction(
-                                        user: user,
-                                        fixedRate: double.parse(valueForRepayment),
+          if (viewModel is CardApplicationFetchedViewModel) {
+            return ScreenScaffold(
+              body: CustomScrollView(
+                slivers: [
+                  SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          AppToolbar(
+                            onBackButtonPressed: (_canContinue == true) ? backWithoutSaving : null,
+                          ),
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    'Change repayment rate',
+                                    style: ClientConfig.getTextStyleScheme().heading1,
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                                Text.rich(
+                                  TextSpan(
+                                    style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                                    children: [
+                                      const TextSpan(
+                                        text:
+                                            'We provide fixed repayment options with flexibility. You can select your preferred fixed rate, ranging from a minimum of ',
                                       ),
-                                    );
+                                      TextSpan(
+                                        text: Format.currency(viewModel
+                                                .cardApplication.repaymentOptions!.minimumAmountLowerThreshold.value /
+                                            100),
+                                        style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
+                                      ),
+                                      const TextSpan(
+                                        text: ' to a maximum of ',
+                                      ),
+                                      TextSpan(
+                                        text: Format.currency(viewModel
+                                                .cardApplication.repaymentOptions!.minimumAmountUpperThreshold.value /
+                                            100),
+                                        style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
+                                      ),
+                                      const TextSpan(
+                                        text: '.',
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(height: 24),
+                                FixedRepayment(
+                                  viewModel: viewModel,
+                                  controller: _initialFixedRepayment,
+                                  onFixedChanged: (value) {
+                                    setState(() {
+                                      _canContinue = value >
+                                              (viewModel.cardApplication.repaymentOptions!.minimumAmountLowerThreshold
+                                                      .value /
+                                                  100) &&
+                                          value <=
+                                              (viewModel.cardApplication.repaymentOptions!.minimumAmountUpperThreshold
+                                                      .value /
+                                                  100);
+                                    });
+                                  },
+                                ),
+                                const SizedBox(height: 24),
+                                const PercentageRepayment(),
+                                const Spacer(),
+                                SizedBox(
+                                  width: double.infinity,
+                                  height: 48,
+                                  child: Button(
+                                    text: "Save changes",
+                                    disabledColor: const Color(0xFFDFE2E6),
+                                    color: ClientConfig.getColorScheme().tertiary,
+                                    textColor: ClientConfig.getColorScheme().surface,
+                                    onPressed: _canContinue
+                                        ? () {
+                                            final valueForRepayment = _initialFixedRepayment.text;
+                                            final procentualValue = 5;
 
-                                    Navigator.pushNamed(context, RepaymentSuccessfullyChangedScreen.routeName,
-                                        arguments: RepaymentSuccessfullyScreenParams(
-                                          fixedRate: double.parse(valueForRepayment),
-                                          interestRate: procentualValue,
-                                        ));
-                                  }
-                                : null,
+                                            StoreProvider.of<AppState>(context).dispatch(
+                                              UpdateCardApplicationCommandAction(
+                                                user: user,
+                                                fixedRate: double.parse(valueForRepayment),
+                                                id: viewModel.cardApplication.id,
+                                              ),
+                                            );
+
+                                            Navigator.pushNamed(context, RepaymentSuccessfullyChangedScreen.routeName,
+                                                arguments: RepaymentSuccessfullyScreenParams(
+                                                  fixedRate: double.parse(valueForRepayment),
+                                                  interestRate: procentualValue,
+                                                ));
+                                          }
+                                        : null,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                              ],
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 8),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ],
               ),
-            ),
-          ),
-        ],
-      ),
-    );
+            );
+          }
+
+          return const Center(child: CircularProgressIndicator());
+        });
   }
 }
 
@@ -250,11 +290,13 @@ class CustomAction extends StatelessWidget {
 class FixedRepayment extends StatelessWidget {
   final TextEditingController controller;
   final void Function(double) onFixedChanged;
+  final CardApplicationFetchedViewModel viewModel;
 
   const FixedRepayment({
     super.key,
     required this.controller,
     required this.onFixedChanged,
+    required this.viewModel,
   });
 
   @override
@@ -272,6 +314,7 @@ class FixedRepayment extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         CustomTextField(
+          viewModel: viewModel,
           controller: controller,
           onChanged: (textValue) {
             final value = double.tryParse(textValue);
@@ -289,8 +332,9 @@ class FixedRepayment extends StatelessWidget {
 class CustomTextField extends StatefulWidget {
   final TextEditingController? controller;
   final void Function(String)? onChanged;
+  final CardApplicationFetchedViewModel viewModel;
 
-  const CustomTextField({super.key, this.controller, this.onChanged});
+  const CustomTextField({super.key, this.controller, this.onChanged, required this.viewModel});
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -333,6 +377,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
                 controller: widget.controller,
                 onChanged: (text) {
+                  var lowerAmount =
+                      widget.viewModel.cardApplication.repaymentOptions!.minimumAmountLowerThreshold.value / 100;
+                  var upperAmount =
+                      widget.viewModel.cardApplication.repaymentOptions!.minimumAmountUpperThreshold.value / 100;
+
                   if (text.isEmpty) text = '0';
 
                   if (widget.onChanged != null) {
@@ -340,15 +389,15 @@ class _CustomTextFieldState extends State<CustomTextField> {
                   }
 
                   setState(() {
-                    _inRange = (double.parse(text) < 500 || double.parse(text) > 9000);
+                    _inRange = (double.parse(text) < lowerAmount || double.parse(text) > upperAmount);
                   });
 
-                  if (double.parse(text) < 500) {
-                    errorMessage = 'Rate is too low. The minimum is €500.';
+                  if (double.parse(text) < lowerAmount) {
+                    errorMessage = 'Rate is too low. The minimum is ${Format.currency(lowerAmount)}.';
                   }
 
-                  if (double.parse(text) > 9000) {
-                    errorMessage = 'Rate is too high. The maximum is €9,000.';
+                  if (double.parse(text) > upperAmount) {
+                    errorMessage = 'Rate is too high. The maximum is ${Format.currency(upperAmount)}.';
                   }
                 },
                 keyboardType: const TextInputType.numberWithOptions(decimal: true),
