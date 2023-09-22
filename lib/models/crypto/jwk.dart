@@ -37,10 +37,10 @@ class Jwk {
 
   String toAlphabeticJson() {
     Map<String, dynamic> jwkMap = {
-      'kty': kty,
-      'alg': alg,
-      'use': use,
-      'kid': kid,
+      'kty': kty ?? _defaultJWKkty,
+      'alg': alg ?? _defaultJWKalg,
+      'use': use ?? _defaultJWKuse,
+      'kid': kid ?? "",
       'n': n,
       'e': e,
     };
