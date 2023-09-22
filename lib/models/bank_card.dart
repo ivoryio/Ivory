@@ -70,7 +70,7 @@ class BankCard {
 
   factory BankCard.fromJson(Map<String, dynamic> json) => BankCard(
         id: json["id"],
-        accountId: json["account_id"],
+        accountId: json["account_id"] ?? '',
         status: getCardStatus(json["status"] ?? BankCardStatus.INACTIVE.name),
         type:
             getCardType(json["type"] ?? BankCardType.VIRTUAL_VISA_CREDIT.name),
@@ -194,16 +194,16 @@ class BankCardFetchedDetails {
   });
 }
 
-String createCardToJson(CreateBankCard data) => json.encode(data.toJson());
+String createCardToJson(CreateBankCardReqBody data) => json.encode(data.toJson());
 
-class CreateBankCard {
+class CreateBankCardReqBody {
   late String line1;
   late String line2;
   BankCardType type;
   String businessId;
   late String reference;
 
-  CreateBankCard(
+  CreateBankCardReqBody(
     String firstName,
     String lastName,
     this.type,

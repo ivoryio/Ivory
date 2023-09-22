@@ -7,6 +7,7 @@ import 'package:solarisdemo/infrastructure/bank_card/bank_card_presenter.dart';
 import 'package:solarisdemo/models/bank_card.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
+import 'package:solarisdemo/redux/bank_card/bank_card_state.dart';
 import 'package:solarisdemo/screens/wallet/card_details/card_details_info.dart';
 import 'package:solarisdemo/screens/wallet/card_details/card_details_screen.dart';
 import 'package:solarisdemo/screens/wallet/change_pin/card_change_pin_choose_screen.dart';
@@ -61,6 +62,11 @@ class CardActions extends StatelessWidget {
               }
               if (viewModel.bankCard!.status == BankCardStatus.INACTIVE) {
                 return InactiveCard(
+                  viewModel: viewModel,
+                );
+              }
+              if (viewModel.bankCard!.status == BankCardStatus.BLOCKED) {
+                return FrozenCard(
                   viewModel: viewModel,
                 );
               }
@@ -141,11 +147,11 @@ class ActiveCard extends StatelessWidget {
               icon: Icons.remove_red_eye_outlined,
               textLabel: 'Details',
               onPressed: () async {
-                  Navigator.pushNamed(
-                    context,
-                    BankCardDetailsScreen.routeName,
+                Navigator.pushNamed(
+                  context,
+                  BankCardDetailsScreen.routeName,
                   arguments: CardScreenParams(card: viewModel.bankCard!),
-                );       
+                );
               },
             ),
             CardOptionsButton(
@@ -161,7 +167,16 @@ class ActiveCard extends StatelessWidget {
             CardOptionsButton(
               icon: Icons.ac_unit,
               textLabel: 'Freeze',
-              onPressed: () {},
+              onPressed: () {
+                StoreProvider.of<AppState>(context).dispatch(
+                  BankCardFreezeCommandAction(
+                    bankCards:
+                        (StoreProvider.of<AppState>(context).state.bankCardsState as BankCardsFetchedState).bankCards,
+                    user: viewModel.user!,
+                    bankCard: viewModel.bankCard!,
+                  ),
+                );
+              },
             ),
           ],
         ),
@@ -226,7 +241,67 @@ class ActiveCard extends StatelessWidget {
               actionSwitch: false,
             ),
             IvoryListItemWithAction(
-              leftIcon: Icons.delete,
+              leftIcon: Icons.delete_outline,
+              actionName: 'Close card',
+              actionDescription: 'The card will be permanently closed',
+              rightIcon: Icons.arrow_forward_ios,
+              actionSwitch: false,
+            ),
+          ],
+        )
+      ],
+    );
+  }
+}
+
+class FrozenCard extends StatelessWidget {
+  final BankCardFetchedViewModel viewModel;
+  const FrozenCard({super.key, required this.viewModel});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CardOptionsButton(
+              icon: Icons.ac_unit,
+              textLabel: 'Unfreeze',
+              onPressed: () async {
+                StoreProvider.of<AppState>(context).dispatch(
+                  BankCardUnfreezeCommandAction(
+                    user: viewModel.user!,
+                    bankCard: viewModel.bankCard!,
+                    bankCards:
+                        (StoreProvider.of<AppState>(context).state.bankCardsState as BankCardsFetchedState).bankCards,
+
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+        const SizedBox(height: 40),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const ItemTitle(
+              nameOfActionTitle: 'If your card is compromised',
+            ),
+            if (viewModel.bankCard!.type.toString().contains('virtual'))
+            const SizedBox(height: 28),
+            if (viewModel.bankCard!.type.toString().contains('virtual'))
+            IvoryListItemWithAction(
+              leftIcon: Icons.credit_card,
+              actionName: 'Replace card',
+              actionDescription: 'If your card is damaged',
+              rightIcon: Icons.arrow_forward_ios,
+              actionSwitch: false,
+            ),
+            const SizedBox(height: 32),
+            IvoryListItemWithAction(
+              leftIcon: Icons.delete_outline,
               actionName: 'Close card',
               actionDescription: 'The card will be permanently closed',
               rightIcon: Icons.arrow_forward_ios,

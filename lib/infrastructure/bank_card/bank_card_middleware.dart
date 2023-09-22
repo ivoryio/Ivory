@@ -19,6 +19,28 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
   call(Store<AppState> store, action, NextDispatcher next) async {
     next(action);
 
+    if (action is CreateCardCommandAction) {
+      store.dispatch(BankCardsLoadingEventAction());
+      final response = await _bankCardService.createBankCard(
+        user: action.user.cognito,
+        reqBody: CreateBankCardReqBody(
+          action.firstName,
+          action.lastName,
+          action.type,
+          action.businessId,
+        ),
+      );
+
+      if (response is CreateBankCardSuccessResponse) {
+        store.dispatch(UpdateBankCardsEventAction(
+          bankCards: [],
+          updatedCard: response.bankCard,
+        ));
+      } else {
+        store.dispatch(BankCardFailedEventAction());
+      }
+    }
+
     if (action is GetBankCardCommandAction) {
       store.dispatch(BankCardLoadingEventAction());
       final response = await _bankCardService.getBankCardById(
@@ -33,6 +55,22 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
         ));
       } else {
         store.dispatch(BankCardFailedEventAction());
+      }
+    }
+
+    if (action is GetBankCardsCommandAction) {
+      store.dispatch(BankCardsLoadingEventAction());
+
+      final response = await _bankCardService.getBankCards(
+        user: action.user.cognito,
+      );
+
+      if (response is GetBankCardsServiceResponse) {
+        store.dispatch(BankCardsFetchedEventAction(
+          bankCards: response.bankCards,
+        ));
+      } else {
+        store.dispatch(BankCardsFailedEventAction());
       }
     }
 
@@ -88,9 +126,10 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
       final restrictedKeypair = await _deviceService.getDeviceKeyPairs(restricted: true);
       if (restrictedKeypair == null) {
         store.dispatch(BankCardFailedEventAction());
+        return null;
       }
 
-      final restrictedPrivateKey = restrictedKeypair!.privateKey;
+      final restrictedPrivateKey = restrictedKeypair.privateKey;
       final signature = _deviceService.generateSignature(
         privateKey: restrictedPrivateKey,
         stringToSign: encryptedPin,
@@ -218,6 +257,48 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
         store.dispatch(BankCardDetailsFetchedEventAction(
           cardDetails: response.cardDetails,
           bankCard: action.bankCard,
+        ));
+      } else {
+        store.dispatch(BankCardFailedEventAction());
+      }
+    }
+
+    if (action is BankCardFreezeCommandAction) {
+      store.dispatch(BankCardLoadingEventAction());
+      final response = await _bankCardService.freezeCard(
+        cardId: action.bankCard.id,
+        user: action.user.cognito,
+      );
+
+      if (response is FreezeBankCardSuccessResponse) {
+        store.dispatch(BankCardFetchedEventAction(
+          bankCard: response.bankCard,
+          user: action.user,
+        ));
+        store.dispatch(UpdateBankCardsEventAction(
+          bankCards: action.bankCards,
+          updatedCard: response.bankCard,
+        ));
+      } else {
+        store.dispatch(BankCardFailedEventAction());
+      }
+    }
+
+    if (action is BankCardUnfreezeCommandAction) {
+      store.dispatch(BankCardLoadingEventAction());
+      final response = await _bankCardService.unfreezeCard(
+        cardId: action.bankCard.id,
+        user: action.user.cognito,
+      );
+
+      if (response is UnfreezeBankCardSuccessResponse) {
+        store.dispatch(BankCardFetchedEventAction(
+          bankCard: response.bankCard,
+          user: action.user,
+        ));
+        store.dispatch(UpdateBankCardsEventAction(
+          bankCards: action.bankCards,
+          updatedCard: response.bankCard,
         ));
       } else {
         store.dispatch(BankCardFailedEventAction());

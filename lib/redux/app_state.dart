@@ -20,6 +20,7 @@ class AppState extends Equatable {
   final BillsState billsState;
   final MoreCreditState moreCreditState;
   final BankCardState bankCardState;
+  final BankCardsState bankCardsState;
   final CategoriesState categoriesState;
   final ReferenceAccountState referenceAccountState;
   final PersonAccountState personAccountState;
@@ -35,6 +36,7 @@ class AppState extends Equatable {
     required this.billsState,
     required this.moreCreditState,
     required this.bankCardState,
+    required this.bankCardsState,
     required this.categoriesState,
     required this.referenceAccountState,
     required this.personAccountState,
@@ -52,6 +54,7 @@ class AppState extends Equatable {
       billsState: BillsInitialState(),
       moreCreditState: MoreCreditInitialState(),
       bankCardState: BankCardInitialState(),
+      bankCardsState: BankCardsInitialState(),
       categoriesState: CategoriesInitialState(),
       referenceAccountState: ReferenceAccountInitialState(),
       personAccountState: PersonAccountInitialState(),
@@ -70,6 +73,7 @@ class AppState extends Equatable {
         billsState,
         moreCreditState,
         bankCardState,
+        bankCardsState,
         categoriesState,
         referenceAccountState,
         personAccountState,

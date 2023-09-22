@@ -110,9 +110,9 @@ class BankCardConfirmPinConfirmScreen extends StatelessWidget {
 }
 
 class ConfirmPinBody extends StatefulWidget {
-  BankCardViewModel viewModel;
+  final BankCardViewModel viewModel;
   final ValueNotifier<bool> matchingPinErrorNotifier;
-  ConfirmPinBody({
+  const ConfirmPinBody({
     Key? key,
     required this.viewModel,
     required this.matchingPinErrorNotifier,
