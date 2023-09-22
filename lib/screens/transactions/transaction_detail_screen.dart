@@ -17,6 +17,8 @@ import 'package:solarisdemo/widgets/ivory_list_tile.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/spaced_column.dart';
 
+import '../../widgets/account_balance_text.dart';
+
 class TransactionDetailScreen extends StatelessWidget {
   static const routeName = "/transactionDetailScreen";
 
@@ -216,7 +218,11 @@ class _Content extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Text(Format.euro(amountValue.value), style: ClientConfig.getTextStyleScheme().heading1),
+                        AccountBalanceText(
+                          value: amountValue.value,
+                          numberStyle: ClientConfig.getTextStyleScheme().heading1,
+                          centsStyle: ClientConfig.getTextStyleScheme().heading3,
+                        ),
                         if (amountExplainerWidget != null)
                           Padding(
                             padding: const EdgeInsets.only(left: 2),
