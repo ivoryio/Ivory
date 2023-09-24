@@ -44,7 +44,6 @@ class SettingsScreen extends StatelessWidget {
                     actionName: 'Account',
                     actionDescription: 'Personal info & account settings',
                     rightIcon: Icons.arrow_forward_ios,
-                    actionSwitch: false,
                   ),
                   const SizedBox(
                     height: 32,
@@ -54,7 +53,6 @@ class SettingsScreen extends StatelessWidget {
                     actionName: 'App settings',
                     actionDescription: 'Language, FaceID, notifications, etc.',
                     rightIcon: Icons.arrow_forward_ios,
-                    actionSwitch: false,
                   ),
                   const SizedBox(
                     height: 32,
@@ -64,7 +62,6 @@ class SettingsScreen extends StatelessWidget {
                     actionName: 'Security',
                     actionDescription: 'Password & device pairing',
                     rightIcon: Icons.arrow_forward_ios,
-                    actionSwitch: false,
                     onPressed: () => Navigator.of(context).pushNamed(SettingsSecurityScreen.routeName),
                   ),
                   const SizedBox(
@@ -75,7 +72,6 @@ class SettingsScreen extends StatelessWidget {
                     actionName: 'Help',
                     actionDescription: 'Contact us',
                     rightIcon: Icons.arrow_forward_ios,
-                    actionSwitch: false,
                   ),
                   const SizedBox(
                     height: 32,
@@ -85,7 +81,6 @@ class SettingsScreen extends StatelessWidget {
                     actionName: 'FAQ & legal documents',
                     actionDescription: 'FAQ, T&Cs, privacy policy',
                     rightIcon: Icons.arrow_forward_ios,
-                    actionSwitch: false,
                   ),
                   const SizedBox(
                     height: 32,
@@ -94,7 +89,6 @@ class SettingsScreen extends StatelessWidget {
                     leftIcon: Icons.logout,
                     actionName: 'Log out',
                     rightIcon: Icons.arrow_forward_ios,
-                    actionSwitch: false,
                   ),
                   const Spacer(),
                   const Row(

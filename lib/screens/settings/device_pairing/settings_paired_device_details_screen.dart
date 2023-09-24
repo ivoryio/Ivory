@@ -220,7 +220,6 @@ class SettingsPairedDeviceDetailsScreen extends StatelessWidget {
                         actionName: 'Unpair device',
                         rightIcon: Icons.arrow_forward_ios,
                         rightIconColor: ClientConfig.getClientConfig().uiSettings.colorscheme.error,
-                        actionSwitch: false,
                         onPressed: () {
                           showBottomModal(
                               context: context,
