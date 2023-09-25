@@ -60,6 +60,7 @@ class BankCardsScreen extends StatelessWidget {
                 const SizedBox(height: 16),
                 Expanded(
                   child: SingleChildScrollView(
+                    physics: const ClampingScrollPhysics(),
                     child: _Content(cards: viewModel.bankCards!),
                   ),
                 ),

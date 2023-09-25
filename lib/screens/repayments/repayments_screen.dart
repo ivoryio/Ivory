@@ -36,6 +36,7 @@ class RepaymentsScreen extends StatelessWidget {
 
     return ScreenScaffold(
       body: SingleChildScrollView(
+        physics: const ClampingScrollPhysics(),
         padding: EdgeInsets.symmetric(
             horizontal: ClientConfig.getCustomClientUiSettings()
                 .defaultScreenHorizontalPadding),
