@@ -14,7 +14,7 @@ class BankCardPresenter {
     } else if (bankCardState is BankCardLoadingState) {
       return BankCardLoadingViewModel();
     } else if (bankCardState is BankCardErrorState) {
-      return BankCardErrorViewModel();
+      return BankCardErrorViewModel(errorMessage: bankCardState.message);
     } else if (bankCardState is BankCardNoBoundedDevicesState) {
       return BankCardNoBoundedDevicesViewModel(
         bankCard: bankCardState.bankCard,
@@ -75,8 +75,9 @@ abstract class BankCardViewModel extends Equatable {
   final List<BankCard>? bankCards;
   final AuthenticatedUser? user;
   final BankCardFetchedDetails? cardDetails;
+  final String? errorMessage;
 
-  const BankCardViewModel({this.user, this.pin, this.bankCard, this.cardDetails, this.bankCards});
+  const BankCardViewModel({this.user, this.pin, this.bankCard, this.cardDetails, this.bankCards, this.errorMessage});
 
   @override
   List<Object?> get props => [pin];
@@ -86,7 +87,14 @@ class BankCardInitialViewModel extends BankCardViewModel {}
 
 class BankCardLoadingViewModel extends BankCardViewModel {}
 
-class BankCardErrorViewModel extends BankCardViewModel {}
+class BankCardErrorViewModel extends BankCardViewModel {
+  const BankCardErrorViewModel({
+    required String errorMessage,
+  }) : super(errorMessage: errorMessage);
+
+  @override
+  List<Object?> get props => [errorMessage];
+}
 
 class BankCardNoBoundedDevicesViewModel extends BankCardViewModel {
   const BankCardNoBoundedDevicesViewModel({
@@ -148,7 +156,6 @@ class BankCardDetailsFetchedViewModel extends BankCardViewModel {
 }
 
 class BankCardPinChangedViewModel extends BankCardViewModel {}
-
 
 abstract class BankCardsViewModel extends Equatable {
   final List<BankCard>? bankCards;

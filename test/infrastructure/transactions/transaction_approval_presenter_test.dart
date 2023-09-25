@@ -157,7 +157,7 @@ void main() {
       message: notificationMessage,
     );
     final transactionApprovalState = TransactionApprovalInitialState();
-    final bankCardState = BankCardErrorState();
+    final bankCardState = BankCardErrorState('');
 
     // when
     final viewModel = TransactionApprovalPresenter.present(

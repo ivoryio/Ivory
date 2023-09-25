@@ -115,8 +115,8 @@ class BankCardDetailsScreen extends StatelessWidget {
                   );
                 }
                 if (viewModel is BankCardErrorViewModel) {
-                  return const Center(
-                    child: Text('Error'),
+                  return Center(
+                    child: Text(viewModel.errorMessage!),
                   );
                 }
                 if (viewModel is BankCardDetailsFetchedViewModel) {

@@ -92,7 +92,11 @@ class BankCardLoadingEventAction {}
 
 class BankCardsLoadingEventAction {}
 
-class BankCardFailedEventAction {}
+class BankCardFailedEventAction {
+  final String message;
+
+  BankCardFailedEventAction({this.message = ''});
+}
 
 class BankCardsFailedEventAction {}
 

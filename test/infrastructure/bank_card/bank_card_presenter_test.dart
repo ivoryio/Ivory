@@ -51,11 +51,11 @@ void main() {
 
   test("when fetching is failed should return error", () {
     //given
-    final bankCardState = BankCardErrorState();
+    final bankCardState = BankCardErrorState('');
     //when
     final viewModel = BankCardPresenter.presentBankCard(bankCardState: bankCardState, user: user);
     //then
-    expect(viewModel, BankCardErrorViewModel());
+    expect(viewModel, BankCardErrorViewModel(errorMessage: ''));
   });
 
   test("When fetching is successful should return a card", () {

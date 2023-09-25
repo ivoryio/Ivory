@@ -191,40 +191,40 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
           message: "'Please use biometric authentication to view card details.'");
 
       if (!isBiometricsAuthenticated) {
-        store.dispatch(BankCardFailedEventAction());
+        store.dispatch(BankCardFailedEventAction(message: '!isBiometricsAuthenticated'));
         return null;
       }
 
       final rsaKeyPair = _deviceService.generateRSAKey();
       if (rsaKeyPair == null) {
-        store.dispatch(BankCardFailedEventAction());
+        store.dispatch(BankCardFailedEventAction(message: 'rsaKeyPair == null'));
         return null;
       }
 
       final jwk = _deviceService.convertRSAPublicKeyToJWK(rsaPublicKey: rsaKeyPair.publicKey);
       if (jwk == null) {
-        store.dispatch(BankCardFailedEventAction());
+        store.dispatch(BankCardFailedEventAction(message: 'jwk == null'));
         return null;
       }
 
       String? consentId = await _deviceService.getConsentId();
 
       if (consentId == null) {
-        store.dispatch(BankCardFailedEventAction());
+        store.dispatch(BankCardFailedEventAction(message: 'consentId == null'));
         return null;
       }
 
       String? deviceFingerPrint = await _deviceService.getDeviceFingerprint(consentId);
 
       if (deviceFingerPrint == null || deviceFingerPrint.isEmpty) {
-        store.dispatch(BankCardFailedEventAction());
+        store.dispatch(BankCardFailedEventAction(message: 'deviceFingerPrint == null || deviceFingerPrint.isEmpty'));
         return null;
       }
 
       final existingRestrictedKeyPair = await _deviceService.getDeviceKeyPairs(restricted: true);
 
       if (existingRestrictedKeyPair == null) {
-        store.dispatch(BankCardFailedEventAction());
+        store.dispatch(BankCardFailedEventAction(message: 'existingRestrictedKeyPair == null'));
         return null;
       }
 
@@ -234,7 +234,7 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
           privateKey: existingRestrictedKeyPair.privateKey, stringToSign: alphabeticJWK);
 
       if (signature == null) {
-        store.dispatch(BankCardFailedEventAction());
+        store.dispatch(BankCardFailedEventAction(message: 'signature == null'));
         return null;
       }
 
@@ -259,7 +259,7 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
           bankCard: action.bankCard,
         ));
       } else {
-        store.dispatch(BankCardFailedEventAction());
+        store.dispatch(BankCardFailedEventAction(message: 'error at final request'));
       }
     }
 
