@@ -273,7 +273,6 @@ class FrozenCard extends StatelessWidget {
                     bankCard: viewModel.bankCard!,
                     bankCards:
                         (StoreProvider.of<AppState>(context).state.bankCardsState as BankCardsFetchedState).bankCards,
-
                   ),
                 );
               },
@@ -287,23 +286,20 @@ class FrozenCard extends StatelessWidget {
             const ItemTitle(
               nameOfActionTitle: 'If your card is compromised',
             ),
+            if (viewModel.bankCard!.type.toString().contains('virtual')) const SizedBox(height: 28),
             if (viewModel.bankCard!.type.toString().contains('virtual'))
-            const SizedBox(height: 28),
-            if (viewModel.bankCard!.type.toString().contains('virtual'))
-            IvoryListItemWithAction(
-              leftIcon: Icons.credit_card,
-              actionName: 'Replace card',
-              actionDescription: 'If your card is damaged',
-              rightIcon: Icons.arrow_forward_ios,
-              actionSwitch: false,
-            ),
+              IvoryListItemWithAction(
+                leftIcon: Icons.credit_card,
+                actionName: 'Replace card',
+                actionDescription: 'If your card is damaged',
+                rightIcon: Icons.arrow_forward_ios,
+              ),
             const SizedBox(height: 32),
             IvoryListItemWithAction(
               leftIcon: Icons.delete_outline,
               actionName: 'Close card',
               actionDescription: 'The card will be permanently closed',
               rightIcon: Icons.arrow_forward_ios,
-              actionSwitch: false,
             ),
           ],
         )
