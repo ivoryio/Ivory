@@ -26,14 +26,14 @@ class ChangeRepaymentRateScreen extends StatefulWidget {
 }
 
 class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
-  final TextEditingController _initialFixedRepayment = TextEditingController(text: '1');
+  final TextEditingController _initialFixedRepayment = TextEditingController();
   bool _canContinue = false;
 
   @override
   void initState() {
     super.initState();
     _initialFixedRepayment.addListener(() {
-      if (_canContinue == true) {
+      if (_canContinue == false) {
         return;
       }
     });
@@ -79,21 +79,17 @@ class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
                         cardApplicationState: store.state.cardApplicationState,
                         user: user,
                       ),
-                      // onDidChange: (previousViewModel, newViewModel) {
-                      //   if (previousViewModel is CardApplicationLoadingViewModel && newViewModel is CardApplicationUpdatedViewModel) {
-                      //     Navigator.pushNamed(context, RepaymentSuccessfullyChangedScreen.routeName,
-                      //         arguments: RepaymentSuccessfullyScreenParams(
-                      //           fixedRate: newViewModel.cardApplication.repaymentOptions!.minimumAmountLowerThreshold.value / 100,
-                      //           interestRate: 5,
-                      //         ));
-                      //   }
-                      // },
                       builder: (context, viewModel) {
                         if (viewModel is CardApplicationErrorViewModel) {
                           return const Center(child: Text("Error"));
                         }
 
                         if (viewModel is CardApplicationFetchedViewModel) {
+                          var lowerAmount =
+                              viewModel.cardApplication.repaymentOptions!.minimumAmountUpperThreshold.value / 100;
+                          var upperAmount =
+                              viewModel.cardApplication.repaymentOptions!.minimumAmountUpperThreshold.value / 100;
+
                           return Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -115,18 +111,14 @@ class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
                                           'We provide fixed repayment options with flexibility. You can select your preferred fixed rate, ranging from a minimum of ',
                                     ),
                                     TextSpan(
-                                      text: Format.currency(viewModel
-                                              .cardApplication.repaymentOptions!.minimumAmountLowerThreshold.value /
-                                          100),
+                                      text: Format.currency(lowerAmount * 0.05),
                                       style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
                                     ),
                                     const TextSpan(
                                       text: ' to a maximum of ',
                                     ),
                                     TextSpan(
-                                      text: Format.currency(viewModel
-                                              .cardApplication.repaymentOptions!.minimumAmountUpperThreshold.value /
-                                          100),
+                                      text: Format.currency(upperAmount * 0.9),
                                       style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
                                     ),
                                     const TextSpan(
@@ -141,14 +133,11 @@ class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
                                 controller: _initialFixedRepayment,
                                 onFixedChanged: (value) {
                                   setState(() {
-                                    var lowerAmount =
-                                        viewModel.cardApplication.repaymentOptions!.minimumAmountLowerThreshold.value /
-                                            100;
                                     var upperAmount =
                                         viewModel.cardApplication.repaymentOptions!.minimumAmountUpperThreshold.value /
                                             100;
 
-                                    _canContinue = value > lowerAmount && value <= upperAmount;
+                                    _canContinue = value >= (upperAmount * 0.05) && value <= (upperAmount * 0.9);
                                   });
                                 },
                               ),
@@ -345,6 +334,12 @@ class _CustomTextFieldState extends State<CustomTextField> {
   String errorMessage = '';
 
   @override
+  void initState() {
+    super.initState();
+    widget.controller!.text = (widget.viewModel.cardApplication.repaymentOptions!.minimumAmount.value / 100).toString();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final RegExp regExp = RegExp(r'^\d+\.?\d*$');
 
@@ -377,8 +372,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
                 controller: widget.controller,
                 onChanged: (text) {
-                  var lowerAmount =
-                      widget.viewModel.cardApplication.repaymentOptions!.minimumAmountLowerThreshold.value / 100;
                   var upperAmount =
                       widget.viewModel.cardApplication.repaymentOptions!.minimumAmountUpperThreshold.value / 100;
 
@@ -389,15 +382,15 @@ class _CustomTextFieldState extends State<CustomTextField> {
                   }
 
                   setState(() {
-                    _inRange = (double.parse(text) < lowerAmount || double.parse(text) > upperAmount);
+                    _inRange = (double.parse(text) < (upperAmount * 0.05) || double.parse(text) > (upperAmount * 0.9));
                   });
 
-                  if (double.parse(text) < lowerAmount) {
-                    errorMessage = 'Rate is too low. The minimum is ${Format.currency(lowerAmount)}.';
+                  if (double.parse(text) < (upperAmount * 0.05)) {
+                    errorMessage = 'Rate is too low. The minimum is ${Format.currency((upperAmount * 0.05))}.';
                   }
 
-                  if (double.parse(text) > upperAmount) {
-                    errorMessage = 'Rate is too high. The maximum is ${Format.currency(upperAmount)}.';
+                  if (double.parse(text) > (upperAmount * 0.9)) {
+                    errorMessage = 'Rate is too high. The maximum is ${Format.currency((upperAmount * 0.9))}.';
                   }
                 },
                 keyboardType: const TextInputType.numberWithOptions(decimal: true),
