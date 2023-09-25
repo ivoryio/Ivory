@@ -10,6 +10,7 @@ class BiometricsService {
       final canCheckBiometrics = await auth.canCheckBiometrics;
       if (!canCheckBiometrics) {
         // Biometric authentication is not available on the device.
+        print('Biometric authentication is not available on the device.');
         return false;
       }
 
