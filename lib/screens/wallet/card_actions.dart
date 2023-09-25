@@ -193,7 +193,6 @@ class ActiveCard extends StatelessWidget {
               actionName: 'Change PIN',
               actionDescription: 'For security or personal reasons',
               rightIcon: Icons.arrow_forward_ios,
-              actionSwitch: false,
               onPressed: () => Navigator.pushNamed(
                 context,
                 BankCardChangePinChooseScreen.routeName,
@@ -205,32 +204,33 @@ class ActiveCard extends StatelessWidget {
               actionName: 'Unblock card',
               actionDescription: 'After 3 incorrect PIN/CVV attempts',
               rightIcon: Icons.arrow_forward_ios,
-              actionSwitch: false,
             ),
             IvoryListItemWithAction(
               leftIcon: Icons.wifi_tethering_error,
               actionName: 'Contactless limit',
               actionDescription: 'For safe and mindful in-store payments',
               rightIcon: Icons.arrow_forward_ios,
-              actionSwitch: false,
             ),
             IvoryListItemWithAction(
               leftIcon: Icons.wifi_tethering,
               actionName: 'Contactless payments',
               actionDescription: 'Apple Pay won’t be affected',
               rightIcon: Icons.arrow_forward_ios,
+              actionSwitch: false,
             ),
             IvoryListItemWithAction(
               leftIcon: Icons.language,
               actionName: 'Online payments',
               actionDescription: 'Apple Pay won’t be affected',
               rightIcon: Icons.arrow_forward_ios,
+              actionSwitch: false,
             ),
             IvoryListItemWithAction(
               leftIcon: Icons.payments,
               actionName: 'ATM withdrawals',
               actionDescription: 'If you don’t plan to withdraw',
               rightIcon: Icons.arrow_forward_ios,
+              actionSwitch: false,
             ),
             const ItemTitle(nameOfActionTitle: 'Card management'),
             IvoryListItemWithAction(
@@ -238,14 +238,12 @@ class ActiveCard extends StatelessWidget {
               actionName: 'Replace card',
               actionDescription: 'If your card is damaged',
               rightIcon: Icons.arrow_forward_ios,
-              actionSwitch: false,
             ),
             IvoryListItemWithAction(
               leftIcon: Icons.delete_outline,
               actionName: 'Close card',
               actionDescription: 'The card will be permanently closed',
               rightIcon: Icons.arrow_forward_ios,
-              actionSwitch: false,
             ),
           ],
         )

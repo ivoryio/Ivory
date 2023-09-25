@@ -253,7 +253,6 @@ class SettingsDevicePairingScreen extends StatelessWidget {
             actionName: device.deviceName,
             actionDescription: 'ID: ${device.deviceId.substring(0, 13)}',
             rightIcon: Icons.arrow_forward_ios,
-            actionSwitch: false,
             onPressed: () {
               Navigator.pushNamed(
                 context,
