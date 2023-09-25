@@ -46,7 +46,6 @@ class HomeScreen extends StatelessWidget {
       ..getAccountSummary();
 
     return Screen(
-      // scrollPhysics: const ClampingScrollPhysics(),
       title: 'Welcome ${user.cognito.firstName}!',
       hideBackButton: true,
       appBarColor: ClientConfig.getColorScheme().primary,
