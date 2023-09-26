@@ -11,6 +11,7 @@ import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
 import 'package:solarisdemo/infrastructure/person/person_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/bills/bill_service.dart';
+import 'package:solarisdemo/infrastructure/repayments/change_repayment/change_repayment_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/more_credit/more_credit_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/reminder/repayment_reminder_service.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart';
@@ -30,6 +31,7 @@ Store<AppState> createTestStore({
   TransactionService? transactionService,
   CreditLineService? creditLineService,
   RepaymentReminderService? repaymentReminderService,
+  CardApplicationService? cardApplicationService,
   BillService? billService,
   MoreCreditService? moreCreditService,
   BankCardService? bankCardService,
@@ -48,6 +50,7 @@ Store<AppState> createTestStore({
     transactionService: transactionService ?? NotImplementedTransactionService(),
     creditLineService: creditLineService ?? NotImplementedCreditLineService(),
     repaymentReminderService: repaymentReminderService ?? NotImplementedRepaymentReminderService(),
+    cardApplicationService: cardApplicationService ?? NotImplementedCardApplicationService(),
     billService: billService ?? NotImplementedBillService(),
     moreCreditService: moreCreditService ?? NotImplementedMoreCreditService(),
     bankCardService: bankCardService ?? NotImplementedBankCardService(),
@@ -108,6 +111,18 @@ class NotImplementedCreditLineService extends CreditLineService {
 class NotImplementedRepaymentReminderService extends RepaymentReminderService {
   @override
   Future<RepaymentReminderServiceResponse> getRepaymentReminders({User? user}) {
+    throw UnimplementedError();
+  }
+}
+
+class NotImplementedCardApplicationService extends CardApplicationService {
+  @override
+  Future<ChangeRepaymentResponse> getCardApplication({User? user}) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<ChangeRepaymentResponse> updateChangeRepayment({User? user, required double fixedRate, required String id}) {
     throw UnimplementedError();
   }
 }
