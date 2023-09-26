@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 
 import '../config.dart';
 
+// ignore: must_be_immutable
 class IvoryListItemWithAction extends StatelessWidget {
   final IconData leftIcon;
   late Color? leftIconColor;
@@ -10,8 +12,9 @@ class IvoryListItemWithAction extends StatelessWidget {
   final String? actionDescription;
   final IconData rightIcon;
   late Color? rightIconColor;
-  final bool actionSwitch;
+  final bool? actionSwitch;
   final VoidCallback? onPressed;
+  final GlobalKey<ActionItemState> switchKey = GlobalKey<ActionItemState>();
 
   IvoryListItemWithAction({
     super.key,
@@ -21,20 +24,22 @@ class IvoryListItemWithAction extends StatelessWidget {
     this.actionDescription,
     required this.rightIcon,
     this.rightIconColor,
-    this.actionSwitch = true,
+    this.actionSwitch,
     this.onPressed,
   });
 
   @override
   Widget build(BuildContext context) {
-
     leftIconColor ??= ClientConfig.getColorScheme().secondary;
     rightIconColor ??= ClientConfig.getColorScheme().secondary;
 
-    return GestureDetector(
+    return InkWell(
       onTap: () {
         if (onPressed != null) {
           onPressed!();
+        }
+        if (actionSwitch != null) {
+          switchKey.currentState!.toggleSwitch();
         }
       },
       child: Row(
@@ -62,9 +67,11 @@ class IvoryListItemWithAction extends StatelessWidget {
           ),
           Container(
             padding: const EdgeInsets.only(right: 0),
-            child:
-                (actionSwitch == true)
-                ? const ActionItem()
+            child: (actionSwitch != null)
+                ? ActionItem(
+                    key: switchKey,
+                    initialSwitchValue: actionSwitch!,
+                  )
                 : Icon(
                     rightIcon,
                     color: rightIconColor,
@@ -78,14 +85,27 @@ class IvoryListItemWithAction extends StatelessWidget {
 }
 
 class ActionItem extends StatefulWidget {
-  const ActionItem({super.key});
+  final bool initialSwitchValue;
+  const ActionItem({super.key, required this.initialSwitchValue});
 
   @override
-  State<ActionItem> createState() => _ActionItemState();
+  State<ActionItem> createState() => ActionItemState();
 }
 
-class _ActionItemState extends State<ActionItem> {
-  bool _isSpendingLimitEnabled = false;
+class ActionItemState extends State<ActionItem> {
+  bool _switchValue = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _switchValue = widget.initialSwitchValue;
+  }
+
+  toggleSwitch() {
+    setState(() {
+      _switchValue = !_switchValue;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,11 +116,11 @@ class _ActionItemState extends State<ActionItem> {
       inactiveColor: const Color(0xFFB0B0B0),
       duration: const Duration(milliseconds: 50),
       toggleSize: 24.0,
-      value: _isSpendingLimitEnabled,
+      value: _switchValue,
       padding: 4,
       onToggle: (val) {
         setState(() {
-          _isSpendingLimitEnabled = val;
+          _switchValue = val;
         });
       },
     );

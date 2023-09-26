@@ -60,7 +60,7 @@ class FakeBankCardService extends BankCardService {
       ),
     );
   }
-  
+
   @override
   Future<BankCardServiceResponse> getCardDetails({
     required String cardId,
@@ -73,6 +73,96 @@ class FakeBankCardService extends BankCardService {
         cardExpiry: '11/24',
         cvv: '8315',
         cardNumber: '4526 1612 3862 1856',
+      ),
+    );
+  }
+
+  @override
+  Future<BankCardServiceResponse> getLatestPinKey({
+    required String cardId,
+    required User? user,
+  }) async {
+    return GetLatestPinKeySuccessResponse(
+      jwkJson: const {
+        "kid": "84b5eb09-72b4-4bb4-b105-4cfd11573136",
+        "kty": "RSA",
+        "use": "enc",
+        "alg": "RS256",
+        "n":
+            "0REZBtc6LmFoWgGe5esVU6QmtmSSnzQFNwnaUeMwVf-8OMa3uxZh1z4upxR80SbHhiPcAKcpkU-2GSE9MS7Fr6VG25tO7JsN8kPEZ59RzEiSn_8sd57AHaIPJnBUHfT5a7qgsgsoJNW6XISGaNfA4MiLskbCnQxDMaOEK9E7yYqC-do4arrqPy61l7gyWkG2IyZFWp48wiibmeBlHqBkihstD0mnXKbx--kjNx0xQ2s5gmvhO402-F4Vap1Yc3Ub1enG0H8u8sIIPG8JHIDO3GgX40WZAI3uRURi7346eWWl0RJ7Ai6Fy7sDFXsn6YiS0o9RegRWFufwMJ8TbIlm5w",
+        "e": "AQAB"
+      },
+    );
+  }
+
+  @override
+  Future<BankCardServiceResponse> changePin({
+    required String cardId,
+    required User? user,
+    required ChangePinRequestBody reqBody,
+  }) async {
+    return ChangePinSuccessResponse();
+  }
+
+  @override
+  Future<BankCardServiceResponse> freezeCard({
+    required String cardId,
+    required User? user,
+  }) async {
+    return FreezeBankCardSuccessResponse(
+      bankCard: BankCard(
+        id: "active-card-id",
+        accountId: "62a8f478184ae7cba59c633373c53286cacc",
+        status: BankCardStatus.BLOCKED,
+        type: BankCardType.VIRTUAL_VISA_CREDIT,
+        representation: BankCardRepresentation(
+          line1: "ACTIVE JOE",
+          line2: "ACTIVE JOE",
+          maskedPan: '493441******9641',
+          formattedExpirationDate: '06/26',
+        ),
+      ),
+    );
+  }
+
+  @override
+  Future<BankCardServiceResponse> unfreezeCard({
+    required String cardId,
+    required User? user,
+  }) async {
+    return UnfreezeBankCardSuccessResponse(
+      bankCard: BankCard(
+        id: "active-card-id",
+        accountId: "62a8f478184ae7cba59c633373c53286cacc",
+        status: BankCardStatus.ACTIVE,
+        type: BankCardType.VIRTUAL_VISA_CREDIT,
+        representation: BankCardRepresentation(
+          line1: "ACTIVE JOE",
+          line2: "ACTIVE JOE",
+          maskedPan: '493441******9641',
+          formattedExpirationDate: '06/26',
+        ),
+      ),
+    );
+  }
+
+  @override
+  Future<BankCardServiceResponse> createBankCard({
+    required CreateBankCardReqBody reqBody,
+    required User? user,
+  }) async {
+    return CreateBankCardSuccessResponse(
+      bankCard: BankCard(
+        id: "active-card-id",
+        accountId: "62a8f478184ae7cba59c633373c53286cacc",
+        status: BankCardStatus.ACTIVE,
+        type: BankCardType.VIRTUAL_VISA_CREDIT,
+        representation: BankCardRepresentation(
+          line1: "ACTIVE JOE",
+          line2: "ACTIVE JOE",
+          maskedPan: '493441******9641',
+          formattedExpirationDate: '06/26',
+        ),
       ),
     );
   }
@@ -109,12 +199,77 @@ class FakeFailingBankCardService extends BankCardService {
         cardNumber: '4526 1612 3862 1856',
       ),
     );
+    // return BankCardErrorResponse();
+  }
+
+  @override
+  Future<BankCardServiceResponse> getLatestPinKey({
+    required String cardId,
+    required User? user,
+  }) async {
+    return BankCardErrorResponse();
+  }
+
+  @override
+  Future<BankCardServiceResponse> changePin({
+    required String cardId,
+    required User? user,
+    required ChangePinRequestBody reqBody,
+  }) async {
+    return BankCardErrorResponse();
+  }
+
+  @override
+  Future<BankCardServiceResponse> freezeCard({
+    required String cardId,
+    required User? user,
+  }) async {
+    return BankCardErrorResponse();
+  }
+
+  @override
+  Future<BankCardServiceResponse> unfreezeCard({
+    required String cardId,
+    required User? user,
+  }) async {
+    return BankCardErrorResponse();
+  }
+
+  @override
+  Future<BankCardServiceResponse> createBankCard({
+    required CreateBankCardReqBody reqBody,
+    required User? user,
+  }) async {
     return BankCardErrorResponse();
   }
 }
 
-
 class FakeDeviceService extends DeviceService {
+  @override
+  Future<String?> getConsentId() async {
+    return "consentId";
+  }
+
+  @override
+  Future<String?> getDeviceId() async {
+    return "deviceId";
+  }
+
+  @override
+  Future<String?> getDeviceFingerprint(String? consentId) async {
+    return "deviceFingerprint";
+  }
+
+  @override
+  Future<DeviceKeyPairs?> getDeviceKeyPairs({bool restricted = false}) async {
+    return DeviceKeyPairs(publicKey: "publicKey", privateKey: "privateKey");
+  }
+
+  @override
+  String? generateSignature({required String privateKey, required String stringToSign}) {
+    return "signature";
+  }
+
   @override
   RSAKeyPair? generateRSAKey() {
     return RSAKeyPair(
@@ -128,6 +283,14 @@ class FakeDeviceService extends DeviceService {
           BigInt.zero,
           BigInt.zero,
         ));
+  }
+
+  @override
+  Future<String?> encryptPin({
+    required String pinToEncrypt,
+    required Map<String, dynamic> pinKey,
+  }) async {
+    return 'encryptedPin';
   }
 }
 

@@ -72,6 +72,9 @@ android {
    buildTypes {
        release {
            signingConfig signingConfigs.release
+           minifyEnabled true
+           proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
+                'proguard-rules.pro'
        }
    }
     namespace 'com.thinslices.solarisdemo'
@@ -86,4 +89,5 @@ dependencies {
     implementation('io.seon.androidsdk:androidsdk:5.0.3') {
         transitive = true
     }
+    implementation("com.nimbusds:nimbus-jose-jwt:9.23")
 }

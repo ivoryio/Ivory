@@ -1,0 +1,8 @@
+-dontwarn com.google.crypto.tink.subtle.XChaCha20Poly1305
+-dontwarn org.bouncycastle.crypto.BlockCipher
+-dontwarn org.bouncycastle.crypto.CipherParameters
+-dontwarn org.bouncycastle.crypto.InvalidCipherTextException
+-dontwarn org.bouncycastle.crypto.engines.AESEngine
+-dontwarn org.bouncycastle.crypto.modes.GCMBlockCipher
+-dontwarn org.bouncycastle.crypto.params.AEADParameters
+-dontwarn org.bouncycastle.crypto.params.KeyParameter

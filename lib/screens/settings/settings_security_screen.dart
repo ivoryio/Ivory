@@ -43,7 +43,6 @@ class SettingsSecurityScreen extends StatelessWidget {
                     leftIcon: Icons.phonelink_ring,
                     actionName: 'Device pairing',
                     rightIcon: Icons.arrow_forward_ios,
-                    actionSwitch: false,
                     onPressed: () => Navigator.pushNamed(context, SettingsDevicePairingScreen.routeName),
                   ),
                   const SizedBox(
@@ -53,7 +52,6 @@ class SettingsSecurityScreen extends StatelessWidget {
                     leftIcon: Icons.lock_outline,
                     actionName: 'Change password',
                     rightIcon: Icons.arrow_forward_ios,
-                    actionSwitch: false,
                   )
                 ],
               )),

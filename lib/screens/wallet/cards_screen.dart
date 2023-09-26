@@ -3,16 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/infrastructure/bank_card/bank_card_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../cubits/auth_cubit/auth_cubit.dart';
-import '../../cubits/cards_cubit/cards_cubit.dart';
 import '../../models/bank_card.dart';
 import '../../models/user.dart';
-import '../../services/card_service.dart';
 import '../../utilities/constants.dart';
 import '../../widgets/button.dart';
 import '../../widgets/card_widget.dart';
@@ -27,44 +26,53 @@ class BankCardsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AuthenticatedUser user = context.read<AuthCubit>().state.user!;
-    return BlocProvider.value(
-      value: BankCardsCubit(cardsService: BankCardsService(user: user.cognito))..getCards(),
-      child: BlocBuilder<BankCardsCubit, BankCardsState>(
-        builder: (context, state) {
-          if (state is BankCardsLoading) {
-            return const GenericLoadingScreen(title: "Cards");
-          }
 
-          if (state is BankCardsLoaded) {
-            return ScreenScaffold(
-              body: Column(
-                children: [
-                  const AppToolbar(
-                    title: "Cards",
+    return StoreConnector<AppState, BankCardsViewModel>(
+      onInit: (store) {
+        store.dispatch(GetBankCardsCommandAction(user: user));
+      },
+      converter: (store) {
+        return BankCardPresenter.presentBankCards(
+          bankCardsState: store.state.bankCardsState,
+          user: user,
+        );
+      },
+      builder: (context, viewModel) {
+        if (viewModel is BankCardsLoadingViewModel) {
+          return const GenericLoadingScreen(title: "Cards");
+        }
+        if (viewModel is BankCardsFetchedViewModel) {
+          return ScreenScaffold(
+            body: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const AppToolbar(),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
                   ),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: _Content(cards: state.cards),
-                    ),
+                  child: Text(
+                    'Cards',
+                    style: ClientConfig.getTextStyleScheme().heading1,
+                    textAlign: TextAlign.left,
                   ),
-                ],
-              ),
-            );
-          }
-
-          if (state is BankCardsError) {
-            return GenericErrorScreen(
-              title: "Cards",
-              message: state.message,
-            );
-          }
-
-          return const GenericErrorScreen(
-            title: "Cards",
-            message: "Cards could not be loaded",
+                ),
+                const SizedBox(height: 16),
+                Expanded(
+                  child: SingleChildScrollView(
+                    physics: const ClampingScrollPhysics(),
+                    child: _Content(cards: viewModel.bankCards!),
+                  ),
+                ),
+              ],
+            ),
           );
-        },
-      ),
+        }
+        return const GenericErrorScreen(
+          title: "Cards",
+          message: "Cards could not be loaded",
+        );
+      },
     );
   }
 }
@@ -144,6 +152,7 @@ class _CardSlider extends StatelessWidget {
                     cardHolder: cardHolder,
                     cardExpiry: cardExpiry,
                     isViewable: false,
+                    isFrozen: card.status == BankCardStatus.BLOCKED,
                     cardType: card.type.toString().toLowerCase().contains('virtual') ? 'Virtual card' : 'Physical card',
                   ),
                 ),
@@ -189,11 +198,13 @@ class _OrderCardButton extends StatelessWidget {
 
 void addNewCard(BuildContext context) {
   final user = context.read<AuthCubit>().state.user!;
-  CreateBankCard card = CreateBankCard(
-    user.person.firstName!,
-    user.person.lastName!,
-    BankCardType.VIRTUAL_VISA_CREDIT,
-    user.personAccount.businessId ?? '',
+  StoreProvider.of<AppState>(context).dispatch(
+    CreateCardCommandAction(
+      user: user,
+      firstName: user.person.firstName!,
+      lastName: user.person.lastName!,
+      type: BankCardType.VIRTUAL_VISA_CREDIT,
+      businessId: user.personAccount.businessId ?? '',
+    ),
   );
-  context.read<BankCardsCubit>().createCard(card);
 }

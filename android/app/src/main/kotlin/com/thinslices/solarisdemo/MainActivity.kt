@@ -5,15 +5,16 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import io.seon.androidsdk.exception.SeonException
 import io.seon.androidsdk.service.SeonBuilder
-import java.security.KeyPairGenerator
-import java.security.spec.ECGenParameterSpec
-import java.util.Base64
-import java.security.Signature
-import java.security.spec.PKCS8EncodedKeySpec
-import java.security.KeyFactory
 import android.util.Log
-import java.security.interfaces.ECPublicKey
-import java.security.interfaces.ECPrivateKey
+import com.nimbusds.jose.EncryptionMethod
+import com.nimbusds.jose.JWEAlgorithm
+import com.nimbusds.jose.JWEHeader
+import com.nimbusds.jose.JWEObject
+import com.nimbusds.jose.Payload
+import com.nimbusds.jose.crypto.RSAEncrypter
+import com.nimbusds.jose.jwk.JWK
+import com.nimbusds.jose.jwk.RSAKey
+
 
 class MainActivity: FlutterFragmentActivity() {
     private val CHANNEL = "com.thinslices.solarisdemo/native"
@@ -41,6 +42,35 @@ class MainActivity: FlutterFragmentActivity() {
                     e.printStackTrace()
                     result.error("500", "Fingeprint error", e.toString())
                 }
+            } else if (call.method == "encryptPin") {
+                val pinKeyMap = call.argument("pinKey") as Map<String, *>?
+                val pinToEncrypt = call.argument<String>("pinToEncrypt") ?: ""
+
+                try {
+                val solarisPublicKey = JWK.parse(pinKeyMap)
+                    .toRSAKey()
+                    .toRSAPublicKey()
+
+                val jweHeader: JWEHeader = JWEHeader
+                    .Builder(JWEAlgorithm.RSA_OAEP_256, EncryptionMethod.A256CBC_HS512)
+                    .build()
+
+                val jweObject = JWEObject(
+                    jweHeader,
+                    Payload(pinToEncrypt)
+                )
+
+                jweObject.encrypt(RSAEncrypter(solarisPublicKey))
+
+                val encryptedData = jweObject.serialize()
+
+                result.success(encryptedData)
+
+                } catch (e : Exception) {
+                    e.printStackTrace()
+                    result.error("500", "jwk error", e.toString())
+                }
+
             } else {
                 result.notImplemented()
             }

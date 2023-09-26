@@ -1,10 +1,11 @@
 import 'package:redux/redux.dart';
 import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
+import 'package:solarisdemo/models/bank_card.dart';
+import 'package:solarisdemo/models/crypto/jwe.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 
 import '../../../redux/bank_card/bank_card_action.dart';
-import '../../models/bank_card.dart';
 import 'bank_card_service.dart';
 
 class BankCardMiddleware extends MiddlewareClass<AppState> {
@@ -17,6 +18,28 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
   @override
   call(Store<AppState> store, action, NextDispatcher next) async {
     next(action);
+
+    if (action is CreateCardCommandAction) {
+      store.dispatch(BankCardsLoadingEventAction());
+      final response = await _bankCardService.createBankCard(
+        user: action.user.cognito,
+        reqBody: CreateBankCardReqBody(
+          action.firstName,
+          action.lastName,
+          action.type,
+          action.businessId,
+        ),
+      );
+
+      if (response is CreateBankCardSuccessResponse) {
+        store.dispatch(UpdateBankCardsEventAction(
+          bankCards: [],
+          updatedCard: response.bankCard,
+        ));
+      } else {
+        store.dispatch(BankCardFailedEventAction());
+      }
+    }
 
     if (action is GetBankCardCommandAction) {
       store.dispatch(BankCardLoadingEventAction());
@@ -35,8 +58,107 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
       }
     }
 
+    if (action is GetBankCardsCommandAction) {
+      store.dispatch(BankCardsLoadingEventAction());
+
+      final response = await _bankCardService.getBankCards(
+        user: action.user.cognito,
+      );
+
+      if (response is GetBankCardsServiceResponse) {
+        store.dispatch(BankCardsFetchedEventAction(
+          bankCards: response.bankCards,
+        ));
+      } else {
+        store.dispatch(BankCardsFailedEventAction());
+      }
+    }
+
+    if (action is BankCardInitiatePinChangeCommandAction) {
+      store.dispatch(BankCardLoadingEventAction());
+
+      final deviceId = await _deviceService.getDeviceId();
+      if (deviceId == '') {
+        store.dispatch(BankCardNoBoundedDevicesEventAction(bankCard: action.bankCard));
+        return null;
+      }
+
+      store.dispatch(BankCardFetchedEventAction(bankCard: action.bankCard, user: action.user));
+    }
+
     if (action is BankCardChoosePinCommandAction) {
       store.dispatch(BankCardPinChoosenEventAction(pin: action.pin, user: action.user, bankcard: action.bankCard));
+    }
+
+    if (action is BankCardConfirmPinCommandAction) {
+      store.dispatch(BankCardLoadingEventAction());
+      final deviceId = await _deviceService.getDeviceId();
+      if (deviceId == '') {
+        store.dispatch(BankCardFailedEventAction());
+        return null;
+      }
+      final consentId = await _deviceService.getConsentId();
+      final deviceFingerprint = await _deviceService.getDeviceFingerprint(consentId);
+      if (deviceFingerprint == null) {
+        store.dispatch(BankCardFailedEventAction());
+        return null;
+      }
+
+      final getLatestPinKeyResponse = await _bankCardService.getLatestPinKey(
+        user: action.user.cognito,
+        cardId: action.bankCard.id,
+      );
+
+      if (getLatestPinKeyResponse is BankCardErrorResponse) {
+        store.dispatch(BankCardFailedEventAction());
+        return null;
+      }
+
+      final pinToEncrypt = '{"pin": "${action.pin}"}';
+      final jwkJson = (getLatestPinKeyResponse as GetLatestPinKeySuccessResponse).jwkJson;
+
+      final encryptedPin = await _deviceService.encryptPin(pinToEncrypt: pinToEncrypt, pinKey: jwkJson);
+      if (encryptedPin is! String) {
+        store.dispatch(BankCardFailedEventAction());
+        return null;
+      }
+
+      final restrictedKeypair = await _deviceService.getDeviceKeyPairs(restricted: true);
+      if (restrictedKeypair == null) {
+        store.dispatch(BankCardFailedEventAction());
+        return null;
+      }
+
+      final restrictedPrivateKey = restrictedKeypair.privateKey;
+      final signature = _deviceService.generateSignature(
+        privateKey: restrictedPrivateKey,
+        stringToSign: encryptedPin,
+      );
+      if (signature == null) {
+        store.dispatch(BankCardFailedEventAction());
+        return null;
+      }
+
+      ChangePinRequestBody reqBody = ChangePinRequestBody(
+        signature: signature,
+        deviceData: deviceFingerprint,
+        deviceId: deviceId!,
+        encryptedPin: encryptedPin,
+        keyId: jwkJson["kid"],
+      );
+
+      final changePinResponse = await _bankCardService.changePin(
+        user: action.user.cognito,
+        cardId: action.bankCard.id,
+        reqBody: reqBody,
+      );
+
+      if (changePinResponse is BankCardErrorResponse) {
+        store.dispatch(BankCardFailedEventAction());
+        return null;
+      }
+
+      store.dispatch(BankCardPinConfirmedEventAction(pin: action.pin, user: action.user, bankcard: action.bankCard));
     }
 
     if (action is BankCardActivateCommandAction) {
@@ -61,7 +183,7 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
 
       final deviceId = await _deviceService.getDeviceId();
       if (deviceId == '') {
-        store.dispatch(BankCardNoBoundedDevicesEventAction());
+        store.dispatch(BankCardNoBoundedDevicesEventAction(bankCard: action.bankCard));
         return null;
       }
 
@@ -135,6 +257,48 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
         store.dispatch(BankCardDetailsFetchedEventAction(
           cardDetails: response.cardDetails,
           bankCard: action.bankCard,
+        ));
+      } else {
+        store.dispatch(BankCardFailedEventAction());
+      }
+    }
+
+    if (action is BankCardFreezeCommandAction) {
+      store.dispatch(BankCardLoadingEventAction());
+      final response = await _bankCardService.freezeCard(
+        cardId: action.bankCard.id,
+        user: action.user.cognito,
+      );
+
+      if (response is FreezeBankCardSuccessResponse) {
+        store.dispatch(BankCardFetchedEventAction(
+          bankCard: response.bankCard,
+          user: action.user,
+        ));
+        store.dispatch(UpdateBankCardsEventAction(
+          bankCards: action.bankCards,
+          updatedCard: response.bankCard,
+        ));
+      } else {
+        store.dispatch(BankCardFailedEventAction());
+      }
+    }
+
+    if (action is BankCardUnfreezeCommandAction) {
+      store.dispatch(BankCardLoadingEventAction());
+      final response = await _bankCardService.unfreezeCard(
+        cardId: action.bankCard.id,
+        user: action.user.cognito,
+      );
+
+      if (response is UnfreezeBankCardSuccessResponse) {
+        store.dispatch(BankCardFetchedEventAction(
+          bankCard: response.bankCard,
+          user: action.user,
+        ));
+        store.dispatch(UpdateBankCardsEventAction(
+          bankCards: action.bankCards,
+          updatedCard: response.bankCard,
         ));
       } else {
         store.dispatch(BankCardFailedEventAction());

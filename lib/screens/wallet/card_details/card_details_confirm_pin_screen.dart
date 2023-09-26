@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
+import 'package:solarisdemo/infrastructure/bank_card/bank_card_presenter.dart';
+import 'package:solarisdemo/models/user.dart';
+import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/screens/wallet/card_details/card_details_apple_wallet.dart';
+import 'package:solarisdemo/screens/wallet/card_details/card_details_choose_pin.dart';
+import 'package:solarisdemo/utilities/validator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
+import 'package:solarisdemo/widgets/pin_field.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
-import '../../config.dart';
-import '../../cubits/auth_cubit/auth_cubit.dart';
-import '../../infrastructure/bank_card/bank_card_presenter.dart';
-import '../../models/user.dart';
-import '../../redux/app_state.dart';
-import '../../utilities/validator.dart';
-import '../../widgets/pin_field.dart';
-import 'card_details_apple_wallet.dart';
-import 'card_details_choose_pin.dart';
 
 class BankCardDetailsConfirmPinScreen extends StatefulWidget {
   static const routeName = '/bankCardDetailsConfirmPinScreen';

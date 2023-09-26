@@ -27,11 +27,12 @@ class Format {
     int digits = 0,
     int maxDigits = 2,
   }) {
+    String sign = value < 0 ? '' : '+';
     if (digits == 0 && maxDigits > 0 && value % 1 != 0) {
-      return Format.currency(value, digits: maxDigits);
+      return '$sign${Format.currency(value, digits: maxDigits)}';
     }
 
-    return Format.currency(value, digits: digits);
+    return '$sign${Format.currency(value, digits: digits)}';
   }
 
   static String amountWithSign(AmountValue amount) {
