@@ -16,7 +16,7 @@ class CardApplicationMiddleware extends MiddlewareClass<AppState> {
       store.dispatch(CardApplicationLoadingEventAction());
 
       final response = await _cardApplicationService.updateChangeRepayment(
-        user: action.user.cognito,
+        user: action.user,
         fixedRate: action.fixedRate,
         id: action.id,
       );
@@ -30,7 +30,7 @@ class CardApplicationMiddleware extends MiddlewareClass<AppState> {
 
     if (action is GetCardApplicationCommandAction) {
       final response = await _cardApplicationService.getCardApplication(
-        user: action.user.cognito,
+        user: action.user,
       );
 
       if (response is GetCardApplicationSuccessResponse) {

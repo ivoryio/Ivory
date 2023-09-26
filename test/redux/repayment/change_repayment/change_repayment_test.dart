@@ -1,26 +1,18 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
-import 'package:solarisdemo/models/person_account.dart';
-import 'package:solarisdemo/models/person_model.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/repayments/change_repayment/change_repayment_action.dart';
 import 'package:solarisdemo/redux/repayments/change_repayment/change_repayment_state.dart';
 
 import '../../../setup/create_store.dart';
 import '../../../setup/create_app_state.dart';
+import '../../../cubits/login_cubit_test.dart';
 import 'change_repayment_mocks.dart';
 
-class MockUser extends Mock implements User {}
-
-class MockPerson extends Mock implements Person {}
-
-class MockPersonAccount extends Mock implements PersonAccount {}
-
 void main() {
-  AuthenticatedUser user = AuthenticatedUser(
-    cognito: MockUser(),
-    person: MockPerson(),
-    personAccount: MockPersonAccount(),
+  User user = User(
+    session: MockUserSession(),
+    attributes: [],
+    cognitoUser: MockCognitoUser(),
   );
 
   test('When asking to fetch card application the first time you enter the screen it should have a loading state',

@@ -6,7 +6,7 @@ import 'package:solarisdemo/redux/repayments/change_repayment/change_repayment_s
 class CardApplicationPresenter {
   static CardApplicationViewModel presentCardApplication({
     required CardApplicationState cardApplicationState,
-    required AuthenticatedUser user,
+    required User user,
   }) {
     if (cardApplicationState is CardApplicationLoadingState) {
       return CardApplicationLoadingViewModel();
@@ -23,11 +23,16 @@ class CardApplicationPresenter {
 }
 
 abstract class CardApplicationViewModel extends Equatable {
-  final AuthenticatedUser? user;
-  const CardApplicationViewModel({this.user});
+  final User? user;
+  final CreditCardApplication? cardApplication;
+
+  const CardApplicationViewModel({
+    this.user,
+    this.cardApplication,
+  });
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [cardApplication];
 }
 
 class CardApplicationInitialViewModel extends CardApplicationViewModel {}
@@ -37,23 +42,11 @@ class CardApplicationLoadingViewModel extends CardApplicationViewModel {}
 class CardApplicationErrorViewModel extends CardApplicationViewModel {}
 
 class CardApplicationFetchedViewModel extends CardApplicationViewModel {
-  final CreditCardApplication cardApplication;
-
-  const CardApplicationFetchedViewModel({
-    required this.cardApplication,
-  });
-
-  @override
-  List<Object?> get props => [cardApplication];
+  const CardApplicationFetchedViewModel({required CreditCardApplication cardApplication})
+      : super(cardApplication: cardApplication);
 }
 
 class CardApplicationUpdatedViewModel extends CardApplicationViewModel {
-  final CreditCardApplication cardApplication;
-
-  const CardApplicationUpdatedViewModel({
-    required this.cardApplication,
-  });
-
-  @override
-  List<Object?> get props => [cardApplication];
+  const CardApplicationUpdatedViewModel({required CreditCardApplication cardApplication})
+      : super(cardApplication: cardApplication);
 }

@@ -2,7 +2,7 @@ import 'package:solarisdemo/models/transfer/credit_card_application.dart';
 import 'package:solarisdemo/models/user.dart';
 
 class UpdateCardApplicationCommandAction {
-  final AuthenticatedUser user;
+  final User user;
   final double fixedRate;
   final String id;
 
@@ -22,7 +22,7 @@ class UpdateCardApplicationEventAction {
 }
 
 class GetCardApplicationCommandAction {
-  final AuthenticatedUser user;
+  final User user;
 
   GetCardApplicationCommandAction({required this.user});
 }

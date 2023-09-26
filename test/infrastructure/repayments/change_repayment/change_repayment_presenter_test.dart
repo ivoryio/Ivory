@@ -1,23 +1,16 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
 import 'package:solarisdemo/infrastructure/repayments/change_repayment/change_repayment_presenter.dart';
-import 'package:solarisdemo/models/person_account.dart';
-import 'package:solarisdemo/models/person_model.dart';
 import 'package:solarisdemo/models/transfer/credit_card_application.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/repayments/change_repayment/change_repayment_state.dart';
 
-class MockUser extends Mock implements User {}
-
-class MockPerson extends Mock implements Person {}
-
-class MockPersonAccount extends Mock implements PersonAccount {}
+import '../../../cubits/login_cubit_test.dart';
 
 void main() {
-  final user = AuthenticatedUser(
-    cognito: MockUser(),
-    person: MockPerson(),
-    personAccount: MockPersonAccount(),
+  User user = User(
+    session: MockUserSession(),
+    attributes: [],
+    cognitoUser: MockCognitoUser(),
   );
 
   final cardApplication = CreditCardApplication(

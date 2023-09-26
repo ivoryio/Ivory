@@ -74,10 +74,10 @@ class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
                   ),
                   Expanded(
                     child: StoreConnector<AppState, CardApplicationViewModel>(
-                      onInit: (store) => store.dispatch(GetCardApplicationCommandAction(user: user)),
+                      onInit: (store) => store.dispatch(GetCardApplicationCommandAction(user: user.cognito)),
                       converter: (store) => CardApplicationPresenter.presentCardApplication(
                         cardApplicationState: store.state.cardApplicationState,
-                        user: user,
+                        user: user.cognito,
                       ),
                       builder: (context, viewModel) {
                         if (viewModel is CardApplicationErrorViewModel) {
@@ -86,9 +86,9 @@ class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
 
                         if (viewModel is CardApplicationFetchedViewModel) {
                           var lowerAmount =
-                              viewModel.cardApplication.repaymentOptions!.minimumAmountUpperThreshold.value / 100;
+                              viewModel.cardApplication!.repaymentOptions!.minimumAmountUpperThreshold.value / 100;
                           var upperAmount =
-                              viewModel.cardApplication.repaymentOptions!.minimumAmountUpperThreshold.value / 100;
+                              viewModel.cardApplication!.repaymentOptions!.minimumAmountUpperThreshold.value / 100;
 
                           return Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -134,7 +134,7 @@ class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
                                 onFixedChanged: (value) {
                                   setState(() {
                                     var upperAmount =
-                                        viewModel.cardApplication.repaymentOptions!.minimumAmountUpperThreshold.value /
+                                        viewModel.cardApplication!.repaymentOptions!.minimumAmountUpperThreshold.value /
                                             100;
 
                                     _canContinue = value >= (upperAmount * 0.05) && value <= (upperAmount * 0.9);
@@ -158,9 +158,9 @@ class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
 
                                           StoreProvider.of<AppState>(context).dispatch(
                                             UpdateCardApplicationCommandAction(
-                                              user: user,
+                                              user: user.cognito,
                                               fixedRate: double.parse(valueForRepayment),
-                                              id: viewModel.cardApplication.id,
+                                              id: viewModel.cardApplication!.id,
                                             ),
                                           );
 
@@ -336,7 +336,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
   @override
   void initState() {
     super.initState();
-    widget.controller!.text = (widget.viewModel.cardApplication.repaymentOptions!.minimumAmount.value / 100).toString();
+    widget.controller!.text =
+        (widget.viewModel.cardApplication!.repaymentOptions!.minimumAmount.value / 100).toString();
   }
 
   @override
@@ -373,7 +374,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 controller: widget.controller,
                 onChanged: (text) {
                   var upperAmount =
-                      widget.viewModel.cardApplication.repaymentOptions!.minimumAmountUpperThreshold.value / 100;
+                      widget.viewModel.cardApplication!.repaymentOptions!.minimumAmountUpperThreshold.value / 100;
 
                   if (text.isEmpty) text = '0';
 
