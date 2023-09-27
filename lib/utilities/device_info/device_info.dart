@@ -7,13 +7,17 @@ class DeviceInfoService {
 
   DeviceInfoService();
 
-
   Future<String> getDeviceName() async {
     if (Platform.isAndroid) {
       AndroidDeviceInfo androidInfo = await _deviceInfoPlugin.androidInfo;
       String manufacturer = androidInfo.manufacturer;
       String model = androidInfo.model;
-      return '$manufacturer $model'.substring(0, 20);
+      String response = '$manufacturer $model';
+      if (response.length > 20) {
+        return response.substring(0, 20);
+      }
+
+      return response.substring(0, response.length);
     } else if (Platform.isIOS) {
       IosDeviceInfo iosInfo = await _deviceInfoPlugin.iosInfo;
       return iosInfo.name;
