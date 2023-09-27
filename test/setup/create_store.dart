@@ -9,6 +9,7 @@ import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_binding_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
+import 'package:solarisdemo/infrastructure/person/account_summary/account_summary_service.dart';
 import 'package:solarisdemo/infrastructure/person/person_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/bills/bill_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/change_repayment/change_repayment_service.dart';
@@ -44,6 +45,7 @@ Store<AppState> createTestStore({
   DeviceService? deviceService,
   BiometricsService? biometricsService,
   DeviceInfoService? deviceInfoService,
+  AccountSummaryService? accountSummaryService,
 }) {
   return createStore(
     initialState: initialState,
@@ -63,6 +65,7 @@ Store<AppState> createTestStore({
     deviceService: deviceService ?? NotImplementedDeviceService(),
     biometricsService: biometricsService ?? NotImplementedBiometricsService(),
     deviceInfoService: deviceInfoService ?? NotImplementedDeviceInfoService(),
+    accountSummaryService: accountSummaryService ?? NotImplementedAccountSummaryService(),
   );
 }
 
@@ -332,4 +335,11 @@ class MockLocalAutentication extends Mock implements LocalAuthentication {}
 
 class NotImplementedBiometricsService extends BiometricsService {
   NotImplementedBiometricsService() : super(auth: MockLocalAutentication());
+}
+
+class NotImplementedAccountSummaryService extends AccountSummaryService {
+  @override
+  Future<AccountSummaryServiceResponse> getPersonAccountSummary({User? user}) {
+    throw UnimplementedError();
+  }
 }

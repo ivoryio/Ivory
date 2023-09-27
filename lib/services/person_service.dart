@@ -3,23 +3,11 @@ import 'package:solarisdemo/models/person_account.dart';
 import '../models/device.dart';
 import 'api_service.dart';
 import '../models/person_model.dart';
-import '../models/person_account_summary.dart';
 
 class PersonService extends ApiService {
   PersonService({
     super.user,
   });
-
-  Future<PersonAccountSummary>? getPersonAccountSummary() async {
-    try {
-      String path = 'account/summary';
-
-      var data = await get(path);
-      return PersonAccountSummary.fromJson(data);
-    } catch (e) {
-      throw Exception("Failed to load account summary");
-    }
-  }
 
   Future<Person>? getPerson() async {
     try {
