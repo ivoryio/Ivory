@@ -58,7 +58,7 @@ class DeviceBindingFetchedViewModel extends DeviceBindingViewModel {
   }) : super(devices: devices, thisDevice: thisDevice);
 
   @override
-  List<Object?> get props => [devices];
+  List<Object?> get props => [devices, thisDevice];
 }
 
 class DeviceBindingFetchedButEmptyViewModel extends DeviceBindingViewModel {
