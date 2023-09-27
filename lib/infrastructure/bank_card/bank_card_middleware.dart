@@ -221,7 +221,7 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
         return null;
       }
 
-      final existingRestrictedKeyPair = await _deviceService.getDeviceKeyPairs(restricted: true);
+      final existingRestrictedKeyPair = await _deviceService.getDeviceKeyPairs();
 
       if (existingRestrictedKeyPair == null) {
         store.dispatch(BankCardFailedEventAction());
@@ -229,6 +229,7 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
       }
 
       String alphabeticJWK = jwk.toAlphabeticJson();
+      print(alphabeticJWK);
 
       final signature = _deviceService.generateSignature(
           privateKey: existingRestrictedKeyPair.privateKey, stringToSign: alphabeticJWK);

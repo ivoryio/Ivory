@@ -5,7 +5,6 @@ import '../../models/device.dart';
 import '../../models/user.dart';
 
 class DeviceBindingService extends ApiService {
-
   DeviceBindingService({super.user});
 
   Future<DeviceBindingServiceResponse> createDeviceBinding({
@@ -14,11 +13,15 @@ class DeviceBindingService extends ApiService {
   }) async {
     this.user = user;
 
+    print('reqBody create binding: ${reqBody.toJson()}');
+
     try {
       var data = await post(
         'person/device/binding',
         body: reqBody.toJson(),
       );
+
+      print('data create binding: $data');
 
       return CreateDeviceBindingSuccessResponse(
         deviceId: data['id'],
@@ -36,12 +39,15 @@ class DeviceBindingService extends ApiService {
       required String signature}) async {
     this.user = user;
     try {
+      final reqbody = VerifyDeviceSignatureChallengeRequest(
+        deviceData: deviceFingerPrint,
+        signature: signature,
+      );
+      print('req body verify device binding: $reqbody');
+
       await post(
         'person/device/verify_signature/$deviceId',
-        body: VerifyDeviceSignatureChallengeRequest(
-          deviceData: deviceFingerPrint,
-          signature: signature,
-        ).toJson(),
+        body: reqbody.toJson(),
       );
 
       return VerifyDeviceBindingSignatureSuccessResponse();

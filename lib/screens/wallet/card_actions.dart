@@ -5,6 +5,7 @@ import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/infrastructure/bank_card/bank_card_presenter.dart';
 import 'package:solarisdemo/models/bank_card.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_state.dart';
@@ -157,7 +158,16 @@ class ActiveCard extends StatelessWidget {
             CardOptionsButton(
               icon: Icons.wallet,
               textLabel: 'Add to wallet',
-              onPressed: () {},
+              onPressed: () async {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                //log all cache
+                print(prefs.getKeys());
+                print(prefs.getString('device_id'));
+                print(prefs.getString('unrestrictedKeyPair'));
+                print(prefs.getString('restrictedKeyPair'));
+                print(viewModel.bankCard!.id);
+                //log all cache
+              },
             ),
             CardOptionsButton(
               icon: Icons.speed,

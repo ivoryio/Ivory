@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:pointycastle/export.dart';
 
 class CryptoKeyGenerator {
-
   static CryptoKeyPair generateECKeyPair() {
     var keyPair = _createECKeyGenerator().generateKeyPair();
     var publicKeyUncompressedForm = _toUncompressedForm(keyPair.publicKey as ECPublicKey);
@@ -19,6 +18,9 @@ class CryptoKeyGenerator {
         stop = true;
       }
     }
+    print('publicUncompressedForm: $publicKeyUncompressedForm');
+    print('privateKey: ${_toHex(keyPair.privateKey as ECPrivateKey)}');
+
     return CryptoKeyPair(
       publicKey: publicKeyUncompressedForm,
       privateKey: _toHex(keyPair.privateKey as ECPrivateKey),
@@ -38,7 +40,8 @@ class CryptoKeyGenerator {
   static ECKeyGenerator _createECKeyGenerator() {
     final keyGen = ECKeyGenerator();
 
-    keyGen.init(ParametersWithRandom(ECKeyGeneratorParameters(ECCurve_secp256r1()), _secureRandom()));
+    keyGen.init(ParametersWithRandom(ECKeyGeneratorParameters(ECCurve_prime256v1()), _secureRandom()));
+    // keyGen.init(ParametersWithRandom(ECKeyGeneratorParameters(ECCurve_secp256r1()), _secureRandom()));
     return keyGen;
   }
 
