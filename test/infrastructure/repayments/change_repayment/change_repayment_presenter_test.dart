@@ -1,18 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:solarisdemo/infrastructure/repayments/change_repayment/change_repayment_presenter.dart';
 import 'package:solarisdemo/models/transfer/credit_card_application.dart';
-import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/repayments/change_repayment/change_repayment_state.dart';
 
-import '../../../cubits/login_cubit_test.dart';
-
 void main() {
-  User user = User(
-    session: MockUserSession(),
-    attributes: [],
-    cognitoUser: MockCognitoUser(),
-  );
-
   final cardApplication = CreditCardApplication(
     id: 'ff46c26e244f482a955ec0bb9a0170d4ccla',
     externalCustomerId: '',
@@ -34,7 +25,6 @@ void main() {
       // when
       final viewModel = CardApplicationPresenter.presentCardApplication(
         cardApplicationState: state,
-        user: user,
       );
 
       // then
@@ -48,7 +38,6 @@ void main() {
       // when
       final viewModel = CardApplicationPresenter.presentCardApplication(
         cardApplicationState: state,
-        user: user,
       );
 
       // then
@@ -62,7 +51,6 @@ void main() {
       // when
       final viewModel = CardApplicationPresenter.presentCardApplication(
         cardApplicationState: state,
-        user: user,
       );
 
       // then
@@ -77,7 +65,6 @@ void main() {
       // when
       final viewModel = CardApplicationPresenter.presentCardApplication(
         cardApplicationState: state,
-        user: user,
       );
 
       // then

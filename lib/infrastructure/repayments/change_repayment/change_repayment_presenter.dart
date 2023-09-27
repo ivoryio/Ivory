@@ -1,13 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:solarisdemo/models/transfer/credit_card_application.dart';
-import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/repayments/change_repayment/change_repayment_state.dart';
 
 class CardApplicationPresenter {
-  static CardApplicationViewModel presentCardApplication({
-    required CardApplicationState cardApplicationState,
-    required User user,
-  }) {
+  static CardApplicationViewModel presentCardApplication({required CardApplicationState cardApplicationState}) {
     if (cardApplicationState is CardApplicationLoadingState) {
       return CardApplicationLoadingViewModel();
     } else if (cardApplicationState is CardApplicationErrorState) {
@@ -23,13 +19,9 @@ class CardApplicationPresenter {
 }
 
 abstract class CardApplicationViewModel extends Equatable {
-  final User? user;
   final CreditCardApplication? cardApplication;
 
-  const CardApplicationViewModel({
-    this.user,
-    this.cardApplication,
-  });
+  const CardApplicationViewModel({this.cardApplication});
 
   @override
   List<Object?> get props => [cardApplication];

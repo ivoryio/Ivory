@@ -77,7 +77,6 @@ class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
                       onInit: (store) => store.dispatch(GetCardApplicationCommandAction(user: user.cognito)),
                       converter: (store) => CardApplicationPresenter.presentCardApplication(
                         cardApplicationState: store.state.cardApplicationState,
-                        user: user.cognito,
                       ),
                       builder: (context, viewModel) {
                         if (viewModel is CardApplicationErrorViewModel) {
