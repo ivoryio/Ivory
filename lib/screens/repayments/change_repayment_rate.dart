@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
+import 'package:solarisdemo/infrastructure/repayments/change_repayment/change_repayment_presenter.dart';
+import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/repayments/change_repayment/change_repayment_action.dart';
 import 'package:solarisdemo/screens/repayments/repayment_successfully_changed.dart';
 import 'package:solarisdemo/screens/repayments/repayments_screen.dart';
+import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
+import 'package:solarisdemo/widgets/button.dart';
+import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
-
-import '../../widgets/button.dart';
-import '../../widgets/modal.dart';
 
 class ChangeRepaymentRateScreen extends StatefulWidget {
   static const routeName = "/changeRepaymentRateScreen";
@@ -16,32 +22,31 @@ class ChangeRepaymentRateScreen extends StatefulWidget {
   const ChangeRepaymentRateScreen({super.key});
 
   @override
-  State<ChangeRepaymentRateScreen> createState() =>
-      _ChangeRepaymentRateScreenState();
+  State<ChangeRepaymentRateScreen> createState() => _ChangeRepaymentRateScreenState();
 }
 
 class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
-  final TextEditingController _controller =
-      TextEditingController(text: '500.00');
+  final TextEditingController _initialFixedRepayment = TextEditingController();
   bool _canContinue = false;
-  int _procentualValue = 5;
 
   @override
   void initState() {
     super.initState();
-    _controller.addListener(() {
-      if (_canContinue == true) {
+    _initialFixedRepayment.addListener(() {
+      if (_canContinue == false) {
         return;
       }
+    });
 
-      setState(() {
-        _canContinue = true;
-      });
+    setState(() {
+      _canContinue = true;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final user = context.read<AuthCubit>().state.user!;
+
     backWithoutSaving() {
       showBottomModal(
         context: context,
@@ -52,70 +57,135 @@ class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
     }
 
     return ScreenScaffold(
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: ClientConfig.getCustomClientUiSettings()
-              .defaultScreenHorizontalPadding,
-        ),
-        child: Column(
-          children: [
-            AppToolbar(
-              onBackButtonPressed:
-                  (_canContinue == true) ? backWithoutSaving : null,
-            ),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Change repayment rate',
-                style: ClientConfig.getTextStyleScheme().heading1,
+      body: CustomScrollView(
+        slivers: [
+          SliverFillRemaining(
+            hasScrollBody: false,
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
               ),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'You can decide whether you prefer the flexibility of a percentage rate repayment or the predictability of fixed repayments.',
-              style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-            ),
-            const SizedBox(height: 24),
-            ChooseRepaymentType(
-                controller: _controller,
-                onFixedChanged: (value) {
-                  setState(() {
-                    _canContinue = value > 500 && value < 9000;
-                  });
-                },
-                onPercentageChanged: (value) {
-                  setState(() {
-                    _procentualValue = value.toInt();
-                    _canContinue = true;
-                  });
-                }),
-            const Spacer(),
-            SizedBox(
-              width: double.infinity,
-              height: 48,
-              child: Button(
-                text: "Save changes",
-                disabledColor: const Color(0xFFDFE2E6),
-                color: ClientConfig.getColorScheme().tertiary,
-                textColor: ClientConfig.getColorScheme().surface,
-                onPressed: _canContinue
-                    ? () {
-                        final valueForRepayment = _controller.text;
-                        final procentualValue = _procentualValue;
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  AppToolbar(
+                    onBackButtonPressed: (_canContinue == true) ? backWithoutSaving : null,
+                  ),
+                  Expanded(
+                    child: StoreConnector<AppState, CardApplicationViewModel>(
+                      onInit: (store) => store.dispatch(GetCardApplicationCommandAction(user: user.cognito)),
+                      converter: (store) => CardApplicationPresenter.presentCardApplication(
+                        cardApplicationState: store.state.cardApplicationState,
+                      ),
+                      builder: (context, viewModel) {
+                        if (viewModel is CardApplicationErrorViewModel) {
+                          return const Center(child: Text("Error"));
+                        }
 
-                        Navigator.pushNamed(context,
-                            RepaymentSuccessfullyChangedScreen.routeName,
-                            arguments: RepaymentSuccessfullyScreenParams(
-                              fixedRate: double.parse(valueForRepayment),
-                              interestRate: procentualValue,
-                            ));
-                      }
-                    : null,
+                        if (viewModel is CardApplicationFetchedViewModel) {
+                          var lowerAmount =
+                              viewModel.cardApplication!.repaymentOptions!.minimumAmountUpperThreshold.value / 100;
+                          var upperAmount =
+                              viewModel.cardApplication!.repaymentOptions!.minimumAmountUpperThreshold.value / 100;
+
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'Change repayment rate',
+                                  style: ClientConfig.getTextStyleScheme().heading1,
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              Text.rich(
+                                TextSpan(
+                                  style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                                  children: [
+                                    const TextSpan(
+                                      text:
+                                          'We provide fixed repayment options with flexibility. You can select your preferred fixed rate, ranging from a minimum of ',
+                                    ),
+                                    TextSpan(
+                                      text: Format.currency(lowerAmount * 0.05),
+                                      style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
+                                    ),
+                                    const TextSpan(
+                                      text: ' to a maximum of ',
+                                    ),
+                                    TextSpan(
+                                      text: Format.currency(upperAmount * 0.9),
+                                      style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
+                                    ),
+                                    const TextSpan(
+                                      text: '.',
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 24),
+                              FixedRepayment(
+                                viewModel: viewModel,
+                                controller: _initialFixedRepayment,
+                                onFixedChanged: (value) {
+                                  setState(() {
+                                    var upperAmount =
+                                        viewModel.cardApplication!.repaymentOptions!.minimumAmountUpperThreshold.value /
+                                            100;
+
+                                    _canContinue = value >= (upperAmount * 0.05) && value <= (upperAmount * 0.9);
+                                  });
+                                },
+                              ),
+                              const SizedBox(height: 24),
+                              const PercentageRepayment(),
+                              const Spacer(),
+                              SizedBox(
+                                width: double.infinity,
+                                height: 48,
+                                child: Button(
+                                  text: "Save changes",
+                                  disabledColor: const Color(0xFFDFE2E6),
+                                  color: ClientConfig.getColorScheme().tertiary,
+                                  textColor: ClientConfig.getColorScheme().surface,
+                                  onPressed: _canContinue
+                                      ? () {
+                                          final valueForRepayment = _initialFixedRepayment.text;
+
+                                          StoreProvider.of<AppState>(context).dispatch(
+                                            UpdateCardApplicationCommandAction(
+                                              user: user.cognito,
+                                              fixedRate: double.parse(valueForRepayment),
+                                              id: viewModel.cardApplication!.id,
+                                            ),
+                                          );
+
+                                          Navigator.pushNamed(context, RepaymentSuccessfullyChangedScreen.routeName,
+                                              arguments: RepaymentSuccessfullyScreenParams(
+                                                fixedRate: double.parse(valueForRepayment),
+                                                interestRate: 5,
+                                              ));
+                                        }
+                                      : null,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                            ],
+                          );
+                        }
+
+                        return const Center(child: CircularProgressIndicator());
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 8),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -129,8 +199,7 @@ class ShowBottomModalActions extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: 0,
-        vertical: ClientConfig.getCustomClientUiSettings()
-            .defaultScreenVerticalPadding,
+        vertical: ClientConfig.getCustomClientUiSettings().defaultScreenVerticalPadding,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -148,10 +217,7 @@ class ShowBottomModalActions extends StatelessWidget {
           const SizedBox(height: 16),
           CustomAction(
             path: () {
-              Navigator.pushNamed(
-                context,
-                RepaymentsScreen.routeName,
-              );
+              Navigator.popUntil(context, ModalRoute.withName(RepaymentsScreen.routeName));
             },
             message: 'Yes, discard changes',
             backgroundColor: Colors.red,
@@ -209,28 +275,17 @@ class CustomAction extends StatelessWidget {
   }
 }
 
-class ChooseRepaymentType extends StatefulWidget {
+class FixedRepayment extends StatelessWidget {
   final TextEditingController controller;
-  final void Function(double) onPercentageChanged;
   final void Function(double) onFixedChanged;
+  final CardApplicationFetchedViewModel viewModel;
 
-  const ChooseRepaymentType({
+  const FixedRepayment({
     super.key,
     required this.controller,
-    required this.onPercentageChanged,
     required this.onFixedChanged,
+    required this.viewModel,
   });
-
-  @override
-  State<ChooseRepaymentType> createState() => _ChooseRepaymentTypeState();
-}
-
-class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
-  RepaymentType _selectedOption = RepaymentType.percentage;
-
-  double sliderValue = 20;
-  double min = 5;
-  double max = 90;
 
   @override
   Widget build(BuildContext context) {
@@ -238,196 +293,26 @@ class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildRepaymentOptions(type: RepaymentType.percentage),
-        const SizedBox(height: 16),
-        _buildRepaymentOptions(type: RepaymentType.fixed),
-      ],
-    );
-  }
-
-  Widget _buildRepaymentOptions({required RepaymentType type}) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        border: Border.fromBorderSide(
-          BorderSide(
-            width: 1,
-            color: _selectedOption == type
-                ? ClientConfig.getColorScheme().secondary
-                : const Color(0xFFE9EAEB),
-            style: BorderStyle.solid,
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            'Fixed repayment',
+            style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
           ),
         ),
-        borderRadius: const BorderRadius.all(Radius.circular(8)),
-      ),
-      child: Column(
-        children: [
-          InkWell(
-            onTap: () => setState(() => _selectedOption = type),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Radio(
-                  activeColor: ClientConfig.getColorScheme().secondary,
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  visualDensity: const VisualDensity(
-                    horizontal: VisualDensity.minimumDensity,
-                    vertical: VisualDensity.minimumDensity,
-                  ),
-                  value: type,
-                  groupValue: _selectedOption,
-                  onChanged: (RepaymentType? value) {
-                    setState(() {
-                      _selectedOption = value!;
-                    });
-                  },
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Text(
-                    type == RepaymentType.percentage
-                        ? 'Percentage rate repayment'
-                        : 'Fixed rate repayment',
-                    style: ClientConfig.getTextStyleScheme().labelMedium,
-                    textAlign: TextAlign.left,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                InkWell(
-                  child: SvgPicture.asset(
-                    "assets/icons/info.svg",
-                    width: 24,
-                    height: 24,
-                  ),
-                  onTap: () {
-                    final titleOfModal = type == RepaymentType.percentage
-                        ? 'Percentage rate repayment'
-                        : 'Fixed rate repayment';
-                    final messageOfModal = type == RepaymentType.percentage
-                        ? 'Reflects the overall cost of repaying credit, accounting for interest and fees. It allows for transparency and informed financial decisions.'
-                        : 'Ensures stability by keeping the interest rate constant throughout the loan term. It provides predictability.';
-                    showBottomModal(
-                      context: context,
-                      title: titleOfModal,
-                      message: messageOfModal,
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-          if (type == RepaymentType.percentage && type == _selectedOption) ...[
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const SizedBox(height: 8),
-                const Row(
-                  children: [
-                    Expanded(
-                      child: RepaymentConditions(
-                          message:
-                              'Choose your preferred percentage rate. The minimum is 5% and the maximum is 90%.'),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SliderTheme(
-                      data: SliderThemeData(
-                        trackHeight: 8,
-                        trackShape: const RoundedRectSliderTrackShape(),
-                        activeTrackColor: ClientConfig.getColorScheme().secondary,
-                        inactiveTrackColor: const Color(0xFFE9EAEB),
-                        thumbColor: ClientConfig.getColorScheme().primary,
-                        thumbShape: CustomThumb(label: sliderValue),
-                        overlayColor: const Color(0x00FFFF00),
-                        valueIndicatorColor: ClientConfig.getColorScheme().secondary,
-                        valueIndicatorTextStyle: ClientConfig.getTextStyleScheme().bodySmallBold,
-                      ),
-                      child: Expanded(
-                        child: Slider(
-                          value: sliderValue,
-                          onChanged: (double newValue) {
-                            setState(() {
-                              sliderValue = newValue;
-                            });
-                          },
-                          onChangeEnd: (double newValue) {
-                            setState(() {
-                              sliderValue = newValue;
-                            });
+        const SizedBox(height: 16),
+        CustomTextField(
+          viewModel: viewModel,
+          controller: controller,
+          onChanged: (textValue) {
+            final value = double.tryParse(textValue);
 
-                            widget.onPercentageChanged(newValue);
-                          },
-                          min: min,
-                          max: max,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 18),
-                      child: Text('${min.toInt()}%'),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 6),
-                      child: Text('${max.toInt()}%'),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ],
-          if (type == RepaymentType.fixed && type == _selectedOption)
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const SizedBox(height: 8),
-                const Row(
-                  children: [
-                    Expanded(
-                      child: RepaymentConditions(
-                          message:
-                              'Choose your preferred fixed rate. The minimum is €500 and the maximum is €9,000.'),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                CustomTextField(
-                  controller: widget.controller,
-                  onChanged: (textValue) {
-                    final value = double.tryParse(textValue);
-
-                    if (value != null) {
-                      widget.onFixedChanged(value);
-                    }
-                  },
-                ),
-              ],
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-class RepaymentConditions extends StatelessWidget {
-  final String message;
-  const RepaymentConditions({super.key, required this.message});
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      message,
-      style:  ClientConfig.getTextStyleScheme().bodySmallRegular,
+            if (value != null) {
+              onFixedChanged(value);
+            }
+          },
+        ),
+      ],
     );
   }
 }
@@ -435,16 +320,24 @@ class RepaymentConditions extends StatelessWidget {
 class CustomTextField extends StatefulWidget {
   final TextEditingController? controller;
   final void Function(String)? onChanged;
+  final CardApplicationFetchedViewModel viewModel;
 
-  const CustomTextField({super.key, this.controller, this.onChanged});
+  const CustomTextField({super.key, this.controller, this.onChanged, required this.viewModel});
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
 }
 
 class _CustomTextFieldState extends State<CustomTextField> {
-  bool _rangeError = false;
+  bool _inRange = false;
   String errorMessage = '';
+
+  @override
+  void initState() {
+    super.initState();
+    widget.controller!.text =
+        (widget.viewModel.cardApplication!.repaymentOptions!.minimumAmount.value / 100).toString();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -463,17 +356,15 @@ class _CustomTextFieldState extends State<CustomTextField> {
               decoration: BoxDecoration(
                 border: Border.all(
                   width: 1,
-                  color: _rangeError ? Colors.red : const Color(0xFFADADB4),
+                  color: _inRange ? Colors.red : const Color(0xFFADADB4),
                   style: BorderStyle.solid,
                 ),
-                borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(8),
-                    bottomLeft: Radius.circular(8)),
+                borderRadius: const BorderRadius.only(topLeft: Radius.circular(8), bottomLeft: Radius.circular(8)),
                 color: const Color(0xFFF8F9FA),
               ),
               child: Text(
                 '€',
-                style:  ClientConfig.getTextStyleScheme().heading2.copyWith(color: const Color(0xFFADADB4)),
+                style: ClientConfig.getTextStyleScheme().heading2.copyWith(color: const Color(0xFFADADB4)),
               ),
             ),
             Expanded(
@@ -481,6 +372,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
                 controller: widget.controller,
                 onChanged: (text) {
+                  var upperAmount =
+                      widget.viewModel.cardApplication!.repaymentOptions!.minimumAmountUpperThreshold.value / 100;
+
                   if (text.isEmpty) text = '0';
 
                   if (widget.onChanged != null) {
@@ -488,20 +382,18 @@ class _CustomTextFieldState extends State<CustomTextField> {
                   }
 
                   setState(() {
-                    _rangeError =
-                        (double.parse(text) < 500 || double.parse(text) > 9000);
+                    _inRange = (double.parse(text) < (upperAmount * 0.05) || double.parse(text) > (upperAmount * 0.9));
                   });
 
-                  if (double.parse(text) < 500) {
-                    errorMessage = 'Rate is too low. The minimum is €500.';
+                  if (double.parse(text) < (upperAmount * 0.05)) {
+                    errorMessage = 'Rate is too low. The minimum is ${Format.currency((upperAmount * 0.05))}.';
                   }
 
-                  if (double.parse(text) > 9000) {
-                    errorMessage = 'Rate is too high. The maximum is €9,000.';
+                  if (double.parse(text) > (upperAmount * 0.9)) {
+                    errorMessage = 'Rate is too high. The maximum is ${Format.currency((upperAmount * 0.9))}.';
                   }
                 },
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
                 inputFormatters: <TextInputFormatter>[
                   FilteringTextInputFormatter.allow(regExp),
                   TextInputFormatter.withFunction(
@@ -530,7 +422,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                     ),
                     borderSide: BorderSide(
                       width: 1,
-                      color: _rangeError ? Colors.red : const Color(0xFFADADB4),
+                      color: _inRange ? Colors.red : const Color(0xFFADADB4),
                       style: BorderStyle.solid,
                     ),
                   ),
@@ -541,7 +433,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                     ),
                     borderSide: BorderSide(
                       width: 1,
-                      color: _rangeError ? Colors.red : const Color(0xFFADADB4),
+                      color: _inRange ? Colors.red : const Color(0xFFADADB4),
                       style: BorderStyle.solid,
                     ),
                   ),
@@ -550,7 +442,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             ),
           ],
         ),
-        _rangeError
+        _inRange
             ? Text(
                 errorMessage,
                 style: const TextStyle(
@@ -566,59 +458,50 @@ class _CustomTextFieldState extends State<CustomTextField> {
   }
 }
 
-class CustomThumb extends SliderComponentShape {
-  final double label;
-
-  CustomThumb({required this.label});
+class PercentageRepayment extends StatelessWidget {
+  const PercentageRepayment({super.key});
 
   @override
-  Size getPreferredSize(bool isEnabled, bool isDiscrete) {
-    return const Size.fromRadius(20);
-  }
-
-  @override
-  void paint(
-    PaintingContext context,
-    Offset center, {
-    required Animation<double> activationAnimation,
-    required Animation<double> enableAnimation,
-    bool? isDiscrete,
-    TextPainter? labelPainter,
-    double? value,
-    double? textScaleFactor,
-    RenderBox? parentBox,
-    SliderThemeData? sliderTheme,
-    Size? sizeWithOverflow,
-    TextDirection? textDirection,
-    bool isPressed = false,
-  }) {
-    final canvas = context.canvas;
-
-    final paint = Paint()
-      ..color = sliderTheme!.thumbColor!
-      ..style = PaintingStyle.fill;
-    canvas.drawCircle(center, 20, paint);
-
-    final textSpan = TextSpan(
-      text: '${label.round()}%',
-      style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: Colors.white),
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: const BoxDecoration(
+        border: Border.fromBorderSide(
+          BorderSide(
+            width: 1,
+            color: Color(0xFFE9EAEB),
+            style: BorderStyle.solid,
+          ),
+        ),
+        borderRadius: BorderRadius.all(Radius.circular(8)),
+        color: Color(0xFFF8F9FA),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              SvgPicture.asset(
+                "assets/icons/info.svg",
+                width: 24,
+                height: 24,
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Text(
+                  '5% interest rate',
+                  style: ClientConfig.getTextStyleScheme().heading4,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+              'Our fixed interest rate of 5% remains the same, no matter the repayment type or rate you select. It will accrue based on your outstanding balance after the repayment has been deducted.',
+              style: ClientConfig.getTextStyleScheme().bodyLargeRegular),
+        ],
+      ),
     );
-
-    final textPainter = TextPainter(
-      text: textSpan,
-      textDirection: TextDirection.ltr,
-      textAlign: TextAlign.center,
-    );
-    textPainter.layout();
-
-    final textOffset = Offset(
-        center.dx - textPainter.width / 2, center.dy - textPainter.height / 2);
-
-    textPainter.paint(canvas, textOffset);
   }
-}
-
-enum RepaymentType {
-  percentage,
-  fixed,
 }

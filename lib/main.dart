@@ -16,6 +16,7 @@ import 'package:solarisdemo/infrastructure/notifications/push_notification_servi
 import 'package:solarisdemo/infrastructure/notifications/push_notification_storage_service.dart';
 import 'package:solarisdemo/infrastructure/person/person_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/bills/bill_service.dart';
+import 'package:solarisdemo/infrastructure/repayments/change_repayment/change_repayment_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/more_credit/more_credit_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/reminder/repayment_reminder_service.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart';
@@ -56,6 +57,7 @@ Store<AppState> _buildStore() {
     transactionService: TransactionService(),
     creditLineService: CreditLineService(),
     repaymentReminderService: RepaymentReminderService(),
+    cardApplicationService: CardApplicationService(),
     billService: BillService(),
     moreCreditService: MoreCreditService(),
     bankCardService: BankCardService(),

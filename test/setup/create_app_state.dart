@@ -7,6 +7,7 @@ import 'package:solarisdemo/redux/notification/notification_state.dart';
 import 'package:solarisdemo/redux/person/person_account/person_account_state.dart';
 import 'package:solarisdemo/redux/person/reference_account/reference_account_state.dart';
 import 'package:solarisdemo/redux/repayments/bills/bills_state.dart';
+import 'package:solarisdemo/redux/repayments/change_repayment/change_repayment_state.dart';
 import 'package:solarisdemo/redux/repayments/more_credit/more_credit_state.dart';
 import 'package:solarisdemo/redux/repayments/reminder/repayment_reminder_state.dart';
 import 'package:solarisdemo/redux/transactions/approval/transaction_approval_state.dart';
@@ -17,6 +18,7 @@ AppState createAppState({
   TransactionsState? transactionsState,
   CreditLineState? creditLineState,
   RepaymentReminderState? repaymentReminderState,
+  CardApplicationState? cardApplicationState,
   BillsState? billsState,
   MoreCreditState? moreCreditState,
   BankCardState? bankCardState,
@@ -33,6 +35,7 @@ AppState createAppState({
     transactionsState: transactionsState ?? TransactionsInitialState(),
     creditLineState: creditLineState ?? CreditLineInitialState(),
     repaymentReminderState: repaymentReminderState ?? RepaymentReminderInitialState(),
+    cardApplicationState: cardApplicationState ?? CardApplicationInitialState(),
     billsState: billsState ?? BillsInitialState(),
     moreCreditState: moreCreditState ?? MoreCreditInitialState(),
     bankCardState: bankCardState ?? BankCardInitialState(),
