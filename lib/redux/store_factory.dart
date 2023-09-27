@@ -12,6 +12,8 @@ import 'package:solarisdemo/infrastructure/device/device_binding_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/notifications_middleware.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
+import 'package:solarisdemo/infrastructure/person/account_summary/account_summary_middleware.dart';
+import 'package:solarisdemo/infrastructure/person/account_summary/account_summary_service.dart';
 import 'package:solarisdemo/infrastructure/person/person_account_middleware.dart';
 import 'package:solarisdemo/infrastructure/person/person_service.dart';
 import 'package:solarisdemo/infrastructure/person/reference_account_middleware.dart';
@@ -51,6 +53,7 @@ Store<AppState> createStore({
   required DeviceService deviceService,
   required BiometricsService biometricsService,
   required DeviceInfoService deviceInfoService,
+  required AccountSummaryService accountSummaryService,
 }) {
   return Store<AppState>(
     appReducer,
@@ -70,6 +73,7 @@ Store<AppState> createStore({
       TransferMiddleware(transferService, changeRequestService),
       DeviceBindingMiddleware(deviceBindingService, deviceService, deviceInfoService),
       TransactionApprovalMiddleware(changeRequestService, deviceService, biometricsService),
+      GetAccountSummaryMiddleware(accountSummaryService),
     ],
   );
 }

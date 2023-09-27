@@ -4,6 +4,7 @@ import 'package:solarisdemo/redux/categories/category_state.dart';
 import 'package:solarisdemo/redux/credit_line/credit_line_state.dart';
 import 'package:solarisdemo/redux/device/device_state.dart';
 import 'package:solarisdemo/redux/notification/notification_state.dart';
+import 'package:solarisdemo/redux/person/account_summary/account_summay_state.dart';
 import 'package:solarisdemo/redux/person/person_account/person_account_state.dart';
 import 'package:solarisdemo/redux/person/reference_account/reference_account_state.dart';
 import 'package:solarisdemo/redux/repayments/bills/bills_state.dart';
@@ -30,6 +31,7 @@ class AppState extends Equatable {
   final DeviceBindingState deviceBindingState;
   final NotificationState notificationState;
   final TransactionApprovalState transactionApprovalState;
+  final AccountSummaryState accountSummaryState;
 
   const AppState({
     required this.transactionsState,
@@ -47,6 +49,7 @@ class AppState extends Equatable {
     required this.deviceBindingState,
     required this.notificationState,
     required this.transactionApprovalState,
+    required this.accountSummaryState,
   });
 
   factory AppState.initialState() {
@@ -66,6 +69,7 @@ class AppState extends Equatable {
       deviceBindingState: DeviceBindingInitialState(),
       notificationState: NotificationInitialState(),
       transactionApprovalState: TransactionApprovalInitialState(),
+      accountSummaryState: AccountSummaryInitialState(),
     );
   }
 
