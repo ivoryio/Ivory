@@ -166,6 +166,7 @@ class ActiveCard extends StatelessWidget {
                 print(prefs.getString('unrestrictedKeyPair'));
                 print(prefs.getString('restrictedKeyPair'));
                 print(viewModel.bankCard!.id);
+                print(viewModel.user!.person.id);
                 //log all cache
               },
             ),

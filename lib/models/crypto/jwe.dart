@@ -31,5 +31,5 @@ class Jwe {
 
 
 // You can define your default values here
-String _defaultJWEalg = "RSA1_5";
+String _defaultJWEalg = "RSA-OAEP-256";
 String _defaultJWEenc = "A256GCM";
