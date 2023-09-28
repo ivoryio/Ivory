@@ -8,12 +8,11 @@ import 'package:solarisdemo/infrastructure/bank_card/bank_card_presenter.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
-import 'package:solarisdemo/screens/wallet/card_details/card_details_choose_pin.dart';
+import 'package:solarisdemo/screens/wallet/card_activation/card_activation_choose_pin.dart';
 import 'package:solarisdemo/utilities/ivory_color_mapper.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
-
 
 class BankCardDetailsInfoScreen extends StatelessWidget {
   static const routeName = '/cardDetailsInfoScreen';
@@ -49,9 +48,7 @@ class BankCardDetailsInfoScreen extends StatelessWidget {
                       ),
                     ],
                   )),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                  ),
+                  padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
                   backButtonEnabled: true,
                   onBackButtonPressed: () {
                     Navigator.pop(context);
@@ -65,6 +62,9 @@ class BankCardDetailsInfoScreen extends StatelessWidget {
                   value: 1 / 3,
                   color: ClientConfig.getColorScheme().secondary,
                   backgroundColor: const Color(0xFFE9EAEB),
+                ),
+                const SizedBox(
+                  height: 16,
                 ),
                 Expanded(
                   child: Padding(
@@ -85,10 +85,12 @@ class BankCardDetailsInfoScreen extends StatelessWidget {
                         ),
                         Expanded(
                           child: Center(
-                            child:  SvgPicture(
+                            child: SvgPicture(
                               SvgAssetLoader(
                                 'assets/images/choose_pin.svg',
-                                colorMapper: IvoryColorMapper(baseColor: ClientConfig.getColorScheme().secondary,),
+                                colorMapper: IvoryColorMapper(
+                                  baseColor: ClientConfig.getColorScheme().secondary,
+                                ),
                               ),
                             ),
                           ),

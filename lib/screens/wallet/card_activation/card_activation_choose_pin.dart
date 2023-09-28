@@ -7,7 +7,7 @@ import 'package:solarisdemo/infrastructure/bank_card/bank_card_presenter.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
-import 'package:solarisdemo/screens/wallet/card_details/card_details_confirm_pin_screen.dart';
+import 'package:solarisdemo/screens/wallet/card_activation/card_activation_confirm_pin_screen.dart';
 import 'package:solarisdemo/utilities/validator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/pin_field.dart';
@@ -19,12 +19,10 @@ class BankCardDetailsChoosePinScreen extends StatefulWidget {
   const BankCardDetailsChoosePinScreen({super.key});
 
   @override
-  State<BankCardDetailsChoosePinScreen> createState() =>
-      _BankCardDetailsChoosePinScreenState();
+  State<BankCardDetailsChoosePinScreen> createState() => _BankCardDetailsChoosePinScreenState();
 }
 
-class _BankCardDetailsChoosePinScreenState
-    extends State<BankCardDetailsChoosePinScreen> {
+class _BankCardDetailsChoosePinScreenState extends State<BankCardDetailsChoosePinScreen> {
   late bool pinDiffersBirthDate = true;
   late bool pinDiffersPostalCode = true;
   late bool pinIsNotASequence = true;
@@ -59,10 +57,7 @@ class _BankCardDetailsChoosePinScreenState
                     ),
                   ],
                 )),
-                padding: EdgeInsets.symmetric(
-                  horizontal: ClientConfig.getCustomClientUiSettings()
-                      .defaultScreenHorizontalPadding,
-                ),
+                padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
                 backButtonEnabled: true,
                 onBackButtonPressed: () {
                   Navigator.pop(context);
@@ -73,17 +68,14 @@ class _BankCardDetailsChoosePinScreenState
                 color: ClientConfig.getColorScheme().secondary,
                 backgroundColor: const Color(0xFFE9EAEB),
               ),
+              const SizedBox(
+                height: 16,
+              ),
               Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: ClientConfig.getCustomClientUiSettings()
-                      .defaultScreenHorizontalPadding,
-                ),
+                padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(
-                      height: 24,
-                    ),
                     Text(
                       'Choose PIN',
                       style: ClientConfig.getTextStyleScheme().heading2,
@@ -129,14 +121,7 @@ class _BankCardDetailsChoosePinScreenState
               if (!completed) const Spacer(),
               if (!completed)
                 Padding(
-                  padding: EdgeInsets.only(
-                    right: ClientConfig.getCustomClientUiSettings()
-                        .defaultScreenHorizontalPadding,
-                    left: ClientConfig.getCustomClientUiSettings()
-                        .defaultScreenHorizontalPadding,
-                    bottom: ClientConfig.getCustomClientUiSettings()
-                        .defaultScreenHorizontalPadding,
-                  ),
+                  padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -173,6 +158,9 @@ class _BankCardDetailsChoosePinScreenState
                         icon: Icons.close,
                         validColor: const Color(0xFF15141E),
                         invalidColor: const Color(0xFFE61F27),
+                      ),
+                      const SizedBox(
+                        height: 24,
                       ),
                     ],
                   ),
@@ -318,7 +306,8 @@ class PinValidityRule extends StatelessWidget {
         ),
         Text(
           text,
-          style: ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(color: isValid ? validColor : invalidColor),
+          style:
+              ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(color: isValid ? validColor : invalidColor),
         ),
       ],
     );

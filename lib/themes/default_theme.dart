@@ -41,12 +41,13 @@ class DefaultTheme {
       ),
     ),
     customSettings: CustomClientUiSettings(
-      defaultScreenHorizontalPadding: 24,
-      defaultScreenVerticalPadding: 24,
-      defaultScreenPadding: const EdgeInsets.symmetric(
-        horizontal: 24,
-        vertical: 24,
-      ),
+      defaultScreenTopPadding: 0,
+      defaultScreenBottomPadding: 16,
+      defaultScreenLeftPadding: 24,
+      defaultScreenRightPadding: 24,
+      defaultScreenHorizontalPadding: const EdgeInsets.symmetric(horizontal: 24),
+      defaultScreenVerticalPadding: const EdgeInsets.only(top: 0, bottom: 16),
+      defaultScreenPadding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
     ),
     labelTextStyle: TextStyleScheme(
       display: const TextStyle(
@@ -269,11 +270,19 @@ class ClientUiSettings {
 }
 
 class CustomClientUiSettings {
-  final double defaultScreenHorizontalPadding;
-  final double defaultScreenVerticalPadding;
+  final double defaultScreenTopPadding;
+  final double defaultScreenBottomPadding;
+  final double defaultScreenLeftPadding;
+  final double defaultScreenRightPadding;
+  final EdgeInsets defaultScreenHorizontalPadding;
+  final EdgeInsets defaultScreenVerticalPadding;
   final EdgeInsets defaultScreenPadding;
 
   CustomClientUiSettings({
+    required this.defaultScreenTopPadding,
+    required this.defaultScreenBottomPadding,
+    required this.defaultScreenLeftPadding,
+    required this.defaultScreenRightPadding,
     required this.defaultScreenHorizontalPadding,
     required this.defaultScreenVerticalPadding,
     required this.defaultScreenPadding,

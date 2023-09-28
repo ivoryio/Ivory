@@ -53,9 +53,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 );
               },
               child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                ),
+                padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
                 child: Column(
                   children: [
                     const AppToolbar(title: "Transactions"),
@@ -64,7 +62,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const SizedBox(height: 16),
                             CustomSearchBar(
                               hintText: "Search by name, date",
                               textLabel: viewModel.transactionListFilter?.searchString,

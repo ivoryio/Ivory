@@ -27,7 +27,7 @@ class BillsScreen extends StatelessWidget {
     return ScreenScaffold(
       body: Padding(
         padding:
-            EdgeInsets.symmetric(horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding),
+            ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

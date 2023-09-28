@@ -32,21 +32,15 @@ class _MoreCreditScreenState extends State<MoreCreditScreen> {
 
     return ScreenScaffold(
       body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: ClientConfig.getCustomClientUiSettings()
-              .defaultScreenHorizontalPadding,
-          vertical: 0,
-        ),
+        padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const AppToolbar(),
-            const SizedBox(height: 24),
             Text(
               'Need more credit?',
               style: ClientConfig.getTextStyleScheme().heading1,
             ),
-            const SizedBox(height: 16),
             Text.rich(
               TextSpan(
                 style: ClientConfig.getTextStyleScheme().mixedStyles,
@@ -121,7 +115,6 @@ class _MoreCreditScreenState extends State<MoreCreditScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 16),
           ],
         ),
       ),

@@ -76,17 +76,11 @@ class SettingsPairedDeviceDetailsScreen extends StatelessWidget {
               AppToolbar(
                 backButtonEnabled: viewModel is! DeviceBindingLoadingViewModel,
                 title: '',
-                padding: EdgeInsets.symmetric(
-                  horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                ),
+                padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
               ),
               Expanded(
                 child: Padding(
-                  padding: EdgeInsets.only(
-                    left: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                    right: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                    bottom: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                  ),
+                  padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

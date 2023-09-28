@@ -26,7 +26,7 @@ class BillDetailScreen extends StatelessWidget {
     return ScreenScaffold(
       body: SingleChildScrollView(
         padding:
-            EdgeInsets.symmetric(horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding),
+            ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
         child: StoreConnector<AppState, BillDetailViewModel>(
           onInit: (store) {
             store.dispatch(GetBillByIdCommandAction(id: billId, user: user.cognito));
@@ -70,7 +70,8 @@ class BillDetailScreen extends StatelessWidget {
                               ),
                               ...bill.transactions!.map(
                                 (transaction) => Padding(
-                                  padding: const EdgeInsets.only(left: 24),
+                                  padding: EdgeInsets.only(
+                                      left: ClientConfig.getCustomClientUiSettings().defaultScreenLeftPadding),
                                   child: ExpandedDetailsRow(
                                     title: transaction.merchantName,
                                     trailing: Format.euro(transaction.amount.value),

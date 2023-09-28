@@ -40,8 +40,7 @@ class _RepaymentReminderScreenState extends State<RepaymentReminderScreen> {
 
     return ScreenScaffold(
       body: Padding(
-        padding:
-            EdgeInsets.symmetric(horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding),
+        padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
         child: Column(
           children: [
             const AppToolbar(),
@@ -181,7 +180,6 @@ class _RepaymentReminderScreenState extends State<RepaymentReminderScreen> {
                 textColor: ClientConfig.getColorScheme().surface,
               ),
             ),
-            const SizedBox(height: 16),
           ],
         ),
       ),

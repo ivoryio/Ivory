@@ -28,63 +28,57 @@ class SettingsDevicePairingScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         AppToolbar(
-          padding: EdgeInsets.symmetric(
-            horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-          ),
+          padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
         ),
         Expanded(
           child: Padding(
-              padding: EdgeInsets.only(
-                left: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                right: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                bottom: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Device pairing',
-                    style: ClientConfig.getTextStyleScheme().heading1,
+            padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Device pairing',
+                  style: ClientConfig.getTextStyleScheme().heading1,
+                ),
+                const SizedBox(
+                  height: 24,
+                ),
+                StoreConnector<AppState, DeviceBindingViewModel>(
+                  onInit: (store) {
+                    store.dispatch(FetchBoundDevicesCommandAction());
+                  },
+                  converter: (store) => DeviceBindingPresenter.presentDeviceBinding(
+                    deviceBindingState: store.state.deviceBindingState,
                   ),
-                  const SizedBox(
-                    height: 24,
-                  ),
-                  StoreConnector<AppState, DeviceBindingViewModel>(
-                    onInit: (store) {
-                      store.dispatch(FetchBoundDevicesCommandAction());
-                    },
-                    converter: (store) => DeviceBindingPresenter.presentDeviceBinding(
-                      deviceBindingState: store.state.deviceBindingState,
-                    ),
-                    builder: (context, viewModel) {
-                      if (viewModel is DeviceBindingLoadingViewModel) {
-                        return const Expanded(
-                          child: Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                        );
-                      }
-                      if (viewModel is DeviceBindingErrorViewModel) {
-                        return const Center(
-                          child: Text('Error'),
-                        );
-                      }
-                      if (viewModel is DeviceBindingFetchedViewModel ||
-                          viewModel is DeviceBindingFetchedButEmptyViewModel) {
-                        return _buildPageContent(
-                          context: context,
-                          viewModel: viewModel,
-                          user: user,
-                        );
-                      }
+                  builder: (context, viewModel) {
+                    if (viewModel is DeviceBindingLoadingViewModel) {
                       return const Expanded(
                         child: Center(
                           child: CircularProgressIndicator(),
                         ),
                       );
-                    },
-                  ),
-                ],
+                    }
+                    if (viewModel is DeviceBindingErrorViewModel) {
+                      return const Center(
+                        child: Text('Error'),
+                      );
+                    }
+                    if (viewModel is DeviceBindingFetchedViewModel ||
+                        viewModel is DeviceBindingFetchedButEmptyViewModel) {
+                      return _buildPageContent(
+                        context: context,
+                        viewModel: viewModel,
+                        user: user,
+                      );
+                    }
+                    return const Expanded(
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
           ),
         ),

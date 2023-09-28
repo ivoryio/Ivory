@@ -111,9 +111,7 @@ class _CountdownScreenState extends State<CountdownScreen>
 
     return ScreenScaffold(
       body: Padding(
-        padding: EdgeInsets.symmetric(
-            horizontal: ClientConfig.getCustomClientUiSettings()
-                .defaultScreenHorizontalPadding),
+        padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
         child: Column(
           children: [
             const AppToolbar(title: "Sign Up"),

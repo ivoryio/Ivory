@@ -62,9 +62,7 @@ class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
           SliverFillRemaining(
             hasScrollBody: false,
             child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-              ),
+              padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -172,7 +170,6 @@ class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
                                       : null,
                                 ),
                               ),
-                              const SizedBox(height: 8),
                             ],
                           );
                         }
@@ -197,10 +194,7 @@ class ShowBottomModalActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: 0,
-        vertical: ClientConfig.getCustomClientUiSettings().defaultScreenVerticalPadding,
-      ),
+      padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.stretch,

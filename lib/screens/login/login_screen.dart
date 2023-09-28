@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/screens/landing/landing_screen.dart';
 import 'package:solarisdemo/screens/login/login_consent_screen.dart';
 import 'package:solarisdemo/services/device_service.dart';
@@ -36,10 +37,10 @@ class LoginScreen extends StatelessWidget {
       child: BlocBuilder<LoginCubit, LoginState>(
         builder: (context, state) {
           if (state is LoginInitial) {
-            return const ScreenScaffold(
+            return ScreenScaffold(
               body: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
+                padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+                child: const Column(
                   children: [
                     AppToolbar(title: "Login"),
                     Expanded(child: LoginOptions()),
@@ -57,7 +58,7 @@ class LoginScreen extends StatelessWidget {
           if (state is LoginError) {
             return ScreenScaffold(
               body: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
+                padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
                 child: Center(
                   child: Column(
                     children: [

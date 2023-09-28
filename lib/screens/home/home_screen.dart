@@ -122,9 +122,8 @@ class HomePageContent extends StatelessWidget {
                               transaction: transaction,
                             ),
                           Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 0,
-                              vertical: ClientConfig.getCustomClientUiSettings().defaultScreenVerticalPadding,
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 24,
                             ),
                             child: Analytics(
                               transactions: viewModel.transactions!,
@@ -141,10 +140,7 @@ class HomePageContent extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-              vertical: 0,
-            ),
+            padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
             child: const Rewards(),
           ),
         ],
@@ -174,9 +170,7 @@ class HomePageHeader extends StatelessWidget {
         builder: (context, viewModel) {
           if (viewModel is AccountSummaryFetchedViewModel || viewModel is AccountSummaryLoadingViewModel) {
             return Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-              ),
+              padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.only(

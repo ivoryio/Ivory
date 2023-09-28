@@ -146,7 +146,7 @@ class TransactionDetailScreen extends StatelessWidget {
     return ScreenScaffold(
       body: SingleChildScrollView(
         padding:
-            EdgeInsets.symmetric(horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding),
+            ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
         child: _Content(
           amountValue: amountValue,
           mainIcon: mainIcon,
@@ -200,7 +200,6 @@ class _Content extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const AppToolbar(),
-        const SizedBox(height: 16),
         Material(
           color: const Color(0xFFF8F9FA),
           shape: const RoundedRectangleBorder(

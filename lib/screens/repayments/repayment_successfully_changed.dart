@@ -39,8 +39,7 @@ class RepaymentSuccessfullyChangedScreen extends StatelessWidget {
 
     return ScreenScaffold(
         body: Padding(
-      padding:
-          EdgeInsets.symmetric(horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding),
+      padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
       child: Column(
         children: [
           const AppToolbar(
@@ -96,7 +95,6 @@ class RepaymentSuccessfullyChangedScreen extends StatelessWidget {
               },
             ),
           ),
-          const SizedBox(height: 8),
         ],
       ),
     ));
