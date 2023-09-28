@@ -1,16 +1,18 @@
 import 'dart:developer';
 
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:solarisdemo/infrastructure/person/account_summary/account_summary_presenter.dart';
+import 'package:solarisdemo/redux/person/account_summary/account_summay_action.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../config.dart';
-import '../../cubits/account_summary_cubit/account_summary_cubit.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../models/user.dart';
-import '../../services/person_service.dart';
+import '../../redux/app_state.dart';
 import '../../utilities/format.dart';
 
 class AccountDetailsScreen extends StatelessWidget {
@@ -64,13 +66,6 @@ class AccountDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     AuthenticatedUser user = context.read<AuthCubit>().state.user!;
 
-    AccountSummaryCubit accountSummaryCubit =
-        AccountSummaryCubit(personService: PersonService(user: user.cognito))
-          ..getAccountSummary();
-
-    late String iban;
-    late String bic;
-
     return ScreenScaffold(
       body: Padding(
         padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
@@ -96,107 +91,111 @@ class AccountDetailsScreen extends StatelessWidget {
                   Radius.circular(16),
                 ),
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+              child: StoreConnector<AppState, AccountSummaryViewModel>(
+                onInit: (store) {
+                  store.dispatch(GetAccountSummaryCommandAction(user: user.cognito));
+                },
+                converter: (store) =>
+                    AccountSummaryPresenter.presentAccountSummary(accountSummaryState: store.state.accountSummaryState),
+                builder: (context, viewModel) {
+                  return Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
                       children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text(
-                              'IBAN',
-                              style:
-                                  ClientConfig.getTextStyleScheme().labelSmall,
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'IBAN',
+                                  style:
+                                  ClientConfig
+                                      .getTextStyleScheme()
+                                      .labelSmall,
+                                ),
+                                const SizedBox(height: 4),
+                               ibanFromViewModel(viewModel),
+                              ],
                             ),
-                            const SizedBox(height: 4),
-                            BlocProvider<AccountSummaryCubit>.value(
-                              value: accountSummaryCubit,
-                              child: BlocBuilder<AccountSummaryCubit,
-                                  AccountSummaryCubitState>(
-                                builder: (context, state) {
-                                  if (state is AccountSummaryCubitLoaded) {
-                                    iban = state.data!.iban ?? '';
-                                    iban = Format.iban(iban);
-
-                                    return Text(
-                                      iban,
-                                      style: ClientConfig.getTextStyleScheme()
-                                          .bodyLargeRegular,
-                                    );
-                                  }
-
-                                  return const Text('');
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                        CopyContentButton(
-                          onPressed: () {
-                            inspect(iban);
-                            showAlertDialog(context, iban);
-                          },
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'BIC',
-                              style:
-                                  ClientConfig.getTextStyleScheme().labelSmall,
-                            ),
-                            const SizedBox(height: 4),
-                            BlocProvider<AccountSummaryCubit>.value(
-                              value: accountSummaryCubit,
-                              child: BlocBuilder<AccountSummaryCubit,
-                                  AccountSummaryCubitState>(
-                                builder: (context, state) {
-                                  if (state is AccountSummaryCubitLoaded) {
-                                    bic = state.data!.bic ?? '';
-
-                                    return Text(
-                                      bic,
-                                      style: ClientConfig.getTextStyleScheme()
-                                          .bodyLargeRegular,
-                                    );
-                                  }
-
-                                  return const Text('');
-                                },
-                              ),
+                            CopyContentButton(
+                              onPressed: () {
+                                inspect(viewModel.accountSummary?.iban ?? '');
+                                showAlertDialog(context, viewModel.accountSummary?.iban ?? '');
+                              },
                             ),
                           ],
                         ),
                         const SizedBox(height: 16),
-                        CopyContentButton(
-                          onPressed: () {
-                            inspect(bic);
-                            showAlertDialog(context, bic);
-                          },
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'BIC',
+                                  style:
+                                  ClientConfig
+                                      .getTextStyleScheme()
+                                      .labelSmall,
+                                ),
+                                const SizedBox(height: 4),
+                               bicFromViewModel(viewModel),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            CopyContentButton(
+                              onPressed: () {
+                                inspect(viewModel.accountSummary?.bic ?? '');
+                                showAlertDialog(context, viewModel.accountSummary?.bic ?? '');
+                              },
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
-                ),
-              ),
+                  );
+                }),
             ),
           ],
         ),
       ),
     );
+  }
+
+  Widget ibanFromViewModel(AccountSummaryViewModel viewModel) {
+    if(viewModel is AccountSummaryFetchedViewModel) {
+      String iban = viewModel.accountSummary?.iban ?? '';
+      iban = Format.iban(iban);
+
+      return Text(
+        iban,
+        style: ClientConfig
+            .getTextStyleScheme()
+            .bodyLargeRegular,
+      );
+    }
+    return const Text(' ');
+  }
+
+  Widget bicFromViewModel(AccountSummaryViewModel viewModel) {
+    if(viewModel is AccountSummaryFetchedViewModel) {
+      String bic = viewModel.accountSummary?.bic ?? '';
+
+      return Text(
+        bic,
+        style: ClientConfig
+            .getTextStyleScheme()
+            .bodyLargeRegular,
+      );
+    }
+    return const Text(' ');
   }
 }
 

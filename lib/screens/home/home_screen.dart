@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-import 'package:solarisdemo/models/person_account_summary.dart';
+import 'package:solarisdemo/infrastructure/person/account_summary/account_summary_presenter.dart';
 import 'package:solarisdemo/models/person_model.dart';
 import 'package:solarisdemo/screens/account/account_details_screen.dart';
 import 'package:solarisdemo/screens/repayments/repayments_screen.dart';
@@ -12,14 +12,13 @@ import 'package:solarisdemo/widgets/rewards.dart';
 import 'package:solarisdemo/widgets/screen.dart';
 
 import '../../config.dart';
-import '../../cubits/account_summary_cubit/account_summary_cubit.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../infrastructure/transactions/transaction_presenter.dart';
 import '../../models/transactions/transaction_model.dart';
 import '../../models/user.dart';
 import '../../redux/app_state.dart';
+import '../../redux/person/account_summary/account_summay_action.dart';
 import '../../redux/transactions/transactions_action.dart';
-import '../../services/person_service.dart';
 import '../../widgets/account_balance_text.dart';
 import '../../widgets/analytics.dart';
 import '../../widgets/transaction_listing_item.dart';
@@ -41,9 +40,6 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AuthenticatedUser user = context.read<AuthCubit>().state.user!;
-
-    AccountSummaryCubit accountSummaryCubit = AccountSummaryCubit(personService: PersonService(user: user.cognito))
-      ..getAccountSummary();
 
     return Screen(
       title: 'Welcome ${user.cognito.firstName}!',
@@ -70,7 +66,6 @@ class HomeScreen extends StatelessWidget {
       titleTextStyle: ClientConfig.getTextStyleScheme().heading3.copyWith(color: Colors.white),
       centerTitle: false,
       child: HomePageContent(
-        accountSummaryCubit: accountSummaryCubit,
         user: user,
       ),
     );
@@ -78,13 +73,11 @@ class HomeScreen extends StatelessWidget {
 }
 
 class HomePageContent extends StatelessWidget {
-  final AccountSummaryCubit accountSummaryCubit;
   final AuthenticatedUser user;
 
   const HomePageContent({
     super.key,
     required this.user,
-    required this.accountSummaryCubit,
   });
 
   @override
@@ -96,7 +89,7 @@ class HomePageContent extends StatelessWidget {
         children: [
           HomePageHeader(
             customer: user.person,
-            accountSummaryCubit: accountSummaryCubit,
+            user: user,
           ),
           Padding(
             padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
@@ -157,22 +150,25 @@ class HomePageContent extends StatelessWidget {
 }
 
 class HomePageHeader extends StatelessWidget {
-  final AccountSummaryCubit accountSummaryCubit;
   final Person customer;
+  final AuthenticatedUser user;
 
   const HomePageHeader({
     super.key,
     required this.customer,
-    required this.accountSummaryCubit,
+    required this.user,
   });
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<AccountSummaryCubit>.value(
-      value: accountSummaryCubit,
-      child: BlocBuilder<AccountSummaryCubit, AccountSummaryCubitState>(
-        builder: (context, state) {
-          if (state is AccountSummaryCubitLoaded || state is AccountSummaryCubitLoading) {
+    return StoreConnector<AppState, AccountSummaryViewModel>(
+      onInit: (store) {
+        store.dispatch(GetAccountSummaryCommandAction(user: user.cognito));
+      },
+      converter: (store) =>
+          AccountSummaryPresenter.presentAccountSummary(accountSummaryState: store.state.accountSummaryState),
+        builder: (context, viewModel) {
+          if (viewModel is AccountSummaryFetchedViewModel || viewModel is AccountSummaryLoadingViewModel) {
             return Container(
               padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
               width: MediaQuery.of(context).size.width,
@@ -186,12 +182,12 @@ class HomePageHeader extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (state is AccountSummaryCubitLoaded)
+                  if (viewModel is AccountSummaryFetchedViewModel)
                     AccountSummary(
-                      spending: state.data?.spending ?? 0,
-                      availableBalance: state.data?.availableBalance?.value ?? 0,
-                      outstandingAmount: state.data?.outstandingAmount ?? 0,
-                      creditLimit: state.data?.creditLimit ?? 0,
+                      spending: viewModel.accountSummary?.spending ?? 0,
+                      availableBalance:viewModel.accountSummary?.availableBalance?.value ?? 0,
+                      outstandingAmount: viewModel.accountSummary?.outstandingAmount ?? 0,
+                      creditLimit: viewModel.accountSummary?.creditLimit ?? 0,
                     )
                   else
                     const Center(
@@ -212,7 +208,6 @@ class HomePageHeader extends StatelessWidget {
 
           return const Text("Could not load account summary");
         },
-      ),
     );
   }
 }
@@ -237,6 +232,8 @@ class AccountSummary extends StatelessWidget {
       children: [
         AccountBalance(
           value: availableBalance,
+          outstandingAmount: outstandingAmount,
+          creditLimit: creditLimit,
         ),
         AccountStats(
           spending: spending,
@@ -250,16 +247,18 @@ class AccountSummary extends StatelessWidget {
 
 class AccountBalance extends StatelessWidget {
   final num value;
+  final num? outstandingAmount;
+  final num? creditLimit;
 
   const AccountBalance({
     super.key,
     required this.value,
+    this.outstandingAmount,
+    this.creditLimit,
   });
 
   @override
   Widget build(BuildContext context) {
-    PersonAccountSummary personAccountSummary = context.read<AccountSummaryCubit>().state.data!;
-
     return Column(
       children: [
          Row(
@@ -295,9 +294,9 @@ class AccountBalance extends StatelessWidget {
         LinearPercentIndicator(
           lineHeight: 8,
           barRadius: const Radius.circular(40),
-          percent: ((personAccountSummary.outstandingAmount ?? 0) / (personAccountSummary.creditLimit ?? 0)).isInfinite
+          percent: ((outstandingAmount ?? 0) / (creditLimit ?? 0)).isInfinite
               ? 0
-              : (personAccountSummary.outstandingAmount ?? 0) / (personAccountSummary.creditLimit ?? 0.01),
+              : (outstandingAmount ?? 0) / (creditLimit ?? 0.01),
           backgroundColor: const Color(0x26F8F9FA),
           progressColor: ClientConfig.getColorScheme().secondary,
           curve: Curves.fastOutSlowIn,

@@ -188,6 +188,9 @@ class _DetailsContentState extends State<_DetailsContent> {
 
   @override
   Widget build(BuildContext context) {
+    var outstandingAmount = widget.viewModel.creditLine.outstandingAmount.value;
+    var currentBillAmount = widget.viewModel.creditLine.currentBillAmount.value;
+
     return Padding(
       padding: const EdgeInsets.only(top: 16),
       child: Column(
@@ -195,7 +198,7 @@ class _DetailsContentState extends State<_DetailsContent> {
         children: [
           _DetailsItem(
             title: 'Outstanding balance',
-            subtitle: Format.euro(widget.viewModel.creditLine.outstandingAmount.value),
+            subtitle: outstandingAmount == 0 ? '€ 0' : Format.euro(outstandingAmount),
             onInfoIconTap: () {
               showBottomModal(
                 context: context,
@@ -208,7 +211,7 @@ class _DetailsContentState extends State<_DetailsContent> {
           const Divider(height: 24),
           _DetailsItem(
             title: 'Next full repayment',
-            subtitle: Format.euro(widget.viewModel.creditLine.currentBillAmount.value),
+            subtitle: currentBillAmount == 0 ? '€ 0' : Format.euro(currentBillAmount),
             onInfoIconTap: () {
               showBottomModal(
                 context: context,

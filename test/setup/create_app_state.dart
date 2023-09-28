@@ -4,6 +4,7 @@ import 'package:solarisdemo/redux/categories/category_state.dart';
 import 'package:solarisdemo/redux/credit_line/credit_line_state.dart';
 import 'package:solarisdemo/redux/device/device_state.dart';
 import 'package:solarisdemo/redux/notification/notification_state.dart';
+import 'package:solarisdemo/redux/person/account_summary/account_summay_state.dart';
 import 'package:solarisdemo/redux/person/person_account/person_account_state.dart';
 import 'package:solarisdemo/redux/person/reference_account/reference_account_state.dart';
 import 'package:solarisdemo/redux/repayments/bills/bills_state.dart';
@@ -30,6 +31,7 @@ AppState createAppState({
   DeviceBindingState? deviceBindingState,
   NotificationState? notificationState,
   TransactionApprovalState? transactionApprovalState,
+  AccountSummaryState? accountSummaryState,
 }) {
   return AppState(
     transactionsState: transactionsState ?? TransactionsInitialState(),
@@ -47,5 +49,6 @@ AppState createAppState({
     deviceBindingState: deviceBindingState ?? DeviceBindingInitialState(),
     notificationState: notificationState ?? NotificationInitialState(),
     transactionApprovalState: transactionApprovalState ?? TransactionApprovalInitialState(),
+    accountSummaryState: accountSummaryState ?? AccountSummaryInitialState(),
   );
 }
