@@ -23,18 +23,11 @@ class SettingsDevicePairingSuccessScreen extends StatelessWidget {
         children: [
           AppToolbar(
             backButtonEnabled: false,
-            padding: EdgeInsets.symmetric(
-              horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-              vertical: ClientConfig.getCustomClientUiSettings().defaultScreenVerticalPadding,
-            ),
+            padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
           ),
           Expanded(
             child: Padding(
-              padding: EdgeInsets.only(
-                left: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                right: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                bottom: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-              ),
+              padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

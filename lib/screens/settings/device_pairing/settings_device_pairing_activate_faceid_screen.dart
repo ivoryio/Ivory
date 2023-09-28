@@ -27,14 +27,12 @@ class SettingsDevicePairingActivateFaceidScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           AppToolbar(
-              padding: EdgeInsets.symmetric(
-                horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                vertical: ClientConfig.getCustomClientUiSettings().defaultScreenVerticalPadding,
-              ),
+            padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
               onBackButtonPressed: () {
                 Navigator.popUntil(context, ModalRoute.withName(SettingsDevicePairingScreen.routeName));
                 StoreProvider.of<AppState>(context).dispatch(FetchBoundDevicesCommandAction());
-              }),
+            },
+          ),
           StoreConnector<AppState, DeviceBindingViewModel>(
             onDidChange: ((previousViewModel, viewModel) {
               if (previousViewModel is DeviceBindingLoadingViewModel && viewModel is DeviceBindingCreatedViewModel) {
@@ -59,11 +57,7 @@ class SettingsDevicePairingActivateFaceidScreen extends StatelessWidget {
               }
               return Expanded(
                 child: Padding(
-                  padding: EdgeInsets.only(
-                    left: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                    right: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                    bottom: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                  ),
+                  padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

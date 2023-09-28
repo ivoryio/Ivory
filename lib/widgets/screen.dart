@@ -155,7 +155,7 @@ AppBar createAppBar(
     icon: backButtonIcon ?? defaultBackButtonIcon,
     padding: EdgeInsets.only(
       left: ClientConfig.getCustomClientUiSettings()
-          .defaultScreenHorizontalPadding,
+          .defaultScreenLeftPadding,
     ),
     alignment: Alignment.centerLeft,
     onPressed: () {
@@ -178,7 +178,7 @@ AppBar createAppBar(
       if (trailingActions != null) ...trailingActions,
       SizedBox(
         width: ClientConfig.getCustomClientUiSettings()
-            .defaultScreenHorizontalPadding,
+            .defaultScreenLeftPadding,
       )
     ],
     automaticallyImplyLeading: hideBackButton == true ? false : true,

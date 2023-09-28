@@ -55,16 +55,12 @@ class _TransferReviewScreenState extends State<TransferReviewScreen> {
           children: [
             AppToolbar(
               title: "Review transfer",
-              padding: EdgeInsets.symmetric(
-                horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-              ),
+              padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
             ),
             _buildBody(),
             Container(
               width: double.infinity,
-              padding: EdgeInsets.symmetric(
-                horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-              ),
+              padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
               child: viewModel is TransferLoadingViewModel
                   ? const Center(child: CircularProgressIndicator())
                   : Button(
@@ -98,9 +94,7 @@ class _TransferReviewScreenState extends State<TransferReviewScreen> {
     return Expanded(
       child: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-          ),
+          padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
           child: Column(
             children: [
               IvoryCard(

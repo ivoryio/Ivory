@@ -81,9 +81,7 @@ class _TransferScreenState extends State<TransferScreen> {
               children: [
                 AppToolbar(
                   title: "Transfer",
-                  padding: EdgeInsets.symmetric(
-                    horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                  ),
+                  padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
                 ),
                 viewModel is TransferAccountsLoadingViewModel
                     ? const Expanded(child: Center(child: CircularProgressIndicator()))
@@ -107,9 +105,7 @@ class _TransferScreenState extends State<TransferScreen> {
         Expanded(
           child: SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-              ),
+              padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
               child: Column(
                 children: [
                   _Card(
@@ -170,9 +166,7 @@ class _TransferScreenState extends State<TransferScreen> {
         SizedBox(
           width: double.infinity,
           child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-            ),
+            padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
             child: Button(
               color: ClientConfig.getColorScheme().tertiary,
               text: "Next",
@@ -192,7 +186,6 @@ class _TransferScreenState extends State<TransferScreen> {
             ),
           ),
         ),
-        const SizedBox(height: 16),
       ],
     );
   }

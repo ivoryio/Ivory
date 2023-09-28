@@ -16,16 +16,11 @@ class MoreCreditWaitlistScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenScaffold(
       body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: ClientConfig.getCustomClientUiSettings()
-              .defaultScreenHorizontalPadding,
-          vertical: 0,
-        ),
+        padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const AppToolbar(),
-            const SizedBox(height: 24),
             Text(
               'You have been successfully added to the waitlist',
               style: ClientConfig.getTextStyleScheme().heading1,
@@ -57,7 +52,6 @@ class MoreCreditWaitlistScreen extends StatelessWidget {
                 },
               ),
             ),
-            const SizedBox(height: 16),
           ],
         ),
       ),

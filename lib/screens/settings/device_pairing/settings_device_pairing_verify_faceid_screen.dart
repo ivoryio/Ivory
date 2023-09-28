@@ -56,10 +56,7 @@ class _SettingsDevicePairingVerifyFaceidScreenState extends State<SettingsDevice
             children: [
               AppToolbar(
                 backButtonEnabled: viewModel is! DeviceBindingLoadingViewModel,
-                padding: EdgeInsets.symmetric(
-                  horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                  vertical: ClientConfig.getCustomClientUiSettings().defaultScreenVerticalPadding,
-                ),
+                padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
                 onBackButtonPressed: () {
                   Navigator.popUntil(context, ModalRoute.withName(SettingsDevicePairingScreen.routeName));
                   StoreProvider.of<AppState>(context).dispatch(DeleteIncompleteDeviceBindingCommandAction());
@@ -67,11 +64,7 @@ class _SettingsDevicePairingVerifyFaceidScreenState extends State<SettingsDevice
               ),
               Expanded(
                 child: Padding(
-                  padding: EdgeInsets.only(
-                    left: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                    right: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                    bottom: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                  ),
+                  padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

@@ -53,10 +53,7 @@ class _TransactionsFilteringScreenState
 
     return ScreenScaffold(
       body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: ClientConfig.getCustomClientUiSettings()
-              .defaultScreenHorizontalPadding,
-        ),
+        padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
         child: Column(
           children: [
             AppToolbar(
@@ -208,7 +205,6 @@ class _TransactionsFilteringScreenState
                 ),
               ),
             ),
-            const SizedBox(height: 16),
           ],
         ),
       ),

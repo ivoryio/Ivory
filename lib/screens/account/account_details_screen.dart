@@ -73,7 +73,7 @@ class AccountDetailsScreen extends StatelessWidget {
 
     return ScreenScaffold(
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
+        padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

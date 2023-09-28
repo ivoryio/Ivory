@@ -41,9 +41,7 @@ class TransferSuccessfulScreen extends StatelessWidget {
           Expanded(
             child: ScrollableScreenContainer(
               child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                ),
+                padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -124,9 +122,7 @@ class TransferSuccessfulScreen extends StatelessWidget {
           ),
           Container(
             width: double.infinity,
-            padding: EdgeInsets.symmetric(
-              horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-            ),
+            padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
             child: Button(
               color: ClientConfig.getColorScheme().tertiary,
               text: "Back to \"Home\"",
@@ -134,7 +130,6 @@ class TransferSuccessfulScreen extends StatelessWidget {
               onPressed: () => Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false),
             ),
           ),
-          const SizedBox(height: 16),
         ],
       ),
     );

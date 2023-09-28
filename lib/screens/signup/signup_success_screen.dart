@@ -17,9 +17,7 @@ class SignupSuccessScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenScaffold(
       body: Padding(
-        padding: EdgeInsets.symmetric(
-            horizontal: ClientConfig.getCustomClientUiSettings()
-                .defaultScreenHorizontalPadding),
+        padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
         child: Column(
           children: [
             const AppToolbar(title: "Signup", backButtonEnabled: false),

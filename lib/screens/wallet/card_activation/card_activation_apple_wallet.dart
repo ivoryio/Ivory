@@ -8,13 +8,12 @@ import 'package:solarisdemo/infrastructure/bank_card/bank_card_presenter.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
-import 'package:solarisdemo/screens/wallet/card_details/card_details_activation_success_screen.dart';
+import 'package:solarisdemo/screens/wallet/card_activation/card_activation_success_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/button_with_icon.dart';
 import 'package:solarisdemo/widgets/ivory_error_widget.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
-
 
 class BankCardDetailsAppleWalletScreen extends StatelessWidget {
   static const routeName = '/bankCardDetailsAppleWalletScreen';
@@ -44,10 +43,7 @@ class BankCardDetailsAppleWalletScreen extends StatelessWidget {
                 ],
               ),
             ),
-            padding: EdgeInsets.symmetric(
-              horizontal: ClientConfig.getCustomClientUiSettings()
-                  .defaultScreenHorizontalPadding,
-            ),
+            padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
             backButtonEnabled: false,
             onBackButtonPressed: () {
               Navigator.pop(context);
@@ -58,7 +54,9 @@ class BankCardDetailsAppleWalletScreen extends StatelessWidget {
             color: ClientConfig.getColorScheme().secondary,
             backgroundColor: const Color(0xFFE9EAEB),
           ),
-          
+          const SizedBox(
+            height: 16,
+          ),
           StoreConnector<AppState, BankCardViewModel>(
               converter: (store) => BankCardPresenter.presentBankCard(
                     bankCardState: store.state.bankCardState,
@@ -87,8 +85,7 @@ class BankCardDetailsAppleWalletScreen extends StatelessWidget {
                 }
                 return Expanded(
                   child: Padding(
-                    padding: ClientConfig.getCustomClientUiSettings()
-                        .defaultScreenPadding,
+                    padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
                     child: Column(
                       children: [
                         Text(
@@ -110,7 +107,7 @@ class BankCardDetailsAppleWalletScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             SvgPicture.asset(
-                                'assets/images/apple_wallet_logo.svg',
+                              'assets/images/apple_wallet_logo.svg',
                             )
                           ],
                         ),
@@ -122,13 +119,13 @@ class BankCardDetailsAppleWalletScreen extends StatelessWidget {
                               width: double.infinity,
                               child: Button(
                                 color: Colors.white,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 0, vertical: 23.0),
+                                padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 23.0),
                                 text: 'Maybe later',
-                                textStyle: ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(color: ClientConfig.getColorScheme().tertiary),
+                                textStyle: ClientConfig.getTextStyleScheme()
+                                    .bodyLargeRegular
+                                    .copyWith(color: ClientConfig.getColorScheme().tertiary),
                                 onPressed: () {
-                                  StoreProvider.of<AppState>(context)
-                                      .dispatch(BankCardActivateCommandAction(
+                                  StoreProvider.of<AppState>(context).dispatch(BankCardActivateCommandAction(
                                     cardId: (viewModel as BankCardPinChoosenViewModel).bankCard!.id,
                                     user: user,
                                   ));
@@ -137,8 +134,7 @@ class BankCardDetailsAppleWalletScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 16),
                             Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16),
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
                               child: ButtonWithIcon(
                                 text: 'Add to Apple Wallet',
                                 textStyle: const TextStyle(
@@ -150,8 +146,7 @@ class BankCardDetailsAppleWalletScreen extends StatelessWidget {
                                 onPressed: () {
                                   //TODO: Add to apple wallet flow
                                 },
-                                iconWidget: Image.asset(
-                                    'assets/icons/apple_wallet_logo.png'),
+                                iconWidget: Image.asset('assets/icons/apple_wallet_logo.png'),
                               ),
                             ),
                           ],

@@ -48,9 +48,7 @@ class BankCardsScreen extends StatelessWidget {
               children: [
                 const AppToolbar(),
                 Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                  ),
+                  padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
                   child: Text(
                     'Cards',
                     style: ClientConfig.getTextStyleScheme().heading1,

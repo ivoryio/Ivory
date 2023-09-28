@@ -8,7 +8,7 @@ import 'package:solarisdemo/models/bank_card.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_state.dart';
-import 'package:solarisdemo/screens/wallet/card_details/card_details_info.dart';
+import 'package:solarisdemo/screens/wallet/card_activation/card_activation_info.dart';
 import 'package:solarisdemo/screens/wallet/card_details/card_details_screen.dart';
 import 'package:solarisdemo/screens/wallet/change_pin/card_change_pin_choose_screen.dart';
 import 'package:solarisdemo/widgets/button.dart';

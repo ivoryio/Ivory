@@ -35,7 +35,7 @@ class TransactionApprovalPendingScreen extends StatelessWidget {
 
     return ScreenScaffold(
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
+        padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
         child: StoreConnector<AppState, TransactionApprovalViewModel>(
             onInit: (store) {
               if (store.state.notificationState is NotificationTransactionApprovalState) {

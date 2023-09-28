@@ -6,13 +6,12 @@ import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/infrastructure/bank_card/bank_card_presenter.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
-import 'package:solarisdemo/screens/wallet/card_details/card_details_apple_wallet.dart';
-import 'package:solarisdemo/screens/wallet/card_details/card_details_choose_pin.dart';
+import 'package:solarisdemo/screens/wallet/card_activation/card_activation_apple_wallet.dart';
+import 'package:solarisdemo/screens/wallet/card_activation/card_activation_choose_pin.dart';
 import 'package:solarisdemo/utilities/validator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/pin_field.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
-
 
 class BankCardDetailsConfirmPinScreen extends StatefulWidget {
   static const routeName = '/bankCardDetailsConfirmPinScreen';
@@ -20,12 +19,10 @@ class BankCardDetailsConfirmPinScreen extends StatefulWidget {
   const BankCardDetailsConfirmPinScreen({super.key});
 
   @override
-  State<BankCardDetailsConfirmPinScreen> createState() =>
-      _BankCardDetailsConfirmPinScreenState();
+  State<BankCardDetailsConfirmPinScreen> createState() => _BankCardDetailsConfirmPinScreenState();
 }
 
-class _BankCardDetailsConfirmPinScreenState
-    extends State<BankCardDetailsConfirmPinScreen> {
+class _BankCardDetailsConfirmPinScreenState extends State<BankCardDetailsConfirmPinScreen> {
   late bool twoPinsMatch = true;
   late bool completed = false;
   GlobalKey<FourDigitPinCodeInputState> fourDigitPinKey = GlobalKey();
@@ -57,29 +54,24 @@ class _BankCardDetailsConfirmPinScreenState
                     ),
                   ],
                 )),
-                padding: EdgeInsets.symmetric(
-                  horizontal: ClientConfig.getCustomClientUiSettings()
-                      .defaultScreenHorizontalPadding,
-                ),
+                padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
                 backButtonEnabled: true,
                 onBackButtonPressed: () {
-                  Navigator.pop(context, );
+                  Navigator.pop(
+                    context,
+                  );
                 },
               ),
               LinearProgressIndicator(
                 value: 3 / 3,
-                color:  ClientConfig.getColorScheme().secondary,
+                color: ClientConfig.getColorScheme().secondary,
                 backgroundColor: const Color(0xFFE9EAEB),
               ),
+              const SizedBox(
+                height: 16,
+              ),
               Padding(
-                padding: EdgeInsets.only(
-                  left: ClientConfig.getCustomClientUiSettings()
-                      .defaultScreenHorizontalPadding,
-                  right: ClientConfig.getCustomClientUiSettings()
-                      .defaultScreenHorizontalPadding,
-                  top: ClientConfig.getCustomClientUiSettings()
-                      .defaultScreenVerticalPadding,
-                ),
+                padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
                 child: Column(
                   children: [
                     Column(
@@ -153,23 +145,22 @@ class _BankCardDetailsConfirmPinScreenState
               ),
               const Spacer(),
               Padding(
-                  padding: EdgeInsets.only(
-                    left: ClientConfig.getCustomClientUiSettings()
-                        .defaultScreenHorizontalPadding,
-                    right: ClientConfig.getCustomClientUiSettings()
-                        .defaultScreenHorizontalPadding,
-                    bottom: ClientConfig.getCustomClientUiSettings()
-                        .defaultScreenVerticalPadding,
-                  ),
-                  child: PinValidityRule(
-                    isValid: twoPinsMatch,
-                    text: 'Your PIN should match',
-                    icon: Icons.check,
-                    validColor: completed
-                        ? const Color(0xFF00774C)
-                        : const Color(0xFF15141E),
-                    invalidColor: const Color(0xFFE61F27),
-                  ))
+                padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+                child: Column(
+                  children: [
+                    PinValidityRule(
+                      isValid: twoPinsMatch,
+                      text: 'Your PIN should match',
+                      icon: Icons.check,
+                      validColor: completed ? const Color(0xFF00774C) : const Color(0xFF15141E),
+                      invalidColor: const Color(0xFFE61F27),
+                    ),
+                    const SizedBox(
+                      height: 24,
+                    ),
+                  ],
+                ),
+              )
             ],
           ),
         );

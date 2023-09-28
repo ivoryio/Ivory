@@ -38,15 +38,11 @@ class TransferSignScreen extends StatelessWidget {
         body: Column(
           children: [
             AppToolbar(
-              padding: EdgeInsets.symmetric(
-                horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-              ),
+              padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
             ),
             Expanded(
               child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                ),
+                padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
