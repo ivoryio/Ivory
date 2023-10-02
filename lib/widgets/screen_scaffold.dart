@@ -109,18 +109,15 @@ class GenericLoadingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenScaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        child: Column(
-          children: [
-            AppToolbar(title: title),
-            const Expanded(
-              child: Center(
-                child: CircularProgressIndicator(),
-              ),
-            )
-          ],
-        ),
+      body: Column(
+        children: [
+          AppToolbar(title: title),
+          const Expanded(
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          )
+        ],
       ),
     );
   }

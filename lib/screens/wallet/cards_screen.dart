@@ -8,6 +8,7 @@ import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
+import 'package:solarisdemo/widgets/screen_title.dart';
 
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../models/bank_card.dart';
@@ -40,8 +41,9 @@ class BankCardsScreen extends StatelessWidget {
       },
       builder: (context, viewModel) {
         if (viewModel is BankCardsLoadingViewModel) {
-          return const GenericLoadingScreen(title: "Cards");
+          return const GenericLoadingScreen(title: "");
         }
+
         if (viewModel is BankCardsFetchedViewModel) {
           return ScreenScaffold(
             body: Column(
@@ -81,14 +83,7 @@ class _Content extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-          child: Text(
-            'Cards',
-            style: ClientConfig.getTextStyleScheme().heading1,
-            textAlign: TextAlign.left,
-          ),
-        ),
+        const ScreenTitle("Cards"),
         _CardSlider(cards: cards),
         const SizedBox(height: 4),
         if (cards.isNotEmpty) CardActions(initialCardId: cards[0].id),

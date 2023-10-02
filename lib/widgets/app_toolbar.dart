@@ -13,7 +13,7 @@ class AppToolbar extends StatefulWidget {
   final double? toolbarHeight;
   final bool backButtonEnabled;
   final RichText? richTextTitle;
-  final double titleVisibilityOffset;
+  final double titleMaxOpacityScrollOffset;
   final ScrollController? scrollController;
   final void Function()? onBackButtonPressed;
 
@@ -28,7 +28,7 @@ class AppToolbar extends StatefulWidget {
     this.onBackButtonPressed,
     this.backButtonEnabled = true,
     this.scrollController,
-    this.titleVisibilityOffset = 100,
+    this.titleMaxOpacityScrollOffset = 100,
     this.backgroundColor = Colors.white,
     this.backIcon = const Icon(Icons.arrow_back),
   });
@@ -45,34 +45,38 @@ class _AppToolbarState extends State<AppToolbar> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.scrollController == null) return _buildAppToolbar(context, 1.0);
+    if (widget.scrollController == null) return _buildAppToolbar(context, titleOpacity: 1.0);
 
     if (widget.scrollController!.hasClients == false) {
-      return _buildAppToolbar(context, 0.0);
+      return _buildAppToolbar(context, titleOpacity: 0.0);
     }
 
     return AnimatedBuilder(
       animation: widget.scrollController!,
       builder: (controller, child) {
         final offset = widget.scrollController!.offset;
-        final titleOpacity = max(0, min(1, offset / widget.titleVisibilityOffset)).toDouble();
+        final titleOpacity = max(0, min(1, offset / widget.titleMaxOpacityScrollOffset)).toDouble();
 
-        return _buildAppToolbar(context, titleOpacity);
+        return _buildAppToolbar(context, titleOpacity: titleOpacity);
       },
     );
   }
 
-  Widget _buildAppToolbar(BuildContext context, double titleOpacity) {
+  Widget _buildAppToolbar(
+    BuildContext context, {
+    required double titleOpacity,
+  }) {
     return Container(
       padding: widget.padding ?? ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
       decoration: BoxDecoration(
         color: widget.backgroundColor,
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 5 * titleOpacity,
-            offset: Offset(0, 3 * titleOpacity),
-          ),
+          if (widget.scrollController != null)
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 5 * titleOpacity,
+              offset: Offset(0, 3 * titleOpacity),
+            ),
         ],
       ),
       child: Column(
