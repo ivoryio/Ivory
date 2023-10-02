@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -7,6 +8,7 @@ import 'package:solarisdemo/redux/device/device_action.dart';
 import 'package:solarisdemo/screens/settings/device_pairing/settings_device_pairing_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
+import 'package:solarisdemo/widgets/ivory_asset_with_badge.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../../utilities/ivory_color_mapper.dart';
@@ -47,36 +49,17 @@ class SettingsDevicePairingSuccessScreen extends StatelessWidget {
                     height: 24,
                   ),
                   Expanded(
-                    child: Center(
-                      child: SizedBox(
-                        width: 300,
-                        height: 300,
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            SvgPicture(
-                              SvgAssetLoader(
-                                'assets/images/biometric_faceid.svg',
-                                colorMapper: IvoryColorMapper(baseColor: ClientConfig.getColorScheme().secondary,),
-                              ),
-                            ),
-                            Positioned(
-                              left: 170,
-                              bottom: 180,
-                              child: Container(
-                                height: 64,
-                                width: 64,
-                                decoration: const BoxDecoration(shape: BoxShape.circle, color: Color(0xFF00774C)),
-                                child: Icon(
-                                  Icons.check,
-                                  color: ClientConfig.getColorScheme().surface,
-                                  size: 48,
-                                ),
-                              ),
-                            ),
-                          ],
+                    child: IvoryAssetWithBadge(
+                      childWidget: SvgPicture(
+                        SvgAssetLoader(
+                          'assets/images/biometric_faceid.svg',
+                          colorMapper: IvoryColorMapper(
+                            baseColor: ClientConfig.getColorScheme().secondary,
+                          ),
                         ),
                       ),
+                      childPosition: BadgePosition.topEnd(top: -45, end: -25),
+                      isSuccess: true,
                     ),
                   ),
                   const SizedBox(
@@ -91,6 +74,7 @@ class SettingsDevicePairingSuccessScreen extends StatelessWidget {
                       color: ClientConfig.getColorScheme().tertiary,
                       textColor: ClientConfig.getColorScheme().surface,
                       onPressed: () {
+                        
                         Navigator.popUntil(
                             context,
                             ModalRoute.withName(
