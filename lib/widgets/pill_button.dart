@@ -7,12 +7,15 @@ class PillButton extends StatelessWidget {
   final void Function() buttonCallback;
   final Icon? icon;
   final bool active;
+  final void Function()? closeButton;
+
   const PillButton({
     super.key,
     required this.buttonText,
     required this.buttonCallback,
     this.icon,
     this.active = true,
+    this.closeButton,
   });
 
   @override
@@ -29,24 +32,31 @@ class PillButton extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
             color: active ? const Color(0xFFF8F9FA) : Colors.white,
-            border: active? Border.all(
-              width: 1,
-              color: const Color(0xFFDFE2E6),
-            ) : null,
+            border: active
+                ? Border.all(
+                    width: 1,
+                    color: const Color(0xFFDFE2E6),
+                  )
+                : null,
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
                 buttonText,
-                style: active?
-                ClientConfig.getTextStyleScheme().labelSmall:
-                ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: ClientConfig.getColorScheme().tertiary),
+                style: active
+                    ? ClientConfig.getTextStyleScheme().labelSmall
+                    : ClientConfig.getTextStyleScheme()
+                        .labelSmall
+                        .copyWith(color: ClientConfig.getColorScheme().tertiary),
               ),
               if (icon != null)
-                Padding(
-                  padding: const EdgeInsets.only(left: 3),
-                  child: icon!,
+                GestureDetector(
+                  onTap: closeButton,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 3),
+                    child: icon!,
+                  ),
                 ),
             ],
           ),
