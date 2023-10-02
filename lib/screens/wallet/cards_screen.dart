@@ -26,6 +26,7 @@ class BankCardsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AuthenticatedUser user = context.read<AuthCubit>().state.user!;
+    ScrollController scrollController = ScrollController();
 
     return StoreConnector<AppState, BankCardsViewModel>(
       onInit: (store) {
@@ -46,18 +47,13 @@ class BankCardsScreen extends StatelessWidget {
             body: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const AppToolbar(),
-                Padding(
-                  padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                  child: Text(
-                    'Cards',
-                    style: ClientConfig.getTextStyleScheme().heading1,
-                    textAlign: TextAlign.left,
-                  ),
+                AppToolbar(
+                  title: "Cards",
+                  scrollController: scrollController,
                 ),
-                const SizedBox(height: 16),
                 Expanded(
                   child: SingleChildScrollView(
+                    controller: scrollController,
                     physics: const ClampingScrollPhysics(),
                     child: _Content(cards: viewModel.bankCards!),
                   ),
@@ -83,7 +79,16 @@ class _Content extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Padding(
+          padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+          child: Text(
+            'Cards',
+            style: ClientConfig.getTextStyleScheme().heading1,
+            textAlign: TextAlign.left,
+          ),
+        ),
         _CardSlider(cards: cards),
         const SizedBox(height: 4),
         if (cards.isNotEmpty) CardActions(initialCardId: cards[0].id),
