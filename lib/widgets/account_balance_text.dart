@@ -21,16 +21,16 @@ class AccountBalanceText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RichText(
-      text: TextSpan(
+    return Text.rich(
+      TextSpan(
         children: [
           TextSpan(
             text: Format.euro(value, digits: 0, maxDigits: 0),
-            style: defaultNumberStyle.merge(numberStyle),
+            style: numberStyle ?? defaultNumberStyle,
           ),
           TextSpan(
             text: ".${Format.cents(value)}",
-            style: defaultCentsStyle.merge(centsStyle),
+            style: centsStyle ?? defaultCentsStyle,
           ),
         ],
       ),
