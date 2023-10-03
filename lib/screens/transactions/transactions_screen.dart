@@ -15,7 +15,6 @@ import '../../models/transactions/transaction_model.dart';
 import '../../models/transactions/upcoming_transaction_model.dart';
 import '../../models/user.dart';
 import '../../utilities/format.dart';
-import '../../widgets/button.dart';
 import '../../widgets/empty_list_message.dart';
 import '../../widgets/pill_button.dart';
 import '../../widgets/search_bar.dart';

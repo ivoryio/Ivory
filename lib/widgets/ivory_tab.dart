@@ -23,36 +23,43 @@ class IvoryTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> buttons = [];
+    return ListenableBuilder(
+      listenable: controller,
+      builder: (context, child) {
+        final List<Widget> buttons = [];
 
-    for (int tabIndex = 0; tabIndex < tabs.length; tabIndex++) {
-      final active = tabIndex == controller.currentIndex;
+        for (int tabIndex = 0; tabIndex < tabs.length; tabIndex++) {
+          final isActive = tabIndex == controller.currentIndex;
+          final title = tabs[tabIndex].title;
+          final onPressed = tabs[tabIndex].onPressed;
 
-      buttons.add(
-        Expanded(
-          child: Button(
-            text: tabs[tabIndex].title,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            color: active ? Colors.white : const Color(0xFFDFE2E6),
-            textColor: const Color(0xFF15141E),
-            border: active ? null : Border.all(width: 1, color: const Color(0xFFDFE2E6)),
-            borderRadius: 8,
-            onPressed: () {
-              controller.changeIndex(tabIndex);
-              tabs[tabIndex].onPressed?.call();
-            },
-          ),
-        ),
-      );
-    }
+          buttons.add(
+            Expanded(
+              child: Button(
+                text: title,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                color: isActive ? Colors.white : const Color(0xFFDFE2E6),
+                textColor: const Color(0xFF15141E),
+                border: isActive ? null : Border.all(width: 1, color: const Color(0xFFDFE2E6)),
+                borderRadius: 8,
+                onPressed: () {
+                  controller.changeIndex(tabIndex);
+                  onPressed?.call();
+                },
+              ),
+            ),
+          );
+        }
 
-    return Container(
-      padding: const EdgeInsets.all(0),
-      decoration: BoxDecoration(
-          color: const Color(0xFFDFE2E6),
-          borderRadius: const BorderRadius.all(Radius.circular(8.0)),
-          border: Border.all(width: 1, color: const Color(0xFFDFE2E6))),
-      child: Row(children: buttons),
+        return Container(
+          padding: const EdgeInsets.all(0),
+          decoration: BoxDecoration(
+              color: const Color(0xFFDFE2E6),
+              borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+              border: Border.all(width: 1, color: const Color(0xFFDFE2E6))),
+          child: Row(children: buttons),
+        );
+      },
     );
   }
 }
