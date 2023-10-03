@@ -1,6 +1,8 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/utilities/ivory_color_mapper.dart';
+import 'package:solarisdemo/widgets/ivory_asset_with_badge.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../../config.dart';
@@ -32,11 +34,17 @@ class MoreCreditWaitlistScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Expanded(
-              child: Center(
-                child: SvgPicture(SvgAssetLoader(
-                  'assets/images/repayment_more_credit_waitlist.svg',
-                  colorMapper: IvoryColorMapper(baseColor: ClientConfig.getColorScheme().secondary,)
-                ),),
+              child: IvoryAssetWithBadge(
+                childWidget: SvgPicture(
+                  SvgAssetLoader(
+                    'assets/images/repayment_more_credit.svg',
+                    colorMapper: IvoryColorMapper(
+                      baseColor: ClientConfig.getColorScheme().secondary,
+                    ),
+                  ),
+                ),
+                childPosition: BadgePosition.topEnd(top: -5, end: 78),
+                isSuccess: true,
               ),
             ),
             SizedBox(

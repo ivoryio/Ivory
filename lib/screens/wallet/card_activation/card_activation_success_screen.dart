@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -11,6 +12,7 @@ import 'package:solarisdemo/screens/home/home_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/card_widget.dart';
+import 'package:solarisdemo/widgets/ivory_asset_with_badge.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 
@@ -51,15 +53,22 @@ class BankCardDetailsActivationSuccessScreen extends StatelessWidget {
                     style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
                   ),
                   const Spacer(),
-                  const Row(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      BankCardWidget(
-                        isCardEmpty: true,
-                        customHeight: 148,
-                        customWidth: 231,
-                        isViewable: false,
-                        imageScaledownFactor: 1.5,
+                      IvoryAssetWithBadge(
+                        childWidget: const BankCardWidget(
+                          isCardEmpty: true,
+                          customHeight: 148,
+                          customWidth: 231,
+                          isViewable: false,
+                          imageScaledownFactor: 1.5,
+                      ),
+                        childPosition: BadgePosition.topEnd(
+                          top: -32,
+                          end: -32,
+                        ),
+                        isSuccess: true,
                       ),
                     ],
                   ),

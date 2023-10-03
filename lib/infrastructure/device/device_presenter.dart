@@ -25,7 +25,9 @@ class DeviceBindingPresenter {
     } else if (deviceBindingState is DeviceBindingCreatedState) {
       return DeviceBindingCreatedViewModel();
     } else if (deviceBindingState is DeviceBindingChallengeVerifiedState) {
-      return DeviceBindingChallengeVerifiedViewModel();
+      return DeviceBindingChallengeVerifiedViewModel(
+        thisDevice: deviceBindingState.thisDevice,
+      );
     }
     return DeviceBindingInitialViewModel();
   }
@@ -49,7 +51,14 @@ class DeviceBindingErrorViewModel extends DeviceBindingViewModel {}
 
 class DeviceBindingCreatedViewModel extends DeviceBindingViewModel {}
 
-class DeviceBindingChallengeVerifiedViewModel extends DeviceBindingViewModel {}
+class DeviceBindingChallengeVerifiedViewModel extends DeviceBindingViewModel {
+  const DeviceBindingChallengeVerifiedViewModel({
+    required Device thisDevice,
+  }) : super(thisDevice: thisDevice);
+
+  @override
+  List<Object?> get props => [thisDevice];
+}
 
 class DeviceBindingFetchedViewModel extends DeviceBindingViewModel {
   const DeviceBindingFetchedViewModel({
