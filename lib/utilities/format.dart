@@ -7,10 +7,8 @@ class Format {
     num number, {
     int digits = 2,
     String symbol = "€ ",
-    String locale = "en_US",
   }) {
     NumberFormat formatter = NumberFormat.currency(
-      locale: locale,
       symbol: symbol,
       decimalDigits: digits,
     );
@@ -36,12 +34,12 @@ class Format {
 
   static String amountWithSign(AmountValue amount) {
     double value = amount.value;
-    String currencySymbolt = getCurrencySymbol(amount.currency);
+    String currencySymbol = getCurrencySymbol(amount.currency);
 
     String formattedAmount = value.abs().toStringAsFixed(2);
     String sign = value < 0 ? '-' : '+';
 
-    return '$sign $currencySymbolt$formattedAmount';
+    return '$sign $currencySymbol$formattedAmount';
   }
 
   static String cents(num value) {

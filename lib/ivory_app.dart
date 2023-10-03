@@ -11,6 +11,7 @@ import 'package:solarisdemo/navigator.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/auth/auth_action.dart';
 import 'package:solarisdemo/screens/account/account_details_screen.dart';
+import 'package:solarisdemo/screens/available_balance/available_balance_screen.dart';
 import 'package:solarisdemo/screens/wallet/card_activation/card_activation_apple_wallet.dart';
 import 'package:solarisdemo/screens/wallet/card_activation/card_activation_choose_pin.dart';
 import 'package:solarisdemo/screens/wallet/card_activation/card_activation_confirm_pin_screen.dart';
@@ -105,6 +106,7 @@ class _IvoryAppState extends State<IvoryApp> {
               // home
               HomeScreen.routeName: (context) =>
                   const MainNavigationScreen(initialScreen: MainNavigationScreens.homeScreen),
+              AvailableBalanceScreen.routeName: (context) => const AvailableBalanceScreen(),
               // settings
               SettingsScreen.routeName: (context) =>
                   const MainNavigationScreen(initialScreen: MainNavigationScreens.settingsScreen),
