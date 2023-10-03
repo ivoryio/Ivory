@@ -6,7 +6,7 @@ import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/infrastructure/device/device_presenter.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/device/device_action.dart';
-import 'package:solarisdemo/screens/settings/device_pairing/settings_device_pairing_activate_faceid_screen.dart';
+import 'package:solarisdemo/screens/settings/device_pairing/settings_device_pairing_inital_screen.dart';
 import 'package:solarisdemo/screens/settings/device_pairing/settings_paired_device_details_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/ivory_list_item_with_action.dart';
@@ -196,7 +196,7 @@ class SettingsDevicePairingScreen extends StatelessWidget {
               if (viewModel is DeviceBindingFetchedButEmptyViewModel)
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, SettingsDevicePairingActivateFaceidScreen.routeName);
+                    Navigator.pushNamed(context, SettingsDevicePairingInitialScreen.routeName);
                   },
                   child: SizedBox(
                     height: 48,

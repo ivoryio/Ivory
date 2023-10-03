@@ -49,7 +49,6 @@ class IvoryAssetWithBadge extends StatelessWidget {
         ),
       );
     } else {
-      //implement error indicator here if needed
       return Container(
         height: 64,
         width: 64,
