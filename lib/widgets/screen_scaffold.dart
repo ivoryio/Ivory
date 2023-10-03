@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 
 class ScreenScaffold extends StatelessWidget {
@@ -111,7 +112,10 @@ class GenericLoadingScreen extends StatelessWidget {
     return ScreenScaffold(
       body: Column(
         children: [
-          AppToolbar(title: title),
+          AppToolbar(
+            title: title,
+            padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+          ),
           const Expanded(
             child: Center(
               child: CircularProgressIndicator(),
