@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/widgets/screen_title.dart';
 
 class AppToolbar extends StatefulWidget {
   final String title;
@@ -16,6 +17,7 @@ class AppToolbar extends StatefulWidget {
   final double titleMaxOpacityScrollOffset;
   final ScrollController? scrollController;
   final void Function()? onBackButtonPressed;
+  final bool includeBottomScreenTitle;
 
   const AppToolbar({
     super.key,
@@ -28,7 +30,8 @@ class AppToolbar extends StatefulWidget {
     this.onBackButtonPressed,
     this.backButtonEnabled = true,
     this.scrollController,
-    this.titleMaxOpacityScrollOffset = 100,
+    this.includeBottomScreenTitle = true,
+    this.titleMaxOpacityScrollOffset = 56,
     this.backgroundColor = Colors.white,
     this.backIcon = const Icon(Icons.arrow_back),
   });
@@ -102,7 +105,15 @@ class _AppToolbarState extends State<AppToolbar> {
             ),
             titleSpacing: 8,
           ),
-          if (widget.bottom != null) widget.bottom!,
+          if (widget.includeBottomScreenTitle)
+            Opacity(
+              opacity: 1 - titleOpacity,
+              child: ScreenTitle(widget.title, padding: EdgeInsets.zero, scale: 1 - titleOpacity),
+            ),
+          if (widget.bottom != null) ...[
+            SizedBox(height: 8 * (1 - titleOpacity)),
+            widget.bottom!,
+          ],
         ],
       ),
     );
