@@ -80,7 +80,7 @@ class RepaymentSuccessfullyChangedScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              childPosition: BadgePosition.topEnd(top: -5, end: 40),
+              childPosition: BadgePosition.topEnd(top: 24, end: 36),
               isSuccess: true,
             ),
           ),

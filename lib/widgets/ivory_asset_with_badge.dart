@@ -52,9 +52,9 @@ class IvoryAssetWithBadge extends StatelessWidget {
       return Container(
         height: 64,
         width: 64,
-        decoration: const BoxDecoration(shape: BoxShape.circle, color: Color(0xFF00774C)),
+        decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.red),
         child: Icon(
-          Icons.check,
+          Icons.close_rounded,
           color: ClientConfig.getColorScheme().surface,
           size: 46,
         ),
