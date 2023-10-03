@@ -30,7 +30,7 @@ class AppToolbar extends StatefulWidget {
     this.onBackButtonPressed,
     this.backButtonEnabled = true,
     this.scrollController,
-    this.includeBottomScreenTitle = true,
+    this.includeBottomScreenTitle = false,
     this.titleMaxOpacityScrollOffset = 56,
     this.backgroundColor = Colors.white,
     this.backIcon = const Icon(Icons.arrow_back),

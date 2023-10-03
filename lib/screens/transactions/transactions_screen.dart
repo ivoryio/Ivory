@@ -59,6 +59,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                   AppToolbar(
                     title: "Transactions",
                     scrollController: scrollController,
+                    includeBottomScreenTitle: true,
                     bottom: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
