@@ -8,6 +8,7 @@ import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
+import 'package:solarisdemo/widgets/screen_title.dart';
 
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../models/bank_card.dart';
@@ -82,6 +83,7 @@ class _Content extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const ScreenTitle("Cards"),
         _CardSlider(cards: cards),
         const SizedBox(height: 4),
         if (cards.isNotEmpty) CardActions(initialCardId: cards[0].id),

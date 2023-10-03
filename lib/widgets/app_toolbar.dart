@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/widgets/screen_title.dart';
 
 class AppToolbar extends StatefulWidget {
@@ -70,7 +69,7 @@ class _AppToolbarState extends State<AppToolbar> {
     required double titleOpacity,
   }) {
     return Container(
-      padding: widget.padding ?? ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+      padding: widget.padding ?? EdgeInsets.zero,
       decoration: BoxDecoration(
         color: widget.backgroundColor,
         boxShadow: [

@@ -60,6 +60,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     title: "Transactions",
                     scrollController: scrollController,
                     includeBottomScreenTitle: true,
+                    padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
                     bottom: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
