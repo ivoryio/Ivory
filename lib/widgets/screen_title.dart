@@ -4,8 +4,9 @@ import 'package:solarisdemo/config.dart';
 class ScreenTitle extends StatelessWidget {
   final String title;
   final EdgeInsetsGeometry? padding;
+  final double scale;
 
-  const ScreenTitle(this.title, {super.key, this.padding});
+  const ScreenTitle(this.title, {super.key, this.padding, this.scale = 1.0});
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +16,7 @@ class ScreenTitle extends StatelessWidget {
         title,
         style: ClientConfig.getTextStyleScheme().heading1,
         textAlign: TextAlign.left,
+        textScaleFactor: scale,
       ),
     );
   }
