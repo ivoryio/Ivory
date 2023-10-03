@@ -32,6 +32,8 @@ class IvoryTabBar extends StatelessWidget {
           final isActive = tabIndex == controller.currentIndex;
           final title = tabs[tabIndex].title;
           final onPressed = tabs[tabIndex].onPressed;
+          final isFirst = tabIndex == 0;
+          final isLast = tabIndex == tabs.length - 1;
 
           buttons.add(
             Expanded(
@@ -40,9 +42,15 @@ class IvoryTabBar extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 color: isActive ? Colors.white : const Color(0xFFDFE2E6),
                 textColor: const Color(0xFF15141E),
-                border: isActive ? null : Border.all(width: 1, color: const Color(0xFFDFE2E6)),
-                borderRadius: 8,
+                borderRadius: BorderRadius.only(
+                  topLeft: isFirst ? const Radius.circular(8) : Radius.zero,
+                  bottomLeft: isFirst ? const Radius.circular(8) : Radius.zero,
+                  topRight: isLast ? const Radius.circular(8) : Radius.zero,
+                  bottomRight: isLast ? const Radius.circular(8) : Radius.zero,
+                ),
                 onPressed: () {
+                  if (isActive) return;
+
                   controller.changeIndex(tabIndex);
                   onPressed?.call();
                 },
@@ -52,11 +60,11 @@ class IvoryTabBar extends StatelessWidget {
         }
 
         return Container(
-          padding: const EdgeInsets.all(0),
-          decoration: BoxDecoration(
-              color: const Color(0xFFDFE2E6),
-              borderRadius: const BorderRadius.all(Radius.circular(8.0)),
-              border: Border.all(width: 1, color: const Color(0xFFDFE2E6))),
+          padding: const EdgeInsets.all(1),
+          decoration: const BoxDecoration(
+            color: Color(0xFFDFE2E6),
+            borderRadius: BorderRadius.all(Radius.circular(8.0)),
+          ),
           child: Row(children: buttons),
         );
       },
