@@ -5,6 +5,7 @@ import 'package:solarisdemo/infrastructure/transactions/transaction_presenter.da
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/transactions/transactions_action.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
+import 'package:solarisdemo/widgets/ivory_tab.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../config.dart';
@@ -34,6 +35,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   @override
   Widget build(BuildContext context) {
     AuthenticatedUser user = context.read<AuthCubit>().state.user!;
+    ScrollController scrollController = ScrollController();
+    IvoryTabController tabController = IvoryTabController(tabsCount: 2);
 
     return StoreConnector<AppState, TransactionsViewModel>(
         onInit: (store) {
@@ -52,77 +55,96 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                   GetTransactionsCommandAction(filter: viewModel.transactionListFilter, user: user.cognito),
                 );
               },
-              child: Padding(
-                padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                child: Column(
-                  children: [
-                    const AppToolbar(title: "Transactions"),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+              child: Column(
+                children: [
+                  AppToolbar(
+                    title: "Transactions",
+                    scrollController: scrollController,
+                    bottom: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CustomSearchBar(
+                          hintText: "Search by name, date",
+                          textLabel: viewModel.transactionListFilter?.searchString,
+                          showButtonIndicator: isFilterActive,
+                          onPressedFilterButton: () {
+                            Navigator.pushNamed(
+                              context,
+                              TransactionsFilteringScreen.routeName,
+                              arguments: viewModel.transactionListFilter,
+                            );
+                          },
+                          onSubmitSearch: (value) {
+                            TransactionListFilter filter;
+                            if (value.isEmpty) {
+                              filter = TransactionListFilter(
+                                bookingDateMax: viewModel.transactionListFilter?.bookingDateMax,
+                                bookingDateMin: viewModel.transactionListFilter?.bookingDateMin,
+                                size: viewModel.transactionListFilter?.size,
+                                categories: viewModel.transactionListFilter?.categories,
+                                searchString: null,
+                              );
+                            } else {
+                              filter = TransactionListFilter(
+                                bookingDateMax: viewModel.transactionListFilter?.bookingDateMax,
+                                bookingDateMin: viewModel.transactionListFilter?.bookingDateMin,
+                                size: viewModel.transactionListFilter?.size,
+                                categories: viewModel.transactionListFilter?.categories,
+                                searchString: value,
+                              );
+                            }
+                            StoreProvider.of<AppState>(context)
+                                .dispatch(GetTransactionsCommandAction(filter: filter, user: user.cognito));
+                          },
+                          onChangedSearch: (String value) {
+                            return;
+                          },
+                        ),
+                        _buildFilterListDisplay(viewModel, user),
+                        const SizedBox(height: 16),
+                        IvoryTabBar(
+                          controller: tabController,
+                          tabs: [
+                            IvoryTab(
+                              title: "Past",
+                              onPressed: () => StoreProvider.of<AppState>(context).dispatch(
+                                GetTransactionsCommandAction(
+                                  filter: viewModel.transactionListFilter,
+                                  user: user.cognito,
+                                ),
+                              ),
+                            ),
+                            IvoryTab(
+                              title: "Upcoming",
+                              onPressed: () => StoreProvider.of<AppState>(context).dispatch(
+                                GetUpcomingTransactionsCommandAction(
+                                  user: user.cognito,
+                                  filter: viewModel.transactionListFilter,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      controller: scrollController,
+                      child: Padding(
+                        padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+                        child: IvoryTabView(
+                          controller: tabController,
                           children: [
-                            CustomSearchBar(
-                              hintText: "Search by name, date",
-                              textLabel: viewModel.transactionListFilter?.searchString,
-                              showButtonIndicator: isFilterActive,
-                              onPressedFilterButton: () {
-                                Navigator.pushNamed(
-                                  context,
-                                  TransactionsFilteringScreen.routeName,
-                                  arguments: viewModel.transactionListFilter,
-                                );
-                              },
-                              onSubmitSearch: (value) {
-                                TransactionListFilter filter;
-                                if (value.isEmpty) {
-                                  filter = TransactionListFilter(
-                                    bookingDateMax: viewModel.transactionListFilter?.bookingDateMax,
-                                    bookingDateMin: viewModel.transactionListFilter?.bookingDateMin,
-                                    size: viewModel.transactionListFilter?.size,
-                                    categories: viewModel.transactionListFilter?.categories,
-                                    searchString: null,
-                                  );
-                                } else {
-                                  filter = TransactionListFilter(
-                                    bookingDateMax: viewModel.transactionListFilter?.bookingDateMax,
-                                    bookingDateMin: viewModel.transactionListFilter?.bookingDateMin,
-                                    size: viewModel.transactionListFilter?.size,
-                                    categories: viewModel.transactionListFilter?.categories,
-                                    searchString: value,
-                                  );
-                                }
-                                StoreProvider.of<AppState>(context)
-                                    .dispatch(GetTransactionsCommandAction(filter: filter, user: user.cognito));
-                              },
-                              onChangedSearch: (String value) {
-                                return;
-                              },
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              child: _buildFilterListDisplay(viewModel, user),
-                            ),
-                            ButtonsTransactionType(
-                              user: user,
-                              viewModel: viewModel,
-                              buttons: [
-                                ButtonTransactionTypeItem(
-                                  type: TransactionTypeItems.past,
-                                  child: _buildTransactionsList(viewModel),
-                                ),
-                                ButtonTransactionTypeItem(
-                                  type: TransactionTypeItems.upcoming,
-                                  child: _buildTransactionsList(viewModel),
-                                ),
-                              ],
-                            ),
+                            _buildTransactionsList(viewModel),
+                            _buildTransactionsList(viewModel),
                           ],
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           );
@@ -146,7 +168,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     if (viewModel is TransactionsFetchedViewModel) {
       bool isFilteringActive = (viewModel.transactionListFilter?.bookingDateMin != null ||
           viewModel.transactionListFilter?.bookingDateMax != null);
-      if(viewModel.transactionListFilter?.searchString != null) {
+      if (viewModel.transactionListFilter?.searchString != null) {
         isFilteringActive = isFilteringActive || (viewModel.transactionListFilter!.searchString!.isNotEmpty);
       }
 
@@ -166,7 +188,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
               "No results",
               style: ClientConfig.getTextStyleScheme().heading3,
             ),
-            const SizedBox(height: 16,),
+            const SizedBox(height: 16),
             Text(
               "Please apply different filters or search terms.",
               style: ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(color: const Color(0xFF56555E)),
@@ -517,120 +539,13 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       }
     }
 
-    return Wrap(
-      spacing: 8,
-      runSpacing: 4,
-      children: widgetList,
-    );
-  }
-}
-
-class ButtonsTransactionType extends StatefulWidget {
-  final List<ButtonTransactionTypeItem> buttons;
-  final int? initialSelectedButtonIndex;
-  final AuthenticatedUser user;
-  final TransactionsViewModel viewModel;
-
-  const ButtonsTransactionType({
-    super.key,
-    required this.buttons,
-    this.initialSelectedButtonIndex,
-    required this.user,
-    required this.viewModel,
-  });
-
-  @override
-  State<ButtonsTransactionType> createState() => _ButtonsTransactionTypeState();
-}
-
-class _ButtonsTransactionTypeState extends State<ButtonsTransactionType> {
-  int selectedButton = 0;
-
-  @override
-  void initState() {
-    selectedButton = widget.initialSelectedButtonIndex ?? selectedButton;
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(0),
-          decoration: BoxDecoration(
-              color: const Color(0xFFDFE2E6),
-              borderRadius: const BorderRadius.all(Radius.circular(8.0)),
-              border: Border.all(width: 1, color: const Color(0xFFDFE2E6))),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              for (int buttonIndex = 0; buttonIndex < widget.buttons.length; buttonIndex++)
-                ActiveButton(
-                  active: selectedButton == buttonIndex,
-                  type: widget.buttons[buttonIndex].type,
-                  textStyle: ClientConfig.getTextStyleScheme().labelSmall,
-                  onPressed: () {
-                    setState(() => selectedButton = buttonIndex);
-                    if (buttonIndex == 0) {
-                      StoreProvider.of<AppState>(context).dispatch(GetTransactionsCommandAction(
-                          filter: widget.viewModel.transactionListFilter, user: widget.user.cognito));
-                    }
-
-                    if (buttonIndex == 1) {
-                      StoreProvider.of<AppState>(context).dispatch(GetUpcomingTransactionsCommandAction(
-                          user: widget.user.cognito, filter: widget.viewModel.transactionListFilter));
-                    }
-                  },
-                )
-            ],
-          ),
-        ),
-        const SizedBox(height: 24),
-        widget.buttons[selectedButton].child,
-      ],
-    );
-  }
-}
-
-class ActiveButton extends StatelessWidget {
-  final TransactionTypeItems type;
-  final bool active;
-  final Function onPressed;
-  final TextStyle? textStyle;
-
-  const ActiveButton({
-    super.key,
-    this.textStyle,
-    required this.active,
-    required this.type,
-    required this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Button(
-        text: (type == TransactionTypeItems.past) ? "Past" : "Upcoming",
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        color: !active ? const Color(0xFFDFE2E6) : Colors.white,
-        textColor: const Color(0xFF15141E),
-        border: !active ? Border.all(width: 1, color: const Color(0xFFDFE2E6)) : null,
-        onPressed: onPressed,
+    return Padding(
+      padding: EdgeInsets.only(top: widgetList.isNotEmpty ? 16 : 0),
+      child: Wrap(
+        spacing: 8,
+        runSpacing: 4,
+        children: widgetList,
       ),
     );
   }
 }
-
-class ButtonTransactionTypeItem {
-  final TransactionTypeItems type;
-  final Widget child;
-
-  const ButtonTransactionTypeItem({
-    required this.type,
-    required this.child,
-  });
-}
-
-enum TransactionTypeItems { past, upcoming }
