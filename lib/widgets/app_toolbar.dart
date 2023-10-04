@@ -40,9 +40,22 @@ class AppToolbar extends StatefulWidget {
 }
 
 class _AppToolbarState extends State<AppToolbar> {
+  bool _clientAdded = false;
+
   @override
   void initState() {
     super.initState();
+    if (widget.scrollController != null) {
+      widget.scrollController!.addListener(onScroll);
+    }
+  }
+
+  @override
+  void dispose() {
+    if (widget.scrollController != null) {
+      widget.scrollController!.removeListener(onScroll);
+    }
+    super.dispose();
   }
 
   @override
@@ -83,6 +96,7 @@ class _AppToolbarState extends State<AppToolbar> {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           AppBar(
             actions: widget.actions,
@@ -116,5 +130,14 @@ class _AppToolbarState extends State<AppToolbar> {
         ],
       ),
     );
+  }
+
+  void onScroll() {
+    // needed to trigger rebuild when scroll controller has a client
+    if (widget.scrollController!.hasClients && _clientAdded == false) {
+      setState(() {
+        _clientAdded = true;
+      });
+    }
   }
 }
