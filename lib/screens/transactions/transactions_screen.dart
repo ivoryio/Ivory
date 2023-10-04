@@ -31,11 +31,12 @@ class TransactionsScreen extends StatefulWidget {
 }
 
 class _TransactionsScreenState extends State<TransactionsScreen> {
+  ScrollController scrollController = ScrollController();
+  IvoryTabController tabController = IvoryTabController(tabsCount: 2);
+
   @override
   Widget build(BuildContext context) {
     AuthenticatedUser user = context.read<AuthCubit>().state.user!;
-    ScrollController scrollController = ScrollController();
-    IvoryTabController tabController = IvoryTabController(tabsCount: 2);
 
     return StoreConnector<AppState, TransactionsViewModel>(
         onInit: (store) {
