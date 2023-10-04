@@ -6,7 +6,7 @@ import 'package:solarisdemo/widgets/screen_title.dart';
 class AppToolbar extends StatefulWidget {
   final String title;
   final Icon backIcon;
-  final Widget? bottom;
+  final List<Widget>? children;
   final EdgeInsets? padding;
   final List<Widget> actions;
   final Color backgroundColor;
@@ -20,7 +20,7 @@ class AppToolbar extends StatefulWidget {
 
   const AppToolbar({
     super.key,
-    this.bottom,
+    this.children,
     this.padding,
     this.title = "",
     this.richTextTitle,
@@ -123,10 +123,8 @@ class _AppToolbarState extends State<AppToolbar> {
               opacity: 1 - titleOpacity,
               child: ScreenTitle(widget.title, padding: EdgeInsets.zero, scale: 1 - titleOpacity),
             ),
-          if (widget.bottom != null) ...[
-            SizedBox(height: 8 * (1 - titleOpacity)),
-            widget.bottom!,
-          ],
+          if (widget.children != null) SizedBox(height: 8 * (1 - titleOpacity)),
+          if (widget.children != null) ...widget.children!,
         ],
       ),
     );

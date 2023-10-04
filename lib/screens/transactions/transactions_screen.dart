@@ -62,74 +62,71 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     scrollController: scrollController,
                     includeBottomScreenTitle: true,
                     padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                    bottom: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CustomSearchBar(
-                          hintText: "Search by name, date",
-                          textLabel: viewModel.transactionListFilter?.searchString,
-                          showButtonIndicator: isFilterActive,
-                          onPressedFilterButton: () {
-                            Navigator.pushNamed(
-                              context,
-                              TransactionsFilteringScreen.routeName,
-                              arguments: viewModel.transactionListFilter,
+                    children: [
+                      CustomSearchBar(
+                        hintText: "Search by name, date",
+                        textLabel: viewModel.transactionListFilter?.searchString,
+                        showButtonIndicator: isFilterActive,
+                        onPressedFilterButton: () {
+                          Navigator.pushNamed(
+                            context,
+                            TransactionsFilteringScreen.routeName,
+                            arguments: viewModel.transactionListFilter,
+                          );
+                        },
+                        onSubmitSearch: (value) {
+                          TransactionListFilter filter;
+                          if (value.isEmpty) {
+                            filter = TransactionListFilter(
+                              bookingDateMax: viewModel.transactionListFilter?.bookingDateMax,
+                              bookingDateMin: viewModel.transactionListFilter?.bookingDateMin,
+                              size: viewModel.transactionListFilter?.size,
+                              categories: viewModel.transactionListFilter?.categories,
+                              searchString: null,
                             );
-                          },
-                          onSubmitSearch: (value) {
-                            TransactionListFilter filter;
-                            if (value.isEmpty) {
-                              filter = TransactionListFilter(
-                                bookingDateMax: viewModel.transactionListFilter?.bookingDateMax,
-                                bookingDateMin: viewModel.transactionListFilter?.bookingDateMin,
-                                size: viewModel.transactionListFilter?.size,
-                                categories: viewModel.transactionListFilter?.categories,
-                                searchString: null,
-                              );
-                            } else {
-                              filter = TransactionListFilter(
-                                bookingDateMax: viewModel.transactionListFilter?.bookingDateMax,
-                                bookingDateMin: viewModel.transactionListFilter?.bookingDateMin,
-                                size: viewModel.transactionListFilter?.size,
-                                categories: viewModel.transactionListFilter?.categories,
-                                searchString: value,
-                              );
-                            }
-                            StoreProvider.of<AppState>(context)
-                                .dispatch(GetTransactionsCommandAction(filter: filter, user: user.cognito));
-                          },
-                          onChangedSearch: (String value) {
-                            return;
-                          },
-                        ),
-                        _buildFilterListDisplay(viewModel, user),
-                        const SizedBox(height: 16),
-                        IvoryTabBar(
-                          controller: tabController,
-                          tabs: [
-                            IvoryTab(
-                              title: "Past",
-                              onPressed: () => StoreProvider.of<AppState>(context).dispatch(
-                                GetTransactionsCommandAction(
-                                  filter: viewModel.transactionListFilter,
-                                  user: user.cognito,
-                                ),
+                          } else {
+                            filter = TransactionListFilter(
+                              bookingDateMax: viewModel.transactionListFilter?.bookingDateMax,
+                              bookingDateMin: viewModel.transactionListFilter?.bookingDateMin,
+                              size: viewModel.transactionListFilter?.size,
+                              categories: viewModel.transactionListFilter?.categories,
+                              searchString: value,
+                            );
+                          }
+                          StoreProvider.of<AppState>(context)
+                              .dispatch(GetTransactionsCommandAction(filter: filter, user: user.cognito));
+                        },
+                        onChangedSearch: (String value) {
+                          return;
+                        },
+                      ),
+                      _buildFilterListDisplay(viewModel, user),
+                      const SizedBox(height: 16),
+                      IvoryTabBar(
+                        controller: tabController,
+                        tabs: [
+                          IvoryTab(
+                            title: "Past",
+                            onPressed: () => StoreProvider.of<AppState>(context).dispatch(
+                              GetTransactionsCommandAction(
+                                filter: viewModel.transactionListFilter,
+                                user: user.cognito,
                               ),
                             ),
-                            IvoryTab(
-                              title: "Upcoming",
-                              onPressed: () => StoreProvider.of<AppState>(context).dispatch(
-                                GetUpcomingTransactionsCommandAction(
-                                  user: user.cognito,
-                                  filter: viewModel.transactionListFilter,
-                                ),
+                          ),
+                          IvoryTab(
+                            title: "Upcoming",
+                            onPressed: () => StoreProvider.of<AppState>(context).dispatch(
+                              GetUpcomingTransactionsCommandAction(
+                                user: user.cognito,
+                                filter: viewModel.transactionListFilter,
                               ),
                             ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                      ],
-                    ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                    ],
                   ),
                   Expanded(
                     child: SingleChildScrollView(
