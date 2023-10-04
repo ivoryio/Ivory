@@ -22,137 +22,150 @@ class BillDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final billId = ModalRoute.of(context)!.settings.arguments as String;
     final user = context.read<AuthCubit>().state.user!;
+    final scrollController = ScrollController();
 
     return ScreenScaffold(
-      body: SingleChildScrollView(
-        padding:
-            ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-        child: StoreConnector<AppState, BillDetailViewModel>(
-          onInit: (store) {
-            store.dispatch(GetBillByIdCommandAction(id: billId, user: user.cognito));
-          },
-          converter: (store) => BillDetailPresenter.presentBillDetail(
-            billState: store.state.billsState,
-            billId: billId,
+      body: Column(
+        children: [
+          AppToolbar(
+            title: "Bill details",
+            scrollController: scrollController,
+            padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
           ),
-          distinct: true,
-          builder: (context, viewModel) {
-            final bill = viewModel.bill;
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const AppToolbar(),
-                Text(
-                  Format.date(bill.statementDate, pattern: 'MMM d, yyyy'),
-                  style: ClientConfig.getTextStyleScheme().heading1,
+          Expanded(
+            child: SingleChildScrollView(
+              controller: scrollController,
+              padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+              child: StoreConnector<AppState, BillDetailViewModel>(
+                onInit: (store) {
+                  store.dispatch(GetBillByIdCommandAction(id: billId, user: user.cognito));
+                },
+                converter: (store) => BillDetailPresenter.presentBillDetail(
+                  billState: store.state.billsState,
+                  billId: billId,
                 ),
-                const SizedBox(height: 24),
-                Material(
-                  color: const Color(0xFFF8F9FA),
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(16),
-                    ),
-                  ),
-                  child: Column(
+                distinct: true,
+                builder: (context, viewModel) {
+                  final bill = viewModel.bill;
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: SpacedColumn(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          space: 8,
+                      Text(
+                        Format.date(bill.statementDate, pattern: 'MMM d, yyyy'),
+                        style: ClientConfig.getTextStyleScheme().heading1,
+                      ),
+                      const SizedBox(height: 24),
+                      Material(
+                        color: const Color(0xFFF8F9FA),
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(16),
+                          ),
+                        ),
+                        child: Column(
                           children: [
-                            Text('Repayment details', style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold),
-                            if (viewModel.transactionsLoaded) ...[
-                              ExpandedDetailsRow(
-                                title: 'Amount spent',
-                                trailing: Format.euro(bill.amountSpent!.value),
-                              ),
-                              ...bill.transactions!.map(
-                                (transaction) => Padding(
-                                  padding: EdgeInsets.only(
-                                      left: ClientConfig.getCustomClientUiSettings().defaultScreenLeftPadding),
-                                  child: ExpandedDetailsRow(
-                                    title: transaction.merchantName,
-                                    trailing: Format.euro(transaction.amount.value),
+                            Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: SpacedColumn(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                space: 8,
+                                children: [
+                                  Text('Repayment details',
+                                      style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold),
+                                  if (viewModel.transactionsLoaded) ...[
+                                    ExpandedDetailsRow(
+                                      title: 'Amount spent',
+                                      trailing: Format.euro(bill.amountSpent!.value),
+                                    ),
+                                    ...bill.transactions!.map(
+                                      (transaction) => Padding(
+                                        padding: EdgeInsets.only(
+                                            left: ClientConfig.getCustomClientUiSettings().defaultScreenLeftPadding),
+                                        child: ExpandedDetailsRow(
+                                          title: transaction.merchantName,
+                                          trailing: Format.euro(transaction.amount.value),
+                                        ),
+                                      ),
+                                    )
+                                  ] else
+                                    const Center(
+                                      child: SizedBox.square(
+                                        dimension: 24,
+                                        child: CircularProgressIndicator(strokeWidth: 2),
+                                      ),
+                                    ),
+                                  ExpandedDetailsRow(
+                                    title: 'Fixed repayment rate',
+                                    trailing: Format.euro(bill.currentBillAmount.value),
                                   ),
-                                ),
-                              )
-                            ] else
-                              const Center(
-                                child: SizedBox.square(
-                                  dimension: 24,
-                                  child: CircularProgressIndicator(strokeWidth: 2),
-                                ),
+                                  ExpandedDetailsRow(title: 'Interest rate', trailing: '${bill.interestRate}%'),
+                                  ExpandedDetailsRow(
+                                    title: 'Interest amount',
+                                    trailing: Format.euro(bill.currentBillAmount.value),
+                                  ),
+                                ],
                               ),
-                            ExpandedDetailsRow(
-                              title: 'Fixed repayment rate',
-                              trailing: Format.euro(bill.currentBillAmount.value),
                             ),
-                            ExpandedDetailsRow(title: 'Interest rate', trailing: '${bill.interestRate}%'),
-                            ExpandedDetailsRow(
-                              title: 'Interest amount',
-                              trailing: Format.euro(bill.currentBillAmount.value),
-                            ),
+                            const Divider(height: 1),
+                            Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: SpacedColumn(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                space: 8,
+                                children: [
+                                  ExpandedDetailsRow(
+                                    title: 'Total repayment amount',
+                                    trailing: Format.euro(bill.currentBillAmount.value),
+                                  ),
+                                  ExpandedDetailsRow(
+                                    title: 'Due date',
+                                    trailing: Format.date(bill.dueDate, pattern: 'MMM d, yyyy'),
+                                  ),
+                                ],
+                              ),
+                            )
                           ],
                         ),
                       ),
-                      const Divider(height: 1),
-                      Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: SpacedColumn(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          space: 8,
-                          children: [
-                            ExpandedDetailsRow(
-                              title: 'Total repayment amount',
-                              trailing: Format.euro(bill.currentBillAmount.value),
-                            ),
-                            ExpandedDetailsRow(
-                              title: 'Due date',
-                              trailing: Format.date(bill.dueDate, pattern: 'MMM d, yyyy'),
-                            ),
-                          ],
+                      const SizedBox(height: 24),
+                      Material(
+                        color: const Color(0xFFF8F9FA),
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(16),
+                          ),
                         ),
-                      )
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: SpacedColumn(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            space: 8,
+                            children: [
+                              Text('Outstanding balance',
+                                  style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold),
+                              ExpandedDetailsRow(
+                                title: 'Before repayment',
+                                trailing: Format.euro(bill.outstandingAmount.value),
+                              ),
+                              ExpandedDetailsRow(
+                                title: 'After repaymeny',
+                                trailing: Format.euro(bill.outstandingAmount.value - bill.currentBillAmount.value),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      Text('Actions', style: ClientConfig.getTextStyleScheme().heading4),
+                      const SizedBox(height: 8),
+                      _DownloadBillButton(bill: bill),
                     ],
-                  ),
-                ),
-                const SizedBox(height: 24),
-                Material(
-                  color: const Color(0xFFF8F9FA),
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(16),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: SpacedColumn(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      space: 8,
-                      children: [
-                        Text('Outstanding balance', style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold),
-                        ExpandedDetailsRow(
-                          title: 'Before repayment',
-                          trailing: Format.euro(bill.outstandingAmount.value),
-                        ),
-                        ExpandedDetailsRow(
-                          title: 'After repaymeny',
-                          trailing: Format.euro(bill.outstandingAmount.value - bill.currentBillAmount.value),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 24),
-                Text('Actions', style: ClientConfig.getTextStyleScheme().heading4),
-                const SizedBox(height: 8),
-                _DownloadBillButton(bill: bill),
-              ],
-            );
-          },
-        ),
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

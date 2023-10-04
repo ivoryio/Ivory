@@ -19,6 +19,7 @@ import 'package:solarisdemo/widgets/ivory_error_widget.dart';
 import 'package:solarisdemo/widgets/ivory_list_tile.dart';
 import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
+import 'package:solarisdemo/widgets/screen_title.dart';
 import 'package:solarisdemo/widgets/spaced_column.dart';
 
 import '../../config.dart';
@@ -33,142 +34,146 @@ class RepaymentsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = context.read<AuthCubit>().state.user!;
+    final ScrollController scrollController = ScrollController();
 
     return ScreenScaffold(
-      body: SingleChildScrollView(
-        physics: const ClampingScrollPhysics(),
-        padding:
-            ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            AppToolbar(
-              onBackButtonPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            Text(
-              'Repayments',
-              style: ClientConfig.getTextStyleScheme().heading1,
-            ),
-            const SizedBox(height: 24),
-            Material(
-              color: const Color(0xFFF8F9FA),
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(16),
-                ),
-              ),
-              child: StoreConnector<AppState, CreditLineViewModel>(
-                onInit: (store) {
-                  store.dispatch(GetCreditLineCommandAction(user: user.cognito));
-                },
-                converter: (store) => CreditLinePresenter.presentCreditLine(
-                  creditLineState: store.state.creditLineState,
-                  user: user,
-                ),
-                distinct: true,
-                builder: (context, viewModel) {
-                  if (viewModel is CreditLineLoadingViewModel) {
-                    return Container(
-                      alignment: Alignment.center,
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(16),
-                      child: const CircularProgressIndicator(),
-                    );
-                  } else if (viewModel is CreditLineErrorViewModel) {
-                    return Container(
-                      alignment: Alignment.center,
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(16),
-                      child: const IvoryErrorWidget('Error loading credit line details'),
-                    );
-                  }
-
-                  return _DetailsContent(viewModel: viewModel as CreditLineFetchedViewModel);
-                },
-              ),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              'Actions',
-              style: ClientConfig.getTextStyleScheme().heading4,
-            ),
-            IvoryListTile(
-              startIcon: Icons.sync,
-              title: 'Change repayment rate',
-              subtitle: 'And choose between percentage or fixed',
-              onTap: () {
-                Navigator.pushNamed(context, ChangeRepaymentRateScreen.routeName);
-              },
-            ),
-            IvoryListTile(
-              startIcon: Icons.notifications_active_outlined,
-              title: 'Set repayment reminder',
-              subtitle: 'Before we debit your reference account',
-              onTap: () {
-                Navigator.pushNamed(context, RepaymentReminderScreen.routeName);
-              },
-            ),
-            IvoryListTile(
-              startIcon: Icons.content_paste_search_rounded,
-              title: 'View bills',
-              subtitle: 'View all your repayment bills',
-              onTap: () {
-                Navigator.pushNamed(context, BillsScreen.routeName);
-              },
-            ),
-            IvoryListTile(
-              startIcon: Icons.analytics_outlined,
-              title: 'Repayments analytics',
-              subtitle: 'Check your repayment analytics',
-              onTap: () {
-                log('Repayments analytics');
-              },
-            ),
-            StoreConnector<AppState, MoreCreditViewModel>(
-              converter: (store) => MoreCreditPresenter.presentMoreCredit(
-                moreCreditState: store.state.moreCreditState,
-                user: user,
-              ),
-              distinct: true,
-              builder: (context, viewModel) {
-                if (viewModel is MoreCreditInitialViewModel) {
-                  StoreProvider.of<AppState>(context).dispatch(
-                    GetMoreCreditCommandAction(
-                      user: user.cognito,
+      body: Column(
+        children: [
+          AppToolbar(
+            title: "Repayments",
+            scrollController: scrollController,
+            padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              controller: scrollController,
+              physics: const ClampingScrollPhysics(),
+              padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const ScreenTitle("Repayments"),
+                  const SizedBox(height: 24),
+                  Material(
+                    color: const Color(0xFFF8F9FA),
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(16),
+                      ),
                     ),
-                  );
-                }
+                    child: StoreConnector<AppState, CreditLineViewModel>(
+                      onInit: (store) {
+                        store.dispatch(GetCreditLineCommandAction(user: user.cognito));
+                      },
+                      converter: (store) => CreditLinePresenter.presentCreditLine(
+                        creditLineState: store.state.creditLineState,
+                        user: user,
+                      ),
+                      distinct: true,
+                      builder: (context, viewModel) {
+                        if (viewModel is CreditLineLoadingViewModel) {
+                          return Container(
+                            alignment: Alignment.center,
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(16),
+                            child: const CircularProgressIndicator(),
+                          );
+                        } else if (viewModel is CreditLineErrorViewModel) {
+                          return Container(
+                            alignment: Alignment.center,
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(16),
+                            child: const IvoryErrorWidget('Error loading credit line details'),
+                          );
+                        }
 
-                if (viewModel is MoreCreditLoadingViewModel) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
+                        return _DetailsContent(viewModel: viewModel as CreditLineFetchedViewModel);
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    'Actions',
+                    style: ClientConfig.getTextStyleScheme().heading4,
+                  ),
+                  IvoryListTile(
+                    startIcon: Icons.sync,
+                    title: 'Change repayment rate',
+                    subtitle: 'And choose between percentage or fixed',
+                    onTap: () {
+                      Navigator.pushNamed(context, ChangeRepaymentRateScreen.routeName);
+                    },
+                  ),
+                  IvoryListTile(
+                    startIcon: Icons.notifications_active_outlined,
+                    title: 'Set repayment reminder',
+                    subtitle: 'Before we debit your reference account',
+                    onTap: () {
+                      Navigator.pushNamed(context, RepaymentReminderScreen.routeName);
+                    },
+                  ),
+                  IvoryListTile(
+                    startIcon: Icons.content_paste_search_rounded,
+                    title: 'View bills',
+                    subtitle: 'View all your repayment bills',
+                    onTap: () {
+                      Navigator.pushNamed(context, BillsScreen.routeName);
+                    },
+                  ),
+                  IvoryListTile(
+                    startIcon: Icons.analytics_outlined,
+                    title: 'Repayments analytics',
+                    subtitle: 'Check your repayment analytics',
+                    onTap: () {
+                      log('Repayments analytics');
+                    },
+                  ),
+                  StoreConnector<AppState, MoreCreditViewModel>(
+                    converter: (store) => MoreCreditPresenter.presentMoreCredit(
+                      moreCreditState: store.state.moreCreditState,
+                      user: user,
+                    ),
+                    distinct: true,
+                    builder: (context, viewModel) {
+                      if (viewModel is MoreCreditInitialViewModel) {
+                        StoreProvider.of<AppState>(context).dispatch(
+                          GetMoreCreditCommandAction(
+                            user: user.cognito,
+                          ),
+                        );
+                      }
 
-                if (viewModel is MoreCreditErrorViewModel) {
-                  return const Text('Error loading more credit details');
-                }
+                      if (viewModel is MoreCreditLoadingViewModel) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
 
-                return IvoryListTile(
-                  startIcon: Icons.back_hand_outlined,
-                  title: 'Need more credit?',
-                  subtitle: (viewModel is MoreCreditFetchedViewModel) && (viewModel.waitlist == false)
-                      ? ('Sign up for our waitlist')
-                      : ('You\'re on our waitlist'),
-                  onTap: () {
-                    (viewModel is MoreCreditFetchedViewModel)
-                        ? (viewModel.waitlist == false)
-                            ? Navigator.pushNamed(context, MoreCreditScreen.routeName)
-                            : Navigator.pushNamed(context, MoreCreditWaitlistScreen.routeName)
-                        : Navigator.pushNamed(context, MoreCreditWaitlistScreen.routeName);
-                  },
-                );
-              },
+                      if (viewModel is MoreCreditErrorViewModel) {
+                        return const Text('Error loading more credit details');
+                      }
+
+                      return IvoryListTile(
+                        startIcon: Icons.back_hand_outlined,
+                        title: 'Need more credit?',
+                        subtitle: (viewModel is MoreCreditFetchedViewModel) && (viewModel.waitlist == false)
+                            ? ('Sign up for our waitlist')
+                            : ('You\'re on our waitlist'),
+                        onTap: () {
+                          (viewModel is MoreCreditFetchedViewModel)
+                              ? (viewModel.waitlist == false)
+                                  ? Navigator.pushNamed(context, MoreCreditScreen.routeName)
+                                  : Navigator.pushNamed(context, MoreCreditWaitlistScreen.routeName)
+                              : Navigator.pushNamed(context, MoreCreditWaitlistScreen.routeName);
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
