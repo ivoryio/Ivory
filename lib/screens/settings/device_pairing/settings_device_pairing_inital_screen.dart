@@ -15,9 +15,9 @@ import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import '../../../config.dart';
 import '../../../utilities/ivory_color_mapper.dart';
 
-class SettingsDevicePairingActivateFaceidScreen extends StatelessWidget {
+class SettingsDevicePairingInitialScreen extends StatelessWidget {
   static const routeName = "/settingsDevicePairingActivateFaceidScreen";
-  const SettingsDevicePairingActivateFaceidScreen({super.key});
+  const SettingsDevicePairingInitialScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +28,9 @@ class SettingsDevicePairingActivateFaceidScreen extends StatelessWidget {
         children: [
           AppToolbar(
             padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-              onBackButtonPressed: () {
-                Navigator.popUntil(context, ModalRoute.withName(SettingsDevicePairingScreen.routeName));
-                StoreProvider.of<AppState>(context).dispatch(FetchBoundDevicesCommandAction());
+            onBackButtonPressed: () {
+              Navigator.popUntil(context, ModalRoute.withName(SettingsDevicePairingScreen.routeName));
+              StoreProvider.of<AppState>(context).dispatch(FetchBoundDevicesCommandAction());
             },
           ),
           StoreConnector<AppState, DeviceBindingViewModel>(
@@ -62,34 +62,28 @@ class SettingsDevicePairingActivateFaceidScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Pair device by\nactivating Face ID',
+                        'Device pairing required',
                         style: ClientConfig.getTextStyleScheme().heading1,
                         textAlign: TextAlign.left,
                       ),
                       const SizedBox(
                         height: 16,
                       ),
-                      RichText(
-                        text: TextSpan(
-                          style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                          children: [
-                            const TextSpan(text: 'This will help you easily and seamlessly '),
-                            TextSpan(
-                                text: 'log in without a password, authorise payments ',
-                                style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold),
-                            const TextSpan(text: 'and do multiple other operations.'),
-                          ],
-                        ),
+                      Text(
+                        'This will bolster your security when utilizing our app, which is designed with your safety in mind.',
+                        style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
                       ),
                       const SizedBox(
                         height: 24,
                       ),
                       Expanded(
                         child: Center(
-                          child:  SvgPicture(
+                          child: SvgPicture(
                             SvgAssetLoader(
-                              'assets/images/biometric_faceid.svg',
-                              colorMapper: IvoryColorMapper(baseColor: ClientConfig.getColorScheme().secondary,),
+                              'assets/images/device_pairing.svg',
+                              colorMapper: IvoryColorMapper(
+                                baseColor: ClientConfig.getColorScheme().secondary,
+                              ),
                             ),
                           ),
                         ),
@@ -103,7 +97,7 @@ class SettingsDevicePairingActivateFaceidScreen extends StatelessWidget {
                           color: ClientConfig.getColorScheme().surface,
                           textColor: ClientConfig.getColorScheme().tertiary,
                           onPressed: () {
-                            StoreProvider.of<AppState>(context).dispatch(CreateDeviceBindingCommandAction(user: user));
+                            Navigator.pop(context);
                           },
                         ),
                       ),
@@ -114,11 +108,13 @@ class SettingsDevicePairingActivateFaceidScreen extends StatelessWidget {
                         width: double.infinity,
                         height: 48,
                         child: Button(
-                          text: 'Activate Face ID',
+                          text: 'Pair device',
                           disabledColor: const Color(0xFFDFE2E6),
                           color: ClientConfig.getColorScheme().tertiary,
                           textColor: ClientConfig.getColorScheme().surface,
-                          onPressed: () {},
+                          onPressed: () {
+                            StoreProvider.of<AppState>(context).dispatch(CreateDeviceBindingCommandAction(user: user));
+                          },
                         ),
                       ),
                     ],

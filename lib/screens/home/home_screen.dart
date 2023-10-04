@@ -5,6 +5,7 @@ import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:solarisdemo/infrastructure/person/account_summary/account_summary_presenter.dart';
 import 'package:solarisdemo/models/person_model.dart';
 import 'package:solarisdemo/screens/account/account_details_screen.dart';
+import 'package:solarisdemo/screens/available_balance/available_balance_screen.dart';
 import 'package:solarisdemo/screens/repayments/repayments_screen.dart';
 import 'package:solarisdemo/screens/transactions/transactions_screen.dart';
 import 'package:solarisdemo/screens/transfer/transfer_screen.dart';
@@ -184,10 +185,7 @@ class HomePageHeader extends StatelessWidget {
                 children: [
                   if (viewModel is AccountSummaryFetchedViewModel)
                     AccountSummary(
-                      spending: viewModel.accountSummary?.spending ?? 0,
-                      availableBalance:viewModel.accountSummary?.availableBalance?.value ?? 0,
-                      outstandingAmount: viewModel.accountSummary?.outstandingAmount ?? 0,
-                      creditLimit: viewModel.accountSummary?.creditLimit ?? 0,
+                     viewModel: viewModel,
                     )
                   else
                     const Center(
@@ -213,17 +211,11 @@ class HomePageHeader extends StatelessWidget {
 }
 
 class AccountSummary extends StatelessWidget {
-  final num outstandingAmount;
-  final num creditLimit;
-  final num availableBalance;
-  final num spending;
+  final AccountSummaryFetchedViewModel viewModel;
 
   const AccountSummary({
     super.key,
-    required this.availableBalance,
-    required this.spending,
-    required this.outstandingAmount,
-    required this.creditLimit,
+    required this.viewModel,
   });
 
   @override
@@ -231,14 +223,10 @@ class AccountSummary extends StatelessWidget {
     return Column(
       children: [
         AccountBalance(
-          value: availableBalance,
-          outstandingAmount: outstandingAmount,
-          creditLimit: creditLimit,
+          viewModel: viewModel,
         ),
         AccountStats(
-          spending: spending,
-          creditLimit: creditLimit,
-          outstandingAmount: outstandingAmount,
+         viewModel: viewModel,
         ),
       ],
     );
@@ -246,15 +234,11 @@ class AccountSummary extends StatelessWidget {
 }
 
 class AccountBalance extends StatelessWidget {
-  final num value;
-  final num? outstandingAmount;
-  final num? creditLimit;
+  final AccountSummaryFetchedViewModel viewModel;
 
   const AccountBalance({
     super.key,
-    required this.value,
-    this.outstandingAmount,
-    this.creditLimit,
+    required this.viewModel,
   });
 
   @override
@@ -268,35 +252,31 @@ class AccountBalance extends StatelessWidget {
               "Available Balance",
               style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: Colors.white),
             ),
-            const SizedBox(
-              width: 4,
-            ),
-            const Icon(
-              Icons.info_outline,
-              color: Colors.white,
+            IconButton(
+              icon: const Icon(
+                Icons.info_outline,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.of(context).pushNamed(AvailableBalanceScreen.routeName, arguments: viewModel);
+              },
             ),
           ],
         ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              AccountBalanceText(
-                value: value,
-                numberStyle: ClientConfig.getTextStyleScheme().display.copyWith(color: Colors.white),
-                centsStyle: const TextStyle(color: Colors.white, fontSize: 24),
-              ),
-            ],
+          child: AccountBalanceText(
+            value: viewModel.accountSummary?.availableBalance?.value ?? 0,
+            numberStyle: ClientConfig.getTextStyleScheme().display.copyWith(color: Colors.white),
+            centsStyle: const TextStyle(color: Colors.white, fontSize: 24),
           ),
         ),
         LinearPercentIndicator(
           lineHeight: 8,
           barRadius: const Radius.circular(40),
-          percent: ((outstandingAmount ?? 0) / (creditLimit ?? 0)).isInfinite
+          percent: ((viewModel.accountSummary?.outstandingAmount ?? 0) / (viewModel.accountSummary?.creditLimit ?? 0)).isInfinite
               ? 0
-              : (outstandingAmount ?? 0) / (creditLimit ?? 0.01),
+              : (viewModel.accountSummary?.outstandingAmount ?? 0) / (viewModel.accountSummary?.creditLimit ?? 0.01),
           backgroundColor: const Color(0x26F8F9FA),
           progressColor: ClientConfig.getColorScheme().secondary,
           curve: Curves.fastOutSlowIn,
@@ -307,15 +287,11 @@ class AccountBalance extends StatelessWidget {
 }
 
 class AccountStats extends StatelessWidget {
-  final num spending;
-  final num outstandingAmount;
-  final num creditLimit;
+  final AccountSummaryFetchedViewModel viewModel;
 
   const AccountStats({
     super.key,
-    required this.spending,
-    required this.outstandingAmount,
-    required this.creditLimit,
+    required this.viewModel,
   });
 
   @override
@@ -334,7 +310,7 @@ class AccountStats extends StatelessWidget {
               ),
               const SizedBox(width: 5),
               AccountBalanceText(
-                value: outstandingAmount,
+                value: viewModel.accountSummary?.outstandingAmount ?? 0,
                 numberStyle: ClientConfig.getTextStyleScheme().labelLarge.copyWith(color: Colors.white),
                 centsStyle: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: Colors.white),
               ),
@@ -349,7 +325,7 @@ class AccountStats extends StatelessWidget {
               ),
               const SizedBox(width: 5),
               AccountBalanceText(
-                value: creditLimit,
+                value: viewModel.accountSummary?.creditLimit ?? 0.01,
                 numberStyle: ClientConfig.getTextStyleScheme().labelLarge.copyWith(color: Colors.white),
                 centsStyle: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: Colors.white),
               ),

@@ -16,7 +16,7 @@ class FileSaverService {
       Share.shareXFiles([xFile]);
     } else {
       // Ask for storage permission
-      final status = await Permission.storage.request();
+      final status = await Permission.manageExternalStorage.request();
       if (!status.isGranted) {
         return;
       }

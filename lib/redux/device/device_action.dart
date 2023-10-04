@@ -46,7 +46,11 @@ class BoundDevicesFetchedEventAction {
 
 class DeviceBindingCreatedEventAction {}
 
-class DeviceBindingChallengeVerifiedEventAction {}
+class DeviceBindingChallengeVerifiedEventAction {
+  final Device thisDevice;
+
+  DeviceBindingChallengeVerifiedEventAction(this.thisDevice);
+}
 
 class BoundDevicesFetchedButEmptyEventAction {
   final Device thisDevice;
