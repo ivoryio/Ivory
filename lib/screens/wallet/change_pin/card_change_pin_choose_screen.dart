@@ -25,7 +25,7 @@ class BankCardChangePinChooseScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = context.read<AuthCubit>().state.user!;
-    final GlobalKey<_ChangePinBodyState> _changePinBodyKey = GlobalKey<_ChangePinBodyState>();
+    final GlobalKey<_ChangePinBodyState> changePinBodyKey = GlobalKey<_ChangePinBodyState>();
     ValueNotifier<bool> birthdayErrorNotifier = ValueNotifier<bool>(false);
     ValueNotifier<bool> postalCodeErrorNotifier = ValueNotifier<bool>(false);
     ValueNotifier<bool> sequenceErrorNotifier = ValueNotifier<bool>(false);
@@ -47,7 +47,7 @@ class BankCardChangePinChooseScreen extends StatelessWidget {
         },
         onWillChange: (previousViewModel, newViewModel) {
           if (previousViewModel is BankCardLoadingViewModel && newViewModel is BankCardFetchedViewModel) {
-            _changePinBodyKey.currentState?.clearPinAndResetFocus();
+            changePinBodyKey.currentState?.clearPinAndResetFocus();
           }
         },
         onDidChange: (previousViewModel, viewModel) {
@@ -109,7 +109,7 @@ class BankCardChangePinChooseScreen extends StatelessWidget {
                 ),
               ),
               ChangePinBody(
-                key: _changePinBodyKey,
+                key: changePinBodyKey,
                 viewModel: viewModel,
                 birthdayErrorNotifier: birthdayErrorNotifier,
                 postalCodeErrorNotifier: postalCodeErrorNotifier,
