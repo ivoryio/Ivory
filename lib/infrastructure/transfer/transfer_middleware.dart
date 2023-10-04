@@ -1,6 +1,7 @@
 import 'package:redux/redux.dart';
 import 'package:solarisdemo/infrastructure/change_request/change_request_service.dart';
 import 'package:solarisdemo/infrastructure/transfer/transfer_service.dart';
+import 'package:solarisdemo/models/change_request/change_request_error_type.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/transfer/transfer_action.dart';
 
@@ -40,8 +41,8 @@ class TransferMiddleware extends MiddlewareClass<AppState> {
             transfer: response.transferConfirmation.transfer,
           ),
         );
-      } else {
-        store.dispatch(ConfirmTransferFailedEventAction());
+      } else if(response is ChangeRequestServiceErrorResponse) {
+        store.dispatch(ConfirmTransferFailedEventAction(response.errorType));
       }
     }
   }

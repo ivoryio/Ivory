@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:solarisdemo/models/transfer/transfer_authorization_request.dart';
 
+import '../../models/change_request/change_request_error_type.dart';
+
 abstract class TransferState extends Equatable {
   @override
   List<Object?> get props => [];
@@ -26,4 +28,8 @@ class TransferConfirmedState extends TransferState {
   });
 }
 
-class TransferFailedState extends TransferState {}
+class TransferFailedState extends TransferState {
+  final ChangeRequestErrorType errorType;
+
+  TransferFailedState(this.errorType);
+}
