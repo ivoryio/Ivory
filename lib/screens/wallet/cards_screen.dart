@@ -52,6 +52,7 @@ class BankCardsScreen extends StatelessWidget {
                 AppToolbar(
                   title: "Cards",
                   scrollController: scrollController,
+                  padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
                 ),
                 Expanded(
                   child: SingleChildScrollView(
@@ -83,9 +84,13 @@ class _Content extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const ScreenTitle("Cards"),
+        ScreenTitle(
+          "Cards",
+          padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+        ),
+        const SizedBox(height: 16),
         _CardSlider(cards: cards),
-        const SizedBox(height: 4),
+        const SizedBox(height: 16),
         if (cards.isNotEmpty) CardActions(initialCardId: cards[0].id),
       ],
     );
