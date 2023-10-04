@@ -13,10 +13,6 @@ class Format {
       decimalDigits: digits,
     );
 
-    if (number % 1 != 0 && digits == 0) {
-      return formatter.format(number.isNegative ? number.ceil() : number.floor());
-    }
-
     return formatter.format(number);
   }
 
@@ -43,7 +39,21 @@ class Format {
   }
 
   static String cents(num value) {
-    return (value.toDouble() % 1).toStringAsFixed(2).substring(2);
+    String valueString = value.toString();
+
+    if (valueString.contains('.')) {
+      List<String> parts = valueString.split('.');
+      if (parts.length == 2) {
+        String fractionalPart = parts[1];
+        if (fractionalPart.length >= 2) {
+          return fractionalPart.substring(0, 2);
+        } else {
+          return fractionalPart.padRight(2, '0');
+        }
+      }
+    }
+
+    return '0';
   }
 
   static String iban(String iban) {

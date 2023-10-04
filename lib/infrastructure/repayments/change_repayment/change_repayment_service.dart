@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:solarisdemo/models/transfer/credit_card_application.dart';
 import 'package:solarisdemo/models/user.dart';
 
@@ -48,7 +49,7 @@ class CardApplicationService extends ApiService {
   }
 }
 
-abstract class ChangeRepaymentResponse {
+abstract class ChangeRepaymentResponse extends Equatable {
   @override
   List<Object?> get props => [];
 }
