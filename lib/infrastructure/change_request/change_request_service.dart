@@ -28,6 +28,8 @@ class ChangeRequestService extends ApiService {
 
       if (data['success'] == false) {
         return ChangeRequestServiceErrorResponse(errorType: ChangeRequestErrorType.confirmationFailed);
+      } else if(data['response']['response_body']['decline_reason'] == 'insufficient_balance') {
+        return ChangeRequestServiceErrorResponse(errorType: ChangeRequestErrorType.insufficientFunds);
       }
 
       return ConfirmTransferChangeRequestSuccessResponse(
