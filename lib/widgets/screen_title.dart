@@ -11,7 +11,7 @@ class ScreenTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: padding ?? ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+      padding: padding ?? EdgeInsets.zero,
       child: Text(
         title,
         style: ClientConfig.getTextStyleScheme().heading1,
