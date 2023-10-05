@@ -6,6 +6,7 @@ import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_presenter.dart';
 import 'package:solarisdemo/ivory_app.dart';
+import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_state.dart';
 import 'package:solarisdemo/redux/device/device_action.dart';
@@ -36,29 +37,7 @@ class SettingsDevicePairingScreen extends StatelessWidget {
         AppToolbar(
           padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
           onBackButtonPressed: () {
-            if (IvoryApp.generalRouteObserver.isRouteInStackButNotCurrent(BankCardDetailsScreen.routeName)) {
-              Navigator.popUntil(context, ModalRoute.withName(BankCardDetailsScreen.routeName));
-              StoreProvider.of<AppState>(context).dispatch(
-                BankCardFetchDetailsCommandAction(
-                  // ignore: use_build_context_synchronously
-                  user: user,
-                  bankCard: (StoreProvider.of<AppState>(context).state.bankCardState as BankCardNoBoundedDevicesState)
-                      .bankCard,
-                ),
-              );
-            } else if (IvoryApp.generalRouteObserver
-                .isRouteInStackButNotCurrent(BankCardChangePinChooseScreen.routeName)) {
-              Navigator.popUntil(context, ModalRoute.withName(BankCardChangePinChooseScreen.routeName));
-              StoreProvider.of<AppState>(context).dispatch(
-                BankCardInitiatePinChangeCommandAction(
-                  user: user,
-                  bankCard: (StoreProvider.of<AppState>(context).state.bankCardState as BankCardNoBoundedDevicesState)
-                      .bankCard,
-                ),
-              );
-            } else {
-              Navigator.pop(context);
-            }
+            _handleBackNavigation(user: user, context: context);
           },
         ),
         Expanded(
@@ -301,5 +280,30 @@ class SettingsDevicePairingScreen extends StatelessWidget {
     return Column(
       children: deviceWidgets,
     );
+  }
+
+  void _handleBackNavigation({
+    required BuildContext context,
+    required AuthenticatedUser user,
+  }) {
+    if (IvoryApp.generalRouteObserver.isRouteInStackButNotCurrent(BankCardDetailsScreen.routeName)) {
+      Navigator.popUntil(context, ModalRoute.withName(BankCardDetailsScreen.routeName));
+      StoreProvider.of<AppState>(context).dispatch(
+        BankCardFetchDetailsCommandAction(
+          user: user,
+          bankCard: (StoreProvider.of<AppState>(context).state.bankCardState as BankCardNoBoundedDevicesState).bankCard,
+        ),
+      );
+    } else if (IvoryApp.generalRouteObserver.isRouteInStackButNotCurrent(BankCardChangePinChooseScreen.routeName)) {
+      Navigator.popUntil(context, ModalRoute.withName(BankCardChangePinChooseScreen.routeName));
+      StoreProvider.of<AppState>(context).dispatch(
+        BankCardInitiatePinChangeCommandAction(
+          user: user,
+          bankCard: (StoreProvider.of<AppState>(context).state.bankCardState as BankCardNoBoundedDevicesState).bankCard,
+        ),
+      );
+    } else {
+      Navigator.pop(context);
+    }
   }
 }

@@ -60,7 +60,7 @@ class BankCardChangePinChooseScreen extends StatelessWidget {
             });
           }
           if (previousViewModel is BankCardLoadingViewModel && viewModel is BankCardNoBoundedDevicesViewModel) {
-            handleDevicePairing(context, user, viewModel);
+            _showDevicePairingMissingModal(context, user, viewModel);
           }
         },
         builder: (context, viewModel) {
@@ -131,7 +131,7 @@ class BankCardChangePinChooseScreen extends StatelessWidget {
     );
   }
 
-  Future<void> handleDevicePairing(
+  Future<void> _showDevicePairingMissingModal(
     BuildContext context,
     AuthenticatedUser user,
     BankCardViewModel viewModel,

@@ -4,6 +4,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/infrastructure/device/device_presenter.dart';
 import 'package:solarisdemo/models/device.dart';
+import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/device/device_action.dart';
 import 'package:solarisdemo/screens/settings/device_pairing/settings_device_pairing_screen.dart';
@@ -215,48 +216,11 @@ class SettingsPairedDeviceDetailsScreen extends StatelessWidget {
                         rightIcon: Icons.arrow_forward_ios,
                         rightIconColor: ClientConfig.getClientConfig().uiSettings.colorscheme.error,
                         onPressed: () {
-                          showBottomModal(
-                              context: context,
-                              title:
-                                  'Are you sure you want to unpair ${viewModel.thisDevice!.deviceName} (ID: ${viewModel.thisDevice!.deviceId.substring(0, 13)})?',
-                              textWidget: Text(
-                                'You will not be able to make any transactions or other complex actions with this device.',
-                                style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                              ),
-                              content: Column(
-                                children: [
-                                  const SizedBox(
-                                    height: 24,
-                                  ),
-                                  Button(
-                                    text: 'No, go back',
-                                    textColor: ClientConfig.getColorScheme().primary,
-                                    border: Border.all(
-                                      width: 2,
-                                      color: ClientConfig.getColorScheme().primary,
-                                      style: BorderStyle.solid,
-                                    ),
-                                    color: ClientConfig.getColorScheme().background,
-                                    onPressed: () => Navigator.pop(context),
-                                  ),
-                                  const SizedBox(
-                                    height: 16,
-                                  ),
-                                  Button(
-                                    text: 'Yes, unpair',
-                                    color: const Color(0xFFE61F27),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                      StoreProvider.of<AppState>(context).dispatch(
-                                        DeleteBoundDeviceCommandAction(
-                                          user: user,
-                                          deviceId: params.device.deviceId,
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ],
-                              ));
+                          _showUnpairModal(
+                            context: context,
+                            viewModel: viewModel,
+                            user: user,
+                          );
                         },
                       ),
                     ],
@@ -266,6 +230,56 @@ class SettingsPairedDeviceDetailsScreen extends StatelessWidget {
             ],
           );
         },
+      ),
+    );
+  }
+
+  void _showUnpairModal({
+    required BuildContext context,
+    required DeviceBindingViewModel viewModel,
+    required User user,
+  }) {
+    showBottomModal(
+      context: context,
+      title: 'Are you sure you want to unpair ${viewModel.thisDevice!.deviceName} '
+          '(ID: ${viewModel.thisDevice!.deviceId.substring(0, 13)})?',
+      textWidget: Text(
+        'You will not be able to make any transactions or other complex actions with this device.',
+        style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+      ),
+      content: Column(
+        children: [
+          const SizedBox(
+            height: 24,
+          ),
+          Button(
+            text: 'No, go back',
+            textColor: ClientConfig.getColorScheme().primary,
+            border: Border.all(
+              width: 2,
+              color: ClientConfig.getColorScheme().primary,
+              style: BorderStyle.solid,
+            ),
+            color: ClientConfig.getColorScheme().background,
+            onPressed: () => Navigator.pop(context),
+          ),
+          const SizedBox(
+            height: 16,
+          ),
+          Button(
+            text: 'Yes, unpair',
+            color: const Color(0xFFE61F27),
+            onPressed: () {
+              Navigator.pop(context);
+              StoreProvider.of<AppState>(context).dispatch(
+                DeleteBoundDeviceCommandAction(
+                  user: user,
+                  deviceId: viewModel.thisDevice!.deviceId,
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }
