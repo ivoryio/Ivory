@@ -35,6 +35,7 @@ class SettingsPairedDeviceDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = context.read<AuthCubit>().state.user!.cognito;
+
     return ScreenScaffold(
       body: StoreConnector<AppState, DeviceBindingViewModel>(
         onDidChange: (previousViewModel, newViewModel) {
@@ -79,12 +80,12 @@ class SettingsPairedDeviceDetailsScreen extends StatelessWidget {
                 padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
               ),
               Expanded(
-                child: Padding(
-                  padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
+                child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
+                        margin: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
                         decoration: const BoxDecoration(
                           borderRadius: BorderRadius.all(
                             Radius.circular(16),
@@ -201,13 +202,14 @@ class SettingsPairedDeviceDetailsScreen extends StatelessWidget {
                       const SizedBox(
                         height: 24,
                       ),
-                      Text(
-                        'Actions',
-                        style: ClientConfig.getTextStyleScheme().labelLarge,
+                      Padding(
+                        padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+                        child: Text(
+                          'Actions',
+                          style: ClientConfig.getTextStyleScheme().labelLarge,
+                        ),
                       ),
-                      const SizedBox(
-                        height: 24,
-                      ),
+                      const SizedBox(height: 8),
                       IvoryListItemWithAction(
                         leftIcon: Icons.mobile_off,
                         leftIconColor: ClientConfig.getClientConfig().uiSettings.colorscheme.error,
