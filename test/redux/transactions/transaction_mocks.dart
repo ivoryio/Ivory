@@ -8,7 +8,6 @@ import 'package:solarisdemo/models/transactions/transaction_model.dart';
 import 'package:solarisdemo/models/transactions/upcoming_transaction_model.dart';
 import 'package:solarisdemo/models/user.dart';
 
-import '../../setup/create_store.dart';
 
 class FakeTransactionService extends TransactionService {
   @override
@@ -142,7 +141,7 @@ class FakeFailingConfirmChangeRequestService extends ChangeRequestService {
 }
 
 class FakeBiometricsService extends BiometricsService {
-  FakeBiometricsService() : super(auth: MockLocalAutentication());
+  FakeBiometricsService() : super();
 
   @override
   Future<bool> authenticateWithBiometrics({required String message}) async {

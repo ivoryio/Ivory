@@ -4,7 +4,8 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
-import 'package:solarisdemo/logging/navigation_logging_observer.dart';
+import 'package:solarisdemo/navigator_observers/general_navigation_observer.dart';
+import 'package:solarisdemo/navigator_observers/navigation_logging_observer.dart';
 import 'package:solarisdemo/models/home/main_navigation_screens.dart';
 import 'package:solarisdemo/models/transactions/transaction_model.dart';
 import 'package:solarisdemo/navigator.dart';
@@ -12,6 +13,8 @@ import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/auth/auth_action.dart';
 import 'package:solarisdemo/screens/account/account_details_screen.dart';
 import 'package:solarisdemo/screens/available_balance/available_balance_screen.dart';
+import 'package:solarisdemo/screens/settings/app_settings/biometric_enabled_screen.dart';
+import 'package:solarisdemo/screens/settings/app_settings/biometric_needed_screen.dart';
 import 'package:solarisdemo/screens/wallet/card_activation/card_activation_apple_wallet.dart';
 import 'package:solarisdemo/screens/wallet/card_activation/card_activation_choose_pin.dart';
 import 'package:solarisdemo/screens/wallet/card_activation/card_activation_confirm_pin_screen.dart';
@@ -59,6 +62,8 @@ import 'screens/transfer/transfer_successful_screen.dart';
 
 class IvoryApp extends StatefulWidget {
   static final routeObserver = RouteObserver<PageRoute<dynamic>>();
+  static final generalRouteObserver = NavigationGeneralObserver();
+  static final loggingObserver = NavigationLoggingObserver();
 
   final ClientConfigData clientConfig;
   final Store<AppState> store;
@@ -91,7 +96,8 @@ class _IvoryAppState extends State<IvoryApp> {
             theme: widget.clientConfig.uiSettings.themeData,
             navigatorObservers: [
               IvoryApp.routeObserver,
-              NavigationLoggingObserver(),
+              IvoryApp.loggingObserver,
+              IvoryApp.generalRouteObserver,
             ],
             debugShowCheckedModeBanner: false,
             navigatorKey: navigatorKey,
@@ -107,7 +113,7 @@ class _IvoryAppState extends State<IvoryApp> {
               HomeScreen.routeName: (context) =>
                   const MainNavigationScreen(initialScreen: MainNavigationScreens.homeScreen),
               AvailableBalanceScreen.routeName: (context) => const AvailableBalanceScreen(),
-              // settings
+              // settings - security
               SettingsScreen.routeName: (context) =>
                   const MainNavigationScreen(initialScreen: MainNavigationScreens.settingsScreen),
               SettingsSecurityScreen.routeName: (context) => const SettingsSecurityScreen(),
@@ -124,7 +130,11 @@ class _IvoryAppState extends State<IvoryApp> {
               SettingsDevicePairingVerifyFaceidScreen.routeName: (context) =>
                   const SettingsDevicePairingVerifyFaceidScreen(),
               SettingsDevicePairingSuccessScreen.routeName: (context) => const SettingsDevicePairingSuccessScreen(),
-                  
+
+              //settings - app settings
+              AppSettingsBiometricNeededScreen.routeName: (context) => const AppSettingsBiometricNeededScreen(),
+              AppSettingsBiometricEnabledScreen.routeName: (context) => const AppSettingsBiometricEnabledScreen(),
+
               //transactions
               TransactionsScreen.routeName: (context) {
                 final transactionListFilter = ModalRoute.of(context)?.settings.arguments as TransactionListFilter?;

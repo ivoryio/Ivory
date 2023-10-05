@@ -3,11 +3,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
+import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_presenter.dart';
-import 'package:solarisdemo/models/user.dart';
+import 'package:solarisdemo/ivory_app.dart';
+import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
+import 'package:solarisdemo/redux/bank_card/bank_card_state.dart';
 import 'package:solarisdemo/redux/device/device_action.dart';
+import 'package:solarisdemo/screens/settings/app_settings/biometric_needed_screen.dart';
 import 'package:solarisdemo/screens/settings/device_pairing/settings_device_pairing_inital_screen.dart';
 import 'package:solarisdemo/screens/settings/device_pairing/settings_paired_device_details_screen.dart';
+import 'package:solarisdemo/screens/wallet/card_details/card_details_screen.dart';
+import 'package:solarisdemo/screens/wallet/change_pin/card_change_pin_choose_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/ivory_list_item_with_action.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
@@ -22,13 +28,38 @@ class SettingsDevicePairingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = context.read<AuthCubit>().state.user!.cognito;
+    final user = context.read<AuthCubit>().state.user!;
     return ScreenScaffold(
         body: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         AppToolbar(
           padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+          onBackButtonPressed: () {
+            if (IvoryApp.generalRouteObserver.isRouteInStackButNotCurrent(BankCardDetailsScreen.routeName)) {
+              Navigator.popUntil(context, ModalRoute.withName(BankCardDetailsScreen.routeName));
+              StoreProvider.of<AppState>(context).dispatch(
+                BankCardFetchDetailsCommandAction(
+                  // ignore: use_build_context_synchronously
+                  user: user,
+                  bankCard: (StoreProvider.of<AppState>(context).state.bankCardState as BankCardNoBoundedDevicesState)
+                      .bankCard,
+                ),
+              );
+            } else if (IvoryApp.generalRouteObserver
+                .isRouteInStackButNotCurrent(BankCardChangePinChooseScreen.routeName)) {
+              Navigator.popUntil(context, ModalRoute.withName(BankCardChangePinChooseScreen.routeName));
+              StoreProvider.of<AppState>(context).dispatch(
+                BankCardInitiatePinChangeCommandAction(
+                  user: user,
+                  bankCard: (StoreProvider.of<AppState>(context).state.bankCardState as BankCardNoBoundedDevicesState)
+                      .bankCard,
+                ),
+              );
+            } else {
+              Navigator.pop(context);
+            }
+          },
         ),
         Expanded(
           child: Padding(
@@ -68,7 +99,6 @@ class SettingsDevicePairingScreen extends StatelessWidget {
                       return _buildPageContent(
                         context: context,
                         viewModel: viewModel,
-                        user: user,
                       );
                     }
                     return const Expanded(
@@ -89,7 +119,6 @@ class SettingsDevicePairingScreen extends StatelessWidget {
   Widget _buildPageContent({
     required BuildContext context,
     required DeviceBindingViewModel viewModel,
-    required User user,
   }) {
     return Column(
       children: [
@@ -195,8 +224,15 @@ class SettingsDevicePairingScreen extends StatelessWidget {
                 ),
               if (viewModel is DeviceBindingFetchedButEmptyViewModel)
                 GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, SettingsDevicePairingInitialScreen.routeName);
+                  onTap: () async {
+                    final isBiometricsAvailable = await BiometricsService.areBiometricsAvailable();
+                    if (isBiometricsAvailable) {
+                      // ignore: use_build_context_synchronously
+                      Navigator.pushNamed(context, SettingsDevicePairingInitialScreen.routeName);
+                    } else {
+                      // ignore: use_build_context_synchronously
+                      Navigator.pushNamed(context, AppSettingsBiometricNeededScreen.routeName);
+                    }
                   },
                   child: SizedBox(
                     height: 48,

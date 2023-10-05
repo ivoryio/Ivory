@@ -94,7 +94,8 @@ class SettingsDevicePairingSuccessScreen extends StatelessWidget {
                                   context,
                                   ModalRoute.withName(
                                     SettingsDevicePairingScreen.routeName,
-                                  ));
+                                ),
+                              );
                               StoreProvider.of<AppState>(context).dispatch(FetchBoundDevicesCommandAction());
                             },
                           ),

@@ -8,6 +8,7 @@ import 'package:solarisdemo/models/bank_card.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
+import 'package:solarisdemo/screens/settings/device_pairing/settings_device_pairing_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/card_details_widget.dart';
@@ -41,8 +42,9 @@ class BankCardDetailsScreen extends StatelessWidget {
           children: [
             AppToolbar(
               title: 'View card details',
-              onBackButtonPressed: () {
+              onBackButtonPressed: () async {
                 Navigator.popUntil(context, ModalRoute.withName(HomeScreen.routeName));
+                // Navigator.pop(context);
                 StoreProvider.of<AppState>(context).dispatch(
                   GetBankCardCommandAction(
                     user: user,
@@ -72,13 +74,9 @@ class BankCardDetailsScreen extends StatelessWidget {
                             width: double.infinity,
                             child: PrimaryButton(
                               text: 'OK',
-                              onPressed: () {
+                              onPressed: () async {
                                 devicePairedBottomSheetConfirmed = true;
-                                Navigator.popUntil(context, ModalRoute.withName(HomeScreen.routeName));
-                                StoreProvider.of<AppState>(context).dispatch(GetBankCardCommandAction(
-                                  user: context.read<AuthCubit>().state.user!,
-                                  cardId: params.card.id,
-                                ));
+                                Navigator.pushNamed(context, SettingsDevicePairingScreen.routeName);
                               },
                             ),
                           ),
@@ -87,11 +85,7 @@ class BankCardDetailsScreen extends StatelessWidget {
                     ),
                     if (devicePairedBottomSheetConfirmed == false)
                       {
-                        Navigator.popUntil(context, ModalRoute.withName(HomeScreen.routeName)),
-                        StoreProvider.of<AppState>(context).dispatch(GetBankCardCommandAction(
-                          user: context.read<AuthCubit>().state.user!,
-                          cardId: params.card.id,
-                        )),
+                        Navigator.pushNamed(context, SettingsDevicePairingScreen.routeName),
                       },
                   },
               },

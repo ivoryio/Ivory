@@ -10,7 +10,7 @@ import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_state.dart';
-import 'package:solarisdemo/screens/home/home_screen.dart';
+import 'package:solarisdemo/screens/settings/device_pairing/settings_device_pairing_screen.dart';
 import 'package:solarisdemo/screens/wallet/change_pin/card_change_pin_confirm_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
@@ -60,7 +60,6 @@ class BankCardChangePinChooseScreen extends StatelessWidget {
             });
           }
           if (previousViewModel is BankCardLoadingViewModel && viewModel is BankCardNoBoundedDevicesViewModel) {
-            // ignore: use_build_context_synchronously
             handleDevicePairing(context, user, viewModel);
           }
         },
@@ -153,11 +152,7 @@ class BankCardChangePinChooseScreen extends StatelessWidget {
               text: 'OK',
               onPressed: () {
                 devicePairedBottomSheetConfirmed = true;
-                Navigator.popUntil(context, ModalRoute.withName(HomeScreen.routeName));
-                StoreProvider.of<AppState>(context).dispatch(GetBankCardCommandAction(
-                  user: user,
-                  cardId: viewModel.bankCard!.id,
-                ));
+                Navigator.pushNamed(context, SettingsDevicePairingScreen.routeName);
               },
             ),
           ),
@@ -167,12 +162,7 @@ class BankCardChangePinChooseScreen extends StatelessWidget {
 
     if (devicePairedBottomSheetConfirmed == false) {
       // ignore: use_build_context_synchronously
-      Navigator.pop(context);
-      // ignore: use_build_context_synchronously
-      StoreProvider.of<AppState>(context).dispatch(GetBankCardCommandAction(
-        user: user,
-        cardId: viewModel.bankCard!.id,
-      ));
+      Navigator.pushNamed(context, SettingsDevicePairingScreen.routeName);
     }
   }
 }
