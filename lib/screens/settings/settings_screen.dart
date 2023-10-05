@@ -3,6 +3,8 @@ import 'package:solarisdemo/screens/settings/settings_security_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/ivory_list_item_with_action.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
+import 'package:solarisdemo/widgets/screen_title.dart';
+import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
 
 import '../../config.dart';
 
@@ -13,22 +15,26 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ScrollController scrollController = ScrollController();
+
     return ScreenScaffold(
-        body: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        AppToolbar(
-          padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-        ),
-        Expanded(
-          child: Padding(
-              padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AppToolbar(
+            title: "Settings",
+            padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+            scrollController: scrollController,
+          ),
+          Expanded(
+            child: ScrollableScreenContainer(
+              scrollController: scrollController,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Settings',
-                    style: ClientConfig.getTextStyleScheme().heading1,
+                  ScreenTitle(
+                    "Settings",
+                    padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
                   ),
                   const SizedBox(
                     height: 24,
@@ -39,17 +45,11 @@ class SettingsScreen extends StatelessWidget {
                     actionDescription: 'Personal info & account settings',
                     rightIcon: Icons.arrow_forward_ios,
                   ),
-                  const SizedBox(
-                    height: 32,
-                  ),
                   IvoryListItemWithAction(
                     leftIcon: Icons.settings_outlined,
                     actionName: 'App settings',
                     actionDescription: 'Language, FaceID, notifications, etc.',
                     rightIcon: Icons.arrow_forward_ios,
-                  ),
-                  const SizedBox(
-                    height: 32,
                   ),
                   IvoryListItemWithAction(
                     leftIcon: Icons.security,
@@ -58,17 +58,11 @@ class SettingsScreen extends StatelessWidget {
                     rightIcon: Icons.arrow_forward_ios,
                     onPressed: () => Navigator.of(context).pushNamed(SettingsSecurityScreen.routeName),
                   ),
-                  const SizedBox(
-                    height: 32,
-                  ),
                   IvoryListItemWithAction(
                     leftIcon: Icons.help_outline,
                     actionName: 'Help',
                     actionDescription: 'Contact us',
                     rightIcon: Icons.arrow_forward_ios,
-                  ),
-                  const SizedBox(
-                    height: 32,
                   ),
                   IvoryListItemWithAction(
                     leftIcon: Icons.article_outlined,
@@ -76,25 +70,20 @@ class SettingsScreen extends StatelessWidget {
                     actionDescription: 'FAQ, T&Cs, privacy policy',
                     rightIcon: Icons.arrow_forward_ios,
                   ),
-                  const SizedBox(
-                    height: 32,
-                  ),
                   IvoryListItemWithAction(
                     leftIcon: Icons.logout,
                     actionName: 'Log out',
                     rightIcon: Icons.arrow_forward_ios,
                   ),
                   const Spacer(),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('App version 1.0'),
-                    ],
-                  )
+                  const Center(child: Text('App version 1.0')),
+                  const SizedBox(height: 8),
                 ],
-              )),
-        ),
-      ],
-    ));
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
