@@ -12,6 +12,7 @@ import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/ivory_list_item_with_action.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/screen_title.dart';
+import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
 
 import '../../../config.dart';
 import '../../../redux/app_state.dart';
@@ -36,8 +37,8 @@ class SettingsDevicePairingScreen extends StatelessWidget {
             scrollController: scrollController,
           ),
           Expanded(
-            child: SingleChildScrollView(
-              controller: scrollController,
+            child: ScrollableScreenContainer(
+              scrollController: scrollController,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

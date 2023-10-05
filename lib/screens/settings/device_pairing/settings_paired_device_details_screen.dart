@@ -12,6 +12,7 @@ import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/ivory_list_item_with_action.dart';
 import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
+import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
 
 import '../../../config.dart';
 
@@ -80,7 +81,7 @@ class SettingsPairedDeviceDetailsScreen extends StatelessWidget {
                 padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
               ),
               Expanded(
-                child: SingleChildScrollView(
+                child: ScrollableScreenContainer(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
