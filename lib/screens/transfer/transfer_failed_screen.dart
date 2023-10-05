@@ -57,6 +57,7 @@ class TransferFailedScreen extends StatelessWidget {
               onPressed: () => Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false),
             ),
           ),
+          const SizedBox(height: 16),
         ],
       ),
     );
