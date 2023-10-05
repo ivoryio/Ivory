@@ -29,7 +29,11 @@ class IvoryListTile extends StatelessWidget {
       onTap: onTap,
       borderRadius: rounded ? BorderRadius.circular(16) : null,
       child: Padding(
-        padding: padding ?? const EdgeInsets.symmetric(vertical: 16),
+        padding: padding ??
+            EdgeInsets.symmetric(
+              vertical: 16,
+              horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding.left,
+            ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
