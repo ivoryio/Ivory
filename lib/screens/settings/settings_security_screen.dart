@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
-import 'package:solarisdemo/widgets/ivory_list_item_with_action.dart';
+import 'package:solarisdemo/widgets/ivory_list_tile.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/screen_title.dart';
 import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
@@ -38,15 +38,15 @@ class SettingsSecurityScreen extends StatelessWidget {
                 const SizedBox(
                   height: 24,
                 ),
-                IvoryListItemWithAction(
+                IvoryListTile(
                   leftIcon: Icons.phonelink_ring,
-                  actionName: 'Device pairing',
+                  title: 'Device pairing',
                   rightIcon: Icons.arrow_forward_ios,
-                  onPressed: () => Navigator.pushNamed(context, SettingsDevicePairingScreen.routeName),
+                  onTap: () => Navigator.pushNamed(context, SettingsDevicePairingScreen.routeName),
                 ),
-                IvoryListItemWithAction(
+                IvoryListTile(
                   leftIcon: Icons.lock_outline,
-                  actionName: 'Change password',
+                  title: 'Change password',
                   rightIcon: Icons.arrow_forward_ios,
                 )
               ],

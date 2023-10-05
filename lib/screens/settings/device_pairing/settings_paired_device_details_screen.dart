@@ -9,7 +9,8 @@ import 'package:solarisdemo/redux/device/device_action.dart';
 import 'package:solarisdemo/screens/settings/device_pairing/settings_device_pairing_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
-import 'package:solarisdemo/widgets/ivory_list_item_with_action.dart';
+import 'package:solarisdemo/widgets/ivory_list_tile.dart';
+import 'package:solarisdemo/widgets/ivory_list_title_item.dart';
 import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
@@ -203,21 +204,14 @@ class SettingsPairedDeviceDetailsScreen extends StatelessWidget {
                       const SizedBox(
                         height: 24,
                       ),
-                      Padding(
-                        padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                        child: Text(
-                          'Actions',
-                          style: ClientConfig.getTextStyleScheme().labelLarge,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      IvoryListItemWithAction(
+                      const IvoryListTitleItem(title: 'Actions'),
+                      IvoryListTile(
                         leftIcon: Icons.mobile_off,
                         leftIconColor: ClientConfig.getClientConfig().uiSettings.colorscheme.error,
-                        actionName: 'Unpair device',
+                        title: 'Unpair device',
                         rightIcon: Icons.arrow_forward_ios,
                         rightIconColor: ClientConfig.getClientConfig().uiSettings.colorscheme.error,
-                        onPressed: () {
+                        onTap: () {
                           showBottomModal(
                               context: context,
                               title:

@@ -104,7 +104,7 @@ class RepaymentsScreen extends StatelessWidget {
                     ),
                   ),
                   IvoryListTile(
-                    startIcon: Icons.sync,
+                    leftIcon: Icons.sync,
                     title: 'Change repayment rate',
                     subtitle: 'And choose between percentage or fixed',
                     onTap: () {
@@ -112,7 +112,7 @@ class RepaymentsScreen extends StatelessWidget {
                     },
                   ),
                   IvoryListTile(
-                    startIcon: Icons.notifications_active_outlined,
+                    leftIcon: Icons.notifications_active_outlined,
                     title: 'Set repayment reminder',
                     subtitle: 'Before we debit your reference account',
                     onTap: () {
@@ -120,7 +120,7 @@ class RepaymentsScreen extends StatelessWidget {
                     },
                   ),
                   IvoryListTile(
-                    startIcon: Icons.content_paste_search_rounded,
+                    leftIcon: Icons.content_paste_search_rounded,
                     title: 'View bills',
                     subtitle: 'View all your repayment bills',
                     onTap: () {
@@ -128,7 +128,7 @@ class RepaymentsScreen extends StatelessWidget {
                     },
                   ),
                   IvoryListTile(
-                    startIcon: Icons.analytics_outlined,
+                    leftIcon: Icons.analytics_outlined,
                     title: 'Repayments analytics',
                     subtitle: 'Check your repayment analytics',
                     onTap: () {
@@ -161,7 +161,7 @@ class RepaymentsScreen extends StatelessWidget {
                       }
 
                       return IvoryListTile(
-                        startIcon: Icons.back_hand_outlined,
+                        leftIcon: Icons.back_hand_outlined,
                         title: 'Need more credit?',
                         subtitle: (viewModel is MoreCreditFetchedViewModel) && (viewModel.waitlist == false)
                             ? ('Sign up for our waitlist')

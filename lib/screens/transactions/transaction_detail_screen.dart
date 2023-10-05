@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,6 +12,7 @@ import 'package:solarisdemo/screens/repayments/repayments_screen.dart';
 import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/expanded_details_row.dart';
+import 'package:solarisdemo/widgets/ivory_switch.dart';
 import 'package:solarisdemo/widgets/ivory_list_tile.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/spaced_column.dart';
@@ -59,38 +59,31 @@ class TransactionDetailScreen extends StatelessWidget {
 
       actions = [
         if (argument.bookingType == 'SEPA_CREDIT_TRANSFER') ...[
-          IvoryListTile(
+          const IvoryListTile(
             title: 'Exclude from analytics',
             subtitle: 'Remove this transaction from analytics',
-            startIcon: Icons.remove_circle_outline_rounded,
-            trailingWidget: CupertinoSwitch(
-              value: false,
-              onChanged: (value) {},
-            ),
-            onTap: () {},
+            leftIcon: Icons.remove_circle_outline_rounded,
+            actionItem: IvorySwitch(),
           ),
-          IvoryListTile(
+          const IvoryListTile(
             title: 'Download statement',
             subtitle: "Locally in PDF format",
-            startIcon: Icons.download_outlined,
-            hasTrailing: false,
-            onTap: () {},
+            leftIcon: Icons.download_outlined,
           ),
         ],
         if (argument.bookingType == 'AUTOMATIC_REPAYMENT')
           IvoryListTile(
             title: 'View bill',
             subtitle: "View this repayment bill",
-            startIcon: Icons.receipt_outlined,
+            leftIcon: Icons.receipt_outlined,
             onTap: () {},
           ),
         if (argument.bookingType != 'AUTOMATIC_REPAYMENT')
-          IvoryListTile(
+          const IvoryListTile(
             title: 'Report this transaction',
             subtitle: "If you did't make this transaction",
-            startIcon: Icons.report_gmailerrorred_rounded,
-            hasTrailing: false,
-            onTap: () {},
+            leftIcon: Icons.report_gmailerrorred_rounded,
+            actionItem: IvorySwitch(),
           )
       ];
     } else if (argument is UpcomingTransaction) {
@@ -134,7 +127,7 @@ class TransactionDetailScreen extends StatelessWidget {
         IvoryListTile(
           title: 'Manage repayment settings',
           subtitle: "Go to 'Repayments'",
-          startIcon: Icons.settings_outlined,
+          leftIcon: Icons.settings_outlined,
           onTap: () => Navigator.of(context).pushNamed(RepaymentsScreen.routeName),
         ),
       ];
