@@ -17,6 +17,7 @@ import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/expanded_details_row.dart';
 import 'package:solarisdemo/widgets/ivory_error_widget.dart';
 import 'package:solarisdemo/widgets/ivory_list_tile.dart';
+import 'package:solarisdemo/widgets/ivory_list_title.dart';
 import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/screen_title.dart';
@@ -49,6 +50,7 @@ class RepaymentsScreen extends StatelessWidget {
               controller: scrollController,
               physics: const ClampingScrollPhysics(),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
                     padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
@@ -96,13 +98,10 @@ class RepaymentsScreen extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 20),
-                        Text(
-                          'Actions',
-                          style: ClientConfig.getTextStyleScheme().heading4,
-                        ),
                       ],
                     ),
                   ),
+                  const IvoryListTitle(title: 'Actions'),
                   IvoryListTile(
                     leftIcon: Icons.sync,
                     title: 'Change repayment rate',
