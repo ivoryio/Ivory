@@ -10,7 +10,7 @@ import 'package:solarisdemo/screens/settings/device_pairing/settings_device_pair
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/ivory_list_tile.dart';
-import 'package:solarisdemo/widgets/ivory_list_title_item.dart';
+import 'package:solarisdemo/widgets/ivory_list_title.dart';
 import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
@@ -204,7 +204,7 @@ class SettingsPairedDeviceDetailsScreen extends StatelessWidget {
                       const SizedBox(
                         height: 24,
                       ),
-                      const IvoryListTitleItem(title: 'Actions'),
+                      const IvoryListTitle(title: 'Actions'),
                       IvoryListTile(
                         leftIcon: Icons.mobile_off,
                         leftIconColor: ClientConfig.getClientConfig().uiSettings.colorscheme.error,

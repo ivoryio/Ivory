@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:solarisdemo/config.dart';
 
-class IvoryListTitleItem extends StatelessWidget {
+class IvoryListTitle extends StatelessWidget {
   final String title;
 
-  const IvoryListTitleItem({super.key, required this.title});
+  const IvoryListTitle({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {

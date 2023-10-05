@@ -15,7 +15,7 @@ import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/ivory_list_tile.dart';
 import 'package:solarisdemo/widgets/ivory_switch.dart';
 
-import '../../widgets/ivory_list_title_item.dart';
+import '../../widgets/ivory_list_title.dart';
 
 class CardActions extends StatelessWidget {
   final String initialCardId;
@@ -187,7 +187,7 @@ class ActiveCard extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const IvoryListTitleItem(title: 'Security settings'),
+            const IvoryListTitle(title: 'Security settings'),
             IvoryListTile(
               leftIcon: Icons.dialpad,
               title: 'Change PIN',
@@ -233,7 +233,7 @@ class ActiveCard extends StatelessWidget {
               actionItem: IvorySwitch(),
             ),
             const SizedBox(height: 16),
-            const IvoryListTitleItem(title: 'Card management'),
+            const IvoryListTitle(title: 'Card management'),
             const IvoryListTile(
               leftIcon: Icons.credit_card,
               title: 'Replace card',
@@ -285,7 +285,7 @@ class FrozenCard extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const IvoryListTitleItem(title: 'If your card is compromised'),
+            const IvoryListTitle(title: 'If your card is compromised'),
             if (viewModel.bankCard!.type.toString().contains('virtual')) const SizedBox(height: 28),
             if (viewModel.bankCard!.type.toString().contains('virtual'))
               const IvoryListTile(

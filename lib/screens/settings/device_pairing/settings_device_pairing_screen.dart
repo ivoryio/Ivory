@@ -10,7 +10,7 @@ import 'package:solarisdemo/screens/settings/device_pairing/settings_device_pair
 import 'package:solarisdemo/screens/settings/device_pairing/settings_paired_device_details_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/ivory_list_tile.dart';
-import 'package:solarisdemo/widgets/ivory_list_title_item.dart';
+import 'package:solarisdemo/widgets/ivory_list_title.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/screen_title.dart';
 import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
@@ -245,7 +245,7 @@ class SettingsDevicePairingScreen extends StatelessWidget {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const IvoryListTitleItem(title: "Paired devices"),
+          const IvoryListTitle(title: "Paired devices"),
           IvoryListTile(
             leftIcon: Icons.phonelink_ring,
             title: device.deviceName,
