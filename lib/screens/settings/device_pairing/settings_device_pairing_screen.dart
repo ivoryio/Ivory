@@ -11,6 +11,7 @@ import 'package:solarisdemo/screens/settings/device_pairing/settings_paired_devi
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/ivory_list_item_with_action.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
+import 'package:solarisdemo/widgets/screen_title.dart';
 
 import '../../../config.dart';
 import '../../../redux/app_state.dart';
@@ -23,67 +24,72 @@ class SettingsDevicePairingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = context.read<AuthCubit>().state.user!.cognito;
+    final scrollController = ScrollController();
+
     return ScreenScaffold(
-        body: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        AppToolbar(
-          padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-        ),
-        Expanded(
-          child: Padding(
-            padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Device pairing',
-                  style: ClientConfig.getTextStyleScheme().heading1,
-                ),
-                const SizedBox(
-                  height: 24,
-                ),
-                StoreConnector<AppState, DeviceBindingViewModel>(
-                  onInit: (store) {
-                    store.dispatch(FetchBoundDevicesCommandAction());
-                  },
-                  converter: (store) => DeviceBindingPresenter.presentDeviceBinding(
-                    deviceBindingState: store.state.deviceBindingState,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AppToolbar(
+            title: "Device pairing",
+            padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+            scrollController: scrollController,
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              controller: scrollController,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ScreenTitle(
+                    "Device pairing",
+                    padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
                   ),
-                  builder: (context, viewModel) {
-                    if (viewModel is DeviceBindingLoadingViewModel) {
+                  const SizedBox(
+                    height: 24,
+                  ),
+                  StoreConnector<AppState, DeviceBindingViewModel>(
+                    onInit: (store) {
+                      store.dispatch(FetchBoundDevicesCommandAction());
+                    },
+                    converter: (store) => DeviceBindingPresenter.presentDeviceBinding(
+                      deviceBindingState: store.state.deviceBindingState,
+                    ),
+                    builder: (context, viewModel) {
+                      if (viewModel is DeviceBindingLoadingViewModel) {
+                        return const Expanded(
+                          child: Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        );
+                      }
+                      if (viewModel is DeviceBindingErrorViewModel) {
+                        return const Center(
+                          child: Text('Error'),
+                        );
+                      }
+                      if (viewModel is DeviceBindingFetchedViewModel ||
+                          viewModel is DeviceBindingFetchedButEmptyViewModel) {
+                        return _buildPageContent(
+                          context: context,
+                          viewModel: viewModel,
+                          user: user,
+                        );
+                      }
                       return const Expanded(
                         child: Center(
                           child: CircularProgressIndicator(),
                         ),
                       );
-                    }
-                    if (viewModel is DeviceBindingErrorViewModel) {
-                      return const Center(
-                        child: Text('Error'),
-                      );
-                    }
-                    if (viewModel is DeviceBindingFetchedViewModel ||
-                        viewModel is DeviceBindingFetchedButEmptyViewModel) {
-                      return _buildPageContent(
-                        context: context,
-                        viewModel: viewModel,
-                        user: user,
-                      );
-                    }
-                    return const Expanded(
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    );
-                  },
-                ),
-              ],
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      ],
-    ));
+        ],
+      ),
+    );
   }
 
   Widget _buildPageContent({
@@ -92,8 +98,10 @@ class SettingsDevicePairingScreen extends StatelessWidget {
     required User user,
   }) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
+          margin: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
           decoration: const BoxDecoration(
             borderRadius: BorderRadius.all(
               Radius.circular(16),
@@ -222,7 +230,7 @@ class SettingsDevicePairingScreen extends StatelessWidget {
           _buildDeviceList(
             context: context,
             viewModel: viewModel,
-          )
+          ),
       ],
     );
   }
@@ -235,13 +243,14 @@ class SettingsDevicePairingScreen extends StatelessWidget {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Paired devices',
-            style: ClientConfig.getTextStyleScheme().labelLarge,
+          Padding(
+            padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+            child: Text(
+              'Paired devices',
+              style: ClientConfig.getTextStyleScheme().labelLarge,
+            ),
           ),
-          const SizedBox(
-            height: 24,
-          ),
+          const SizedBox(height: 8),
           IvoryListItemWithAction(
             leftIcon: Icons.phonelink_ring,
             actionName: device.deviceName,
@@ -255,9 +264,7 @@ class SettingsDevicePairingScreen extends StatelessWidget {
               );
             },
           ),
-          const SizedBox(
-            height: 32,
-          ),
+          const SizedBox(height: 8),
         ],
       );
     }).toList();
