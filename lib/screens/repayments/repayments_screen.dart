@@ -48,53 +48,60 @@ class RepaymentsScreen extends StatelessWidget {
             child: SingleChildScrollView(
               controller: scrollController,
               physics: const ClampingScrollPhysics(),
-              padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const ScreenTitle("Repayments"),
-                  const SizedBox(height: 24),
-                  Material(
-                    color: const Color(0xFFF8F9FA),
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(16),
-                      ),
-                    ),
-                    child: StoreConnector<AppState, CreditLineViewModel>(
-                      onInit: (store) {
-                        store.dispatch(GetCreditLineCommandAction(user: user.cognito));
-                      },
-                      converter: (store) => CreditLinePresenter.presentCreditLine(
-                        creditLineState: store.state.creditLineState,
-                        user: user,
-                      ),
-                      distinct: true,
-                      builder: (context, viewModel) {
-                        if (viewModel is CreditLineLoadingViewModel) {
-                          return Container(
-                            alignment: Alignment.center,
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(16),
-                            child: const CircularProgressIndicator(),
-                          );
-                        } else if (viewModel is CreditLineErrorViewModel) {
-                          return Container(
-                            alignment: Alignment.center,
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(16),
-                            child: const IvoryErrorWidget('Error loading credit line details'),
-                          );
-                        }
+                  Padding(
+                    padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const ScreenTitle("Repayments"),
+                        const SizedBox(height: 24),
+                        Material(
+                          clipBehavior: Clip.none,
+                          color: const Color(0xFFF8F9FA),
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(16),
+                            ),
+                          ),
+                          child: StoreConnector<AppState, CreditLineViewModel>(
+                            onInit: (store) {
+                              store.dispatch(GetCreditLineCommandAction(user: user.cognito));
+                            },
+                            converter: (store) => CreditLinePresenter.presentCreditLine(
+                              creditLineState: store.state.creditLineState,
+                              user: user,
+                            ),
+                            distinct: true,
+                            builder: (context, viewModel) {
+                              if (viewModel is CreditLineLoadingViewModel) {
+                                return Container(
+                                  alignment: Alignment.center,
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.all(16),
+                                  child: const CircularProgressIndicator(),
+                                );
+                              } else if (viewModel is CreditLineErrorViewModel) {
+                                return Container(
+                                  alignment: Alignment.center,
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.all(16),
+                                  child: const IvoryErrorWidget('Error loading credit line details'),
+                                );
+                              }
 
-                        return _DetailsContent(viewModel: viewModel as CreditLineFetchedViewModel);
-                      },
+                              return _DetailsContent(viewModel: viewModel as CreditLineFetchedViewModel);
+                            },
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        Text(
+                          'Actions',
+                          style: ClientConfig.getTextStyleScheme().heading4,
+                        ),
+                      ],
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    'Actions',
-                    style: ClientConfig.getTextStyleScheme().heading4,
                   ),
                   IvoryListTile(
                     startIcon: Icons.sync,

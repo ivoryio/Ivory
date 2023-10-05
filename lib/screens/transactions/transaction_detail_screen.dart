@@ -104,8 +104,7 @@ class TransactionDetailScreen extends StatelessWidget {
           children: [
             TextSpan(
               text: 'This is an automatic repayment and does not include the 5% interest rate. ',
-              style: ClientConfig.getTextStyleScheme()
-                  .bodySmallBold,
+              style: ClientConfig.getTextStyleScheme().bodySmallBold,
             ),
             TextSpan(
               text: 'Go to “Repayments” ',
@@ -145,8 +144,6 @@ class TransactionDetailScreen extends StatelessWidget {
 
     return ScreenScaffold(
       body: SingleChildScrollView(
-        padding:
-            ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
         child: _Content(
           amountValue: amountValue,
           mainIcon: mainIcon,
@@ -199,125 +196,136 @@ class _Content extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const AppToolbar(),
-        Material(
-          color: const Color(0xFFF8F9FA),
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(16),
-            ),
-          ),
+        AppToolbar(padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding),
+        Padding(
+          padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
           child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: SpacedColumn(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  space: 4,
+              Material(
+                color: const Color(0xFFF8F9FA),
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(16),
+                  ),
+                ),
+                child: Column(
                   children: [
-                    Row(
-                      children: [
-                        AccountBalanceText(
-                          value: amountValue.value,
-                          numberStyle: ClientConfig.getTextStyleScheme().heading1,
-                          centsStyle: ClientConfig.getTextStyleScheme().heading3,
-                        ),
-                        if (amountExplainerWidget != null)
-                          Padding(
-                            padding: const EdgeInsets.only(left: 2),
-                            child: Text('*',
-                                style: TextStyle(color: ClientConfig.getColorScheme().secondary, fontSize: 34)),
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: SpacedColumn(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        space: 4,
+                        children: [
+                          Row(
+                            children: [
+                              AccountBalanceText(
+                                value: amountValue.value,
+                                numberStyle: ClientConfig.getTextStyleScheme().heading1,
+                                centsStyle: ClientConfig.getTextStyleScheme().heading3,
+                              ),
+                              if (amountExplainerWidget != null)
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 2),
+                                  child: Text('*',
+                                      style: TextStyle(color: ClientConfig.getColorScheme().secondary, fontSize: 34)),
+                                ),
+                              const Spacer(),
+                              Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                child: (mainIcon != null)
+                                    ? Icon(mainIcon, size: 26)
+                                    : SvgPicture.asset("assets/images/currency_exchange_euro.svg"),
+                              ),
+                            ],
                           ),
-                        const Spacer(),
-                        Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(30),
+                          Text(subtitle, style: ClientConfig.getTextStyleScheme().bodySmallBold),
+                          Text(
+                            Format.date(dateTime, pattern: 'MMM dd, HH:mm'),
+                            style: ClientConfig.getTextStyleScheme().bodySmallRegular,
                           ),
-                          child: (mainIcon != null) ? Icon(mainIcon, size: 26) : SvgPicture.asset("assets/images/currency_exchange_euro.svg"),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                    Text(subtitle,
-                        style:
-                            ClientConfig.getTextStyleScheme().bodySmallBold),
-                    Text(
-                      Format.date(dateTime, pattern: 'MMM dd, HH:mm'),
-                      style: ClientConfig.getTextStyleScheme().bodySmallRegular,
-                    ),
+                    if (amountExplainerWidget != null) ...[
+                      const Divider(height: 1),
+                      Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: amountExplainerWidget!,
+                      )
+                    ]
                   ],
                 ),
               ),
-              if (amountExplainerWidget != null) ...[
-                const Divider(height: 1),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: amountExplainerWidget!,
-                )
-              ]
+              const SizedBox(height: 24),
+              SpacedColumn(
+                space: 8,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Details', style: ClientConfig.getTextStyleScheme().heading4),
+                  ExpandedDetailsRow(title: 'Status', trailing: status),
+                  ExpandedDetailsRow(
+                    title: 'Category',
+                    trailing: null,
+                    trailingWidget: Row(
+                      children: [
+                        mainIcon != null
+                            ? Icon(category.icon, size: 16)
+                            : SvgPicture.asset(
+                                "assets/images/currency_exchange_euro.svg",
+                                width: 16,
+                                height: 16,
+                              ),
+                        const SizedBox(width: 8),
+                        Text(category.name, style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold),
+                      ],
+                    ),
+                  ),
+                  if (accountOwner != null)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Reference account owner',
+                          style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          accountOwner!,
+                          style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
+                        ),
+                      ],
+                    ),
+                  if (iban != null) ExpandedDetailsRow(title: 'IBAN', trailing: iban),
+                  if (note != null) ...[
+                    Text('Note', style: ClientConfig.getTextStyleScheme().bodyLargeRegular),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF8F9FA),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Text(note!),
+                    ),
+                  ],
+                ],
+              ),
+              const SizedBox(height: 24),
             ],
           ),
         ),
-        const SizedBox(height: 24),
-        SpacedColumn(
-          space: 8,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Details', style: ClientConfig.getTextStyleScheme().heading4),
-            ExpandedDetailsRow(title: 'Status', trailing: status),
-            ExpandedDetailsRow(
-              title: 'Category',
-              trailing: null,
-              trailingWidget: Row(
-                children: [
-                  mainIcon != null ? Icon(
-                      category.icon,
-                      size: 16) : SvgPicture.asset(
-                      "assets/images/currency_exchange_euro.svg",
-                  width: 16,
-                  height: 16,),
-                  const SizedBox(width: 8),
-                  Text(category.name, style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold),
-                ],
-              ),
-            ),
-            if (accountOwner != null)
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Reference account owner',
-                    style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    accountOwner!,
-                    style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
-                  ),
-                ],
-              ),
-            if (iban != null) ExpandedDetailsRow(title: 'IBAN', trailing: iban),
-            if (note != null) ...[
-              Text('Note', style: ClientConfig.getTextStyleScheme().bodyLargeRegular),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF8F9FA),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Text(note!),
-              ),
-            ],
-          ],
-        ),
-        const SizedBox(height: 24),
         if (actions != null) ...[
-          Text('Actions', style: ClientConfig.getTextStyleScheme().heading4),
+          Padding(
+            padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+            child: Text('Actions', style: ClientConfig.getTextStyleScheme().heading4),
+          ),
           const SizedBox(height: 8),
           ...actions!,
-        ],
+        ]
       ],
     );
   }
