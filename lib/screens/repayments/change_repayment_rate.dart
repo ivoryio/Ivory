@@ -51,7 +51,10 @@ class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
       showBottomModal(
         context: context,
         title: "Are you sure you want to discard the changes?",
-        message: "The changes you made will not be saved.",
+        textWidget: Text(
+          "The changes you made will not be saved.",
+          style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+        ),
         content: const ShowBottomModalActions(),
       );
     }

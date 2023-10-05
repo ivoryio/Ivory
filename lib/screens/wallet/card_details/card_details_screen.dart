@@ -61,19 +61,33 @@ class BankCardDetailsScreen extends StatelessWidget {
               onDidChange: (previousViewModel, viewModel) async => {
                 if (previousViewModel is BankCardLoadingViewModel && viewModel is BankCardNoBoundedDevicesViewModel)
                   {
+                    devicePairedBottomSheetConfirmed = false,
+                    
                     await showBottomModal(
-                      showCloseButton: false,
                       context: context,
                       title: "Device pairing required",
-                      message:
-                          "In order to access the card details you need to pair your device first. You can do this from the “Security” menu in the Settings tab.",
+                      textWidget: RichText(
+                        text: TextSpan(
+                          style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                          children: [
+                            const TextSpan(
+                              text:
+                                  'In order to view your card details, you need to pair your device first. Click on the button below, or go to “Device pairing” under Security in the Settings tab and ',
+                            ),
+                            TextSpan(
+                              text: 'pair your device now.',
+                              style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
+                            ),
+                          ],
+                        ),
+                      ),
                       content: Column(
                         children: [
                           const SizedBox(height: 24),
                           SizedBox(
                             width: double.infinity,
                             child: PrimaryButton(
-                              text: 'OK',
+                              text: 'Go to “Device pairing”',
                               onPressed: () async {
                                 devicePairedBottomSheetConfirmed = true;
                                 Navigator.pushNamed(context, SettingsDevicePairingScreen.routeName);
@@ -85,8 +99,14 @@ class BankCardDetailsScreen extends StatelessWidget {
                     ),
                     if (devicePairedBottomSheetConfirmed == false)
                       {
-                        Navigator.pushNamed(context, SettingsDevicePairingScreen.routeName),
-                      },
+                        Navigator.pop(context),
+                        StoreProvider.of<AppState>(context).dispatch(
+                          GetBankCardCommandAction(
+                            user: user,
+                            cardId: params.card.id,
+                          ),
+                        ),
+                      }
                   },
               },
               onInit: (store) => {

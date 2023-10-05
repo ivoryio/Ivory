@@ -138,18 +138,29 @@ class BankCardChangePinChooseScreen extends StatelessWidget {
   ) async {
     bool devicePairedBottomSheetConfirmed = false;
     await showBottomModal(
-      showCloseButton: false,
       context: context,
       title: "Device pairing required",
-      message:
-          "In order to access the card details you need to pair your device first. You can do this from the “Security” menu in the Settings tab.",
+      textWidget: RichText(
+        text: TextSpan(
+          style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+          children: [
+            const TextSpan(
+                text:
+                    'In order to view your card details, you need to pair your device first. Click on the button below, or go to “Device pairing” under Security in the Settings tab and '),
+            TextSpan(
+              text: 'pair your device now.',
+              style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
+            ),
+          ],
+        ),
+      ),
       content: Column(
         children: [
           const SizedBox(height: 24),
           SizedBox(
             width: double.infinity,
             child: PrimaryButton(
-              text: 'OK',
+              text: 'Go to “Device pairing”',
               onPressed: () {
                 devicePairedBottomSheetConfirmed = true;
                 Navigator.pushNamed(context, SettingsDevicePairingScreen.routeName);
@@ -162,7 +173,14 @@ class BankCardChangePinChooseScreen extends StatelessWidget {
 
     if (devicePairedBottomSheetConfirmed == false) {
       // ignore: use_build_context_synchronously
-      Navigator.pushNamed(context, SettingsDevicePairingScreen.routeName);
+      Navigator.pop(context);
+      // ignore: use_build_context_synchronously
+      StoreProvider.of<AppState>(context).dispatch(
+        GetBankCardCommandAction(
+          user: user,
+          cardId: viewModel.bankCard!.id,
+        ),
+      );
     }
   }
 }

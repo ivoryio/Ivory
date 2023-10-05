@@ -208,8 +208,10 @@ class _DetailsContentState extends State<_DetailsContent> {
               showBottomModal(
                 context: context,
                 title: 'Outstanding balance',
-                message:
-                    'The outstanding balance includes any carried-over balance from previous billing cycles, new purchases, fees, and accrued interest. It represents the total amount that you owe.',
+                textWidget: Text(
+                  'The outstanding balance includes any carried-over balance from previous billing cycles, new purchases, fees, and accrued interest. It represents the total amount that you owe.',
+                  style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                ),
               );
             },
           ),
@@ -221,8 +223,10 @@ class _DetailsContentState extends State<_DetailsContent> {
               showBottomModal(
                 context: context,
                 title: 'Next full repayment',
-                message:
-                    'This is the amount that will be automatically debited from your reference account this billing cycle. It includes your chosen repayment rate and the applicable interest rate.',
+                textWidget: Text(
+                  'This is the amount that will be automatically debited from your reference account this billing cycle. It includes your chosen repayment rate and the applicable interest rate.',
+                  style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                ),
               );
             },
           ),
@@ -345,10 +349,12 @@ class _ExpandedDetails extends StatelessWidget {
                   showBottomModal(
                     context: context,
                     title: 'Repayment rate',
-                    message:
-                        'You can decide whether you prefer the flexibility of a percentage rate repayment or the predictability of fixed repayments.'
-                        '\n\nThe repayment rate will be automatically deducted from your reference account and added to your credit account which will increase your available spending balance.'
-                        '\n\nPlease note that the repayment rate does not include any applicable interest charges.',
+                    textWidget: Text(
+                      'You can decide whether you prefer the flexibility of a percentage rate repayment or the predictability of fixed repayments.'
+                      '\n\nThe repayment rate will be automatically deducted from your reference account and added to your credit account which will increase your available spending balance.'
+                      '\n\nPlease note that the repayment rate does not include any applicable interest charges.',
+                      style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                    ),
                   );
                 },
               ),
@@ -359,8 +365,10 @@ class _ExpandedDetails extends StatelessWidget {
                   showBottomModal(
                     context: context,
                     title: 'Interest rate',
-                    message:
-                        'Our fixed interest rate of 5% remains the same, no matter the repayment type or rate you select. It will accrue based on your outstanding balance after the repayment has been deducted.',
+                    textWidget: Text(
+                      'Our fixed interest rate of 5% remains the same, no matter the repayment type or rate you select. It will accrue based on your outstanding balance after the repayment has been deducted.',
+                      style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                    ),
                   );
                 },
               ),
@@ -388,9 +396,11 @@ class _ExpandedDetails extends StatelessWidget {
                     showBottomModal(
                       context: context,
                       title: 'Reference account',
-                      message:
-                          'For your convenience, we automatically deduct the amount due from your designated reference account on the 4th of each month.'
-                          '\n\nIf you want to change your reference account, please contact us at +49 151 23456789.',
+                      textWidget: Text(
+                        'For your convenience, we automatically deduct the amount due from your designated reference account on the 4th of each month.'
+                        '\n\nIf you want to change your reference account, please contact us at +49 151 23456789.',
+                        style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                      ),
                     );
                   }),
                 ],

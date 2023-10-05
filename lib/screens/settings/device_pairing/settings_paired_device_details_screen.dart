@@ -219,8 +219,10 @@ class SettingsPairedDeviceDetailsScreen extends StatelessWidget {
                               context: context,
                               title:
                                   'Are you sure you want to unpair ${viewModel.thisDevice!.deviceName} (ID: ${viewModel.thisDevice!.deviceId.substring(0, 13)})?',
-                              message:
-                                  'You will not be able to make any transactions or other complex actions with this device.',
+                              textWidget: Text(
+                                'You will not be able to make any transactions or other complex actions with this device.',
+                                style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                              ),
                               content: Column(
                                 children: [
                                   const SizedBox(
