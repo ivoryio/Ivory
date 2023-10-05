@@ -3,17 +3,17 @@ import 'package:flutter_switch/flutter_switch.dart';
 
 import '../config.dart';
 
-// ignore: must_be_immutable
 class IvoryListItemWithAction extends StatelessWidget {
   final IconData leftIcon;
-  late Color? leftIconColor;
+  final Color? leftIconColor;
   final String actionName;
   final String? actionDescription;
   final IconData rightIcon;
-  late Color? rightIconColor;
+  final Color? rightIconColor;
   final bool? actionSwitch;
   final VoidCallback? onPressed;
   final GlobalKey<ActionItemState> switchKey = GlobalKey<ActionItemState>();
+  final EdgeInsetsGeometry? padding;
 
   IvoryListItemWithAction({
     super.key,
@@ -25,13 +25,11 @@ class IvoryListItemWithAction extends StatelessWidget {
     this.rightIconColor,
     this.actionSwitch,
     this.onPressed,
+    this.padding,
   });
 
   @override
   Widget build(BuildContext context) {
-    leftIconColor ??= ClientConfig.getColorScheme().secondary;
-    rightIconColor ??= ClientConfig.getColorScheme().secondary;
-
     return InkWell(
       onTap: () {
         if (onPressed != null) {
@@ -41,43 +39,50 @@ class IvoryListItemWithAction extends StatelessWidget {
           switchKey.currentState!.toggleSwitch();
         }
       },
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Icon(leftIcon, color: leftIconColor, size: 24),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  actionName,
-                  style: ClientConfig.getTextStyleScheme().heading4,
-                ),
-                if (actionDescription != null)
-                  Text(
-                    actionDescription!,
-                    style: ClientConfig.getTextStyleScheme().bodySmallRegular,
-                  ),
-              ],
+      child: Padding(
+        padding: padding ??
+            EdgeInsets.symmetric(
+              vertical: 16,
+              horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding.left,
             ),
-          ),
-          Container(
-            padding: const EdgeInsets.only(right: 0),
-            child: (actionSwitch != null)
-                ? ActionItem(
-                    key: switchKey,
-                    initialSwitchValue: actionSwitch!,
-                  )
-                : Icon(
-                    rightIcon,
-                    color: rightIconColor,
-                    size: 24,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(leftIcon, color: leftIconColor ?? ClientConfig.getColorScheme().secondary, size: 24),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    actionName,
+                    style: ClientConfig.getTextStyleScheme().heading4,
                   ),
-          ),
-        ],
+                  if (actionDescription != null)
+                    Text(
+                      actionDescription!,
+                      style: ClientConfig.getTextStyleScheme().bodySmallRegular,
+                    ),
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.only(right: 0),
+              child: (actionSwitch != null)
+                  ? ActionItem(
+                      key: switchKey,
+                      initialSwitchValue: actionSwitch!,
+                    )
+                  : Icon(
+                      rightIcon,
+                      color: rightIconColor ?? ClientConfig.getColorScheme().secondary,
+                      size: 24,
+                    ),
+            ),
+          ],
+        ),
       ),
     );
   }
