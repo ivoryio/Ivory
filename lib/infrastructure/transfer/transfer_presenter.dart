@@ -3,6 +3,8 @@ import 'package:solarisdemo/redux/person/person_account/person_account_state.dar
 import 'package:solarisdemo/redux/person/reference_account/reference_account_state.dart';
 import 'package:solarisdemo/redux/transfer/transfer_state.dart';
 
+import '../../models/change_request/change_request_error_type.dart';
+
 class TransferPresenter {
   static TransferViewModel presentTransfer({
     required TransferState transferState,
@@ -13,14 +15,14 @@ class TransferPresenter {
       if (transferState is TransferLoadingState) {
         return TransferLoadingViewModel();
       } else if (transferState is TransferFailedState) {
-        return TransferFailedViewModel();
+        return TransferFailedViewModel(errorType: transferState.errorType);
       } else if (transferState is TransferNeedConfirmationState) {
         return TransferConfirmationViewModel(changeRequestId: transferState.transferAuthorizationRequest.id);
       } else if (transferState is TransferConfirmedState) {
         return TransferConfirmedViewModel(amount: transferState.amount);
       }
     } else {
-      return TransferFailedViewModel();
+      return TransferFailedViewModel(errorType: ChangeRequestErrorType.unknown);
     }
 
     return TransferInitialViewModel();
@@ -36,7 +38,14 @@ class TransferInitialViewModel extends TransferViewModel {}
 
 class TransferLoadingViewModel extends TransferViewModel {}
 
-class TransferFailedViewModel extends TransferViewModel {}
+class TransferFailedViewModel extends TransferViewModel {
+  final ChangeRequestErrorType errorType;
+
+  TransferFailedViewModel({required this.errorType});
+
+  @override
+  List<Object?> get props => [errorType];
+}
 
 class TransferConfirmationViewModel extends TransferViewModel {
   final String changeRequestId;

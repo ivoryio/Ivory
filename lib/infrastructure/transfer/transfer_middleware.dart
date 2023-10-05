@@ -40,8 +40,8 @@ class TransferMiddleware extends MiddlewareClass<AppState> {
             transfer: response.transferConfirmation.transfer,
           ),
         );
-      } else {
-        store.dispatch(ConfirmTransferFailedEventAction());
+      } else if(response is ChangeRequestServiceErrorResponse) {
+        store.dispatch(ConfirmTransferFailedEventAction(response.errorType));
       }
     }
   }

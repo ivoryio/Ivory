@@ -23,71 +23,74 @@ class BillsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = context.read<AuthCubit>().state.user!;
+    final scrollController = ScrollController();
 
     return ScreenScaffold(
-      body: Padding(
-        padding:
-            ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const AppToolbar(),
-            Text(
-              'Bills',
-              style: ClientConfig.getTextStyleScheme().heading1,
-            ),
-            const SizedBox(height: 24),
-            const IvoryTextField(
-              placeholder: 'Search by date',
-              prefix: Icon(Icons.search),
-            ),
-            const SizedBox(height: 24),
-            StoreConnector<AppState, BillsViewModel>(
-              onInit: (store) {
-                store.dispatch(GetBillsCommandAction(user: user.cognito));
-              },
-              converter: (store) => BillsPresenter.presentBills(billState: store.state.billsState),
-              distinct: true,
-              builder: (context, viewModel) {
-                if (viewModel is BillsLoadingViewModel || viewModel is BillsInitialViewModel) {
-                  return Container(
-                    alignment: Alignment.center,
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(16),
-                    child: const CircularProgressIndicator(),
-                  );
-                } else if (viewModel is BillsErrorViewModel) {
-                  return Container(
-                    alignment: Alignment.center,
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(16),
-                    child: const IvoryErrorWidget('Error loading bills'),
-                  );
-                }
-
-                final bills = (viewModel as BillsFetchedViewModel).bills;
-
-                if (bills.isEmpty) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('No bills yet', style: ClientConfig.getTextStyleScheme().heading4),
-                      const SizedBox(height: 16),
-                      Text(
-                        'Your future bills will be displayed here after your automatic repayments go through.',
-                        style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                      )
-                    ],
-                  );
-                }
-
-                return Expanded(
-                  child: _BillsScrollView(bills: bills),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AppToolbar(
+            title: "Bills",
+            scrollController: scrollController,
+            titleMaxOpacityScrollOffset: 40,
+            includeBottomScreenTitle: true,
+            padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+            children: const [
+              IvoryTextField(
+                placeholder: 'Search by date',
+                prefix: Icon(Icons.search),
+              ),
+              SizedBox(height: 16),
+            ],
+          ),
+          StoreConnector<AppState, BillsViewModel>(
+            onInit: (store) {
+              store.dispatch(GetBillsCommandAction(user: user.cognito));
+            },
+            converter: (store) => BillsPresenter.presentBills(billState: store.state.billsState),
+            distinct: true,
+            builder: (context, viewModel) {
+              if (viewModel is BillsLoadingViewModel || viewModel is BillsInitialViewModel) {
+                return Container(
+                  alignment: Alignment.center,
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16),
+                  child: const CircularProgressIndicator(),
                 );
-              },
-            )
-          ],
-        ),
+              } else if (viewModel is BillsErrorViewModel) {
+                return Container(
+                  alignment: Alignment.center,
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16),
+                  child: const IvoryErrorWidget('Error loading bills'),
+                );
+              }
+
+              final bills = (viewModel as BillsFetchedViewModel).bills;
+
+              if (bills.isEmpty) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('No bills yet', style: ClientConfig.getTextStyleScheme().heading4),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Your future bills will be displayed here after your automatic repayments go through.',
+                      style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                    )
+                  ],
+                );
+              }
+
+              return Expanded(
+                child: _BillsScrollView(
+                  bills: bills,
+                  scrollController: scrollController,
+                ),
+              );
+            },
+          )
+        ],
       ),
     );
   }
@@ -95,7 +98,8 @@ class BillsScreen extends StatelessWidget {
 
 class _BillsScrollView extends StatelessWidget {
   final List<Bill> bills;
-  const _BillsScrollView({required this.bills});
+  final ScrollController scrollController;
+  const _BillsScrollView({required this.bills, required this.scrollController});
 
   @override
   Widget build(BuildContext context) {
@@ -110,6 +114,8 @@ class _BillsScrollView extends StatelessWidget {
     }
 
     return ListView.builder(
+      controller: scrollController,
+      padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
       itemCount: billsGroupedByYear.length,
       itemBuilder: (context, i) {
         final year = billsGroupedByYear.keys.elementAt(i);

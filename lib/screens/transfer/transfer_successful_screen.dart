@@ -12,6 +12,8 @@ import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
 
+import '../../utilities/ivory_color_mapper.dart';
+
 class TransferSuccessfulScreenParams {
   final double amount;
   final String fromAccount;
@@ -113,7 +115,14 @@ class TransferSuccessfulScreen extends StatelessWidget {
                       ),
                     ),
                     const Spacer(),
-                    Center(child: SvgPicture.asset("assets/images/transfer_successful_illustration.svg")),
+                    Center(child: SvgPicture(
+                      SvgAssetLoader(
+                        'assets/images/repayment_more_credit.svg',
+                        colorMapper: IvoryColorMapper(
+                          baseColor: ClientConfig.getColorScheme().secondary,
+                        ),
+                      ),
+                    ),),
                     const Spacer(),
                   ],
                 ),
@@ -130,6 +139,7 @@ class TransferSuccessfulScreen extends StatelessWidget {
               onPressed: () => Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false),
             ),
           ),
+          const SizedBox(height: 16),
         ],
       ),
     );
