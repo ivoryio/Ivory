@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -9,6 +10,7 @@ import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/credit_line/credit_line_action.dart';
 import 'package:solarisdemo/screens/repayments/repayments_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
+import 'package:solarisdemo/widgets/ivory_asset_with_badge.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../utilities/ivory_color_mapper.dart';
@@ -90,13 +92,17 @@ class RepaymentSuccessfullyChangedScreen extends StatelessWidget {
           ],
           const SizedBox(height: 24),
           Expanded(
-            child: SvgPicture(
-              SvgAssetLoader(
-                'assets/images/repayment_successfully_changed.svg',
-                colorMapper: IvoryColorMapper(
-                  baseColor: ClientConfig.getColorScheme().secondary,
+            child: IvoryAssetWithBadge(
+              childWidget: SvgPicture(
+                SvgAssetLoader(
+                  'assets/images/repayment_successfully_changed.svg',
+                  colorMapper: IvoryColorMapper(
+                    baseColor: ClientConfig.getColorScheme().secondary,
+                  ),
                 ),
               ),
+              childPosition: BadgePosition.topEnd(top: 24, end: 36),
+              isSuccess: true,
             ),
           ),
           SizedBox(

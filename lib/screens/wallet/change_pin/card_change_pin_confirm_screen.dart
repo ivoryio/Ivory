@@ -20,7 +20,7 @@ class BankCardConfirmPinConfirmScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = context.read<AuthCubit>().state.user!;
-    final GlobalKey<_ConfirmPinBodyState> _confirmPinBodyKey = GlobalKey<_ConfirmPinBodyState>();
+    final GlobalKey<_ConfirmPinBodyState> confirmPinBodyKey = GlobalKey<_ConfirmPinBodyState>();
 
     ValueNotifier<bool> matchingPinErrorNotifier = ValueNotifier<bool>(false);
 
@@ -80,7 +80,7 @@ class BankCardConfirmPinConfirmScreen extends StatelessWidget {
                   ),
                 ),
                 ConfirmPinBody(
-                  key: _confirmPinBodyKey,
+                  key: confirmPinBodyKey,
                   viewModel: viewModel,
                   matchingPinErrorNotifier: matchingPinErrorNotifier,
                 ),

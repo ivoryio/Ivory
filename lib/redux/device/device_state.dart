@@ -36,4 +36,11 @@ class DeviceBindingDeletedState extends DeviceBindingState {}
 
 class DeviceBindingCreatedState extends DeviceBindingState {}
 
-class DeviceBindingChallengeVerifiedState extends DeviceBindingState {}
+class DeviceBindingChallengeVerifiedState extends DeviceBindingState {
+  final Device thisDevice;
+
+  DeviceBindingChallengeVerifiedState(this.thisDevice);
+
+  @override
+  List<Object?> get props => [thisDevice];
+}

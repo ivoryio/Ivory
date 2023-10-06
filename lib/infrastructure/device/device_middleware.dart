@@ -151,7 +151,12 @@ class DeviceBindingMiddleware extends MiddlewareClass<AppState> {
         restricted: true,
       );
 
-      store.dispatch(DeviceBindingChallengeVerifiedEventAction());
+      store.dispatch(DeviceBindingChallengeVerifiedEventAction(
+        Device(
+          deviceId: deviceId,
+          deviceName: await _deviceInfoService.getDeviceName(),
+        ),
+      ));
     }
 
     if (action is FetchBoundDevicesCommandAction) {

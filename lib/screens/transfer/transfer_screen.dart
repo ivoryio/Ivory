@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
@@ -17,7 +16,8 @@ import 'package:solarisdemo/widgets/ivory_card.dart';
 import 'package:solarisdemo/widgets/ivory_error_widget.dart';
 import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
-import 'package:solarisdemo/widgets/snackbar.dart';
+
+import '../../widgets/top_up_bottom_sheet_content.dart';
 
 class TransferScreen extends StatefulWidget {
   static const routeName = "/transferScreen";
@@ -148,7 +148,7 @@ class _TransferScreenState extends State<TransferScreen> {
                       showBottomModal(
                         context: context,
                         title: "How to top up your Ivory account?",
-                        content: _TopUpBottomSheetContent(iban: viewModel.personAccount.iban!),
+                        content: TopUpBottomSheetContent(iban: viewModel.personAccount.iban!),
                       );
                     },
                     child: Text(
@@ -283,71 +283,6 @@ class _Card extends StatelessWidget {
           ]
         ],
       ),
-    );
-  }
-}
-
-class _TopUpBottomSheetContent extends StatelessWidget {
-  final String iban;
-
-  const _TopUpBottomSheetContent({required this.iban});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _buildRow(context, text: "Copy your Ivory IBAN below:", iban: iban),
-        const SizedBox(height: 24),
-        _buildRow(context, text: "Log into your reference bank account."),
-        const SizedBox(height: 24),
-        _buildRow(context, text: "Make a transfer to your Ivory account using the IBAN you copied."),
-        const SizedBox(height: 24),
-      ],
-    );
-  }
-
-  Widget _buildRow(BuildContext context, {required String text, String? iban}) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Icon(Icons.check, color: ClientConfig.getColorScheme().secondary),
-        const SizedBox(width: 16),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(text, style: ClientConfig.getTextStyleScheme().bodyLargeRegular),
-              if (iban != null) ...[
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    Text(
-                      Format.iban(iban),
-                      style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold.copyWith(
-                            color: const Color(0xFF15141E),
-                          ),
-                    ),
-                    const SizedBox(width: 8),
-                    InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                        Clipboard.setData(ClipboardData(text: iban));
-
-                        showSnackbar(
-                          context,
-                          text: "Copied to clipboard",
-                          icon: const Icon(Icons.copy, color: Colors.white),
-                        );
-                      },
-                      child: const Icon(Icons.copy, color: Color(0xFF15141E)),
-                    ),
-                  ],
-                ),
-              ],
-            ],
-          ),
-        ),
-      ],
     );
   }
 }

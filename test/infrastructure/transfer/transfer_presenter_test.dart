@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:solarisdemo/infrastructure/transfer/transfer_presenter.dart';
+import 'package:solarisdemo/models/change_request/change_request_error_type.dart';
 import 'package:solarisdemo/models/person/person_reference_account.dart';
 import 'package:solarisdemo/models/person_account.dart';
 import 'package:solarisdemo/models/transfer/transfer_authorization_request.dart';
@@ -68,7 +69,7 @@ void main() {
 
   test("When transfer state is failed it should return failed view model", () {
     //given
-    final transferState = TransferFailedState();
+    final transferState = TransferFailedState(ChangeRequestErrorType.unknown);
 
     //when
     final viewModel = TransferPresenter.presentTransfer(

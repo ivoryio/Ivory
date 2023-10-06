@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:solarisdemo/config.dart';
 
 const double _defaultFontSize = 16;
-const double _defaultBorderRadius = 4.0;
+const BorderRadiusGeometry _defaultBorderRadius = BorderRadius.all(Radius.circular(4));
 
 class Button extends StatelessWidget {
   final String text;
@@ -12,7 +12,7 @@ class Button extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final double? fontSize;
   final String? fontFamily;
-  final double? borderRadius;
+  final BorderRadiusGeometry borderRadius;
   final BoxBorder? border;
   final Color? disabledColor;
   final Color? disabledTextColor;
@@ -46,7 +46,7 @@ class Button extends StatelessWidget {
       fontFamily: fontFamily,
     );
 
-Widget buttonChild = Stack(
+    Widget buttonChild = Stack(
       alignment: Alignment.centerRight,
       children: [
         SizedBox(
@@ -79,7 +79,7 @@ Widget buttonChild = Stack(
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(borderRadius!)),
+          borderRadius: borderRadius,
         ),
       ),
       onPressed: isDisabled ? null : (onPressed as void Function()?),
@@ -88,7 +88,7 @@ Widget buttonChild = Stack(
 
     if (border != null) {
       return Container(
-        decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(borderRadius!)), border: border),
+        decoration: BoxDecoration(borderRadius: borderRadius, border: border),
         child: widget,
       );
     }
