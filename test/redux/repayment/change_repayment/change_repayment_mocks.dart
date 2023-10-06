@@ -7,6 +7,7 @@ class FakeCardApplicationService extends CardApplicationService {
   Future<ChangeRepaymentResponse> updateChangeRepayment({
     User? user,
     double? fixedRate,
+    int? percentageRate,
     String? id,
   }) async {
     return UpdateCardApplicationSuccessResponse(
@@ -28,7 +29,6 @@ class FakeCardApplicationService extends CardApplicationService {
             unit: Unit.CENTS,
           ),
           upcomingType: '',
-          minimumPercentage: 0,
           currentType: '',
           upcomingBillingCycle: '',
           currentBillingCycle: '',
@@ -43,6 +43,7 @@ class FakeCardApplicationService extends CardApplicationService {
             currency: Currency.EUR,
             unit: Unit.CENTS,
           ),
+          minimumPercentage: 0,
           minimumPercentageLowerThreshold: 0,
           minimumPercentageUpperThreshold: 0,
         ),
@@ -74,6 +75,7 @@ class FakeFailingCardApplicationService extends CardApplicationService {
   Future<ChangeRepaymentResponse> updateChangeRepayment({
     User? user,
     double? fixedRate,
+    int? percentageRate,
     String? id,
   }) async {
     return ChangeRepaymentErrorResponse();

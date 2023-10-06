@@ -10,6 +10,7 @@ class CardApplicationService extends ApiService {
   Future<ChangeRepaymentResponse> updateChangeRepayment({
     User? user,
     required double fixedRate,
+    required int percentageRate,
     required String id,
   }) async {
     if (user != null) {
@@ -20,6 +21,7 @@ class CardApplicationService extends ApiService {
     Map<String, dynamic> body = {
       'repayment_options': {
         'minimum_amount': {'value': fixedRate * 100},
+        'minimum_percentage': percentageRate,
       },
     };
 
