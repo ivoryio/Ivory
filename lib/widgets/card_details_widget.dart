@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/models/bank_card.dart';
+import 'package:solarisdemo/widgets/card_widget.dart';
 import 'package:solarisdemo/widgets/snackbar.dart';
 
 import '../config.dart';
@@ -9,16 +10,17 @@ import '../utilities/format.dart';
 
 class BankCardShowDetailsWidget extends StatelessWidget {
   final BankCardFetchedDetails cardDetails;
-  final String? cardType;
+  final BankCardType? cardType;
+  final String? cardTypeLabel;
 
   const BankCardShowDetailsWidget({
     super.key,
     required this.cardDetails,
+    this.cardTypeLabel,
     this.cardType,
   });
 
-  void showAlertDialog(
-      BuildContext context, String stringToCopy, String typeOfString) async {
+  void showAlertDialog(BuildContext context, String stringToCopy, String typeOfString) async {
     copyToClipboard(stringToCopy);
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -45,6 +47,7 @@ class BankCardShowDetailsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<String> cardNumberParts = Format.iban(cardDetails.cardNumber).split(" ");
+    final isVisa = cardType.toString().toLowerCase().contains("visa");
 
     return SizedBox(
       width: 310,
@@ -69,8 +72,7 @@ class BankCardShowDetailsWidget extends StatelessWidget {
                 ],
               ),
               image: DecorationImage(
-                image:
-                    AssetImage(ClientConfig.getAssetImagePath('card_logo.png')),
+                image: AssetImage(ClientConfig.getAssetImagePath('card_logo.png')),
                 fit: BoxFit.scaleDown,
               ),
             ),
@@ -82,17 +84,17 @@ class BankCardShowDetailsWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const Row(
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Padding(
-                            padding: EdgeInsets.only(left: 16),
-                            child: VisaSvgIcon(),
+                            padding: const EdgeInsets.only(left: 16),
+                            child: isVisa ? const VisaSvgIcon() : const MastercardSvgIcon(),
                           ),
                         ],
                       ),
-                      if (cardType != null) CardTypeLabel(cardType: cardType!),
+                      if (cardTypeLabel != null) CardTypeLabel(cardType: cardTypeLabel!),
                     ],
                   ),
                   const SizedBox(height: 16),
@@ -111,12 +113,12 @@ class BankCardShowDetailsWidget extends StatelessWidget {
                             Row(
                               children: [
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       cardNumberParts.join(' '),
-                                      style: ClientConfig.getTextStyleScheme().labelMedium.copyWith(color: Colors.white),
+                                      style:
+                                          ClientConfig.getTextStyleScheme().labelMedium.copyWith(color: Colors.white),
                                     )
                                   ],
                                 ),
@@ -175,7 +177,8 @@ class BankCardShowDetailsWidget extends StatelessWidget {
                                   children: [
                                     Text(
                                       cardDetails.cvv,
-                                      style: ClientConfig.getTextStyleScheme().labelMedium.copyWith(color: Colors.white),
+                                      style:
+                                          ClientConfig.getTextStyleScheme().labelMedium.copyWith(color: Colors.white),
                                     ),
                                     const SizedBox(width: 8),
                                     SizedBox(

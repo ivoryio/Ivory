@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/models/bank_card.dart';
 
 import '../utilities/format.dart';
 
@@ -15,7 +16,7 @@ class BankCardWidget extends StatelessWidget {
   final String? cardNumber;
   final String? cardExpiry;
   final bool? isViewable;
-  final String? cardType;
+  final BankCardType? cardType;
   final double? customHeight;
   final double? customWidth;
   final double? imageScaledownFactor;
@@ -72,7 +73,7 @@ class BankCardWidget extends StatelessWidget {
     bool isFrozen,
     double imageScaledownFactor,
     bool isViewable,
-    String? cardType,
+    BankCardType? cardType,
     bool? isCardEmpty,
     List<String> cardNumberParts,
     String? cardHolder,
@@ -81,13 +82,13 @@ class BankCardWidget extends StatelessWidget {
     return Stack(
       children: [
         if (isFrozen == false)
-        Positioned.fill(
-          child: Image.asset(
-            ClientConfig.getAssetImagePath('card_logo.png'),
-            fit: BoxFit.scaleDown,
-            scale: imageScaledownFactor,
+          Positioned.fill(
+            child: Image.asset(
+              ClientConfig.getAssetImagePath('card_logo.png'),
+              fit: BoxFit.scaleDown,
+              scale: imageScaledownFactor,
+            ),
           ),
-        ),
         if (isFrozen == true)
           Positioned.fill(
             child: Image.asset(
@@ -131,14 +132,22 @@ class BankCardWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.only(
+                  Padding(
+                    padding: const EdgeInsets.only(
                       left: 16,
                     ),
-                    child: VisaSvgIcon(),
+                    child: cardType != null
+                        ? cardType.toString().toLowerCase().contains('visa')
+                            ? const VisaSvgIcon()
+                            : const MastercardSvgIcon()
+                        : Container(),
                   ),
                   if (isViewable) const EyeIcon(),
-                  if (cardType != null) CardTypeLabel(cardType: cardType),
+                  if (cardType != null)
+                    CardTypeLabel(
+                      cardType:
+                          cardType.toString().toLowerCase().contains('virtual') ? 'Virtual card' : 'Physical card',
+                    ),
                 ],
               ),
               const Spacer(),
@@ -246,6 +255,22 @@ class VisaSvgIcon extends StatelessWidget {
       height: 40,
       width: 40,
       placeholderBuilder: (context) => const Text("VISA"),
+    );
+  }
+}
+
+class MastercardSvgIcon extends StatelessWidget {
+  const MastercardSvgIcon({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(
+      "assets/icons/mastercard_logo.svg",
+      height: 16,
+      width: 26,
+      placeholderBuilder: (context) => const Text("Mastercard"),
     );
   }
 }
