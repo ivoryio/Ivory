@@ -306,7 +306,7 @@ class CardTypeLabel extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 16,
-        vertical: 4,
+        vertical: 8,
       ),
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -317,7 +317,7 @@ class CardTypeLabel extends StatelessWidget {
       ),
       child: Text(
         cardType,
-        style: ClientConfig.getTextStyleScheme().labelXSmall.copyWith(color: Colors.black),
+        style: ClientConfig.getTextStyleScheme().labelXSmall.copyWith(color: Colors.black, height: 1.2),
       ),
     );
   }
