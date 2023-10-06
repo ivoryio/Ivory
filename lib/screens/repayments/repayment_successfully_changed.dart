@@ -50,23 +50,44 @@ class RepaymentSuccessfullyChangedScreen extends StatelessWidget {
             style: ClientConfig.getTextStyleScheme().heading1,
           ),
           const SizedBox(height: 16),
-          Text.rich(
-            TextSpan(
-              style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-              children: [
-                const TextSpan(
-                  text: 'You will start paying a fixed rate of ',
-                ),
-                TextSpan(
-                  text: '€${params.fixedRate.toStringAsFixed(2)}',
-                  style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
-                ),
-                TextSpan(
-                  text: '. The ${params.interestRate}% interest rate will be calculated and added to this amount.',
-                ),
-              ],
+          if (params.interestRate >= 10) ...[
+            Text.rich(
+              TextSpan(
+                style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                children: [
+                  const TextSpan(
+                    text: 'You will start paying a percentage rate of ',
+                  ),
+                  TextSpan(
+                    text: '${params.interestRate}%',
+                    style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
+                  ),
+                  const TextSpan(
+                    text: '. The 5% interest rate will be calculated and added to this amount.',
+                  ),
+                ],
+              ),
             ),
-          ),
+          ],
+          if (params.interestRate < 10) ...[
+            Text.rich(
+              TextSpan(
+                style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                children: [
+                  const TextSpan(
+                    text: 'You will start paying a fixed rate of ',
+                  ),
+                  TextSpan(
+                    text: '€${params.fixedRate.toStringAsFixed(2)}',
+                    style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
+                  ),
+                  const TextSpan(
+                    text: '. The 5% interest rate will be calculated and added to this amount.',
+                  ),
+                ],
+              ),
+            ),
+          ],
           const SizedBox(height: 24),
           Expanded(
             child: SvgPicture(

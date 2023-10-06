@@ -131,18 +131,33 @@ class PageContent extends StatefulWidget {
 
 class _PageContentState extends State<PageContent> {
   final TextEditingController inputFixedRateController = TextEditingController();
+  int initialPercentageRate = 0;
+  int thumbPercentage = 20;
   double minFixedRate = 0;
   double maxFixedRate = 0;
-  double chosenPercentageRate = 0;
+  int chosenPercentageRate = 3;
+  double chosenFixedRate = 49;
 
   bool canContinue = false;
+
+  void onPercentageRateChanged(int value, int minValue, int maxValue) {
+    setState(() {
+      chosenPercentageRate = value;
+      canContinue = value >= 10;
+      widget.acceptToContinue(canContinue);
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     minFixedRate = (widget.viewModel.cardApplication!.repaymentOptions!.minimumAmountUpperThreshold.value / 100) * 0.05;
     maxFixedRate = (widget.viewModel.cardApplication!.repaymentOptions!.minimumAmountUpperThreshold.value / 100) * 0.9;
-    inputFixedRateController.text = minFixedRate.toStringAsFixed(2);
+    inputFixedRateController.text =
+        (widget.viewModel.cardApplication!.repaymentOptions!.minimumAmount.value / 100) < minFixedRate
+            ? minFixedRate.toStringAsFixed(2)
+            : (widget.viewModel.cardApplication!.repaymentOptions!.minimumAmount.value / 100).toStringAsFixed(2);
+    initialPercentageRate = widget.viewModel.cardApplication!.repaymentOptions!.minimumPercentage;
 
     inputFixedRateController.addListener(() {
       if (double.parse(inputFixedRateController.text) >= minFixedRate &&
@@ -157,25 +172,24 @@ class _PageContentState extends State<PageContent> {
           widget.acceptToContinue(canContinue);
         });
       }
-    });
-  }
 
-  void onPercentageRateChanged(double value, int minValue, int maxValue) {
-    setState(() {
-      chosenPercentageRate = value;
-      canContinue = value >= 10;
+      if (double.parse(inputFixedRateController.text) < minFixedRate && chosenPercentageRate < 10) {
+        chosenFixedRate = minFixedRate;
+      } else if (double.parse(inputFixedRateController.text) >= minFixedRate && chosenPercentageRate < 10) {
+        chosenFixedRate = double.parse(inputFixedRateController.text);
+      } else if (double.parse(inputFixedRateController.text) >= minFixedRate && chosenPercentageRate >= 10) {
+        chosenFixedRate = double.parse(inputFixedRateController.text);
+        chosenPercentageRate = 3;
+      } else {
+        chosenFixedRate = 49;
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final minFixedRate =
-        (widget.viewModel.cardApplication!.repaymentOptions!.minimumAmountUpperThreshold.value / 100) * 0.05;
-    final maxFixedRate =
-        (widget.viewModel.cardApplication!.repaymentOptions!.minimumAmountUpperThreshold.value / 100) * 0.9;
-    final initialPercentageRate = widget.viewModel.cardApplication!.repaymentOptions!.minimumPercentage;
-    const minPercentageRate = 5;
-    const maxPercentageRate = 90;
+    const minPercentageRate = 10;
+    const maxPercentageRate = 50;
 
     return Expanded(
       child: Column(
@@ -186,7 +200,7 @@ class _PageContentState extends State<PageContent> {
             maxFixedRate: maxFixedRate,
             minPercentageRate: minPercentageRate,
             maxPercentageRate: maxPercentageRate,
-            initialPercentageRate: initialPercentageRate,
+            thumbPercentageRate: thumbPercentage,
             onPercentageRateChanged: onPercentageRateChanged,
             inputFixedRateController: inputFixedRateController,
           ),
@@ -202,18 +216,25 @@ class _PageContentState extends State<PageContent> {
               textColor: ClientConfig.getColorScheme().surface,
               onPressed: canContinue
                   ? () {
+                      if (chosenPercentageRate >= 10) {
+                        chosenFixedRate = 49;
+                      } else {
+                        chosenPercentageRate = 3;
+                      }
+
                       StoreProvider.of<AppState>(context).dispatch(
                         UpdateCardApplicationCommandAction(
                           user: widget.user,
-                          fixedRate: double.parse(inputFixedRateController.text),
+                          fixedRate: chosenFixedRate,
+                          percentageRate: chosenPercentageRate,
                           id: widget.viewModel.cardApplication!.id,
                         ),
                       );
 
                       Navigator.pushNamed(context, RepaymentSuccessfullyChangedScreen.routeName,
                           arguments: RepaymentSuccessfullyScreenParams(
-                            fixedRate: double.parse(inputFixedRateController.text),
-                            interestRate: chosenPercentageRate.toInt(),
+                            fixedRate: chosenFixedRate,
+                            interestRate: chosenPercentageRate,
                           ));
                     }
                   : null,
@@ -232,9 +253,9 @@ class ChooseRepaymentType extends StatefulWidget {
   final double maxFixedRate;
   final int minPercentageRate;
   final int maxPercentageRate;
-  final int initialPercentageRate;
+  final int thumbPercentageRate;
+  final void Function(int value, int minValue, int maxValue) onPercentageRateChanged;
   final TextEditingController inputFixedRateController;
-  final void Function(double value, int minValue, int maxValue) onPercentageRateChanged;
 
   const ChooseRepaymentType({
     super.key,
@@ -243,7 +264,7 @@ class ChooseRepaymentType extends StatefulWidget {
     required this.maxFixedRate,
     required this.minPercentageRate,
     required this.maxPercentageRate,
-    required this.initialPercentageRate,
+    required this.thumbPercentageRate,
     required this.onPercentageRateChanged,
     required this.inputFixedRateController,
   });
@@ -339,7 +360,7 @@ class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
             PercentageRepayment(
                 minPercentageRate: widget.minPercentageRate,
                 maxPercentageRate: widget.maxPercentageRate,
-                initialPercentageValue: widget.initialPercentageRate,
+                thumbPercentageValue: widget.thumbPercentageRate,
                 onChanged: (value) =>
                     widget.onPercentageRateChanged(value, widget.minPercentageRate, widget.maxPercentageRate)),
           ],
@@ -359,14 +380,14 @@ class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
 class PercentageRepayment extends StatefulWidget {
   final int minPercentageRate;
   final int maxPercentageRate;
-  final int initialPercentageValue;
-  final void Function(double) onChanged;
+  final int thumbPercentageValue;
+  final void Function(int) onChanged;
 
   const PercentageRepayment({
     super.key,
     required this.minPercentageRate,
     required this.maxPercentageRate,
-    required this.initialPercentageValue,
+    required this.thumbPercentageValue,
     required this.onChanged,
   });
 
@@ -375,12 +396,12 @@ class PercentageRepayment extends StatefulWidget {
 }
 
 class _PercentageRepaymentState extends State<PercentageRepayment> {
-  late double sliderValue;
+  late int sliderValue;
 
   @override
   void initState() {
     super.initState();
-    sliderValue = widget.initialPercentageValue.toDouble();
+    sliderValue = widget.thumbPercentageValue;
   }
 
   @override
@@ -438,18 +459,18 @@ class _PercentageRepaymentState extends State<PercentageRepayment> {
               ),
               child: Expanded(
                 child: Slider(
-                  value: sliderValue,
+                  value: sliderValue.toDouble(),
                   onChanged: (double newValue) {
                     setState(() {
-                      sliderValue = newValue;
+                      sliderValue = newValue.toInt();
                     });
                   },
                   onChangeEnd: (double newValue) {
                     setState(() {
-                      sliderValue = newValue;
+                      sliderValue = newValue.toInt();
                     });
 
-                    widget.onChanged(newValue);
+                    widget.onChanged(newValue.toInt());
                   },
                   min: widget.minPercentageRate.toDouble(),
                   max: widget.maxPercentageRate.toDouble(),
@@ -642,7 +663,7 @@ class _FixedRepaymentState extends State<FixedRepayment> {
 }
 
 class CustomThumb extends SliderComponentShape {
-  final double label;
+  final int label;
 
   CustomThumb({required this.label});
 

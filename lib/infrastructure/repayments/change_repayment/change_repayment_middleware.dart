@@ -18,6 +18,7 @@ class CardApplicationMiddleware extends MiddlewareClass<AppState> {
       final response = await _cardApplicationService.updateChangeRepayment(
         user: action.user,
         fixedRate: action.fixedRate,
+        percentageRate: action.percentageRate,
         id: action.id,
       );
 
