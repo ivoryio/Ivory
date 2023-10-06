@@ -4,11 +4,13 @@ import 'package:solarisdemo/models/user.dart';
 class UpdateCardApplicationCommandAction {
   final User user;
   final double fixedRate;
+  final int percentageRate;
   final String id;
 
   UpdateCardApplicationCommandAction({
     required this.user,
     required this.fixedRate,
+    required this.percentageRate,
     required this.id,
   });
 }

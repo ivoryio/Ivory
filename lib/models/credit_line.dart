@@ -12,6 +12,7 @@ class CreditLine {
   final num interestRate;
   final AmountValue fixedRate;
   final AccountData referenceAccount;
+  final num repaymentPercentageRate;
 
   const CreditLine({
     required this.id,
@@ -24,6 +25,7 @@ class CreditLine {
     required this.interestRate,
     required this.fixedRate,
     required this.referenceAccount,
+    required this.repaymentPercentageRate,
   });
 
   factory CreditLine.fromJson(Map<String, dynamic> json) => CreditLine(
@@ -37,6 +39,7 @@ class CreditLine {
         interestRate: json['interest_rate'],
         fixedRate: AmountValue.fromJson(json['fixed_repayment_rate']),
         referenceAccount: AccountData.fromJson(json['reference_account']),
+        repaymentPercentageRate: json['repayment_percentage_rate'],
       );
 
   factory CreditLine.empty() => CreditLine(
@@ -50,5 +53,6 @@ class CreditLine {
         interestRate: 0.0,
         fixedRate: AmountValue.empty(),
         referenceAccount: AccountData.empty(),
+        repaymentPercentageRate: 0.0,
       );
 }

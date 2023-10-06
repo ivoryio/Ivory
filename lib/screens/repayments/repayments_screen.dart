@@ -209,7 +209,7 @@ class _DetailsContentState extends State<_DetailsContent> {
                 context: context,
                 title: 'Outstanding balance',
                 message:
-                    'The outstanding balance includes any carried-over balance from previous billing cycles, new purchases, fees, and accrued interest. It represents the total amount that you owe.',
+                    'The outstanding balance includes any carried-over balance from previous billing cycles, new purchases, fees, and accrued interest. It represents the total amount that you owe. It updates after the bill is generated each month.',
               );
             },
           ),
@@ -222,7 +222,7 @@ class _DetailsContentState extends State<_DetailsContent> {
                 context: context,
                 title: 'Next full repayment',
                 message:
-                    'This is the amount that will be automatically debited from your reference account this billing cycle. It includes your chosen repayment rate and the applicable interest rate.',
+                    'This is the amount that will be automatically debited from your reference account this billing cycle. It includes your chosen repayment rate and the applicable interest rate. It updates after the bill is generated each month.',
               );
             },
           ),
@@ -330,6 +330,8 @@ class _ExpandedDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    num repaymentPercentageRate = viewModel.creditLine.repaymentPercentageRate;
+
     return Column(
       children: [
         Padding(
@@ -338,20 +340,42 @@ class _ExpandedDetails extends StatelessWidget {
             space: 8,
             children: [
               ExpandedDetailsRow(title: 'Amount spent', trailing: Format.currency(viewModel.creditLine.spentAmount)),
-              ExpandedDetailsRow(
-                title: 'Fixed repayment rate',
-                trailing: Format.currency(viewModel.creditLine.fixedRate.value),
-                onInfoIconTap: () {
-                  showBottomModal(
-                    context: context,
-                    title: 'Repayment rate',
-                    message:
-                        'You can decide whether you prefer the flexibility of a percentage rate repayment or the predictability of fixed repayments.'
-                        '\n\nThe repayment rate will be automatically deducted from your reference account and added to your credit account which will increase your available spending balance.'
-                        '\n\nPlease note that the repayment rate does not include any applicable interest charges.',
-                  );
-                },
-              ),
+              if (repaymentPercentageRate < 10) ...[
+                ExpandedDetailsRow(
+                  title: 'Fixed repayment rate',
+                  trailing: Format.currency(viewModel.creditLine.fixedRate.value),
+                  onInfoIconTap: () {
+                    showBottomModal(
+                      context: context,
+                      title: 'Repayment rate',
+                      message:
+                          'You can decide whether you prefer the flexibility of a percentage rate repayment or the predictability of fixed repayments.'
+                          '\n\nThe repayment rate will be automatically deducted from your reference account and added to your credit account which will increase your available spending balance.'
+                          '\n\nPlease note that the repayment rate does not include any applicable interest charges.',
+                    );
+                  },
+                ),
+              ],
+              if (repaymentPercentageRate >= 10) ...[
+                ExpandedDetailsRow(
+                  title: 'Percentage repayment rate',
+                  trailing: '${repaymentPercentageRate}%',
+                  onInfoIconTap: () {
+                    showBottomModal(
+                      context: context,
+                      title: 'Repayment rate',
+                      message:
+                          'You can decide whether you prefer the flexibility of a percentage rate repayment or the predictability of fixed repayments.'
+                          '\n\nThe repayment rate will be automatically deducted from your reference account and added to your credit account which will increase your available spending balance.'
+                          '\n\nPlease note that the repayment rate does not include any applicable interest charges.',
+                    );
+                  },
+                ),
+                ExpandedDetailsRow(
+                  title: 'Repayment amount',
+                  trailing: Format.currency(viewModel.creditLine.spentAmount * (repaymentPercentageRate / 100)),
+                ),
+              ],
               ExpandedDetailsRow(
                 title: 'Interest rate',
                 trailing: '5%', //'${viewModel.creditLine.interestRate}%',

@@ -126,7 +126,8 @@ class NotImplementedCardApplicationService extends CardApplicationService {
   }
 
   @override
-  Future<ChangeRepaymentResponse> updateChangeRepayment({User? user, required double fixedRate, required String id}) {
+  Future<ChangeRepaymentResponse> updateChangeRepayment(
+      {User? user, required double fixedRate, required int percentageRate, required String id}) {
     throw UnimplementedError();
   }
 }

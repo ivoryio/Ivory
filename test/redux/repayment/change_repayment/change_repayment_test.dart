@@ -64,6 +64,7 @@ void main() {
     store.dispatch(UpdateCardApplicationCommandAction(
       user: user,
       fixedRate: 1000,
+      percentageRate: 10,
       id: 'ff46c26e244f482a955ec0bb9a0170d4ccla',
     ));
 
