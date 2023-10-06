@@ -580,6 +580,7 @@ class _FixedRepaymentState extends State<FixedRepayment> {
             Expanded(
               child: TextField(
                 style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                autofocus: true,
                 controller: widget.controller,
                 onChanged: (inputValue) {
                   if (inputValue.isEmpty) inputValue = '0';
@@ -719,11 +720,12 @@ class ShowBottomModalActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+      padding: ClientConfig.getCustomClientUiSettings().defaultScreenVerticalPadding,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          const SizedBox(height: 24),
           CustomAction(
             path: () {
               Navigator.pop(context);
