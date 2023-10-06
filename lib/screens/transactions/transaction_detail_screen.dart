@@ -292,7 +292,6 @@ class _Content extends StatelessWidget {
                         ),
                       ],
                     ),
-                  if (iban != null) ExpandedDetailsRow(title: 'IBAN', trailing: iban),
                   if (note != null) ...[
                     Text('Note', style: ClientConfig.getTextStyleScheme().bodyLargeRegular),
                     Container(
