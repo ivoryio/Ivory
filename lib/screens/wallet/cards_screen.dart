@@ -156,7 +156,7 @@ class _CardSlider extends StatelessWidget {
                     cardExpiry: cardExpiry,
                     isViewable: false,
                     isFrozen: card.status == BankCardStatus.BLOCKED,
-                    cardType: card.type.toString().toLowerCase().contains('virtual') ? 'Virtual card' : 'Physical card',
+                    cardType: card.type,
                   ),
                 ),
               );

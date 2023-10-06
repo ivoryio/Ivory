@@ -77,9 +77,9 @@ class TransferSuccessfulScreen extends StatelessWidget {
                                     text: " from your ",
                                     style: regularFont,
                                   ),
-                                  TextSpan(text: "Reference account", style: boldFont),
-                                  TextSpan(text: " to your ", style: regularFont),
                                   TextSpan(text: "Ivory account", style: boldFont),
+                                  TextSpan(text: " to your ", style: regularFont),
+                                  TextSpan(text: "Reference account", style: boldFont),
                                   TextSpan(
                                     text: ".",
                                     style: regularFont,
@@ -115,14 +115,16 @@ class TransferSuccessfulScreen extends StatelessWidget {
                       ),
                     ),
                     const Spacer(),
-                    Center(child: SvgPicture(
-                      SvgAssetLoader(
-                        'assets/images/repayment_more_credit.svg',
-                        colorMapper: IvoryColorMapper(
-                          baseColor: ClientConfig.getColorScheme().secondary,
+                    Center(
+                      child: SvgPicture(
+                        SvgAssetLoader(
+                          'assets/images/repayment_more_credit.svg',
+                          colorMapper: IvoryColorMapper(
+                            baseColor: ClientConfig.getColorScheme().secondary,
+                          ),
                         ),
                       ),
-                    ),),
+                    ),
                     const Spacer(),
                   ],
                 ),
