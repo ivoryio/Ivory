@@ -7,7 +7,7 @@ import 'package:solarisdemo/infrastructure/device/device_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/device/device_action.dart';
 import 'package:solarisdemo/screens/settings/device_pairing/settings_device_pairing_screen.dart';
-import 'package:solarisdemo/screens/settings/device_pairing/settings_device_pairing_verify_faceid_screen.dart';
+import 'package:solarisdemo/screens/settings/device_pairing/settings_device_pairing_verify_pairing_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
@@ -36,7 +36,7 @@ class SettingsDevicePairingInitialScreen extends StatelessWidget {
           StoreConnector<AppState, DeviceBindingViewModel>(
             onDidChange: ((previousViewModel, viewModel) {
               if (previousViewModel is DeviceBindingLoadingViewModel && viewModel is DeviceBindingCreatedViewModel) {
-                Navigator.pushNamed(context, SettingsDevicePairingVerifyFaceidScreen.routeName);
+                Navigator.pushNamed(context, SettingsDevicePairingVerifyPairingScreen.routeName);
               }
             }),
             converter: (store) => DeviceBindingPresenter.presentDeviceBinding(
@@ -62,16 +62,25 @@ class SettingsDevicePairingInitialScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Device pairing required',
+                        'Pair your device',
                         style: ClientConfig.getTextStyleScheme().heading1,
                         textAlign: TextAlign.left,
                       ),
                       const SizedBox(
                         height: 16,
                       ),
-                      Text(
-                        'This will bolster your security when utilizing our app, which is designed with your safety in mind.',
-                        style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                      RichText(
+                        text: TextSpan(
+                          style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                          children: [
+                            const TextSpan(text: 'Device pairing is necessary for '),
+                            TextSpan(
+                              text: 'actions like viewing card details and changing your PIN, ',
+                              style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
+                            ),
+                            const TextSpan(text: 'increasing app security with your safety in mind.'),
+                          ],
+                        ),
                       ),
                       const SizedBox(
                         height: 24,

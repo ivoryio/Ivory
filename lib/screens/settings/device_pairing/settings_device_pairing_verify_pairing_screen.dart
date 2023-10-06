@@ -13,15 +13,15 @@ import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/tan_input.dart';
 
-class SettingsDevicePairingVerifyFaceidScreen extends StatefulWidget {
+class SettingsDevicePairingVerifyPairingScreen extends StatefulWidget {
   static const routeName = "/settingsDevicePairingVerifyFaceidScreen";
-  const SettingsDevicePairingVerifyFaceidScreen({super.key});
+  const SettingsDevicePairingVerifyPairingScreen({super.key});
 
   @override
-  State<SettingsDevicePairingVerifyFaceidScreen> createState() => _SettingsDevicePairingVerifyFaceidScreenState();
+  State<SettingsDevicePairingVerifyPairingScreen> createState() => _SettingsDevicePairingVerifyPairingScreenState();
 }
 
-class _SettingsDevicePairingVerifyFaceidScreenState extends State<SettingsDevicePairingVerifyFaceidScreen> {
+class _SettingsDevicePairingVerifyPairingScreenState extends State<SettingsDevicePairingVerifyPairingScreen> {
   final TextEditingController _tanInputController = TextEditingController();
   bool _isInputComplete = false;
 
@@ -69,7 +69,7 @@ class _SettingsDevicePairingVerifyFaceidScreenState extends State<SettingsDevice
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Verify Face ID activation',
+                        'Verify device pairing',
                         style: ClientConfig.getTextStyleScheme().heading2,
                         textAlign: TextAlign.left,
                       ),
