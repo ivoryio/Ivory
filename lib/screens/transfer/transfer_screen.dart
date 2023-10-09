@@ -58,7 +58,7 @@ class _TransferScreenState extends State<TransferScreen> {
             amountController.addListener(() {
               setState(() {
                 final value = double.tryParse(amountController.text) ?? 0;
-                final balance = newViewModel.personAccount.availableBalance!.value.toDouble();
+                final balance = newViewModel.personAccount.balance!.value.toDouble();
 
                 if (value > balance) {
                   _errorText = "Not enough balance";
@@ -111,7 +111,7 @@ class _TransferScreenState extends State<TransferScreen> {
                   _Card(
                     title: "Ivory account",
                     iban: viewModel.personAccount.iban!,
-                    balance: viewModel.personAccount.availableBalance!.value.toDouble(),
+                    balance: viewModel.personAccount.balance!.value.toDouble(),
                   ),
                   const Padding(
                     padding: EdgeInsets.all(4.0),
@@ -221,7 +221,10 @@ class _Card extends StatelessWidget {
                   "€${balance!.toStringAsFixed(2)}",
                   style: ClientConfig.getTextStyleScheme().heading4,
                 ),
-                Text("*", style: ClientConfig.getTextStyleScheme().heading4.copyWith(color: ClientConfig.getColorScheme().secondary)),
+                Text("*",
+                    style: ClientConfig.getTextStyleScheme()
+                        .heading4
+                        .copyWith(color: ClientConfig.getColorScheme().secondary)),
               ]
             ]),
           ),
