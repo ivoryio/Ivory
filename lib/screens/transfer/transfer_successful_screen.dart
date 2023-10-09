@@ -13,6 +13,7 @@ import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/ivory_asset_with_badge.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
+import 'package:solarisdemo/widgets/screen_title.dart';
 import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
 
 import '../../utilities/ivory_color_mapper.dart';
@@ -54,14 +55,7 @@ class TransferSuccessfulScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        "Transfer successful",
-                        style: ClientConfig.getTextStyleScheme().heading1,
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
+                    const ScreenTitle("Transfer successful"),
                     const SizedBox(height: 16),
                     StoreConnector<AppState, TransferViewModel>(
                       converter: (store) => TransferPresenter.presentTransfer(
