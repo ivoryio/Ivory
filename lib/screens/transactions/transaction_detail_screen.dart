@@ -28,6 +28,7 @@ class TransactionDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final argument = ModalRoute.of(context)!.settings.arguments;
     final user = context.read<AuthCubit>().state.user!;
+    final scrollController = ScrollController();
 
     AmountValue amountValue;
     IconData? mainIcon;
@@ -136,20 +137,32 @@ class TransactionDetailScreen extends StatelessWidget {
     }
 
     return ScreenScaffold(
-      body: SingleChildScrollView(
-        child: _Content(
-          amountValue: amountValue,
-          mainIcon: mainIcon,
-          subtitle: subtitle,
-          dateTime: dateTime,
-          amountExplainerWidget: amountExplainerWidget,
-          status: status,
-          category: category,
-          accountOwner: accountOwner,
-          iban: iban,
-          note: note,
-          actions: actions,
-        ),
+      body: Column(
+        children: [
+          AppToolbar(
+            title: "Transaction details",
+            scrollController: scrollController,
+            padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              controller: scrollController,
+              child: _Content(
+                amountValue: amountValue,
+                mainIcon: mainIcon,
+                subtitle: subtitle,
+                dateTime: dateTime,
+                amountExplainerWidget: amountExplainerWidget,
+                status: status,
+                category: category,
+                accountOwner: accountOwner,
+                iban: iban,
+                note: note,
+                actions: actions,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -189,7 +202,6 @@ class _Content extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AppToolbar(padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding),
         Padding(
           padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
           child: Column(
