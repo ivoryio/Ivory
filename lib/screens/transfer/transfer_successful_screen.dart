@@ -9,6 +9,7 @@ import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/screens/home/home_screen.dart';
 import 'package:solarisdemo/screens/transactions/transactions_screen.dart';
 import 'package:solarisdemo/utilities/format.dart';
+import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/ivory_asset_with_badge.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
@@ -42,6 +43,10 @@ class TransferSuccessfulScreen extends StatelessWidget {
       shouldPop: false,
       body: Column(
         children: [
+          AppToolbar(
+            backButtonEnabled: false,
+            padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+          ),
           Expanded(
             child: ScrollableScreenContainer(
               child: Padding(
@@ -49,7 +54,6 @@ class TransferSuccessfulScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Spacer(),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
