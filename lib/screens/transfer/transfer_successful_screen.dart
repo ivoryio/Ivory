@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -9,6 +10,7 @@ import 'package:solarisdemo/screens/home/home_screen.dart';
 import 'package:solarisdemo/screens/transactions/transactions_screen.dart';
 import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/button.dart';
+import 'package:solarisdemo/widgets/ivory_asset_with_badge.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
 
@@ -115,10 +117,12 @@ class TransferSuccessfulScreen extends StatelessWidget {
                       ),
                     ),
                     const Spacer(),
-                    Center(
-                      child: SvgPicture(
+                    IvoryAssetWithBadge(
+                      isSuccess: true,
+                      childPosition: BadgePosition.topEnd(top: -32, end: -32),
+                      childWidget: SvgPicture(
                         SvgAssetLoader(
-                          'assets/images/repayment_more_credit.svg',
+                          'assets/images/transfer_successful_illustration.svg',
                           colorMapper: IvoryColorMapper(
                             baseColor: ClientConfig.getColorScheme().secondary,
                           ),
