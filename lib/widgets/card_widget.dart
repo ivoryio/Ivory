@@ -19,7 +19,7 @@ class BankCardWidget extends StatelessWidget {
   final BankCardType? cardType;
   final double? customHeight;
   final double? customWidth;
-  final double? imageScaledownFactor;
+  final double imageScaledownFactor;
   final bool isFrozen;
 
   const BankCardWidget({
