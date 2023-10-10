@@ -21,7 +21,7 @@ import 'package:solarisdemo/screens/wallet/card_details/card_details_screen.dart
 import 'package:solarisdemo/screens/wallet/change_pin/card_change_pin_choose_screen.dart';
 import 'package:solarisdemo/screens/home/home_screen.dart';
 import 'package:solarisdemo/screens/home/main_navigation_screen.dart';
-import 'package:solarisdemo/screens/landing/landing_screen.dart';
+import 'package:solarisdemo/screens/welcome/welcome_screen.dart';
 import 'package:solarisdemo/screens/login/login_screen.dart';
 import 'package:solarisdemo/screens/repayments/bills/bill_detail_screen.dart';
 import 'package:solarisdemo/screens/repayments/bills/bills_screen.dart';
@@ -95,10 +95,10 @@ class _IvoryAppState extends State<IvoryApp> {
             ],
             debugShowCheckedModeBanner: false,
             navigatorKey: navigatorKey,
-            initialRoute: LandingScreen.routeName,
+            initialRoute: WelcomeScreen.routeName,
             routes: {
               // landing
-              LandingScreen.routeName: (context) => const LandingScreen(),
+              WelcomeScreen.routeName: (context) => const WelcomeScreen(),
               // login
               LoginScreen.routeName: (context) => const LoginScreen(),
               // signup
@@ -124,7 +124,7 @@ class _IvoryAppState extends State<IvoryApp> {
               SettingsDevicePairingVerifyFaceidScreen.routeName: (context) =>
                   const SettingsDevicePairingVerifyFaceidScreen(),
               SettingsDevicePairingSuccessScreen.routeName: (context) => const SettingsDevicePairingSuccessScreen(),
-                  
+
               //transactions
               TransactionsScreen.routeName: (context) {
                 final transactionListFilter = ModalRoute.of(context)?.settings.arguments as TransactionListFilter?;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:solarisdemo/screens/landing/landing_screen.dart';
+import 'package:solarisdemo/screens/welcome/welcome_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
@@ -11,8 +11,7 @@ class AuthErrorScreen extends StatelessWidget {
   final String title;
   final String message;
 
-  const AuthErrorScreen(
-      {super.key, required this.message, required this.title});
+  const AuthErrorScreen({super.key, required this.message, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +32,7 @@ class AuthErrorScreen extends StatelessWidget {
                       Navigator.popUntil(
                         context,
                         ModalRoute.withName(
-                          LandingScreen.routeName,
+                          WelcomeScreen.routeName,
                         ),
                       );
                     },

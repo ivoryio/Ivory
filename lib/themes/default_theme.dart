@@ -22,6 +22,7 @@ class DefaultTheme {
 
   static ClientUiSettings clientUiSettings = ClientUiSettings(
     cardType: CardType.visa,
+    welcomeVideoPath: "assets/videos/ivory_welcome_video.mp4",
     colorscheme: colorScheme,
     themeData: ThemeData(
       primaryColor: colorScheme.primary,
@@ -160,6 +161,7 @@ class PorscheTheme {
   static ClientUiSettings clientUiSettings = DefaultTheme.clientUiSettings.copyWith(
     colorscheme: colorScheme,
     cardType: CardType.mastercard,
+    welcomeVideoPath: "assets/videos/porsche_welcome_video.mp4",
   );
 }
 
@@ -254,14 +256,15 @@ class ClientUiSettings {
   final CustomClientUiSettings customSettings;
   final TextStyleScheme labelTextStyle;
   final CardType cardType;
+  final String welcomeVideoPath;
 
-  const ClientUiSettings({
-    required this.colorscheme,
-    required this.themeData,
-    required this.customSettings,
-    required this.labelTextStyle,
-    required this.cardType,
-  });
+  const ClientUiSettings(
+      {required this.colorscheme,
+      required this.themeData,
+      required this.customSettings,
+      required this.labelTextStyle,
+      required this.cardType,
+      required this.welcomeVideoPath});
 
   ClientUiSettings copyWith({
     ColorScheme? colorscheme,
@@ -269,6 +272,7 @@ class ClientUiSettings {
     CustomClientUiSettings? customSettings,
     TextStyleScheme? labelTextStyle,
     CardType? cardType,
+    String? welcomeVideoPath,
   }) {
     return ClientUiSettings(
       colorscheme: colorscheme ?? this.colorscheme,
@@ -276,6 +280,7 @@ class ClientUiSettings {
       customSettings: customSettings ?? this.customSettings,
       labelTextStyle: labelTextStyle ?? this.labelTextStyle,
       cardType: cardType ?? this.cardType,
+      welcomeVideoPath: welcomeVideoPath ?? this.welcomeVideoPath,
     );
   }
 }

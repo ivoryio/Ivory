@@ -2,7 +2,7 @@ name: solarisdemo
 description: Flutter project for Solaris Demo App.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: "none" # Remove this line if you wish to publish to pub.dev
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -19,7 +19,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 2.0.8+31
 
 environment:
-  sdk: ">=3.0.0 <3.15.0"
+  sdk: '>=3.0.0 <3.15.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -71,6 +71,7 @@ dependencies:
   url_launcher: ^6.1.12
   smooth_page_indicator: ^1.1.0
   badges: ^3.1.2
+  video_player: ^2.7.2
 
 dev_dependencies:
   flutter_test:
@@ -107,6 +108,7 @@ flutter:
     - assets/images/default/
     - assets/icons/porsche/
     - assets/images/porsche/
+    - assets/videos/
     - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
