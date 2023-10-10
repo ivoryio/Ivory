@@ -63,7 +63,7 @@ class AppSettingsBiometricEnabledScreen extends StatelessWidget {
                     width: double.infinity,
                     height: 48,
                     child: Button(
-                      text: 'Back to "Home"',
+                      text: 'Done',
                       disabledColor: const Color(0xFFDFE2E6),
                       color: ClientConfig.getColorScheme().tertiary,
                       textColor: ClientConfig.getColorScheme().surface,
