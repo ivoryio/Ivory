@@ -43,7 +43,6 @@ class BankCardDetailsScreen extends StatelessWidget {
               title: 'View card details',
               onBackButtonPressed: () async {
                 Navigator.popUntil(context, ModalRoute.withName(HomeScreen.routeName));
-                // Navigator.pop(context);
                 StoreProvider.of<AppState>(context).dispatch(
                   GetBankCardCommandAction(
                     user: user,
