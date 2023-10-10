@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
+enum CardType { visa, mastercard }
+
 class DefaultTheme {
   static ColorScheme colorScheme = const ColorScheme(
     primary: Color(0xFF071034),
     secondary: Color(0xFF2575FC),
     tertiary: Color(0xFF2575FC), // USE THIS FOR BUTTON BACKGROUNDS
     surface: Colors.white, // USE THIS FOR BUTTON TEXTS
-    surfaceVariant: Color(0xFF1D26A7),//USED TO CALCULATE GRADIENT,
-    outline: Color(0xFF6300BB),//ALSO USED TO CALCULATE GRADIENT,
+    surfaceVariant: Color(0xFF1D26A7), //USED TO CALCULATE GRADIENT,
+    outline: Color(0xFF6300BB), //ALSO USED TO CALCULATE GRADIENT,
     background: Colors.white,
     error: Colors.red,
     onPrimary: Colors.black,
@@ -19,6 +21,7 @@ class DefaultTheme {
   );
 
   static ClientUiSettings clientUiSettings = ClientUiSettings(
+    cardType: CardType.visa,
     colorscheme: colorScheme,
     themeData: ThemeData(
       primaryColor: colorScheme.primary,
@@ -146,15 +149,18 @@ class DefaultTheme {
 
 class PorscheTheme {
   static ColorScheme colorScheme = DefaultTheme.colorScheme.copyWith(
-      primary: Colors.black,
-      secondary: const Color(0xFFCC0000),
-      tertiary: Colors.black, // USE THIS FOR BUTTON BACKGROUNDS
-      surface: Colors.white, // USE THIS FOR BUTTON TEXTS
-      surfaceVariant: const Color(0xFF3D3D3D), //USED TO CALCULATE GRADIENT,
-      outline: Colors.black, //ALSO USED TO CALCULATE GRADIENT,
+    primary: Colors.black,
+    secondary: const Color(0xFFCC0000),
+    tertiary: Colors.black, // USE THIS FOR BUTTON BACKGROUNDS
+    surface: Colors.white, // USE THIS FOR BUTTON TEXTS
+    surfaceVariant: const Color(0xFF3D3D3D), //USED TO CALCULATE GRADIENT,
+    outline: Colors.black, //ALSO USED TO CALCULATE GRADIENT,
   );
 
-  static ClientUiSettings clientUiSettings = DefaultTheme.clientUiSettings.copyWith(colorscheme: colorScheme);
+  static ClientUiSettings clientUiSettings = DefaultTheme.clientUiSettings.copyWith(
+    colorscheme: colorScheme,
+    cardType: CardType.mastercard,
+  );
 }
 
 class SolarisTheme {
@@ -163,7 +169,7 @@ class SolarisTheme {
     secondary: const Color(0xFFFF6432),
     tertiary: const Color(0xFFFF6432), // USE THIS FOR BUTTON BACKGROUNDS
     surface: Colors.white, // USE THIS FOR BUTTON TEXTS
-    surfaceVariant: const Color(0xFFF8623A),//USED TO CALCULATE GRADIENT,
+    surfaceVariant: const Color(0xFFF8623A), //USED TO CALCULATE GRADIENT,
     outline: const Color(0xFF9D2801), //ALSO USED TO CALCULATE GRADIENT,
   );
 
@@ -247,24 +253,29 @@ class ClientUiSettings {
   final ThemeData themeData;
   final CustomClientUiSettings customSettings;
   final TextStyleScheme labelTextStyle;
+  final CardType cardType;
 
   const ClientUiSettings({
     required this.colorscheme,
     required this.themeData,
     required this.customSettings,
     required this.labelTextStyle,
+    required this.cardType,
   });
 
-  ClientUiSettings copyWith(
-      {ColorScheme? colorscheme,
-      ThemeData? themeData,
-      CustomClientUiSettings? customSettings,
-      TextStyleScheme? labelTextStyle}) {
+  ClientUiSettings copyWith({
+    ColorScheme? colorscheme,
+    ThemeData? themeData,
+    CustomClientUiSettings? customSettings,
+    TextStyleScheme? labelTextStyle,
+    CardType? cardType,
+  }) {
     return ClientUiSettings(
       colorscheme: colorscheme ?? this.colorscheme,
       themeData: themeData ?? this.themeData,
       customSettings: customSettings ?? this.customSettings,
       labelTextStyle: labelTextStyle ?? this.labelTextStyle,
+      cardType: cardType ?? this.cardType,
     );
   }
 }

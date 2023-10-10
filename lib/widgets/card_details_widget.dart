@@ -47,7 +47,6 @@ class BankCardShowDetailsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<String> cardNumberParts = Format.iban(cardDetails.cardNumber).split(" ");
-    final isVisa = cardType.toString().toLowerCase().contains("visa");
 
     return SizedBox(
       width: 310,
@@ -84,13 +83,13 @@ class BankCardShowDetailsWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Row(
+                      const Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(left: 16),
-                            child: isVisa ? const VisaSvgIcon() : const MastercardSvgIcon(),
+                            padding: EdgeInsets.only(left: 16),
+                            child: CardTypeIcon(),
                           ),
                         ],
                       ),

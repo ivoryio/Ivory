@@ -154,7 +154,6 @@ class _CardSlider extends StatelessWidget {
                     cardNumber: cardNumber,
                     cardHolder: cardHolder,
                     cardExpiry: cardExpiry,
-                    isViewable: false,
                     isFrozen: card.status == BankCardStatus.BLOCKED,
                     cardType: card.type,
                   ),

@@ -15,9 +15,6 @@ import 'package:solarisdemo/widgets/card_widget.dart';
 import 'package:solarisdemo/widgets/ivory_asset_with_badge.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
-
-
-
 class BankCardDetailsActivationSuccessScreen extends StatelessWidget {
   static const routeName = '/bankCardDetailsActivationSuccessScreen';
 
@@ -58,12 +55,11 @@ class BankCardDetailsActivationSuccessScreen extends StatelessWidget {
                     children: [
                       IvoryAssetWithBadge(
                         childWidget: const BankCardWidget(
-                          isCardEmpty: true,
+                          showCardDetails: false,
                           customHeight: 148,
                           customWidth: 231,
-                          isViewable: false,
                           imageScaledownFactor: 1.5,
-                      ),
+                        ),
                         childPosition: BadgePosition.topEnd(
                           top: -32,
                           end: -32,
@@ -79,8 +75,8 @@ class BankCardDetailsActivationSuccessScreen extends StatelessWidget {
                     width: double.infinity,
                     child: Button(
                       disabledColor: const Color(0xFFDFE2E6),
-                      color:  ClientConfig.getColorScheme().tertiary,
-                      textColor:  ClientConfig.getColorScheme().surface,
+                      color: ClientConfig.getColorScheme().tertiary,
+                      textColor: ClientConfig.getColorScheme().surface,
                       text: 'Back to "Card"',
                       onPressed: () {
                         Navigator.popUntil(
