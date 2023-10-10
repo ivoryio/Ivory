@@ -131,12 +131,12 @@ class _CardSlider extends StatelessWidget {
             controller: pageController,
             clipBehavior: Clip.none,
             itemCount: cards.length,
-            onPageChanged: (i) => StoreProvider.of<AppState>(context).dispatch(GetBankCardCommandAction(
+            onPageChanged: (cardIndex) => StoreProvider.of<AppState>(context).dispatch(GetBankCardCommandAction(
               user: context.read<AuthCubit>().state.user!,
-              cardId: cards[i].id,
+              cardId: cards[cardIndex].id,
             )),
-            itemBuilder: (context, i) {
-              BankCard card = cards[i];
+            itemBuilder: (context, cardIndex) {
+              BankCard card = cards[cardIndex];
 
               String cardNumber = card.representation?.maskedPan ?? emptyStringValue;
               String cardHolder = card.representation?.line2 ?? emptyStringValue;
@@ -146,7 +146,7 @@ class _CardSlider extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: GestureDetector(
                   onTap: () => pageController.animateToPage(
-                    i,
+                    cardIndex,
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeInOut,
                   ),

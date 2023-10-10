@@ -73,9 +73,7 @@ class BankCardWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Padding(
-                padding: EdgeInsets.only(
-                  left: 16,
-                ),
+                padding: EdgeInsets.only(left: 16),
                 child: CardTypeIcon(),
               ),
               if (showCardDetails && cardType != null) CardTypeLabel(cardType: cardType!),
