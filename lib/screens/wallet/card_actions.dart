@@ -12,8 +12,10 @@ import 'package:solarisdemo/screens/wallet/card_activation/card_activation_info.
 import 'package:solarisdemo/screens/wallet/card_details/card_details_screen.dart';
 import 'package:solarisdemo/screens/wallet/change_pin/card_change_pin_choose_screen.dart';
 import 'package:solarisdemo/widgets/button.dart';
-import 'package:solarisdemo/widgets/ivory_list_item_with_action.dart';
-import 'package:solarisdemo/widgets/spaced_column.dart';
+import 'package:solarisdemo/widgets/ivory_list_tile.dart';
+import 'package:solarisdemo/widgets/ivory_switch.dart';
+
+import '../../widgets/ivory_list_title.dart';
 
 class CardActions extends StatelessWidget {
   final String initialCardId;
@@ -38,44 +40,39 @@ class CardActions extends StatelessWidget {
         );
       },
       builder: (context, viewModel) {
-        return Padding(
-          padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-          child: (() {
-            if (viewModel is BankCardInitialViewModel) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            if (viewModel is BankCardLoadingViewModel) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            if (viewModel is BankCardErrorViewModel) {
-              return const Text("Something went wrong");
-            }
-            if (viewModel is BankCardFetchedViewModel) {
-              if (viewModel.bankCard!.status == BankCardStatus.ACTIVE) {
-                return ActiveCard(
-                  viewModel: viewModel,
-                );
-              }
-              if (viewModel.bankCard!.status == BankCardStatus.INACTIVE) {
-                return InactiveCard(
-                  viewModel: viewModel,
-                );
-              }
-              if (viewModel.bankCard!.status == BankCardStatus.BLOCKED) {
-                return FrozenCard(
-                  viewModel: viewModel,
-                );
-              }
-            }
-
-            return const Center(
-              child: CircularProgressIndicator(),
+        if (viewModel is BankCardInitialViewModel) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        if (viewModel is BankCardLoadingViewModel) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        if (viewModel is BankCardErrorViewModel) {
+          return const Text("Something went wrong");
+        }
+        if (viewModel is BankCardFetchedViewModel) {
+          if (viewModel.bankCard!.status == BankCardStatus.ACTIVE) {
+            return ActiveCard(
+              viewModel: viewModel,
             );
-          }()),
+          }
+          if (viewModel.bankCard!.status == BankCardStatus.INACTIVE) {
+            return InactiveCard(
+              viewModel: viewModel,
+            );
+          }
+          if (viewModel.bankCard!.status == BankCardStatus.BLOCKED) {
+            return FrozenCard(
+              viewModel: viewModel,
+            );
+          }
+        }
+
+        return const Center(
+          child: CircularProgressIndicator(),
         );
       },
     );
@@ -88,46 +85,49 @@ class InactiveCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Activate your card',
-              style: ClientConfig.getTextStyleScheme().heading3,
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            Text(
-              'Your card is currently inactive. \n\nOnce it arrives to your address, click on the "Activate my card" to active it and start using. \n\nIt will take only 1 minute.',
-              style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-            ),
-            const SizedBox(height: 60),
-          ],
-        ),
-        const SizedBox(
-          height: 70,
-        ),
-        SizedBox(
-          width: double.infinity,
-          child: Button(
-            text: "Activate my card",
-            disabledColor: const Color(0xFFDFE2E6),
-            color: ClientConfig.getColorScheme().tertiary,
-            textColor: ClientConfig.getColorScheme().surface,
-            onPressed: () {
-              Navigator.pushNamed(
-                context,
-                BankCardDetailsInfoScreen.routeName,
-              );
-            },
+    return Padding(
+      padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Activate your card',
+                style: ClientConfig.getTextStyleScheme().heading3,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              Text(
+                'Your card is currently inactive. \n\nOnce it arrives to your address, click on the "Activate my card" to active it and start using. \n\nIt will take only 1 minute.',
+                style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+              ),
+              const SizedBox(height: 60),
+            ],
           ),
-        ),
-      ],
+          const SizedBox(
+            height: 70,
+          ),
+          SizedBox(
+            width: double.infinity,
+            child: Button(
+              text: "Activate my card",
+              disabledColor: const Color(0xFFDFE2E6),
+              color: ClientConfig.getColorScheme().tertiary,
+              textColor: ClientConfig.getColorScheme().surface,
+              onPressed: () {
+                Navigator.pushNamed(
+                  context,
+                  BankCardDetailsInfoScreen.routeName,
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -140,111 +140,113 @@ class ActiveCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            CardOptionsButton(
-              icon: Icons.remove_red_eye_outlined,
-              textLabel: 'Details',
-              onPressed: () async {
-                Navigator.pushNamed(
-                  context,
-                  BankCardDetailsScreen.routeName,
-                  arguments: CardScreenParams(card: viewModel.bankCard!),
-                );
-              },
-            ),
-            CardOptionsButton(
-              icon: Icons.wallet,
-              textLabel: 'Add to wallet',
-              onPressed: () {},
-            ),
-            CardOptionsButton(
-              icon: Icons.speed,
-              textLabel: 'Set cap',
-              onPressed: () => {},
-            ),
-            CardOptionsButton(
-              icon: Icons.ac_unit,
-              textLabel: 'Freeze',
-              onPressed: () {
-                StoreProvider.of<AppState>(context).dispatch(
-                  BankCardFreezeCommandAction(
-                    bankCards:
-                        (StoreProvider.of<AppState>(context).state.bankCardsState as BankCardsFetchedState).bankCards,
-                    user: viewModel.user!,
-                    bankCard: viewModel.bankCard!,
-                  ),
-                );
-              },
-            ),
-          ],
+        Padding(
+          padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CardOptionsButton(
+                icon: Icons.remove_red_eye_outlined,
+                textLabel: 'Details',
+                onPressed: () async {
+                  Navigator.pushNamed(
+                    context,
+                    BankCardDetailsScreen.routeName,
+                    arguments: CardScreenParams(card: viewModel.bankCard!),
+                  );
+                },
+              ),
+              CardOptionsButton(
+                icon: Icons.wallet,
+                textLabel: 'Add to wallet',
+                onPressed: () {},
+              ),
+              CardOptionsButton(
+                icon: Icons.speed,
+                textLabel: 'Set cap',
+                onPressed: () => {},
+              ),
+              CardOptionsButton(
+                icon: Icons.ac_unit,
+                textLabel: 'Freeze',
+                onPressed: () {
+                  StoreProvider.of<AppState>(context).dispatch(
+                    BankCardFreezeCommandAction(
+                      bankCards:
+                          (StoreProvider.of<AppState>(context).state.bankCardsState as BankCardsFetchedState).bankCards,
+                      user: viewModel.user!,
+                      bankCard: viewModel.bankCard!,
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
         const SizedBox(height: 40),
-        SpacedColumn(
+        Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          space: 28,
           children: [
-            const ItemTitle(
-              nameOfActionTitle: 'Security settings',
-            ),
-            IvoryListItemWithAction(
+            const IvoryListTitle(title: 'Security settings'),
+            IvoryListTile(
               leftIcon: Icons.dialpad,
-              actionName: 'Change PIN',
-              actionDescription: 'For security or personal reasons',
+              title: 'Change PIN',
+              subtitle: 'For security or personal reasons',
               rightIcon: Icons.arrow_forward_ios,
-              onPressed: () => Navigator.pushNamed(
+              onTap: () => Navigator.pushNamed(
                 context,
                 BankCardChangePinChooseScreen.routeName,
                 arguments: CardScreenParams(card: viewModel.bankCard!),
               ),
             ),
-            IvoryListItemWithAction(
+            const IvoryListTile(
               leftIcon: Icons.lock_open,
-              actionName: 'Unblock card',
-              actionDescription: 'After 3 incorrect PIN/CVV attempts',
+              title: 'Unblock card',
+              subtitle: 'After 3 incorrect PIN/CVV attempts',
               rightIcon: Icons.arrow_forward_ios,
             ),
-            IvoryListItemWithAction(
+            const IvoryListTile(
               leftIcon: Icons.wifi_tethering_error,
-              actionName: 'Contactless limit',
-              actionDescription: 'For safe and mindful in-store payments',
+              title: 'Contactless limit',
+              subtitle: 'For safe and mindful in-store payments',
               rightIcon: Icons.arrow_forward_ios,
             ),
-            IvoryListItemWithAction(
+            const IvoryListTile(
               leftIcon: Icons.wifi_tethering,
-              actionName: 'Contactless payments',
-              actionDescription: 'Apple Pay won’t be affected',
+              title: 'Contactless payments',
+              subtitle: 'Apple Pay won’t be affected',
               rightIcon: Icons.arrow_forward_ios,
-              actionSwitch: false,
+              actionItem: IvorySwitch(),
             ),
-            IvoryListItemWithAction(
+            const IvoryListTile(
               leftIcon: Icons.language,
-              actionName: 'Online payments',
-              actionDescription: 'Apple Pay won’t be affected',
+              title: 'Online payments',
+              subtitle: 'Apple Pay won’t be affected',
               rightIcon: Icons.arrow_forward_ios,
-              actionSwitch: false,
+              actionItem: IvorySwitch(),
             ),
-            IvoryListItemWithAction(
+            const IvoryListTile(
               leftIcon: Icons.payments,
-              actionName: 'ATM withdrawals',
-              actionDescription: 'If you don’t plan to withdraw',
+              title: 'ATM withdrawals',
+              subtitle: 'If you don’t plan to withdraw',
               rightIcon: Icons.arrow_forward_ios,
-              actionSwitch: false,
+              actionItem: IvorySwitch(),
             ),
-            const ItemTitle(nameOfActionTitle: 'Card management'),
-            IvoryListItemWithAction(
+            const SizedBox(height: 16),
+            const IvoryListTitle(title: 'Card management'),
+            const IvoryListTile(
               leftIcon: Icons.credit_card,
-              actionName: 'Replace card',
-              actionDescription: 'If your card is damaged',
+              title: 'Replace card',
+              subtitle: 'If your card is damaged',
               rightIcon: Icons.arrow_forward_ios,
             ),
-            IvoryListItemWithAction(
+            const IvoryListTile(
               leftIcon: Icons.delete_outline,
-              actionName: 'Close card',
-              actionDescription: 'The card will be permanently closed',
+              title: 'Close card',
+              subtitle: 'The card will be permanently closed',
               rightIcon: Icons.arrow_forward_ios,
             ),
+            const SizedBox(height: 16)
           ],
         )
       ],
@@ -283,22 +285,19 @@ class FrozenCard extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const ItemTitle(
-              nameOfActionTitle: 'If your card is compromised',
-            ),
+            const IvoryListTitle(title: 'If your card is compromised'),
             if (viewModel.bankCard!.type.toString().contains('virtual')) const SizedBox(height: 28),
             if (viewModel.bankCard!.type.toString().contains('virtual'))
-              IvoryListItemWithAction(
+              const IvoryListTile(
                 leftIcon: Icons.credit_card,
-                actionName: 'Replace card',
-                actionDescription: 'If your card is damaged',
+                title: 'Replace card',
+                subtitle: 'If your card is damaged',
                 rightIcon: Icons.arrow_forward_ios,
               ),
-            const SizedBox(height: 32),
-            IvoryListItemWithAction(
+            const IvoryListTile(
               leftIcon: Icons.delete_outline,
-              actionName: 'Close card',
-              actionDescription: 'The card will be permanently closed',
+              title: 'Close card',
+              subtitle: 'The card will be permanently closed',
               rightIcon: Icons.arrow_forward_ios,
             ),
           ],
@@ -341,20 +340,6 @@ class CardOptionsButton extends StatelessWidget {
           ),
         )
       ],
-    );
-  }
-}
-
-class ItemTitle extends StatelessWidget {
-  final String nameOfActionTitle;
-
-  const ItemTitle({super.key, required this.nameOfActionTitle});
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      nameOfActionTitle,
-      style: ClientConfig.getTextStyleScheme().labelLarge,
     );
   }
 }

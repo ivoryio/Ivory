@@ -10,9 +10,11 @@ import 'package:solarisdemo/redux/device/device_action.dart';
 import 'package:solarisdemo/screens/settings/device_pairing/settings_device_pairing_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
-import 'package:solarisdemo/widgets/ivory_list_item_with_action.dart';
+import 'package:solarisdemo/widgets/ivory_list_tile.dart';
+import 'package:solarisdemo/widgets/ivory_list_title.dart';
 import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
+import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
 
 import '../../../config.dart';
 
@@ -36,6 +38,7 @@ class SettingsPairedDeviceDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = context.read<AuthCubit>().state.user!.cognito;
+
     return ScreenScaffold(
       body: StoreConnector<AppState, DeviceBindingViewModel>(
         onDidChange: (previousViewModel, newViewModel) {
@@ -80,12 +83,12 @@ class SettingsPairedDeviceDetailsScreen extends StatelessWidget {
                 padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
               ),
               Expanded(
-                child: Padding(
-                  padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
+                child: ScrollableScreenContainer(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
+                        margin: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
                         decoration: const BoxDecoration(
                           borderRadius: BorderRadius.all(
                             Radius.circular(16),
@@ -202,20 +205,14 @@ class SettingsPairedDeviceDetailsScreen extends StatelessWidget {
                       const SizedBox(
                         height: 24,
                       ),
-                      Text(
-                        'Actions',
-                        style: ClientConfig.getTextStyleScheme().labelLarge,
-                      ),
-                      const SizedBox(
-                        height: 24,
-                      ),
-                      IvoryListItemWithAction(
+                      const IvoryListTitle(title: 'Actions'),
+                      IvoryListTile(
                         leftIcon: Icons.mobile_off,
                         leftIconColor: ClientConfig.getClientConfig().uiSettings.colorscheme.error,
-                        actionName: 'Unpair device',
+                        title: 'Unpair device',
                         rightIcon: Icons.arrow_forward_ios,
                         rightIconColor: ClientConfig.getClientConfig().uiSettings.colorscheme.error,
-                        onPressed: () {
+                        onTap: () {
                           _showUnpairModal(
                             context: context,
                             viewModel: viewModel,

@@ -13,6 +13,14 @@ class Format {
       decimalDigits: digits,
     );
 
+    if (digits == 0 && number.toInt() == 0 && number < 0) {
+      return "-${formatter.format(number.abs())}";
+    }
+
+    if (digits == 0 && number > 0) {
+      return formatter.format(number.toInt());
+    }
+
     return formatter.format(number);
   }
 
