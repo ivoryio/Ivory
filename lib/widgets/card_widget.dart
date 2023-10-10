@@ -257,8 +257,8 @@ class CardTypeIcon extends StatelessWidget {
     return ClientConfig.getClientConfig().uiSettings.cardType == CardType.visa
         ? SvgPicture.asset(
             "assets/icons/visa_pay_logo.svg",
-            height: 40,
-            width: 40,
+            height: 16,
+            width: 50,
             placeholderBuilder: (context) => const Text("VISA"),
           )
         : SvgPicture.asset(
