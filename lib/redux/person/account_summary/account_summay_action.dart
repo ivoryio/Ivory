@@ -4,8 +4,12 @@ import '../../../models/user.dart';
 
 class GetAccountSummaryCommandAction {
   final User user;
+  final bool forceAccountSummaryReload;
 
-  GetAccountSummaryCommandAction({required this.user});
+  GetAccountSummaryCommandAction({
+    required this.user,
+    required this.forceAccountSummaryReload,
+  });
 }
 
 class AccountSummaryLoadingEventAction {}

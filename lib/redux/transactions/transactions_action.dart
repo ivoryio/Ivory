@@ -6,8 +6,9 @@ import '../../models/user.dart';
 class GetTransactionsCommandAction {
   final TransactionListFilter? filter;
   final User user;
+  final bool forceReloadTransactions;
 
-  GetTransactionsCommandAction({required this.filter, required this.user});
+  GetTransactionsCommandAction({required this.filter, required this.user, required this.forceReloadTransactions});
 }
 
 class TransactionsLoadingEventAction {
@@ -42,4 +43,22 @@ class UpcomingTransactionsFetchedEventAction {
     required this.upcomingTransactions,
     this.filter,
   });
+}
+
+class GetHomeTransactionsCommandAction {
+  final TransactionListFilter? filter;
+  final User user;
+  final bool forceReloadTransactions;
+
+  GetHomeTransactionsCommandAction({required this.filter, required this.user, required this.forceReloadTransactions});
+}
+
+class HomeTransactionsLoadingEventAction {}
+
+class HomeTransactionsFailedEventAction {}
+
+class HomeTransactionsFetchedEventAction {
+  final List<Transaction> transactions;
+
+  HomeTransactionsFetchedEventAction({required this.transactions});
 }

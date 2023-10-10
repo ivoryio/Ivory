@@ -34,5 +34,6 @@ AppState appReducer(AppState currentState, dynamic action) {
     notificationState: notificationReducer(currentState.notificationState, action),
     transactionApprovalState: transactionApprovalReducer(currentState.transactionApprovalState, action),
     accountSummaryState: accountSummaryReducer(currentState.accountSummaryState, action),
+    homePageTransactionsState: homeTransactionsReducer(currentState.homePageTransactionsState, action),
   );
 }

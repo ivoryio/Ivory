@@ -28,10 +28,12 @@ class GetBankCardCommandAction {
 }
 
 class GetBankCardsCommandAction {
-  final AuthenticatedUser user;
+  final User user;
+  final bool forceCardsReload;
 
   GetBankCardsCommandAction({
     required this.user,
+    required this.forceCardsReload,
   });
 }
 

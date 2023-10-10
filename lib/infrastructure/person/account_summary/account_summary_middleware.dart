@@ -3,6 +3,8 @@ import 'package:solarisdemo/infrastructure/person/account_summary/account_summar
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/person/account_summary/account_summay_action.dart';
 
+import '../../../redux/person/account_summary/account_summay_state.dart';
+
 class GetAccountSummaryMiddleware extends MiddlewareClass<AppState>
 {
   final AccountSummaryService _accountSummaryService;
@@ -14,6 +16,10 @@ class GetAccountSummaryMiddleware extends MiddlewareClass<AppState>
     next(action);
 
     if(action is GetAccountSummaryCommandAction) {
+      if((store.state.accountSummaryState is WithAccountSummaryState) && (action.forceAccountSummaryReload == false)) {
+        return;
+      }
+
       store.dispatch(AccountSummaryLoadingEventAction());
 
       final response = await _accountSummaryService.getPersonAccountSummary(user: action.user);

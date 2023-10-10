@@ -31,7 +31,7 @@ class BankCardsScreen extends StatelessWidget {
 
     return StoreConnector<AppState, BankCardsViewModel>(
       onInit: (store) {
-        store.dispatch(GetBankCardsCommandAction(user: user));
+        store.dispatch(GetBankCardsCommandAction(user: user.cognito, forceCardsReload: false));
       },
       converter: (store) {
         return BankCardPresenter.presentBankCards(

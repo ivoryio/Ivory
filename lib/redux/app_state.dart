@@ -32,6 +32,7 @@ class AppState extends Equatable {
   final NotificationState notificationState;
   final TransactionApprovalState transactionApprovalState;
   final AccountSummaryState accountSummaryState;
+  final TransactionsState homePageTransactionsState;
 
   const AppState({
     required this.transactionsState,
@@ -50,6 +51,7 @@ class AppState extends Equatable {
     required this.notificationState,
     required this.transactionApprovalState,
     required this.accountSummaryState,
+    required this.homePageTransactionsState,
   });
 
   factory AppState.initialState() {
@@ -70,27 +72,29 @@ class AppState extends Equatable {
       notificationState: NotificationInitialState(),
       transactionApprovalState: TransactionApprovalInitialState(),
       accountSummaryState: AccountSummaryInitialState(),
+      homePageTransactionsState: TransactionsInitialState(),
     );
   }
 
   @override
   List<Object?> get props => [
-        transactionsState,
-        creditLineState,
-        repaymentReminderState,
-        cardApplicationState,
-        billsState,
-        moreCreditState,
-        bankCardState,
-        bankCardsState,
-        categoriesState,
-        referenceAccountState,
-        personAccountState,
-        transferState,
-        deviceBindingState,
-        notificationState,
-        transactionApprovalState,
-      ];
+    transactionsState,
+    creditLineState,
+    repaymentReminderState,
+    cardApplicationState,
+    billsState,
+    moreCreditState,
+    bankCardState,
+    bankCardsState,
+    categoriesState,
+    referenceAccountState,
+    personAccountState,
+    transferState,
+    deviceBindingState,
+    notificationState,
+    transactionApprovalState,
+    homePageTransactionsState,
+  ];
 
   @override
   bool get stringify => true;

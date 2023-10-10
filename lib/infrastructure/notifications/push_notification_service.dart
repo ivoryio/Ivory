@@ -10,12 +10,17 @@ import 'package:solarisdemo/infrastructure/notifications/push_notification_stora
 import 'package:solarisdemo/models/notifications/notification_type.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/navigator.dart';
+import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
 import 'package:solarisdemo/redux/notification/notification_action.dart';
+import 'package:solarisdemo/redux/person/account_summary/account_summay_action.dart';
+import 'package:solarisdemo/redux/transactions/transactions_state.dart';
 import 'package:solarisdemo/screens/transactions/transaction_approval_pending_screen.dart';
 import 'package:solarisdemo/services/api_service.dart';
 import 'package:solarisdemo/utilities/remote_message_utils.dart';
 
+import '../../models/transactions/transaction_model.dart';
 import '../../redux/app_state.dart';
+import '../../redux/transactions/transactions_action.dart';
 
 const String highImportanceChannelId = 'high_importance_channel';
 
@@ -95,6 +100,7 @@ class FirebasePushNotificationService extends PushNotificationService {
     FirebaseMessaging.onBackgroundMessage(_onBackgroundMessage); // App is in background and notification received
     FirebaseMessaging.onMessageOpenedApp.listen(_onMessage); // App was in background and notification clicked
     FirebaseMessaging.instance.getInitialMessage().then(_onMessage); // App was terminated and notification clicked
+    FirebaseMessaging.onMessage.listen(_pushNotificationReceived);
 
     // Handle token
     _messaging.getToken().then(_onTokenRefresh); // Initial token (on app start)
@@ -108,6 +114,25 @@ class FirebasePushNotificationService extends PushNotificationService {
 
     _redirect(message);
     clearNotification();
+  }
+
+  void _pushNotificationReceived(RemoteMessage? message) {
+    final transactionsState = store.state.transactionsState;
+    final filter = (transactionsState is TransactionsFetchedState) ? transactionsState.transactionListFilter:null;
+    store.dispatch(
+      GetTransactionsCommandAction(filter: filter, user: user!, forceReloadTransactions: true),
+    );
+    store.dispatch(GetHomeTransactionsCommandAction(
+      filter: const TransactionListFilter(
+        size: 3,
+        page: 1,
+        sort: '-recorded_at',
+      ),
+      user: user!,
+      forceReloadTransactions: true,
+    ));
+    store.dispatch(GetBankCardsCommandAction(user: user!, forceCardsReload: true));
+    store.dispatch(GetAccountSummaryCommandAction(user: user!, forceAccountSummaryReload: true));
   }
 
   Future<void> handleAndroidLocalNotifications() async {
