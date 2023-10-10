@@ -8,6 +8,7 @@ import 'package:solarisdemo/models/bank_card.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
+import 'package:solarisdemo/screens/settings/device_pairing/settings_device_pairing_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/card_details_widget.dart';
@@ -31,7 +32,6 @@ class BankCardDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AuthenticatedUser user = context.read<AuthCubit>().state.user!;
-    bool devicePairedBottomSheetConfirmed = false;
 
     return ScreenScaffold(
       body: Padding(
@@ -41,7 +41,7 @@ class BankCardDetailsScreen extends StatelessWidget {
           children: [
             AppToolbar(
               title: 'View card details',
-              onBackButtonPressed: () {
+              onBackButtonPressed: () async {
                 Navigator.popUntil(context, ModalRoute.withName(HomeScreen.routeName));
                 StoreProvider.of<AppState>(context).dispatch(
                   GetBankCardCommandAction(
@@ -58,42 +58,10 @@ class BankCardDetailsScreen extends StatelessWidget {
               ),
               onDidChange: (previousViewModel, viewModel) async => {
                 if (previousViewModel is BankCardLoadingViewModel && viewModel is BankCardNoBoundedDevicesViewModel)
-                  {
-                    await showBottomModal(
-                      showCloseButton: false,
-                      context: context,
-                      title: "Device pairing required",
-                      message:
-                          "In order to access the card details you need to pair your device first. You can do this from the “Security” menu in the Settings tab.",
-                      content: Column(
-                        children: [
-                          const SizedBox(height: 24),
-                          SizedBox(
-                            width: double.infinity,
-                            child: PrimaryButton(
-                              text: 'OK',
-                              onPressed: () {
-                                devicePairedBottomSheetConfirmed = true;
-                                Navigator.popUntil(context, ModalRoute.withName(HomeScreen.routeName));
-                                StoreProvider.of<AppState>(context).dispatch(GetBankCardCommandAction(
-                                  user: context.read<AuthCubit>().state.user!,
-                                  cardId: params.card.id,
-                                ));
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    if (devicePairedBottomSheetConfirmed == false)
-                      {
-                        Navigator.popUntil(context, ModalRoute.withName(HomeScreen.routeName)),
-                        StoreProvider.of<AppState>(context).dispatch(GetBankCardCommandAction(
-                          user: context.read<AuthCubit>().state.user!,
-                          cardId: params.card.id,
-                        )),
-                      },
-                  },
+                  _showDevicePairingMissingModal(
+                    context: context,
+                    user: user,
+                  ),
               },
               onInit: (store) => {
                 store.dispatch(
@@ -199,5 +167,59 @@ class BankCardDetailsScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _showDevicePairingMissingModal({
+    required BuildContext context,
+    required AuthenticatedUser user,
+  }) async {
+    bool devicePairedBottomSheetConfirmed = false;
+
+    await showBottomModal(
+      context: context,
+      title: "Device pairing required",
+      textWidget: RichText(
+        text: TextSpan(
+          style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+          children: [
+            const TextSpan(
+              text:
+                  'In order to view your card details, you need to pair your device first. Click on the button below, or go to “Device pairing” under Security in the Settings tab and ',
+            ),
+            TextSpan(
+              text: 'pair your device now.',
+              style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
+            ),
+          ],
+        ),
+      ),
+      content: Column(
+        children: [
+          const SizedBox(height: 24),
+          SizedBox(
+            width: double.infinity,
+            child: PrimaryButton(
+              text: 'Go to “Device pairing”',
+              onPressed: () async {
+                devicePairedBottomSheetConfirmed = true;
+                Navigator.pushNamed(context, SettingsDevicePairingScreen.routeName);
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (!devicePairedBottomSheetConfirmed) {
+      // ignore: use_build_context_synchronously
+      Navigator.pop(context);
+      // ignore: use_build_context_synchronously
+      StoreProvider.of<AppState>(context).dispatch(
+        GetBankCardCommandAction(
+          user: user,
+          cardId: params.card.id,
+        ),
+      );
+    }
   }
 }

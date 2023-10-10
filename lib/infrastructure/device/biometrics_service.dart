@@ -1,9 +1,9 @@
 import 'package:local_auth/local_auth.dart';
 
 class BiometricsService {
-  final LocalAuthentication auth;
+  static final LocalAuthentication auth = LocalAuthentication();
 
-  BiometricsService({required this.auth});
+  BiometricsService();
 
   Future<bool> authenticateWithBiometrics({required String message}) async {
     try {
@@ -23,6 +23,16 @@ class BiometricsService {
       );
     } catch (e) {
       print('Error during biometric authentication: $e');
+      return false;
+    }
+  }
+
+static Future<bool> areBiometricsAvailable() async {
+    try {
+      final List<BiometricType> availableBiometrics = await auth.getAvailableBiometrics();
+      return availableBiometrics.isNotEmpty;
+    } catch (e) {
+      print("Error checking biometrics: $e");
       return false;
     }
   }

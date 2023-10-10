@@ -7,8 +7,6 @@ import 'package:solarisdemo/models/bank_card.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/utilities/crypto/crypto_key_generator.dart';
 
-import '../../setup/create_store.dart';
-
 class MockGetCardDetailsRequestBody extends Mock implements GetCardDetailsRequestBody {}
 
 class MockRSAKeyPair extends Mock implements RSAKeyPair {
@@ -295,7 +293,7 @@ class FakeDeviceService extends DeviceService {
 }
 
 class FakeBiometricsService extends BiometricsService {
-  FakeBiometricsService() : super(auth: MockLocalAutentication());
+  FakeBiometricsService() : super();
 
   @override
   Future<bool> authenticateWithBiometrics({required String message}) async {

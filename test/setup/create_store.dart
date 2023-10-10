@@ -335,7 +335,7 @@ class NotImplementedDeviceService extends DeviceService {
 class MockLocalAutentication extends Mock implements LocalAuthentication {}
 
 class NotImplementedBiometricsService extends BiometricsService {
-  NotImplementedBiometricsService() : super(auth: MockLocalAutentication());
+  NotImplementedBiometricsService() : super();
 }
 
 class NotImplementedAccountSummaryService extends AccountSummaryService {

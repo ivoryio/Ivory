@@ -6,7 +6,7 @@ Future<dynamic> showBottomModal({
   required BuildContext context,
   Widget? content,
   String? title,
-  String? message,
+  Widget? textWidget,
   bool showCloseButton = true,
   bool isScrollControlled = true,
 }) async {
@@ -64,11 +64,7 @@ Future<dynamic> showBottomModal({
             ],
           ),
           if (title != null || showCloseButton) const SizedBox(height: 24),
-          if (message != null)
-            Text(
-              message,
-              style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-            ),
+          if (textWidget != null) textWidget,
           if (content != null) content,
         ],
       ),
