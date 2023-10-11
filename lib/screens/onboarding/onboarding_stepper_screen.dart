@@ -7,8 +7,12 @@ import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 class OnboardingStepperScreen extends StatelessWidget {
   static const routeName = "/onboardingStepperScreen";
+  final int currentStep;
 
-  const OnboardingStepperScreen({super.key});
+  const OnboardingStepperScreen({
+    super.key,
+    this.currentStep = 0,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -52,18 +56,28 @@ class OnboardingStepperScreen extends StatelessWidget {
                         height: 70,
                         child: CircularPercentProgress(
                           numberOfSegments: onboardingSteps.length,
-                          currentSegment: onboardingSteps.indexOf(
-                              onboardingSteps.firstWhere((element) => element.state == OnboardingStepState.inProgress)),
+                          currentSegment: currentStep,
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 24),
                   for (int index = 0; index < onboardingSteps.length; index++) ...[
-                    OnboardingStepListTile(
-                      step: onboardingSteps[index],
-                      positionInList: index + 1,
-                    ),
+                    if (currentStep < index)
+                      OnboardingStepListTile(
+                          step: onboardingSteps[index],
+                          positionInList: index + 1,
+                          state: OnboardingStepState.notStarted),
+                    if (currentStep > index)
+                      OnboardingStepListTile(
+                          step: onboardingSteps[index],
+                          positionInList: index + 1,
+                          state: OnboardingStepState.completed),
+                    if (currentStep == index)
+                      OnboardingStepListTile(
+                          step: onboardingSteps[index],
+                          positionInList: index + 1,
+                          state: OnboardingStepState.inProgress),
                     if (index != onboardingSteps.length - 1) const SizedBox(height: 16),
                   ]
                 ],
@@ -84,7 +98,7 @@ class OnboardingStepperScreen extends StatelessWidget {
 }
 
 class CircularPercentProgress extends StatelessWidget {
-  final num numberOfSegments;
+  final int numberOfSegments;
   final int currentSegment;
 
   const CircularPercentProgress({
@@ -97,9 +111,9 @@ class CircularPercentProgress extends StatelessWidget {
   Widget build(BuildContext context) {
     int percentValue = 1;
 
-    if (currentSegment == 1) percentValue = 1;
+    if (currentSegment < 1) percentValue = 1;
     if (currentSegment == numberOfSegments) percentValue = 100;
-    if (currentSegment > 1 && currentSegment < numberOfSegments) {
+    if (currentSegment >= 1 && currentSegment < numberOfSegments) {
       percentValue = ((currentSegment / numberOfSegments) * 100).toInt();
     }
 
@@ -127,11 +141,13 @@ class CircularPercentProgress extends StatelessWidget {
 
 class OnboardingStepListTile extends StatelessWidget {
   final OnboardingStep step;
+  final OnboardingStepState state;
   final int positionInList;
 
   const OnboardingStepListTile({
     super.key,
     required this.step,
+    required this.state,
     required this.positionInList,
   });
 
@@ -140,7 +156,7 @@ class OnboardingStepListTile extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: const Color(0xFFE9EAEB)),
-        color: step.state != OnboardingStepState.inProgress ? const Color(0xFFF8F9FA) : const Color(0xFFFFFFFF),
+        color: state != OnboardingStepState.inProgress ? const Color(0xFFF8F9FA) : const Color(0xFFFFFFFF),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Padding(
@@ -151,41 +167,41 @@ class OnboardingStepListTile extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                if (step.state == OnboardingStepState.completed) ...[
+                if (state == OnboardingStepState.completed) ...[
                   TileIcon(
-                    state: step.state,
+                    state: state,
                     positionInList: positionInList,
                   )
                 ],
-                if (step.state == OnboardingStepState.inProgress) ...[
+                if (state == OnboardingStepState.inProgress) ...[
                   TileIcon(
-                    state: step.state,
+                    state: state,
                     positionInList: positionInList,
                   )
                 ],
-                if (step.state == OnboardingStepState.notStarted) ...[
+                if (state == OnboardingStepState.notStarted) ...[
                   TileIcon(
-                    state: step.state,
+                    state: state,
                     positionInList: positionInList,
                   )
                 ],
                 const SizedBox(width: 16),
                 Text(
                   step.title,
-                  style: (step.state == OnboardingStepState.notStarted)
+                  style: (state == OnboardingStepState.notStarted)
                       ? ClientConfig.getTextStyleScheme().labelMedium.copyWith(color: const Color(0xFFADADB4))
                       : ClientConfig.getTextStyleScheme().labelMedium,
                 ),
                 const Spacer(),
-                if (step.state == OnboardingStepState.inProgress) ...[
+                if (state == OnboardingStepState.inProgress) ...[
                   Row(
                     children: [
-                      Text('${step.timeEstimation} MIN'),
+                      Text('${step.timeEstimation} MIN', style: ClientConfig.getTextStyleScheme().labelCaps),
                       const SizedBox(width: 8),
                       SvgPicture.asset('assets/icons/clock.svg', width: 16, height: 16),
                     ],
                   ),
-                ] else if (step.state == OnboardingStepState.notStarted) ...[
+                ] else if (state == OnboardingStepState.notStarted) ...[
                   Row(
                     children: [
                       Text('${step.timeEstimation} MIN',
@@ -201,7 +217,7 @@ class OnboardingStepListTile extends StatelessWidget {
                   const Text(''),
               ],
             ),
-            if (step.state == OnboardingStepState.inProgress) ...[
+            if (state == OnboardingStepState.inProgress) ...[
               const SizedBox(height: 4),
               Row(
                 children: [
@@ -299,14 +315,12 @@ List<OnboardingStep> onboardingSteps = [
     title: 'Sign up',
     description: 'Fill in your title, name, email address and choose your password. It\'s that easy.',
     timeEstimation: 2,
-    state: OnboardingStepState.inProgress,
   ),
   OnboardingStep(
     type: OnboardingStepType.personalDetails,
     title: 'Personal details',
     description: 'We\'ll need a few personal details from you. Rest assured your data is in good hands with us.',
     timeEstimation: 3,
-    state: OnboardingStepState.notStarted,
   ),
   OnboardingStep(
     type: OnboardingStepType.financialDetails,
@@ -314,21 +328,18 @@ List<OnboardingStep> onboardingSteps = [
     description:
         'Tailored to your financial needs, we\'ll gather essential information through a few simple questions.',
     timeEstimation: 5,
-    state: OnboardingStepState.notStarted,
   ),
   OnboardingStep(
     type: OnboardingStepType.identityVerification,
     title: 'Identity verification',
     description: 'Verify your identity quickly and easily with your preferred method.',
     timeEstimation: 15,
-    state: OnboardingStepState.notStarted,
   ),
   OnboardingStep(
     type: OnboardingStepType.cardConfiguration,
     title: 'Card configuration',
     description: 'Provide your reference account, select your repayment option and let\'s get you your credit card.',
     timeEstimation: 1,
-    state: OnboardingStepState.notStarted,
   ),
 ];
 
@@ -337,14 +348,12 @@ class OnboardingStep {
   final String title;
   final String description;
   final int timeEstimation;
-  final OnboardingStepState state;
 
   OnboardingStep({
     required this.type,
     required this.title,
     required this.description,
     required this.timeEstimation,
-    required this.state,
   });
 }
 

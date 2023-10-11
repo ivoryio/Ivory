@@ -102,7 +102,7 @@ class _IvoryAppState extends State<IvoryApp> {
             ],
             debugShowCheckedModeBanner: false,
             navigatorKey: navigatorKey,
-            initialRoute: OnboardingStepperScreen.routeName,
+            initialRoute: LandingScreen.routeName,
             routes: {
               // landing
               LandingScreen.routeName: (context) => const LandingScreen(),
@@ -203,7 +203,9 @@ class _IvoryAppState extends State<IvoryApp> {
               // account
               AccountDetailsScreen.routeName: (context) => const AccountDetailsScreen(),
               // onboarding
-              OnboardingStepperScreen.routeName: (context) => const OnboardingStepperScreen(),
+              OnboardingStepperScreen.routeName: (context) => const OnboardingStepperScreen(
+                    currentStep: 0,
+                  ),
             },
           );
         }),
