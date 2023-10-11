@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/screens/onboarding/start/onboarding_usa_tax_payer_screen.dart';
 import 'package:solarisdemo/utilities/ivory_color_mapper.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
@@ -70,7 +71,9 @@ class OnboardingGermanResidencyScreen extends StatelessWidget {
                   const SizedBox(height: 16),
                   SizedBox(
                     width: double.infinity,
-                    child: PrimaryButton(text: "Yes, I live in Germany", onPressed: () {}),
+                    child: PrimaryButton(
+                        text: "Yes, I live in Germany",
+                        onPressed: () => Navigator.pushNamed(context, OnboardingUsaTaxPayerScreen.routeName)),
                   ),
                   const SizedBox(height: 16)
                 ],

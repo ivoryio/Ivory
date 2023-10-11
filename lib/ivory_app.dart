@@ -60,6 +60,7 @@ import 'package:solarisdemo/screens/wallet/change_pin/card_change_pin_success_sc
 import 'package:solarisdemo/services/auth_service.dart';
 
 import 'screens/onboarding/start/onboarding_start_screen.dart';
+import 'screens/onboarding/start/onboarding_usa_tax_payer_screen.dart';
 import 'screens/transfer/transfer_review_screen.dart';
 import 'screens/transfer/transfer_successful_screen.dart';
 
@@ -208,6 +209,7 @@ class _IvoryAppState extends State<IvoryApp> {
               OnboardingStartScreen.routeName: (context) => const OnboardingStartScreen(),
               OnboardingGermanResidencyScreen.routeName: (context) => const OnboardingGermanResidencyScreen(),
               OnboardingGermanResidencyErrorScreen.routeName: (context) => const OnboardingGermanResidencyErrorScreen(),
+              OnboardingUsaTaxPayerScreen.routeName: (context) => const OnboardingUsaTaxPayerScreen(),
             },
           );
         }),
