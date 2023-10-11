@@ -1,6 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/ivory_app.dart';
+import 'package:solarisdemo/screens/login/login_screen.dart';
+import 'package:solarisdemo/screens/onboarding/start/onboarding_start_screen.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
 import 'package:video_player/video_player.dart';
@@ -37,7 +42,7 @@ class HeroVideo extends StatefulWidget {
   State<HeroVideo> createState() => _HeroVideoState();
 }
 
-class _HeroVideoState extends State<HeroVideo> {
+class _HeroVideoState extends State<HeroVideo> with WidgetsBindingObserver, RouteAware {
   late VideoPlayerController _controller;
   late Future<void> _initializeVideoPlayerFuture;
 
@@ -45,12 +50,58 @@ class _HeroVideoState extends State<HeroVideo> {
   void initState() {
     super.initState();
 
-    final videoPath = ClientConfig.getClientConfig().uiSettings.welcomeVideoPath;
+    WidgetsBinding.instance.addObserver(this);
 
+    final videoPath = ClientConfig.getClientConfig().uiSettings.welcomeVideoPath;
     _controller = VideoPlayerController.asset(videoPath);
+
     _initializeVideoPlayerFuture = _controller.initialize();
 
     _controller.setLooping(true);
+    _controller.setVolume(0);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    IvoryApp.generalRouteObserver.subscribe(this, ModalRoute.of(context)!);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused && _controller.value.isPlaying) {
+      log("Pausing video", name: "didChangeAppLifecycleState: paused");
+      _controller.pause();
+    } else if (state == AppLifecycleState.resumed && !_controller.value.isPlaying) {
+      log("Playing video", name: "didChangeAppLifecycleState: resumed");
+      _controller.play();
+    }
+  }
+
+  @override
+  didPopNext() {
+    _controller.play();
+    log("Playing video", name: "didPopNet");
+
+    super.didPopNext();
+  }
+
+  @override
+  void didPushNext() {
+    _controller.pause();
+    log("Pausing video", name: "didPushNext");
+
+    super.didPushNext();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+    IvoryApp.generalRouteObserver.unsubscribe(this);
+
+    super.dispose();
   }
 
   @override
@@ -112,12 +163,19 @@ class WelcomeScreenContent extends StatelessWidget {
             const Spacer(),
             SizedBox(
               width: double.infinity,
-              child: SecondaryButton(borderWidth: 2, text: "Log in", onPressed: () {}),
+              child: SecondaryButton(
+                borderWidth: 2,
+                text: "Log in",
+                onPressed: () => Navigator.pushNamed(context, LoginScreen.routeName),
+              ),
             ),
             const SizedBox(height: 16),
             SizedBox(
               width: double.infinity,
-              child: PrimaryButton(text: "Sign up", onPressed: () {}),
+              child: PrimaryButton(
+                text: "Sign up",
+                onPressed: () => Navigator.pushNamed(context, OnboardingStartScreen.routeName),
+              ),
             ),
           ],
         ),
