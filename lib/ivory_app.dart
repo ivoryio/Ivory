@@ -56,7 +56,9 @@ import 'package:solarisdemo/screens/wallet/cards_screen.dart';
 import 'package:solarisdemo/screens/wallet/change_pin/card_change_pin_confirm_screen.dart';
 import 'package:solarisdemo/screens/wallet/change_pin/card_change_pin_success_screen.dart';
 import 'package:solarisdemo/services/auth_service.dart';
+import 'package:solarisdemo/utilities/helpers/force_reload_helper.dart';
 
+import 'models/user.dart';
 import 'screens/transfer/transfer_review_screen.dart';
 import 'screens/transfer/transfer_successful_screen.dart';
 
@@ -74,11 +76,36 @@ class IvoryApp extends StatefulWidget {
   State<IvoryApp> createState() => _IvoryAppState();
 }
 
-class _IvoryAppState extends State<IvoryApp> {
+class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
+
+  User? user;
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      final store = widget.store;
+      if(user == null) {return;}
+
+      forceReloadAppStates(store, user!);
+    }
+  }
+
   // Hack to inform Redux of logged in action
   void _onAuthStateChanged(AuthState state) {
     if (state.user != null) {
-      widget.store.dispatch(AuthLoggedInAction(state.user!.cognito));
+      user = state.user!.cognito;
+      widget.store.dispatch(AuthLoggedInAction(user!));
     }
   }
 
