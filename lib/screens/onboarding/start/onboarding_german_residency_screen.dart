@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/utilities/ivory_color_mapper.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/screen_title.dart';
 import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
+import 'package:solarisdemo/screens/onboarding/start/onboarding_german_residency_error_screen.dart';
 
 class OnboardingGermanResidencyScreen extends StatelessWidget {
   static const routeName = "/onboardingGermanResidencyScreen";
@@ -46,12 +48,24 @@ class OnboardingGermanResidencyScreen extends StatelessWidget {
                       style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
                     ),
                   ),
-                  const Spacer(),
-                  Center(child: SvgPicture.asset("assets/images/germany_illustration.svg")),
-                  const Spacer(),
+                  Expanded(
+                    child: Center(
+                      child: SvgPicture(
+                        SvgAssetLoader(
+                          "assets/images/germany_illustration.svg",
+                          colorMapper: IvoryColorMapper(
+                            baseColor: ClientConfig.getColorScheme().secondary,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                   SizedBox(
                     width: double.infinity,
-                    child: SecondaryButton(borderWidth: 2, text: "No, I don't live in Germany", onPressed: () {}),
+                    child: SecondaryButton(
+                        borderWidth: 2,
+                        text: "No, I don't live in Germany",
+                        onPressed: () => Navigator.pushNamed(context, OnboardingGermanResidencyErrorScreen.routeName)),
                   ),
                   const SizedBox(height: 16),
                   SizedBox(

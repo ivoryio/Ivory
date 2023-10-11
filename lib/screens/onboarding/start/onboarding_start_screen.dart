@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/screens/onboarding/start/onboarding_german_residency_screen.dart';
+import 'package:solarisdemo/utilities/ivory_color_mapper.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
@@ -60,9 +61,18 @@ class OnboardingStartScreen extends StatelessWidget {
                       style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
                     ),
                   ),
-                  const Spacer(),
-                  Center(child: SvgPicture.asset("assets/images/onboarding_start.svg")),
-                  const Spacer(),
+                  Expanded(
+                    child: Center(
+                      child: SvgPicture(
+                        SvgAssetLoader(
+                          "assets/images/onboarding_start.svg",
+                          colorMapper: IvoryColorMapper(
+                            baseColor: ClientConfig.getColorScheme().secondary,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                   SizedBox(
                     width: double.infinity,
                     child: PrimaryButton(
