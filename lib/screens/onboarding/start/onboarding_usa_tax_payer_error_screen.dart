@@ -13,10 +13,10 @@ import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/screen_title.dart';
 import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
 
-class OnboardingGermanResidencyErrorScreen extends StatelessWidget {
-  static const routeName = "/onboardingGermanResidencyErrorScreen";
+class OnboardingUsaTaxPayerErrorScreen extends StatelessWidget {
+  static const routeName = "/onboardingUsaTaxPayerErrorScreen";
 
-  const OnboardingGermanResidencyErrorScreen({super.key});
+  const OnboardingUsaTaxPayerErrorScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -43,10 +43,10 @@ class OnboardingGermanResidencyErrorScreen extends StatelessWidget {
                       children: [
                         const TextSpan(text: "At the moment, "),
                         TextSpan(
-                          text: "German residency is required ",
+                          text: "USA taxpayers are unable to proceed ",
                           style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
                         ),
-                        const TextSpan(text: "to proceed with your credit account application.")
+                        const TextSpan(text: "with the credit account application. ")
                       ],
                       style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
                     ),

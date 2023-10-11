@@ -15,6 +15,7 @@ import 'package:solarisdemo/screens/account/account_details_screen.dart';
 import 'package:solarisdemo/screens/available_balance/available_balance_screen.dart';
 import 'package:solarisdemo/screens/onboarding/start/onboarding_german_residency_error_screen.dart';
 import 'package:solarisdemo/screens/onboarding/start/onboarding_german_residency_screen.dart';
+import 'package:solarisdemo/screens/onboarding/start/onboarding_usa_tax_payer_error_screen.dart';
 import 'package:solarisdemo/screens/settings/app_settings/biometric_enabled_screen.dart';
 import 'package:solarisdemo/screens/settings/app_settings/biometric_needed_screen.dart';
 import 'package:solarisdemo/screens/wallet/card_activation/card_activation_apple_wallet.dart';
@@ -210,6 +211,7 @@ class _IvoryAppState extends State<IvoryApp> {
               OnboardingGermanResidencyScreen.routeName: (context) => const OnboardingGermanResidencyScreen(),
               OnboardingGermanResidencyErrorScreen.routeName: (context) => const OnboardingGermanResidencyErrorScreen(),
               OnboardingUsaTaxPayerScreen.routeName: (context) => const OnboardingUsaTaxPayerScreen(),
+              OnboardingUsaTaxPayerErrorScreen.routeName: (context) => const OnboardingUsaTaxPayerErrorScreen(),
             },
           );
         }),
