@@ -92,7 +92,10 @@ class TransactionApprovalPendingScreen extends StatelessWidget {
             showBottomModal(
               context: context,
               title: 'Reject this payment',
-              message: "Are you sure you want to reject this payment?",
+              textWidget: Text(
+                "Are you sure you want to reject this payment?",
+                style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+              ),
               content: _RejectPopUp(
                 onConfirm: () => StoreProvider.of<AppState>(context).dispatch(
                   RejectTransactionCommandAction(
@@ -155,7 +158,10 @@ class TransactionApprovalPendingScreen extends StatelessWidget {
                     final bottomSheet = await showBottomModal(
                       context: context,
                       title: "Payment confirmation timed out",
-                      message: "The payment has been automatically rejected.",
+                      textWidget: Text(
+                        "The payment has been automatically rejected.",
+                        style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                      ),
                       content: const _TimeoutPopUp(),
                     );
 

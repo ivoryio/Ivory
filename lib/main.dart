@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:local_auth/local_auth.dart';
 import 'package:redux/redux.dart';
 import 'package:solarisdemo/infrastructure/bank_card/bank_card_service.dart';
 import 'package:solarisdemo/infrastructure/categories/categories_service.dart';
@@ -68,9 +67,7 @@ Store<AppState> _buildStore() {
     changeRequestService: ChangeRequestService(),
     deviceBindingService: DeviceBindingService(),
     deviceService: DeviceService(),
-    biometricsService: BiometricsService(
-      auth: LocalAuthentication(),
-    ),
+    biometricsService: BiometricsService(),
     deviceInfoService: DeviceInfoService(),
     accountSummaryService: AccountSummaryService(),
   );

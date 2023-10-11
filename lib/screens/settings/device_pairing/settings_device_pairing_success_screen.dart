@@ -57,7 +57,7 @@ class SettingsDevicePairingSuccessScreen extends StatelessWidget {
                                   text:
                                       '${viewModel.thisDevice!.deviceName} (ID: ${viewModel.thisDevice!.deviceId.substring(0, 13)}) ',
                                   style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold),
-                              const TextSpan(text: 'has been successfully paired, ensuring your security.'),
+                              const TextSpan(text: 'has been successfully paired.'),
                             ],
                           ),
                         ),
@@ -94,7 +94,8 @@ class SettingsDevicePairingSuccessScreen extends StatelessWidget {
                                   context,
                                   ModalRoute.withName(
                                     SettingsDevicePairingScreen.routeName,
-                                  ));
+                                ),
+                              );
                               StoreProvider.of<AppState>(context).dispatch(FetchBoundDevicesCommandAction());
                             },
                           ),
