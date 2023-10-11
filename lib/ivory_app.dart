@@ -13,6 +13,7 @@ import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/auth/auth_action.dart';
 import 'package:solarisdemo/screens/account/account_details_screen.dart';
 import 'package:solarisdemo/screens/available_balance/available_balance_screen.dart';
+import 'package:solarisdemo/screens/onboarding/start/onboarding_german_residency_screen.dart';
 import 'package:solarisdemo/screens/settings/app_settings/biometric_enabled_screen.dart';
 import 'package:solarisdemo/screens/settings/app_settings/biometric_needed_screen.dart';
 import 'package:solarisdemo/screens/wallet/card_activation/card_activation_apple_wallet.dart';
@@ -204,6 +205,7 @@ class _IvoryAppState extends State<IvoryApp> {
               AccountDetailsScreen.routeName: (context) => const AccountDetailsScreen(),
               // onboarding
               OnboardingStartScreen.routeName: (context) => const OnboardingStartScreen(),
+              OnboardingGermanResidencyScreen.routeName: (context) => const OnboardingGermanResidencyScreen(),
             },
           );
         }),
