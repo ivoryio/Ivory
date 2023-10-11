@@ -15,6 +15,7 @@ import 'package:solarisdemo/screens/account/account_details_screen.dart';
 import 'package:solarisdemo/screens/available_balance/available_balance_screen.dart';
 import 'package:solarisdemo/screens/settings/app_settings/biometric_enabled_screen.dart';
 import 'package:solarisdemo/screens/settings/app_settings/biometric_needed_screen.dart';
+import 'package:solarisdemo/screens/onboarding/onboarding_stepper_screen.dart';
 import 'package:solarisdemo/screens/wallet/card_activation/card_activation_apple_wallet.dart';
 import 'package:solarisdemo/screens/wallet/card_activation/card_activation_choose_pin.dart';
 import 'package:solarisdemo/screens/wallet/card_activation/card_activation_confirm_pin_screen.dart';
@@ -101,7 +102,7 @@ class _IvoryAppState extends State<IvoryApp> {
             ],
             debugShowCheckedModeBanner: false,
             navigatorKey: navigatorKey,
-            initialRoute: LandingScreen.routeName,
+            initialRoute: OnboardingStepperScreen.routeName,
             routes: {
               // landing
               LandingScreen.routeName: (context) => const LandingScreen(),
@@ -201,6 +202,8 @@ class _IvoryAppState extends State<IvoryApp> {
               TransferFailedScreen.routeName: (context) => const TransferFailedScreen(),
               // account
               AccountDetailsScreen.routeName: (context) => const AccountDetailsScreen(),
+              // onboarding
+              OnboardingStepperScreen.routeName: (context) => const OnboardingStepperScreen(),
             },
           );
         }),
