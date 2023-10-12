@@ -31,7 +31,12 @@ class CardActions extends StatelessWidget {
 
     return StoreConnector<AppState, BankCardViewModel>(
       onInit: (store) {
-        store.dispatch(GetBankCardCommandAction(user: user, cardId: initialCardId));
+        store.dispatch(
+          GetBankCardCommandAction(
+            user: user,
+            cardId: initialCardId,
+            forceReloadCardData: false,
+          ),);
       },
       converter: (store) {
         return BankCardPresenter.presentBankCard(

@@ -17,3 +17,16 @@ TransactionsState transactionsReducer(
 
   return currentState;
 }
+
+TransactionsState homeTransactionsReducer(
+    TransactionsState currentState, dynamic action) {
+  if (action is HomeTransactionsLoadingEventAction) {
+    return TransactionsLoadingState(null);
+  } else if (action is HomeTransactionsFailedEventAction) {
+    return TransactionsErrorState();
+  } else if (action is HomeTransactionsFetchedEventAction) {
+    return TransactionsFetchedState(action.transactions, null);
+  }
+
+  return currentState;
+}

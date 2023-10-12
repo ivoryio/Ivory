@@ -80,6 +80,7 @@ class BankCardChangePinChooseScreen extends StatelessWidget {
                       GetBankCardCommandAction(
                         user: user,
                         cardId: viewModel.bankCard!.id,
+                        forceReloadCardData: true,
                       ),
                     );
                   },
@@ -179,6 +180,7 @@ class BankCardChangePinChooseScreen extends StatelessWidget {
         GetBankCardCommandAction(
           user: user,
           cardId: viewModel.bankCard!.id,
+          forceReloadCardData: true,
         ),
       );
     }

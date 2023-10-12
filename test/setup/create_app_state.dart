@@ -32,6 +32,7 @@ AppState createAppState({
   NotificationState? notificationState,
   TransactionApprovalState? transactionApprovalState,
   AccountSummaryState? accountSummaryState,
+  TransactionsState? homePageTransactionsState,
 }) {
   return AppState(
     transactionsState: transactionsState ?? TransactionsInitialState(),
@@ -50,5 +51,6 @@ AppState createAppState({
     notificationState: notificationState ?? NotificationInitialState(),
     transactionApprovalState: transactionApprovalState ?? TransactionApprovalInitialState(),
     accountSummaryState: accountSummaryState ?? AccountSummaryInitialState(),
+    homePageTransactionsState: homePageTransactionsState ?? TransactionsInitialState(),
   );
 }

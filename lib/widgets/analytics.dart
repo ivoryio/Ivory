@@ -29,7 +29,7 @@ class AnalyticsState extends State<Analytics> {
   Widget build(BuildContext context) {
     return StoreConnector<AppState, TransactionsViewModel>(
       converter: (store) => TransactionPresenter.presentTransactions(
-          transactionsState: store.state.transactionsState),
+          transactionsState: store.state.homePageTransactionsState),
       builder: (context, viewModel) {
         Widget emptyListWidget = Column(
           children: [
