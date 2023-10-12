@@ -26,9 +26,7 @@ class OnboardingGermanResidencyErrorScreen extends StatelessWidget {
         children: [
           AppToolbar(
             padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-            actions: [
-              SvgPicture.asset('assets/icons/default/appbar_logo.svg'),
-            ],
+            actions: const [AppbarLogo()],
           ),
           Expanded(
             child: ScrollableScreenContainer(
