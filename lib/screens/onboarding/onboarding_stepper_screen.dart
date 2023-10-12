@@ -134,7 +134,7 @@ class _CircularPercentProgressState extends State<CircularPercentProgress> with 
 
     controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 5),
+      duration: const Duration(milliseconds: 1500),
     )..addListener(() {
         if (percentValue == 0.01) {
           controller.value <= 0.02

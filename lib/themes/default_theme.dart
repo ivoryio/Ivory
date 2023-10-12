@@ -24,7 +24,12 @@ class DefaultTheme {
     customColors: const CustomColors(
       neutral100: Color(0xFFF8F9FA),
       neutral200: Color(0xFFE9EAEB),
+      neutral300: Color(0xFFDFE2E6),
+      neutral400: Color(0xFFCFD4D9),
       neutral500: Color(0xFFADADB4),
+      neutral600: Color(0xFF757480),
+      neutral700: Color(0xFF56555E),
+      neutral800: Color(0xFF313038),
       neutral900: Color(0xFF15141E),
     ),
     cardType: CardType.visa,
@@ -185,26 +190,46 @@ class SolarisTheme {
 class CustomColors {
   final Color neutral100;
   final Color neutral200;
+  final Color neutral300;
+  final Color neutral400;
   final Color neutral500;
+  final Color neutral600;
+  final Color neutral700;
+  final Color neutral800;
   final Color neutral900;
 
   const CustomColors({
     required this.neutral100,
     required this.neutral200,
+    required this.neutral300,
+    required this.neutral400,
     required this.neutral500,
+    required this.neutral600,
+    required this.neutral700,
+    required this.neutral800,
     required this.neutral900,
   });
 
   CustomColors copyWith({
     Color? neutral100,
     Color? neutral200,
+    Color? neutral300,
+    Color? neutral400,
     Color? neutral500,
+    Color? neutral600,
+    Color? neutral700,
+    Color? neutral800,
     Color? neutral900,
   }) {
     return CustomColors(
       neutral100: neutral100 ?? this.neutral100,
       neutral200: neutral200 ?? this.neutral200,
+      neutral300: neutral300 ?? this.neutral300,
+      neutral400: neutral400 ?? this.neutral400,
       neutral500: neutral500 ?? this.neutral500,
+      neutral600: neutral600 ?? this.neutral600,
+      neutral700: neutral700 ?? this.neutral700,
+      neutral800: neutral800 ?? this.neutral800,
       neutral900: neutral900 ?? this.neutral900,
     );
   }
