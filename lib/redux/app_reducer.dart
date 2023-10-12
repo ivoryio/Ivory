@@ -1,3 +1,4 @@
+import 'package:solarisdemo/redux/auth/auth_reducer.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_reducer.dart';
 import 'package:solarisdemo/redux/categories/category_reducer.dart';
 import 'package:solarisdemo/redux/credit_line/credit_line_reducer.dart';
@@ -34,5 +35,6 @@ AppState appReducer(AppState currentState, dynamic action) {
     notificationState: notificationReducer(currentState.notificationState, action),
     transactionApprovalState: transactionApprovalReducer(currentState.transactionApprovalState, action),
     accountSummaryState: accountSummaryReducer(currentState.accountSummaryState, action),
+    authState: authReducer(currentState.authState, action),
   );
 }

@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_state.dart';
 import 'package:solarisdemo/redux/categories/category_state.dart';
 import 'package:solarisdemo/redux/credit_line/credit_line_state.dart';
@@ -32,6 +33,7 @@ class AppState extends Equatable {
   final NotificationState notificationState;
   final TransactionApprovalState transactionApprovalState;
   final AccountSummaryState accountSummaryState;
+  final AuthState authState;
 
   const AppState({
     required this.transactionsState,
@@ -50,6 +52,7 @@ class AppState extends Equatable {
     required this.notificationState,
     required this.transactionApprovalState,
     required this.accountSummaryState,
+    required this.authState,
   });
 
   factory AppState.initialState() {
@@ -70,6 +73,7 @@ class AppState extends Equatable {
       notificationState: NotificationInitialState(),
       transactionApprovalState: TransactionApprovalInitialState(),
       accountSummaryState: AccountSummaryInitialState(),
+      authState: AuthInitialState(),
     );
   }
 
@@ -90,6 +94,7 @@ class AppState extends Equatable {
         deviceBindingState,
         notificationState,
         transactionApprovalState,
+        authState
       ];
 
   @override

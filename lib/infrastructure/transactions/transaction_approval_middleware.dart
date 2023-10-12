@@ -1,6 +1,7 @@
 import 'package:redux/redux.dart';
 import 'package:solarisdemo/infrastructure/change_request/change_request_service.dart';
 import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
+import 'package:solarisdemo/infrastructure/device/device_fingerprint_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
@@ -8,12 +9,14 @@ import 'package:solarisdemo/redux/transactions/approval/transaction_approval_act
 
 class TransactionApprovalMiddleware extends MiddlewareClass<AppState> {
   final DeviceService _deviceService;
+  final DeviceFingerprintService _deviceFingerprintService;
   final BiometricsService _biometricsService;
   final ChangeRequestService _changeRequestService;
 
   TransactionApprovalMiddleware(
     this._changeRequestService,
     this._deviceService,
+    this._deviceFingerprintService,
     this._biometricsService,
   );
 
@@ -24,7 +27,7 @@ class TransactionApprovalMiddleware extends MiddlewareClass<AppState> {
     if (action is AuthorizeTransactionCommandAction) {
       final consentId = await _deviceService.getConsentId();
       final deviceId = await _deviceService.getDeviceId();
-      final deviceData = await _deviceService.getDeviceFingerprint(consentId);
+      final deviceData = await _deviceFingerprintService.getDeviceFingerprint(consentId);
 
       final isDeviceIdNotEmpty = deviceId != null && deviceId.isNotEmpty;
       final isDeviceDataNotEmpty = deviceData != null && deviceData.isNotEmpty;
