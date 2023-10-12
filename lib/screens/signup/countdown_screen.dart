@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:solarisdemo/screens/landing/landing_screen.dart';
+import 'package:solarisdemo/screens/welcome/welcome_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
@@ -22,8 +22,7 @@ class CountdownScreen extends StatefulWidget {
   _CountdownScreenState createState() => _CountdownScreenState();
 }
 
-class _CountdownScreenState extends State<CountdownScreen>
-    with WidgetsBindingObserver {
+class _CountdownScreenState extends State<CountdownScreen> with WidgetsBindingObserver {
   Timer? _timer;
   int _start = 3 * 60; // 3 minutes in seconds
 
@@ -136,9 +135,7 @@ class _CountdownScreenState extends State<CountdownScreen>
                       const Text(
                         'Almost there!',
                       ),
-                    if (_start != 0)
-                      const Text(
-                          'Your personalized experience is being prepared.'),
+                    if (_start != 0) const Text('Your personalized experience is being prepared.'),
                     if (_start == 0)
                       SizedBox(
                         width: double.infinity,
@@ -151,7 +148,7 @@ class _CountdownScreenState extends State<CountdownScreen>
 
                             Navigator.popUntil(
                               context,
-                              ModalRoute.withName(LandingScreen.routeName),
+                              ModalRoute.withName(WelcomeScreen.routeName),
                             );
                           },
                         ),

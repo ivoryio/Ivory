@@ -13,6 +13,9 @@ import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/auth/auth_action.dart';
 import 'package:solarisdemo/screens/account/account_details_screen.dart';
 import 'package:solarisdemo/screens/available_balance/available_balance_screen.dart';
+import 'package:solarisdemo/screens/onboarding/start/onboarding_german_residency_error_screen.dart';
+import 'package:solarisdemo/screens/onboarding/start/onboarding_german_residency_screen.dart';
+import 'package:solarisdemo/screens/onboarding/start/onboarding_usa_tax_payer_error_screen.dart';
 import 'package:solarisdemo/screens/settings/app_settings/biometric_enabled_screen.dart';
 import 'package:solarisdemo/screens/settings/app_settings/biometric_needed_screen.dart';
 import 'package:solarisdemo/screens/wallet/card_activation/card_activation_apple_wallet.dart';
@@ -24,7 +27,7 @@ import 'package:solarisdemo/screens/wallet/card_details/card_details_screen.dart
 import 'package:solarisdemo/screens/wallet/change_pin/card_change_pin_choose_screen.dart';
 import 'package:solarisdemo/screens/home/home_screen.dart';
 import 'package:solarisdemo/screens/home/main_navigation_screen.dart';
-import 'package:solarisdemo/screens/landing/landing_screen.dart';
+import 'package:solarisdemo/screens/welcome/welcome_screen.dart';
 import 'package:solarisdemo/screens/login/login_screen.dart';
 import 'package:solarisdemo/screens/repayments/bills/bill_detail_screen.dart';
 import 'package:solarisdemo/screens/repayments/bills/bills_screen.dart';
@@ -57,10 +60,11 @@ import 'package:solarisdemo/screens/wallet/change_pin/card_change_pin_confirm_sc
 import 'package:solarisdemo/screens/wallet/change_pin/card_change_pin_success_screen.dart';
 import 'package:solarisdemo/services/auth_service.dart';
 import 'package:solarisdemo/utilities/helpers/force_reload_helper.dart';
-
-import 'models/user.dart';
-import 'screens/transfer/transfer_review_screen.dart';
-import 'screens/transfer/transfer_successful_screen.dart';
+import 'package:solarisdemo/models/user.dart';
+import 'package:solarisdemo/screens/onboarding/start/onboarding_start_screen.dart';
+import 'package:solarisdemo/screens/onboarding/start/onboarding_usa_tax_payer_screen.dart';
+import 'package:solarisdemo/screens/transfer/transfer_review_screen.dart';
+import 'package:solarisdemo/screens/transfer/transfer_successful_screen.dart';
 
 class IvoryApp extends StatefulWidget {
   static final routeObserver = RouteObserver<PageRoute<dynamic>>();
@@ -77,7 +81,6 @@ class IvoryApp extends StatefulWidget {
 }
 
 class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
-
   User? user;
   @override
   void initState() {
@@ -95,7 +98,9 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       final store = widget.store;
-      if(user == null) {return;}
+      if (user == null) {
+        return;
+      }
 
       forceReloadAppStates(store, user!);
     }
@@ -128,10 +133,10 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
             ],
             debugShowCheckedModeBanner: false,
             navigatorKey: navigatorKey,
-            initialRoute: LandingScreen.routeName,
+            initialRoute: WelcomeScreen.routeName,
             routes: {
               // landing
-              LandingScreen.routeName: (context) => const LandingScreen(),
+              WelcomeScreen.routeName: (context) => const WelcomeScreen(),
               // login
               LoginScreen.routeName: (context) => const LoginScreen(),
               // signup
@@ -228,6 +233,12 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
               TransferFailedScreen.routeName: (context) => const TransferFailedScreen(),
               // account
               AccountDetailsScreen.routeName: (context) => const AccountDetailsScreen(),
+              // onboarding
+              OnboardingStartScreen.routeName: (context) => const OnboardingStartScreen(),
+              OnboardingGermanResidencyScreen.routeName: (context) => const OnboardingGermanResidencyScreen(),
+              OnboardingGermanResidencyErrorScreen.routeName: (context) => const OnboardingGermanResidencyErrorScreen(),
+              OnboardingUsaTaxPayerScreen.routeName: (context) => const OnboardingUsaTaxPayerScreen(),
+              OnboardingUsaTaxPayerErrorScreen.routeName: (context) => const OnboardingUsaTaxPayerErrorScreen(),
             },
           );
         }),

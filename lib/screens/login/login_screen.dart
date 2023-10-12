@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solarisdemo/config.dart';
-import 'package:solarisdemo/screens/landing/landing_screen.dart';
+import 'package:solarisdemo/screens/welcome/welcome_screen.dart';
 import 'package:solarisdemo/screens/login/login_consent_screen.dart';
 import 'package:solarisdemo/services/device_service.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -69,7 +69,7 @@ class LoginScreen extends StatelessWidget {
                           context.read<AuthCubit>().reset();
                           Navigator.popUntil(
                             context,
-                            ModalRoute.withName(LandingScreen.routeName),
+                            ModalRoute.withName(WelcomeScreen.routeName),
                           );
                         },
                       )
@@ -130,8 +130,7 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
   TextEditingController passwordInputController = TextEditingController();
 
   void onChanged() {
-    bool isInputValid = phoneController.text.isNotEmpty &&
-        passwordInputController.text.isNotEmpty;
+    bool isInputValid = phoneController.text.isNotEmpty && passwordInputController.text.isNotEmpty;
 
     if (isInputValid && !isLoginEnabled) {
       setState(() {
@@ -211,9 +210,7 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
                                 _formKey.currentState!.save();
                                 String phoneNumber = phoneController.text;
                                 String password = passwordInputController.text;
-                                String? deviceConsentId =
-                                    await OldDeviceService
-                                        .getDeviceConsentId();
+                                String? deviceConsentId = await OldDeviceService.getDeviceConsentId();
                                 if (deviceConsentId.isNotEmpty) {
                                   context.read<LoginCubit>().setCredentials(
                                         phoneNumber: phoneNumber,
@@ -254,8 +251,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   void onChange() {
-    bool isInputValid = emailInputController.text.isNotEmpty &&
-        passwordInputController.text.isNotEmpty;
+    bool isInputValid = emailInputController.text.isNotEmpty && passwordInputController.text.isNotEmpty;
 
     if (isInputValid && !isLoginEnabled) {
       setState(() {
@@ -271,8 +267,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
   }
 
   Future<CacheCredentials?> getCredentials() async {
-    CacheCredentials? credentials =
-        await OldDeviceService.getCredentialsFromCache();
+    CacheCredentials? credentials = await OldDeviceService.getCredentialsFromCache();
 
     if (credentials != null) {
       emailInputController.text = credentials.email ?? "";
@@ -358,9 +353,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                                 _formKey.currentState!.save();
                                 String emailAddress = emailInputController.text;
                                 String password = passwordInputController.text;
-                                String? deviceConsentId =
-                                    await OldDeviceService
-                                        .getDeviceConsentId();
+                                String? deviceConsentId = await OldDeviceService.getDeviceConsentId();
                                 if (deviceConsentId.isNotEmpty) {
                                   context.read<LoginCubit>().setCredentials(
                                         email: emailAddress,
