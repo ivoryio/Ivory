@@ -101,13 +101,14 @@ class HomePageContent extends StatelessWidget {
                 ),
                 StoreConnector<AppState, TransactionsViewModel>(
                   onInit: (store) => store.dispatch(
-                    GetTransactionsCommandAction(
+                    GetHomeTransactionsCommandAction(
                       filter: _defaultTransactionListFilter,
                       user: user.cognito,
+                      forceReloadTransactions: false,
                     ),
                   ),
                   converter: (store) =>
-                      TransactionPresenter.presentTransactions(transactionsState: store.state.transactionsState),
+                      TransactionPresenter.presentTransactions(transactionsState: store.state.homePageTransactionsState),
                   builder: (context, viewModel) {
                     if (viewModel is TransactionsErrorViewModel) {
                       return const Center(
@@ -164,7 +165,7 @@ class HomePageHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return StoreConnector<AppState, AccountSummaryViewModel>(
       onInit: (store) {
-        store.dispatch(GetAccountSummaryCommandAction(user: user.cognito));
+        store.dispatch(GetAccountSummaryCommandAction(user: user.cognito, forceAccountSummaryReload: false));
       },
       converter: (store) =>
           AccountSummaryPresenter.presentAccountSummary(accountSummaryState: store.state.accountSummaryState),

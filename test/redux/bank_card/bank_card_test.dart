@@ -35,6 +35,7 @@ void main() {
             cognito: MockUser(),
             personAccount: MockPersonAccount(),
           ),
+          forceReloadCardData: false,
         ),
       );
 
@@ -63,6 +64,7 @@ void main() {
             cognito: MockUser(),
             personAccount: MockPersonAccount(),
           ),
+          forceReloadCardData: false,
         ),
       );
 

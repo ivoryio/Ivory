@@ -31,7 +31,7 @@ class BankCardsScreen extends StatelessWidget {
 
     return StoreConnector<AppState, BankCardsViewModel>(
       onInit: (store) {
-        store.dispatch(GetBankCardsCommandAction(user: user));
+        store.dispatch(GetBankCardsCommandAction(user: user.cognito, forceCardsReload: false));
       },
       converter: (store) {
         return BankCardPresenter.presentBankCards(
@@ -134,6 +134,7 @@ class _CardSlider extends StatelessWidget {
             onPageChanged: (cardIndex) => StoreProvider.of<AppState>(context).dispatch(GetBankCardCommandAction(
               user: context.read<AuthCubit>().state.user!,
               cardId: cards[cardIndex].id,
+              forceReloadCardData: false,
             )),
             itemBuilder: (context, cardIndex) {
               BankCard card = cards[cardIndex];

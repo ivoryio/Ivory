@@ -86,6 +86,7 @@ class BankCardDetailsActivationSuccessScreen extends StatelessWidget {
                         StoreProvider.of<AppState>(context).dispatch(GetBankCardCommandAction(
                           user: user,
                           cardId: viewModel.bankCard!.id,
+                          forceReloadCardData: true,
                         ));
                       },
                     ),

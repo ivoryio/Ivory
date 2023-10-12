@@ -1,6 +1,7 @@
 import 'package:redux/redux.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart';
 import 'package:solarisdemo/redux/transactions/transactions_action.dart';
+import 'package:solarisdemo/redux/transactions/transactions_state.dart';
 
 import '../../redux/app_state.dart';
 
@@ -14,6 +15,10 @@ class GetTransactionsMiddleware extends MiddlewareClass<AppState> {
     next(action);
 
     if (action is GetTransactionsCommandAction) {
+      if((store.state.transactionsState is TransactionsFetchedState) && (action.forceReloadTransactions == false)) {
+        return;
+      }
+
       store.dispatch(TransactionsLoadingEventAction(filter: action.filter));
       final response = await _transactionService.getTransactions(
           filter: action.filter, user: action.user);
@@ -38,6 +43,21 @@ class GetTransactionsMiddleware extends MiddlewareClass<AppState> {
             upcomingTransactions: response.upcomingTransactions));
       } else {
         store.dispatch(TransactionsFailedEventAction());
+      }
+    }
+
+    if (action is GetHomeTransactionsCommandAction) {
+      if((store.state.homePageTransactionsState is TransactionsFetchedState)  && (action.forceReloadTransactions == false)) {
+        return;
+      }
+      store.dispatch(HomeTransactionsLoadingEventAction());
+      final response = await _transactionService.getTransactions(
+          filter: action.filter, user: action.user);
+
+      if (response is GetTransactionsSuccessResponse) {
+        store.dispatch(HomeTransactionsFetchedEventAction(transactions: response.transactions));
+      } else {
+        store.dispatch(HomeTransactionsFailedEventAction());
       }
     }
   }
