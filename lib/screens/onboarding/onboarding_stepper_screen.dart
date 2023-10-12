@@ -6,17 +6,27 @@ import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/circular_percent_indicator.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
+class OnboardingStepperScreenParams {
+  final OnboardingStepType step;
+
+  OnboardingStepperScreenParams({
+    required this.step,
+  });
+}
+
 class OnboardingStepperScreen extends StatelessWidget {
   static const routeName = "/onboardingStepperScreen";
-  final int currentStep;
+  final OnboardingStepperScreenParams params;
 
   const OnboardingStepperScreen({
     super.key,
-    this.currentStep = 0,
+    required this.params,
   });
 
   @override
   Widget build(BuildContext context) {
+    int currentStep = onboardingSteps.indexWhere((step) => step.type == params.step);
+
     return ScreenScaffold(
       body: Column(
         children: [

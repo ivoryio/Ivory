@@ -203,9 +203,11 @@ class _IvoryAppState extends State<IvoryApp> {
               // account
               AccountDetailsScreen.routeName: (context) => const AccountDetailsScreen(),
               // onboarding
-              OnboardingStepperScreen.routeName: (context) => const OnboardingStepperScreen(
-                    currentStep: 3,
-                  ),
+              OnboardingStepperScreen.routeName: (context) {
+                final params = ModalRoute.of(context)?.settings.arguments as OnboardingStepperScreenParams;
+
+                return OnboardingStepperScreen(params: params);
+              },
             },
           );
         }),
