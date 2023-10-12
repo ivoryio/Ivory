@@ -93,7 +93,7 @@ class AccountDetailsScreen extends StatelessWidget {
               ),
               child: StoreConnector<AppState, AccountSummaryViewModel>(
                 onInit: (store) {
-                  store.dispatch(GetAccountSummaryCommandAction(user: user.cognito));
+                  store.dispatch(GetAccountSummaryCommandAction(user: user.cognito, forceAccountSummaryReload: false));
                 },
                 converter: (store) =>
                     AccountSummaryPresenter.presentAccountSummary(accountSummaryState: store.state.accountSummaryState),

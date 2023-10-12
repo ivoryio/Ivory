@@ -4,6 +4,7 @@ import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/models/bank_card.dart';
 import 'package:solarisdemo/models/crypto/jwe.dart';
 import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/bank_card/bank_card_state.dart';
 
 import '../../../redux/bank_card/bank_card_action.dart';
 import 'bank_card_service.dart';
@@ -42,6 +43,13 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
     }
 
     if (action is GetBankCardCommandAction) {
+      if(store.state.bankCardState is BankCardFetchedState) {
+        final BankCardFetchedState state = store.state.bankCardState as BankCardFetchedState;
+        if((state.bankCard.id == action.cardId) && (action.forceReloadCardData == false)) {
+          return;
+        }
+      }
+
       store.dispatch(BankCardLoadingEventAction());
       final response = await _bankCardService.getBankCardById(
         user: action.user.cognito,
@@ -59,10 +67,13 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
     }
 
     if (action is GetBankCardsCommandAction) {
+      if((store.state.bankCardsState is BankCardsFetchedState) && (action.forceCardsReload == false)) {
+        return;
+      }
       store.dispatch(BankCardsLoadingEventAction());
 
       final response = await _bankCardService.getBankCards(
-        user: action.user.cognito,
+        user: action.user,
       );
 
       if (response is GetBankCardsServiceResponse) {

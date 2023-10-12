@@ -20,18 +20,22 @@ class CreateCardCommandAction {
 class GetBankCardCommandAction {
   final String cardId;
   final AuthenticatedUser user;
+  final bool forceReloadCardData;
 
   GetBankCardCommandAction({
     required this.user,
     required this.cardId,
+    required this.forceReloadCardData,
   });
 }
 
 class GetBankCardsCommandAction {
-  final AuthenticatedUser user;
+  final User user;
+  final bool forceCardsReload;
 
   GetBankCardsCommandAction({
     required this.user,
+    required this.forceCardsReload,
   });
 }
 
