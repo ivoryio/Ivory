@@ -60,12 +60,11 @@ import 'package:solarisdemo/screens/wallet/change_pin/card_change_pin_confirm_sc
 import 'package:solarisdemo/screens/wallet/change_pin/card_change_pin_success_screen.dart';
 import 'package:solarisdemo/services/auth_service.dart';
 import 'package:solarisdemo/utilities/helpers/force_reload_helper.dart';
-
-import 'models/user.dart';
-import 'screens/onboarding/start/onboarding_start_screen.dart';
-import 'screens/onboarding/start/onboarding_usa_tax_payer_screen.dart';
-import 'screens/transfer/transfer_review_screen.dart';
-import 'screens/transfer/transfer_successful_screen.dart';
+import 'package:solarisdemo/models/user.dart';
+import 'package:solarisdemo/screens/onboarding/start/onboarding_start_screen.dart';
+import 'package:solarisdemo/screens/onboarding/start/onboarding_usa_tax_payer_screen.dart';
+import 'package:solarisdemo/screens/transfer/transfer_review_screen.dart';
+import 'package:solarisdemo/screens/transfer/transfer_successful_screen.dart';
 
 class IvoryApp extends StatefulWidget {
   static final routeObserver = RouteObserver<PageRoute<dynamic>>();
