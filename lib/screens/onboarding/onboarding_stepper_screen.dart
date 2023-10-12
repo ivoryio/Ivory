@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
+import 'package:solarisdemo/widgets/circular_percent_indicator.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 class OnboardingStepperScreen extends StatelessWidget {
@@ -21,10 +22,6 @@ class OnboardingStepperScreen extends StatelessWidget {
         children: [
           AppToolbar(
             padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-            backButtonEnabled: true,
-            onBackButtonPressed: () {
-              Navigator.pop(context);
-            },
             actions: [
               SvgPicture.asset("assets/icons/default/appbar_logo.svg"),
             ],
@@ -50,9 +47,8 @@ class OnboardingStepperScreen extends StatelessWidget {
                       SizedBox(
                         width: 70,
                         height: 70,
-                        child: CircularPercentProgress(
-                          numberOfSegments: onboardingSteps.length,
-                          currentSegment: currentStep,
+                        child: CircularPercentIndicator(
+                          percent: currentStep == 0 ? 0.01 : currentStep / onboardingSteps.length,
                         ),
                       ),
                     ],
@@ -102,87 +98,6 @@ class OnboardingStepperScreen extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class CircularPercentProgress extends StatefulWidget {
-  final int numberOfSegments;
-  final int currentSegment;
-
-  const CircularPercentProgress({
-    super.key,
-    required this.numberOfSegments,
-    required this.currentSegment,
-  });
-
-  @override
-  State<CircularPercentProgress> createState() => _CircularPercentProgressState();
-}
-
-class _CircularPercentProgressState extends State<CircularPercentProgress> with TickerProviderStateMixin {
-  late AnimationController controller;
-  double percentValue = 0.01;
-
-  @override
-  void initState() {
-    if (widget.currentSegment < 1) percentValue = 0.01;
-    if (widget.currentSegment == widget.numberOfSegments) percentValue = 1;
-    if (widget.currentSegment >= 1 && widget.currentSegment < widget.numberOfSegments) {
-      percentValue = ((widget.currentSegment / widget.numberOfSegments)).toDouble();
-    }
-
-    controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1500),
-    )..addListener(() {
-        if (percentValue == 0.01) {
-          controller.value <= 0.02
-              ? setState(
-                  () {},
-                )
-              : controller.value;
-        }
-
-        if (controller.value <= percentValue) {
-          setState(() {});
-        }
-
-        if (controller.value > percentValue) {
-          controller.stop(canceled: true);
-        }
-      });
-    controller.repeat(reverse: false);
-    controller.forward();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Positioned.fill(
-          child: CircularProgressIndicator(
-            value: controller.value,
-            strokeWidth: 5,
-            backgroundColor: ClientConfig.getCustomColors().neutral200,
-            valueColor: AlwaysStoppedAnimation<Color>(ClientConfig.getColorScheme().secondary),
-          ),
-        ),
-        Center(
-          child: Text(
-            '${(percentValue * 100).toInt()} %',
-            style: ClientConfig.getTextStyleScheme().labelSmall,
-          ),
-        )
-      ],
     );
   }
 }
