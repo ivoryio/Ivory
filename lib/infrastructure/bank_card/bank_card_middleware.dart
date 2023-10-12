@@ -43,6 +43,13 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
     }
 
     if (action is GetBankCardCommandAction) {
+      if(store.state.bankCardState is BankCardFetchedState) {
+        final BankCardFetchedState state = store.state.bankCardState as BankCardFetchedState;
+        if((state.bankCard.id == action.cardId) && (action.forceReloadCardData == false)) {
+          return;
+        }
+      }
+
       store.dispatch(BankCardLoadingEventAction());
       final response = await _bankCardService.getBankCardById(
         user: action.user.cognito,

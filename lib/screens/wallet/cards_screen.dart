@@ -134,6 +134,7 @@ class _CardSlider extends StatelessWidget {
             onPageChanged: (cardIndex) => StoreProvider.of<AppState>(context).dispatch(GetBankCardCommandAction(
               user: context.read<AuthCubit>().state.user!,
               cardId: cards[cardIndex].id,
+              forceReloadCardData: false,
             )),
             itemBuilder: (context, cardIndex) {
               BankCard card = cards[cardIndex];

@@ -43,6 +43,7 @@ class TransactionApprovalPendingScreen extends StatelessWidget {
                   GetBankCardCommandAction(
                     user: user,
                     cardId: (store.state.notificationState as NotificationTransactionApprovalState).message.cardId,
+                    forceReloadCardData: true,
                   ),
                 );
               }
