@@ -204,7 +204,7 @@ class _IvoryAppState extends State<IvoryApp> {
               AccountDetailsScreen.routeName: (context) => const AccountDetailsScreen(),
               // onboarding
               OnboardingStepperScreen.routeName: (context) => const OnboardingStepperScreen(
-                    currentStep: 0,
+                    currentStep: 3,
                   ),
             },
           );

@@ -21,6 +21,12 @@ class DefaultTheme {
   );
 
   static ClientUiSettings clientUiSettings = ClientUiSettings(
+    customColors: const CustomColors(
+      neutral100: Color(0xFFF8F9FA),
+      neutral200: Color(0xFFE9EAEB),
+      neutral500: Color(0xFFADADB4),
+      neutral900: Color(0xFF15141E),
+    ),
     cardType: CardType.visa,
     colorscheme: colorScheme,
     themeData: ThemeData(
@@ -176,6 +182,34 @@ class SolarisTheme {
   static ClientUiSettings clientUiSettings = DefaultTheme.clientUiSettings.copyWith(colorscheme: colorScheme);
 }
 
+class CustomColors {
+  final Color neutral100;
+  final Color neutral200;
+  final Color neutral500;
+  final Color neutral900;
+
+  const CustomColors({
+    required this.neutral100,
+    required this.neutral200,
+    required this.neutral500,
+    required this.neutral900,
+  });
+
+  CustomColors copyWith({
+    Color? neutral100,
+    Color? neutral200,
+    Color? neutral500,
+    Color? neutral900,
+  }) {
+    return CustomColors(
+      neutral100: neutral100 ?? this.neutral100,
+      neutral200: neutral200 ?? this.neutral200,
+      neutral500: neutral500 ?? this.neutral500,
+      neutral900: neutral900 ?? this.neutral900,
+    );
+  }
+}
+
 class TextStyleScheme {
   final TextStyle display;
   final TextStyle heading1;
@@ -250,6 +284,7 @@ class TextStyleScheme {
 
 class ClientUiSettings {
   final ColorScheme colorscheme;
+  final CustomColors customColors;
   final ThemeData themeData;
   final CustomClientUiSettings customSettings;
   final TextStyleScheme labelTextStyle;
@@ -257,6 +292,7 @@ class ClientUiSettings {
 
   const ClientUiSettings({
     required this.colorscheme,
+    required this.customColors,
     required this.themeData,
     required this.customSettings,
     required this.labelTextStyle,
@@ -265,6 +301,7 @@ class ClientUiSettings {
 
   ClientUiSettings copyWith({
     ColorScheme? colorscheme,
+    CustomColors? customColors,
     ThemeData? themeData,
     CustomClientUiSettings? customSettings,
     TextStyleScheme? labelTextStyle,
@@ -272,6 +309,7 @@ class ClientUiSettings {
   }) {
     return ClientUiSettings(
       colorscheme: colorscheme ?? this.colorscheme,
+      customColors: customColors ?? this.customColors,
       themeData: themeData ?? this.themeData,
       customSettings: customSettings ?? this.customSettings,
       labelTextStyle: labelTextStyle ?? this.labelTextStyle,

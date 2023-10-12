@@ -44,10 +44,6 @@ class OnboardingStepperScreen extends StatelessWidget {
                             'Your progress',
                             style: ClientConfig.getTextStyleScheme().heading1,
                           ),
-                          Text(
-                            'Let\'s get you an account!',
-                            style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                          ),
                         ],
                       ),
                       const SizedBox(width: 16),
@@ -60,6 +56,19 @@ class OnboardingStepperScreen extends StatelessWidget {
                         ),
                       ),
                     ],
+                  ),
+                  const SizedBox(height: 8),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: (currentStep != 0)
+                        ? Text(
+                            'If you need to pause at any point, you can sign in later and pick up right where you left off.',
+                            style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                          )
+                        : Text(
+                            'Let\'s get you an account!',
+                            style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                          ),
                   ),
                   const SizedBox(height: 24),
                   for (int index = 0; index < onboardingSteps.length; index++) ...[
@@ -97,7 +106,7 @@ class OnboardingStepperScreen extends StatelessWidget {
   }
 }
 
-class CircularPercentProgress extends StatelessWidget {
+class CircularPercentProgress extends StatefulWidget {
   final int numberOfSegments;
   final int currentSegment;
 
@@ -108,29 +117,68 @@ class CircularPercentProgress extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    int percentValue = 1;
+  State<CircularPercentProgress> createState() => _CircularPercentProgressState();
+}
 
-    if (currentSegment < 1) percentValue = 1;
-    if (currentSegment == numberOfSegments) percentValue = 100;
-    if (currentSegment >= 1 && currentSegment < numberOfSegments) {
-      percentValue = ((currentSegment / numberOfSegments) * 100).toInt();
+class _CircularPercentProgressState extends State<CircularPercentProgress> with TickerProviderStateMixin {
+  late AnimationController controller;
+  double percentValue = 0.01;
+
+  @override
+  void initState() {
+    if (widget.currentSegment < 1) percentValue = 0.01;
+    if (widget.currentSegment == widget.numberOfSegments) percentValue = 1;
+    if (widget.currentSegment >= 1 && widget.currentSegment < widget.numberOfSegments) {
+      percentValue = ((widget.currentSegment / widget.numberOfSegments)).toDouble();
     }
 
+    controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 5),
+    )..addListener(() {
+        if (percentValue == 0.01) {
+          controller.value <= 0.02
+              ? setState(
+                  () {},
+                )
+              : controller.value;
+        }
+
+        if (controller.value <= percentValue) {
+          setState(() {});
+        }
+
+        if (controller.value > percentValue) {
+          controller.stop(canceled: true);
+        }
+      });
+    controller.repeat(reverse: false);
+    controller.forward();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Stack(
       alignment: Alignment.center,
       children: [
         Positioned.fill(
           child: CircularProgressIndicator(
-            value: percentValue == 1 ? 0.01 : percentValue / 100,
+            value: controller.value,
             strokeWidth: 5,
-            backgroundColor: const Color(0xFFE9EAEB),
+            backgroundColor: ClientConfig.getCustomColors().neutral200,
             valueColor: AlwaysStoppedAnimation<Color>(ClientConfig.getColorScheme().secondary),
           ),
         ),
         Center(
           child: Text(
-            '$percentValue %',
+            '${(percentValue * 100).toInt()} %',
             style: ClientConfig.getTextStyleScheme().labelSmall,
           ),
         )
@@ -155,8 +203,10 @@ class OnboardingStepListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(color: const Color(0xFFE9EAEB)),
-        color: state != OnboardingStepState.inProgress ? const Color(0xFFF8F9FA) : const Color(0xFFFFFFFF),
+        border: Border.all(color: ClientConfig.getCustomColors().neutral200, width: 1),
+        color: state != OnboardingStepState.inProgress
+            ? ClientConfig.getCustomColors().neutral100
+            : ClientConfig.getColorScheme().background,
         borderRadius: BorderRadius.circular(4),
       ),
       child: Padding(
@@ -189,7 +239,9 @@ class OnboardingStepListTile extends StatelessWidget {
                 Text(
                   step.title,
                   style: (state == OnboardingStepState.notStarted)
-                      ? ClientConfig.getTextStyleScheme().labelMedium.copyWith(color: const Color(0xFFADADB4))
+                      ? ClientConfig.getTextStyleScheme()
+                          .labelMedium
+                          .copyWith(color: ClientConfig.getCustomColors().neutral500)
                       : ClientConfig.getTextStyleScheme().labelMedium,
                 ),
                 const Spacer(),
@@ -205,12 +257,14 @@ class OnboardingStepListTile extends StatelessWidget {
                   Row(
                     children: [
                       Text('${step.timeEstimation} MIN',
-                          style: ClientConfig.getTextStyleScheme().labelCaps.copyWith(color: const Color(0xFFADADB4))),
+                          style: ClientConfig.getTextStyleScheme()
+                              .labelCaps
+                              .copyWith(color: ClientConfig.getCustomColors().neutral500)),
                       const SizedBox(width: 8),
                       SvgPicture.asset('assets/icons/clock.svg',
                           width: 16,
                           height: 16,
-                          colorFilter: const ColorFilter.mode(Color(0xFFADADB4), BlendMode.srcIn))
+                          colorFilter: ColorFilter.mode(ClientConfig.getCustomColors().neutral500, BlendMode.srcIn))
                     ],
                   ),
                 ] else
@@ -290,15 +344,15 @@ class TileIcon extends StatelessWidget {
         width: 32,
         height: 32,
         decoration: BoxDecoration(
-          border: Border.all(width: 2, color: Color(0xFFADADB4)),
+          border: Border.all(width: 2, color: ClientConfig.getCustomColors().neutral500),
           shape: BoxShape.circle,
           color: const Color(0x00000000),
         ),
         child: Center(
           child: Text(
             '$positionInList',
-            style: const TextStyle(
-              color: Color(0xFFADADB4),
+            style: TextStyle(
+              color: ClientConfig.getCustomColors().neutral500,
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
