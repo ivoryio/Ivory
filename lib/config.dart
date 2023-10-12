@@ -40,6 +40,10 @@ class ClientConfig {
     return getClientConfig().uiSettings.colorscheme;
   }
 
+  static CustomColors getCustomColors() {
+    return getClientConfig().uiSettings.customColors;
+  }
+
   static TextStyleScheme getTextStyleScheme() {
     return getClientConfig().uiSettings.labelTextStyle;
   }
