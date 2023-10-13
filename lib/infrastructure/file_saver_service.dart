@@ -48,6 +48,9 @@ class FileSaverService {
 
 Future<void> _writeLocalFile({required String name, required String extension, required Uint8List bytes}) async {
   Directory downloadDirectory = Directory('/storage/emulated/0/Download');
+  if (!downloadDirectory.existsSync()) {
+    downloadDirectory = Directory('/storage/emulated/0/Downloads');
+  }
 
   final path = downloadDirectory.path;
   final fileObject = File('$path/$name.$extension');
