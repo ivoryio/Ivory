@@ -26,6 +26,9 @@ build-android:
 build-ios:
 	flutter build ipa --dart-define=CLIENT=$(CLIENT)
 
+update-splashscreen:
+	dart run flutter_native_splash:create --path=splash_screen_$(CLIENT).yaml
+
 ###########################################################
 
 

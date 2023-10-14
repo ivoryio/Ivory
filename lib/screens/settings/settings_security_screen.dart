@@ -44,7 +44,7 @@ class SettingsSecurityScreen extends StatelessWidget {
                   rightIcon: Icons.arrow_forward_ios,
                   onTap: () => Navigator.pushNamed(context, SettingsDevicePairingScreen.routeName),
                 ),
-                IvoryListTile(
+                const IvoryListTile(
                   leftIcon: Icons.lock_outline,
                   title: 'Change password',
                   rightIcon: Icons.arrow_forward_ios,

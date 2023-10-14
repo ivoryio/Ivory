@@ -40,7 +40,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
     return StoreConnector<AppState, TransactionsViewModel>(
         onInit: (store) {
-          store.dispatch(GetTransactionsCommandAction(filter: null, user: user.cognito));
+          store.dispatch(GetTransactionsCommandAction(filter: null, user: user.cognito, forceReloadTransactions: false));
         },
         converter: (store) =>
             TransactionPresenter.presentTransactions(transactionsState: store.state.transactionsState),
@@ -52,7 +52,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             body: RefreshIndicator(
               onRefresh: () async {
                 StoreProvider.of<AppState>(context).dispatch(
-                  GetTransactionsCommandAction(filter: viewModel.transactionListFilter, user: user.cognito),
+                  GetTransactionsCommandAction(filter: viewModel.transactionListFilter, user: user.cognito, forceReloadTransactions: true),
                 );
               },
               child: Column(
@@ -94,7 +94,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                             );
                           }
                           StoreProvider.of<AppState>(context)
-                              .dispatch(GetTransactionsCommandAction(filter: filter, user: user.cognito));
+                              .dispatch(GetTransactionsCommandAction(filter: filter, user: user.cognito, forceReloadTransactions: true));
                         },
                         onChangedSearch: (String value) {
                           return;
@@ -111,6 +111,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                               GetTransactionsCommandAction(
                                 filter: viewModel.transactionListFilter,
                                 user: user.cognito,
+                                forceReloadTransactions: true,
                               ),
                             ),
                           ),
@@ -495,7 +496,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       searchString: viewModel.transactionListFilter!.searchString,
                       categories: viewModel.transactionListFilter!.categories,
                     ),
-                    user: user.cognito));
+                    user: user.cognito,
+                    forceReloadTransactions: true));
               },
               icon: const Icon(
                 Icons.close,
@@ -525,7 +527,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                         searchString: viewModel.transactionListFilter!.searchString,
                         categories: newCategories,
                       ),
-                      user: user.cognito));
+                      user: user.cognito,
+                      forceReloadTransactions: true));
                 },
                 icon: const Icon(
                   Icons.close,

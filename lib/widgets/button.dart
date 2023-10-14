@@ -112,7 +112,7 @@ class PrimaryButton extends StatelessWidget {
     return Button(
       text: text,
       onPressed: onPressed,
-      color: ClientConfig.getColorScheme().secondary,
+      color: ClientConfig.getColorScheme().tertiary,
     );
   }
 }

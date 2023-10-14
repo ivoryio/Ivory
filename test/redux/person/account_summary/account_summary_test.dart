@@ -28,6 +28,7 @@ void main() {
           attributes: [],
           cognitoUser: MockCognitoUser(),
         ),
+        forceAccountSummaryReload: false,
       ),
     );
     //then
@@ -52,6 +53,7 @@ void main() {
           attributes: [],
           cognitoUser: MockCognitoUser(),
         ),
+        forceAccountSummaryReload: false,
       ),
     );
     //then
@@ -77,6 +79,7 @@ void main() {
           attributes: [],
           cognitoUser: MockCognitoUser(),
         ),
+        forceAccountSummaryReload: false,
       ),
     );
     //then

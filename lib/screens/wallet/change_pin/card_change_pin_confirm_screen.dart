@@ -52,6 +52,7 @@ class BankCardConfirmPinConfirmScreen extends StatelessWidget {
                         GetBankCardCommandAction(
                           user: user,
                           cardId: viewModel.bankCard!.id,
+                          forceReloadCardData: true,
                         ),
                       );
                     },

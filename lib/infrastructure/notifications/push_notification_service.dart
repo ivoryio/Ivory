@@ -13,6 +13,7 @@ import 'package:solarisdemo/navigator.dart';
 import 'package:solarisdemo/redux/notification/notification_action.dart';
 import 'package:solarisdemo/screens/transactions/transaction_approval_pending_screen.dart';
 import 'package:solarisdemo/services/api_service.dart';
+import 'package:solarisdemo/utilities/helpers/force_reload_helper.dart';
 import 'package:solarisdemo/utilities/remote_message_utils.dart';
 
 import '../../redux/app_state.dart';
@@ -95,6 +96,7 @@ class FirebasePushNotificationService extends PushNotificationService {
     FirebaseMessaging.onBackgroundMessage(_onBackgroundMessage); // App is in background and notification received
     FirebaseMessaging.onMessageOpenedApp.listen(_onMessage); // App was in background and notification clicked
     FirebaseMessaging.instance.getInitialMessage().then(_onMessage); // App was terminated and notification clicked
+    FirebaseMessaging.onMessage.listen(_pushNotificationReceived);
 
     // Handle token
     _messaging.getToken().then(_onTokenRefresh); // Initial token (on app start)
@@ -108,6 +110,10 @@ class FirebasePushNotificationService extends PushNotificationService {
 
     _redirect(message);
     clearNotification();
+  }
+
+  void _pushNotificationReceived(RemoteMessage? message) {
+    forceReloadAppStates(store, user!);
   }
 
   Future<void> handleAndroidLocalNotifications() async {

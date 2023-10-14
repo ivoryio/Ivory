@@ -36,5 +36,6 @@ AppState appReducer(AppState currentState, dynamic action) {
     transactionApprovalState: transactionApprovalReducer(currentState.transactionApprovalState, action),
     accountSummaryState: accountSummaryReducer(currentState.accountSummaryState, action),
     authState: authReducer(currentState.authState, action),
+    homePageTransactionsState: homeTransactionsReducer(currentState.homePageTransactionsState, action),
   );
 }

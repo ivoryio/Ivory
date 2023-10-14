@@ -185,7 +185,7 @@ class _TransactionsFilteringScreenState extends State<TransactionsFilteringScree
                 ),
                 onPressed: () {
                   StoreProvider.of<AppState>(context)
-                      .dispatch(GetTransactionsCommandAction(filter: transactionListFilter, user: user.cognito));
+                      .dispatch(GetTransactionsCommandAction(filter: transactionListFilter, user: user.cognito, forceReloadTransactions: true));
 
                   Navigator.pop(context);
                 },

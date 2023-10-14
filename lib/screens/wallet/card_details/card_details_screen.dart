@@ -47,6 +47,7 @@ class BankCardDetailsScreen extends StatelessWidget {
                   GetBankCardCommandAction(
                     user: user,
                     cardId: params.card.id,
+                    forceReloadCardData: false,
                   ),
                 );
               },
@@ -123,6 +124,7 @@ class BankCardDetailsScreen extends StatelessWidget {
                                     GetBankCardCommandAction(
                                       user: user,
                                       cardId: params.card.id,
+                                      forceReloadCardData: false,
                                     ),
                                   );
                                 },
@@ -147,6 +149,7 @@ class BankCardDetailsScreen extends StatelessWidget {
                                 GetBankCardCommandAction(
                                   user: user,
                                   cardId: params.card.id,
+                                  forceReloadCardData: false,
                                 ),
                               );
                             },
@@ -218,6 +221,7 @@ class BankCardDetailsScreen extends StatelessWidget {
         GetBankCardCommandAction(
           user: user,
           cardId: params.card.id,
+          forceReloadCardData: false,
         ),
       );
     }

@@ -371,7 +371,7 @@ class _ExpandedDetails extends StatelessWidget {
               if (repaymentPercentageRate >= 10) ...[
                 ExpandedDetailsRow(
                   title: 'Percentage repayment rate',
-                  trailing: '${repaymentPercentageRate}%',
+                  trailing: '$repaymentPercentageRate%',
                   onInfoIconTap: () {
                     showBottomModal(
                       context: context,

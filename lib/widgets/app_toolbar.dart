@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/widgets/screen_title.dart';
 
 class AppToolbar extends StatefulWidget {
@@ -137,5 +139,14 @@ class _AppToolbarState extends State<AppToolbar> {
         _clientAdded = true;
       });
     }
+  }
+}
+
+class AppbarLogo extends StatelessWidget {
+  const AppbarLogo({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(ClientConfig.getAssetIconPath('appbar_logo.svg'));
   }
 }

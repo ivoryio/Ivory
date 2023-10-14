@@ -34,6 +34,7 @@ class AppState extends Equatable {
   final TransactionApprovalState transactionApprovalState;
   final AccountSummaryState accountSummaryState;
   final AuthState authState;
+  final TransactionsState homePageTransactionsState;
 
   const AppState({
     required this.transactionsState,
@@ -53,6 +54,7 @@ class AppState extends Equatable {
     required this.transactionApprovalState,
     required this.accountSummaryState,
     required this.authState,
+    required this.homePageTransactionsState,
   });
 
   factory AppState.initialState() {
@@ -74,6 +76,7 @@ class AppState extends Equatable {
       transactionApprovalState: TransactionApprovalInitialState(),
       accountSummaryState: AccountSummaryInitialState(),
       authState: AuthInitialState(),
+      homePageTransactionsState: TransactionsInitialState(),
     );
   }
 
@@ -94,7 +97,8 @@ class AppState extends Equatable {
         deviceBindingState,
         notificationState,
         transactionApprovalState,
-        authState
+        authState,
+        homePageTransactionsState,
       ];
 
   @override
