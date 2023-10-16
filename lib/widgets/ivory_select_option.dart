@@ -9,6 +9,7 @@ class IvorySelectOption extends StatefulWidget {
   final List<SelectOption> options;
   final void Function(SelectOption)? onOptionSelected;
   final IvorySelectOptionController? controller;
+  final VoidCallback? onBottomSheetOpened;
 
   const IvorySelectOption({
     super.key,
@@ -17,6 +18,7 @@ class IvorySelectOption extends StatefulWidget {
     required this.options,
     this.onOptionSelected,
     this.controller,
+    this.onBottomSheetOpened,
   });
 
   @override
@@ -96,6 +98,8 @@ class _IvorySelectOptionState extends State<IvorySelectOption> {
   }
 
   void _onTap() {
+    widget.onBottomSheetOpened?.call();
+
     showBottomModal(
       context: context,
       title: "Select your preferred title",
