@@ -12,7 +12,9 @@ class IvoryTextField extends StatefulWidget {
   final int? maxLines;
   final FocusNode? focusNode;
   final String? label;
+  final bool obscureText;
   final String? errorText;
+  final bool error;
 
   const IvoryTextField({
     Key? key,
@@ -27,6 +29,8 @@ class IvoryTextField extends StatefulWidget {
     this.focusNode,
     this.label,
     this.errorText,
+    this.obscureText = false,
+    this.error = false,
   }) : super(key: key);
 
   @override
@@ -57,7 +61,7 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
           Text(
             widget.label!,
             style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(
-                color: widget.errorText != null
+                color: widget.error || widget.errorText != null
                     ? ClientConfig.getCustomColors().error
                     : ClientConfig.getCustomColors().neutral600),
           ),
@@ -66,7 +70,7 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
         CupertinoTextField(
           focusNode: _focusNode,
           decoration: BoxDecoration(
-            color: widget.errorText != null
+            color: widget.error || widget.errorText != null
                 ? ClientConfig.getCustomColors().red100
                 : ClientConfig.getCustomColors().neutral100,
             border: Border.all(
@@ -81,6 +85,7 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
           ),
           controller: _controller,
           onChanged: widget.onChanged,
+          obscureText: widget.obscureText,
           placeholder: widget.placeholder,
           prefix: widget.prefix != null ? Padding(padding: const EdgeInsets.only(left: 8), child: widget.prefix) : null,
           suffix: widget.suffix != null
@@ -113,7 +118,7 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
   }
 
   Color _getBorderColor() {
-    if (widget.errorText != null) {
+    if (widget.error || widget.errorText != null) {
       return const Color(0xFFE61F27);
     } else if (_focusNode.hasFocus) {
       return ClientConfig.getCustomColors().neutral900;
