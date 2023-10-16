@@ -58,7 +58,10 @@ class _IvorySelectOptionState extends State<IvorySelectOption> {
                   decoration: BoxDecoration(
                     color: ClientConfig.getCustomColors().neutral100,
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: ClientConfig.getCustomColors().neutral400),
+                    border: Border.all(
+                        color: selectedOptions.isNotEmpty
+                            ? ClientConfig.getCustomColors().neutral500
+                            : ClientConfig.getCustomColors().neutral400),
                   ),
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   child: Row(
