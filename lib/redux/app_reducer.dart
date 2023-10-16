@@ -3,6 +3,7 @@ import 'package:solarisdemo/redux/categories/category_reducer.dart';
 import 'package:solarisdemo/redux/credit_line/credit_line_reducer.dart';
 import 'package:solarisdemo/redux/device/device_reducer.dart';
 import 'package:solarisdemo/redux/notification/notification_reducer.dart';
+import 'package:solarisdemo/redux/onboarding/signup/basic_info/onboarding_basic_info_reducer.dart';
 import 'package:solarisdemo/redux/person/account_summary/account_summay_reducer.dart';
 import 'package:solarisdemo/redux/person/person_account/person_account_reducer.dart';
 import 'package:solarisdemo/redux/person/reference_account/reference_account_reducer.dart';
@@ -35,5 +36,6 @@ AppState appReducer(AppState currentState, dynamic action) {
     transactionApprovalState: transactionApprovalReducer(currentState.transactionApprovalState, action),
     accountSummaryState: accountSummaryReducer(currentState.accountSummaryState, action),
     homePageTransactionsState: homeTransactionsReducer(currentState.homePageTransactionsState, action),
+    onboardingBasicInfoState: onboardingBasicInfoReducer(currentState.onboardingBasicInfoState, action),
   );
 }

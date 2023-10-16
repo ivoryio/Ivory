@@ -4,6 +4,7 @@ import 'package:solarisdemo/redux/categories/category_state.dart';
 import 'package:solarisdemo/redux/credit_line/credit_line_state.dart';
 import 'package:solarisdemo/redux/device/device_state.dart';
 import 'package:solarisdemo/redux/notification/notification_state.dart';
+import 'package:solarisdemo/redux/onboarding/signup/basic_info/onboarding_basic_info_state.dart';
 import 'package:solarisdemo/redux/person/account_summary/account_summay_state.dart';
 import 'package:solarisdemo/redux/person/person_account/person_account_state.dart';
 import 'package:solarisdemo/redux/person/reference_account/reference_account_state.dart';
@@ -33,6 +34,7 @@ class AppState extends Equatable {
   final TransactionApprovalState transactionApprovalState;
   final AccountSummaryState accountSummaryState;
   final TransactionsState homePageTransactionsState;
+  final OnboardingBasicInfoState onboardingBasicInfoState;
 
   const AppState({
     required this.transactionsState,
@@ -52,6 +54,7 @@ class AppState extends Equatable {
     required this.transactionApprovalState,
     required this.accountSummaryState,
     required this.homePageTransactionsState,
+    required this.onboardingBasicInfoState,
   });
 
   factory AppState.initialState() {
@@ -73,28 +76,31 @@ class AppState extends Equatable {
       transactionApprovalState: TransactionApprovalInitialState(),
       accountSummaryState: AccountSummaryInitialState(),
       homePageTransactionsState: TransactionsInitialState(),
+      onboardingBasicInfoState: OnboardingBasicInfoInitialState(),
     );
   }
 
   @override
   List<Object?> get props => [
-    transactionsState,
-    creditLineState,
-    repaymentReminderState,
-    cardApplicationState,
-    billsState,
-    moreCreditState,
-    bankCardState,
-    bankCardsState,
-    categoriesState,
-    referenceAccountState,
-    personAccountState,
-    transferState,
-    deviceBindingState,
-    notificationState,
-    transactionApprovalState,
-    homePageTransactionsState,
-  ];
+        transactionsState,
+        creditLineState,
+        repaymentReminderState,
+        cardApplicationState,
+        billsState,
+        moreCreditState,
+        bankCardState,
+        bankCardsState,
+        categoriesState,
+        referenceAccountState,
+        personAccountState,
+        transferState,
+        deviceBindingState,
+        notificationState,
+        transactionApprovalState,
+        accountSummaryState,
+        homePageTransactionsState,
+        onboardingBasicInfoState,
+      ];
 
   @override
   bool get stringify => true;
