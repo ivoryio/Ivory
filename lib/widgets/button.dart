@@ -100,10 +100,12 @@ class Button extends StatelessWidget {
 class PrimaryButton extends StatelessWidget {
   final String text;
   final Function? onPressed;
+  final bool isLoading;
 
   const PrimaryButton({
     super.key,
     required this.text,
+    this.isLoading = false,
     this.onPressed,
   });
 
@@ -112,6 +114,7 @@ class PrimaryButton extends StatelessWidget {
     return Button(
       text: text,
       onPressed: onPressed,
+      isLoading: isLoading,
       color: ClientConfig.getColorScheme().tertiary,
     );
   }
