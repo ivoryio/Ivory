@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
+import 'package:solarisdemo/widgets/continue_button_controller.dart';
 import 'package:solarisdemo/widgets/ivory_select_option.dart';
 import 'package:solarisdemo/widgets/ivory_text_field.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
@@ -20,11 +21,31 @@ class OnboardingBasicInfoScreen extends StatefulWidget {
 
 class _OnboardingBasicInfoScreenState extends State<OnboardingBasicInfoScreen> {
   late IvorySelectOptionController _selectTitleController;
+  late ContinueButtonController _continueButtonController;
+  late TextEditingController _firstNameController;
+  late TextEditingController _lastNameController;
 
   @override
   void initState() {
     super.initState();
     _selectTitleController = IvorySelectOptionController();
+    _firstNameController = TextEditingController();
+    _lastNameController = TextEditingController();
+    _continueButtonController = ContinueButtonController();
+
+    _selectTitleController.addListener(onChange);
+    _firstNameController.addListener(onChange);
+    _lastNameController.addListener(onChange);
+  }
+
+  void onChange() {
+    if (_selectTitleController.selectedOptions.isEmpty ||
+        _firstNameController.text.isEmpty ||
+        _lastNameController.text.isEmpty) {
+      _continueButtonController.setDisabled();
+    } else {
+      _continueButtonController.setEnabled();
+    }
   }
 
   @override
@@ -67,24 +88,33 @@ class _OnboardingBasicInfoScreenState extends State<OnboardingBasicInfoScreen> {
                     ],
                   ),
                   const SizedBox(height: 24),
-                  const IvoryTextField(
+                  IvoryTextField(
                     label: "First name(s)",
                     placeholder: "Type first name",
+                    controller: _firstNameController,
                   ),
                   const SizedBox(height: 24),
-                  const IvoryTextField(
+                  IvoryTextField(
                     label: "Last name(s)",
                     placeholder: "Type last name",
+                    controller: _lastNameController,
                   ),
                   const Spacer(),
                   const SizedBox(height: 24),
                   SizedBox(
                       width: double.infinity,
-                      child: PrimaryButton(
-                        text: "Continue",
-                        onPressed: () {
-                          log(_selectTitleController.options.toString());
-                        },
+                      child: ListenableBuilder(
+                        listenable: _continueButtonController,
+                        builder: (context, child) => PrimaryButton(
+                          text: "Continue",
+                          onPressed: _continueButtonController.isEnabled
+                              ? () {
+                                  log(_selectTitleController.selectedOptions.toString(), name: "selectedOptions");
+                                  log(_firstNameController.text, name: "firstName");
+                                  log(_lastNameController.text, name: "lastName");
+                                }
+                              : null,
+                        ),
                       )),
                   const SizedBox(height: 16),
                 ],
