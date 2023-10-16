@@ -18,6 +18,7 @@ import 'package:solarisdemo/screens/onboarding/start/onboarding_german_residency
 import 'package:solarisdemo/screens/onboarding/start/onboarding_usa_tax_payer_error_screen.dart';
 import 'package:solarisdemo/screens/settings/app_settings/biometric_enabled_screen.dart';
 import 'package:solarisdemo/screens/settings/app_settings/biometric_needed_screen.dart';
+import 'package:solarisdemo/screens/onboarding/onboarding_stepper_screen.dart';
 import 'package:solarisdemo/screens/wallet/card_activation/card_activation_apple_wallet.dart';
 import 'package:solarisdemo/screens/wallet/card_activation/card_activation_choose_pin.dart';
 import 'package:solarisdemo/screens/wallet/card_activation/card_activation_confirm_pin_screen.dart';
@@ -234,6 +235,11 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
               // account
               AccountDetailsScreen.routeName: (context) => const AccountDetailsScreen(),
               // onboarding
+              OnboardingStepperScreen.routeName: (context) {
+                final params = ModalRoute.of(context)?.settings.arguments as OnboardingStepperScreenParams;
+
+                return OnboardingStepperScreen(params: params);
+              },
               OnboardingStartScreen.routeName: (context) => const OnboardingStartScreen(),
               OnboardingGermanResidencyScreen.routeName: (context) => const OnboardingGermanResidencyScreen(),
               OnboardingGermanResidencyErrorScreen.routeName: (context) => const OnboardingGermanResidencyErrorScreen(),
