@@ -11,18 +11,49 @@ class AuthenticateUserCommandAction {
   });
 }
 
-class ConfirmAuthenticationCommandAction {
+class LoadCredentialsCommandAction {}
+
+class LogoutUserCommandAction {}
+
+class ConfirmTanAuthenticationCommandAction {
   final String tan;
+  final User cognitoUser;
   final void Function() onSuccess;
-  ConfirmAuthenticationCommandAction({
+  ConfirmTanAuthenticationCommandAction({
     required this.tan,
     required this.onSuccess,
+    required this.cognitoUser,
   });
 }
 
-class AuthenticatedEventAction {
+class ConfirmBiometricAuthenticationCommandAction {
   final User cognitoUser;
-  AuthenticatedEventAction({
+  final void Function() onSuccess;
+  ConfirmBiometricAuthenticationCommandAction({
+    required this.onSuccess,
+    required this.cognitoUser,
+  });
+}
+
+class CredentialsLoadedEventAction {
+  final String? email;
+  final String? password;
+  CredentialsLoadedEventAction({
+    this.email,
+    this.password,
+  });
+}
+
+class AuthenticatedWithoutBoundDeviceEventAction {
+  final User cognitoUser;
+  AuthenticatedWithoutBoundDeviceEventAction({
+    required this.cognitoUser,
+  });
+}
+
+class AuthenticatedWithBoundDeviceEventAction {
+  final User cognitoUser;
+  AuthenticatedWithBoundDeviceEventAction({
     required this.cognitoUser,
   });
 }
@@ -35,7 +66,15 @@ class AuthenticationConfirmedEventAction {
   });
 }
 
-class AuthLoadingEventAction {}
+class LoggedOutEventAction {}
+
+class AuthLoadingEventAction {
+  final AuthLoadingType loadingType;
+
+  AuthLoadingEventAction({
+    required this.loadingType,
+  });
+}
 
 class AuthFailedEventAction {}
 
@@ -44,4 +83,11 @@ class AuthLoggedInAction {
   AuthLoggedInAction(
     this.user,
   );
+}
+
+enum AuthLoadingType {
+  initAuth,
+  authenticate,
+  confirmWithTan,
+  confirmWithBiometrics,
 }

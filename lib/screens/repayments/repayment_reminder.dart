@@ -3,14 +3,13 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
-import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/infrastructure/repayments/reminder/repayment_reminder_presenter.dart';
 import 'package:solarisdemo/models/repayments/reminder/repayment_reminder.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/repayments/reminder/repayment_reminder_action.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
@@ -36,7 +35,8 @@ class _RepaymentReminderScreenState extends State<RepaymentReminderScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final user = context.read<AuthCubit>().state.user!;
+    final user =
+        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedAndConfirmedState).authenticatedUser;
 
     return ScreenScaffold(
       body: Padding(

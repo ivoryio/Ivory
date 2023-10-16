@@ -71,3 +71,15 @@ class AuthenticatedUser {
     required this.personAccount,
   });
 }
+
+class CacheCredentials {
+  String? email;
+  String? password;
+  String? deviceId;
+
+  CacheCredentials({
+    required this.email,
+    required this.password,
+    required this.deviceId,
+  });
+}

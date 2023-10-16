@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:pointycastle/pointycastle.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:solarisdemo/models/crypto/jwk.dart';
+import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/utilities/crypto/crypto_key_generator.dart';
 import 'package:solarisdemo/utilities/crypto/crypto_message_signer.dart';
 import 'package:solarisdemo/utilities/crypto/crypto_utils.dart';
@@ -105,6 +106,23 @@ class DeviceService {
       prefs.setString('password', password);
     } catch (e) {
       print(e.toString());
+    }
+  }
+
+  Future<CacheCredentials?> getCredentialsFromCache() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? email = prefs.getString('email');
+      String? password = prefs.getString('password');
+      String? deviceId = await getDeviceId();
+
+      return CacheCredentials(
+        email: email,
+        password: password,
+        deviceId: deviceId,
+      );
+    } catch (e) {
+      return null;
     }
   }
 

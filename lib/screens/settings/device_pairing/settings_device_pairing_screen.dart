@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_presenter.dart';
 import 'package:solarisdemo/ivory_app.dart';
 import 'package:solarisdemo/models/user.dart';
+import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_state.dart';
 import 'package:solarisdemo/redux/device/device_action.dart';
@@ -32,7 +31,8 @@ class SettingsDevicePairingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = context.read<AuthCubit>().state.user!;
+    final user =
+        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedAndConfirmedState).authenticatedUser;
     final scrollController = ScrollController();
 
     return ScreenScaffold(

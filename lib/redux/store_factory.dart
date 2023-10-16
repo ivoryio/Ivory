@@ -79,7 +79,7 @@ Store<AppState> createStore({
       DeviceBindingMiddleware(deviceBindingService, deviceService, deviceInfoService, deviceFingerprintService),
       TransactionApprovalMiddleware(changeRequestService, deviceService, deviceFingerprintService, biometricsService),
       GetAccountSummaryMiddleware(accountSummaryService),
-      AuthMiddleware(authService, deviceService, deviceFingerprintService, personService),
+      AuthMiddleware(authService, deviceService, deviceFingerprintService, personService, biometricsService),
     ],
   );
 }

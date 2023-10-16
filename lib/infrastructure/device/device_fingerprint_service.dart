@@ -56,11 +56,11 @@ class DeviceFingerprintService extends ApiService {
       );
       return CreateDeviceActivityResponse();
     } catch (e) {
-      throw Exception("Failed to load device activity");
+      return DeviceFingerprintServiceErrorResponse(errorType: DeviceFingerprintServiceErrorType.unableToCreateActivity);
     }
   }
 
-    Future<String?> getDeviceFingerprint(String? consentId) async {
+  Future<String?> getDeviceFingerprint(String? consentId) async {
     if (consentId == null) {
       return null;
     }
@@ -84,8 +84,6 @@ class DeviceFingerprintService extends ApiService {
     }
   }
 }
-
-
 
 abstract class DeviceFingerprintServiceResponse extends Equatable {
   @override

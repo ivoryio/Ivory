@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
-import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/infrastructure/transfer/transfer_presenter.dart';
 import 'package:solarisdemo/models/transfer/reference_account_transfer.dart';
 import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/transfer/transfer_action.dart';
 import 'package:solarisdemo/screens/transfer/transfer_sign_screen.dart';
 import 'package:solarisdemo/utilities/format.dart';
@@ -37,7 +36,8 @@ class _TransferReviewScreenState extends State<TransferReviewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final user = context.read<AuthCubit>().state.user!;
+    final user =
+        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedAndConfirmedState).authenticatedUser;
 
     return StoreConnector<AppState, TransferViewModel>(
       converter: (store) => TransferPresenter.presentTransfer(

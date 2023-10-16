@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/infrastructure/device/device_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/device/device_action.dart';
 import 'package:solarisdemo/screens/settings/device_pairing/settings_device_pairing_screen.dart';
 import 'package:solarisdemo/screens/settings/device_pairing/settings_device_pairing_verify_pairing_screen.dart';
@@ -21,7 +20,9 @@ class SettingsDevicePairingInitialScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = context.read<AuthCubit>().state.user!.cognito;
+    final user = (StoreProvider.of<AppState>(context).state.authState as AuthenticatedAndConfirmedState)
+        .authenticatedUser
+        .cognito;
     return ScreenScaffold(
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
-import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/infrastructure/bank_card/bank_card_presenter.dart';
 import 'package:solarisdemo/models/bank_card.dart';
 import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_state.dart';
 import 'package:solarisdemo/screens/wallet/card_activation/card_activation_info.dart';
@@ -27,7 +26,8 @@ class CardActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = context.read<AuthCubit>().state.user!;
+    final user =
+        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedAndConfirmedState).authenticatedUser;
 
     return StoreConnector<AppState, BankCardViewModel>(
       onInit: (store) {
