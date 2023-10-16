@@ -1,7 +1,10 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/onboarding/signup/basic_info/onboarding_basic_info_action.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/continue_button_controller.dart';
@@ -112,6 +115,14 @@ class _OnboardingBasicInfoScreenState extends State<OnboardingBasicInfoScreen> {
                                   log(_selectTitleController.selectedOptions.toString(), name: "selectedOptions");
                                   log(_firstNameController.text, name: "firstName");
                                   log(_lastNameController.text, name: "lastName");
+
+                                  StoreProvider.of<AppState>(context).dispatch(
+                                    SubmitOnboardingBasicInfoCommandAction(
+                                      title: _selectTitleController.selectedOptions.first.value,
+                                      firstName: _firstNameController.text,
+                                      lastName: _lastNameController.text,
+                                    ),
+                                  );
                                 }
                               : null,
                         ),
