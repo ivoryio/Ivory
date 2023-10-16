@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
-import 'package:solarisdemo/screens/onboarding/sign_up/onboarding_basic_info_screen.dart';
+import 'package:solarisdemo/screens/onboarding/signup/onboarding_basic_info_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/circular_percent_indicator.dart';
