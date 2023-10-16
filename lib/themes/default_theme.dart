@@ -31,6 +31,8 @@ class DefaultTheme {
       neutral700: Color(0xFF56555E),
       neutral800: Color(0xFF313038),
       neutral900: Color(0xFF15141E),
+      error: Color(0xFFE61F27),
+      red100: Color(0xFFFFE9EA),
     ),
     cardType: CardType.visa,
     welcomeVideoPath: "assets/videos/ivory_welcome_video.mp4",
@@ -199,6 +201,8 @@ class CustomColors {
   final Color neutral700;
   final Color neutral800;
   final Color neutral900;
+  final Color error;
+  final Color red100;
 
   const CustomColors({
     required this.neutral100,
@@ -210,6 +214,8 @@ class CustomColors {
     required this.neutral700,
     required this.neutral800,
     required this.neutral900,
+    required this.error,
+    required this.red100,
   });
 
   CustomColors copyWith({
@@ -222,6 +228,8 @@ class CustomColors {
     Color? neutral700,
     Color? neutral800,
     Color? neutral900,
+    Color? error,
+    Color? red100,
   }) {
     return CustomColors(
       neutral100: neutral100 ?? this.neutral100,
@@ -233,6 +241,8 @@ class CustomColors {
       neutral700: neutral700 ?? this.neutral700,
       neutral800: neutral800 ?? this.neutral800,
       neutral900: neutral900 ?? this.neutral900,
+      error: error ?? this.error,
+      red100: red100 ?? this.red100,
     );
   }
 }
