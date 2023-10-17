@@ -24,9 +24,9 @@ class OnboardingBasicInfoScreen extends StatefulWidget {
 
 class _OnboardingBasicInfoScreenState extends State<OnboardingBasicInfoScreen> {
   late IvorySelectOptionController _selectTitleController;
-  late ContinueButtonController _continueButtonController;
   late TextEditingController _firstNameController;
   late TextEditingController _lastNameController;
+  late ContinueButtonController _continueButtonController;
 
   @override
   void initState() {
@@ -111,8 +111,10 @@ class _OnboardingBasicInfoScreenState extends State<OnboardingBasicInfoScreen> {
                         listenable: _continueButtonController,
                         builder: (context, child) => PrimaryButton(
                           text: "Continue",
+                          isLoading: _continueButtonController.isLoading,
                           onPressed: _continueButtonController.isEnabled
                               ? () {
+                                  _continueButtonController.setLoading();
                                   log(_selectTitleController.selectedOptions.toString(), name: "selectedOptions");
                                   log(_firstNameController.text, name: "firstName");
                                   log(_lastNameController.text, name: "lastName");
