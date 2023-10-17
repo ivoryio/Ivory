@@ -11,7 +11,7 @@ class DefaultTheme {
     surfaceVariant: Color(0xFF1D26A7), //USED TO CALCULATE GRADIENT,
     outline: Color(0xFF6300BB), //ALSO USED TO CALCULATE GRADIENT,
     background: Colors.white,
-    error: Colors.red,
+    error: Color(0xFFE61F27),
     onPrimary: Colors.black,
     onSecondary: Colors.black,
     onSurface: Colors.black,
@@ -31,7 +31,8 @@ class DefaultTheme {
       neutral700: Color(0xFF56555E),
       neutral800: Color(0xFF313038),
       neutral900: Color(0xFF15141E),
-      validCheck: Color(0xFF00774C),
+      success: Color(0xFF00774C),
+      red100: Color(0xFFFFE9EA),
     ),
     cardType: CardType.visa,
     welcomeVideoPath: "assets/videos/ivory_welcome_video.mp4",
@@ -200,7 +201,8 @@ class CustomColors {
   final Color neutral700;
   final Color neutral800;
   final Color neutral900;
-  final Color validCheck;
+  final Color success;
+  final Color red100;
 
   const CustomColors({
     required this.neutral100,
@@ -212,7 +214,8 @@ class CustomColors {
     required this.neutral700,
     required this.neutral800,
     required this.neutral900,
-    required this.validCheck,
+    required this.success,
+    required this.red100,
   });
 
   CustomColors copyWith({
@@ -225,7 +228,8 @@ class CustomColors {
     Color? neutral700,
     Color? neutral800,
     Color? neutral900,
-    Color? validCheck,
+    Color? success,
+    Color? red100,
   }) {
     return CustomColors(
       neutral100: neutral100 ?? this.neutral100,
@@ -237,7 +241,8 @@ class CustomColors {
       neutral700: neutral700 ?? this.neutral700,
       neutral800: neutral800 ?? this.neutral800,
       neutral900: neutral900 ?? this.neutral900,
-      validCheck: validCheck ?? this.validCheck,
+      success: success ?? this.success,
+      red100: red100 ?? this.red100,
     );
   }
 }
