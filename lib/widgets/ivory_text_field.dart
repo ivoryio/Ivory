@@ -109,8 +109,8 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
             ),
             borderRadius: const BorderRadius.all(Radius.circular(10)),
           ),
-          padding: EdgeInsets.symmetric(
-            horizontal: widget.prefix != null || widget.suffix != null ? 8 : 16,
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16,
             vertical: 12,
           ),
           controller: _controller,
@@ -119,10 +119,15 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
           placeholder: widget.placeholder,
           enabled: widget.enabled,
           textCapitalization: widget.textCapitalization ?? TextCapitalization.none,
-          prefix: widget.prefix != null ? Padding(padding: const EdgeInsets.only(left: 8), child: widget.prefix) : null,
+          prefix: widget.prefix != null
+              ? Padding(
+                  padding: const EdgeInsets.only(left: 16),
+                  child: widget.prefix,
+                )
+              : null,
           suffix: widget.suffix != null
               ? Padding(
-                  padding: const EdgeInsets.only(right: 8),
+                  padding: const EdgeInsets.only(right: 16),
                   child: widget.suffix,
                 )
               : null,
