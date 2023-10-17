@@ -16,6 +16,7 @@ class IvoryTextField extends StatefulWidget {
   final String? errorText;
   final bool error;
   final TextCapitalization? textCapitalization;
+  final bool enabled;
 
   const IvoryTextField({
     Key? key,
@@ -31,6 +32,7 @@ class IvoryTextField extends StatefulWidget {
     this.label,
     this.errorText,
     this.obscureText = false,
+    this.enabled = true,
     this.error = false,
     this.textCapitalization,
   }) : super(key: key);
@@ -87,9 +89,11 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
           Text(
             widget.label!,
             style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(
-                color: widget.error || widget.errorText != null
-                    ? ClientConfig.getCustomColors().error
-                    : ClientConfig.getCustomColors().neutral600),
+                color: widget.enabled == false
+                    ? ClientConfig.getCustomColors().neutral500
+                    : widget.error || widget.errorText != null
+                        ? ClientConfig.getCustomColors().error
+                        : ClientConfig.getCustomColors().neutral600),
           ),
           const SizedBox(height: 8),
         ],
@@ -113,6 +117,7 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
           onChanged: widget.onChanged,
           obscureText: widget.obscureText,
           placeholder: widget.placeholder,
+          enabled: widget.enabled,
           textCapitalization: widget.textCapitalization ?? TextCapitalization.none,
           prefix: widget.prefix != null ? Padding(padding: const EdgeInsets.only(left: 8), child: widget.prefix) : null,
           suffix: widget.suffix != null
@@ -124,9 +129,10 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
           keyboardType: widget.keyboardType,
           minLines: widget.minLines,
           maxLines: widget.maxLines ?? widget.minLines ?? 1,
-          style: ClientConfig.getTextStyleScheme()
-              .bodyLargeRegular
-              .copyWith(color: ClientConfig.getCustomColors().neutral900),
+          style: ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(
+              color: widget.enabled
+                  ? ClientConfig.getCustomColors().neutral900
+                  : ClientConfig.getCustomColors().neutral500),
           placeholderStyle: ClientConfig.getTextStyleScheme()
               .bodyLargeRegular
               .copyWith(color: ClientConfig.getCustomColors().neutral500),
@@ -145,7 +151,9 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
   }
 
   Color _getBorderColor() {
-    if (widget.error || widget.errorText != null) {
+    if (widget.enabled == false) {
+      return ClientConfig.getCustomColors().neutral400;
+    } else if (widget.error || widget.errorText != null) {
       return const Color(0xFFE61F27);
     } else if (_focusNode.hasFocus) {
       return ClientConfig.getCustomColors().neutral900;
