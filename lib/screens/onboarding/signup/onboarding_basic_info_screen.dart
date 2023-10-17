@@ -108,30 +108,31 @@ class _OnboardingBasicInfoScreenState extends State<OnboardingBasicInfoScreen> {
                   const Spacer(),
                   const SizedBox(height: 24),
                   SizedBox(
-                      width: double.infinity,
-                      child: ListenableBuilder(
-                        listenable: _continueButtonController,
-                        builder: (context, child) => PrimaryButton(
-                          text: "Continue",
-                          isLoading: _continueButtonController.isLoading,
-                          onPressed: _continueButtonController.isEnabled
-                              ? () {
-                                  _continueButtonController.setLoading();
-                                  log(_selectTitleController.selectedOptions.toString(), name: "selectedOptions");
-                                  log(_firstNameController.text, name: "firstName");
-                                  log(_lastNameController.text, name: "lastName");
+                    width: double.infinity,
+                    child: ListenableBuilder(
+                      listenable: _continueButtonController,
+                      builder: (context, child) => PrimaryButton(
+                        text: "Continue",
+                        isLoading: _continueButtonController.isLoading,
+                        onPressed: _continueButtonController.isEnabled
+                            ? () {
+                                _continueButtonController.setLoading();
+                                log(_selectTitleController.selectedOptions.toString(), name: "selectedOptions");
+                                log(_firstNameController.text, name: "firstName");
+                                log(_lastNameController.text, name: "lastName");
 
-                                  StoreProvider.of<AppState>(context).dispatch(
-                                    SubmitOnboardingBasicInfoCommandAction(
-                                      title: _selectTitleController.selectedOptions.first.value,
-                                      firstName: _firstNameController.text,
-                                      lastName: _lastNameController.text,
-                                    ),
-                                  );
-                                }
-                              : null,
-                        ),
-                      )),
+                                StoreProvider.of<AppState>(context).dispatch(
+                                  SubmitOnboardingBasicInfoCommandAction(
+                                    title: _selectTitleController.selectedOptions.first.value,
+                                    firstName: _firstNameController.text,
+                                    lastName: _lastNameController.text,
+                                  ),
+                                );
+                              }
+                            : null,
+                      ),
+                    ),
+                  ),
                   const SizedBox(height: 16),
                 ],
               ),
