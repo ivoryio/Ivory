@@ -95,12 +95,14 @@ class _OnboardingBasicInfoScreenState extends State<OnboardingBasicInfoScreen> {
                   IvoryTextField(
                     label: "First name(s)",
                     placeholder: "Type first name",
+                    textCapitalization: TextCapitalization.words,
                     controller: _firstNameController,
                   ),
                   const SizedBox(height: 24),
                   IvoryTextField(
                     label: "Last name(s)",
                     placeholder: "Type last name",
+                    textCapitalization: TextCapitalization.words,
                     controller: _lastNameController,
                   ),
                   const Spacer(),

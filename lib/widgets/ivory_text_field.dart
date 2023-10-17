@@ -15,6 +15,7 @@ class IvoryTextField extends StatefulWidget {
   final bool obscureText;
   final String? errorText;
   final bool error;
+  final TextCapitalization? textCapitalization;
 
   const IvoryTextField({
     Key? key,
@@ -31,6 +32,7 @@ class IvoryTextField extends StatefulWidget {
     this.errorText,
     this.obscureText = false,
     this.error = false,
+    this.textCapitalization,
   }) : super(key: key);
 
   @override
@@ -111,6 +113,7 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
           onChanged: widget.onChanged,
           obscureText: widget.obscureText,
           placeholder: widget.placeholder,
+          textCapitalization: widget.textCapitalization ?? TextCapitalization.none,
           prefix: widget.prefix != null ? Padding(padding: const EdgeInsets.only(left: 8), child: widget.prefix) : null,
           suffix: widget.suffix != null
               ? Padding(
