@@ -38,7 +38,11 @@ class _IvorySelectOptionState extends State<IvorySelectOption> {
 
   @override
   void dispose() {
-    _controller.dispose();
+    // dispose only if controller is not provided
+    if (widget.controller == null) {
+      _controller.dispose();
+    }
+
     super.dispose();
   }
 

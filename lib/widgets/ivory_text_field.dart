@@ -38,6 +38,7 @@ class IvoryTextField extends StatefulWidget {
 }
 
 class _IvoryTextFieldState extends State<IvoryTextField> {
+  late Color _borderColor;
   late FocusNode _focusNode;
   late TextEditingController _controller;
 
@@ -48,8 +49,31 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
     _focusNode = widget.focusNode ?? FocusNode();
     _controller = widget.controller ?? TextEditingController();
 
-    _focusNode.addListener(() => setState(() {}));
-    _controller.addListener(() => setState(() {}));
+    _borderColor = _getBorderColor();
+
+    _focusNode.addListener(onChange);
+    _controller.addListener(onChange);
+  }
+
+  @override
+  void dispose() {
+    if (widget.focusNode == null) {
+      _focusNode.dispose();
+    }
+    if (widget.controller == null) {
+      _controller.dispose();
+    }
+
+    super.dispose();
+  }
+
+  void onChange() {
+    final newBorderColor = _getBorderColor();
+    if (newBorderColor != _borderColor) {
+      setState(() {
+        _borderColor = newBorderColor;
+      });
+    }
   }
 
   @override
@@ -74,7 +98,7 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
                 ? ClientConfig.getCustomColors().red100
                 : ClientConfig.getCustomColors().neutral100,
             border: Border.all(
-              color: _getBorderColor(),
+              color: _borderColor,
               width: 1,
             ),
             borderRadius: const BorderRadius.all(Radius.circular(10)),
