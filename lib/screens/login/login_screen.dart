@@ -6,6 +6,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/auth/auth_presenter.dart';
+import 'package:solarisdemo/models/auth/auth_error_type.dart';
 import 'package:solarisdemo/models/auth/auth_loading_type.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/auth/auth_action.dart';
@@ -38,7 +39,6 @@ class LoginScreen extends StatelessWidget {
       },
       converter: (store) => AuthPresenter.presentAuth(authState: store.state.authState),
       builder: (context, viewModel) {
-        if (viewModel is AuthErrorViewModel) {}
         if (viewModel is AuthenticatedWithoutBoundDeviceViewModel ||
             viewModel.loadingType == AuthLoadingType.confirmWithTan) {
           return LoginWithTanScreen(
@@ -53,7 +53,8 @@ class LoginScreen extends StatelessWidget {
         }
         if (viewModel is AuthInitialViewModel ||
             viewModel.loadingType == AuthLoadingType.initAuth ||
-            viewModel.loadingType == AuthLoadingType.authenticate) {
+            viewModel.loadingType == AuthLoadingType.authenticate ||
+            (viewModel is AuthErrorViewModel && viewModel.errorType == AuthErrorType.invalidCredentials)) {
           return ScreenScaffold(
             body: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -361,7 +362,7 @@ class EmailLoginForm extends StatefulWidget {
 class _EmailLoginFormState extends State<EmailLoginForm> {
   bool isEmailValid = false;
   bool isPasswordValid = false;
-  bool hasError = false;
+  bool hasValidationError = false;
   bool hidePassword = true;
   bool isCompleted = false;
   TextEditingController emailInputController = TextEditingController();
@@ -373,20 +374,20 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
         emailInputController.text.isNotEmpty && Validator.isValidEmailAddress(emailInputController.text);
 
     setState(() {
-      hasError = !isInputValid;
+      hasValidationError = !isInputValid;
     });
 
     if (isInputValid && !isEmailValid) {
       setState(() {
         isEmailValid = true;
-        hasError = false;
+        hasValidationError = false;
       });
     }
 
     if (!isInputValid && isEmailValid) {
       setState(() {
         isEmailValid = false;
-        hasError = true;
+        hasValidationError = true;
       });
     }
   }
@@ -409,7 +410,6 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    
     if (widget.viewModel is AuthInitialViewModel &&
         widget.viewModel.email != null &&
         widget.viewModel.password != null &&
@@ -418,13 +418,20 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
       emailInputController.text = widget.viewModel.email!;
       passwordInputController.text = widget.viewModel.password!;
 
-      // FocusScope.of(context).unfocus();
-
       setState(() {
         isEmailValid = true;
         isPasswordValid = true;
       });
     }
+
+    if (widget.viewModel is AuthErrorViewModel && isCompleted == true) {
+      setState(() {
+        isEmailValid = false;
+        isPasswordValid = false;
+        isCompleted = false;
+      });
+    }
+
     return Form(
       key: _formKey,
       child: Padding(
@@ -436,17 +443,33 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                if (widget.viewModel is AuthErrorViewModel && (!isEmailValid || !isPasswordValid))
+                  AuthErrorContainer(
+                    errorType: widget.viewModel.errorType!,
+                  ),
+                if (widget.viewModel is AuthErrorViewModel)
+                  const SizedBox(
+                    height: 24,
+                  ),
                 Text(
                   'Email address',
                   style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(
-                        color: hasError ? const Color(0xFFE61F27) : ClientConfig.getCustomColors().neutral700,
+                        color: hasValidationError || !isEmailValid
+                            ? const Color(0xFFE61F27)
+                            : ClientConfig.getCustomColors().neutral700,
                       ),
                 ),
                 const SizedBox(height: 8),
                 TextField(
+                  onTap: () {
+                    if (widget.viewModel is AuthErrorViewModel) {
+                      setState(() {
+                        isEmailValid = true;
+                      });
+                    }
+                  },
                   enabled: !isCompleted,
                   style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                  // autofocus: true,
                   controller: emailInputController,
                   onChanged: (inputValue) => onChangeEmailAddress(),
                   keyboardType: TextInputType.emailAddress,
@@ -456,14 +479,18 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                       vertical: 12,
                     ),
                     filled: true,
-                    fillColor: hasError ? const Color(0xFFFFE9EA) : ClientConfig.getCustomColors().neutral100,
+                    fillColor: hasValidationError || !isEmailValid
+                        ? const Color(0xFFFFE9EA)
+                        : ClientConfig.getCustomColors().neutral100,
                     border: OutlineInputBorder(
                       borderRadius: const BorderRadius.all(
                         Radius.circular(8),
                       ),
                       borderSide: BorderSide(
                         width: 1,
-                        color: hasError ? const Color(0xFFE61F27) : ClientConfig.getCustomColors().neutral500,
+                        color: hasValidationError || !isEmailValid
+                            ? const Color(0xFFE61F27)
+                            : ClientConfig.getCustomColors().neutral500,
                         style: BorderStyle.solid,
                       ),
                     ),
@@ -473,14 +500,16 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                       ),
                       borderSide: BorderSide(
                         width: 1,
-                        color: hasError ? const Color(0xFFE61F27) : ClientConfig.getColorScheme().primary,
+                        color: hasValidationError || !isEmailValid
+                            ? const Color(0xFFE61F27)
+                            : ClientConfig.getColorScheme().primary,
                         style: BorderStyle.solid,
                       ),
                     ),
                   ),
                 ),
-                if (hasError) const SizedBox(height: 8),
-                if (hasError)
+                if (hasValidationError) const SizedBox(height: 8),
+                if (hasValidationError)
                   Text(
                     'Please input a valid email address: example@gmail.com',
                     style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(
@@ -492,10 +521,19 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                 ),
                 Text(
                   'Password',
-                  style: ClientConfig.getTextStyleScheme().labelSmall,
+                  style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(
+                        color: !isPasswordValid ? const Color(0xFFE61F27) : ClientConfig.getCustomColors().neutral700,
+                      ),
                 ),
                 const SizedBox(height: 8),
                 TextField(
+                  onTap: () {
+                    if (widget.viewModel is AuthErrorViewModel) {
+                      setState(() {
+                        isPasswordValid = true;
+                      });
+                    }
+                  },
                   enabled: !isCompleted,
                   style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
                   obscureText: hidePassword,
@@ -508,15 +546,14 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                       vertical: 12,
                     ),
                     filled: true,
-                    fillColor: ClientConfig.getCustomColors().neutral100,
+                    fillColor: !isPasswordValid ? const Color(0xFFFFE9EA) : ClientConfig.getCustomColors().neutral100,
                     border: OutlineInputBorder(
                       borderRadius: const BorderRadius.all(
                         Radius.circular(8),
                       ),
                       borderSide: BorderSide(
                         width: 1,
-                        color: ClientConfig.getCustomColors().neutral500,
-                        // color: isErrorRange ? Colors.red : const Color(0xFFADADB4),
+                        color: !isPasswordValid ? const Color(0xFFE61F27) : ClientConfig.getCustomColors().neutral500,
                         style: BorderStyle.solid,
                       ),
                     ),
@@ -526,8 +563,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                       ),
                       borderSide: BorderSide(
                         width: 1,
-                        color: ClientConfig.getColorScheme().primary,
-                        // color: isErrorRange ? Colors.red : const Color(0xFFADADB4),
+                        color: !isPasswordValid ? const Color(0xFFE61F27) : ClientConfig.getColorScheme().primary,
                         style: BorderStyle.solid,
                       ),
                     ),
@@ -552,8 +588,8 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                 ),
               ],
             ),
-            const SizedBox(
-              height: 210,
+            SizedBox(
+              height: widget.viewModel is AuthErrorViewModel ? 100 : 210,
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -603,6 +639,82 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class AuthErrorContainer extends StatelessWidget {
+  final AuthErrorType errorType;
+
+  const AuthErrorContainer({
+    Key? key,
+    required this.errorType,
+  }) : super(key: key);
+
+  String getErrorTitle() {
+    switch (errorType) {
+      case AuthErrorType.invalidCredentials:
+        return 'Wrong email or password';
+      case AuthErrorType.cantCreateConsent:
+        return 'Consent Creation Failed';
+      case AuthErrorType.cantCreateFingerprint:
+        return 'Fingerprint Creation Failed';
+      case AuthErrorType.biometricAuthFailed:
+        return 'Biometric Authentication Failed';
+      case AuthErrorType.cantGetPersonData:
+        return 'Unable to Retrieve Person Data';
+      case AuthErrorType.cantGetPersonAccountData:
+        return 'Unable to Retrieve Account Data';
+      default:
+        return 'Unknown Error';
+    }
+  }
+
+  String getErrorDescription() {
+    switch (errorType) {
+      case AuthErrorType.invalidCredentials:
+        return 'Please double-check the information you\'ve entered and try with a different email or password.';
+      case AuthErrorType.cantCreateConsent:
+      case AuthErrorType.cantCreateFingerprint:
+      case AuthErrorType.biometricAuthFailed:
+        return 'An error occurred while processing your request. Please try again.';
+      case AuthErrorType.cantGetPersonData:
+      case AuthErrorType.cantGetPersonAccountData:
+        return 'There was a problem retrieving your data. Please check your network connection and try again.';
+      default:
+        return 'An unknown error occurred. Please try again or contact support.';
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0XFFFFE9EA),
+        border: Border.all(
+          width: 1,
+          color: const Color(0xFFFFBDBF),
+          style: BorderStyle.solid,
+        ),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            getErrorTitle(),
+            style: ClientConfig.getTextStyleScheme().bodySmallBold,
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+          Text(
+            getErrorDescription(),
+            style: ClientConfig.getTextStyleScheme().bodySmallRegular,
+          ),
+        ],
       ),
     );
   }

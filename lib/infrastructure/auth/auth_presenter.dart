@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:solarisdemo/models/auth/auth_error_type.dart';
 import 'package:solarisdemo/models/auth/auth_loading_type.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/auth/auth_state.dart';
@@ -17,7 +18,9 @@ class AuthPresenter {
         authState.loadingType,
       );
     } else if (authState is AuthErrorState) {
-      return AuthErrorViewModel();
+      return AuthErrorViewModel(
+        authState.errorType,
+      );
     } else if (authState is AuthenticatedWithoutBoundDeviceState) {
       return AuthenticatedWithoutBoundDeviceViewModel(
         cognitoUser: authState.cognitoUser,
@@ -40,6 +43,7 @@ abstract class AuthViewModel extends Equatable {
   final AuthenticatedUser? authenticatedUser;
   final String? tan;
   final AuthLoadingType? loadingType;
+  final AuthErrorType? errorType;
   final String? email;
   final String? password;
 
@@ -48,6 +52,7 @@ abstract class AuthViewModel extends Equatable {
     this.authenticatedUser,
     this.tan,
     this.loadingType,
+    this.errorType,
     this.email,
     this.password,
   });
@@ -69,7 +74,11 @@ class AuthLoadingViewModel extends AuthViewModel {
   ) : super(loadingType: loadingType);
 }
 
-class AuthErrorViewModel extends AuthViewModel {}
+class AuthErrorViewModel extends AuthViewModel {
+  const AuthErrorViewModel(
+    AuthErrorType errorType,
+  ) : super(errorType: errorType);
+}
 
 class AuthenticatedWithoutBoundDeviceViewModel extends AuthViewModel {
   const AuthenticatedWithoutBoundDeviceViewModel({
