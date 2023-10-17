@@ -58,12 +58,14 @@ class Button extends StatelessWidget {
           ),
         ),
         if (isLoading)
-          const Positioned(
+          Positioned(
             right: 100,
             child: SizedBox(
               width: 16,
               height: 16,
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                color: ClientConfig.getCustomColors().neutral500,
+              ),
             ),
           )
       ],
