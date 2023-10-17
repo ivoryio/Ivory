@@ -5,6 +5,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/onboarding/signup/basic_info/onboarding_basic_info_action.dart';
+import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/continue_button_controller.dart';
@@ -57,15 +58,11 @@ class _OnboardingBasicInfoScreenState extends State<OnboardingBasicInfoScreen> {
       body: Column(
         children: [
           AppToolbar(
-            richTextTitle: StepRichTextTitle(step: 1, totalSteps: 4),
+            richTextTitle: StepRichTextTitle(step: 1, totalSteps: 5),
             actions: const [AppbarLogo()],
             padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
           ),
-          LinearProgressIndicator(
-            value: 2 / 100,
-            color: ClientConfig.getColorScheme().secondary,
-            backgroundColor: const Color(0xFFE9EAEB),
-          ),
+          AnimatedLinearProgressIndicator.step(current: 1, totalSteps: 5),
           Expanded(
             child: ScrollableScreenContainer(
               padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
