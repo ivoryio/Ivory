@@ -66,13 +66,13 @@ class _OnboardingBasicInfoScreenState extends State<OnboardingBasicInfoScreen> {
             color: ClientConfig.getColorScheme().secondary,
             backgroundColor: const Color(0xFFE9EAEB),
           ),
-          const SizedBox(height: 16),
           Expanded(
             child: ScrollableScreenContainer(
               padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const SizedBox(height: 16),
                   Text("Preferred title, first & last name", style: ClientConfig.getTextStyleScheme().heading2),
                   const SizedBox(height: 16),
                   Text(
