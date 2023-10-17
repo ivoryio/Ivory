@@ -92,7 +92,7 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
                 color: widget.enabled == false
                     ? ClientConfig.getCustomColors().neutral500
                     : widget.error || widget.errorText != null
-                        ? ClientConfig.getCustomColors().error
+                        ? ClientConfig.getColorScheme().error
                         : ClientConfig.getCustomColors().neutral600),
           ),
           const SizedBox(height: 8),
@@ -146,9 +146,9 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
           const SizedBox(height: 8),
           Text(
             widget.errorText!,
-            style: ClientConfig.getTextStyleScheme()
-                .bodySmallRegular
-                .copyWith(color: ClientConfig.getCustomColors().error),
+            style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(
+                  color: ClientConfig.getColorScheme().error,
+                ),
           ),
         ]
       ],

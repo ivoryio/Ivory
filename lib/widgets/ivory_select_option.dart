@@ -172,7 +172,7 @@ class _BottomSheetOptionState extends State<_BottomSheetOption> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(widget.label, style: ClientConfig.getTextStyleScheme().heading4),
-            if (_isSelected) const Icon(Icons.check, color: Color(0xFF00774C)),
+            if (_isSelected) Icon(Icons.check, color: ClientConfig.getCustomColors().success),
           ],
         ),
       ),
