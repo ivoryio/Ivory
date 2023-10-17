@@ -13,6 +13,7 @@ import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/auth/auth_action.dart';
 import 'package:solarisdemo/screens/account/account_details_screen.dart';
 import 'package:solarisdemo/screens/available_balance/available_balance_screen.dart';
+import 'package:solarisdemo/screens/onboarding/signup/onboarding_basic_info_screen.dart';
 import 'package:solarisdemo/screens/onboarding/start/onboarding_german_residency_error_screen.dart';
 import 'package:solarisdemo/screens/onboarding/start/onboarding_german_residency_screen.dart';
 import 'package:solarisdemo/screens/onboarding/start/onboarding_usa_tax_payer_error_screen.dart';
@@ -245,6 +246,8 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
               OnboardingGermanResidencyErrorScreen.routeName: (context) => const OnboardingGermanResidencyErrorScreen(),
               OnboardingUsaTaxPayerScreen.routeName: (context) => const OnboardingUsaTaxPayerScreen(),
               OnboardingUsaTaxPayerErrorScreen.routeName: (context) => const OnboardingUsaTaxPayerErrorScreen(),
+              // onboarding/sign_up
+              OnboardingBasicInfoScreen.routeName: (context) => const OnboardingBasicInfoScreen(),
             },
           );
         }),
