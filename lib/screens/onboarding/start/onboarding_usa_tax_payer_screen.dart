@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/screens/onboarding/onboarding_stepper_screen.dart';
 import 'package:solarisdemo/screens/onboarding/start/onboarding_usa_tax_payer_error_screen.dart';
 import 'package:solarisdemo/utilities/ivory_color_mapper.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -92,7 +93,13 @@ class OnboardingUsaTaxPayerScreen extends StatelessWidget {
                     width: double.infinity,
                     child: PrimaryButton(
                       text: "No, I'm not a USA taxpayer",
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushNamed(
+                          context,
+                          OnboardingStepperScreen.routeName,
+                          arguments: OnboardingStepperScreenParams(step: OnboardingStepType.signUp),
+                        );
+                      },
                     ),
                   ),
                   const SizedBox(height: 16)
