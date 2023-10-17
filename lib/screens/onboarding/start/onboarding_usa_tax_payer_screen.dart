@@ -94,10 +94,9 @@ class OnboardingUsaTaxPayerScreen extends StatelessWidget {
                     child: PrimaryButton(
                       text: "No, I'm not a USA taxpayer",
                       onPressed: () {
-                        Navigator.pushNamedAndRemoveUntil(
+                        Navigator.pushNamed(
                           context,
                           OnboardingStepperScreen.routeName,
-                          (route) => false,
                           arguments: OnboardingStepperScreenParams(step: OnboardingStepType.signUp),
                         );
                       },
