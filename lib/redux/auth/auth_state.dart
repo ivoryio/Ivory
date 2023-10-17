@@ -11,10 +11,12 @@ abstract class AuthState extends Equatable {
 class AuthInitialState extends AuthState {
   final String? email;
   final String? password;
+  final String? deviceId;
 
   AuthInitialState({
     this.email,
     this.password,
+    this.deviceId,
   });
 }
 

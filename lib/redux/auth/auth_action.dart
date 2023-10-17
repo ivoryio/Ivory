@@ -40,9 +40,11 @@ class ConfirmBiometricAuthenticationCommandAction {
 class CredentialsLoadedEventAction {
   final String? email;
   final String? password;
+  final String? deviceId;
   CredentialsLoadedEventAction({
     this.email,
     this.password,
+    this.deviceId,
   });
 }
 
@@ -92,4 +94,3 @@ class AuthLoggedInAction {
     this.user,
   );
 }
-

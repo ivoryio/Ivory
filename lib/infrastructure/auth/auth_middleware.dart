@@ -38,6 +38,7 @@ class AuthMiddleware extends MiddlewareClass<AppState> {
       if (credentials == null) {
         store.dispatch(
           CredentialsLoadedEventAction(
+            deviceId: '',
             email: '',
             password: '',
           ),
@@ -47,8 +48,9 @@ class AuthMiddleware extends MiddlewareClass<AppState> {
 
       store.dispatch(
         CredentialsLoadedEventAction(
-          email: credentials.email!,
-          password: credentials.password!,
+          deviceId: credentials.deviceId,
+          email: credentials.email,
+          password: credentials.password,
         ),
       );
     }

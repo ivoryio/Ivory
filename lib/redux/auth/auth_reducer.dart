@@ -8,6 +8,7 @@ AuthState authReducer(AuthState currentState, dynamic action) {
     return AuthInitialState(
       email: action.email ?? action.email,
       password: action.password ?? action.password,
+      deviceId: action.deviceId ?? action.deviceId,
     );
   } else if (action is AuthFailedEventAction) {
     return AuthErrorState(action.errorType);

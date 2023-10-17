@@ -12,9 +12,11 @@ import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/auth/auth_action.dart';
 import 'package:solarisdemo/screens/login/login_with_biometrics_screen.dart';
 import 'package:solarisdemo/screens/login/login_with_tan_screen.dart';
+import 'package:solarisdemo/screens/login/modals/mobile_number_country_picker_popup.dart';
 import 'package:solarisdemo/services/device_service.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/checkbox.dart';
+import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/screen_title.dart';
 
@@ -178,15 +180,26 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
                             const BorderRadius.only(topLeft: Radius.circular(8), bottomLeft: Radius.circular(8)),
                         color: ClientConfig.getCustomColors().neutral100,
                       ),
-                      child: Row(
-                        children: [
-                          Image.asset('assets/images/germany_flag.png'),
-                          const SizedBox(width: 4),
-                          Icon(
-                            Icons.expand_more,
-                            color: ClientConfig.getCustomColors().neutral500,
-                          ),
-                        ],
+                      child: GestureDetector(
+                        onTap: () {
+                          showBottomModal(
+                            context: context,
+                            title: "Select mobile number prefix",
+                            content: CountryPickerPopup(
+                              onChangedSearch: (value) {},
+                            ),
+                          );
+                        },
+                        child: Row(
+                          children: [
+                            Image.asset('assets/images/germany_flag.png'),
+                            const SizedBox(width: 4),
+                            Icon(
+                              Icons.expand_more,
+                              color: ClientConfig.getCustomColors().neutral500,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     Expanded(
