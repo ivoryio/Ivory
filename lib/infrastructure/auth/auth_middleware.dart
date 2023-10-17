@@ -4,6 +4,8 @@ import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_fingerprint_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/infrastructure/person/person_service.dart';
+import 'package:solarisdemo/models/auth/auth_error_type.dart';
+import 'package:solarisdemo/models/auth/auth_loading_type.dart';
 import 'package:solarisdemo/models/device_activity.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
@@ -63,7 +65,7 @@ class AuthMiddleware extends MiddlewareClass<AppState> {
         action.password,
       );
       if (loginResponse is! LoginSuccessResponse) {
-        store.dispatch(AuthFailedEventAction());
+        store.dispatch(AuthFailedEventAction(errorType: AuthErrorType.invalidCredentials));
         return;
       }
 
@@ -80,7 +82,7 @@ class AuthMiddleware extends MiddlewareClass<AppState> {
         final newConsentResponse = await _deviceFingerprintService.createDeviceConsent(user: user);
 
         if (newConsentResponse is! CreateDeviceConsentResponse) {
-          store.dispatch(AuthFailedEventAction());
+          store.dispatch(AuthFailedEventAction(errorType: AuthErrorType.cantCreateConsent));
           return;
         }
 
@@ -88,7 +90,7 @@ class AuthMiddleware extends MiddlewareClass<AppState> {
 
         final deviceFingerprint = await _deviceFingerprintService.getDeviceFingerprint(consentId);
         if (deviceFingerprint == null) {
-          store.dispatch(AuthFailedEventAction());
+          store.dispatch(AuthFailedEventAction(errorType: AuthErrorType.cantCreateFingerprint));
           return;
         }
         await _deviceFingerprintService.createDeviceActivity(
@@ -99,7 +101,7 @@ class AuthMiddleware extends MiddlewareClass<AppState> {
 
       final deviceFingerprint = await _deviceFingerprintService.getDeviceFingerprint(consentId);
       if (deviceFingerprint == null) {
-        store.dispatch(AuthFailedEventAction());
+        store.dispatch(AuthFailedEventAction(errorType: AuthErrorType.cantCreateFingerprint));
         return;
       }
       await _deviceFingerprintService.createDeviceActivity(
@@ -130,20 +132,20 @@ class AuthMiddleware extends MiddlewareClass<AppState> {
             await _biometricsService.authenticateWithBiometrics(message: "Please use biometric to authenticate");
 
         if (biometricAuth != true) {
-          store.dispatch(AuthFailedEventAction());
+          store.dispatch(AuthFailedEventAction(errorType: AuthErrorType.biometricAuthFailed));
           return;
         }
       }
 
       final personResponse = await _personService.getPerson(user: action.cognitoUser);
       if (personResponse is! GetPersonSuccessResponse) {
-        store.dispatch(AuthFailedEventAction());
+        store.dispatch(AuthFailedEventAction(errorType: AuthErrorType.cantGetPersonData));
         return;
       }
 
       final personAccountResponse = await _personService.getPersonAccount(user: action.cognitoUser);
       if (personAccountResponse is! GetPersonAccountSuccessResponse) {
-        store.dispatch(AuthFailedEventAction());
+        store.dispatch(AuthFailedEventAction(errorType: AuthErrorType.cantGetPersonAccountData));
         return;
       }
 

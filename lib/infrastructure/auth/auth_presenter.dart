@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
+import 'package:solarisdemo/models/auth/auth_loading_type.dart';
 import 'package:solarisdemo/models/user.dart';
-import 'package:solarisdemo/redux/auth/auth_action.dart';
 import 'package:solarisdemo/redux/auth/auth_state.dart';
 
 class AuthPresenter {

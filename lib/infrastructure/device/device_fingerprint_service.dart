@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:solarisdemo/models/auth/device_fingerprint_service_error_type.dart';
+import 'package:solarisdemo/models/auth/device_fingerprint_error_type.dart';
 import 'package:solarisdemo/models/device_activity.dart';
 import 'package:solarisdemo/models/device_consent.dart';
 import 'package:solarisdemo/models/user.dart';
@@ -33,7 +33,7 @@ class DeviceFingerprintService extends ApiService {
       );
       return CreateDeviceConsentResponse(consentId: data['id']);
     } catch (e) {
-      return DeviceFingerprintServiceErrorResponse(errorType: DeviceFingerprintServiceErrorType.unableToCreateActivity);
+      return DeviceFingerprintServiceErrorResponse(errorType: DeviceFingerprintErrorType.unableToCreateActivity);
     }
   }
 
@@ -56,7 +56,7 @@ class DeviceFingerprintService extends ApiService {
       );
       return CreateDeviceActivityResponse();
     } catch (e) {
-      return DeviceFingerprintServiceErrorResponse(errorType: DeviceFingerprintServiceErrorType.unableToCreateActivity);
+      return DeviceFingerprintServiceErrorResponse(errorType: DeviceFingerprintErrorType.unableToCreateActivity);
     }
   }
 
@@ -102,7 +102,7 @@ class CreateDeviceConsentResponse extends DeviceFingerprintServiceResponse {
 class CreateDeviceActivityResponse extends DeviceFingerprintServiceResponse {}
 
 class DeviceFingerprintServiceErrorResponse extends DeviceFingerprintServiceResponse {
-  final DeviceFingerprintServiceErrorType errorType;
+  final DeviceFingerprintErrorType errorType;
 
   DeviceFingerprintServiceErrorResponse({required this.errorType});
 

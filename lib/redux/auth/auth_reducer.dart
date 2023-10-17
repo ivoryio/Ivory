@@ -10,7 +10,7 @@ AuthState authReducer(AuthState currentState, dynamic action) {
       password: action.password ?? action.password,
     );
   } else if (action is AuthFailedEventAction) {
-    return AuthErrorState();
+    return AuthErrorState(action.errorType);
   } else if (action is AuthenticatedWithoutBoundDeviceEventAction) {
     return AuthenticatedWithoutBoundDeviceState(action.cognitoUser);
   } else if (action is AuthenticatedWithBoundDeviceEventAction) {

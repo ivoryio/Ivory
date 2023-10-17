@@ -1,3 +1,5 @@
+import 'package:solarisdemo/models/auth/auth_error_type.dart';
+import 'package:solarisdemo/models/auth/auth_loading_type.dart';
 import 'package:solarisdemo/models/user.dart';
 
 class AuthenticateUserCommandAction {
@@ -76,7 +78,13 @@ class AuthLoadingEventAction {
   });
 }
 
-class AuthFailedEventAction {}
+class AuthFailedEventAction {
+  final AuthErrorType errorType;
+
+  AuthFailedEventAction({
+    required this.errorType,
+  });
+}
 
 class AuthLoggedInAction {
   final User user;
@@ -85,9 +93,3 @@ class AuthLoggedInAction {
   );
 }
 
-enum AuthLoadingType {
-  initAuth,
-  authenticate,
-  confirmWithTan,
-  confirmWithBiometrics,
-}

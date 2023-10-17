@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
+import 'package:solarisdemo/models/auth/auth_error_type.dart';
+import 'package:solarisdemo/models/auth/auth_loading_type.dart';
 import 'package:solarisdemo/models/user.dart';
-import 'package:solarisdemo/redux/auth/auth_action.dart';
 
 abstract class AuthState extends Equatable {
   @override
@@ -28,7 +29,11 @@ class AuthLoadingState extends AuthState {
 
 class AuthTanConfirmState extends AuthState {}
 
-class AuthErrorState extends AuthState {}
+class AuthErrorState extends AuthState {
+  final AuthErrorType errorType;
+
+  AuthErrorState(this.errorType);
+}
 
 class AuthenticatedWithoutBoundDeviceState extends AuthState {
   final User cognitoUser;

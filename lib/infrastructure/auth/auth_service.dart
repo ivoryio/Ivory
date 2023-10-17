@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 import 'package:equatable/equatable.dart';
 import 'package:solarisdemo/config.dart';
-import 'package:solarisdemo/models/auth/auth_service_error_type.dart';
+import 'package:solarisdemo/models/auth/auth_error_type.dart';
 import 'package:solarisdemo/models/user.dart';
 
 class AuthService {
@@ -36,7 +36,8 @@ class AuthService {
 
       return LoginSuccessResponse(user: user);
     } catch (e) {
-      return AuthServiceErrorResponse(errorType: AuthServiceErrorType.invalidCredentials);
+      //additional error handling needed here
+      return AuthServiceErrorResponse(errorType: AuthErrorType.invalidCredentials);
     }
   }
 }
@@ -53,9 +54,9 @@ class LoginSuccessResponse extends AuthServiceResponse {
 }
 
 class AuthServiceErrorResponse extends AuthServiceResponse {
-  final AuthServiceErrorType errorType;
+  final AuthErrorType errorType;
 
-  AuthServiceErrorResponse({this.errorType = AuthServiceErrorType.unknown});
+  AuthServiceErrorResponse({this.errorType = AuthErrorType.unknown});
 
   @override
   List<Object?> get props => [];
