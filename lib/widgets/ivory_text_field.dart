@@ -124,7 +124,7 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
                   horizontal: 16,
                   vertical: 12,
                 ),
-                controller: _controller.textEditingController,
+                controller: _controller._textEditingController,
                 onChanged: widget.onChanged,
                 obscureText: widget.obscureText,
                 placeholder: widget.placeholder,
@@ -243,7 +243,6 @@ class IvoryTextFieldController extends ChangeNotifier {
   bool get hasError => _errorText != null || _error;
   String get text => _textEditingController.text;
   TextSelection get selection => _textEditingController.selection;
-  TextEditingController get textEditingController => _textEditingController;
 
   set text(String value) {
     _textEditingController.text = value;
