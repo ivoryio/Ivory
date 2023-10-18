@@ -12,12 +12,10 @@ import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 class LoginWithBiometricsScreen extends StatefulWidget {
-  static const routeName = "/loginTanScreen";
-  final AuthViewModel viewModel;
+  static const routeName = "/loginBiometricsScreen";
 
   const LoginWithBiometricsScreen({
     super.key,
-    required this.viewModel,
   });
 
   @override

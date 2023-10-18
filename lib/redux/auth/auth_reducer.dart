@@ -3,7 +3,7 @@ import 'package:solarisdemo/redux/auth/auth_state.dart';
 
 AuthState authReducer(AuthState currentState, dynamic action) {
   if (action is AuthLoadingEventAction) {
-    return AuthLoadingState(action.loadingType);
+    return AuthLoadingState();
   } else if (action is CredentialsLoadedEventAction) {
     return AuthInitialState(
       email: action.email ?? action.email,

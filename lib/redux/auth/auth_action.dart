@@ -1,14 +1,11 @@
 import 'package:solarisdemo/models/auth/auth_error_type.dart';
-import 'package:solarisdemo/models/auth/auth_loading_type.dart';
 import 'package:solarisdemo/models/user.dart';
 
 class AuthenticateUserCommandAction {
   final String email;
-  final String phoneNumber;
   final String password;
   AuthenticateUserCommandAction({
     required this.email,
-    required this.phoneNumber,
     required this.password,
   });
 }
@@ -72,13 +69,7 @@ class AuthenticationConfirmedEventAction {
 
 class LoggedOutEventAction {}
 
-class AuthLoadingEventAction {
-  final AuthLoadingType loadingType;
-
-  AuthLoadingEventAction({
-    required this.loadingType,
-  });
-}
+class AuthLoadingEventAction {}
 
 class AuthFailedEventAction {
   final AuthErrorType errorType;

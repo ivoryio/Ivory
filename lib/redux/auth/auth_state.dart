@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:solarisdemo/models/auth/auth_error_type.dart';
-import 'package:solarisdemo/models/auth/auth_loading_type.dart';
 import 'package:solarisdemo/models/user.dart';
 
 abstract class AuthState extends Equatable {
@@ -20,14 +19,7 @@ class AuthInitialState extends AuthState {
   });
 }
 
-class AuthLoadingState extends AuthState {
-  final AuthLoadingType loadingType;
-
-  AuthLoadingState(this.loadingType);
-
-  @override
-  List<Object?> get props => [loadingType];
-}
+class AuthLoadingState extends AuthState {}
 
 class AuthTanConfirmState extends AuthState {}
 

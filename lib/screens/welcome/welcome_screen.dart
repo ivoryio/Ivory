@@ -1,10 +1,16 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/infrastructure/auth/auth_presenter.dart';
 import 'package:solarisdemo/ivory_app.dart';
+import 'package:solarisdemo/navigator.dart';
+import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/auth/auth_action.dart';
 import 'package:solarisdemo/screens/login/login_screen.dart';
+import 'package:solarisdemo/screens/login/login_with_biometrics_screen.dart';
 import 'package:solarisdemo/screens/onboarding/start/onboarding_start_screen.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
@@ -19,16 +25,48 @@ class WelcomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const ScreenScaffold(
+    return ScreenScaffold(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.light,
       extendBodyBehindAppBar: true,
       body: ScrollableScreenContainer(
-        child: Column(
-          children: [
-            HeroVideo(),
-            WelcomeScreenContent(),
-          ],
+        child: StoreConnector<AppState, AuthViewModel>(
+          onInit: (store) {
+            store.dispatch(
+              LoadCredentialsCommandAction(),
+            );
+          },
+          onWillChange: (previousViewModel, newViewModel) {
+            if (previousViewModel is AuthLoadingViewModel &&
+                newViewModel is AuthInitialViewModel &&
+                newViewModel.email!.isNotEmpty &&
+                newViewModel.password!.isNotEmpty &&
+                newViewModel.deviceId!.isNotEmpty) {
+              StoreProvider.of<AppState>(context).dispatch(
+                AuthenticateUserCommandAction(
+                  email: newViewModel.email!,
+                  password: newViewModel.password!,
+                ),
+              );
+            }
+            if (previousViewModel is AuthLoadingViewModel && newViewModel is AuthenticatedWithBoundDeviceViewModel) {
+              Navigator.of(
+                navigatorKey.currentContext as BuildContext,
+              ).pushNamedAndRemoveUntil(LoginWithBiometricsScreen.routeName, (route) => false);
+            }
+          },
+          builder: (context, viewModel) {
+            if (viewModel is AuthLoadingViewModel) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            return const Column(
+              children: [
+                HeroVideo(),
+                WelcomeScreenContent(),
+              ],
+            );
+          },
+          converter: (store) => AuthPresenter.presentAuth(authState: store.state.authState),
         ),
       ),
     );

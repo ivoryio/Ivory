@@ -3,19 +3,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/auth/auth_presenter.dart';
 import 'package:solarisdemo/models/auth/auth_error_type.dart';
-import 'package:solarisdemo/models/auth/auth_loading_type.dart';
+import 'package:solarisdemo/navigator.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/auth/auth_action.dart';
-import 'package:solarisdemo/screens/login/login_with_biometrics_screen.dart';
 import 'package:solarisdemo/screens/login/login_with_tan_screen.dart';
 import 'package:solarisdemo/screens/login/modals/mobile_number_country_picker_popup.dart';
 import 'package:solarisdemo/services/device_service.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/checkbox.dart';
+import 'package:solarisdemo/widgets/continue_button_controller.dart';
 import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/screen_title.dart';
@@ -39,77 +38,64 @@ class LoginScreen extends StatelessWidget {
           LoadCredentialsCommandAction(),
         );
       },
+      onWillChange: (previousViewModel, newViewModel) {
+        if (previousViewModel is AuthLoadingViewModel && newViewModel is AuthenticatedWithoutBoundDeviceViewModel) {
+          Navigator.of(
+            navigatorKey.currentContext as BuildContext,
+          ).pushNamed(LoginWithTanScreen.routeName);
+        }
+      },
       converter: (store) => AuthPresenter.presentAuth(authState: store.state.authState),
       builder: (context, viewModel) {
-        if (viewModel is AuthenticatedWithoutBoundDeviceViewModel ||
-            viewModel.loadingType == AuthLoadingType.confirmWithTan) {
-          return LoginWithTanScreen(
-            viewModel: viewModel,
-          );
-        }
-        if (viewModel is AuthenticatedWithBoundDeviceViewModel ||
-            viewModel.loadingType == AuthLoadingType.confirmWithBiometrics) {
-          return LoginWithBiometricsScreen(
-            viewModel: viewModel,
-          );
-        }
-        if (viewModel is AuthInitialViewModel ||
-            viewModel.loadingType == AuthLoadingType.initAuth ||
-            viewModel.loadingType == AuthLoadingType.authenticate ||
-            (viewModel is AuthErrorViewModel && viewModel.errorType == AuthErrorType.invalidCredentials)) {
-          return ScreenScaffold(
-            body: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                AppToolbar(
-                  title: "Login",
-                  backButtonEnabled: viewModel is! AuthLoadingViewModel,
-                  scrollController: scrollController,
-                  padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                  actions: [
-                    SvgPicture.asset(
-                      'assets/images/ivory-logo-small.svg',
-                    ),
-                  ],
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-                    child: SingleChildScrollView(
-                      physics: const ClampingScrollPhysics(),
-                      controller: scrollController,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const ScreenTitle(
-                            "Login",
-                          ),
-                          const SizedBox(height: 24),
-                          TabView(
-                            tabs: [
-                              TabViewItem(
-                                text: "Email",
-                                child: EmailLoginForm(
-                                  viewModel: viewModel,
-                                ),
+        return ScreenScaffold(
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AppToolbar(
+                title: "Login",
+                backButtonEnabled: viewModel is! AuthLoadingViewModel,
+                scrollController: scrollController,
+                padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+                actions: const [
+                  AppbarLogo(),
+                ],
+              ),
+              Expanded(
+                child: Padding(
+                  padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
+                  child: SingleChildScrollView(
+                    physics: const ClampingScrollPhysics(),
+                    controller: scrollController,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const ScreenTitle(
+                          "Login",
+                        ),
+                        const SizedBox(height: 24),
+                        TabView(
+                          tabs: [
+                            TabViewItem(
+                              text: "Email",
+                              child: EmailLoginForm(
+                                viewModel: viewModel,
                               ),
-                              const TabViewItem(
-                                text: "Phone number",
-                                child: PhoneNumberLoginForm(),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                            ),
+                            const TabViewItem(
+                              text: "Phone number",
+                              child: PhoneNumberLoginForm(),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
-              ],
-            ),
-          );
-        }
-        return const GenericLoadingScreen();
+              ),
+              const SizedBox(height: 16),
+            ],
+          ),
+        );
       },
     );
   }
@@ -326,7 +312,6 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
                   height: 24,
                 ),
                 SizedBox(
-                  // width: double.infinity,
                   child: PrimaryButton(
                     text: "Continue",
                     onPressed: isLoginEnabled
@@ -373,50 +358,63 @@ class EmailLoginForm extends StatefulWidget {
 }
 
 class _EmailLoginFormState extends State<EmailLoginForm> {
-  bool isEmailValid = false;
-  bool isPasswordValid = false;
-  bool hasValidationError = false;
-  bool hidePassword = true;
+  bool _isEmailValid = false;
+  bool _isPasswordValid = false;
+  bool _hasValidationError = false;
+  bool _hidePassword = true;
   bool isCompleted = false;
-  TextEditingController emailInputController = TextEditingController();
-  TextEditingController passwordInputController = TextEditingController();
+  late TextEditingController _emailInputController;
+  late TextEditingController _passwordInputController;
+  late ContinueButtonController continueButtonController;
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _emailInputController = TextEditingController();
+    _passwordInputController = TextEditingController();
+    continueButtonController = ContinueButtonController();
+
+    _emailInputController.addListener(onChangeEmailAddress);
+    _passwordInputController.addListener(onChangePassword);
+  }
 
   void onChangeEmailAddress() {
     bool isInputValid =
-        emailInputController.text.isNotEmpty && Validator.isValidEmailAddress(emailInputController.text);
+        _emailInputController.text.isNotEmpty && Validator.isValidEmailAddress(_emailInputController.text);
 
     setState(() {
-      hasValidationError = !isInputValid;
+      _hasValidationError = !isInputValid;
     });
 
-    if (isInputValid && !isEmailValid) {
+    if (isInputValid && !_isEmailValid) {
       setState(() {
-        isEmailValid = true;
-        hasValidationError = false;
+        _isEmailValid = true;
+        _hasValidationError = false;
       });
     }
 
-    if (!isInputValid && isEmailValid) {
+    if (!isInputValid && _isEmailValid) {
       setState(() {
-        isEmailValid = false;
-        hasValidationError = true;
+        _isEmailValid = false;
+        _hasValidationError = true;
       });
     }
   }
 
   void onChangePassword() {
-    bool isInputValid = passwordInputController.text.isNotEmpty && passwordInputController.text.length >= 6;
+    bool isInputValid = _passwordInputController.text.isNotEmpty && _passwordInputController.text.length >= 6;
 
-    if (isInputValid && !isPasswordValid) {
+    if (isInputValid && !_isPasswordValid) {
       setState(() {
-        isPasswordValid = true;
+        _isPasswordValid = true;
       });
     }
 
-    if (!isInputValid && isPasswordValid) {
+    if (!isInputValid && _isPasswordValid) {
       setState(() {
-        isPasswordValid = false;
+        _isPasswordValid = false;
       });
     }
   }
@@ -426,21 +424,21 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
     if (widget.viewModel is AuthInitialViewModel &&
         widget.viewModel.email != null &&
         widget.viewModel.password != null &&
-        emailInputController.text.isEmpty &&
-        passwordInputController.text.isEmpty) {
-      emailInputController.text = widget.viewModel.email!;
-      passwordInputController.text = widget.viewModel.password!;
+        _emailInputController.text.isEmpty &&
+        _passwordInputController.text.isEmpty) {
+      _emailInputController.text = widget.viewModel.email!;
+      _passwordInputController.text = widget.viewModel.password!;
 
       setState(() {
-        isEmailValid = true;
-        isPasswordValid = true;
+        _isEmailValid = true;
+        _isPasswordValid = true;
       });
     }
 
     if (widget.viewModel is AuthErrorViewModel && isCompleted == true) {
       setState(() {
-        isEmailValid = false;
-        isPasswordValid = false;
+        _isEmailValid = false;
+        _isPasswordValid = false;
         isCompleted = false;
       });
     }
@@ -456,18 +454,18 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (widget.viewModel is AuthErrorViewModel && (!isEmailValid || !isPasswordValid))
+                if (widget.viewModel is AuthErrorViewModel && (!_isEmailValid || !_isPasswordValid))
                   AuthErrorContainer(
                     errorType: widget.viewModel.errorType!,
                   ),
-                if (widget.viewModel is AuthErrorViewModel)
+                if (widget.viewModel is AuthErrorViewModel && (!_isEmailValid || !_isPasswordValid))
                   const SizedBox(
                     height: 24,
                   ),
                 Text(
                   'Email address',
                   style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(
-                        color: hasValidationError || !isEmailValid
+                        color: _hasValidationError || !_isEmailValid
                             ? const Color(0xFFE61F27)
                             : ClientConfig.getCustomColors().neutral700,
                       ),
@@ -477,13 +475,13 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                   onTap: () {
                     if (widget.viewModel is AuthErrorViewModel) {
                       setState(() {
-                        isEmailValid = true;
+                        _isEmailValid = true;
                       });
                     }
                   },
                   enabled: !isCompleted,
                   style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                  controller: emailInputController,
+                  controller: _emailInputController,
                   onChanged: (inputValue) => onChangeEmailAddress(),
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
@@ -492,7 +490,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                       vertical: 12,
                     ),
                     filled: true,
-                    fillColor: hasValidationError || !isEmailValid
+                    fillColor: _hasValidationError || !_isEmailValid
                         ? const Color(0xFFFFE9EA)
                         : ClientConfig.getCustomColors().neutral100,
                     border: OutlineInputBorder(
@@ -501,7 +499,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                       ),
                       borderSide: BorderSide(
                         width: 1,
-                        color: hasValidationError || !isEmailValid
+                        color: _hasValidationError || !_isEmailValid
                             ? const Color(0xFFE61F27)
                             : ClientConfig.getCustomColors().neutral500,
                         style: BorderStyle.solid,
@@ -513,7 +511,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                       ),
                       borderSide: BorderSide(
                         width: 1,
-                        color: hasValidationError || !isEmailValid
+                        color: _hasValidationError || !_isEmailValid
                             ? const Color(0xFFE61F27)
                             : ClientConfig.getColorScheme().primary,
                         style: BorderStyle.solid,
@@ -521,8 +519,8 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                     ),
                   ),
                 ),
-                if (hasValidationError) const SizedBox(height: 8),
-                if (hasValidationError)
+                if (_hasValidationError) const SizedBox(height: 8),
+                if (_hasValidationError)
                   Text(
                     'Please input a valid email address: example@gmail.com',
                     style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(
@@ -535,7 +533,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                 Text(
                   'Password',
                   style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(
-                        color: !isPasswordValid ? const Color(0xFFE61F27) : ClientConfig.getCustomColors().neutral700,
+                        color: !_isPasswordValid ? const Color(0xFFE61F27) : ClientConfig.getCustomColors().neutral700,
                       ),
                 ),
                 const SizedBox(height: 8),
@@ -543,14 +541,14 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                   onTap: () {
                     if (widget.viewModel is AuthErrorViewModel) {
                       setState(() {
-                        isPasswordValid = true;
+                        _isPasswordValid = true;
                       });
                     }
                   },
                   enabled: !isCompleted,
                   style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                  obscureText: hidePassword,
-                  controller: passwordInputController,
+                  obscureText: _hidePassword,
+                  controller: _passwordInputController,
                   onChanged: (inputValue) => onChangePassword(),
                   keyboardType: TextInputType.visiblePassword,
                   decoration: InputDecoration(
@@ -559,14 +557,14 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                       vertical: 12,
                     ),
                     filled: true,
-                    fillColor: !isPasswordValid ? const Color(0xFFFFE9EA) : ClientConfig.getCustomColors().neutral100,
+                    fillColor: !_isPasswordValid ? const Color(0xFFFFE9EA) : ClientConfig.getCustomColors().neutral100,
                     border: OutlineInputBorder(
                       borderRadius: const BorderRadius.all(
                         Radius.circular(8),
                       ),
                       borderSide: BorderSide(
                         width: 1,
-                        color: !isPasswordValid ? const Color(0xFFE61F27) : ClientConfig.getCustomColors().neutral500,
+                        color: !_isPasswordValid ? const Color(0xFFE61F27) : ClientConfig.getCustomColors().neutral500,
                         style: BorderStyle.solid,
                       ),
                     ),
@@ -576,7 +574,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                       ),
                       borderSide: BorderSide(
                         width: 1,
-                        color: !isPasswordValid ? const Color(0xFFE61F27) : ClientConfig.getColorScheme().primary,
+                        color: !_isPasswordValid ? const Color(0xFFE61F27) : ClientConfig.getColorScheme().primary,
                         style: BorderStyle.solid,
                       ),
                     ),
@@ -591,7 +589,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                       isChecked: false,
                       onChanged: (bool? value) {
                         setState(() {
-                          hidePassword = !hidePassword;
+                          _hidePassword = !_hidePassword;
                         });
                       },
                     ),
@@ -602,7 +600,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
               ],
             ),
             SizedBox(
-              height: widget.viewModel is AuthErrorViewModel ? 100 : 210,
+              height: widget.viewModel is AuthErrorViewModel && (!_isEmailValid || !_isPasswordValid) ? 100 : 210,
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -627,19 +625,18 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                     color: ClientConfig.getColorScheme().tertiary,
                     textColor: ClientConfig.getColorScheme().surface,
                     isLoading: widget.viewModel is AuthLoadingViewModel,
-                    onPressed: isEmailValid && isPasswordValid
+                    onPressed: _isEmailValid && _isPasswordValid
                         ? () async {
                             if (_formKey.currentState!.validate()) {
                               _formKey.currentState!.save();
-                              String emailAddress = emailInputController.text;
-                              String password = passwordInputController.text;
+                              String emailAddress = _emailInputController.text;
+                              String password = _passwordInputController.text;
                               setState(() {
                                 isCompleted = true;
                               });
                               StoreProvider.of<AppState>(context).dispatch(
                                 AuthenticateUserCommandAction(
                                   email: emailAddress,
-                                  phoneNumber: '',
                                   password: password,
                                 ),
                               );

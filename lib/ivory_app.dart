@@ -13,6 +13,8 @@ import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/auth/auth_action.dart';
 import 'package:solarisdemo/screens/account/account_details_screen.dart';
 import 'package:solarisdemo/screens/available_balance/available_balance_screen.dart';
+import 'package:solarisdemo/screens/login/login_with_biometrics_screen.dart';
+import 'package:solarisdemo/screens/login/login_with_tan_screen.dart';
 import 'package:solarisdemo/screens/onboarding/signup/onboarding_basic_info_screen.dart';
 import 'package:solarisdemo/screens/onboarding/start/onboarding_german_residency_error_screen.dart';
 import 'package:solarisdemo/screens/onboarding/start/onboarding_german_residency_screen.dart';
@@ -141,6 +143,8 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
               WelcomeScreen.routeName: (context) => const WelcomeScreen(),
               // login
               LoginScreen.routeName: (context) => const LoginScreen(),
+              LoginWithTanScreen.routeName: (context) => const LoginWithTanScreen(),
+              LoginWithBiometricsScreen.routeName: (context) => const LoginWithBiometricsScreen(),
               // signup
               SignupScreen.routeName: (context) => const SignupScreen(),
               // home

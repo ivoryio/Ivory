@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:solarisdemo/models/auth/auth_error_type.dart';
-import 'package:solarisdemo/models/auth/auth_loading_type.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/auth/auth_state.dart';
 
@@ -12,10 +11,10 @@ class AuthPresenter {
       return AuthInitialViewModel(
         email: authState.email ?? authState.email,
         password: authState.password ?? authState.password,
+        deviceId: authState.deviceId ?? authState.deviceId,
       );
     } else if (authState is AuthLoadingState) {
       return AuthLoadingViewModel(
-        authState.loadingType,
       );
     } else if (authState is AuthErrorState) {
       return AuthErrorViewModel(
@@ -42,19 +41,19 @@ abstract class AuthViewModel extends Equatable {
   final User? cognitoUser;
   final AuthenticatedUser? authenticatedUser;
   final String? tan;
-  final AuthLoadingType? loadingType;
   final AuthErrorType? errorType;
   final String? email;
   final String? password;
+  final String? deviceId;
 
   const AuthViewModel({
     this.cognitoUser,
     this.authenticatedUser,
     this.tan,
-    this.loadingType,
     this.errorType,
     this.email,
     this.password,
+    this.deviceId,
   });
 
   @override
@@ -65,14 +64,11 @@ class AuthInitialViewModel extends AuthViewModel {
   const AuthInitialViewModel({
     String? email,
     String? password,
-  }) : super(email: email, password: password);
+    String? deviceId,
+  }) : super(email: email, password: password, deviceId: deviceId);
 }
 
-class AuthLoadingViewModel extends AuthViewModel {
-  const AuthLoadingViewModel(
-    AuthLoadingType loadingType,
-  ) : super(loadingType: loadingType);
-}
+class AuthLoadingViewModel extends AuthViewModel {}
 
 class AuthErrorViewModel extends AuthViewModel {
   const AuthErrorViewModel(

@@ -5,7 +5,6 @@ import 'package:solarisdemo/infrastructure/device/device_fingerprint_service.dar
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/infrastructure/person/person_service.dart';
 import 'package:solarisdemo/models/auth/auth_error_type.dart';
-import 'package:solarisdemo/models/auth/auth_loading_type.dart';
 import 'package:solarisdemo/models/device_activity.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
@@ -30,9 +29,7 @@ class AuthMiddleware extends MiddlewareClass<AppState> {
     next(action);
 
     if (action is LoadCredentialsCommandAction) {
-      store.dispatch(AuthLoadingEventAction(
-        loadingType: AuthLoadingType.initAuth,
-      ));
+      store.dispatch(AuthLoadingEventAction());
 
       final credentials = await _deviceService.getCredentialsFromCache();
       if (credentials == null) {
@@ -56,14 +53,14 @@ class AuthMiddleware extends MiddlewareClass<AppState> {
     }
 
     if (action is AuthenticateUserCommandAction) {
-      store.dispatch(AuthLoadingEventAction(
-        loadingType: AuthLoadingType.authenticate,
-      ));
+      store.dispatch(AuthLoadingEventAction());
 
-      final userName = action.email.isNotEmpty ? action.email : action.phoneNumber;
+      if (action.email.isEmpty || action.email == '') {
+        store.dispatch(AuthFailedEventAction(errorType: AuthErrorType.invalidCredentials));
+      }
 
       final loginResponse = await _authService.login(
-        userName,
+        action.email,
         action.password,
       );
       if (loginResponse is! LoginSuccessResponse) {
@@ -95,10 +92,14 @@ class AuthMiddleware extends MiddlewareClass<AppState> {
           store.dispatch(AuthFailedEventAction(errorType: AuthErrorType.cantCreateFingerprint));
           return;
         }
-        await _deviceFingerprintService.createDeviceActivity(
+        final deviceActivity = await _deviceFingerprintService.createDeviceActivity(
           activityType: DeviceActivityType.CONSENT_PROVIDED,
           deviceFingerprint: deviceFingerprint,
         );
+        if (deviceActivity is! CreateDeviceActivityResponse) {
+          store.dispatch(AuthFailedEventAction(errorType: AuthErrorType.cantCreateActivity));
+          return;
+        }
       }
 
       final deviceFingerprint = await _deviceFingerprintService.getDeviceFingerprint(consentId);
@@ -106,27 +107,27 @@ class AuthMiddleware extends MiddlewareClass<AppState> {
         store.dispatch(AuthFailedEventAction(errorType: AuthErrorType.cantCreateFingerprint));
         return;
       }
-      await _deviceFingerprintService.createDeviceActivity(
+      final deviceActivity = await _deviceFingerprintService.createDeviceActivity(
         activityType: DeviceActivityType.APP_START,
         deviceFingerprint: deviceFingerprint,
         user: user,
       );
-
+      if (deviceActivity is! CreateDeviceActivityResponse) {
+        store.dispatch(AuthFailedEventAction(errorType: AuthErrorType.cantCreateActivity));
+        return;
+      }
       final boundDeviceId = await _deviceService.getDeviceId();
-      if (boundDeviceId!.isNotEmpty) {
+      if (boundDeviceId != '') {
         store.dispatch(AuthenticatedWithBoundDeviceEventAction(cognitoUser: user));
         return;
       }
+
       store.dispatch(AuthenticatedWithoutBoundDeviceEventAction(cognitoUser: user));
     }
 
     if (action is ConfirmTanAuthenticationCommandAction || action is ConfirmBiometricAuthenticationCommandAction) {
       store.dispatch(
-        AuthLoadingEventAction(
-          loadingType: action is ConfirmTanAuthenticationCommandAction
-              ? AuthLoadingType.confirmWithTan
-              : AuthLoadingType.confirmWithBiometrics,
-        ),
+        AuthLoadingEventAction(),
       );
 
       if (action is ConfirmBiometricAuthenticationCommandAction) {
