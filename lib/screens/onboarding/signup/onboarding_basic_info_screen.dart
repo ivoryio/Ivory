@@ -25,16 +25,16 @@ class OnboardingBasicInfoScreen extends StatefulWidget {
 
 class _OnboardingBasicInfoScreenState extends State<OnboardingBasicInfoScreen> {
   late IvorySelectOptionController _selectTitleController;
-  late TextEditingController _firstNameController;
-  late TextEditingController _lastNameController;
+  late IvoryTextFieldController _firstNameController;
+  late IvoryTextFieldController _lastNameController;
   late ContinueButtonController _continueButtonController;
 
   @override
   void initState() {
     super.initState();
     _selectTitleController = IvorySelectOptionController();
-    _firstNameController = TextEditingController();
-    _lastNameController = TextEditingController();
+    _firstNameController = IvoryTextFieldController();
+    _lastNameController = IvoryTextFieldController();
     _continueButtonController = ContinueButtonController();
 
     _selectTitleController.addListener(onChange);
