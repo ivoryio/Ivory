@@ -33,7 +33,7 @@ class TransferReviewScreen extends StatefulWidget {
 }
 
 class _TransferReviewScreenState extends State<TransferReviewScreen> {
-  final noteController = TextEditingController();
+  final noteController = IvoryTextFieldController();
 
   @override
   Widget build(BuildContext context) {

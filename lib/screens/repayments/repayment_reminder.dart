@@ -96,7 +96,8 @@ class _RepaymentReminderScreenState extends State<RepaymentReminderScreen> {
                               .map(
                                 (reminder) => ListTile(
                                   minLeadingWidth: 0,
-                                  leading: Icon(Icons.notifications_none_rounded, color: ClientConfig.getColorScheme().secondary),
+                                  leading: Icon(Icons.notifications_none_rounded,
+                                      color: ClientConfig.getColorScheme().secondary),
                                   title: Text(
                                     reminder.description,
                                     style: ClientConfig.getTextStyleScheme().heading4,
@@ -136,10 +137,15 @@ class _RepaymentReminderScreenState extends State<RepaymentReminderScreen> {
                                 horizontal: 24,
                               ),
                             ),
-                            icon: Icon(Icons.notifications_active_outlined, color: ClientConfig.getColorScheme().secondary,),
+                            icon: Icon(
+                              Icons.notifications_active_outlined,
+                              color: ClientConfig.getColorScheme().secondary,
+                            ),
                             label: Text(
                               'Add reminder',
-                              style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold.copyWith(color: ClientConfig.getColorScheme().secondary),
+                              style: ClientConfig.getTextStyleScheme()
+                                  .bodyLargeRegularBold
+                                  .copyWith(color: ClientConfig.getColorScheme().secondary),
                             ),
                             onPressed: () async {
                               final value = await showBottomModal(
@@ -201,7 +207,7 @@ class _RepaymentReminderScreenState extends State<RepaymentReminderScreen> {
       );
     }
 
-    Timer(const Duration(seconds: 1), (){
+    Timer(const Duration(seconds: 1), () {
       Navigator.pop(context);
     });
   }
@@ -276,7 +282,7 @@ class _CustomReminderPopUpContent extends StatefulWidget {
 }
 
 class _CustomReminderPopUpContentState extends State<_CustomReminderPopUpContent> {
-  final _textController = TextEditingController(text: '1');
+  final _textController = IvoryTextFieldController(text: '1');
   TimePeriod _timePeriod = TimePeriod.hours;
 
   void onChangedTimePeriod(TimePeriod? value) {
@@ -313,7 +319,7 @@ class _CustomReminderPopUpContentState extends State<_CustomReminderPopUpContent
           child: Button(
             text: 'Done',
             color: ClientConfig.getColorScheme().tertiary,
-            textColor:ClientConfig.getColorScheme().surface,
+            textColor: ClientConfig.getColorScheme().surface,
             onPressed: () {
               Navigator.of(context).pop((int.parse(_textController.text), _timePeriod));
             },
