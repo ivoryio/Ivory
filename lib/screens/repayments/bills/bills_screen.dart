@@ -115,7 +115,6 @@ class _BillsScrollView extends StatelessWidget {
 
     return ListView.builder(
       controller: scrollController,
-      padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
       itemCount: billsGroupedByYear.length,
       itemBuilder: (context, i) {
         final year = billsGroupedByYear.keys.elementAt(i);
@@ -124,9 +123,12 @@ class _BillsScrollView extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              year,
-              style: ClientConfig.getTextStyleScheme().heading4,
+            Padding(
+              padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+              child: Text(
+                year,
+                style: ClientConfig.getTextStyleScheme().heading4,
+              ),
             ),
             const SizedBox(height: 8),
             ...bills.map((bill) => _BillItem(bill: bill)),
@@ -150,13 +152,19 @@ class _BillItem extends StatelessWidget {
         style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
       ),
       minLeadingWidth: 0,
-      leading: Icon(
-        Icons.receipt_outlined,
-        color: ClientConfig.getColorScheme().secondary,
+      leading: Padding(
+        padding: const EdgeInsets.only(left: 24),
+        child: Icon(
+          Icons.receipt_outlined,
+          color: ClientConfig.getColorScheme().secondary,
+        ),
       ),
-      trailing: Icon(
-        Icons.arrow_forward_ios,
-        color: ClientConfig.getColorScheme().secondary,
+      trailing: Padding(
+        padding: const EdgeInsets.only(right: 24),
+        child: Icon(
+          Icons.arrow_forward_ios,
+          color: ClientConfig.getColorScheme().secondary,
+        ),
       ),
       contentPadding: EdgeInsets.zero,
       onTap: () => Navigator.of(context).pushNamed(

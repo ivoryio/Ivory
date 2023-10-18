@@ -132,15 +132,12 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                   Expanded(
                     child: SingleChildScrollView(
                       controller: scrollController,
-                      child: Padding(
-                        padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                        child: IvoryTabView(
-                          controller: tabController,
-                          children: [
-                            _buildTransactionsList(viewModel),
-                            _buildTransactionsList(viewModel),
-                          ],
-                        ),
+                      child: IvoryTabView(
+                        controller: tabController,
+                        children: [
+                          _buildTransactionsList(viewModel),
+                          _buildTransactionsList(viewModel),
+                        ],
                       ),
                     ),
                   ),
@@ -332,16 +329,19 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  formattedDayMonthYear,
-                  style: ClientConfig.getTextStyleScheme().labelLarge,
-                ),
-                Text(_formatAmountWithCurrency(_sumOfDay(transactions)),
-                    style: ClientConfig.getTextStyleScheme().labelSmall),
-              ],
+            Padding(
+              padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    formattedDayMonthYear,
+                    style: ClientConfig.getTextStyleScheme().labelLarge,
+                  ),
+                  Text(_formatAmountWithCurrency(_sumOfDay(transactions)),
+                      style: ClientConfig.getTextStyleScheme().labelSmall),
+                ],
+              ),
             ),
             ListView.separated(
               physics: const NeverScrollableScrollPhysics(),

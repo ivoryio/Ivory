@@ -147,7 +147,7 @@ class BankCardChangePinChooseScreen extends StatelessWidget {
           children: [
             const TextSpan(
                 text:
-                    'In order to view your card details, you need to pair your device first. Click on the button below, or go to “Device pairing” under Security in the Settings tab and '),
+                    'In order to change your pin, you need to pair your device first. Click on the button below, or go to “Device pairing” under Security in the Settings tab and '),
             TextSpan(
               text: 'pair your device now.',
               style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,

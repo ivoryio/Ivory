@@ -91,54 +91,55 @@ class HomePageContent extends StatelessWidget {
             customer: user.person,
             user: user,
           ),
-          Padding(
-            padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-            child: Column(
-              children: [
-                const TransactionListTitle(
+          Column(
+            children: [
+              Padding(
+                padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+                child: const TransactionListTitle(
                   displayShowAllButton: true,
                 ),
-                StoreConnector<AppState, TransactionsViewModel>(
-                  onInit: (store) => store.dispatch(
-                    GetHomeTransactionsCommandAction(
-                      filter: _defaultTransactionListFilter,
-                      user: user.cognito,
-                      forceReloadTransactions: false,
-                    ),
+              ),
+              StoreConnector<AppState, TransactionsViewModel>(
+                onInit: (store) => store.dispatch(
+                  GetHomeTransactionsCommandAction(
+                    filter: _defaultTransactionListFilter,
+                    user: user.cognito,
+                    forceReloadTransactions: false,
                   ),
-                  converter: (store) =>
-                      TransactionPresenter.presentTransactions(transactionsState: store.state.homePageTransactionsState),
-                  builder: (context, viewModel) {
-                    if (viewModel is TransactionsErrorViewModel) {
-                      return const Center(
-                        child: Text('Could not load transactions'),
-                      );
-                    }
-
-                    if (viewModel is TransactionsFetchedViewModel) {
-                      return Column(
-                        children: [
-                          for (var transaction in viewModel.transactions!)
-                            TransactionListItem(
-                              transaction: transaction,
-                            ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 24,
-                            ),
-                            child: Analytics(
-                              transactions: viewModel.transactions!,
-                            ),
-                          ),
-                        ],
-                      );
-                    }
-
-                    return const Center(child: CircularProgressIndicator());
-                  },
                 ),
-              ],
-            ),
+                converter: (store) =>
+                    TransactionPresenter.presentTransactions(transactionsState: store.state.homePageTransactionsState),
+                builder: (context, viewModel) {
+                  if (viewModel is TransactionsErrorViewModel) {
+                    return const Center(
+                      child: Text('Could not load transactions'),
+                    );
+                  }
+
+                  if (viewModel is TransactionsFetchedViewModel) {
+                    return Column(
+                      children: [
+                        for (var transaction in viewModel.transactions!)
+                          TransactionListItem(
+                            transaction: transaction,
+                          ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 24,
+                            horizontal: 24,
+                          ),
+                          child: Analytics(
+                            transactions: viewModel.transactions!,
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+
+                  return const Center(child: CircularProgressIndicator());
+                },
+              ),
+            ],
           ),
           Padding(
             padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,

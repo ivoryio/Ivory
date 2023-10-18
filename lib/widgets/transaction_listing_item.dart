@@ -37,12 +37,15 @@ class TransactionListItem extends StatelessWidget {
       onTap: isClickable
           ? () => Navigator.pushNamed(context, TransactionDetailScreen.routeName, arguments: transaction)
           : null,
-      child: TransactionCard(
-        formattedDate: formattedDate,
-        amount: amount,
-        description: description,
-        recipientName: recipientName,
-        categoryIcon: transaction.category?.icon,
+      child: Padding(
+        padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+        child: TransactionCard(
+          formattedDate: formattedDate,
+          amount: amount,
+          description: description,
+          recipientName: recipientName,
+          categoryIcon: transaction.category?.icon,
+        ),
       ),
     );
   }
