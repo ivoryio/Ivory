@@ -1,14 +1,15 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/redux/app_state.dart';
-import 'package:solarisdemo/redux/onboarding/password/onboarding_password_action.dart';
+import 'package:solarisdemo/redux/onboarding/signup/password/onboarding_password_action.dart';
+import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
+import 'package:solarisdemo/widgets/continue_button_controller.dart';
 import 'package:solarisdemo/widgets/field_validators.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
+import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
 
 class OnboardingPasswordScreen extends StatefulWidget {
   static const routeName = "/onboardingPasswordScreen";
@@ -20,17 +21,19 @@ class OnboardingPasswordScreen extends StatefulWidget {
 }
 
 class _OnboardingPasswordScreenState extends State<OnboardingPasswordScreen> {
+  final ContinueButtonController _continueButtonController = ContinueButtonController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
   FocusNode passwordFocusNode = FocusNode();
   FocusNode confirmPasswordFocusNode = FocusNode();
   bool showPassword = false;
-  bool isButtonEnabled = false;
   bool isValidPassword = true;
 
   @override
   void initState() {
     super.initState();
+
+    _continueButtonController.setDisabled();
 
     passwordFocusNode.addListener(() => setState(() {}));
     confirmPasswordFocusNode.addListener(() => setState(() {}));
@@ -46,13 +49,9 @@ class _OnboardingPasswordScreenState extends State<OnboardingPasswordScreen> {
             richTextTitle: StepRichTextTitle(step: 3, totalSteps: 5),
             actions: const [AppbarLogo()],
           ),
-          LinearProgressIndicator(
-            value: 40 / 100,
-            color: ClientConfig.getColorScheme().secondary,
-            backgroundColor: const Color(0xFFE9EAEB),
-          ),
+          AnimatedLinearProgressIndicator.step(current: 3, totalSteps: 5),
           Expanded(
-            child: SingleChildScrollView(
+            child: ScrollableScreenContainer(
               padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -105,15 +104,17 @@ class _OnboardingPasswordScreenState extends State<OnboardingPasswordScreen> {
                       hintText: 'Type password',
                     ),
                     onChanged: (value) {
-                      if (value == confirmPasswordController.text && value.isNotEmpty) {
+                      setState(() {
+                        isValidPassword = !validatorMessages.map((e) => e.validate(value)).contains(false);
+                      });
+
+                      if (isValidPassword && value == confirmPasswordController.text && value.isNotEmpty) {
                         setState(() {
-                          isButtonEnabled = true;
-                          isValidPassword = !validatorMessages.map((e) => e.validate(value)).contains(false);
+                          _continueButtonController.setEnabled();
                         });
                       } else {
                         setState(() {
-                          isButtonEnabled = false;
-                          isValidPassword = !validatorMessages.map((e) => e.validate(value)).contains(false);
+                          _continueButtonController.setDisabled();
                         });
                       }
                     },
@@ -159,13 +160,13 @@ class _OnboardingPasswordScreenState extends State<OnboardingPasswordScreen> {
                       hintText: 'Repeat password',
                     ),
                     onChanged: (value) {
-                      if (value == passwordController.text && value.isNotEmpty) {
+                      if (value == passwordController.text && value.isNotEmpty && isValidPassword) {
                         setState(() {
-                          isButtonEnabled = true;
+                          _continueButtonController.setEnabled();
                         });
                       } else {
                         setState(() {
-                          isButtonEnabled = false;
+                          _continueButtonController.setDisabled();
                         });
                       }
                     },
@@ -204,24 +205,29 @@ class _OnboardingPasswordScreenState extends State<OnboardingPasswordScreen> {
                       Text('Show passwords', style: ClientConfig.getTextStyleScheme().bodyLargeRegular),
                     ],
                   ),
+                  const Spacer(),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ListenableBuilder(
+                      listenable: _continueButtonController,
+                      builder: (context, child) => PrimaryButton(
+                        text: "Continue",
+                        isLoading: _continueButtonController.isLoading,
+                        onPressed: _continueButtonController.isEnabled
+                            ? () {
+                                if (isValidPassword && passwordController.text == confirmPasswordController.text) {
+                                  StoreProvider.of<AppState>(context)
+                                      .dispatch(OnboardingSubmitPasswordCommandAction(passwordController.text));
+                                } else {
+                                  _continueButtonController.setDisabled();
+                                }
+                              }
+                            : null,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
                 ],
-              ),
-            ),
-          ),
-          Padding(
-            padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-            child: SizedBox(
-              width: double.infinity,
-              child: PrimaryButton(
-                text: "Continue",
-                onPressed: isButtonEnabled
-                    ? () {
-                        StoreProvider.of<AppState>(context)
-                            .dispatch(OnboardingSubmitPasswordCommandAction(passwordController.text));
-
-                        log('OnboardingPasswordScreen: passwordController.text: ${passwordController.text}');
-                      }
-                    : null,
               ),
             ),
           ),
