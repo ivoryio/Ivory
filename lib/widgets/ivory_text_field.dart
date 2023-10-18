@@ -183,11 +183,11 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
   Color _getBorderColor() {
     if (_controller.isEnabled == false) {
       return ClientConfig.getCustomColors().neutral400;
-    } else if (_controller.hasError) {
-      return const Color(0xFFE61F27);
-    } else if (_focusNode.hasFocus && !widget.error) {
+    } else if (_focusNode.hasFocus) {
       return ClientConfig.getCustomColors().neutral900;
-    } else if (_controller.text.isNotEmpty && !widget.error) {
+    } else if (_controller.hasError) {
+      return ClientConfig.getColorScheme().error;
+    } else if (_controller.text.isNotEmpty) {
       return ClientConfig.getCustomColors().neutral500;
     } else {
       return ClientConfig.getCustomColors().neutral400;
