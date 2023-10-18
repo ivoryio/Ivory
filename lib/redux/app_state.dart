@@ -4,7 +4,9 @@ import 'package:solarisdemo/redux/categories/category_state.dart';
 import 'package:solarisdemo/redux/credit_line/credit_line_state.dart';
 import 'package:solarisdemo/redux/device/device_state.dart';
 import 'package:solarisdemo/redux/notification/notification_state.dart';
+import 'package:solarisdemo/redux/onboarding/password/onboarding_password_state.dart';
 import 'package:solarisdemo/redux/onboarding/signup/basic_info/onboarding_basic_info_state.dart';
+import 'package:solarisdemo/redux/onboarding/signup/email/onboarding_email_state.dart';
 import 'package:solarisdemo/redux/person/account_summary/account_summay_state.dart';
 import 'package:solarisdemo/redux/person/person_account/person_account_state.dart';
 import 'package:solarisdemo/redux/person/reference_account/reference_account_state.dart';
@@ -35,6 +37,8 @@ class AppState extends Equatable {
   final AccountSummaryState accountSummaryState;
   final TransactionsState homePageTransactionsState;
   final OnboardingBasicInfoState onboardingBasicInfoState;
+  final OnboardingEmailState onboardingEmailState;
+  final OnboardingPasswordState onboardingPasswordState;
 
   const AppState({
     required this.transactionsState,
@@ -55,6 +59,8 @@ class AppState extends Equatable {
     required this.accountSummaryState,
     required this.homePageTransactionsState,
     required this.onboardingBasicInfoState,
+    required this.onboardingEmailState,
+    required this.onboardingPasswordState,
   });
 
   factory AppState.initialState() {
@@ -77,6 +83,8 @@ class AppState extends Equatable {
       accountSummaryState: AccountSummaryInitialState(),
       homePageTransactionsState: TransactionsInitialState(),
       onboardingBasicInfoState: OnboardingBasicInfoInitialState(),
+      onboardingEmailState: OnboardingEmailInitialState(),
+      onboardingPasswordState: OnboardingPasswordInitialState(),
     );
   }
 
@@ -100,6 +108,8 @@ class AppState extends Equatable {
         accountSummaryState,
         homePageTransactionsState,
         onboardingBasicInfoState,
+        onboardingEmailState,
+        onboardingPasswordState,
       ];
 
   @override

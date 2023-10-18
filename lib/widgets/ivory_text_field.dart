@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:solarisdemo/config.dart';
 
@@ -49,6 +51,7 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
   @override
   void initState() {
     super.initState();
+    log('widget.error [${widget.error}]');
 
     _focusNode = widget.focusNode ?? FocusNode();
     _controller = widget.controller ?? TextEditingController();
@@ -160,9 +163,9 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
       return ClientConfig.getCustomColors().neutral400;
     } else if (widget.error || widget.errorText != null) {
       return const Color(0xFFE61F27);
-    } else if (_focusNode.hasFocus) {
+    } else if (_focusNode.hasFocus && !widget.error) {
       return ClientConfig.getCustomColors().neutral900;
-    } else if (_controller.text.isNotEmpty) {
+    } else if (_controller.text.isNotEmpty && !widget.error) {
       return ClientConfig.getCustomColors().neutral500;
     } else {
       return ClientConfig.getCustomColors().neutral400;

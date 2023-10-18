@@ -1,8 +1,10 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/onboarding/password/onboarding_password_action.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/field_validators.dart';
@@ -24,6 +26,7 @@ class _OnboardingPasswordScreenState extends State<OnboardingPasswordScreen> {
   FocusNode confirmPasswordFocusNode = FocusNode();
   bool showPassword = false;
   bool isButtonEnabled = false;
+  bool isValidPassword = true;
 
   @override
   void initState() {
@@ -41,29 +44,34 @@ class _OnboardingPasswordScreenState extends State<OnboardingPasswordScreen> {
           AppToolbar(
             padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
             richTextTitle: StepRichTextTitle(step: 3, totalSteps: 5),
-            actions: [
-              SvgPicture.asset("assets/icons/default/appbar_logo.svg"),
-            ],
+            actions: const [AppbarLogo()],
           ),
-          const SizedBox(height: 16),
-          Padding(
-            padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text('Password', style: ClientConfig.getTextStyleScheme().heading2),
-            ),
+          LinearProgressIndicator(
+            value: 40 / 100,
+            color: ClientConfig.getColorScheme().secondary,
+            backgroundColor: const Color(0xFFE9EAEB),
           ),
-          const SizedBox(height: 16),
           Expanded(
             child: SingleChildScrollView(
               padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const SizedBox(height: 16),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text('Password', style: ClientConfig.getTextStyleScheme().heading2),
+                  ),
+                  const SizedBox(height: 16),
                   Text('Choose your password and verify it below.',
                       style: ClientConfig.getTextStyleScheme().bodyLargeRegular),
                   const SizedBox(height: 24),
-                  Text('Password', style: ClientConfig.getTextStyleScheme().labelSmall),
+                  Text('Password',
+                      style: (isValidPassword == false && passwordFocusNode.hasFocus)
+                          ? ClientConfig.getTextStyleScheme()
+                              .labelSmall
+                              .copyWith(color: ClientConfig.getColorScheme().error)
+                          : ClientConfig.getTextStyleScheme().labelSmall),
                   const SizedBox(height: 8),
                   TextField(
                     style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
@@ -71,19 +79,44 @@ class _OnboardingPasswordScreenState extends State<OnboardingPasswordScreen> {
                     obscureText: !showPassword,
                     focusNode: passwordFocusNode,
                     decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(
+                      contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16,
                         vertical: 12,
                       ),
+                      filled: true,
+                      fillColor: ClientConfig.getCustomColors().neutral100,
+                      focusColor: ClientConfig.getCustomColors().neutral100,
                       border: OutlineInputBorder(
-                        borderSide: BorderSide(color: ClientConfig.getCustomColors().neutral400),
-                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                        borderRadius: const BorderRadius.all(Radius.circular(8)),
+                        borderSide: BorderSide(
+                            width: 1,
+                            color: (isValidPassword == false && passwordFocusNode.hasFocus)
+                                ? ClientConfig.getColorScheme().error
+                                : ClientConfig.getCustomColors().neutral500),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: const BorderRadius.all(Radius.circular(8)),
+                        borderSide: BorderSide(
+                            width: 1,
+                            color: (isValidPassword == false && passwordFocusNode.hasFocus)
+                                ? ClientConfig.getColorScheme().error
+                                : ClientConfig.getCustomColors().neutral500),
                       ),
                       hintText: 'Type password',
                     ),
-                    // onChanged: (value) {
-                    //   setState(() => value = passwordController.text);
-                    // },
+                    onChanged: (value) {
+                      if (value == confirmPasswordController.text && value.isNotEmpty) {
+                        setState(() {
+                          isButtonEnabled = true;
+                          isValidPassword = !validatorMessages.map((e) => e.validate(value)).contains(false);
+                        });
+                      } else {
+                        setState(() {
+                          isButtonEnabled = false;
+                          isValidPassword = !validatorMessages.map((e) => e.validate(value)).contains(false);
+                        });
+                      }
+                    },
                   ),
                   if (passwordFocusNode.hasFocus) ...[
                     const SizedBox(height: 8),
@@ -93,7 +126,14 @@ class _OnboardingPasswordScreenState extends State<OnboardingPasswordScreen> {
                     ),
                   ],
                   const SizedBox(height: 24),
-                  Text('Repeat password', style: ClientConfig.getTextStyleScheme().labelSmall),
+                  Text('Repeat password',
+                      style: (confirmPasswordController.text.isNotEmpty &&
+                              confirmPasswordController.text != passwordController.text &&
+                              confirmPasswordFocusNode.hasFocus)
+                          ? ClientConfig.getTextStyleScheme()
+                              .labelSmall
+                              .copyWith(color: ClientConfig.getColorScheme().error)
+                          : ClientConfig.getTextStyleScheme().labelSmall),
                   const SizedBox(height: 8),
                   TextField(
                     style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
@@ -101,17 +141,24 @@ class _OnboardingPasswordScreenState extends State<OnboardingPasswordScreen> {
                     obscureText: !showPassword,
                     focusNode: confirmPasswordFocusNode,
                     decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(
+                      contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16,
                         vertical: 12,
                       ),
+                      filled: true,
+                      fillColor: ClientConfig.getCustomColors().neutral100,
+                      focusColor: ClientConfig.getCustomColors().neutral100,
                       border: OutlineInputBorder(
-                        borderSide: BorderSide(color: ClientConfig.getCustomColors().neutral400),
-                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                        borderRadius: const BorderRadius.all(Radius.circular(8)),
+                        borderSide: BorderSide(width: 1, color: ClientConfig.getCustomColors().neutral400),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: const BorderRadius.all(Radius.circular(8)),
+                        borderSide: BorderSide(width: 1, color: ClientConfig.getCustomColors().neutral500),
                       ),
                       hintText: 'Repeat password',
                     ),
-                    onChanged: (value) async {
+                    onChanged: (value) {
                       if (value == passwordController.text && value.isNotEmpty) {
                         setState(() {
                           isButtonEnabled = true;
@@ -169,7 +216,10 @@ class _OnboardingPasswordScreenState extends State<OnboardingPasswordScreen> {
                 text: "Continue",
                 onPressed: isButtonEnabled
                     ? () {
-                        log('onPressed');
+                        StoreProvider.of<AppState>(context)
+                            .dispatch(OnboardingSubmitPasswordCommandAction(passwordController.text));
+
+                        log('OnboardingPasswordScreen: passwordController.text: ${passwordController.text}');
                       }
                     : null,
               ),

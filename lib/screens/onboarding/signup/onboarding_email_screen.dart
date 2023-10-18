@@ -1,8 +1,9 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/onboarding/signup/email/onboarding_email_action.dart';
+import 'package:solarisdemo/screens/onboarding/signup/onboarding_password_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
@@ -17,33 +18,33 @@ class OnboardingEmailScreen extends StatefulWidget {
 }
 
 class _OnboardingEmailScreenState extends State<OnboardingEmailScreen> {
-  TextEditingController emailController = TextEditingController();
-  bool isEmailValid = false;
+  final TextEditingController _emailController = TextEditingController();
+  bool _isEmailValid = true;
+  bool _canContinue = false;
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 3), () {
+
+    _emailController.addListener(() {
+      final email = _emailController.text;
+
       setState(() {
-        isEmailValid = true;
-      });
-    });
-    emailController.addListener(() {
-      final email = emailController.text;
-      setState(() {
-        isEmailValid = isValidEmail(email);
+        _isEmailValid = isValidEmail(email);
+        _canContinue = _isEmailValid;
       });
     });
   }
 
   bool isValidEmail(String email) {
     final emailRegExp = RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$');
+
     return emailRegExp.hasMatch(email);
   }
 
   @override
   void dispose() {
-    emailController.dispose();
+    _emailController.dispose();
     super.dispose();
   }
 
@@ -55,53 +56,69 @@ class _OnboardingEmailScreenState extends State<OnboardingEmailScreen> {
           AppToolbar(
             padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
             richTextTitle: StepRichTextTitle(step: 2, totalSteps: 5),
-            actions: [
-              SvgPicture.asset("assets/icons/default/appbar_logo.svg"),
-            ],
+            actions: const [AppbarLogo()],
           ),
-          const SizedBox(height: 16),
-          Padding(
-            padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text('Email address', style: ClientConfig.getTextStyleScheme().heading2),
-            ),
+          LinearProgressIndicator(
+            value: 20 / 100,
+            color: ClientConfig.getColorScheme().secondary,
+            backgroundColor: const Color(0xFFE9EAEB),
           ),
-          const SizedBox(height: 16),
           Expanded(
             child: SingleChildScrollView(
               padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const SizedBox(height: 16),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text('Email address', style: ClientConfig.getTextStyleScheme().heading2),
+                  ),
                   Text('Enter your email address below.', style: ClientConfig.getTextStyleScheme().bodyLargeRegular),
                   const SizedBox(height: 24),
                   Text('Email address',
-                      style: isEmailValid
+                      style: _isEmailValid
                           ? ClientConfig.getTextStyleScheme().labelSmall
-                          : ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: Colors.red)),
+                          : ClientConfig.getTextStyleScheme()
+                              .labelSmall
+                              .copyWith(color: ClientConfig.getColorScheme().error)),
                   const SizedBox(height: 8),
                   TextField(
                     style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                    controller: emailController,
+                    controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
-                    autofocus: true,
                     decoration: InputDecoration(
                         contentPadding: const EdgeInsets.symmetric(
                           horizontal: 16,
                           vertical: 12,
                         ),
+                        filled: true,
+                        fillColor: (_isEmailValid == false)
+                            ? ClientConfig.getCustomColors().red100
+                            : ClientConfig.getCustomColors().neutral100,
+                        focusColor: (_isEmailValid == false)
+                            ? ClientConfig.getCustomColors().red100
+                            : ClientConfig.getCustomColors().neutral100,
                         border: OutlineInputBorder(
                           borderRadius: const BorderRadius.all(Radius.circular(8)),
                           borderSide: BorderSide(
                               width: 1,
-                              color: isEmailValid
-                                  ? ClientConfig.getCustomColors().neutral400
-                                  : ClientConfig.getColorScheme().error),
+                              color: (_isEmailValid == false)
+                                  ? ClientConfig.getColorScheme().error
+                                  : ClientConfig.getCustomColors().neutral500),
                         ),
-                        hintText: 'Type email address,'),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: const BorderRadius.all(Radius.circular(8)),
+                          borderSide: BorderSide(
+                              width: 1,
+                              color: (_isEmailValid == false)
+                                  ? ClientConfig.getColorScheme().error
+                                  : ClientConfig.getCustomColors().neutral500),
+                        ),
+                        hintText: 'Type email address'),
                   ),
-                  isEmailValid
+                  const SizedBox(height: 8),
+                  _isEmailValid
                       ? const SizedBox()
                       : const Text('Please input a valid email address.',
                           style: TextStyle(
@@ -120,9 +137,15 @@ class _OnboardingEmailScreenState extends State<OnboardingEmailScreen> {
               width: double.infinity,
               child: PrimaryButton(
                 text: "Continue",
-                onPressed: isEmailValid
+                onPressed: _canContinue
                     ? () {
-                        log('onPressed');
+                        StoreProvider.of<AppState>(context).dispatch(
+                          OnboardingSubmitEmailCommandAction(
+                            _emailController.text,
+                          ),
+                        );
+
+                        Navigator.pushNamed(context, OnboardingPasswordScreen.routeName);
                       }
                     : null,
               ),

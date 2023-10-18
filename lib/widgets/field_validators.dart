@@ -17,6 +17,7 @@ class FieldValidators extends StatefulWidget {
 
 class _FieldValidatorsState extends State<FieldValidators> {
   late bool isActive;
+  late bool isValid;
 
   @override
   void initState() {
@@ -44,7 +45,7 @@ class _FieldValidatorsState extends State<FieldValidators> {
     List<Widget> items = [];
 
     for (var validator in widget.validators) {
-      final isValid = widget.controllers.every((controller) => validator.validate(controller.text));
+      isValid = widget.controllers.every((controller) => validator.validate(controller.text));
 
       items.add(
         Row(
@@ -57,7 +58,7 @@ class _FieldValidatorsState extends State<FieldValidators> {
                   : Icons.check,
               color: isActive
                   ? isValid
-                      ? ClientConfig.getCustomColors().validCheck
+                      ? ClientConfig.getCustomColors().success
                       : ClientConfig.getColorScheme().error
                   : ClientConfig.getCustomColors().neutral700,
             ),

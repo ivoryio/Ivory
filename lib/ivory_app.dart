@@ -248,10 +248,10 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
               OnboardingGermanResidencyErrorScreen.routeName: (context) => const OnboardingGermanResidencyErrorScreen(),
               OnboardingUsaTaxPayerScreen.routeName: (context) => const OnboardingUsaTaxPayerScreen(),
               OnboardingUsaTaxPayerErrorScreen.routeName: (context) => const OnboardingUsaTaxPayerErrorScreen(),
-              OnboardingEmailScreen.routeName: (context) => const OnboardingEmailScreen(),
-              OnboardingPasswordScreen.routeName: (context) => const OnboardingPasswordScreen(),
               // onboarding/sign_up
               OnboardingBasicInfoScreen.routeName: (context) => const OnboardingBasicInfoScreen(),
+              OnboardingEmailScreen.routeName: (context) => const OnboardingEmailScreen(),
+              OnboardingPasswordScreen.routeName: (context) => const OnboardingPasswordScreen(),
             },
           );
         }),
