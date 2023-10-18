@@ -1,41 +1,44 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:solarisdemo/config.dart';
 
 class IvoryTextField extends StatefulWidget {
-  final ValueChanged<String>? onChanged;
+  final FocusNode? focusNode;
+  final IvoryTextFieldController? controller;
+  final List<TextInputFormatter>? inputFormatters;
+  final String? errorText;
+  final String? label;
   final String? placeholder;
+  final TextCapitalization? textCapitalization;
+  final TextInputType? keyboardType;
+  final ValueChanged<String>? onChanged;
   final Widget? prefix;
   final Widget? suffix;
-  final TextInputType? keyboardType;
-  final int? minLines;
-  final int? maxLines;
-  final FocusNode? focusNode;
-  final String? label;
-  final bool obscureText;
-  final String? errorText;
-  final bool error;
-  final TextCapitalization? textCapitalization;
   final bool enabled;
-  final IvoryTextFieldController? controller;
+  final bool error;
+  final bool obscureText;
+  final int? maxLines;
+  final int? minLines;
 
   const IvoryTextField({
-    Key? key,
+    super.key,
+    this.controller,
+    this.enabled = true,
+    this.error = false,
+    this.errorText,
+    this.focusNode,
+    this.inputFormatters,
+    this.keyboardType,
+    this.label,
+    this.maxLines,
+    this.minLines,
+    this.obscureText = false,
     this.onChanged,
     this.placeholder,
     this.prefix,
     this.suffix,
-    this.keyboardType,
-    this.minLines,
-    this.maxLines,
-    this.focusNode,
-    this.label,
-    this.errorText,
-    this.obscureText = false,
-    this.enabled = true,
-    this.error = false,
     this.textCapitalization,
-    this.controller,
-  }) : super(key: key);
+  });
 
   @override
   State<IvoryTextField> createState() => _IvoryTextFieldState();
@@ -51,14 +54,12 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
     super.initState();
 
     _focusNode = widget.focusNode ?? FocusNode();
-
     _controller = widget.controller ??
         IvoryTextFieldController(
           error: widget.error,
           enabled: widget.enabled,
           errorText: widget.errorText,
         );
-
     _borderColor = _getBorderColor();
 
     _focusNode.addListener(onChange);
@@ -86,14 +87,14 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
     }
   }
 
+  bool get isEnabled => _controller.isEnabled;
+  bool get hasError => _controller.hasError;
+
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
         listenable: _controller,
         builder: (context, child) {
-          final isEnabled = _controller.isEnabled;
-          final hasError = widget.error || widget.errorText != null || _controller.errorText != null;
-
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -127,8 +128,9 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
                 onChanged: widget.onChanged,
                 obscureText: widget.obscureText,
                 placeholder: widget.placeholder,
-                enabled: widget.enabled,
+                enabled: _controller.isEnabled,
                 textCapitalization: widget.textCapitalization ?? TextCapitalization.none,
+                inputFormatters: widget.inputFormatters,
                 prefix: widget.prefix != null
                     ? Padding(
                         padding: const EdgeInsets.only(left: 16),
@@ -145,7 +147,7 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
                 minLines: widget.minLines,
                 maxLines: widget.maxLines ?? widget.minLines ?? 1,
                 style: ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(
-                    color: widget.enabled
+                    color: _controller.isEnabled
                         ? ClientConfig.getCustomColors().neutral900
                         : ClientConfig.getCustomColors().neutral500),
                 placeholderStyle: ClientConfig.getTextStyleScheme()
@@ -169,7 +171,7 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
   Color _getBorderColor() {
     if (_controller.isEnabled == false) {
       return ClientConfig.getCustomColors().neutral400;
-    } else if (widget.error || widget.errorText != null || _controller.errorText != null) {
+    } else if (_controller.hasError) {
       return const Color(0xFFE61F27);
     } else if (_focusNode.hasFocus) {
       return ClientConfig.getCustomColors().neutral900;
