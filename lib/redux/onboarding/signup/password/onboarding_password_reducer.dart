@@ -1,5 +1,5 @@
-import 'package:solarisdemo/redux/onboarding/password/onboarding_password_action.dart';
-import 'package:solarisdemo/redux/onboarding/password/onboarding_password_state.dart';
+import 'package:solarisdemo/redux/onboarding/signup/password/onboarding_password_action.dart';
+import 'package:solarisdemo/redux/onboarding/signup/password/onboarding_password_state.dart';
 
 OnboardingPasswordState onboardingPasswordReducer(
   OnboardingPasswordState state,

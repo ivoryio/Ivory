@@ -4,7 +4,7 @@ import 'package:solarisdemo/redux/categories/category_state.dart';
 import 'package:solarisdemo/redux/credit_line/credit_line_state.dart';
 import 'package:solarisdemo/redux/device/device_state.dart';
 import 'package:solarisdemo/redux/notification/notification_state.dart';
-import 'package:solarisdemo/redux/onboarding/password/onboarding_password_state.dart';
+import 'package:solarisdemo/redux/onboarding/signup/password/onboarding_password_state.dart';
 import 'package:solarisdemo/redux/onboarding/signup/basic_info/onboarding_basic_info_state.dart';
 import 'package:solarisdemo/redux/onboarding/signup/email/onboarding_email_state.dart';
 import 'package:solarisdemo/redux/person/account_summary/account_summay_state.dart';
