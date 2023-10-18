@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:solarisdemo/config.dart';
 
+enum TextFieldInputType { text, name, email, number }
+
 class IvoryTextField extends StatefulWidget {
   final FocusNode? focusNode;
   final IvoryTextFieldController? controller;
@@ -10,6 +12,7 @@ class IvoryTextField extends StatefulWidget {
   final String? label;
   final String? placeholder;
   final TextCapitalization? textCapitalization;
+  final TextFieldInputType inputType;
   final TextInputType? keyboardType;
   final ValueChanged<String>? onChanged;
   final Widget? prefix;
@@ -28,6 +31,7 @@ class IvoryTextField extends StatefulWidget {
     this.errorText,
     this.focusNode,
     this.inputFormatters,
+    this.inputType = TextFieldInputType.text,
     this.keyboardType,
     this.label,
     this.maxLines,
@@ -59,6 +63,7 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
           error: widget.error,
           enabled: widget.enabled,
           errorText: widget.errorText,
+          obscureText: widget.obscureText,
         );
     _borderColor = _getBorderColor();
 
@@ -92,6 +97,10 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
 
   @override
   Widget build(BuildContext context) {
+    final keyboardType = _getKeyboardType();
+    final inputFormatters = _getInputFormatters();
+    final textCapitalization = _getTextCapitalization();
+
     return ListenableBuilder(
         listenable: _controller,
         builder: (context, child) {
@@ -126,11 +135,11 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
                 ),
                 controller: _controller._textEditingController,
                 onChanged: widget.onChanged,
-                obscureText: widget.obscureText,
+                obscureText: _controller.obscureText,
                 placeholder: widget.placeholder,
                 enabled: _controller.isEnabled,
-                textCapitalization: widget.textCapitalization ?? TextCapitalization.none,
-                inputFormatters: widget.inputFormatters,
+                textCapitalization: textCapitalization,
+                inputFormatters: inputFormatters,
                 prefix: widget.prefix != null
                     ? Padding(
                         padding: const EdgeInsets.only(left: 16),
@@ -143,7 +152,7 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
                         child: widget.suffix,
                       )
                     : null,
-                keyboardType: widget.keyboardType,
+                keyboardType: keyboardType,
                 minLines: widget.minLines,
                 maxLines: widget.maxLines ?? widget.minLines ?? 1,
                 style: ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(
@@ -181,6 +190,60 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
       return ClientConfig.getCustomColors().neutral400;
     }
   }
+
+  List<TextInputFormatter>? _getInputFormatters() {
+    if (widget.inputFormatters != null) {
+      return widget.inputFormatters;
+    }
+
+    switch (widget.inputType) {
+      case TextFieldInputType.text:
+        return null;
+      case TextFieldInputType.name:
+        return [
+          FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z .-]')),
+        ];
+      case TextFieldInputType.email:
+        return [
+          FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9@._-]')),
+        ];
+      case TextFieldInputType.number:
+        return [
+          FilteringTextInputFormatter.allow(RegExp(r'[0-9\.,]')),
+        ];
+      default:
+        return null;
+    }
+  }
+
+  TextInputType? _getKeyboardType() {
+    if (widget.keyboardType != null) {
+      return widget.keyboardType;
+    }
+
+    switch (widget.inputType) {
+      case TextFieldInputType.text:
+        return TextInputType.text;
+      case TextFieldInputType.name:
+        return TextInputType.name;
+      case TextFieldInputType.email:
+        return TextInputType.emailAddress;
+      case TextFieldInputType.number:
+        return TextInputType.number;
+      default:
+        return null;
+    }
+  }
+
+  TextCapitalization _getTextCapitalization() {
+    if (widget.textCapitalization != null) {
+      return widget.textCapitalization!;
+    } else if (widget.inputType == TextFieldInputType.name) {
+      return TextCapitalization.words;
+    }
+
+    return TextCapitalization.none;
+  }
 }
 
 class IvoryTextFieldController extends ChangeNotifier {
@@ -188,17 +251,20 @@ class IvoryTextFieldController extends ChangeNotifier {
   late bool _error;
   late bool _enabled;
   late String? _errorText;
+  late bool _obscureText;
 
   IvoryTextFieldController({
     String? text,
     String? errorText,
     bool error = false,
     bool enabled = true,
+    bool obscureText = false,
   }) {
     _textEditingController = TextEditingController(text: text);
     _error = error;
     _enabled = enabled;
     _errorText = errorText;
+    _obscureText = obscureText;
   }
 
   @override
@@ -233,6 +299,11 @@ class IvoryTextFieldController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setObscureText(bool value) {
+    _obscureText = value;
+    notifyListeners();
+  }
+
   void clear() {
     _textEditingController.clear();
     notifyListeners();
@@ -240,6 +311,7 @@ class IvoryTextFieldController extends ChangeNotifier {
 
   bool get isEnabled => _enabled;
   String? get errorText => _errorText;
+  bool get obscureText => _obscureText;
   bool get hasError => _errorText != null || _error;
   String get text => _textEditingController.text;
   TextSelection get selection => _textEditingController.selection;
