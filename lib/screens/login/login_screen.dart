@@ -535,7 +535,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                                     _passwordFocusNode.unfocus();
                                     StoreProvider.of<AppState>(context).dispatch(
                                       AuthenticateUserCommandAction(
-                                        email: _emailInputController.text,
+                                        email: _emailInputController.text.toLowerCase(),
                                         password: _passwordInputController.text,
                                       ),
                                     );
