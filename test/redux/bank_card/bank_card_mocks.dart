@@ -2,6 +2,7 @@ import 'package:mockito/mockito.dart';
 import 'package:pointycastle/pointycastle.dart';
 import 'package:solarisdemo/infrastructure/bank_card/bank_card_service.dart';
 import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
+import 'package:solarisdemo/infrastructure/device/device_fingerprint_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/models/bank_card.dart';
 import 'package:solarisdemo/models/user.dart';
@@ -254,11 +255,6 @@ class FakeDeviceService extends DeviceService {
   }
 
   @override
-  Future<String?> getDeviceFingerprint(String? consentId) async {
-    return "deviceFingerprint";
-  }
-
-  @override
   Future<DeviceKeyPairs?> getDeviceKeyPairs({bool restricted = false}) async {
     return DeviceKeyPairs(publicKey: "publicKey", privateKey: "privateKey");
   }
@@ -298,5 +294,19 @@ class FakeBiometricsService extends BiometricsService {
   @override
   Future<bool> authenticateWithBiometrics({required String message}) async {
     return true;
+  }
+}
+
+class FakeDeviceFingerprintService extends DeviceFingerprintService {
+  @override
+  Future<String> getDeviceFingerprint(String? consentId) async {
+    return 'deviceFingerprint';
+  }
+}
+
+class FakeFailingDeviceFingerprintService extends DeviceFingerprintService {
+  @override
+  Future<String?> getDeviceFingerprint(String? consentId) async {
+    return null;
   }
 }

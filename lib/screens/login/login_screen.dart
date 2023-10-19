@@ -80,7 +80,7 @@ class LoginScreen extends StatelessWidget {
                               ),
                             ),
                             const TabViewItem(
-                              text: "Phone number",
+                              text: "Mobile",
                               child: PhoneNumberLoginForm(),
                             ),
                           ],
@@ -193,31 +193,31 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
                           keyboardType: TextInputType.phone,
                           controller: _phoneInputController,
                           focusNode: _phoneInputFocusNode,
-                          prefix: SizedBox(
-                            height: 48,
-                            width: 80,
-                            child: GestureDetector(
-                              onTap: () {
-                                showBottomModal(
-                                  addContentPadding: false,
-                                  context: context,
-                                  title: "Select mobile number prefix",
-                                  content: CountryPrefixPicker(
-                                    onCountrySelected: (country) {
-                                      _selectedCountryNotifier.value = country;
-                                      _phoneInputController.text = country.phonePrefix;
-                                    },
-                                    selectedCountry: _selectedCountryNotifier.value,
-                                  ),
-                                );
-                              },
+                          prefix: GestureDetector(
+                            onTap: () {
+                              showBottomModal(
+                                addContentPadding: false,
+                                context: context,
+                                title: "Select mobile number prefix",
+                                content: CountryPrefixPicker(
+                                  onCountrySelected: (country) {
+                                    _selectedCountryNotifier.value = country;
+                                    _phoneInputController.text = country.phonePrefix;
+                                  },
+                                  selectedCountry: _selectedCountryNotifier.value,
+                                ),
+                              );
+                            },
+                            child: SizedBox(
+                              height: 48,
+                              width: 80,
                               child: Row(
                                 children: [
                                   Image.asset(selectedCountry.flagPath),
                                   const SizedBox(width: 4),
                                   Icon(
                                     Icons.expand_more,
-                                    color: ClientConfig.getCustomColors().neutral500,
+                                    color: ClientConfig.getCustomColors().neutral700,
                                   ),
                                   VerticalDivider(
                                     color: _phoneInputFocusNode.hasFocus
@@ -264,7 +264,7 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      "Forgot your email address?",
+                      "Forgot your password?",
                       style: ClientConfig.getTextStyleScheme().labelMedium.copyWith(
                             color: viewModel is AuthLoadingViewModel
                                 ? ClientConfig.getCustomColors().neutral500
@@ -498,12 +498,15 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                     ),
                   ],
                 ),
+                const SizedBox(
+                  height: 32,
+                ),
                 const Spacer(),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Forgot your email address?",
+                      "Forgot your password?",
                       style: ClientConfig.getTextStyleScheme().labelMedium.copyWith(
                             color: viewModel is AuthLoadingViewModel
                                 ? ClientConfig.getCustomColors().neutral500

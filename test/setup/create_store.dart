@@ -365,7 +365,6 @@ class NotImplementedDeviceFingerprintService extends DeviceFingerprintService {
   }
 
   @override
-  @override
   Future<String?> getDeviceFingerprint(String? consentId) async {
     throw UnimplementedError();
   }

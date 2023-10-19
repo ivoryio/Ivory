@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/auth/auth_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
@@ -48,10 +47,8 @@ class _LoginWithTanScreenState extends State<LoginWithTanScreen> {
             children: [
               AppToolbar(
                 backButtonEnabled: viewModel is! AuthLoadingViewModel,
-                actions: [
-                  SvgPicture.asset(
-                    'assets/images/ivory-logo-small.svg',
-                  ),
+                actions: const [
+                  AppbarLogo(),
                 ],
                 padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,      
               ),

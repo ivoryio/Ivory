@@ -101,9 +101,9 @@ class AppState extends Equatable {
         deviceBindingState,
         notificationState,
         transactionApprovalState,
+        accountSummaryState,
         authState,
         homePageTransactionsState,
-        accountSummaryState,
         onboardingBasicInfoState,
       ];
 

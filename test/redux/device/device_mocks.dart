@@ -1,6 +1,7 @@
 import 'package:mockito/mockito.dart';
 import 'package:pointycastle/pointycastle.dart';
 import 'package:solarisdemo/infrastructure/device/device_binding_service.dart';
+import 'package:solarisdemo/infrastructure/device/device_fingerprint_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/models/crypto/jwk.dart';
 import 'package:solarisdemo/models/device.dart';
@@ -105,11 +106,6 @@ class FakeDeviceService extends DeviceService {
   }
 
   @override
-  Future<String?> getDeviceFingerprint(String? consentId) async {
-    return 'deviceFingerprint';
-  }
-
-  @override
   Future<void> saveKeyPairIntoCache({
     required DeviceKeyPairs keyPair,
     bool restricted = false,
@@ -165,5 +161,12 @@ class FakeDeviceInfoService extends DeviceInfoService {
   @override
   Future<String> getDeviceName() async {
     return 'deviceName';
+  }
+}
+
+class FakeDeviceFingerprintService extends DeviceFingerprintService {
+  @override
+  Future<String> getDeviceFingerprint(String? consentId) async {
+    return 'deviceFingerprint';
   }
 }

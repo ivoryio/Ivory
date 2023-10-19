@@ -1,5 +1,6 @@
 import 'package:solarisdemo/infrastructure/change_request/change_request_service.dart';
 import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
+import 'package:solarisdemo/infrastructure/device/device_fingerprint_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart';
 import 'package:solarisdemo/models/amount_value.dart';
@@ -161,11 +162,6 @@ class FakeDeviceService extends DeviceService {
   }
 
   @override
-  Future<String?> getDeviceFingerprint(String? consentId) async {
-    return "deviceFingerprint";
-  }
-
-  @override
   Future<DeviceKeyPairs?> getDeviceKeyPairs({bool restricted = false}) async {
     return DeviceKeyPairs(publicKey: "publicKey", privateKey: "privateKey");
   }
@@ -186,7 +182,16 @@ class FakeFailingDeviceService extends DeviceService {
   Future<String?> getDeviceId() async {
     return null;
   }
+}
 
+class FakeDeviceFingerprintService extends DeviceFingerprintService {
+  @override
+  Future<String> getDeviceFingerprint(String? consentId) async {
+    return 'deviceFingerprint';
+  }
+}
+
+class FakeFailingDeviceFingerprintService extends DeviceFingerprintService {
   @override
   Future<String?> getDeviceFingerprint(String? consentId) async {
     return null;

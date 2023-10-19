@@ -26,6 +26,7 @@ void main() {
     final store = createTestStore(
       deviceService: FakeDeviceService(),
       biometricsService: FakeBiometricsService(),
+      deviceFingerprintService: FakeDeviceFingerprintService(),
       changeRequestService: FakeChangeRequestService(),
       initialState: createAppState(
         notificationState: NotificationInitialState(),
