@@ -8,6 +8,7 @@ import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/continue_button_controller.dart';
 import 'package:solarisdemo/widgets/field_validators.dart';
+import 'package:solarisdemo/widgets/ivory_text_field.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
 
@@ -22,11 +23,15 @@ class OnboardingPasswordScreen extends StatefulWidget {
 
 class _OnboardingPasswordScreenState extends State<OnboardingPasswordScreen> {
   final ContinueButtonController _continueButtonController = ContinueButtonController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController confirmPasswordController = TextEditingController();
+  IvoryTextFieldController passwordController = IvoryTextFieldController(
+    obscureText: true,
+  );
+  IvoryTextFieldController confirmPasswordController = IvoryTextFieldController(
+    obscureText: true,
+  );
   FocusNode passwordFocusNode = FocusNode();
   FocusNode confirmPasswordFocusNode = FocusNode();
-  bool showPassword = false;
+  // bool showPassword = false;
   bool isValidPassword = true;
 
   @override
@@ -65,116 +70,159 @@ class _OnboardingPasswordScreenState extends State<OnboardingPasswordScreen> {
                   Text('Choose your password and verify it below.',
                       style: ClientConfig.getTextStyleScheme().bodyLargeRegular),
                   const SizedBox(height: 24),
-                  Text('Password',
-                      style: (isValidPassword == false && passwordFocusNode.hasFocus)
-                          ? ClientConfig.getTextStyleScheme()
-                              .labelSmall
-                              .copyWith(color: ClientConfig.getColorScheme().error)
-                          : ClientConfig.getTextStyleScheme().labelSmall),
-                  const SizedBox(height: 8),
-                  TextField(
-                    style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                  IvoryTextField(
+                    label: 'Password',
                     controller: passwordController,
-                    obscureText: !showPassword,
+                    obscureText: true,
                     focusNode: passwordFocusNode,
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
-                      ),
-                      filled: true,
-                      fillColor: ClientConfig.getCustomColors().neutral100,
-                      focusColor: ClientConfig.getCustomColors().neutral100,
-                      border: OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(Radius.circular(8)),
-                        borderSide: BorderSide(
-                            width: 1,
-                            color: (isValidPassword == false && passwordFocusNode.hasFocus)
-                                ? ClientConfig.getColorScheme().error
-                                : ClientConfig.getCustomColors().neutral500),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(Radius.circular(8)),
-                        borderSide: BorderSide(
-                            width: 1,
-                            color: (isValidPassword == false && passwordFocusNode.hasFocus)
-                                ? ClientConfig.getColorScheme().error
-                                : ClientConfig.getCustomColors().neutral500),
-                      ),
-                      hintText: 'Type password',
-                    ),
-                    onChanged: (value) {
-                      setState(() {
-                        isValidPassword = !validatorMessages.map((e) => e.validate(value)).contains(false);
-                      });
+                    // onChanged: (value) {
+                    //   setState(() {
+                    //     isValidPassword = !validatorMessages.map((e) => e.validate(value)).contains(false);
+                    //   });
 
-                      if (isValidPassword && value == confirmPasswordController.text && value.isNotEmpty) {
-                        setState(() {
-                          _continueButtonController.setEnabled();
-                        });
-                      } else {
-                        setState(() {
-                          _continueButtonController.setDisabled();
-                        });
-                      }
-                    },
+                    //   if (isValidPassword && value == confirmPasswordController.text && value.isNotEmpty) {
+                    //     setState(() {
+                    //       _continueButtonController.setEnabled();
+                    //     });
+                    //   } else {
+                    //     setState(() {
+                    //       _continueButtonController.setDisabled();
+                    //     });
+                    //   }
+                    // },
                   ),
+                  // Text('Password',
+                  //     style: (isValidPassword == false && passwordFocusNode.hasFocus)
+                  //         ? ClientConfig.getTextStyleScheme()
+                  //             .labelSmall
+                  //             .copyWith(color: ClientConfig.getColorScheme().error)
+                  //         : ClientConfig.getTextStyleScheme().labelSmall),
+                  // const SizedBox(height: 8),
+                  // TextField(
+                  //   style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                  //   controller: passwordController,
+                  //   obscureText: !showPassword,
+                  //   focusNode: passwordFocusNode,
+                  //   decoration: InputDecoration(
+                  //     contentPadding: const EdgeInsets.symmetric(
+                  //       horizontal: 16,
+                  //       vertical: 12,
+                  //     ),
+                  //     filled: true,
+                  //     fillColor: ClientConfig.getCustomColors().neutral100,
+                  //     focusColor: ClientConfig.getCustomColors().neutral100,
+                  //     border: OutlineInputBorder(
+                  //       borderRadius: const BorderRadius.all(Radius.circular(8)),
+                  //       // borderSide: BorderSide(
+                  //       //     width: 1,
+                  //       //     color: (isValidPassword == false && passwordFocusNode.hasFocus)
+                  //       //         ? ClientConfig.getColorScheme().error
+                  //       //         : ClientConfig.getCustomColors().neutral500),
+                  //       borderSide: BorderSide(width: 1, color: ClientConfig.getCustomColors().neutral500),
+                  //     ),
+                  //     focusedBorder: OutlineInputBorder(
+                  //       borderRadius: const BorderRadius.all(Radius.circular(8)),
+                  //       // borderSide: BorderSide(
+                  //       //     width: 1,
+                  //       //     color: (isValidPassword == false && passwordFocusNode.hasFocus)
+                  //       //         ? ClientConfig.getColorScheme().error
+                  //       //         : ClientConfig.getCustomColors().neutral500),
+                  //       borderSide: BorderSide(width: 1, color: ClientConfig.getCustomColors().neutral500),
+                  //     ),
+                  //     hintText: 'Type password',
+                  //   ),
+                  //   onChanged: (value) {
+                  //     setState(() {
+                  //       isValidPassword = !validatorMessages.map((e) => e.validate(value)).contains(false);
+                  //     });
+
+                  //     if (isValidPassword && value == confirmPasswordController.text && value.isNotEmpty) {
+                  //       setState(() {
+                  //         _continueButtonController.setEnabled();
+                  //       });
+                  //     } else {
+                  //       setState(() {
+                  //         _continueButtonController.setDisabled();
+                  //       });
+                  //     }
+                  //   },
+                  // ),
                   if (passwordFocusNode.hasFocus) ...[
                     const SizedBox(height: 8),
                     FieldValidators(
                       validators: validatorMessages,
-                      controllers: [passwordController],
+                      controllers: [passwordController.textEditingController],
                     ),
                   ],
                   const SizedBox(height: 24),
-                  Text('Repeat password',
-                      style: (confirmPasswordController.text.isNotEmpty &&
-                              confirmPasswordController.text != passwordController.text &&
-                              confirmPasswordFocusNode.hasFocus)
-                          ? ClientConfig.getTextStyleScheme()
-                              .labelSmall
-                              .copyWith(color: ClientConfig.getColorScheme().error)
-                          : ClientConfig.getTextStyleScheme().labelSmall),
-                  const SizedBox(height: 8),
-                  TextField(
-                    style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                  IvoryTextField(
+                    label: 'Repeat password',
                     controller: confirmPasswordController,
-                    obscureText: !showPassword,
+                    // obscureText: confirmPasswordController.setObscureText(),
                     focusNode: confirmPasswordFocusNode,
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
-                      ),
-                      filled: true,
-                      fillColor: ClientConfig.getCustomColors().neutral100,
-                      focusColor: ClientConfig.getCustomColors().neutral100,
-                      border: OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(Radius.circular(8)),
-                        borderSide: BorderSide(width: 1, color: ClientConfig.getCustomColors().neutral400),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(Radius.circular(8)),
-                        borderSide: BorderSide(width: 1, color: ClientConfig.getCustomColors().neutral500),
-                      ),
-                      hintText: 'Repeat password',
-                    ),
-                    onChanged: (value) {
-                      if (value == passwordController.text && value.isNotEmpty && isValidPassword) {
-                        setState(() {
-                          _continueButtonController.setEnabled();
-                        });
-                      } else {
-                        setState(() {
-                          _continueButtonController.setDisabled();
-                        });
-                      }
-                    },
+                    // onChanged: (value) {
+                    //   if (value == passwordController.text && value.isNotEmpty && isValidPassword) {
+                    //     setState(() {
+                    //       _continueButtonController.setEnabled();
+                    //     });
+                    //   } else {
+                    //     setState(() {
+                    //       _continueButtonController.setDisabled();
+                    //     });
+                    //   }
+                    // },
                   ),
+                  // Text('Repeat password',
+                  //     style: (confirmPasswordController.text.isNotEmpty &&
+                  //             confirmPasswordController.text != passwordController.text &&
+                  //             confirmPasswordFocusNode.hasFocus)
+                  //         ? ClientConfig.getTextStyleScheme()
+                  //             .labelSmall
+                  //             .copyWith(color: ClientConfig.getColorScheme().error)
+                  //         : ClientConfig.getTextStyleScheme().labelSmall),
+                  // const SizedBox(height: 8),
+                  // TextField(
+                  //   style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                  //   controller: confirmPasswordController,
+                  //   obscureText: !showPassword,
+                  //   focusNode: confirmPasswordFocusNode,
+                  //   decoration: InputDecoration(
+                  //     contentPadding: const EdgeInsets.symmetric(
+                  //       horizontal: 16,
+                  //       vertical: 12,
+                  //     ),
+                  //     filled: true,
+                  //     fillColor: ClientConfig.getCustomColors().neutral100,
+                  //     focusColor: ClientConfig.getCustomColors().neutral100,
+                  //     border: OutlineInputBorder(
+                  //       borderRadius: const BorderRadius.all(Radius.circular(8)),
+                  //       borderSide: BorderSide(width: 1, color: ClientConfig.getCustomColors().neutral400),
+                  //     ),
+                  //     focusedBorder: OutlineInputBorder(
+                  //       borderRadius: const BorderRadius.all(Radius.circular(8)),
+                  //       borderSide: BorderSide(width: 1, color: ClientConfig.getCustomColors().neutral500),
+                  //     ),
+                  //     hintText: 'Repeat password',
+                  //   ),
+                  //   onChanged: (value) {
+                  //     if (value == passwordController.text && value.isNotEmpty && isValidPassword) {
+                  //       setState(() {
+                  //         _continueButtonController.setEnabled();
+                  //       });
+                  //     } else {
+                  //       setState(() {
+                  //         _continueButtonController.setDisabled();
+                  //       });
+                  //     }
+                  //   },
+                  // ),
                   if (confirmPasswordFocusNode.hasFocus) ...[
                     const SizedBox(height: 8),
                     FieldValidators(
-                      controllers: [passwordController, confirmPasswordController],
+                      controllers: [
+                        passwordController.textEditingController,
+                        confirmPasswordController.textEditingController
+                      ],
                       validators: [
                         FieldValidator(
                             label: 'Passwords match',
@@ -192,13 +240,19 @@ class _OnboardingPasswordScreenState extends State<OnboardingPasswordScreen> {
                       SizedBox(
                         width: 24,
                         height: 24,
-                        child: Checkbox(
-                          value: showPassword,
-                          onChanged: (value) {
-                            setState(() {
-                              showPassword = value!;
-                            });
-                          },
+                        child: ListenableBuilder(
+                          listenable: Listenable.merge([
+                            passwordController,
+                            confirmPasswordController,
+                          ]),
+                          builder: (context, child) => Checkbox(
+                            value: !passwordController.obscureText && !confirmPasswordController.obscureText,
+                            onChanged: (value) {
+                              if (value == null) return;
+                              passwordController.setObscureText(!value);
+                              confirmPasswordController.setObscureText(!value);
+                            },
+                          ),
                         ),
                       ),
                       const SizedBox(width: 8),
