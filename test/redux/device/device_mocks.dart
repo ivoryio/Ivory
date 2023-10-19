@@ -155,6 +155,16 @@ class FakeDeviceService extends DeviceService {
       e: 'e',
     );
   }
+
+  @override
+  Future<void> saveCredentialsInCache(String email, String password) async {
+    return;
+  }
+
+  @override
+  Future<void> saveConsentIdInCache(String consentId) async {
+    return;
+  }
 }
 
 class FakeDeviceInfoService extends DeviceInfoService {

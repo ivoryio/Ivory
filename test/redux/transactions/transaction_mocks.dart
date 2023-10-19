@@ -1,6 +1,5 @@
 import 'package:solarisdemo/infrastructure/change_request/change_request_service.dart';
 import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
-import 'package:solarisdemo/infrastructure/device/device_fingerprint_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart';
 import 'package:solarisdemo/models/amount_value.dart';
@@ -170,6 +169,25 @@ class FakeDeviceService extends DeviceService {
   String? generateSignature({required String privateKey, required String stringToSign}) {
     return "signature";
   }
+
+  @override
+  Future<CacheCredentials?> getCredentialsFromCache() async {
+    return CacheCredentials(
+      email: 'email',
+      password: 'password',
+      deviceId: 'deviceId',
+    );
+  }
+
+  @override
+  Future<void> saveCredentialsInCache(String email, String password) async {
+    return;
+  }
+
+  @override
+  Future<void> saveConsentIdInCache(String consentId) async {
+    return;
+  }
 }
 
 class FakeFailingDeviceService extends DeviceService {
@@ -182,18 +200,9 @@ class FakeFailingDeviceService extends DeviceService {
   Future<String?> getDeviceId() async {
     return null;
   }
-}
 
-class FakeDeviceFingerprintService extends DeviceFingerprintService {
   @override
-  Future<String> getDeviceFingerprint(String? consentId) async {
-    return 'deviceFingerprint';
-  }
-}
-
-class FakeFailingDeviceFingerprintService extends DeviceFingerprintService {
-  @override
-  Future<String?> getDeviceFingerprint(String? consentId) async {
+  Future<CacheCredentials?> getCredentialsFromCache() async {
     return null;
   }
 }
