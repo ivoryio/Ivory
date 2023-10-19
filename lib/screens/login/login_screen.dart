@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/auth/auth_presenter.dart';
@@ -11,15 +10,15 @@ import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/auth/auth_action.dart';
 import 'package:solarisdemo/screens/login/login_with_tan_screen.dart';
 import 'package:solarisdemo/screens/login/modals/mobile_number_country_picker_popup.dart';
-import 'package:solarisdemo/services/device_service.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/checkbox.dart';
 import 'package:solarisdemo/widgets/continue_button_controller.dart';
+import 'package:solarisdemo/widgets/ivory_text_field.dart';
 import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/screen_title.dart';
+import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
 
-import '../../cubits/login_cubit/login_cubit.dart';
 import '../../utilities/validator.dart';
 import '../../widgets/button.dart';
 import '../../widgets/tab_view.dart';
@@ -61,19 +60,18 @@ class LoginScreen extends StatelessWidget {
                 ],
               ),
               Expanded(
-                child: Padding(
+                child: ScrollableScreenContainer(
                   padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-                  child: SingleChildScrollView(
-                    physics: const ClampingScrollPhysics(),
-                    controller: scrollController,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const ScreenTitle(
-                          "Login",
-                        ),
-                        const SizedBox(height: 24),
-                        TabView(
+                  scrollController: scrollController,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const ScreenTitle(
+                        "Login",
+                      ),
+                      const SizedBox(height: 24),
+                      Expanded(
+                        child: TabView(
                           tabs: [
                             TabViewItem(
                               text: "Email",
@@ -87,8 +85,8 @@ class LoginScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -109,239 +107,199 @@ class PhoneNumberLoginForm extends StatefulWidget {
 }
 
 class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
-  bool isLoginEnabled = false;
-  bool hidePassword = true;
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  TextEditingController phoneController = TextEditingController(text: '+49');
-  TextEditingController passwordInputController = TextEditingController();
+  late IvoryTextFieldController _phoneInputController;
+  late FocusNode _phoneInputFocusNode;
+  late IvoryTextFieldController _passwordInputController;
+  late ContinueButtonController _continueButtonController;
+  late ValueNotifier<CountryPrefixItem> _selectedCountryNotifier;
 
-  void onChanged() {
-    bool isInputValid = phoneController.text.isNotEmpty && passwordInputController.text.isNotEmpty;
+  @override
+  void initState() {
+    super.initState();
+    _phoneInputController = IvoryTextFieldController();
+    _phoneInputFocusNode = FocusNode();
+    _passwordInputController = IvoryTextFieldController(obscureText: true);
+    _continueButtonController = ContinueButtonController();
+    _phoneInputController.addListener(onChangedPhoneNumber);
+    _passwordInputController.addListener(onChangedPassword);
+    _selectedCountryNotifier = ValueNotifier<CountryPrefixItem>(
+      CountryPrefixItem(
+        name: "Germany",
+        flagPath: "assets/images/germany_flag.png",
+        phonePrefix: "+49",
+      ),
+    );
+    _phoneInputController.text = _selectedCountryNotifier.value.phonePrefix;
+  }
 
-    if (isInputValid && !isLoginEnabled) {
-      setState(() {
-        isLoginEnabled = true;
-      });
+  void onChangedPhoneNumber() {
+    final phoneIsValid = _phoneInputController.text.isNotEmpty;
+
+    if (!phoneIsValid && !_phoneInputController.hasError) {
+      _phoneInputController.setErrorText('Please input a valid phone number');
+    } else if (phoneIsValid && _phoneInputController.hasError) {
+      _phoneInputController.setError(false);
+    }
+    if ((_phoneInputController.hasError || _passwordInputController.hasError) && _continueButtonController.isEnabled) {
+      _continueButtonController.setDisabled();
     }
 
-    if (!isInputValid && isLoginEnabled) {
-      setState(() {
-        isLoginEnabled = false;
-      });
+    if (!_phoneInputController.hasError &&
+        _passwordInputController.text.isNotEmpty &&
+        !_passwordInputController.hasError &&
+        !_continueButtonController.isEnabled) {
+      _continueButtonController.setEnabled();
+    }
+  }
+
+  void onChangedPassword() {
+    final passwordIsValid = _passwordInputController.text.length >= 6;
+
+    if (!passwordIsValid && !_passwordInputController.hasError) {
+      _passwordInputController.setErrorText('Please input a valid password with at least 6 characters');
+    } else if (passwordIsValid && _passwordInputController.hasError) {
+      _passwordInputController.setError(false);
+    }
+    if ((_phoneInputController.hasError || _passwordInputController.hasError) && _continueButtonController.isEnabled) {
+      _continueButtonController.setDisabled();
+    }
+
+    if (!_phoneInputController.hasError &&
+        !_passwordInputController.hasError &&
+        _phoneInputController.text.isNotEmpty &&
+        !_continueButtonController.isEnabled) {
+      _continueButtonController.setEnabled();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Padding(
-        padding: const EdgeInsets.only(top: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Mobile number',
-                  style: ClientConfig.getTextStyleScheme().labelSmall,
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+    return StoreConnector<AppState, AuthViewModel>(
+      converter: (store) => AuthPresenter.presentAuth(authState: store.state.authState),
+      builder: (context, viewModel) {
+        return Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 20),
+            child: Column(
+              children: <Widget>[
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      height: 48,
-                      padding: const EdgeInsets.only(left: 12, top: 8, bottom: 8),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          width: 1,
-                          color: ClientConfig.getCustomColors().neutral500,
-                          style: BorderStyle.solid,
-                        ),
-                        borderRadius:
-                            const BorderRadius.only(topLeft: Radius.circular(8), bottomLeft: Radius.circular(8)),
-                        color: ClientConfig.getCustomColors().neutral100,
-                      ),
-                      child: GestureDetector(
-                        onTap: () {
-                          showBottomModal(
-                            context: context,
-                            title: "Select mobile number prefix",
-                            content: CountryPickerPopup(
-                              onChangedSearch: (value) {},
-                            ),
-                          );
-                        },
-                        child: Row(
-                          children: [
-                            Image.asset('assets/images/germany_flag.png'),
-                            const SizedBox(width: 4),
-                            Icon(
-                              Icons.expand_more,
-                              color: ClientConfig.getCustomColors().neutral500,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: TextField(
-                        style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                        autofocus: true,
-                        controller: phoneController,
-                        onChanged: (inputValue) {
-                          if (inputValue.isEmpty) inputValue = '0';
-
-                          setState(() {});
-                        },
-                        keyboardType: TextInputType.phone,
-                        decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 12,
-                          ),
-                          filled: true,
-                          fillColor: ClientConfig.getCustomColors().neutral100,
-                          border: OutlineInputBorder(
-                            borderRadius: const BorderRadius.only(
-                              topRight: Radius.circular(8),
-                              bottomRight: Radius.circular(8),
-                            ),
-                            borderSide: BorderSide(
-                              width: 1,
-                              color: ClientConfig.getCustomColors().neutral500,
-                              style: BorderStyle.solid,
+                    ValueListenableBuilder<CountryPrefixItem>(
+                      valueListenable: _selectedCountryNotifier,
+                      builder: (context, selectedCountry, child) {
+                        return IvoryTextField(
+                          label: 'Mobile number',
+                          keyboardType: TextInputType.phone,
+                          controller: _phoneInputController,
+                          focusNode: _phoneInputFocusNode,
+                          prefix: SizedBox(
+                            height: 48,
+                            width: 80,
+                            child: GestureDetector(
+                              onTap: () {
+                                showBottomModal(
+                                  addContentPadding: false,
+                                  context: context,
+                                  title: "Select mobile number prefix",
+                                  content: CountryPrefixPicker(
+                                    onCountrySelected: (country) {
+                                      _selectedCountryNotifier.value = country;
+                                      _phoneInputController.text = country.phonePrefix;
+                                    },
+                                    selectedCountry: _selectedCountryNotifier.value,
+                                  ),
+                                );
+                              },
+                              child: Row(
+                                children: [
+                                  Image.asset(selectedCountry.flagPath),
+                                  const SizedBox(width: 4),
+                                  Icon(
+                                    Icons.expand_more,
+                                    color: ClientConfig.getCustomColors().neutral500,
+                                  ),
+                                  VerticalDivider(
+                                    color: _phoneInputFocusNode.hasFocus
+                                        ? ClientConfig.getCustomColors().neutral900
+                                        : ClientConfig.getCustomColors().neutral400,
+                                    thickness: 1,
+                                    width: 20,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: const BorderRadius.only(
-                              topRight: Radius.circular(8),
-                              bottomRight: Radius.circular(8),
-                            ),
-                            borderSide: BorderSide(
-                              width: 1,
-                              color: ClientConfig.getColorScheme().primary,
-                              style: BorderStyle.solid,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 24,
-                ),
-                Text(
-                  'Password',
-                  style: ClientConfig.getTextStyleScheme().labelSmall,
-                ),
-                const SizedBox(height: 8),
-                TextField(
-                  style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                  autofocus: true,
-                  obscureText: hidePassword,
-                  controller: passwordInputController,
-                  onChanged: (inputValue) {},
-                  keyboardType: TextInputType.visiblePassword,
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
-                    ),
-                    filled: true,
-                    fillColor: ClientConfig.getCustomColors().neutral100,
-                    border: OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(8),
-                      ),
-                      borderSide: BorderSide(
-                        width: 1,
-                        color: ClientConfig.getCustomColors().neutral400,
-                        style: BorderStyle.solid,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(8),
-                      ),
-                      borderSide: BorderSide(
-                        width: 1,
-                        color: ClientConfig.getColorScheme().primary,
-                        style: BorderStyle.solid,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 24,
-                ),
-                Row(
-                  children: [
-                    CheckboxWidget(
-                      isChecked: false,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          hidePassword = !hidePassword;
-                        });
+                        );
                       },
                     ),
-                    const SizedBox(width: 8),
-                    const Text('Show password'),
+                    const SizedBox(
+                      height: 24,
+                    ),
+                    IvoryTextField(
+                      label: "Password",
+                      controller: _passwordInputController,
+                      onChanged: (inputValue) {},
+                      keyboardType: TextInputType.visiblePassword,
+                    ),
+                    const SizedBox(
+                      height: 24,
+                    ),
+                    Row(
+                      children: [
+                        CheckboxWidget(
+                          isChecked: false,
+                          onChanged: (bool value) {
+                            _passwordInputController.setObscureText(!value);
+                          },
+                        ),
+                        const SizedBox(width: 8),
+                        const Text('Show password'),
+                      ],
+                    ),
+                  ],
+                ),
+                const Spacer(),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Forgot your email address?",
+                      style: ClientConfig.getTextStyleScheme().labelMedium.copyWith(
+                            color: viewModel is AuthLoadingViewModel
+                                ? ClientConfig.getCustomColors().neutral500
+                                : ClientConfig.getColorScheme().secondary,
+                          ),
+                    ),
+                    const SizedBox(
+                      height: 24,
+                    ),
+                    SizedBox(
+                      child: ListenableBuilder(
+                        listenable: _continueButtonController,
+                        builder: (context, child) {
+                          return Button(
+                            text: 'Continue',
+                            disabledColor: ClientConfig.getCustomColors().neutral300,
+                            color: ClientConfig.getColorScheme().tertiary,
+                            textColor: ClientConfig.getColorScheme().surface,
+                            isLoading: viewModel is AuthLoadingViewModel,
+                            onPressed: _continueButtonController.isEnabled
+                                ? () async {
+                                    _continueButtonController.setDisabled();
+                                  }
+                                : null,
+                          );
+                        },
+                      ),
+                    ),
                   ],
                 ),
               ],
             ),
-            const SizedBox(
-              height: 210,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  "Forgot your email address?",
-                  style: ClientConfig.getTextStyleScheme().labelMedium.copyWith(
-                        color: ClientConfig.getColorScheme().secondary,
-                      ),
-                ),
-                const SizedBox(
-                  height: 24,
-                ),
-                SizedBox(
-                  child: PrimaryButton(
-                    text: "Continue",
-                    onPressed: isLoginEnabled
-                        ? () async {
-                            if (_formKey.currentState!.validate()) {
-                              _formKey.currentState!.save();
-                              String phoneNumber = phoneController.text;
-                              String password = passwordInputController.text;
-                              String? deviceConsentId = await OldDeviceService.getDeviceConsentId();
-                              if (deviceConsentId.isNotEmpty) {
-                                context.read<LoginCubit>().setCredentials(
-                                      phoneNumber: phoneNumber,
-                                      password: password,
-                                    );
-                              } else {
-                                context.read<LoginCubit>().requestConsent(
-                                      phoneNumber: phoneNumber,
-                                      password: password,
-                                    );
-                              }
-                            }
-                          }
-                        : null,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
@@ -358,298 +316,239 @@ class EmailLoginForm extends StatefulWidget {
 }
 
 class _EmailLoginFormState extends State<EmailLoginForm> {
-  bool _isEmailValid = false;
-  bool _isPasswordValid = false;
-  bool _hasValidationError = false;
-  bool _hidePassword = true;
-  bool isCompleted = false;
-  late TextEditingController _emailInputController;
-  late TextEditingController _passwordInputController;
-  late ContinueButtonController continueButtonController;
+  late IvoryTextFieldController _emailInputController;
+  late IvoryTextFieldController _passwordInputController;
+  late ContinueButtonController _continueButtonController;
+  late FocusNode _emailFocusNode;
+  late FocusNode _passwordFocusNode;
+  final _hasAuthErrorNotifier = ValueNotifier<bool>(false);
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool get hasAuthError => _hasAuthErrorNotifier.value;
+  set hasAuthError(bool value) => _hasAuthErrorNotifier.value = value;
 
   @override
   void initState() {
     super.initState();
-    _emailInputController = TextEditingController();
-    _passwordInputController = TextEditingController();
-    continueButtonController = ContinueButtonController();
+    _emailInputController = IvoryTextFieldController();
+    _passwordInputController = IvoryTextFieldController(obscureText: true);
+    _emailFocusNode = FocusNode();
+    _passwordFocusNode = FocusNode();
+    _continueButtonController = ContinueButtonController();
 
-    _emailInputController.addListener(onChangeEmailAddress);
+    _emailInputController.addListener(onChangeEmail);
     _passwordInputController.addListener(onChangePassword);
+    _emailFocusNode.addListener(onFocus);
+    _passwordFocusNode.addListener(onFocus);
   }
 
-  void onChangeEmailAddress() {
-    bool isInputValid =
-        _emailInputController.text.isNotEmpty && Validator.isValidEmailAddress(_emailInputController.text);
-
-    setState(() {
-      _hasValidationError = !isInputValid;
-    });
-
-    if (isInputValid && !_isEmailValid) {
-      setState(() {
-        _isEmailValid = true;
-        _hasValidationError = false;
-      });
+  void onFocus() {
+    if (_emailFocusNode.hasFocus && _emailInputController.hasError && hasAuthError) {
+      _emailInputController.setError(false);
     }
-
-    if (!isInputValid && _isEmailValid) {
+    if (_passwordFocusNode.hasFocus && _passwordInputController.hasError && hasAuthError) {
+      _passwordInputController.setError(false);
+    }
+    if (!_emailInputController.hasError && !_passwordInputController.hasError && hasAuthError) {
       setState(() {
-        _isEmailValid = false;
-        _hasValidationError = true;
+        hasAuthError = false;
       });
     }
   }
 
   void onChangePassword() {
-    bool isInputValid = _passwordInputController.text.isNotEmpty && _passwordInputController.text.length >= 6;
-
-    if (isInputValid && !_isPasswordValid) {
-      setState(() {
-        _isPasswordValid = true;
-      });
+    String password = _passwordInputController.text;
+    bool isPasswordInputValid = password.isNotEmpty && password.length >= 6;
+    if (!isPasswordInputValid && !_passwordInputController.hasError) {
+      _passwordInputController.setErrorText('Please input a valid password with at least 6 characters');
+      if (hasAuthError) {
+        hasAuthError = false;
+        _emailInputController.setError(false);
+      }
+    } else if (isPasswordInputValid && _passwordInputController.hasError && !hasAuthError) {
+      _passwordInputController.setError(false);
     }
 
-    if (!isInputValid && _isPasswordValid) {
-      setState(() {
-        _isPasswordValid = false;
-      });
+    if (((_emailInputController.hasError) || _passwordInputController.hasError) &&
+        _continueButtonController.isEnabled) {
+      _continueButtonController.setDisabled();
+    }
+    if (!_emailInputController.hasError &&
+        !_passwordInputController.hasError &&
+        _emailInputController.text.isNotEmpty &&
+        !_continueButtonController.isEnabled) {
+      _continueButtonController.setEnabled();
+    }
+  }
+
+  void onChangeEmail() {
+    String emailAddress = _emailInputController.text;
+    bool isEmailInputValid = emailAddress.isNotEmpty && Validator.isValidEmailAddress(emailAddress);
+
+    if (!isEmailInputValid && !_emailInputController.hasError) {
+      _emailInputController.setErrorText('Please input a valid email address: example@gmail.com');
+      if (hasAuthError) {
+        hasAuthError = false;
+        _passwordInputController.setError(false);
+      }
+    } else if (isEmailInputValid && _emailInputController.hasError && !hasAuthError) {
+      _emailInputController.setError(false);
+    }
+
+    if ((_emailInputController.hasError || _passwordInputController.hasError) && _continueButtonController.isEnabled) {
+      _continueButtonController.setDisabled();
+    }
+    if (!_emailInputController.hasError &&
+        _passwordInputController.text.isNotEmpty &&
+        !_passwordInputController.hasError &&
+        !_continueButtonController.isEnabled) {
+      _continueButtonController.setEnabled();
+    }
+  }
+
+  void handleAuthError() {
+    if (mounted) {
+      hasAuthError = true;
+      if (!_emailInputController.hasError) {
+        _emailInputController.setError(true);
+      }
+      if (!_passwordInputController.hasError) {
+        _passwordInputController.setError(true);
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (widget.viewModel is AuthInitialViewModel &&
-        widget.viewModel.email != null &&
-        widget.viewModel.password != null &&
-        _emailInputController.text.isEmpty &&
-        _passwordInputController.text.isEmpty) {
-      _emailInputController.text = widget.viewModel.email!;
-      _passwordInputController.text = widget.viewModel.password!;
-
-      setState(() {
-        _isEmailValid = true;
-        _isPasswordValid = true;
-      });
-    }
-
-    if (widget.viewModel is AuthErrorViewModel && isCompleted == true) {
-      setState(() {
-        _isEmailValid = false;
-        _isPasswordValid = false;
-        isCompleted = false;
-      });
-    }
-
-    return Form(
-      key: _formKey,
-      child: Padding(
-        padding: const EdgeInsets.only(top: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (widget.viewModel is AuthErrorViewModel && (!_isEmailValid || !_isPasswordValid))
-                  AuthErrorContainer(
-                    errorType: widget.viewModel.errorType!,
-                  ),
-                if (widget.viewModel is AuthErrorViewModel && (!_isEmailValid || !_isPasswordValid))
-                  const SizedBox(
-                    height: 24,
-                  ),
-                Text(
-                  'Email address',
-                  style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(
-                        color: _hasValidationError || !_isEmailValid
-                            ? const Color(0xFFE61F27)
-                            : ClientConfig.getCustomColors().neutral700,
-                      ),
-                ),
-                const SizedBox(height: 8),
-                TextField(
-                  onTap: () {
-                    if (widget.viewModel is AuthErrorViewModel) {
-                      setState(() {
-                        _isEmailValid = true;
-                      });
-                    }
-                  },
-                  enabled: !isCompleted,
-                  style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                  controller: _emailInputController,
-                  onChanged: (inputValue) => onChangeEmailAddress(),
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
-                    ),
-                    filled: true,
-                    fillColor: _hasValidationError || !_isEmailValid
-                        ? const Color(0xFFFFE9EA)
-                        : ClientConfig.getCustomColors().neutral100,
-                    border: OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(8),
-                      ),
-                      borderSide: BorderSide(
-                        width: 1,
-                        color: _hasValidationError || !_isEmailValid
-                            ? const Color(0xFFE61F27)
-                            : ClientConfig.getCustomColors().neutral500,
-                        style: BorderStyle.solid,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(8),
-                      ),
-                      borderSide: BorderSide(
-                        width: 1,
-                        color: _hasValidationError || !_isEmailValid
-                            ? const Color(0xFFE61F27)
-                            : ClientConfig.getColorScheme().primary,
-                        style: BorderStyle.solid,
-                      ),
-                    ),
-                  ),
-                ),
-                if (_hasValidationError) const SizedBox(height: 8),
-                if (_hasValidationError)
-                  Text(
-                    'Please input a valid email address: example@gmail.com',
-                    style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(
-                          color: const Color(0xFFE61F27),
-                        ),
-                  ),
-                const SizedBox(
-                  height: 24,
-                ),
-                Text(
-                  'Password',
-                  style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(
-                        color: !_isPasswordValid ? const Color(0xFFE61F27) : ClientConfig.getCustomColors().neutral700,
-                      ),
-                ),
-                const SizedBox(height: 8),
-                TextField(
-                  onTap: () {
-                    if (widget.viewModel is AuthErrorViewModel) {
-                      setState(() {
-                        _isPasswordValid = true;
-                      });
-                    }
-                  },
-                  enabled: !isCompleted,
-                  style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                  obscureText: _hidePassword,
-                  controller: _passwordInputController,
-                  onChanged: (inputValue) => onChangePassword(),
-                  keyboardType: TextInputType.visiblePassword,
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
-                    ),
-                    filled: true,
-                    fillColor: !_isPasswordValid ? const Color(0xFFFFE9EA) : ClientConfig.getCustomColors().neutral100,
-                    border: OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(8),
-                      ),
-                      borderSide: BorderSide(
-                        width: 1,
-                        color: !_isPasswordValid ? const Color(0xFFE61F27) : ClientConfig.getCustomColors().neutral500,
-                        style: BorderStyle.solid,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(8),
-                      ),
-                      borderSide: BorderSide(
-                        width: 1,
-                        color: !_isPasswordValid ? const Color(0xFFE61F27) : ClientConfig.getColorScheme().primary,
-                        style: BorderStyle.solid,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 24,
-                ),
-                Row(
+    return StoreConnector<AppState, AuthViewModel>(
+      onDidChange: (previousViewModel, newViewModel) {
+        if (newViewModel is AuthCredentialsLoadedViewModel) {
+          _emailInputController.text = widget.viewModel.email!;
+          _passwordInputController.text = widget.viewModel.password!;
+        }
+        if (previousViewModel is AuthLoadingViewModel && newViewModel is AuthErrorViewModel) {
+          handleAuthError();
+        }
+      },
+      converter: (store) => AuthPresenter.presentAuth(authState: store.state.authState),
+      builder: (context, viewModel) {
+        return Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 20),
+            child: Column(
+              children: <Widget>[
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CheckboxWidget(
-                      isChecked: false,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          _hidePassword = !_hidePassword;
-                        });
+                    ValueListenableBuilder<bool>(
+                      valueListenable: _hasAuthErrorNotifier,
+                      builder: (context, hasAuthError, child) {
+                        if (hasAuthError && viewModel is AuthErrorViewModel) {
+                          return Column(
+                            children: [
+                              AuthErrorContainer(
+                                errorType: viewModel.errorType!,
+                              ),
+                              const SizedBox(
+                                height: 24,
+                              ),
+                            ],
+                          );
+                        } else {
+                          return const SizedBox(height: 8);
+                        }
                       },
                     ),
-                    const SizedBox(width: 8),
-                    const Text('Show password'),
+                    IvoryTextField(
+                      label: 'Email address',
+                      controller: _emailInputController,
+                      focusNode: _emailFocusNode,
+                      inputType: TextFieldInputType.email,
+                    ),
+                    if (_emailInputController.hasError) const SizedBox(height: 8),
+                    if (_emailInputController.hasError)
+                      Text(
+                        'Please input a valid email address: example@gmail.com',
+                        style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(
+                              color: const Color(0xFFE61F27),
+                            ),
+                      ),
+                    const SizedBox(
+                      height: 24,
+                    ),
+                    const SizedBox(height: 8),
+                    IvoryTextField(
+                      label: 'Password',
+                      controller: _passwordInputController,
+                      focusNode: _passwordFocusNode,
+                    ),
+                    const SizedBox(
+                      height: 24,
+                    ),
+                    Row(
+                      children: [
+                        CheckboxWidget(
+                          isChecked: false,
+                          onChanged: (bool value) {
+                            _passwordInputController.setObscureText(!value);
+                          },
+                        ),
+                        const SizedBox(width: 8),
+                        const Text('Show password'),
+                      ],
+                    ),
+                  ],
+                ),
+                const Spacer(),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Forgot your email address?",
+                      style: ClientConfig.getTextStyleScheme().labelMedium.copyWith(
+                            color: viewModel is AuthLoadingViewModel
+                                ? ClientConfig.getCustomColors().neutral500
+                                : ClientConfig.getColorScheme().secondary,
+                          ),
+                    ),
+                    const SizedBox(
+                      height: 24,
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 48,
+                      child: ListenableBuilder(
+                        listenable: _continueButtonController,
+                        builder: (context, child) {
+                          return Button(
+                            text: 'Continue',
+                            disabledColor: ClientConfig.getCustomColors().neutral300,
+                            color: ClientConfig.getColorScheme().tertiary,
+                            textColor: ClientConfig.getColorScheme().surface,
+                            isLoading: viewModel is AuthLoadingViewModel,
+                            onPressed: _continueButtonController.isEnabled
+                                ? () async {
+                                    _continueButtonController.setDisabled();
+                                    _emailFocusNode.unfocus();
+                                    _passwordFocusNode.unfocus();
+                                    StoreProvider.of<AppState>(context).dispatch(
+                                      AuthenticateUserCommandAction(
+                                        email: _emailInputController.text,
+                                        password: _passwordInputController.text,
+                                      ),
+                                    );
+                                  }
+                                : null,
+                          );
+                        },
+                      ),
+                    ),
                   ],
                 ),
               ],
             ),
-            SizedBox(
-              height: widget.viewModel is AuthErrorViewModel && (!_isEmailValid || !_isPasswordValid) ? 100 : 210,
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Forgot your email address?",
-                  style: ClientConfig.getTextStyleScheme().labelMedium.copyWith(
-                        color: widget.viewModel is AuthLoadingViewModel
-                            ? ClientConfig.getCustomColors().neutral500
-                            : ClientConfig.getColorScheme().secondary,
-                      ),
-                ),
-                const SizedBox(
-                  height: 24,
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  height: 48,
-                  child: Button(
-                    text: 'Continue',
-                    disabledColor: ClientConfig.getCustomColors().neutral300,
-                    color: ClientConfig.getColorScheme().tertiary,
-                    textColor: ClientConfig.getColorScheme().surface,
-                    isLoading: widget.viewModel is AuthLoadingViewModel,
-                    onPressed: _isEmailValid && _isPasswordValid
-                        ? () async {
-                            if (_formKey.currentState!.validate()) {
-                              _formKey.currentState!.save();
-                              String emailAddress = _emailInputController.text;
-                              String password = _passwordInputController.text;
-                              setState(() {
-                                isCompleted = true;
-                              });
-                              StoreProvider.of<AppState>(context).dispatch(
-                                AuthenticateUserCommandAction(
-                                  email: emailAddress,
-                                  password: password,
-                                ),
-                              );
-                            }
-                          }
-                        : null,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

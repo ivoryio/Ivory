@@ -32,24 +32,18 @@ class AuthMiddleware extends MiddlewareClass<AppState> {
       store.dispatch(AuthLoadingEventAction());
 
       final credentials = await _deviceService.getCredentialsFromCache();
-      if (credentials == null) {
+      if (credentials != null && (credentials.email?.isEmpty ?? true) || (credentials?.password?.isEmpty ?? true)) {
+        store.dispatch(ResetAuthEventAction());
+        return;
+      } else {
         store.dispatch(
           CredentialsLoadedEventAction(
-            deviceId: '',
-            email: '',
-            password: '',
+            deviceId: credentials!.deviceId,
+            email: credentials.email,
+            password: credentials.password,
           ),
         );
-        return;
       }
-
-      store.dispatch(
-        CredentialsLoadedEventAction(
-          deviceId: credentials.deviceId,
-          email: credentials.email,
-          password: credentials.password,
-        ),
-      );
     }
 
     if (action is AuthenticateUserCommandAction) {
@@ -86,6 +80,7 @@ class AuthMiddleware extends MiddlewareClass<AppState> {
         }
 
         consentId = (newConsentResponse).consentId;
+        await _deviceService.saveConsentIdInCache(consentId);
 
         final deviceFingerprint = await _deviceFingerprintService.getDeviceFingerprint(consentId);
         if (deviceFingerprint == null) {
@@ -163,7 +158,7 @@ class AuthMiddleware extends MiddlewareClass<AppState> {
     }
 
     if (action is LogoutUserCommandAction) {
-      store.dispatch(LoggedOutEventAction());
+      store.dispatch(ResetAuthEventAction());
     }
   }
 }

@@ -67,7 +67,7 @@ class AuthenticationConfirmedEventAction {
   });
 }
 
-class LoggedOutEventAction {}
+class ResetAuthEventAction {}
 
 class AuthLoadingEventAction {}
 

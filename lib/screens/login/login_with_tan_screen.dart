@@ -38,6 +38,11 @@ class _LoginWithTanScreenState extends State<LoginWithTanScreen> {
     return StoreConnector<AppState, AuthViewModel>(
       builder: (context, viewModel) {
         return ScreenScaffold(
+          popAction: () {
+            StoreProvider.of<AppState>(context).dispatch(
+              LogoutUserCommandAction(),
+            );
+          },
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -48,12 +53,7 @@ class _LoginWithTanScreenState extends State<LoginWithTanScreen> {
                     'assets/images/ivory-logo-small.svg',
                   ),
                 ],
-                padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                onBackButtonPressed: () {
-                  StoreProvider.of<AppState>(context).dispatch(
-                    LoadCredentialsCommandAction(),
-                  );
-                },
+                padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,      
               ),
               Expanded(
                 child: Padding(

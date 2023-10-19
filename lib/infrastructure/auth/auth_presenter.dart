@@ -7,8 +7,8 @@ class AuthPresenter {
   static AuthViewModel presentAuth({
     required AuthState authState,
   }) {
-    if (authState is AuthInitialState) {
-      return AuthInitialViewModel(
+    if (authState is AuthCredentialsLoadedState) {
+      return AuthCredentialsLoadedViewModel(
         email: authState.email ?? authState.email,
         password: authState.password ?? authState.password,
         deviceId: authState.deviceId ?? authState.deviceId,
@@ -33,7 +33,7 @@ class AuthPresenter {
         authenticatedUser: authState.authenticatedUser,
       );
     }
-    return const AuthInitialViewModel();
+    return AuthInitialViewModel();
   }
 }
 
@@ -60,8 +60,10 @@ abstract class AuthViewModel extends Equatable {
   List<Object?> get props => [cognitoUser, authenticatedUser, tan];
 }
 
-class AuthInitialViewModel extends AuthViewModel {
-  const AuthInitialViewModel({
+class AuthInitialViewModel extends AuthViewModel {}
+
+class AuthCredentialsLoadedViewModel extends AuthViewModel {
+  const AuthCredentialsLoadedViewModel({
     String? email,
     String? password,
     String? deviceId,

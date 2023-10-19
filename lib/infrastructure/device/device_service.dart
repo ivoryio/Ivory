@@ -29,6 +29,11 @@ class DeviceService {
     }
   }
 
+  Future<void> saveConsentIdInCache(String consentId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('device_consent_id', consentId);
+  }
+
   Future<String?> getDeviceId() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();

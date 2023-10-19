@@ -38,7 +38,7 @@ class WelcomeScreen extends StatelessWidget {
           },
           onWillChange: (previousViewModel, newViewModel) {
             if (previousViewModel is AuthLoadingViewModel &&
-                newViewModel is AuthInitialViewModel &&
+                newViewModel is AuthCredentialsLoadedViewModel &&
                 newViewModel.email!.isNotEmpty &&
                 newViewModel.password!.isNotEmpty &&
                 newViewModel.deviceId!.isNotEmpty) {

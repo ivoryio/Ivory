@@ -77,7 +77,8 @@ class _LoginWithBiometricsScreenState extends State<LoginWithBiometricsScreen> {
                         height: 24,
                       ),
                       const Spacer(),
-                      const Center(
+                      if (viewModel is AuthLoadingViewModel)
+                        const Center(
                         child: CircularProgressIndicator(),
                       ),
                       const Spacer(),

@@ -5,7 +5,7 @@ AuthState authReducer(AuthState currentState, dynamic action) {
   if (action is AuthLoadingEventAction) {
     return AuthLoadingState();
   } else if (action is CredentialsLoadedEventAction) {
-    return AuthInitialState(
+    return AuthCredentialsLoadedState(
       email: action.email ?? action.email,
       password: action.password ?? action.password,
       deviceId: action.deviceId ?? action.deviceId,
@@ -18,7 +18,7 @@ AuthState authReducer(AuthState currentState, dynamic action) {
     return AuthenticatedWithBoundDeviceState(action.cognitoUser);
   } else if (action is AuthenticationConfirmedEventAction) {
     return AuthenticatedAndConfirmedState(action.authenticatedUser);
-  } else if (action is LoggedOutEventAction) {
+  } else if (action is ResetAuthEventAction) {
     return AuthInitialState();
   }
   return currentState;

@@ -7,17 +7,19 @@ abstract class AuthState extends Equatable {
   List<Object?> get props => [];
 }
 
-class AuthInitialState extends AuthState {
+class AuthCredentialsLoadedState extends AuthState {
   final String? email;
   final String? password;
   final String? deviceId;
 
-  AuthInitialState({
+  AuthCredentialsLoadedState({
     this.email,
     this.password,
     this.deviceId,
   });
 }
+
+class AuthInitialState extends AuthState {}
 
 class AuthLoadingState extends AuthState {}
 
