@@ -76,7 +76,7 @@ class AppState extends Equatable {
       transactionApprovalState: TransactionApprovalInitialState(),
       accountSummaryState: AccountSummaryInitialState(),
       homePageTransactionsState: TransactionsInitialState(),
-      onboardingSignupState: OnboardingSignupInitialState(),
+      onboardingSignupState: OnboardingSignupSubmittedState(),
     );
   }
 

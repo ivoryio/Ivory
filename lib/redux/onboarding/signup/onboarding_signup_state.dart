@@ -5,8 +5,6 @@ abstract class OnboardingSignupState extends Equatable {
   List<Object?> get props => [];
 }
 
-class OnboardingSignupInitialState extends OnboardingSignupState {}
-
 class OnboardingSignupSubmittedState extends OnboardingSignupState {
   final String? title;
   final String? firstName;

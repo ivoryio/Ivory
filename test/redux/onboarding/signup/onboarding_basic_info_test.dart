@@ -10,7 +10,7 @@ void main() {
     //given
     final store = createTestStore(
       initialState: createAppState(
-        onboardingSignupState: OnboardingSignupInitialState(),
+        onboardingSignupState: OnboardingSignupSubmittedState(),
       ),
     );
     final appState =
@@ -24,7 +24,12 @@ void main() {
     ));
 
     //then
-    expect((await appState).onboardingSignupState, isA<OnboardingSignupSubmittedState>());
+    final onboardingSignupSubmittedState = (await appState).onboardingSignupState;
+
+    expect(onboardingSignupSubmittedState, isA<OnboardingSignupSubmittedState>());
+    expect((onboardingSignupSubmittedState as OnboardingSignupSubmittedState).title, "title");
+    expect(onboardingSignupSubmittedState.firstName, "firstName");
+    expect(onboardingSignupSubmittedState.lastName, "lastName");
   });
 
   test('when the user submit email address, the state should be updated', () async {
@@ -45,23 +50,27 @@ void main() {
     store.dispatch(SubmitOnboardingEmailCommandAction(email: "email"));
 
     //then
-    expect((await appState).onboardingSignupState, isA<OnboardingSignupSubmittedState>());
+    final onboardingSignupSubmittedState = (await appState).onboardingSignupState;
+
+    expect(onboardingSignupSubmittedState, isA<OnboardingSignupSubmittedState>());
+    expect((onboardingSignupSubmittedState as OnboardingSignupSubmittedState).email, "email");
   });
 
   test("when the user submit email address and the state is not OnboardingSignupSubmittedState", () async {
     //given
     final store = createTestStore(
       initialState: createAppState(
-        onboardingSignupState: OnboardingSignupInitialState(),
+        onboardingSignupState: OnboardingSignupSubmittedState(),
       ),
     );
-    final appState = store.onChange.firstWhere((state) => state.onboardingSignupState is OnboardingSignupInitialState);
+    final appState =
+        store.onChange.firstWhere((state) => state.onboardingSignupState is OnboardingSignupSubmittedState);
 
     //when
     store.dispatch(SubmitOnboardingEmailCommandAction(email: "email"));
 
     //then
-    expect((await appState).onboardingSignupState, isA<OnboardingSignupInitialState>());
+    expect((await appState).onboardingSignupState, isA<OnboardingSignupSubmittedState>());
   });
 
   test('when the user submit password, the state should be updated', () async {
@@ -83,22 +92,26 @@ void main() {
     store.dispatch(SubmitOnboardingPasswordCommandAction(password: "password"));
 
     //then
-    expect((await appState).onboardingSignupState, isA<OnboardingSignupSubmittedState>());
+    final onboardingSignupSubmittedState = (await appState).onboardingSignupState;
+
+    expect(onboardingSignupSubmittedState, isA<OnboardingSignupSubmittedState>());
+    expect((onboardingSignupSubmittedState as OnboardingSignupSubmittedState).password, "password");
   });
 
   test("when the user submit password and the state is not OnboardingSignupSubmittedState", () async {
     //given
     final store = createTestStore(
       initialState: createAppState(
-        onboardingSignupState: OnboardingSignupInitialState(),
+        onboardingSignupState: OnboardingSignupSubmittedState(),
       ),
     );
-    final appState = store.onChange.firstWhere((state) => state.onboardingSignupState is OnboardingSignupInitialState);
+    final appState =
+        store.onChange.firstWhere((state) => state.onboardingSignupState is OnboardingSignupSubmittedState);
 
     //when
     store.dispatch(SubmitOnboardingPasswordCommandAction(password: "password"));
 
     //then
-    expect((await appState).onboardingSignupState, isA<OnboardingSignupInitialState>());
+    expect((await appState).onboardingSignupState, isA<OnboardingSignupSubmittedState>());
   });
 }

@@ -54,6 +54,6 @@ AppState createAppState({
     transactionApprovalState: transactionApprovalState ?? TransactionApprovalInitialState(),
     accountSummaryState: accountSummaryState ?? AccountSummaryInitialState(),
     homePageTransactionsState: homePageTransactionsState ?? TransactionsInitialState(),
-    onboardingSignupState: onboardingSignupState ?? OnboardingSignupInitialState(),
+    onboardingSignupState: onboardingSignupState ?? OnboardingSignupSubmittedState(),
   );
 }
