@@ -5,7 +5,7 @@ import 'package:solarisdemo/redux/categories/category_state.dart';
 import 'package:solarisdemo/redux/credit_line/credit_line_state.dart';
 import 'package:solarisdemo/redux/device/device_state.dart';
 import 'package:solarisdemo/redux/notification/notification_state.dart';
-import 'package:solarisdemo/redux/onboarding/signup/basic_info/onboarding_basic_info_state.dart';
+import 'package:solarisdemo/redux/onboarding/signup/onboarding_signup_state.dart';
 import 'package:solarisdemo/redux/person/account_summary/account_summay_state.dart';
 import 'package:solarisdemo/redux/person/person_account/person_account_state.dart';
 import 'package:solarisdemo/redux/person/reference_account/reference_account_state.dart';
@@ -36,7 +36,7 @@ class AppState extends Equatable {
   final AccountSummaryState accountSummaryState;
   final AuthState authState;
   final TransactionsState homePageTransactionsState;
-  final OnboardingBasicInfoState onboardingBasicInfoState;
+  final OnboardingSignupState onboardingSignupState;
 
   const AppState({
     required this.transactionsState,
@@ -57,7 +57,7 @@ class AppState extends Equatable {
     required this.accountSummaryState,
     required this.authState,
     required this.homePageTransactionsState,
-    required this.onboardingBasicInfoState,
+    required this.onboardingSignupState,
   });
 
   factory AppState.initialState() {
@@ -80,7 +80,7 @@ class AppState extends Equatable {
       accountSummaryState: AccountSummaryInitialState(),
       authState: AuthInitialState(),
       homePageTransactionsState: TransactionsInitialState(),
-      onboardingBasicInfoState: OnboardingBasicInfoInitialState(),
+      onboardingSignupState: OnboardingSignupSubmittedState(),
     );
   }
 
@@ -104,7 +104,7 @@ class AppState extends Equatable {
         accountSummaryState,
         authState,
         homePageTransactionsState,
-        onboardingBasicInfoState,
+        onboardingSignupState,
       ];
 
   @override
