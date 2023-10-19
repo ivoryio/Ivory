@@ -99,6 +99,7 @@ class _TransferReviewScreenState extends State<TransferReviewScreen> {
             children: [
               IvoryCard(
                 padding: const EdgeInsets.all(16),
+                color: ClientConfig.getCustomColors().neutral100,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

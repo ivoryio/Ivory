@@ -56,7 +56,7 @@ class BillDetailScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 24),
                       Material(
-                        color: const Color(0xFFF8F9FA),
+                        color: ClientConfig.getCustomColors().neutral100,
                         shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(
                             Radius.circular(16),
@@ -129,7 +129,7 @@ class BillDetailScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 24),
                       Material(
-                        color: const Color(0xFFF8F9FA),
+                        color: ClientConfig.getCustomColors().neutral100,
                         shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(
                             Radius.circular(16),
