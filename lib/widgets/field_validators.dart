@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:solarisdemo/config.dart';
 
 class FieldValidators extends StatefulWidget {
-  final List<TextEditingController> controllers;
+  final TextEditingController controller;
   final List<FieldValidator> validators;
+  final VoidCallback? onValid;
+  final VoidCallback? onInvalid;
 
   const FieldValidators({
     super.key,
-    this.controllers = const [],
+    required this.controller,
     this.validators = const [],
+    this.onValid,
+    this.onInvalid,
   });
 
   @override
@@ -16,69 +20,81 @@ class FieldValidators extends StatefulWidget {
 }
 
 class _FieldValidatorsState extends State<FieldValidators> {
-  late bool isActive;
-  late bool isValid;
-
   @override
   void initState() {
     super.initState();
-    isActive = widget.controllers.every((controller) => controller.text.isNotEmpty);
 
-    for (var controller in widget.controllers) {
-      controller.addListener(() {
-        if (mounted && isActive == false && controller.text.isNotEmpty) {
-          setState(() {
-            isActive = true;
-          });
-          return;
-        }
-
-        if (mounted) {
-          setState(() {});
-        }
-      });
-    }
+    widget.controller.addListener(_validate);
   }
 
   @override
+  void dispose() {
+    widget.controller.removeListener(_validate);
+
+    super.dispose();
+  }
+
+  void _validate() {
+    if (isValidationComplete) {
+      widget.onValid?.call();
+    } else {
+      widget.onInvalid?.call();
+    }
+  }
+
+  bool get isActive => widget.controller.text.isNotEmpty;
+
+  bool get isValidationComplete =>
+      widget.controller.text.isNotEmpty &&
+      widget.validators.every(
+        (validator) => validator.validate(widget.controller.text),
+      );
+
+  @override
   Widget build(BuildContext context) {
-    List<Widget> items = [];
+    return ListenableBuilder(
+      listenable: widget.controller,
+      builder: (context, child) {
+        List<Widget> items = [];
 
-    for (var validator in widget.validators) {
-      isValid = widget.controllers.every((controller) => validator.validate(controller.text));
+        for (var validator in widget.validators) {
+          final isValid = validator.validate(widget.controller.text);
 
-      items.add(
-        Row(
-          children: [
-            Icon(
-              isActive
-                  ? isValid
-                      ? Icons.check
-                      : Icons.close
-                  : Icons.check,
-              color: isActive
-                  ? isValid
-                      ? ClientConfig.getCustomColors().success
-                      : ClientConfig.getColorScheme().error
-                  : ClientConfig.getCustomColors().neutral700,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              validator.label,
-              style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(
+          items.add(
+            Row(
+              children: [
+                Icon(
+                  isActive
+                      ? isValid
+                          ? Icons.check
+                          : Icons.close
+                      : Icons.check,
                   color: isActive
                       ? isValid
-                          ? ClientConfig.getCustomColors().neutral900
+                          ? ClientConfig.getCustomColors().success
                           : ClientConfig.getColorScheme().error
-                      : ClientConfig.getCustomColors().neutral700),
+                      : ClientConfig.getCustomColors().neutral700,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  validator.label,
+                  style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(
+                        color: isActive
+                            ? isValid
+                                ? ClientConfig.getCustomColors().neutral900
+                                : ClientConfig.getColorScheme().error
+                            : ClientConfig.getCustomColors().neutral700,
+                      ),
+                ),
+              ],
             ),
-          ],
-        ),
-      );
-    }
+          );
+        }
 
-    return Column(
-      children: items,
+        return Column(
+          children: items,
+        );
+      },
     );
   }
 }

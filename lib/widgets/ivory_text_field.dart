@@ -125,7 +125,9 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
               CupertinoTextField(
                 focusNode: _focusNode,
                 decoration: BoxDecoration(
-                  color: hasError ? ClientConfig.getCustomColors().red100 : ClientConfig.getCustomColors().neutral100,
+                  color: hasError && !_focusNode.hasFocus
+                      ? ClientConfig.getCustomColors().red100
+                      : ClientConfig.getCustomColors().neutral100,
                   border: Border.all(
                     color: _borderColor,
                     width: 1,
