@@ -120,7 +120,7 @@ class InactiveCard extends StatelessWidget {
             width: double.infinity,
             child: Button(
               text: "Activate my card",
-              disabledColor: const Color(0xFFDFE2E6),
+              disabledColor: ClientConfig.getCustomColors().neutral300,
               color: ClientConfig.getColorScheme().tertiary,
               textColor: ClientConfig.getColorScheme().surface,
               onPressed: () {

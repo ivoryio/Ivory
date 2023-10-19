@@ -122,9 +122,8 @@ class _CircularCountdownProgressState extends State<CircularCountdownProgress> {
             value: widget.duration!.inSeconds > 0
                 ? _remainingTime / widget.duration!.inSeconds
                 : 0,
-            backgroundColor: const Color(0xFFE9EAEB),
+            backgroundColor: ClientConfig.getCustomColors().neutral200,
             valueColor: AlwaysStoppedAnimation<Color>( ClientConfig.getColorScheme().secondary),
-            
           ),
         ),
       ],

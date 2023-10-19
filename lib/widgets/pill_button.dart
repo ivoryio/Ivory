@@ -31,11 +31,11 @@ class PillButton extends StatelessWidget {
           ),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
-            color: active ? const Color(0xFFF8F9FA) : Colors.white,
+            color: active ? ClientConfig.getCustomColors().neutral100 : Colors.white,
             border: active
                 ? Border.all(
                     width: 1,
-                    color: const Color(0xFFDFE2E6),
+                    color: ClientConfig.getCustomColors().neutral300,
                   )
                 : null,
           ),
