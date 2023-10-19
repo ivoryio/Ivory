@@ -55,9 +55,9 @@ class AvailableBalanceScreen extends StatelessWidget {
             Container(
               height: 150,
               width: double.infinity,
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(16)),
-                color: Color(0xFFF8F9Fa),
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(16)),
+                color: ClientConfig.getCustomColors().neutral100,
               ),
               child: Padding(
                 padding: const EdgeInsets.all(16),
@@ -82,8 +82,8 @@ class AvailableBalanceScreen extends StatelessWidget {
                           end: const Alignment(-0.9, 0),
                           stops: const [0.0, 0.5, 0.5, 1],
                           colors: [
-                            const Color(0xFFCFD4D9),
-                            const Color(0xFFCFD4D9),
+                            ClientConfig.getCustomColors().neutral400,
+                            ClientConfig.getCustomColors().neutral400,
                             ClientConfig.getColorScheme().primary,
                             ClientConfig.getColorScheme().primary,
                           ],
@@ -143,8 +143,8 @@ class AvailableBalanceScreen extends StatelessWidget {
       end: const Alignment(-0.5, 0),
       stops: const [0.0, 0.5, 0.5, 1],
       colors: [
-        const Color(0xFFCFD4D9),
-        const Color(0xFFCFD4D9),
+        ClientConfig.getCustomColors().neutral400,
+        ClientConfig.getCustomColors().neutral400,
         ClientConfig.getColorScheme().primary,
         ClientConfig.getColorScheme().primary,
       ],

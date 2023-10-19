@@ -90,11 +90,11 @@ class SettingsPairedDeviceDetailsScreen extends StatelessWidget {
                     children: [
                       Container(
                         margin: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(
+                        decoration: BoxDecoration(
+                          borderRadius: const BorderRadius.all(
                             Radius.circular(16),
                           ),
-                          color: Color(0xFFF8F9FA),
+                          color: ClientConfig.getCustomColors().neutral100,
                         ),
                         child: Column(
                           children: [

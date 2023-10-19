@@ -61,7 +61,7 @@ class BankCardDetailsInfoScreen extends StatelessWidget {
                 LinearProgressIndicator(
                   value: 1 / 3,
                   color: ClientConfig.getColorScheme().secondary,
-                  backgroundColor: const Color(0xFFE9EAEB),
+                  backgroundColor: ClientConfig.getCustomColors().neutral200,
                 ),
                 const SizedBox(
                   height: 16,
@@ -99,7 +99,7 @@ class BankCardDetailsInfoScreen extends StatelessWidget {
                           width: double.infinity,
                           child: Button(
                             text: "Choose PIN",
-                            disabledColor: const Color(0xFFDFE2E6),
+                            disabledColor: ClientConfig.getCustomColors().neutral300,
                             color: ClientConfig.getColorScheme().tertiary,
                             textColor: ClientConfig.getColorScheme().surface,
                             onPressed: () {

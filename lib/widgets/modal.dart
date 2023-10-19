@@ -38,7 +38,7 @@ Future<dynamic> showBottomModal({
               height: 4,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: const Color(0xFFDFE2E6),
+                color: ClientConfig.getCustomColors().neutral300,
               ),
             ),
           ),

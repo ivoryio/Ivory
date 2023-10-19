@@ -214,7 +214,7 @@ class _PageContentState extends State<PageContent> {
             height: 48,
             child: Button(
               text: "Save changes",
-              disabledColor: const Color(0xFFDFE2E6),
+              disabledColor: ClientConfig.getCustomColors().neutral300,
               color: ClientConfig.getColorScheme().tertiary,
               textColor: ClientConfig.getColorScheme().surface,
               onPressed: canContinue
@@ -299,7 +299,7 @@ class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
         border: Border.fromBorderSide(
           BorderSide(
             width: 1,
-            color: selectedRepaymentType == type ? ClientConfig.getColorScheme().secondary : const Color(0xFFE9EAEB),
+            color: selectedRepaymentType == type ? ClientConfig.getColorScheme().secondary : ClientConfig.getCustomColors().neutral200,
             style: BorderStyle.solid,
           ),
         ),
@@ -456,7 +456,7 @@ class _PercentageRepaymentState extends State<PercentageRepayment> {
                 trackHeight: 8,
                 trackShape: const RoundedRectSliderTrackShape(),
                 activeTrackColor: ClientConfig.getColorScheme().secondary,
-                inactiveTrackColor: const Color(0xFFE9EAEB),
+                inactiveTrackColor: ClientConfig.getCustomColors().neutral200,
                 thumbColor: ClientConfig.getColorScheme().primary,
                 thumbShape: CustomThumb(label: sliderValue),
                 overlayColor: const Color(0x00FFFF00),
@@ -576,7 +576,7 @@ class _FixedRepaymentState extends State<FixedRepayment> {
                   style: BorderStyle.solid,
                 ),
                 borderRadius: const BorderRadius.only(topLeft: Radius.circular(8), bottomLeft: Radius.circular(8)),
-                color: const Color(0xFFF8F9FA),
+                color: ClientConfig.getCustomColors().neutral100,
               ),
               child: Text(
                 '€',
@@ -625,7 +625,7 @@ class _FixedRepaymentState extends State<FixedRepayment> {
                     vertical: 12,
                   ),
                   filled: true,
-                  fillColor: const Color(0xFFF8F9FA),
+                  fillColor: ClientConfig.getCustomColors().neutral100,
                   border: OutlineInputBorder(
                     borderRadius: const BorderRadius.only(
                       topRight: Radius.circular(8),

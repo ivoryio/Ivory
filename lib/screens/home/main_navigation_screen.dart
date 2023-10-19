@@ -68,7 +68,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       type: BottomNavigationBarType.fixed,
       backgroundColor: Colors.white,
       selectedItemColor: ClientConfig.getColorScheme().secondary,
-      unselectedItemColor: const Color(0xFFADADB4),
+      unselectedItemColor: ClientConfig.getCustomColors().neutral500,
       elevation: 0,
       onTap: (index) {
         setState(() {

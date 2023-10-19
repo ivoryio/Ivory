@@ -64,7 +64,7 @@ class _BankCardDetailsConfirmPinScreenState extends State<BankCardDetailsConfirm
               LinearProgressIndicator(
                 value: 3 / 3,
                 color: ClientConfig.getColorScheme().secondary,
-                backgroundColor: const Color(0xFFE9EAEB),
+                backgroundColor: ClientConfig.getCustomColors().neutral200,
               ),
               const SizedBox(
                 height: 16,

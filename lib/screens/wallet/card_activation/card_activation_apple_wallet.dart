@@ -51,7 +51,7 @@ class BankCardDetailsAppleWalletScreen extends StatelessWidget {
           LinearProgressIndicator(
             value: 4 / 4,
             color: ClientConfig.getColorScheme().secondary,
-            backgroundColor: const Color(0xFFE9EAEB),
+            backgroundColor: ClientConfig.getCustomColors().neutral200,
           ),
           const SizedBox(
             height: 16,

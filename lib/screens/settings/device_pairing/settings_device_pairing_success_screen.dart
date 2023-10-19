@@ -86,7 +86,7 @@ class SettingsDevicePairingSuccessScreen extends StatelessWidget {
                           height: 48,
                           child: Button(
                             text: 'Back to “Device pairing”',
-                            disabledColor: const Color(0xFFDFE2E6),
+                            disabledColor: ClientConfig.getCustomColors().neutral300,
                             color: ClientConfig.getColorScheme().tertiary,
                             textColor: ClientConfig.getColorScheme().surface,
                             onPressed: () {

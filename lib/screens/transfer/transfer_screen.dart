@@ -207,6 +207,7 @@ class _Card extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IvoryCard(
+      color: ClientConfig.getCustomColors().neutral100,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

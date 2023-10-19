@@ -197,7 +197,7 @@ class WelcomeScreenContent extends StatelessWidget {
         padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
         child: Column(
           children: [
-            const _Carousel(),
+            _Carousel(),
             const Spacer(),
             SizedBox(
               width: double.infinity,
@@ -223,8 +223,6 @@ class WelcomeScreenContent extends StatelessWidget {
 }
 
 class _Carousel extends StatelessWidget {
-  const _Carousel({super.key});
-
   @override
   Widget build(BuildContext context) {
     final pageController = PageController();

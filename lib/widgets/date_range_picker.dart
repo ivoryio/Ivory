@@ -37,7 +37,7 @@ class DateRangePicker extends StatelessWidget {
          borderRadius: BorderRadius.circular(4),
           border: Border.all(
             width: 1,
-            color: const Color(0xFFDFE2E6),
+            color: ClientConfig.getCustomColors().neutral300,
           ),
         ),
       ),
@@ -84,7 +84,7 @@ class DateRangePicker extends StatelessWidget {
       ),
       showNavigationArrow: true,
       selectionColor: Colors.black,
-      rangeSelectionColor: const Color(0xFFDFE2E6),
+      rangeSelectionColor: ClientConfig.getCustomColors().neutral300,
       initialDisplayDate: DateTime.now(),
       endRangeSelectionColor: ClientConfig.getColorScheme().secondary,
       startRangeSelectionColor: ClientConfig.getColorScheme().secondary,
