@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/redux/app_state.dart';
-import 'package:solarisdemo/redux/onboarding/signup/basic_info/onboarding_basic_info_action.dart';
+import 'package:solarisdemo/redux/onboarding/signup/onboarding_basic_info_action.dart';
 import 'package:solarisdemo/screens/onboarding/signup/onboarding_email_screen.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -126,6 +126,7 @@ class _OnboardingBasicInfoScreenState extends State<OnboardingBasicInfoScreen> {
                                     lastName: _lastNameController.text,
                                   ),
                                 );
+
                                 Navigator.pushNamed(context, OnboardingEmailScreen.routeName);
                               }
                             : null,

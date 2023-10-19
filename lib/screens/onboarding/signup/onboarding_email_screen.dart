@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/redux/app_state.dart';
-import 'package:solarisdemo/redux/onboarding/signup/email/onboarding_email_action.dart';
+import 'package:solarisdemo/redux/onboarding/signup/onboarding_email_action.dart';
 import 'package:solarisdemo/screens/onboarding/signup/onboarding_password_screen.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -97,8 +97,8 @@ class _OnboardingEmailScreenState extends State<OnboardingEmailScreen> {
                             ? () {
                                 if (isValidEmail(_emailController.text)) {
                                   StoreProvider.of<AppState>(context).dispatch(
-                                    OnboardingSubmitEmailCommandAction(
-                                      _emailController.text,
+                                    SubmitOnboardingEmailCommandAction(
+                                      email: _emailController.text,
                                     ),
                                   );
 

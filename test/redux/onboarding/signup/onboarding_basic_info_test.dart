@@ -1,6 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:solarisdemo/redux/onboarding/signup/basic_info/onboarding_basic_info_action.dart';
-import 'package:solarisdemo/redux/onboarding/signup/basic_info/onboarding_basic_info_state.dart';
+import 'package:solarisdemo/redux/onboarding/signup/onboarding_basic_info_action.dart';
+import 'package:solarisdemo/redux/onboarding/signup/onboarding_email_action.dart';
+import 'package:solarisdemo/redux/onboarding/signup/onboarding_password_action.dart';
+import 'package:solarisdemo/redux/onboarding/signup/onboarding_signup_state.dart';
 
 import '../../../setup/create_app_state.dart';
 import '../../../setup/create_store.dart';
@@ -10,11 +12,11 @@ void main() {
     //given
     final store = createTestStore(
       initialState: createAppState(
-        onboardingBasicInfoState: OnboardingBasicInfoInitialState(),
+        onboardingSignupState: OnboardingSignupInitialState(),
       ),
     );
     final appState =
-        store.onChange.firstWhere((state) => state.onboardingBasicInfoState is OnboardingBasicInfoSubmittedState);
+        store.onChange.firstWhere((state) => state.onboardingSignupState is OnboardingSignupSubmittedState);
 
     //when
     store.dispatch(const SubmitOnboardingBasicInfoCommandAction(
@@ -24,6 +26,40 @@ void main() {
     ));
 
     //then
-    expect((await appState).onboardingBasicInfoState, isA<OnboardingBasicInfoSubmittedState>());
+    expect((await appState).onboardingSignupState, isA<OnboardingSignupSubmittedState>());
+  });
+
+  test('when the user submit email address, the state should be updated', () async {
+    //given
+    final store = createTestStore(
+      initialState: createAppState(
+        onboardingSignupState: OnboardingSignupInitialState(),
+      ),
+    );
+    final appState =
+        store.onChange.firstWhere((state) => state.onboardingSignupState is OnboardingSignupSubmittedState);
+
+    //when
+    store.dispatch(SubmitOnboardingEmailCommandAction(email: "email"));
+
+    //then
+    expect((await appState).onboardingSignupState, isA<OnboardingSignupSubmittedState>());
+  });
+
+  test('when the user submit password, the state should be updated', () async {
+    //given
+    final store = createTestStore(
+      initialState: createAppState(
+        onboardingSignupState: OnboardingSignupInitialState(),
+      ),
+    );
+    final appState =
+        store.onChange.firstWhere((state) => state.onboardingSignupState is OnboardingSignupSubmittedState);
+
+    //when
+    store.dispatch(SubmitOnboardingPasswordCommandAction(password: "password"));
+
+    //then
+    expect((await appState).onboardingSignupState, isA<OnboardingSignupSubmittedState>());
   });
 }

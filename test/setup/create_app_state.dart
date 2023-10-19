@@ -4,9 +4,7 @@ import 'package:solarisdemo/redux/categories/category_state.dart';
 import 'package:solarisdemo/redux/credit_line/credit_line_state.dart';
 import 'package:solarisdemo/redux/device/device_state.dart';
 import 'package:solarisdemo/redux/notification/notification_state.dart';
-import 'package:solarisdemo/redux/onboarding/signup/password/onboarding_password_state.dart';
-import 'package:solarisdemo/redux/onboarding/signup/basic_info/onboarding_basic_info_state.dart';
-import 'package:solarisdemo/redux/onboarding/signup/email/onboarding_email_state.dart';
+import 'package:solarisdemo/redux/onboarding/signup/onboarding_signup_state.dart';
 import 'package:solarisdemo/redux/person/account_summary/account_summay_state.dart';
 import 'package:solarisdemo/redux/person/person_account/person_account_state.dart';
 import 'package:solarisdemo/redux/person/reference_account/reference_account_state.dart';
@@ -36,9 +34,7 @@ AppState createAppState({
   TransactionApprovalState? transactionApprovalState,
   AccountSummaryState? accountSummaryState,
   TransactionsState? homePageTransactionsState,
-  OnboardingBasicInfoState? onboardingBasicInfoState,
-  OnboardingEmailState? onboardingEmailState,
-  OnboardingPasswordState? onboardingPasswordState,
+  OnboardingSignupState? onboardingSignupState,
 }) {
   return AppState(
     transactionsState: transactionsState ?? TransactionsInitialState(),
@@ -58,8 +54,6 @@ AppState createAppState({
     transactionApprovalState: transactionApprovalState ?? TransactionApprovalInitialState(),
     accountSummaryState: accountSummaryState ?? AccountSummaryInitialState(),
     homePageTransactionsState: homePageTransactionsState ?? TransactionsInitialState(),
-    onboardingBasicInfoState: onboardingBasicInfoState ?? OnboardingBasicInfoInitialState(),
-    onboardingEmailState: onboardingEmailState ?? OnboardingEmailInitialState(),
-    onboardingPasswordState: onboardingPasswordState ?? OnboardingPasswordInitialState(),
+    onboardingSignupState: onboardingSignupState ?? OnboardingSignupInitialState(),
   );
 }
