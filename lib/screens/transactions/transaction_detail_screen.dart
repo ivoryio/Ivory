@@ -207,7 +207,7 @@ class _Content extends StatelessWidget {
           child: Column(
             children: [
               Material(
-                color: const Color(0xFFF8F9FA),
+                color: ClientConfig.getCustomColors().neutral100,
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(
                     Radius.circular(16),
@@ -310,7 +310,7 @@ class _Content extends StatelessWidget {
                       width: double.infinity,
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF8F9FA),
+                        color: ClientConfig.getCustomColors().neutral100,
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Text(note!),

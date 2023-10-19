@@ -2,6 +2,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:solarisdemo/widgets/button.dart';
 
+import '../config.dart';
+
 class IvoryTab extends Equatable {
   final String title;
   final void Function()? onPressed;
@@ -40,7 +42,7 @@ class IvoryTabBar extends StatelessWidget {
               child: Button(
                 text: title,
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                color: isActive ? Colors.white : const Color(0xFFDFE2E6),
+                color: isActive ? Colors.white : ClientConfig.getCustomColors().neutral300,
                 textColor: const Color(0xFF15141E),
                 borderRadius: BorderRadius.only(
                   topLeft: isFirst ? const Radius.circular(8) : Radius.zero,
@@ -61,9 +63,9 @@ class IvoryTabBar extends StatelessWidget {
 
         return Container(
           padding: const EdgeInsets.all(1),
-          decoration: const BoxDecoration(
-            color: Color(0xFFDFE2E6),
-            borderRadius: BorderRadius.all(Radius.circular(8.0)),
+          decoration: BoxDecoration(
+            color: ClientConfig.getCustomColors().neutral300,
+            borderRadius: const BorderRadius.all(Radius.circular(8.0)),
           ),
           child: Row(children: buttons),
         );

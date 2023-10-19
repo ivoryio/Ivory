@@ -124,7 +124,7 @@ class _RepaymentReminderScreenState extends State<RepaymentReminderScreen> {
                         DottedBorder(
                           borderType: BorderType.RRect,
                           radius: const Radius.circular(6),
-                          color: const Color(0xFFADADB4),
+                          color: ClientConfig.getCustomColors().neutral500,
                           strokeWidth: 1.5,
                           strokeCap: StrokeCap.round,
                           dashPattern: const [5, 5],

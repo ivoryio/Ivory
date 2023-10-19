@@ -102,7 +102,7 @@ class SettingsDevicePairingInitialScreen extends StatelessWidget {
                         height: 48,
                         child: Button(
                           text: 'Not now',
-                          disabledColor: const Color(0xFFDFE2E6),
+                          disabledColor: ClientConfig.getCustomColors().neutral300,
                           color: ClientConfig.getColorScheme().surface,
                           textColor: ClientConfig.getColorScheme().tertiary,
                           onPressed: () {
@@ -118,7 +118,7 @@ class SettingsDevicePairingInitialScreen extends StatelessWidget {
                         height: 48,
                         child: Button(
                           text: 'Pair device',
-                          disabledColor: const Color(0xFFDFE2E6),
+                          disabledColor: ClientConfig.getCustomColors().neutral300,
                           color: ClientConfig.getColorScheme().tertiary,
                           textColor: ClientConfig.getColorScheme().surface,
                           onPressed: () {

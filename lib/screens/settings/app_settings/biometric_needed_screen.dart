@@ -107,7 +107,7 @@ class _AppSettingsBiometricNeededScreenState extends State<AppSettingsBiometricN
                     height: 48,
                     child: Button(
                       text: 'Go to "Biometrics"',
-                      disabledColor: const Color(0xFFDFE2E6),
+                      disabledColor: ClientConfig.getCustomColors().neutral300,
                       color: ClientConfig.getColorScheme().tertiary,
                       textColor: ClientConfig.getColorScheme().surface,
                       onPressed: () {

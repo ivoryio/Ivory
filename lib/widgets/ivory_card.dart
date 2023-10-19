@@ -9,7 +9,7 @@ class IvoryCard extends StatelessWidget {
   const IvoryCard({
     super.key,
     required this.child,
-    this.color = const Color(0xFFF8F9FA),
+    required this.color,
     this.borderRadius = const BorderRadius.all(Radius.circular(16)),
     this.padding = EdgeInsets.zero,
   });
