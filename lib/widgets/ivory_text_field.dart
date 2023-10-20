@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:solarisdemo/config.dart';
@@ -56,6 +58,7 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
   @override
   void initState() {
     super.initState();
+    log('widget.error [${widget.error}]');
 
     _focusNode = widget.focusNode ?? FocusNode();
     _controller = widget.controller ??
@@ -122,7 +125,9 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
               CupertinoTextField(
                 focusNode: _focusNode,
                 decoration: BoxDecoration(
-                  color: hasError ? ClientConfig.getCustomColors().red100 : ClientConfig.getCustomColors().neutral100,
+                  color: hasError && !_focusNode.hasFocus
+                      ? ClientConfig.getCustomColors().red100
+                      : ClientConfig.getCustomColors().neutral100,
                   border: Border.all(
                     color: _borderColor,
                     width: 1,
@@ -180,10 +185,10 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
   Color _getBorderColor() {
     if (_controller.isEnabled == false) {
       return ClientConfig.getCustomColors().neutral400;
-    } else if (_controller.hasError) {
-      return const Color(0xFFE61F27);
     } else if (_focusNode.hasFocus) {
       return ClientConfig.getCustomColors().neutral900;
+    } else if (_controller.hasError) {
+      return ClientConfig.getColorScheme().error;
     } else if (_controller.text.isNotEmpty) {
       return ClientConfig.getCustomColors().neutral500;
     } else {
@@ -315,6 +320,7 @@ class IvoryTextFieldController extends ChangeNotifier {
   bool get hasError => _errorText != null || _error;
   String get text => _textEditingController.text;
   TextSelection get selection => _textEditingController.selection;
+  TextEditingController get textEditingController => _textEditingController;
 
   set text(String value) {
     _textEditingController.text = value;
