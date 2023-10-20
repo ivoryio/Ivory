@@ -445,16 +445,19 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           children: [
             Padding(
               padding: const EdgeInsets.only(bottom: 10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    formattedDayMonthYear,
-                    style: ClientConfig.getTextStyleScheme().labelLarge,
-                  ),
-                  Text(formatAmountWithCurrency(sumOfDay(transactions)),
-                      style: ClientConfig.getTextStyleScheme().labelSmall),
-                ],
+              child: Padding(
+                padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      formattedDayMonthYear,
+                      style: ClientConfig.getTextStyleScheme().labelLarge,
+                    ),
+                    Text(formatAmountWithCurrency(sumOfDay(transactions)),
+                        style: ClientConfig.getTextStyleScheme().labelSmall),
+                  ],
+                ),
               ),
             ),
             ListView.separated(
