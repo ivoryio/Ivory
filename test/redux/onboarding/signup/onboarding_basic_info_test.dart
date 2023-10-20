@@ -32,6 +32,37 @@ void main() {
     expect(onboardingSignupSubmittedState.lastName, "lastName");
   });
 
+  test(
+      "When the user submits the basic info but the notification permission is already updated, the state should be updated",
+      () async {
+    //given
+    final store = createTestStore(
+      initialState: createAppState(
+        onboardingSignupState: OnboardingSignupSubmittedState(
+          notificationsAllowed: true,
+        ),
+      ),
+    );
+    final appState =
+        store.onChange.firstWhere((state) => state.onboardingSignupState is OnboardingSignupSubmittedState);
+
+    //when
+    store.dispatch(const SubmitOnboardingBasicInfoCommandAction(
+      title: "title",
+      firstName: "firstName",
+      lastName: "lastName",
+    ));
+
+    //then
+    final onboardingSignupSubmittedState = (await appState).onboardingSignupState;
+
+    expect(onboardingSignupSubmittedState, isA<OnboardingSignupSubmittedState>());
+    expect((onboardingSignupSubmittedState as OnboardingSignupSubmittedState).title, "title");
+    expect(onboardingSignupSubmittedState.firstName, "firstName");
+    expect(onboardingSignupSubmittedState.lastName, "lastName");
+    expect(onboardingSignupSubmittedState.notificationsAllowed, true);
+  });
+
   test('when the user submit email address, the state should be updated', () async {
     //given
     final store = createTestStore(
@@ -40,6 +71,7 @@ void main() {
           title: "title",
           firstName: "firstName",
           lastName: "lastName",
+          notificationsAllowed: true,
         ),
       ),
     );
@@ -54,23 +86,7 @@ void main() {
 
     expect(onboardingSignupSubmittedState, isA<OnboardingSignupSubmittedState>());
     expect((onboardingSignupSubmittedState as OnboardingSignupSubmittedState).email, "email");
-  });
-
-  test("when the user submit email address and the state is not OnboardingSignupSubmittedState", () async {
-    //given
-    final store = createTestStore(
-      initialState: createAppState(
-        onboardingSignupState: OnboardingSignupSubmittedState(),
-      ),
-    );
-    final appState =
-        store.onChange.firstWhere((state) => state.onboardingSignupState is OnboardingSignupSubmittedState);
-
-    //when
-    store.dispatch(SubmitOnboardingEmailCommandAction(email: "email"));
-
-    //then
-    expect((await appState).onboardingSignupState, isA<OnboardingSignupSubmittedState>());
+    expect(onboardingSignupSubmittedState.notificationsAllowed, true);
   });
 
   test('when the user submit password, the state should be updated', () async {
@@ -98,20 +114,36 @@ void main() {
     expect((onboardingSignupSubmittedState as OnboardingSignupSubmittedState).password, "password");
   });
 
-  test("when the user submit password and the state is not OnboardingSignupSubmittedState", () async {
-    //given
+  test("When the user updated the push notifications permission, the state should be updated", () async {
+    // given
     final store = createTestStore(
       initialState: createAppState(
-        onboardingSignupState: OnboardingSignupSubmittedState(),
+        onboardingSignupState: OnboardingSignupSubmittedState(
+          title: "mr",
+          firstName: "firstName",
+          lastName: "lastName",
+          email: "email",
+          password: "password",
+          notificationsAllowed: null,
+        ),
       ),
     );
-    final appState =
-        store.onChange.firstWhere((state) => state.onboardingSignupState is OnboardingSignupSubmittedState);
+    final appState = store.onChange.firstWhere(
+      (state) => state.onboardingSignupState is OnboardingSignupSubmittedState,
+    );
 
-    //when
-    store.dispatch(SubmitOnboardingPasswordCommandAction(password: "password"));
+    // when
+    store.dispatch(UpdatedPushNotificationsPermissionEventAction(allowed: true));
 
-    //then
-    expect((await appState).onboardingSignupState, isA<OnboardingSignupSubmittedState>());
+    // then
+    final onboardingSignupSubmittedState = (await appState).onboardingSignupState;
+
+    expect(onboardingSignupSubmittedState, isA<OnboardingSignupSubmittedState>());
+    expect((onboardingSignupSubmittedState as OnboardingSignupSubmittedState).notificationsAllowed, true);
+    expect(onboardingSignupSubmittedState.title, "mr");
+    expect(onboardingSignupSubmittedState.firstName, "firstName");
+    expect(onboardingSignupSubmittedState.lastName, "lastName");
+    expect(onboardingSignupSubmittedState.email, "email");
+    expect(onboardingSignupSubmittedState.password, "password");
   });
 }

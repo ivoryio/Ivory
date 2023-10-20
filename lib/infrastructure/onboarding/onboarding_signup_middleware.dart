@@ -16,7 +16,7 @@ class OnboardingSignupMiddleware extends MiddlewareClass<AppState> {
       await _pushNotificationService.init(store);
       final hasPermission = await _pushNotificationService.hasPermission();
 
-      store.dispatch(ReceivedPushNotificationsPermissionEventAction(allowed: hasPermission));
+      store.dispatch(UpdatedPushNotificationsPermissionEventAction(allowed: hasPermission));
     }
   }
 }

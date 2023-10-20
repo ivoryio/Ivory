@@ -69,9 +69,7 @@ import 'package:solarisdemo/screens/onboarding/start/onboarding_start_screen.dar
 import 'package:solarisdemo/screens/onboarding/start/onboarding_usa_tax_payer_screen.dart';
 import 'package:solarisdemo/screens/transfer/transfer_review_screen.dart';
 import 'package:solarisdemo/screens/transfer/transfer_successful_screen.dart';
-
-import 'screens/onboarding/signup/onboarding_allow_notifications_screen.dart';
-import 'screens/onboarding/signup/onboarding_allow_notifications_success_screen.dart';
+import 'package:solarisdemo/screens/onboarding/signup/onboarding_allow_notifications_screen.dart';
 
 class IvoryApp extends StatefulWidget {
   static final routeObserver = RouteObserver<PageRoute<dynamic>>();
@@ -256,8 +254,6 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
               OnboardingEmailScreen.routeName: (context) => const OnboardingEmailScreen(),
               OnboardingPasswordScreen.routeName: (context) => const OnboardingPasswordScreen(),
               OnboardingAllowNotificationsScreen.routeName: (context) => const OnboardingAllowNotificationsScreen(),
-              OnboardingAllowNotificationsSuccessScreen.routeName: (context) =>
-                  const OnboardingAllowNotificationsSuccessScreen(),
             },
           );
         }),

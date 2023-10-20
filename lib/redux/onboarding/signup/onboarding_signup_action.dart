@@ -24,8 +24,8 @@ class SubmitOnboardingPasswordCommandAction {
 
 class RequestPushNotificationsPermissionCommandAction {}
 
-class ReceivedPushNotificationsPermissionEventAction {
+class UpdatedPushNotificationsPermissionEventAction {
   final bool allowed;
 
-  ReceivedPushNotificationsPermissionEventAction({required this.allowed});
+  UpdatedPushNotificationsPermissionEventAction({required this.allowed});
 }

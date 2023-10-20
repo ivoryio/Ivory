@@ -8,6 +8,7 @@ OnboardingSignupState onboardingSignupReducer(OnboardingSignupState state, dynam
         title: action.title,
         firstName: action.firstName,
         lastName: action.lastName,
+        notificationsAllowed: state.notificationsAllowed,
       );
     } else if (action is SubmitOnboardingEmailCommandAction) {
       return OnboardingSignupSubmittedState(
@@ -15,6 +16,7 @@ OnboardingSignupState onboardingSignupReducer(OnboardingSignupState state, dynam
         firstName: state.firstName,
         lastName: state.lastName,
         title: state.title,
+        notificationsAllowed: state.notificationsAllowed,
       );
     } else if (action is SubmitOnboardingPasswordCommandAction) {
       return OnboardingSignupSubmittedState(
@@ -23,8 +25,9 @@ OnboardingSignupState onboardingSignupReducer(OnboardingSignupState state, dynam
         lastName: state.lastName,
         password: action.password,
         title: state.title,
+        notificationsAllowed: state.notificationsAllowed,
       );
-    } else if (action is ReceivedPushNotificationsPermissionEventAction) {
+    } else if (action is UpdatedPushNotificationsPermissionEventAction) {
       return OnboardingSignupSubmittedState(
         email: state.email,
         firstName: state.firstName,

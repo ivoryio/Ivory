@@ -23,5 +23,5 @@ class OnboardingSignupSubmittedState extends OnboardingSignupState {
   });
 
   @override
-  List<Object?> get props => [title, firstName, lastName, email, password];
+  List<Object?> get props => [title, firstName, lastName, email, password, notificationsAllowed];
 }

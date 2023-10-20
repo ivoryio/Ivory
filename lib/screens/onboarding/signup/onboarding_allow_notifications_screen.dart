@@ -1,16 +1,16 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/onboarding/onboarding_signup_presenter.dart';
-import 'package:solarisdemo/ivory_app.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/onboarding/signup/onboarding_signup_action.dart';
-import 'package:solarisdemo/screens/onboarding/signup/onboarding_allow_notifications_success_screen.dart';
 import 'package:solarisdemo/utilities/ivory_color_mapper.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
+import 'package:solarisdemo/widgets/ivory_asset_with_badge.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
 
@@ -23,13 +23,7 @@ class OnboardingAllowNotificationsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return StoreConnector<AppState, OnboardingSignupViewModel>(
       converter: (store) => OnboardingSignupPresenter.presentSignup(state: store.state.onboardingSignupState),
-      onWillChange: (previousViewModel, newViewModel) {
-        if (newViewModel is OnboardingSignupNotificationsAllowedViewModel &&
-            _routeNotInStack(OnboardingAllowNotificationsSuccessScreen.routeName)) {
-          Navigator.pushNamed(context, OnboardingAllowNotificationsSuccessScreen.routeName);
-        }
-      },
-      builder: (context, vm) => ScreenScaffold(
+      builder: (context, viewModel) => ScreenScaffold(
         body: Column(
           children: [
             AppToolbar(
@@ -41,57 +35,9 @@ class OnboardingAllowNotificationsScreen extends StatelessWidget {
             Expanded(
               child: ScrollableScreenContainer(
                 padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 16),
-                    Text(
-                      "Instant notifications on all account activity",
-                      style: ClientConfig.getTextStyleScheme().heading2,
-                    ),
-                    const SizedBox(height: 16),
-                    Text.rich(
-                      TextSpan(
-                        children: [
-                          _BodyText(text: "We send "),
-                          _BoldText(text: "push notifications for every transaction and account activity "),
-                          _BodyText(
-                            text:
-                                ", providing you with real-time updates. You'll also receive notifications during onboarding once ",
-                          ),
-                          _BoldText(text: "your identity and score are verified"),
-                          _BodyText(text: "."),
-                        ],
-                        style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                      ),
-                    ),
-                    Expanded(
-                      child: Center(
-                        child: SvgPicture(
-                          SvgAssetLoader(
-                            'assets/images/notifications_illustration.svg',
-                            colorMapper: IvoryColorMapper(
-                              baseColor: ClientConfig.getColorScheme().secondary,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SecondaryButton(
-                      text: "Not right now",
-                      borderWidth: 2,
-                      onPressed: () {},
-                    ),
-                    const SizedBox(height: 16),
-                    PrimaryButton(
-                      text: "Allow notifications",
-                      onPressed: () {
-                        StoreProvider.of<AppState>(context).dispatch(RequestPushNotificationsPermissionCommandAction());
-                      },
-                    ),
-                    const SizedBox(height: 16)
-                  ],
-                ),
+                child: viewModel is OnboardingSignupNotificationsAllowedViewModel
+                    ? const _AllowedNotificationsContent()
+                    : const _RequestNotificationContent(),
               ),
             ),
           ],
@@ -101,22 +47,107 @@ class OnboardingAllowNotificationsScreen extends StatelessWidget {
   }
 }
 
-bool _routeNotInStack(String routeName) {
-  return !IvoryApp.generalRouteObserver.isRouteInStack(routeName);
+class _RequestNotificationContent extends StatelessWidget {
+  const _RequestNotificationContent();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 16),
+        Text(
+          "Instant notifications on all account activity",
+          style: ClientConfig.getTextStyleScheme().heading2,
+        ),
+        const SizedBox(height: 16),
+        Text.rich(
+          TextSpan(
+            children: [
+              const TextSpan(text: "We send "),
+              TextSpan(
+                text: "push notifications for every transaction and account activity ",
+                style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
+              ),
+              const TextSpan(
+                text:
+                    ", providing you with real-time updates. You'll also receive notifications during onboarding once ",
+              ),
+              TextSpan(
+                text: "your identity and score are verified",
+                style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
+              ),
+              const TextSpan(text: "."),
+            ],
+            style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+          ),
+        ),
+        Expanded(
+          child: Center(
+            child: SvgPicture(
+              SvgAssetLoader(
+                'assets/images/notifications_illustration.svg',
+                colorMapper: IvoryColorMapper(
+                  baseColor: ClientConfig.getColorScheme().secondary,
+                ),
+              ),
+            ),
+          ),
+        ),
+        SecondaryButton(
+          text: "Not right now",
+          borderWidth: 2,
+          onPressed: () {},
+        ),
+        const SizedBox(height: 16),
+        PrimaryButton(
+          text: "Allow notifications",
+          onPressed: () {
+            StoreProvider.of<AppState>(context).dispatch(RequestPushNotificationsPermissionCommandAction());
+          },
+        ),
+        const SizedBox(height: 16)
+      ],
+    );
+  }
 }
 
-class _BodyText extends TextSpan {
-  _BodyText({required String text})
-      : super(
-          text: text,
-          style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-        );
-}
+class _AllowedNotificationsContent extends StatelessWidget {
+  const _AllowedNotificationsContent();
 
-class _BoldText extends TextSpan {
-  _BoldText({required String text})
-      : super(
-          text: text,
-          style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
-        );
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 16),
+        Text(
+          "Instant notifications on all account activity",
+          style: ClientConfig.getTextStyleScheme().heading2,
+        ),
+        const SizedBox(height: 16),
+        Text("Thank you! We will notify you about every account acitivity.",
+            style: ClientConfig.getTextStyleScheme().bodyLargeRegular),
+        Expanded(
+          child: IvoryAssetWithBadge(
+            isSuccess: true,
+            childPosition: BadgePosition.topStart(start: -5, top: -30),
+            childWidget: SvgPicture(
+              SvgAssetLoader(
+                'assets/images/notifications_illustration.svg',
+                colorMapper: IvoryColorMapper(
+                  baseColor: ClientConfig.getColorScheme().secondary,
+                ),
+              ),
+            ),
+          ),
+        ),
+        PrimaryButton(
+          text: "Continue",
+          onPressed: () {},
+        ),
+        const SizedBox(height: 16)
+      ],
+    );
+  }
 }
