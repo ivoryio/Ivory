@@ -16,7 +16,8 @@ class NotificationsMiddleware extends MiddlewareClass<AppState> {
     next(action);
 
     if (action is AuthLoggedInAction) {
-      await _pushNotificationService.init(store, user: action.user);
+      await _pushNotificationService.init(store);
+      _pushNotificationService.handleTokenRefresh(user: action.user);
       await _pushNotificationService.handleSavedNotification();
     }
 

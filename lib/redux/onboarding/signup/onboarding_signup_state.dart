@@ -11,6 +11,7 @@ class OnboardingSignupSubmittedState extends OnboardingSignupState {
   final String? lastName;
   final String? email;
   final String? password;
+  final bool? notificationsAllowed;
 
   OnboardingSignupSubmittedState({
     this.title,
@@ -18,6 +19,7 @@ class OnboardingSignupSubmittedState extends OnboardingSignupState {
     this.lastName,
     this.email,
     this.password,
+    this.notificationsAllowed,
   });
 
   @override

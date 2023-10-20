@@ -34,18 +34,20 @@ void saveNotificationMessage(RemoteMessage message) async {
 abstract class PushNotificationService extends ApiService {
   PushNotificationService({super.user});
 
-  Future<void> init(Store<AppState> store, {User? user});
+  Future<void> init(Store<AppState> store);
 
   Future<bool> hasPermission();
 
   Future<void> handleSavedNotification();
 
   Future<void> clearNotification();
+
+  void handleTokenRefresh({User user});
 }
 
 class FirebasePushNotificationService extends PushNotificationService {
   final _messaging = FirebaseMessaging.instance;
-  late final Store<AppState> store;
+  Store<AppState>? store;
   final PushNotificationStorageService storageService;
 
   FirebasePushNotificationService({super.user, required this.storageService}) {
@@ -53,9 +55,10 @@ class FirebasePushNotificationService extends PushNotificationService {
   }
 
   @override
-  Future<void> init(Store<AppState> store, {User? user}) async {
-    this.store = store;
-    if (user != null) this.user = user;
+  Future<void> init(Store<AppState> store) async {
+    if (this.store == null) {
+      this.store = store;
+    }
 
     final settings = await _messaging.requestPermission();
     if (settings.authorizationStatus != AuthorizationStatus.authorized) {
@@ -97,6 +100,11 @@ class FirebasePushNotificationService extends PushNotificationService {
     FirebaseMessaging.onMessageOpenedApp.listen(_onMessage); // App was in background and notification clicked
     FirebaseMessaging.instance.getInitialMessage().then(_onMessage); // App was terminated and notification clicked
     FirebaseMessaging.onMessage.listen(_pushNotificationReceived);
+  }
+
+  @override
+  void handleTokenRefresh({User? user}) {
+    if (user != null) this.user = user;
 
     // Handle token
     _messaging.getToken().then(_onTokenRefresh); // Initial token (on app start)
@@ -113,7 +121,9 @@ class FirebasePushNotificationService extends PushNotificationService {
   }
 
   void _pushNotificationReceived(RemoteMessage? message) {
-    forceReloadAppStates(store, user!);
+    if (store != null || message != null) {
+      forceReloadAppStates(store!, user!);
+    }
   }
 
   Future<void> handleAndroidLocalNotifications() async {
@@ -154,17 +164,19 @@ class FirebasePushNotificationService extends PushNotificationService {
 
   @override
   Future<bool> hasPermission() async {
-    final settings = await _messaging.requestPermission();
+    final settings = await _messaging.getNotificationSettings();
     return settings.authorizationStatus == AuthorizationStatus.authorized;
   }
 
   void _redirect(RemoteMessage message) {
+    if (store == null) return;
+
     debugPrint("Redirect from notification");
     final context = navigatorKey.currentContext as BuildContext;
     final notificationType = RemoteMessageUtils.getNotificationType(message.data["type"] as String);
 
     if (notificationType == NotificationType.scaChallenge) {
-      store.dispatch(ReceivedTransactionApprovalNotificationEventAction(
+      store!.dispatch(ReceivedTransactionApprovalNotificationEventAction(
         user: user!,
         message: RemoteMessageUtils.getNotificationTransactionMessage(message),
       ));

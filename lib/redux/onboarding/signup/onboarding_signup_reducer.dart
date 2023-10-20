@@ -24,6 +24,15 @@ OnboardingSignupState onboardingSignupReducer(OnboardingSignupState state, dynam
         password: action.password,
         title: state.title,
       );
+    } else if (action is ReceivedPushNotificationsPermissionEventAction) {
+      return OnboardingSignupSubmittedState(
+        email: state.email,
+        firstName: state.firstName,
+        lastName: state.lastName,
+        password: state.password,
+        title: state.title,
+        notificationsAllowed: action.allowed,
+      );
     }
   }
 
