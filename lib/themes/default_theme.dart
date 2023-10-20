@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:solarisdemo/config.dart';
 
 enum CardType { visa, mastercard }
 
@@ -67,95 +68,95 @@ class DefaultTheme {
       defaultScreenPadding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
     ),
     labelTextStyle: TextStyleScheme(
-      display: const TextStyle(
+      display: TextStyle(
         fontSize: 40,
         height: 1.2, // 48 / 48,
         fontWeight: FontWeight.w600,
-        color: Color(0xFF15141E),
+        color: ClientConfig.getCustomColors().neutral900,
       ),
-      heading1: const TextStyle(
+      heading1: TextStyle(
         fontSize: 32,
         height: 1.25, // 40 / 32,
         fontWeight: FontWeight.w600,
-        color: Color(0xFF15141E),
+        color: ClientConfig.getCustomColors().neutral900,
       ),
-      heading2: const TextStyle(
+      heading2: TextStyle(
         fontSize: 24,
         height: 1.33, // 32 / 24,
         fontWeight: FontWeight.w600,
-        color: Color(0xFF15141E),
+        color: ClientConfig.getCustomColors().neutral900,
       ),
-      heading3: const TextStyle(
+      heading3: TextStyle(
         fontSize: 20,
         height: 1.4, // 28 / 20,
         fontWeight: FontWeight.w600,
-        color: Color(0xFF15141E),
+        color: ClientConfig.getCustomColors().neutral900,
       ),
-      heading4: const TextStyle(
+      heading4: TextStyle(
         fontSize: 16,
         height: 1.5, // 24 / 16,
         fontWeight: FontWeight.w600,
-        color: Color(0xFF15141E),
+        color: ClientConfig.getCustomColors().neutral900,
       ),
-      bodySmallRegular: const TextStyle(
+      bodySmallRegular: TextStyle(
         fontSize: 14,
         height: 1.285, // 18 / 14,
         fontWeight: FontWeight.w400,
-        color: Color(0xFF56555E),
+        color: ClientConfig.getCustomColors().neutral700,
       ),
-      bodySmallBold: const TextStyle(
+      bodySmallBold: TextStyle(
         fontSize: 14,
         height: 1.285, // 18 / 14,
         fontWeight: FontWeight.w600,
-        color: Color(0xFF15141E),
+        color: ClientConfig.getCustomColors().neutral900,
       ),
-      bodyLargeRegular: const TextStyle(
+      bodyLargeRegular: TextStyle(
         fontSize: 16,
         height: 1.5, // 24 / 16,
         fontWeight: FontWeight.w400,
-        color: Color(0xFF15141E),
+        color: ClientConfig.getCustomColors().neutral900,
       ),
-      bodyLargeRegularBold: const TextStyle(
+      bodyLargeRegularBold: TextStyle(
         fontSize: 16,
         height: 1.5, // 24 / 16,
         fontWeight: FontWeight.w600,
-        color: Color(0xFF15141E),
+        color: ClientConfig.getCustomColors().neutral900,
       ),
-      labelCaps: const TextStyle(
+      labelCaps: TextStyle(
         fontSize: 12,
         height: 1.33, // 16 / 12,
         fontWeight: FontWeight.w600,
-        color: Color(0xFF15141E),
+        color: ClientConfig.getCustomColors().neutral900,
       ),
-      labelXSmall: const TextStyle(
+      labelXSmall: TextStyle(
         fontSize: 12,
         height: 1.5, // 18 / 12,
         fontWeight: FontWeight.w600,
-        color: Color(0xFF56555E),
+        color: ClientConfig.getCustomColors().neutral700,
       ),
-      labelSmall: const TextStyle(
+      labelSmall: TextStyle(
         fontSize: 14,
         height: 1.285, // 18 / 14,
         fontWeight: FontWeight.w600,
-        color: Color(0xFF56555E),
+        color: ClientConfig.getCustomColors().neutral700,
       ),
-      labelMedium: const TextStyle(
+      labelMedium: TextStyle(
         fontSize: 16,
         height: 1.5, // 24 / 16,
         fontWeight: FontWeight.w600,
-        color: Color(0xFF15141E),
+        color: ClientConfig.getCustomColors().neutral900,
       ),
-      labelLarge: const TextStyle(
+      labelLarge: TextStyle(
         fontSize: 18,
         height: 1.33, // 24 / 18,
         fontWeight: FontWeight.w600,
-        color: Color(0xFF15141E),
+        color: ClientConfig.getCustomColors().neutral900,
       ),
-      mixedStyles: const TextStyle(
+      mixedStyles: TextStyle(
         fontSize: 16,
         height: 1.5, // 24 / 16,
         fontWeight: FontWeight.w400,
-        color: Color(0xFF15141E),
+        color: ClientConfig.getCustomColors().neutral900,
       ),
     ),
   );

@@ -188,7 +188,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             const SizedBox(height: 16),
             Text(
               "Please apply different filters or search terms.",
-              style: ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(color: const Color(0xFF56555E)),
+              style: ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(color: ClientConfig.getCustomColors().neutral700),
             ),
           ],
         );
@@ -215,7 +215,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         return Text(
           "Please apply different filters and search again.",
           textAlign: TextAlign.center,
-          style: ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(color: const Color(0xFF56555E)),
+          style: ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(color: ClientConfig.getCustomColors().neutral700),
         );
       }
 

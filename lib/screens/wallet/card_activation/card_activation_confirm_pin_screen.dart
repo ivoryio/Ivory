@@ -44,13 +44,13 @@ class _BankCardDetailsConfirmPinScreenState extends State<BankCardDetailsConfirm
                 richTextTitle: RichText(
                     text: TextSpan(
                   style: ClientConfig.getTextStyleScheme().heading4,
-                  children: const <TextSpan>[
-                    TextSpan(
+                  children: <TextSpan>[
+                    const TextSpan(
                       text: 'Step 3 ',
                     ),
                     TextSpan(
                       text: 'out of 4',
-                      style: TextStyle(color: Color(0xFF56555E)),
+                      style: TextStyle(color: ClientConfig.getCustomColors().neutral700),
                     ),
                   ],
                 )),
@@ -152,7 +152,7 @@ class _BankCardDetailsConfirmPinScreenState extends State<BankCardDetailsConfirm
                       isValid: twoPinsMatch,
                       text: 'Your PIN should match',
                       icon: Icons.check,
-                      validColor: completed ? const Color(0xFF00774C) : const Color(0xFF15141E),
+                      validColor: completed ? ClientConfig.getCustomColors().success : ClientConfig.getCustomColors().neutral900,
                       invalidColor: const Color(0xFFE61F27),
                     ),
                     const SizedBox(

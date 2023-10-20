@@ -65,7 +65,7 @@ class BankCardConfirmPinConfirmScreen extends StatelessWidget {
                           ),
                           TextSpan(
                             text: " out of 2",
-                            style: ClientConfig.getTextStyleScheme().heading4.copyWith(color: const Color(0xFF56555E)),
+                            style: ClientConfig.getTextStyleScheme().heading4.copyWith(color: ClientConfig.getCustomColors().neutral700),
                           ),
                         ],
                       ),
@@ -77,7 +77,7 @@ class BankCardConfirmPinConfirmScreen extends StatelessWidget {
                   child: LinearProgressIndicator(
                     value: 0.5,
                     color: ClientConfig.getColorScheme().secondary,
-                    backgroundColor: const Color(0xFFADADB4),
+                    backgroundColor: ClientConfig.getCustomColors().neutral500,
                   ),
                 ),
                 ConfirmPinBody(
@@ -200,10 +200,10 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> {
                       color: hasError
                           ? const Color(0xffE61F27)
                           : isCompleted == true
-                              ? const Color(0xff00774C)
+                              ? ClientConfig.getCustomColors().success
                               : index >= _newPIN.length
-                                  ? const Color(0xffadadb4)
-                                  : const Color(0xff15141E),
+                                  ? ClientConfig.getCustomColors().neutral500
+                                  : ClientConfig.getCustomColors().neutral900,
                     ),
                   );
                 },
@@ -296,7 +296,7 @@ class ConfirmPinChecks extends StatelessWidget {
                     Icon(
                       Icons.check,
                       size: 24,
-                      color: matchingPinErrorNotifier.value ? const Color(0xffE61F27) : const Color(0xFF56555E),
+                      color: matchingPinErrorNotifier.value ? const Color(0xffE61F27) : ClientConfig.getCustomColors().neutral700,
                     ),
                     const SizedBox(
                       width: 4,
@@ -304,7 +304,7 @@ class ConfirmPinChecks extends StatelessWidget {
                     Text(
                       "Your PIN should match",
                       style: ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(
-                          color: matchingPinErrorNotifier.value ? const Color(0xffE61F27) : const Color(0xFF56555E)),
+                          color: matchingPinErrorNotifier.value ? const Color(0xffE61F27) : ClientConfig.getCustomColors().neutral700),
                     ),
                   ],
                 );

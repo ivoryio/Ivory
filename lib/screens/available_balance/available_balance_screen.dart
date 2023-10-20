@@ -165,7 +165,7 @@ class AvailableBalanceScreen extends StatelessWidget {
         const SizedBox(width: 3,),
         Text(
           text,
-          style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: const Color(0xFF15141E)),
+          style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: ClientConfig.getCustomColors().neutral900),
         )
       ],
     );

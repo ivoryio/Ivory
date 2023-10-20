@@ -126,12 +126,14 @@ class _TransferScreenState extends State<TransferScreen> {
                   Text(
                     "Enter transfer amount",
                     style: ClientConfig.getTextStyleScheme().bodySmallBold.copyWith(
-                          color: _errorText != null ? Colors.red : const Color(0xFF56555E),
+                          color: _errorText != null ? Colors.red : ClientConfig.getCustomColors().neutral700,
                         ),
                   ),
                   IvoryAmountField(
                     controller: amountController,
                     error: _errorText != null,
+                    unfocusedBorderColor: ClientConfig.getCustomColors().neutral500,
+                    hintColor: ClientConfig.getCustomColors().neutral500,
                   ),
                   if (_errorText != null) ...[
                     const SizedBox(height: 8),

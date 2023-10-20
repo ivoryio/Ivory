@@ -5,7 +5,7 @@ void showSnackbar(
   BuildContext context, {
   required String text,
   BorderRadiusGeometry borderRadius = const BorderRadius.all(Radius.circular(30)),
-  Color backgroundColor = const Color(0xFF15141E),
+  required Color backgroundColor,
   Duration duration = const Duration(seconds: 2),
   EdgeInsets margin = const EdgeInsets.only(bottom: 24),
   Icon? icon,

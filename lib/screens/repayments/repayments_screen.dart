@@ -241,7 +241,7 @@ class _DetailsContentState extends State<_DetailsContent> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
               'Due on ${Format.date(widget.viewModel.creditLine.dueDate, pattern: 'MMM dd')}',
-              style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: const Color(0xFF15141E)),
+              style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: ClientConfig.getCustomColors().neutral900),
             ),
           ),
           const SizedBox(height: 12),

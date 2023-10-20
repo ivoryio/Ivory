@@ -572,7 +572,7 @@ class _FixedRepaymentState extends State<FixedRepayment> {
               decoration: BoxDecoration(
                 border: Border.all(
                   width: 1,
-                  color: isErrorRange ? Colors.red : const Color(0xFFADADB4),
+                  color: isErrorRange ? Colors.red : ClientConfig.getCustomColors().neutral500,
                   style: BorderStyle.solid,
                 ),
                 borderRadius: const BorderRadius.only(topLeft: Radius.circular(8), bottomLeft: Radius.circular(8)),
@@ -580,7 +580,7 @@ class _FixedRepaymentState extends State<FixedRepayment> {
               ),
               child: Text(
                 '€',
-                style: ClientConfig.getTextStyleScheme().heading2.copyWith(color: const Color(0xFFADADB4)),
+                style: ClientConfig.getTextStyleScheme().heading2.copyWith(color: ClientConfig.getCustomColors().neutral500),
               ),
             ),
             Expanded(
@@ -633,7 +633,7 @@ class _FixedRepaymentState extends State<FixedRepayment> {
                     ),
                     borderSide: BorderSide(
                       width: 1,
-                      color: isErrorRange ? Colors.red : const Color(0xFFADADB4),
+                      color: isErrorRange ? Colors.red : ClientConfig.getCustomColors().neutral500,
                       style: BorderStyle.solid,
                     ),
                   ),
@@ -644,7 +644,7 @@ class _FixedRepaymentState extends State<FixedRepayment> {
                     ),
                     borderSide: BorderSide(
                       width: 1,
-                      color: isErrorRange ? Colors.red : const Color(0xFFADADB4),
+                      color: isErrorRange ? Colors.red : ClientConfig.getCustomColors().neutral500,
                       style: BorderStyle.solid,
                     ),
                   ),
