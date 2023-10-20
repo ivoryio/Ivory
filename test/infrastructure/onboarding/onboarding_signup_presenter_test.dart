@@ -29,7 +29,7 @@ void main() {
     final viewModel = OnboardingSignupPresenter.presentSignup(state: state);
 
     //then
-    expect(viewModel, OnboardingSignupNotificationsAllowedViewModel());
+    expect(viewModel, NotificationsPermissionAllowedViewModel());
   });
 
   test("When notifications are not allowed", () {
@@ -47,6 +47,6 @@ void main() {
     final viewModel = OnboardingSignupPresenter.presentSignup(state: state);
 
     //then
-    expect(viewModel, OnboardingSignupNotificationsNotAllowedViewModel());
+    expect(viewModel, NotificationsPermissionNotAllowedViewModel());
   });
 }

@@ -5,9 +5,9 @@ class OnboardingSignupPresenter {
   static OnboardingSignupViewModel presentSignup({required OnboardingSignupState state}) {
     if (state is OnboardingSignupSubmittedState && _allPropertiesNotNull(state)) {
       if (state.notificationsAllowed == true) {
-        return OnboardingSignupNotificationsAllowedViewModel();
-      } else if (state.notificationsAllowed == false) {
-        return OnboardingSignupNotificationsNotAllowedViewModel();
+        return NotificationsPermissionAllowedViewModel();
+      } else if (state.notificationsAllowed == false && _allPropertiesNotNull(state)) {
+        return NotificationsPermissionNotAllowedViewModel();
       }
     }
     return OnboardingSignupInitialViewModel();
@@ -30,6 +30,8 @@ abstract class OnboardingSignupViewModel extends Equatable {
 
 class OnboardingSignupInitialViewModel extends OnboardingSignupViewModel {}
 
-class OnboardingSignupNotificationsAllowedViewModel extends OnboardingSignupViewModel {}
+class NotificationsPermissionAllowedViewModel extends OnboardingSignupViewModel {}
 
-class OnboardingSignupNotificationsNotAllowedViewModel extends OnboardingSignupViewModel {}
+class NotificationsPermissionNotAllowedViewModel extends OnboardingSignupViewModel {}
+
+class NotificationsPermissionUnknownViewModel extends OnboardingSignupViewModel {}

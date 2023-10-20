@@ -1,3 +1,4 @@
+import 'package:app_settings/app_settings.dart';
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -14,10 +15,35 @@ import 'package:solarisdemo/widgets/ivory_asset_with_badge.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
 
-class OnboardingAllowNotificationsScreen extends StatelessWidget {
+class OnboardingAllowNotificationsScreen extends StatefulWidget {
   static const routeName = '/onboardingAllowNotificationsScreen';
 
   const OnboardingAllowNotificationsScreen({super.key});
+
+  @override
+  State<OnboardingAllowNotificationsScreen> createState() => _OnboardingAllowNotificationsScreenState();
+}
+
+class _OnboardingAllowNotificationsScreenState extends State<OnboardingAllowNotificationsScreen>
+    with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      StoreProvider.of<AppState>(context).dispatch(CheckPushNotificationPermissionCommandAction());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +61,9 @@ class OnboardingAllowNotificationsScreen extends StatelessWidget {
             Expanded(
               child: ScrollableScreenContainer(
                 padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                child: viewModel is OnboardingSignupNotificationsAllowedViewModel
-                    ? const _AllowedNotificationsContent()
-                    : const _RequestNotificationContent(),
+                child: viewModel is NotificationsPermissionAllowedViewModel
+                    ? const _AllowedPermissionContent()
+                    : _RequestNotificationPermissionContent(viewModel),
               ),
             ),
           ],
@@ -47,8 +73,10 @@ class OnboardingAllowNotificationsScreen extends StatelessWidget {
   }
 }
 
-class _RequestNotificationContent extends StatelessWidget {
-  const _RequestNotificationContent();
+class _RequestNotificationPermissionContent extends StatelessWidget {
+  final OnboardingSignupViewModel viewModel;
+
+  const _RequestNotificationPermissionContent(this.viewModel);
 
   @override
   Widget build(BuildContext context) {
@@ -100,20 +128,27 @@ class _RequestNotificationContent extends StatelessWidget {
           onPressed: () {},
         ),
         const SizedBox(height: 16),
-        PrimaryButton(
-          text: "Allow notifications",
-          onPressed: () {
-            StoreProvider.of<AppState>(context).dispatch(RequestPushNotificationsPermissionCommandAction());
-          },
-        ),
+        viewModel is NotificationsPermissionNotAllowedViewModel
+            ? PrimaryButton(
+                text: "Go to notification settings",
+                onPressed: () async {
+                  await AppSettings.openAppSettings(type: AppSettingsType.notification);
+                },
+              )
+            : PrimaryButton(
+                text: "Allow notifications",
+                onPressed: () {
+                  StoreProvider.of<AppState>(context).dispatch(RequestPushNotificationsPermissionCommandAction());
+                },
+              ),
         const SizedBox(height: 16)
       ],
     );
   }
 }
 
-class _AllowedNotificationsContent extends StatelessWidget {
-  const _AllowedNotificationsContent();
+class _AllowedPermissionContent extends StatelessWidget {
+  const _AllowedPermissionContent();
 
   @override
   Widget build(BuildContext context) {
