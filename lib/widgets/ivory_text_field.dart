@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:solarisdemo/config.dart';
@@ -58,7 +56,6 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
   @override
   void initState() {
     super.initState();
-    log('widget.error [${widget.error}]');
 
     _focusNode = widget.focusNode ?? FocusNode();
     _controller = widget.controller ??
