@@ -82,7 +82,7 @@ class AuthInitializedViewModel extends AuthViewModel {
   const AuthInitializedViewModel({
     required AuthType authType,
     required User cognitoUser,
-  }) : super(cognitoUser: cognitoUser);
+  }) : super(cognitoUser: cognitoUser, authType: authType);
 
   @override
   List<Object?> get props => [cognitoUser, authType];

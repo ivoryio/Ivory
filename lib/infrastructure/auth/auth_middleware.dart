@@ -52,6 +52,7 @@ class AuthMiddleware extends MiddlewareClass<AppState> {
 
       if (action.email.isEmpty || action.email == '') {
         store.dispatch(AuthFailedEventAction(errorType: AuthErrorType.invalidCredentials));
+        return;
       }
 
       final loginResponse = await _authService.login(

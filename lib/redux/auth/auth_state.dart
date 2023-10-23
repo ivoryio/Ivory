@@ -42,7 +42,7 @@ class AuthenticationInitializedState extends AuthState {
   );
 
   @override
-  List<Object?> get props => [cognitoUser];
+  List<Object?> get props => [cognitoUser, authType];
 }
 
 class AuthenticatedState extends AuthState {
