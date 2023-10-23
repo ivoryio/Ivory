@@ -47,8 +47,9 @@ abstract class PushNotificationService extends ApiService {
 
 class FirebasePushNotificationService extends PushNotificationService {
   final _messaging = FirebaseMessaging.instance;
-  Store<AppState>? store;
+  late final Store<AppState> store;
   final PushNotificationStorageService storageService;
+  bool isInitialized = false;
 
   FirebasePushNotificationService({super.user, required this.storageService}) {
     handleAndroidLocalNotifications();
@@ -56,8 +57,8 @@ class FirebasePushNotificationService extends PushNotificationService {
 
   @override
   Future<void> init(Store<AppState> store) async {
-    if (this.store == null) {
-      this.store = store;
+    if (isInitialized) {
+      return;
     }
 
     final settings = await _messaging.requestPermission();
@@ -100,6 +101,8 @@ class FirebasePushNotificationService extends PushNotificationService {
     FirebaseMessaging.onMessageOpenedApp.listen(_onMessage); // App was in background and notification clicked
     FirebaseMessaging.instance.getInitialMessage().then(_onMessage); // App was terminated and notification clicked
     FirebaseMessaging.onMessage.listen(_pushNotificationReceived);
+
+    isInitialized = true;
   }
 
   @override
@@ -121,9 +124,7 @@ class FirebasePushNotificationService extends PushNotificationService {
   }
 
   void _pushNotificationReceived(RemoteMessage? message) {
-    if (store != null || message != null) {
-      forceReloadAppStates(store!, user!);
-    }
+    forceReloadAppStates(store, user!);
   }
 
   Future<void> handleAndroidLocalNotifications() async {
@@ -169,14 +170,12 @@ class FirebasePushNotificationService extends PushNotificationService {
   }
 
   void _redirect(RemoteMessage message) {
-    if (store == null) return;
-
     debugPrint("Redirect from notification");
     final context = navigatorKey.currentContext as BuildContext;
     final notificationType = RemoteMessageUtils.getNotificationType(message.data["type"] as String);
 
     if (notificationType == NotificationType.scaChallenge) {
-      store!.dispatch(ReceivedTransactionApprovalNotificationEventAction(
+      store.dispatch(ReceivedTransactionApprovalNotificationEventAction(
         user: user!,
         message: RemoteMessageUtils.getNotificationTransactionMessage(message),
       ));
