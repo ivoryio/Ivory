@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/utilities/validator.dart';
 
 enum TextFieldInputType { text, name, email, number }
 
@@ -207,7 +208,7 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
         ];
       case TextFieldInputType.email:
         return [
-          FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9@._-]')),
+          FilteringTextInputFormatter.allow(RegexValidator.emailAddress),
         ];
       case TextFieldInputType.number:
         return [
