@@ -15,6 +15,7 @@ import 'package:solarisdemo/infrastructure/device/device_binding_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/notifications_middleware.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
+import 'package:solarisdemo/infrastructure/onboarding/onboarding_signup_middleware.dart';
 import 'package:solarisdemo/infrastructure/person/account_summary/account_summary_middleware.dart';
 import 'package:solarisdemo/infrastructure/person/account_summary/account_summary_service.dart';
 import 'package:solarisdemo/infrastructure/person/person_account_middleware.dart';
@@ -80,6 +81,7 @@ Store<AppState> createStore({
       TransactionApprovalMiddleware(changeRequestService, deviceService, deviceFingerprintService, biometricsService),
       GetAccountSummaryMiddleware(accountSummaryService),
       AuthMiddleware(authService, deviceService, deviceFingerprintService, personService, biometricsService),
+      OnboardingSignupMiddleware(pushNotificationService),
     ],
   );
 }

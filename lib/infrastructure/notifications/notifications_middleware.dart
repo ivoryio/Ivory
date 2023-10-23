@@ -16,7 +16,8 @@ class NotificationsMiddleware extends MiddlewareClass<AppState> {
     next(action);
 
     if (action is AuthenticatedEventAction) {
-      await _pushNotificationService.init(store, user: action.authenticatedUser.cognito);
+      await _pushNotificationService.init(store);
+      _pushNotificationService.handleTokenRefresh(user: action.authenticatedUser.cognito);
       await _pushNotificationService.handleSavedNotification();
     }
 

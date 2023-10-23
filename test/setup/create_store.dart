@@ -103,6 +103,11 @@ class NotImplementedPushNotificationService extends PushNotificationService {
   Future<void> clearNotification() {
     throw UnimplementedError();
   }
+
+  @override
+  void handleTokenRefresh({User? user}) {
+    throw UnimplementedError();
+  }
 }
 
 class NotImplementedTransactionService extends TransactionService {

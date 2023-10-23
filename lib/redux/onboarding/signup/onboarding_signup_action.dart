@@ -21,3 +21,13 @@ class SubmitOnboardingPasswordCommandAction {
 
   SubmitOnboardingPasswordCommandAction({required this.password});
 }
+
+class RequestPushNotificationsPermissionCommandAction {}
+
+class CheckPushNotificationPermissionCommandAction {}
+
+class UpdatedPushNotificationsPermissionEventAction {
+  final bool allowed;
+
+  UpdatedPushNotificationsPermissionEventAction({required this.allowed});
+}

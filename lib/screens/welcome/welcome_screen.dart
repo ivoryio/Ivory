@@ -111,6 +111,10 @@ class _HeroVideoState extends State<HeroVideo> with WidgetsBindingObserver, Rout
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (IvoryApp.generalRouteObserver.routeStack.last != WelcomeScreen.routeName) {
+      return;
+    }
+
     if (state == AppLifecycleState.paused && _controller.value.isPlaying) {
       log("Pausing video", name: "didChangeAppLifecycleState: paused");
       _controller.pause();
