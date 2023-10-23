@@ -21,7 +21,7 @@ class BillDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final billId = ModalRoute.of(context)!.settings.arguments as String;
     final user =
-        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedAndConfirmedState).authenticatedUser;
+        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
     final scrollController = ScrollController();
 
     return ScreenScaffold(

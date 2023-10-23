@@ -39,7 +39,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user =  (StoreProvider.of<AppState>(context).state.authState as AuthenticatedAndConfirmedState).authenticatedUser;
+    final user = (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
 
     return Screen(
       title: 'Welcome ${user.cognito.firstName}!',

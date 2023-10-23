@@ -28,7 +28,7 @@ class _BankCardDetailsConfirmPinScreenState extends State<BankCardDetailsConfirm
   @override
   Widget build(BuildContext context) {
     final user =
-        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedAndConfirmedState).authenticatedUser;
+        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
     return StoreConnector<AppState, BankCardViewModel>(
       converter: (store) => BankCardPresenter.presentBankCard(
         user: user,

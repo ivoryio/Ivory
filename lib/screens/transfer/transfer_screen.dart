@@ -41,7 +41,7 @@ class _TransferScreenState extends State<TransferScreen> {
   @override
   Widget build(BuildContext context) {
     final user =
-        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedAndConfirmedState).authenticatedUser;
+        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
 
     return ScreenScaffold(
       body: StoreConnector<AppState, TransferAccountsViewModel>(

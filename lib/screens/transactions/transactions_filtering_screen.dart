@@ -46,7 +46,7 @@ class _TransactionsFilteringScreenState extends State<TransactionsFilteringScree
         transactionListFilter?.bookingDateMin != null || transactionListFilter?.bookingDateMax != null;
 
     final user =
-        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedAndConfirmedState).authenticatedUser;
+        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
 
     return ScreenScaffold(
       body: Padding(

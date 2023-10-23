@@ -5,6 +5,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/auth/auth_presenter.dart';
 import 'package:solarisdemo/models/auth/auth_error_type.dart';
+import 'package:solarisdemo/models/auth/auth_type.dart';
 import 'package:solarisdemo/navigator.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/auth/auth_action.dart';
@@ -38,7 +39,9 @@ class LoginScreen extends StatelessWidget {
         );
       },
       onWillChange: (previousViewModel, newViewModel) {
-        if (previousViewModel is AuthLoadingViewModel && newViewModel is AuthenticatedWithoutBoundDeviceViewModel) {
+        if (previousViewModel is AuthLoadingViewModel &&
+            newViewModel is AuthInitializedViewModel &&
+            newViewModel.authType == AuthType.withTan) {
           Navigator.of(
             navigatorKey.currentContext as BuildContext,
           ).pushNamed(LoginWithTanScreen.routeName);
@@ -534,7 +537,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                                     _emailFocusNode.unfocus();
                                     _passwordFocusNode.unfocus();
                                     StoreProvider.of<AppState>(context).dispatch(
-                                      AuthenticateUserCommandAction(
+                                      InitUserAuthenticationCommandAction(
                                         email: _emailInputController.text.toLowerCase(),
                                         password: _passwordInputController.text,
                                       ),

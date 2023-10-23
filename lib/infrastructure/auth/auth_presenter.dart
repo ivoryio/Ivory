@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:solarisdemo/models/auth/auth_error_type.dart';
+import 'package:solarisdemo/models/auth/auth_type.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/auth/auth_state.dart';
 
@@ -20,16 +21,13 @@ class AuthPresenter {
       return AuthErrorViewModel(
         authState.errorType,
       );
-    } else if (authState is AuthenticatedWithoutBoundDeviceState) {
-      return AuthenticatedWithoutBoundDeviceViewModel(
+    } else if (authState is AuthenticationInitializedState) {
+      return AuthInitializedViewModel(
         cognitoUser: authState.cognitoUser,
+        authType: authState.authType,
       );
-    } else if (authState is AuthenticatedWithBoundDeviceState) {
-      return AuthenticatedWithBoundDeviceViewModel(
-        cognitoUser: authState.cognitoUser,
-      );
-    } else if (authState is AuthenticatedAndConfirmedState) {
-      return AuthenticatedAndConfirmedViewModel(
+    } else if (authState is AuthenticatedState) {
+      return AuthenticatedViewModel(
         authenticatedUser: authState.authenticatedUser,
       );
     }
@@ -41,6 +39,7 @@ abstract class AuthViewModel extends Equatable {
   final User? cognitoUser;
   final AuthenticatedUser? authenticatedUser;
   final String? tan;
+  final AuthType? authType;
   final AuthErrorType? errorType;
   final String? email;
   final String? password;
@@ -51,13 +50,14 @@ abstract class AuthViewModel extends Equatable {
     this.authenticatedUser,
     this.tan,
     this.errorType,
+    this.authType,
     this.email,
     this.password,
     this.deviceId,
   });
 
   @override
-  List<Object?> get props => [cognitoUser, authenticatedUser, tan];
+  List<Object?> get props => [cognitoUser, authenticatedUser, tan, authType];
 }
 
 class AuthInitialViewModel extends AuthViewModel {}
@@ -78,26 +78,18 @@ class AuthErrorViewModel extends AuthViewModel {
   ) : super(errorType: errorType);
 }
 
-class AuthenticatedWithoutBoundDeviceViewModel extends AuthViewModel {
-  const AuthenticatedWithoutBoundDeviceViewModel({
+class AuthInitializedViewModel extends AuthViewModel {
+  const AuthInitializedViewModel({
+    required AuthType authType,
     required User cognitoUser,
   }) : super(cognitoUser: cognitoUser);
 
   @override
-  List<Object?> get props => [cognitoUser];
+  List<Object?> get props => [cognitoUser, authType];
 }
 
-class AuthenticatedWithBoundDeviceViewModel extends AuthViewModel {
-  const AuthenticatedWithBoundDeviceViewModel({
-    required User cognitoUser,
-  }) : super(cognitoUser: cognitoUser);
-
-  @override
-  List<Object?> get props => [cognitoUser];
-}
-
-class AuthenticatedAndConfirmedViewModel extends AuthViewModel {
-  const AuthenticatedAndConfirmedViewModel({
+class AuthenticatedViewModel extends AuthViewModel {
+  const AuthenticatedViewModel({
     required AuthenticatedUser authenticatedUser,
   }) : super(authenticatedUser: authenticatedUser);
 

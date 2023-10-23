@@ -37,7 +37,7 @@ class _TransferReviewScreenState extends State<TransferReviewScreen> {
   @override
   Widget build(BuildContext context) {
     final user =
-        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedAndConfirmedState).authenticatedUser;
+        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
 
     return StoreConnector<AppState, TransferViewModel>(
       converter: (store) => TransferPresenter.presentTransfer(

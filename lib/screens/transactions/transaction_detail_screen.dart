@@ -29,7 +29,7 @@ class TransactionDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final argument = ModalRoute.of(context)!.settings.arguments;
     final user =
-        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedAndConfirmedState).authenticatedUser;
+        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
     final scrollController = ScrollController();
 
     AmountValue amountValue;

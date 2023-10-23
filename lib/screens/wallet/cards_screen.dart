@@ -25,7 +25,7 @@ class BankCardsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user =
-        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedAndConfirmedState).authenticatedUser;
+        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
     ScrollController scrollController = ScrollController();
 
     return StoreConnector<AppState, BankCardsViewModel>(
@@ -104,7 +104,7 @@ class _CardSlider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user =
-        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedAndConfirmedState).authenticatedUser;
+        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
     if (cards.isEmpty) {
       return Padding(
         padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
@@ -202,7 +202,7 @@ class _OrderCardButton extends StatelessWidget {
 
 void addNewCard(BuildContext context) {
   final user =
-      (StoreProvider.of<AppState>(context).state.authState as AuthenticatedAndConfirmedState).authenticatedUser;
+      (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
   StoreProvider.of<AppState>(context).dispatch(
     CreateCardCommandAction(
       user: user,

@@ -1,10 +1,11 @@
 import 'package:solarisdemo/models/auth/auth_error_type.dart';
+import 'package:solarisdemo/models/auth/auth_type.dart';
 import 'package:solarisdemo/models/user.dart';
 
-class AuthenticateUserCommandAction {
+class InitUserAuthenticationCommandAction {
   final String email;
   final String password;
-  AuthenticateUserCommandAction({
+  InitUserAuthenticationCommandAction({
     required this.email,
     required this.password,
   });
@@ -14,21 +15,14 @@ class LoadCredentialsCommandAction {}
 
 class LogoutUserCommandAction {}
 
-class ConfirmTanAuthenticationCommandAction {
+class AuthenticateUserCommandAction {
+  final AuthType authType;
   final String tan;
   final User cognitoUser;
   final void Function() onSuccess;
-  ConfirmTanAuthenticationCommandAction({
+  AuthenticateUserCommandAction({
+    required this.authType,
     required this.tan,
-    required this.onSuccess,
-    required this.cognitoUser,
-  });
-}
-
-class ConfirmBiometricAuthenticationCommandAction {
-  final User cognitoUser;
-  final void Function() onSuccess;
-  ConfirmBiometricAuthenticationCommandAction({
     required this.onSuccess,
     required this.cognitoUser,
   });
@@ -45,25 +39,22 @@ class CredentialsLoadedEventAction {
   });
 }
 
-class AuthenticatedWithoutBoundDeviceEventAction {
+class AuthenticationInitializedEventAction {
+  final AuthType authType;
   final User cognitoUser;
-  AuthenticatedWithoutBoundDeviceEventAction({
+  AuthenticationInitializedEventAction({
     required this.cognitoUser,
+    required this.authType,
   });
 }
 
-class AuthenticatedWithBoundDeviceEventAction {
-  final User cognitoUser;
-  AuthenticatedWithBoundDeviceEventAction({
-    required this.cognitoUser,
-  });
-}
-
-class AuthenticationConfirmedEventAction {
+class AuthenticatedEventAction {
+  final AuthType authType;
   final AuthenticatedUser authenticatedUser;
 
-  AuthenticationConfirmedEventAction({
+  AuthenticatedEventAction({
     required this.authenticatedUser,
+    required this.authType,
   });
 }
 
@@ -77,11 +68,4 @@ class AuthFailedEventAction {
   AuthFailedEventAction({
     required this.errorType,
   });
-}
-
-class AuthLoggedInAction {
-  final User user;
-  AuthLoggedInAction(
-    this.user,
-  );
 }

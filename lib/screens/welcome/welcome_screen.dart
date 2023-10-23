@@ -6,6 +6,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/auth/auth_presenter.dart';
 import 'package:solarisdemo/ivory_app.dart';
+import 'package:solarisdemo/models/auth/auth_type.dart';
 import 'package:solarisdemo/navigator.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/auth/auth_action.dart';
@@ -43,13 +44,15 @@ class WelcomeScreen extends StatelessWidget {
                 newViewModel.password!.isNotEmpty &&
                 newViewModel.deviceId!.isNotEmpty) {
               StoreProvider.of<AppState>(context).dispatch(
-                AuthenticateUserCommandAction(
+                InitUserAuthenticationCommandAction(
                   email: newViewModel.email!,
                   password: newViewModel.password!,
                 ),
               );
             }
-            if (previousViewModel is AuthLoadingViewModel && newViewModel is AuthenticatedWithBoundDeviceViewModel) {
+            if (previousViewModel is AuthLoadingViewModel &&
+                newViewModel is AuthInitializedViewModel &&
+                newViewModel.authType == AuthType.withBiometrics) {
               Navigator.of(
                 navigatorKey.currentContext as BuildContext,
               ).pushNamedAndRemoveUntil(LoginWithBiometricsScreen.routeName, (route) => false);

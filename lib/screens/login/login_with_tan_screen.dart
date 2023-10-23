@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/auth/auth_presenter.dart';
+import 'package:solarisdemo/models/auth/auth_type.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/auth/auth_action.dart';
 import 'package:solarisdemo/redux/auth/auth_state.dart';
@@ -109,9 +110,10 @@ class _LoginWithTanScreenState extends State<LoginWithTanScreen> {
                           onPressed: _isInputComplete
                               ? () {
                                   StoreProvider.of<AppState>(context).dispatch(
-                                    ConfirmTanAuthenticationCommandAction(
+                                    AuthenticateUserCommandAction(
+                                      authType: AuthType.withTan,
                                       cognitoUser: (StoreProvider.of<AppState>(context).state.authState
-                                              as AuthenticatedWithoutBoundDeviceState)
+                                              as AuthenticationInitializedState)
                                           .cognitoUser,
                                       tan: _tanInputController.text,
                                       onSuccess: () {

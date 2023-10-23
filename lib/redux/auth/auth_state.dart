@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:solarisdemo/models/auth/auth_error_type.dart';
+import 'package:solarisdemo/models/auth/auth_type.dart';
 import 'package:solarisdemo/models/user.dart';
 
 abstract class AuthState extends Equatable {
@@ -31,28 +32,24 @@ class AuthErrorState extends AuthState {
   AuthErrorState(this.errorType);
 }
 
-class AuthenticatedWithoutBoundDeviceState extends AuthState {
+class AuthenticationInitializedState extends AuthState {
+  final AuthType authType;
   final User cognitoUser;
 
-  AuthenticatedWithoutBoundDeviceState(this.cognitoUser);
+  AuthenticationInitializedState(
+    this.cognitoUser,
+    this.authType,
+  );
 
   @override
   List<Object?> get props => [cognitoUser];
 }
 
-class AuthenticatedWithBoundDeviceState extends AuthState {
-  final User cognitoUser;
-
-  AuthenticatedWithBoundDeviceState(this.cognitoUser);
-
-  @override
-  List<Object?> get props => [cognitoUser];
-}
-
-class AuthenticatedAndConfirmedState extends AuthState {
+class AuthenticatedState extends AuthState {
+  final AuthType authType;
   final AuthenticatedUser authenticatedUser;
 
-  AuthenticatedAndConfirmedState(this.authenticatedUser);
+  AuthenticatedState(this.authenticatedUser, this.authType);
 
   @override
   List<Object?> get props => [authenticatedUser];

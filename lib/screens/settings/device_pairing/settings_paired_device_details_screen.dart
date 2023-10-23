@@ -36,7 +36,7 @@ class SettingsPairedDeviceDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = (StoreProvider.of<AppState>(context).state.authState as AuthenticatedAndConfirmedState)
+    final user = (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState)
         .authenticatedUser
         .cognito;
 

@@ -5,6 +5,7 @@ import 'package:solarisdemo/infrastructure/device/device_fingerprint_service.dar
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/infrastructure/person/person_service.dart';
 import 'package:solarisdemo/models/auth/auth_error_type.dart';
+import 'package:solarisdemo/models/auth/auth_type.dart';
 import 'package:solarisdemo/models/device_activity.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
@@ -46,7 +47,7 @@ class AuthMiddleware extends MiddlewareClass<AppState> {
       }
     }
 
-    if (action is AuthenticateUserCommandAction) {
+    if (action is InitUserAuthenticationCommandAction) {
       store.dispatch(AuthLoadingEventAction());
 
       if (action.email.isEmpty || action.email == '') {
@@ -113,19 +114,25 @@ class AuthMiddleware extends MiddlewareClass<AppState> {
       }
       final boundDeviceId = await _deviceService.getDeviceId();
       if (boundDeviceId != '') {
-        store.dispatch(AuthenticatedWithBoundDeviceEventAction(cognitoUser: user));
+        store.dispatch(AuthenticationInitializedEventAction(
+          cognitoUser: user,
+          authType: AuthType.withBiometrics,
+        ));
         return;
       }
 
-      store.dispatch(AuthenticatedWithoutBoundDeviceEventAction(cognitoUser: user));
+      store.dispatch(AuthenticationInitializedEventAction(
+        cognitoUser: user,
+        authType: AuthType.withTan,
+      ));
     }
 
-    if (action is ConfirmTanAuthenticationCommandAction || action is ConfirmBiometricAuthenticationCommandAction) {
+    if (action is AuthenticateUserCommandAction) {
       store.dispatch(
         AuthLoadingEventAction(),
       );
 
-      if (action is ConfirmBiometricAuthenticationCommandAction) {
+      if (action.authType == AuthType.withBiometrics) {
         final biometricAuth =
             await _biometricsService.authenticateWithBiometrics(message: "Please use biometric to authenticate");
 
@@ -153,7 +160,10 @@ class AuthMiddleware extends MiddlewareClass<AppState> {
         personAccount: personAccountResponse.personAccount,
       );
 
-      store.dispatch(AuthenticationConfirmedEventAction(authenticatedUser: authenticatedUser));
+      store.dispatch(AuthenticatedEventAction(
+        authenticatedUser: authenticatedUser,
+        authType: action.authType,
+      ));
       action.onSuccess();
     }
 

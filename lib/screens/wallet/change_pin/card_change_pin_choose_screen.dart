@@ -24,7 +24,7 @@ class BankCardChangePinChooseScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user =
-        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedAndConfirmedState).authenticatedUser;
+        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
     final GlobalKey<_ChangePinBodyState> changePinBodyKey = GlobalKey<_ChangePinBodyState>();
     ValueNotifier<bool> birthdayErrorNotifier = ValueNotifier<bool>(false);
     ValueNotifier<bool> postalCodeErrorNotifier = ValueNotifier<bool>(false);
@@ -317,7 +317,7 @@ class _ChangePinBodyState extends State<ChangePinBody> {
   @override
   Widget build(BuildContext context) {
     final user =
-        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedAndConfirmedState).authenticatedUser;
+        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
 
     return Padding(
       padding: const EdgeInsets.all(24.0),

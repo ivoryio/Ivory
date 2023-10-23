@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:solarisdemo/models/auth/auth_error_type.dart';
+import 'package:solarisdemo/models/auth/auth_type.dart';
 import 'package:solarisdemo/redux/auth/auth_action.dart';
 import 'package:solarisdemo/redux/auth/auth_state.dart';
 
@@ -101,16 +102,17 @@ void main() {
 
       final loadingState = store.onChange.firstWhere((element) => element.authState is AuthLoadingState);
       final appState =
-          store.onChange.firstWhere((element) => element.authState is AuthenticatedWithoutBoundDeviceState);
+          store.onChange.firstWhere((element) => element.authState is AuthenticationInitializedState);
 
       //when
       store.dispatch(
-        AuthenticateUserCommandAction(email: "email", password: "password"),
+        InitUserAuthenticationCommandAction(email: "email", password: "password"),
       );
 
       //then
       expect((await loadingState).authState, isA<AuthLoadingState>());
-      expect((await appState).authState, isA<AuthenticatedWithoutBoundDeviceState>());
+      expect((await appState).authState, isA<AuthenticationInitializedState>());
+      expect(((await appState).authState as AuthenticationInitializedState).authType, equals(AuthType.withTan));
     });
 
     test("Should authenticate the user with bound device succesfully", () async {
@@ -134,16 +136,19 @@ void main() {
       );
 
       final loadingState = store.onChange.firstWhere((element) => element.authState is AuthLoadingState);
-      final appState = store.onChange.firstWhere((element) => element.authState is AuthenticatedWithBoundDeviceState);
+      final appState = store.onChange.firstWhere((element) => element.authState is AuthenticationInitializedState);
 
       //when
       store.dispatch(
-        AuthenticateUserCommandAction(email: "email", password: "password"),
+        InitUserAuthenticationCommandAction(email: "email", password: "password"),
       );
 
       //then
       expect((await loadingState).authState, isA<AuthLoadingState>());
-      expect((await appState).authState, isA<AuthenticatedWithBoundDeviceState>());
+      expect((await appState).authState, isA<AuthenticationInitializedState>());
+      expect(
+          ((await appState).authState as AuthenticationInitializedState).authType, equals(AuthType.withBiometrics));
+
     });
 
     test("If credentials are invalid should fail with AuthErrorType.invalidCredentials", () async {
@@ -164,7 +169,7 @@ void main() {
 
       //when
       store.dispatch(
-        AuthenticateUserCommandAction(email: "", password: ""),
+        InitUserAuthenticationCommandAction(email: "", password: ""),
       );
 
       //then
@@ -187,17 +192,21 @@ void main() {
         ),
       );
       final loadingState = store.onChange.firstWhere((element) => element.authState is AuthLoadingState);
-      final appState = store.onChange.firstWhere((element) => element.authState is AuthenticatedAndConfirmedState);
+      final appState = store.onChange.firstWhere((element) => element.authState is AuthenticatedState);
 
       //when
-      store.dispatch(ConfirmBiometricAuthenticationCommandAction(
+      store.dispatch(AuthenticateUserCommandAction(
+        tan: '',
+        authType: AuthType.withBiometrics,
         cognitoUser: MockUser(),
         onSuccess: () {},
       ));
 
       //then
       expect((await loadingState).authState, isA<AuthLoadingState>());
-      expect((await appState).authState, isA<AuthenticatedAndConfirmedState>());
+      expect((await appState).authState, isA<AuthenticatedState>());
+      expect(((await appState).authState as AuthenticatedState).authType, equals(AuthType.withBiometrics));
+
     });
     test("If biometrics are not confirmed, should fail with AuthErrorType.biometricAuthFailed ", () async {
       //given
@@ -215,7 +224,9 @@ void main() {
           (element.authState as AuthErrorState).errorType == AuthErrorType.biometricAuthFailed);
 
       //when
-      store.dispatch(ConfirmBiometricAuthenticationCommandAction(
+      store.dispatch(AuthenticateUserCommandAction(
+        authType: AuthType.withBiometrics,
+        tan: '',
         cognitoUser: MockUser(),
         onSuccess: () {},
       ));
@@ -237,18 +248,20 @@ void main() {
         ),
       );
       final loadingState = store.onChange.firstWhere((element) => element.authState is AuthLoadingState);
-      final appState = store.onChange.firstWhere((element) => element.authState is AuthenticatedAndConfirmedState);
+      final appState = store.onChange.firstWhere((element) => element.authState is AuthenticatedState);
 
       //when
-      store.dispatch(ConfirmTanAuthenticationCommandAction(
-        tan: '123456',
+      store.dispatch(AuthenticateUserCommandAction(
+        authType: AuthType.withTan,
+        tan: '',
         cognitoUser: MockUser(),
         onSuccess: () {},
       ));
 
       //then
       expect((await loadingState).authState, isA<AuthLoadingState>());
-      expect((await appState).authState, isA<AuthenticatedAndConfirmedState>());
+      expect((await appState).authState, isA<AuthenticatedState>());
+      expect(((await appState).authState as AuthenticatedState).authType, equals(AuthType.withTan));
     });
 
     test("If getPerson is not responding with data, should fail with AuthErrorType.cantGetPersonData", () async {
@@ -265,7 +278,8 @@ void main() {
           (element.authState as AuthErrorState).errorType == AuthErrorType.cantGetPersonData);
 
       //when
-      store.dispatch(ConfirmTanAuthenticationCommandAction(
+      store.dispatch(AuthenticateUserCommandAction(
+        authType: AuthType.withTan,
         tan: '123456',
         cognitoUser: MockUser(),
         onSuccess: () {},
@@ -292,7 +306,8 @@ void main() {
           (element.authState as AuthErrorState).errorType == AuthErrorType.cantGetPersonAccountData);
 
       //when
-      store.dispatch(ConfirmTanAuthenticationCommandAction(
+      store.dispatch(AuthenticateUserCommandAction(
+        authType: AuthType.withTan,
         tan: '123456',
         cognitoUser: MockUser(),
         onSuccess: () {},

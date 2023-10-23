@@ -12,12 +12,10 @@ AuthState authReducer(AuthState currentState, dynamic action) {
     );
   } else if (action is AuthFailedEventAction) {
     return AuthErrorState(action.errorType);
-  } else if (action is AuthenticatedWithoutBoundDeviceEventAction) {
-    return AuthenticatedWithoutBoundDeviceState(action.cognitoUser);
-  } else if (action is AuthenticatedWithBoundDeviceEventAction) {
-    return AuthenticatedWithBoundDeviceState(action.cognitoUser);
-  } else if (action is AuthenticationConfirmedEventAction) {
-    return AuthenticatedAndConfirmedState(action.authenticatedUser);
+  } else if (action is AuthenticationInitializedEventAction) {
+    return AuthenticationInitializedState(action.cognitoUser, action.authType);
+  } else if (action is AuthenticatedEventAction) {
+    return AuthenticatedState(action.authenticatedUser, action.authType);
   } else if (action is ResetAuthEventAction) {
     return AuthInitialState();
   }

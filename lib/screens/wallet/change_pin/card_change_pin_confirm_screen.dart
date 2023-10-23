@@ -18,7 +18,7 @@ class BankCardConfirmPinConfirmScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user =
-        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedAndConfirmedState).authenticatedUser;
+        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
     final GlobalKey<_ConfirmPinBodyState> confirmPinBodyKey = GlobalKey<_ConfirmPinBodyState>();
 
     ValueNotifier<bool> matchingPinErrorNotifier = ValueNotifier<bool>(false);
@@ -161,7 +161,7 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> {
   @override
   Widget build(BuildContext context) {
     final user =
-        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedAndConfirmedState).authenticatedUser;
+        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: Column(
