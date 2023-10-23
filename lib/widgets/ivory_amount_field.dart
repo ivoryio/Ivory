@@ -26,8 +26,8 @@ class IvoryAmountField extends StatefulWidget {
     this.focusNode,
     this.focusedBorderColor = Colors.black,
     this.padding = const EdgeInsets.symmetric(vertical: 16),
-    this.unfocusedBorderColor = const Color(0xFFADADB4),
-    this.hintColor = const Color(0xFFADADB4),
+    required this.unfocusedBorderColor,
+    required this.hintColor,
     this.digitsTextStyle = const TextStyle(
       fontSize: 40,
       height: 1.2,

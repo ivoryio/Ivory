@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../config.dart';
+
 class PinField extends StatefulWidget {
   final TextEditingController controller;
   final ValueChanged<String> onChanged;
@@ -103,11 +105,11 @@ class PinFieldState extends State<PinField> {
     if (_isInvalid) {
       return const Color(0xFFE61F27);
     } else if (_isDone) {
-      return const Color(0xFF00774C);
+      return ClientConfig.getCustomColors().success;
     } else if (_hasText) {
-      return const Color(0xFF15141E);
+      return ClientConfig.getCustomColors().neutral900;
     } else {
-      return const Color(0xFFADADB4);
+      return ClientConfig.getCustomColors().neutral500;
     }
   }
 }

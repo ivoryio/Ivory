@@ -112,7 +112,7 @@ class _CircularCountdownProgressState extends State<CircularCountdownProgress> {
           child: Center(
             child: Text(
               _isRunning ? _showValue : '00:00',
-              style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: const Color(0xFF15141E)),
+              style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: ClientConfig.getCustomColors().neutral900),
             ),
           ),
         ),

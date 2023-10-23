@@ -90,37 +90,40 @@ class UpcomingTransactionListItem extends StatelessWidget {
           : null,
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 10.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                SvgPicture.asset(
-                  "assets/images/currency_exchange_euro.svg",
-                  width: 20,
-                  height: 20,
-                  colorFilter: ColorFilter.mode(ClientConfig.getColorScheme().secondary, BlendMode.srcIn),
-                ),
-                const SizedBox(
-                  width: 16,
-                ),
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(
-                    'Automatic repayment',
-                    style: ClientConfig.getTextStyleScheme().heading4,
+        child: Padding(
+          padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  SvgPicture.asset(
+                    "assets/images/currency_exchange_euro.svg",
+                    width: 20,
+                    height: 20,
+                    colorFilter: ColorFilter.mode(ClientConfig.getColorScheme().secondary, BlendMode.srcIn),
                   ),
-                  Text(
-                    formattedDate,
-                    style: ClientConfig.getTextStyleScheme().bodySmallRegular,
-                  )
-                ]),
-              ],
-            ),
-            Text(
-              Format.amountWithSign(upcomingTransaction.outstandingAmount!),
-              style: ClientConfig.getTextStyleScheme().heading4,
-            )
-          ],
+                  const SizedBox(
+                    width: 16,
+                  ),
+                  Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Text(
+                      'Automatic repayment',
+                      style: ClientConfig.getTextStyleScheme().heading4,
+                    ),
+                    Text(
+                      formattedDate,
+                      style: ClientConfig.getTextStyleScheme().bodySmallRegular,
+                    )
+                  ]),
+                ],
+              ),
+              Text(
+                Format.amountWithSign(upcomingTransaction.outstandingAmount!),
+                style: ClientConfig.getTextStyleScheme().heading4,
+              )
+            ],
+          ),
         ),
       ),
     );

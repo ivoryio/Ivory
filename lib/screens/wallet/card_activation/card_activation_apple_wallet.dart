@@ -31,13 +31,13 @@ class BankCardDetailsAppleWalletScreen extends StatelessWidget {
             richTextTitle: RichText(
               text: TextSpan(
                 style: ClientConfig.getTextStyleScheme().heading4,
-                children: const <TextSpan>[
-                  TextSpan(
+                children: <TextSpan>[
+                  const TextSpan(
                     text: 'Step 4 ',
                   ),
                   TextSpan(
                     text: 'out of 4',
-                    style: TextStyle(color: Color(0xFF56555E)),
+                    style: TextStyle(color: ClientConfig.getCustomColors().neutral700),
                   ),
                 ],
               ),

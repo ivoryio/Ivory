@@ -112,7 +112,7 @@ class TransactionDetailScreen extends StatelessWidget {
             ),
             TextSpan(
               text: 'to view the repayment to be debited from your reference account.',
-              style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(color: const Color(0xFF15141E)),
+              style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(color: ClientConfig.getCustomColors().neutral900),
             ),
           ],
           style: ClientConfig.getTextStyleScheme()

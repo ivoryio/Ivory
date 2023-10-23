@@ -326,7 +326,7 @@ class CardOptionsButton extends StatelessWidget {
         ElevatedButton(
           onPressed: () => onPressed(),
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF15141E),
+            backgroundColor: ClientConfig.getCustomColors().neutral900,
             fixedSize: const Size(48, 48),
             shape: const CircleBorder(),
             splashFactory: NoSplash.splashFactory,
@@ -341,7 +341,7 @@ class CardOptionsButton extends StatelessWidget {
           padding: const EdgeInsets.only(top: 10),
           child: Text(
             textLabel,
-            style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: const Color(0xFF15141E)),
+            style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: ClientConfig.getCustomColors().neutral900),
           ),
         )
       ],

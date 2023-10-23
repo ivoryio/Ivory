@@ -47,13 +47,13 @@ class _BankCardDetailsChoosePinScreenState extends State<BankCardDetailsChoosePi
                 richTextTitle: RichText(
                     text: TextSpan(
                   style: ClientConfig.getTextStyleScheme().heading4,
-                  children: const <TextSpan>[
-                    TextSpan(
+                  children: <TextSpan>[
+                    const TextSpan(
                       text: 'Step 2 ',
                     ),
                     TextSpan(
                       text: 'out of 4',
-                      style: TextStyle(color: Color(0xFF56555E)),
+                      style: TextStyle(color: ClientConfig.getCustomColors().neutral700),
                     ),
                   ],
                 )),
@@ -135,28 +135,28 @@ class _BankCardDetailsChoosePinScreenState extends State<BankCardDetailsChoosePi
                         isValid: pinDiffersBirthDate,
                         text: 'Your date of birth',
                         icon: Icons.close,
-                        validColor: const Color(0xFF15141E),
+                        validColor: ClientConfig.getCustomColors().neutral900,
                         invalidColor: const Color(0xFFE61F27),
                       ),
                       PinValidityRule(
                         isValid: pinDiffersPostalCode,
                         text: 'Your postal code',
                         icon: Icons.close,
-                        validColor: const Color(0xFF15141E),
+                        validColor: ClientConfig.getCustomColors().neutral900,
                         invalidColor: const Color(0xFFE61F27),
                       ),
                       PinValidityRule(
                         isValid: pinIsNotASequence,
                         text: 'Number sequences, e.g. 1234',
                         icon: Icons.close,
-                        validColor: const Color(0xFF15141E),
+                        validColor: ClientConfig.getCustomColors().neutral900,
                         invalidColor: const Color(0xFFE61F27),
                       ),
                       PinValidityRule(
                         isValid: pinNotContainsRepeatingDigits,
                         text: 'More than two digits repeating',
                         icon: Icons.close,
-                        validColor: const Color(0xFF15141E),
+                        validColor: ClientConfig.getCustomColors().neutral900,
                         invalidColor: const Color(0xFFE61F27),
                       ),
                       const SizedBox(
