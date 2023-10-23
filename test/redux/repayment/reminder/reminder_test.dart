@@ -4,9 +4,9 @@ import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/repayments/reminder/repayment_reminder_action.dart';
 import 'package:solarisdemo/redux/repayments/reminder/repayment_reminder_state.dart';
 
-import '../../../cubits/login_cubit_test.dart';
 import '../../../setup/create_app_state.dart';
 import '../../../setup/create_store.dart';
+import '../../auth/auth_mocks.dart';
 import 'reminder_mocks.dart';
 
 void main() {

@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
-import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/infrastructure/bank_card/bank_card_presenter.dart';
-import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
 import 'package:solarisdemo/screens/wallet/change_pin/card_change_pin_success_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -19,7 +17,8 @@ class BankCardConfirmPinConfirmScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = context.read<AuthCubit>().state.user!;
+    final user =
+        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
     final GlobalKey<_ConfirmPinBodyState> confirmPinBodyKey = GlobalKey<_ConfirmPinBodyState>();
 
     ValueNotifier<bool> matchingPinErrorNotifier = ValueNotifier<bool>(false);
@@ -161,7 +160,8 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> {
 
   @override
   Widget build(BuildContext context) {
-    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
+    final user =
+        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: Column(

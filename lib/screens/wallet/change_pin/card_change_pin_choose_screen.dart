@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
 import 'package:solarisdemo/config.dart';
-import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/infrastructure/bank_card/bank_card_presenter.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_state.dart';
 import 'package:solarisdemo/screens/settings/device_pairing/settings_device_pairing_screen.dart';
@@ -24,7 +23,8 @@ class BankCardChangePinChooseScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = context.read<AuthCubit>().state.user!;
+    final user =
+        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
     final GlobalKey<_ChangePinBodyState> changePinBodyKey = GlobalKey<_ChangePinBodyState>();
     ValueNotifier<bool> birthdayErrorNotifier = ValueNotifier<bool>(false);
     ValueNotifier<bool> postalCodeErrorNotifier = ValueNotifier<bool>(false);
@@ -316,7 +316,8 @@ class _ChangePinBodyState extends State<ChangePinBody> {
 
   @override
   Widget build(BuildContext context) {
-    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
+    final user =
+        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
 
     return Padding(
       padding: const EdgeInsets.all(24.0),

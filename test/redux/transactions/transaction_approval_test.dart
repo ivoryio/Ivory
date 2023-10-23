@@ -2,9 +2,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:solarisdemo/redux/transactions/approval/transaction_approval_action.dart';
 import 'package:solarisdemo/redux/transactions/approval/transaction_approval_state.dart';
 
-import '../../infrastructure/repayments/more_credit/more_credit_presenter_test.dart';
 import '../../setup/create_app_state.dart';
 import '../../setup/create_store.dart';
+import '../auth/auth_mocks.dart';
 import 'transaction_mocks.dart';
 
 void main() {
@@ -15,6 +15,7 @@ void main() {
         deviceService: FakeDeviceService(),
         biometricsService: FakeBiometricsService(),
         changeRequestService: FakeChangeRequestService(),
+        deviceFingerprintService: FakeDeviceFingerprintService(),
         initialState: createAppState(
           transactionApprovalState: TransactionApprovalInitialState(),
         ),
@@ -40,6 +41,7 @@ void main() {
         deviceService: FakeDeviceService(),
         biometricsService: FakeBiometricsService(),
         changeRequestService: FakeChangeRequestService(),
+        deviceFingerprintService: FakeDeviceFingerprintService(),
         initialState: createAppState(
           transactionApprovalState: TransactionApprovalInitialState(),
         ),
@@ -68,6 +70,7 @@ void main() {
         deviceService: FakeDeviceService(),
         biometricsService: FakeBiometricsService(),
         changeRequestService: FakeFailingChangeRequestService(),
+        deviceFingerprintService: FakeDeviceFingerprintService(),
         initialState: createAppState(
           transactionApprovalState: TransactionApprovalInitialState(),
         ),
@@ -95,6 +98,7 @@ void main() {
       final store = createTestStore(
         changeRequestService: FakeChangeRequestService(),
         deviceService: FakeFailingDeviceService(),
+        deviceFingerprintService: FakeDeviceFingerprintService(),
         initialState: createAppState(
           transactionApprovalState: TransactionApprovalInitialState(),
         ),
@@ -124,6 +128,7 @@ void main() {
         deviceService: FakeDeviceService(),
         biometricsService: FakeBiometricsService(),
         changeRequestService: FakeChangeRequestService(),
+        deviceFingerprintService: FakeDeviceFingerprintService(),
         initialState: createAppState(
           transactionApprovalState: TransactionApprovalInitialState(),
         ),
@@ -150,6 +155,7 @@ void main() {
         deviceService: FakeDeviceService(),
         biometricsService: FakeBiometricsService(),
         changeRequestService: FakeChangeRequestService(),
+        deviceFingerprintService: FakeDeviceFingerprintService(),
         initialState: createAppState(
           transactionApprovalState: TransactionApprovalInitialState(),
         ),
@@ -185,6 +191,7 @@ void main() {
         deviceService: FakeDeviceService(),
         biometricsService: FakeBiometricsService(),
         changeRequestService: FakeFailingConfirmChangeRequestService(),
+        deviceFingerprintService: FakeDeviceFingerprintService(),
         initialState: createAppState(
           transactionApprovalState: transactionApprovalAuthorizedState,
         ),
@@ -216,6 +223,7 @@ void main() {
         deviceService: FakeDeviceService(),
         biometricsService: FakeBiometricsService(),
         changeRequestService: FakeChangeRequestService(),
+        deviceFingerprintService: FakeDeviceFingerprintService(),
         initialState: createAppState(
           transactionApprovalState: TransactionApprovalInitialState(),
         ),
@@ -245,6 +253,7 @@ void main() {
         deviceService: FakeDeviceService(),
         biometricsService: FakeBiometricsService(),
         changeRequestService: FakeFailingChangeRequestService(),
+        deviceFingerprintService: FakeDeviceFingerprintService(),
         initialState: createAppState(
           transactionApprovalState: TransactionApprovalInitialState(),
         ),

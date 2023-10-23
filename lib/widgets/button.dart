@@ -151,6 +151,7 @@ class TabExpandedButton extends StatelessWidget {
   final bool active;
   final Function onPressed;
   final TextStyle? textStyle;
+  final BorderRadiusGeometry? borderRadius;
 
   const TabExpandedButton({
     super.key,
@@ -158,6 +159,7 @@ class TabExpandedButton extends StatelessWidget {
     required this.active,
     required this.text,
     required this.onPressed,
+    this.borderRadius,
   });
 
   @override
@@ -168,7 +170,13 @@ class TabExpandedButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 6),
         color: active ? Colors.white : Colors.transparent,
         textColor: const Color(0xff020202),
-        border: active ? Border.all(width: 1, color: const Color(0xffB9B9B9)) : null,
+        border: active
+            ? Border.all(
+                width: 1,
+                color: ClientConfig.getCustomColors().neutral300,
+              )
+            : null,
+        borderRadius: borderRadius ?? BorderRadius.zero,
         onPressed: () {
           onPressed();
         },

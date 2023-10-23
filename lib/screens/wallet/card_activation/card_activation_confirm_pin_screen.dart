@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
-import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/infrastructure/bank_card/bank_card_presenter.dart';
-import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/screens/wallet/card_activation/card_activation_apple_wallet.dart';
 import 'package:solarisdemo/screens/wallet/card_activation/card_activation_choose_pin.dart';
 import 'package:solarisdemo/utilities/validator.dart';
@@ -29,7 +27,8 @@ class _BankCardDetailsConfirmPinScreenState extends State<BankCardDetailsConfirm
 
   @override
   Widget build(BuildContext context) {
-    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
+    final user =
+        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
     return StoreConnector<AppState, BankCardViewModel>(
       converter: (store) => BankCardPresenter.presentBankCard(
         user: user,

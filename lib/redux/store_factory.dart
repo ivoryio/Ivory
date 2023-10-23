@@ -1,4 +1,6 @@
 import 'package:redux/redux.dart';
+import 'package:solarisdemo/infrastructure/auth/auth_middleware.dart';
+import 'package:solarisdemo/infrastructure/auth/auth_service.dart';
 import 'package:solarisdemo/infrastructure/bank_card/bank_card_middleware.dart';
 import 'package:solarisdemo/infrastructure/bank_card/bank_card_service.dart';
 import 'package:solarisdemo/infrastructure/categories/categories_middleware.dart';
@@ -7,6 +9,7 @@ import 'package:solarisdemo/infrastructure/change_request/change_request_service
 import 'package:solarisdemo/infrastructure/credit_line/credit_line_middleware.dart';
 import 'package:solarisdemo/infrastructure/credit_line/credit_line_service.dart';
 import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
+import 'package:solarisdemo/infrastructure/device/device_fingerprint_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_middleware.dart';
 import 'package:solarisdemo/infrastructure/device/device_binding_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
@@ -54,6 +57,8 @@ Store<AppState> createStore({
   required BiometricsService biometricsService,
   required DeviceInfoService deviceInfoService,
   required AccountSummaryService accountSummaryService,
+  required DeviceFingerprintService deviceFingerprintService,
+  required AuthService authService,
 }) {
   return Store<AppState>(
     appReducer,
@@ -66,14 +71,15 @@ Store<AppState> createStore({
       CardApplicationMiddleware(cardApplicationService),
       GetBillsMiddleware(billService),
       GetMoreCreditMiddleware(moreCreditService),
-      BankCardMiddleware(bankCardService, deviceService, biometricsService),
+      BankCardMiddleware(bankCardService, deviceService, biometricsService, deviceFingerprintService),
       GetCategoriesMiddleware(categoriesService),
       ReferenceAccountMiddleware(personService),
       PersonAccountMiddleware(personService),
       TransferMiddleware(transferService, changeRequestService),
-      DeviceBindingMiddleware(deviceBindingService, deviceService, deviceInfoService),
-      TransactionApprovalMiddleware(changeRequestService, deviceService, biometricsService),
+      DeviceBindingMiddleware(deviceBindingService, deviceService, deviceInfoService, deviceFingerprintService),
+      TransactionApprovalMiddleware(changeRequestService, deviceService, deviceFingerprintService, biometricsService),
       GetAccountSummaryMiddleware(accountSummaryService),
+      AuthMiddleware(authService, deviceService, deviceFingerprintService, personService, biometricsService),
     ],
   );
 }

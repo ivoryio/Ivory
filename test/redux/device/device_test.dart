@@ -37,6 +37,7 @@ void main() {
       final store = createTestStore(
         deviceBindingService: FakeDeviceBindingService(),
         deviceService: FakeDeviceService(),
+        deviceFingerprintService: FakeDeviceFingerprintService(),
         deviceInfoService: FakeDeviceInfoService(),
         initialState: createAppState(
           deviceBindingState: DeviceBindingInitialState(),
@@ -60,6 +61,7 @@ void main() {
       // given
       final store = createTestStore(
         deviceBindingService: FakeFailingDeviceBindingService(),
+        deviceFingerprintService: FakeDeviceFingerprintService(),
         deviceService: FakeDeviceService(),
         deviceInfoService: FakeDeviceInfoService(),
         initialState: createAppState(
@@ -135,6 +137,7 @@ void main() {
         deviceBindingService: FakeDeviceBindingService(),
         deviceService: FakeDeviceService(),
         deviceInfoService: FakeDeviceInfoService(),
+        deviceFingerprintService: FakeDeviceFingerprintService(),
         initialState: createAppState(
           deviceBindingState: DeviceBindingInitialState(),
         ),
@@ -160,6 +163,7 @@ void main() {
         deviceBindingService: FakeFailingDeviceBindingService(),
         deviceService: FakeDeviceService(),
         deviceInfoService: FakeDeviceInfoService(),
+        deviceFingerprintService: FakeDeviceFingerprintService(),
         initialState: createAppState(
           deviceBindingState: DeviceBindingInitialState(),
         ),

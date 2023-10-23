@@ -106,6 +106,7 @@ flutter:
     - assets/
     - assets/icons/
     - assets/images/
+    - assets/images/country_flags/
     - assets/icons/default/
     - assets/images/default/
     - assets/icons/porsche/
