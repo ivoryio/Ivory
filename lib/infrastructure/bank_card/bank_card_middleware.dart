@@ -1,5 +1,6 @@
 import 'package:redux/redux.dart';
 import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
+import 'package:solarisdemo/infrastructure/device/device_fingerprint_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/models/bank_card.dart';
 import 'package:solarisdemo/models/crypto/jwe.dart';
@@ -12,9 +13,11 @@ import 'bank_card_service.dart';
 class BankCardMiddleware extends MiddlewareClass<AppState> {
   final BankCardService _bankCardService;
   final DeviceService _deviceService;
+  final DeviceFingerprintService _deviceFingerprintService;
   final BiometricsService _biometricsService;
 
-  BankCardMiddleware(this._bankCardService, this._deviceService, this._biometricsService);
+  BankCardMiddleware(
+      this._bankCardService, this._deviceService, this._biometricsService, this._deviceFingerprintService);
 
   @override
   call(Store<AppState> store, action, NextDispatcher next) async {
@@ -109,7 +112,7 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
         return null;
       }
       final consentId = await _deviceService.getConsentId();
-      final deviceFingerprint = await _deviceService.getDeviceFingerprint(consentId);
+      final deviceFingerprint = await _deviceFingerprintService.getDeviceFingerprint(consentId);
       if (deviceFingerprint == null) {
         store.dispatch(BankCardFailedEventAction());
         return null;
@@ -225,7 +228,7 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
         return null;
       }
 
-      String? deviceFingerPrint = await _deviceService.getDeviceFingerprint(consentId);
+      String? deviceFingerPrint = await _deviceFingerprintService.getDeviceFingerprint(consentId);
 
       if (deviceFingerPrint == null || deviceFingerPrint.isEmpty) {
         store.dispatch(BankCardFailedEventAction());

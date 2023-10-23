@@ -42,7 +42,7 @@ class TopUpBottomSheetContent extends StatelessWidget {
                     Text(
                       Format.iban(iban),
                       style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold.copyWith(
-                        color: const Color(0xFF15141E),
+                        color: ClientConfig.getCustomColors().neutral900,
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -54,9 +54,10 @@ class TopUpBottomSheetContent extends StatelessWidget {
                           context,
                           text: "Copied to clipboard",
                           icon: const Icon(Icons.copy, color: Colors.white),
+                          backgroundColor: ClientConfig.getCustomColors().neutral900,
                         );
                       },
-                      child: const Icon(Icons.copy, color: Color(0xFF15141E)),
+                      child: Icon(Icons.copy, color: ClientConfig.getCustomColors().neutral900),
                     ),
                   ],
                 ),

@@ -4,9 +4,9 @@ import 'package:solarisdemo/redux/notification/notification_action.dart';
 import 'package:solarisdemo/redux/notification/notification_state.dart';
 import 'package:solarisdemo/redux/transactions/approval/transaction_approval_state.dart';
 
-import '../../infrastructure/bank_card/bank_card_presenter_test.dart';
 import '../../setup/create_app_state.dart';
 import '../../setup/create_store.dart';
+import '../auth/auth_mocks.dart';
 import '../transactions/transaction_mocks.dart';
 
 void main() {
@@ -26,6 +26,7 @@ void main() {
     final store = createTestStore(
       deviceService: FakeDeviceService(),
       biometricsService: FakeBiometricsService(),
+      deviceFingerprintService: FakeDeviceFingerprintService(),
       changeRequestService: FakeChangeRequestService(),
       initialState: createAppState(
         notificationState: NotificationInitialState(),

@@ -2,11 +2,28 @@ import 'package:equatable/equatable.dart';
 import 'package:solarisdemo/models/person/person_reference_account.dart';
 import 'package:solarisdemo/models/person/person_service_error_type.dart';
 import 'package:solarisdemo/models/person_account.dart';
+import 'package:solarisdemo/models/person_model.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/services/api_service.dart';
 
 class PersonService extends ApiService {
   PersonService({super.user});
+
+  Future<PersonServiceResponse> getPerson({User? user}) async {
+    if (user != null) {
+      this.user = user;
+    }
+
+    try {
+      final data = await get('person');
+
+      return GetPersonSuccessResponse(
+        person: Person.fromJson(data),
+      );
+    } catch (e) {
+      return PersonServiceErrorResponse();
+    }
+  }
 
   Future<PersonServiceResponse> getReferenceAccount({User? user}) async {
     if (user != null) {
@@ -66,6 +83,15 @@ class GetPersonAccountSuccessResponse extends PersonServiceResponse {
 
   @override
   List<Object?> get props => [personAccount];
+}
+
+class GetPersonSuccessResponse extends PersonServiceResponse {
+  final Person person;
+
+  GetPersonSuccessResponse({required this.person});
+
+  @override
+  List<Object?> get props => [person];
 }
 
 class PersonServiceErrorResponse extends PersonServiceResponse {

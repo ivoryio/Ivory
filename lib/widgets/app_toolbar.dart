@@ -165,7 +165,7 @@ class StepRichTextTitle extends RichText {
               ),
               TextSpan(
                 text: " out of $totalSteps",
-                style: ClientConfig.getTextStyleScheme().heading4.copyWith(color: const Color(0xFF56555E)),
+                style: ClientConfig.getTextStyleScheme().heading4.copyWith(color: ClientConfig.getCustomColors().neutral700),
               ),
             ],
           ),

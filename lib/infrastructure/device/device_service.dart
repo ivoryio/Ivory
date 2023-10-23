@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:pointycastle/pointycastle.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:solarisdemo/models/crypto/jwk.dart';
+import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/utilities/crypto/crypto_key_generator.dart';
 import 'package:solarisdemo/utilities/crypto/crypto_message_signer.dart';
 import 'package:solarisdemo/utilities/crypto/crypto_utils.dart';
@@ -13,8 +14,6 @@ MethodChannel _platform = const MethodChannel('com.thinslices.solarisdemo/native
 
 const deviceIdKey = 'device_id';
 const deviceConsentIdKey = 'device_consent_id';
-const getDeviceFingerprintMethod = 'getDeviceFingerprint';
-const getIosDeviceFingerprintMethod = 'getIosDeviceFingerprint';
 const encryptPinMethod = 'encryptPin';
 
 class DeviceService {
@@ -30,36 +29,17 @@ class DeviceService {
     }
   }
 
+  Future<void> saveConsentIdInCache(String consentId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('device_consent_id', consentId);
+  }
+
   Future<String?> getDeviceId() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       return prefs.getString(deviceIdKey) ?? '';
     } catch (e) {
       return '';
-    }
-  }
-
-  Future<String?> getDeviceFingerprint(String? consentId) async {
-    if (consentId == null) {
-      return null;
-    }
-
-    try {
-      if (defaultTargetPlatform == TargetPlatform.android) {
-        return _platform.invokeMethod(
-          getDeviceFingerprintMethod,
-          {'consentId': consentId},
-        );
-      } else if (defaultTargetPlatform == TargetPlatform.iOS) {
-        return await _platform.invokeMethod(
-          getIosDeviceFingerprintMethod,
-          {'consentId': consentId},
-        );
-      }
-
-      return null;
-    } catch (e) {
-      return null;
     }
   }
 
@@ -119,6 +99,33 @@ class DeviceService {
         );
       }
       return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<void> saveCredentialsInCache(String email, String password) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString('email', email);
+      prefs.setString('password', password);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<CacheCredentials?> getCredentialsFromCache() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? email = prefs.getString('email');
+      String? password = prefs.getString('password');
+      String? deviceId = await getDeviceId();
+
+      return CacheCredentials(
+        email: email,
+        password: password,
+        deviceId: deviceId,
+      );
     } catch (e) {
       return null;
     }

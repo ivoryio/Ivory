@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:solarisdemo/config.dart';
 
 const String _defaultHintText = '';
 const double _defaultFontSize = 16;
@@ -91,6 +92,7 @@ class PlatformTextInput extends StatelessWidget {
                 ),
               Expanded(
                 child: TextFormField(
+                  
                   textAlign: textAlign!,
                   controller: controller,
                   obscureText: obscureText!,
@@ -109,11 +111,7 @@ class PlatformTextInput extends StatelessWidget {
                   validator: (value) {
                     return validator(value);
                   },
-                  style: TextStyle(
-                    color: const Color(0xFF414D63),
-                    fontSize: fontSize,
-                    height: 1.5,
-                  ),
+                  style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.all(5),
                     isDense: true,

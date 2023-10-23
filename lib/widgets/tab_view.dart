@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:solarisdemo/config.dart';
 
 import 'button.dart';
 
@@ -32,11 +33,10 @@ class _TabViewState extends State<TabView> {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.all(2),
           decoration: BoxDecoration(
-              color: const Color(0xfff5f5f5),
-              borderRadius: const BorderRadius.all(Radius.circular(9.0)),
-              border: Border.all(width: 1, color: const Color(0xffB9B9B9))),
+            color: ClientConfig.getCustomColors().neutral300,
+            borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -44,6 +44,12 @@ class _TabViewState extends State<TabView> {
                 TabExpandedButton(
                   active: selectedTab == tabIndex,
                   text: widget.tabs[tabIndex].text,
+                  textStyle: ClientConfig.getTextStyleScheme().labelSmall,
+                  borderRadius: tabIndex == 0
+                      ? const BorderRadius.only(topLeft: Radius.circular(8.0), bottomLeft: Radius.circular(8.0))
+                      : tabIndex == widget.tabs.length - 1
+                          ? const BorderRadius.only(topRight: Radius.circular(8.0), bottomRight: Radius.circular(8.0))
+                          : BorderRadius.zero,
                   onPressed: () {
                     setState(() {
                       selectedTab = tabIndex;

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solarisdemo/screens/welcome/welcome_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
-import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../widgets/button.dart';
 
 class AuthErrorScreen extends StatelessWidget {
@@ -28,7 +26,6 @@ class AuthErrorScreen extends StatelessWidget {
                   PrimaryButton(
                     text: "Go to landing page",
                     onPressed: () {
-                      context.read<AuthCubit>().reset();
                       Navigator.popUntil(
                         context,
                         ModalRoute.withName(

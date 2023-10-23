@@ -161,11 +161,6 @@ class FakeDeviceService extends DeviceService {
   }
 
   @override
-  Future<String?> getDeviceFingerprint(String? consentId) async {
-    return "deviceFingerprint";
-  }
-
-  @override
   Future<DeviceKeyPairs?> getDeviceKeyPairs({bool restricted = false}) async {
     return DeviceKeyPairs(publicKey: "publicKey", privateKey: "privateKey");
   }
@@ -173,6 +168,25 @@ class FakeDeviceService extends DeviceService {
   @override
   String? generateSignature({required String privateKey, required String stringToSign}) {
     return "signature";
+  }
+
+  @override
+  Future<CacheCredentials?> getCredentialsFromCache() async {
+    return CacheCredentials(
+      email: 'email',
+      password: 'password',
+      deviceId: 'deviceId',
+    );
+  }
+
+  @override
+  Future<void> saveCredentialsInCache(String email, String password) async {
+    return;
+  }
+
+  @override
+  Future<void> saveConsentIdInCache(String consentId) async {
+    return;
   }
 }
 
@@ -188,7 +202,7 @@ class FakeFailingDeviceService extends DeviceService {
   }
 
   @override
-  Future<String?> getDeviceFingerprint(String? consentId) async {
+  Future<CacheCredentials?> getCredentialsFromCache() async {
     return null;
   }
 }

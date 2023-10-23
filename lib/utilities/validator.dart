@@ -61,7 +61,7 @@ class PinValidator {
 class RegexValidator {
   static RegExp digitsWithTwoDecimals = RegExp(r'^\d+\.?\d{0,2}');
   static RegExp emailAddress = RegExp(
-      r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
+      r"^[^@]+@[^@]+\.[^@]+$");
 
   //Todo: Add phone number validation
   // ^\+    : start with a "+"

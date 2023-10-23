@@ -154,7 +154,7 @@ class BankCardWidget extends StatelessWidget {
         end: const Alignment(1.0, 1.0),
         colors: [
           ClientConfig.getCustomColors().neutral400,
-          const Color(0xFF56555E),
+          ClientConfig.getCustomColors().neutral700,
         ],
       );
     } else {

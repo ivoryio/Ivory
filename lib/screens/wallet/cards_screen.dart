@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/bank_card/bank_card_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/screen_title.dart';
 
-import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../models/bank_card.dart';
-import '../../models/user.dart';
 import '../../utilities/constants.dart';
 import '../../widgets/button.dart';
 import '../../widgets/card_widget.dart';
@@ -26,7 +24,8 @@ class BankCardsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
+    final user =
+        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
     ScrollController scrollController = ScrollController();
 
     return StoreConnector<AppState, BankCardsViewModel>(
@@ -104,6 +103,8 @@ class _CardSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user =
+        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
     if (cards.isEmpty) {
       return Padding(
         padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
@@ -132,7 +133,7 @@ class _CardSlider extends StatelessWidget {
             clipBehavior: Clip.none,
             itemCount: cards.length,
             onPageChanged: (cardIndex) => StoreProvider.of<AppState>(context).dispatch(GetBankCardCommandAction(
-              user: context.read<AuthCubit>().state.user!,
+              user: user,
               cardId: cards[cardIndex].id,
               forceReloadCardData: false,
             )),
@@ -200,7 +201,8 @@ class _OrderCardButton extends StatelessWidget {
 }
 
 void addNewCard(BuildContext context) {
-  final user = context.read<AuthCubit>().state.user!;
+  final user =
+      (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
   StoreProvider.of<AppState>(context).dispatch(
     CreateCardCommandAction(
       user: user,
