@@ -1,8 +1,5 @@
-import 'dart:developer';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -11,6 +8,7 @@ import 'package:solarisdemo/widgets/checkbox.dart';
 import 'package:solarisdemo/widgets/continue_button_controller.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OnboardingTermConditionsScreen extends StatefulWidget {
   static const routeName = "/onboardingTermConditionsScreen";
@@ -23,6 +21,7 @@ class OnboardingTermConditionsScreen extends StatefulWidget {
 
 class _OnboardingTermConditionsScreenState extends State<OnboardingTermConditionsScreen> {
   final ContinueButtonController _continueButtonController = ContinueButtonController();
+  List<bool?> checkCardsValues = [false, false, false, false];
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +32,7 @@ class _OnboardingTermConditionsScreenState extends State<OnboardingTermCondition
           padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
           richTextTitle: StepRichTextTitle(step: 5, totalSteps: 5),
           actions: const [AppbarLogo()],
+          backButtonAppearanceDisabled: _continueButtonController.isLoading,
         ),
         AnimatedLinearProgressIndicator.step(current: 5, totalSteps: 5),
         Expanded(
@@ -166,29 +166,52 @@ class _OnboardingTermConditionsScreenState extends State<OnboardingTermCondition
                     children: [
                       const TextSpan(text: 'Please check Ivory '),
                       TextSpan(
-                          text: 'Customer Information on Data Processing',
-                          style: ClientConfig.getTextStyleScheme()
-                              .bodyLargeRegularBold
-                              .copyWith(color: const Color(0xFF406FE6)),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () async {
-                              String filePath = 'assets/files/a.txt';
-                              String response = await rootBundle.loadString(filePath);
-
-                              log(response);
-                            }),
+                        text: 'Customer Information on Data Processing',
+                        style: ClientConfig.getTextStyleScheme()
+                            .bodyLargeRegularBold
+                            .copyWith(color: const Color(0xFF406FE6)),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () => _launchFileInBrowser(
+                                Uri(
+                                  scheme: 'https',
+                                  host: 'www.solarisgroup.com',
+                                  path:
+                                      '/customer-information/germany/de-iban/english/customer-information-on-data-processing-germany-de-iban-english-v1.8-clean.pdf',
+                                ),
+                              ),
+                      ),
                       const TextSpan(text: ', '),
                       TextSpan(
-                          text: 'Depositor Information Sheet',
-                          style: ClientConfig.getTextStyleScheme()
-                              .bodyLargeRegularBold
-                              .copyWith(color: const Color(0xFF406FE6))),
+                        text: 'Depositor Information Sheet',
+                        style: ClientConfig.getTextStyleScheme()
+                            .bodyLargeRegularBold
+                            .copyWith(color: const Color(0xFF406FE6)),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () => _launchFileInBrowser(
+                                Uri(
+                                  scheme: 'https',
+                                  host: 'www.solarisgroup.com',
+                                  path:
+                                      '/customer-information/germany/de-iban/english/customer-information-on-data-processing-germany-de-iban-english-v1.8-clean.pdf',
+                                ),
+                              ),
+                      ),
                       const TextSpan(text: ', and '),
                       TextSpan(
-                          text: 'other customer information',
-                          style: ClientConfig.getTextStyleScheme()
-                              .bodyLargeRegularBold
-                              .copyWith(color: const Color(0xFF406FE6))),
+                        text: 'other customer information',
+                        style: ClientConfig.getTextStyleScheme()
+                            .bodyLargeRegularBold
+                            .copyWith(color: const Color(0xFF406FE6)),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () => _launchFileInBrowser(
+                                Uri(
+                                  scheme: 'https',
+                                  host: 'www.solarisgroup.com',
+                                  path:
+                                      '/customer-information/germany/de-iban/english/customer-information-on-data-processing-germany-de-iban-english-v1.8-clean.pdf',
+                                ),
+                              ),
+                      ),
                       const TextSpan(text: '.'),
                     ],
                   ),
@@ -202,53 +225,95 @@ class _OnboardingTermConditionsScreenState extends State<OnboardingTermCondition
                   ),
                 ),
                 const SizedBox(height: 24),
-                CheckCard(
-                  isChecked: false,
-                  onChanged: (checked) => log('checked => $checked'),
-                  textFragments: firstCardTextFragments,
+                ListenableBuilder(
+                  listenable: _continueButtonController,
+                  builder: (context, child) => CheckCard(
+                    isChecked: false,
+                    isDisabled: _continueButtonController.isLoading,
+                    onChanged: (checked) {
+                      checkCardsValues[0] = checked;
+                      _isSelected();
+                    },
+                    textFragments: firstCardTextFragments,
+                  ),
                 ),
                 const SizedBox(height: 16),
-                CheckCard(
-                  isChecked: false,
-                  onChanged: (checked) => log('checked => $checked'),
-                  textFragments: [
-                    TextFragment(
-                        text: 'I act only in my own economic interest and not on the initiative of a third party.',
-                        hasCustomColor: false)
-                  ],
+                ListenableBuilder(
+                  listenable: _continueButtonController,
+                  builder: (context, child) => CheckCard(
+                    isChecked: false,
+                    isDisabled: _continueButtonController.isLoading,
+                    onChanged: (checked) {
+                      checkCardsValues[1] = checked;
+                      _isSelected();
+                    },
+                    textFragments: [
+                      TextFragment(
+                          text: 'I act only in my own economic interest and not on the initiative of a third party.',
+                          hasCustomColor: false)
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 16),
-                CheckCard(
-                  isChecked: false,
-                  onChanged: (checked) => log('checked => $checked'),
-                  textFragments: secondCardTextFragments,
+                ListenableBuilder(
+                  listenable: _continueButtonController,
+                  builder: (context, child) => CheckCard(
+                    isChecked: false,
+                    isDisabled: _continueButtonController.isLoading,
+                    onChanged: (checked) {
+                      checkCardsValues[2] = checked;
+                      _isSelected();
+                    },
+                    textFragments: secondCardTextFragments,
+                  ),
                 ),
                 const SizedBox(height: 16),
-                CheckCard(
-                  isChecked: false,
-                  onChanged: (checked) => log('checked => $checked'),
-                  textFragments: thirdCardTextFragments,
+                ListenableBuilder(
+                  listenable: _continueButtonController,
+                  builder: (context, child) => CheckCard(
+                    isChecked: false,
+                    isDisabled: _continueButtonController.isLoading,
+                    onChanged: (checked) {
+                      checkCardsValues[3] = checked;
+                      _isSelected();
+                    },
+                    textFragments: thirdCardTextFragments,
+                  ),
                 ),
                 const SizedBox(height: 16),
-                CheckCard(
-                  isChecked: false,
-                  onChanged: (checked) => log('checked => $checked'),
-                  textFragments: [
-                    TextFragment(
-                        text: 'I want to receive product & marketing updates from Ivory. (Optional)',
-                        hasCustomColor: false)
-                  ],
+                ListenableBuilder(
+                  listenable: _continueButtonController,
+                  builder: (context, child) => CheckCard(
+                    isChecked: false,
+                    isDisabled: _continueButtonController.isLoading,
+                    onChanged: (checked) => {},
+                    textFragments: [
+                      TextFragment(
+                          text: 'I want to receive product & marketing updates from Ivory. (Optional)',
+                          hasCustomColor: false)
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 16),
                 SizedBox(
                   width: double.infinity,
                   child: ListenableBuilder(
                     listenable: _continueButtonController,
-                    builder: (context, child) => PrimaryButton(
-                      text: "Continue",
-                      isLoading: _continueButtonController.isLoading,
-                      onPressed: _continueButtonController.isEnabled ? () {} : null,
-                    ),
+                    builder: (context, child) {
+                      return PrimaryButton(
+                        text: "Continue",
+                        isLoading: _continueButtonController.isLoading,
+                        onPressed: _continueButtonController.isEnabled
+                            ? () {
+                                _continueButtonController.setLoading();
+
+                                setState(() {
+                                  checkCardsValues = [null, null, null, null];
+                                });
+                              }
+                            : null,
+                      );
+                    },
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -259,18 +324,28 @@ class _OnboardingTermConditionsScreenState extends State<OnboardingTermCondition
       ],
     ));
   }
+
+  void _isSelected() {
+    if (checkCardsValues.contains(false)) {
+      _continueButtonController.setDisabled();
+    } else {
+      _continueButtonController.setEnabled();
+    }
+  }
 }
 
 class CheckCard extends StatelessWidget {
   final bool isChecked;
   final Function onChanged;
   final List<TextFragment> textFragments;
+  final bool isDisabled;
 
   const CheckCard({
     super.key,
     required this.isChecked,
     required this.onChanged,
     required this.textFragments,
+    required this.isDisabled,
   });
 
   @override
@@ -291,6 +366,7 @@ class CheckCard extends StatelessWidget {
         children: [
           CheckboxWidget(
             isChecked: isChecked,
+            isDisabled: isDisabled,
             onChanged: (value) => onChanged(value),
           ),
           const SizedBox(width: 8),
@@ -305,6 +381,9 @@ class CheckCard extends StatelessWidget {
                       style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold.copyWith(
                             color: textFragment.hasCustomColor ? const Color(0xFF406FE6) : null,
                           ),
+                      recognizer: (textFragment.filePath != null)
+                          ? (TapGestureRecognizer()..onTap = () => _launchFileInBrowser(textFragment.filePath!))
+                          : null,
                     ),
                 ],
               ),
@@ -316,6 +395,14 @@ class CheckCard extends StatelessWidget {
   }
 }
 
+Future<void> _launchFileInBrowser(Uri filePath) async {
+  final requestFile = await launchUrl(filePath, mode: LaunchMode.externalApplication);
+
+  if (!requestFile) {
+    throw Exception('Could not launch $filePath');
+  }
+}
+
 List<TextFragment> firstCardTextFragments = [
   TextFragment(
     text: 'I accept the ',
@@ -324,6 +411,12 @@ List<TextFragment> firstCardTextFragments = [
   TextFragment(
     text: 'General Terms & Conditions',
     hasCustomColor: true,
+    filePath: Uri(
+      scheme: 'https',
+      host: 'www.solarisgroup.com',
+      path:
+          '/customer-information/germany/de-iban/english/customer-information-on-data-processing-germany-de-iban-english-v1.8-clean.pdf',
+    ),
   ),
   TextFragment(
     text: ', the ',
@@ -332,6 +425,12 @@ List<TextFragment> firstCardTextFragments = [
   TextFragment(
     text: 'List of Prices and Services ',
     hasCustomColor: true,
+    filePath: Uri(
+      scheme: 'https',
+      host: 'www.solarisgroup.com',
+      path:
+          '/customer-information/germany/de-iban/english/customer-information-on-data-processing-germany-de-iban-english-v1.8-clean.pdf',
+    ),
   ),
   TextFragment(
     text: 'and ',
@@ -340,6 +439,12 @@ List<TextFragment> firstCardTextFragments = [
   TextFragment(
     text: 'all other conditions of Ivory.',
     hasCustomColor: true,
+    filePath: Uri(
+      scheme: 'https',
+      host: 'www.solarisgroup.com',
+      path:
+          '/customer-information/germany/de-iban/english/customer-information-on-data-processing-germany-de-iban-english-v1.8-clean.pdf',
+    ),
   ),
 ];
 
@@ -351,6 +456,12 @@ List<TextFragment> secondCardTextFragments = [
   TextFragment(
     text: 'Bureau Score Assessment T&Cs',
     hasCustomColor: true,
+    filePath: Uri(
+      scheme: 'https',
+      host: 'www.solarisgroup.com',
+      path:
+          '/customer-information/germany/de-iban/english/customer-information-on-data-processing-germany-de-iban-english-v1.8-clean.pdf',
+    ),
   ),
   TextFragment(
     text: '.',
@@ -366,6 +477,12 @@ List<TextFragment> thirdCardTextFragments = [
   TextFragment(
     text: 'Data Processing, Privacy Terms and General Data Protection Regulation (GDPR)',
     hasCustomColor: true,
+    filePath: Uri(
+      scheme: 'https',
+      host: 'www.solarisgroup.com',
+      path:
+          '/customer-information/germany/de-iban/english/customer-information-on-data-processing-germany-de-iban-english-v1.8-clean.pdf',
+    ),
   ),
   TextFragment(
     text: '.',
@@ -376,9 +493,11 @@ List<TextFragment> thirdCardTextFragments = [
 class TextFragment {
   final String text;
   final bool hasCustomColor;
+  final Uri? filePath;
 
   TextFragment({
     required this.text,
     required this.hasCustomColor,
+    this.filePath,
   });
 }
