@@ -3,17 +3,6 @@ import 'package:solarisdemo/infrastructure/onboarding/onboarding_signup_presente
 import 'package:solarisdemo/redux/onboarding/signup/onboarding_signup_state.dart';
 
 void main() {
-  test("When some information is missing it should return initial", () {
-    //given
-    final state = OnboardingSignupSubmittedState();
-
-    //when
-    final viewModel = OnboardingSignupPresenter.presentSignup(state: state);
-
-    //then
-    expect(viewModel, OnboardingSignupInitialViewModel());
-  });
-
   test("When notifications are allowed", () {
     //given
     final state = OnboardingSignupSubmittedState(
@@ -48,5 +37,27 @@ void main() {
 
     //then
     expect(viewModel, NotificationsPermissionNotAllowedViewModel());
+  });
+
+  test("When user has given the permission, but some properties are missing", () {
+    //given
+    final state = OnboardingSignupSubmittedState(notificationsAllowed: true);
+
+    //when
+    final viewModel = OnboardingSignupPresenter.presentSignup(state: state);
+
+    //then
+    expect(viewModel, OnboardingSignupInitialViewModel());
+  });
+
+  test("When user has not given the permission, but some properties are missing", () {
+    //given
+    final state = OnboardingSignupSubmittedState(notificationsAllowed: false);
+
+    //when
+    final viewModel = OnboardingSignupPresenter.presentSignup(state: state);
+
+    //then
+    expect(viewModel, OnboardingSignupInitialViewModel());
   });
 }
