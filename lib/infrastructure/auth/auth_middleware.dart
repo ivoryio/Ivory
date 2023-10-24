@@ -65,10 +65,6 @@ class AuthMiddleware extends MiddlewareClass<AppState> {
         return;
       }
 
-      if (loginResponse.user.userGroup == CognitoUserGroup.registering) {
-        store.dispatch(AuthFailedEventAction(errorType: AuthErrorType.incompleteOnboarding));
-        return;
-      }
 
       final user = loginResponse.user;
 
@@ -76,6 +72,11 @@ class AuthMiddleware extends MiddlewareClass<AppState> {
         action.email,
         action.password,
       );
+      
+      if (loginResponse.user.userGroup == CognitoUserGroup.registering) {
+        store.dispatch(AuthFailedEventAction(errorType: AuthErrorType.incompleteOnboarding));
+        return;
+      }
 
       String? consentId = await _deviceService.getConsentId();
 
