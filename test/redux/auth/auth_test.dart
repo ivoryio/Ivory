@@ -79,7 +79,7 @@ void main() {
       },
     );
   });
-  group("Authenticating the user", () {
+  group("Init Authentication", () {
     test("Should authenticate the user without bound device succesfully", () async {
       final Map<String, Object> values = <String, Object>{
         'deviceId': '',
@@ -179,14 +179,15 @@ void main() {
     });
   });
 
-  group("Confirm authentication", () {
+  group("Authenticate", () {
     test(
-        "Succesfully confirm authentication with a bound device (with biometrics), should return AuthenticatedAndConfirmedState",
+        "Succesfully confirm authentication with a bound device (with biometrics), should return AuthenticatedState",
         () async {
       //given
       final store = createTestStore(
         personService: FakePersonService(),
         biometricsService: FakeBiometricsService(),
+        pushNotificationService: FakeNotificationService(),
         initialState: createAppState(
           authState: AuthInitialState(),
         ),
@@ -238,11 +239,12 @@ void main() {
     });
 
     test(
-        "Succesfully confirm authentication without a bound device (only with OTP), should return AuthenticatedAndConfirmedState",
+        "Succesfully confirm authentication without a bound device (only with OTP), should return AuthenticatedState",
         () async {
       //given
       final store = createTestStore(
         personService: FakePersonService(),
+        pushNotificationService: FakeNotificationService(),
         initialState: createAppState(
           authState: AuthInitialState(),
         ),

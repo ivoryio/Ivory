@@ -6,6 +6,7 @@ import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/infrastructure/person/person_service.dart';
 import 'package:solarisdemo/models/auth/auth_error_type.dart';
 import 'package:solarisdemo/models/auth/auth_type.dart';
+import 'package:solarisdemo/models/auth/auth_user_group.dart';
 import 'package:solarisdemo/models/device_activity.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
@@ -64,12 +65,18 @@ class AuthMiddleware extends MiddlewareClass<AppState> {
         return;
       }
 
+
       final user = loginResponse.user;
 
       await _deviceService.saveCredentialsInCache(
         action.email,
         action.password,
       );
+      
+      if (loginResponse.user.userGroup == CognitoUserGroup.registering) {
+        store.dispatch(AuthFailedEventAction(errorType: AuthErrorType.incompleteOnboarding));
+        return;
+      }
 
       String? consentId = await _deviceService.getConsentId();
 
