@@ -3,15 +3,13 @@ import 'dart:developer';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solarisdemo/infrastructure/person/account_summary/account_summary_presenter.dart';
+import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/person/account_summary/account_summay_action.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../config.dart';
-import '../../cubits/auth_cubit/auth_cubit.dart';
-import '../../models/user.dart';
 import '../../redux/app_state.dart';
 import '../../utilities/format.dart';
 
@@ -64,7 +62,8 @@ class AccountDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
+    final user =
+        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
 
     return ScreenScaffold(
       body: Padding(

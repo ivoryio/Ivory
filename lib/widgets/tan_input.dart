@@ -59,10 +59,10 @@ class _InputCodeBoxState extends State<InputCodeBox> {
             border: InputBorder.none,
             contentPadding: EdgeInsets.zero,
             hintText: widget.hintText ?? '',
-            hintStyle: const TextStyle(
+            hintStyle: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w500,
-              color: Color(0xFFADADB4),
+              color: ClientConfig.getCustomColors().neutral500,
             ),
           ),
         ),

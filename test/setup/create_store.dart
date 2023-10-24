@@ -1,12 +1,14 @@
 import 'package:local_auth/local_auth.dart';
 import 'package:mockito/mockito.dart';
 import 'package:redux/redux.dart';
+import 'package:solarisdemo/infrastructure/auth/auth_service.dart';
 import 'package:solarisdemo/infrastructure/bank_card/bank_card_service.dart';
 import 'package:solarisdemo/infrastructure/categories/categories_service.dart';
 import 'package:solarisdemo/infrastructure/change_request/change_request_service.dart';
 import 'package:solarisdemo/infrastructure/credit_line/credit_line_service.dart';
 import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_binding_service.dart';
+import 'package:solarisdemo/infrastructure/device/device_fingerprint_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
 import 'package:solarisdemo/infrastructure/person/account_summary/account_summary_service.dart';
@@ -19,6 +21,7 @@ import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart
 import 'package:solarisdemo/infrastructure/transfer/transfer_service.dart';
 import 'package:solarisdemo/models/bank_card.dart';
 import 'package:solarisdemo/models/device.dart';
+import 'package:solarisdemo/models/device_activity.dart';
 import 'package:solarisdemo/models/transactions/transaction_model.dart';
 import 'package:solarisdemo/models/transfer/reference_account_transfer.dart';
 import 'package:solarisdemo/models/user.dart';
@@ -46,6 +49,8 @@ Store<AppState> createTestStore({
   BiometricsService? biometricsService,
   DeviceInfoService? deviceInfoService,
   AccountSummaryService? accountSummaryService,
+  DeviceFingerprintService? deviceFingerprintService,
+  AuthService? authService,
 }) {
   return createStore(
     initialState: initialState,
@@ -66,6 +71,8 @@ Store<AppState> createTestStore({
     biometricsService: biometricsService ?? NotImplementedBiometricsService(),
     deviceInfoService: deviceInfoService ?? NotImplementedDeviceInfoService(),
     accountSummaryService: accountSummaryService ?? NotImplementedAccountSummaryService(),
+    deviceFingerprintService: deviceFingerprintService ?? NotImplementedDeviceFingerprintService(),
+    authService: authService ?? NotImplementedAuthService(),
   );
 }
 
@@ -94,6 +101,11 @@ class NotImplementedPushNotificationService extends PushNotificationService {
 
   @override
   Future<void> clearNotification() {
+    throw UnimplementedError();
+  }
+
+  @override
+  void handleTokenRefresh({User? user}) {
     throw UnimplementedError();
   }
 }
@@ -294,11 +306,6 @@ class NotImplementedDeviceService extends DeviceService {
   }
 
   @override
-  Future<String?> getDeviceFingerprint(String? consentId) async {
-    throw UnimplementedError();
-  }
-
-  @override
   Future<DeviceKeyPairs?> getDeviceKeyPairs({bool restricted = false}) async {
     throw UnimplementedError();
   }
@@ -341,6 +348,36 @@ class NotImplementedBiometricsService extends BiometricsService {
 class NotImplementedAccountSummaryService extends AccountSummaryService {
   @override
   Future<AccountSummaryServiceResponse> getPersonAccountSummary({User? user}) {
+    throw UnimplementedError();
+  }
+}
+
+class NotImplementedDeviceFingerprintService extends DeviceFingerprintService {
+  @override
+  Future<DeviceFingerprintServiceResponse> createDeviceConsent({
+    User? user,
+  }) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<DeviceFingerprintServiceResponse> createDeviceActivity({
+    User? user,
+    required DeviceActivityType activityType,
+    required String deviceFingerprint,
+  }) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> getDeviceFingerprint(String? consentId) async {
+    throw UnimplementedError();
+  }
+}
+
+class NotImplementedAuthService extends AuthService {
+  @override
+  Future<AuthServiceResponse> login(String userName, String password) {
     throw UnimplementedError();
   }
 }

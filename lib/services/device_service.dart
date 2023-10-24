@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:solarisdemo/models/device_consent.dart';
+import 'package:solarisdemo/models/user.dart';
 import '../models/device_activity.dart';
 import 'api_service.dart';
 
@@ -149,16 +150,4 @@ static Future<String?> getDeviceFingerprint(String consentId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('device_consent_id', deviceConsentId);
   }
-}
-
-class CacheCredentials {
-  String? email;
-  String? password;
-  String? deviceId;
-
-  CacheCredentials({
-    required this.email,
-    required this.password,
-    required this.deviceId,
-  });
 }

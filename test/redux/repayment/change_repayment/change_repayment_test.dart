@@ -5,7 +5,7 @@ import 'package:solarisdemo/redux/repayments/change_repayment/change_repayment_s
 
 import '../../../setup/create_store.dart';
 import '../../../setup/create_app_state.dart';
-import '../../../cubits/login_cubit_test.dart';
+import '../../auth/auth_mocks.dart';
 import 'change_repayment_mocks.dart';
 
 void main() {

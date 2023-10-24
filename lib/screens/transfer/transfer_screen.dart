@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
-import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/infrastructure/transfer/transfer_accounts_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/person/person_account/person_account_action.dart';
 import 'package:solarisdemo/redux/person/reference_account/reference_account_action.dart';
 import 'package:solarisdemo/screens/transfer/transfer_review_screen.dart';
@@ -41,7 +40,8 @@ class _TransferScreenState extends State<TransferScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final user = context.read<AuthCubit>().state.user!;
+    final user =
+        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
 
     return ScreenScaffold(
       body: StoreConnector<AppState, TransferAccountsViewModel>(
@@ -126,12 +126,14 @@ class _TransferScreenState extends State<TransferScreen> {
                   Text(
                     "Enter transfer amount",
                     style: ClientConfig.getTextStyleScheme().bodySmallBold.copyWith(
-                          color: _errorText != null ? Colors.red : const Color(0xFF56555E),
+                          color: _errorText != null ? Colors.red : ClientConfig.getCustomColors().neutral700,
                         ),
                   ),
                   IvoryAmountField(
                     controller: amountController,
                     error: _errorText != null,
+                    unfocusedBorderColor: ClientConfig.getCustomColors().neutral500,
+                    hintColor: ClientConfig.getCustomColors().neutral500,
                   ),
                   if (_errorText != null) ...[
                     const SizedBox(height: 8),

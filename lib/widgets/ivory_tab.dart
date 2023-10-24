@@ -43,7 +43,7 @@ class IvoryTabBar extends StatelessWidget {
                 text: title,
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 color: isActive ? Colors.white : ClientConfig.getCustomColors().neutral300,
-                textColor: const Color(0xFF15141E),
+                textColor: ClientConfig.getCustomColors().neutral900,
                 borderRadius: BorderRadius.only(
                   topLeft: isFirst ? const Radius.circular(8) : Radius.zero,
                   bottomLeft: isFirst ? const Radius.circular(8) : Radius.zero,

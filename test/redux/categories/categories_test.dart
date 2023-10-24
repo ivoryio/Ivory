@@ -3,9 +3,9 @@ import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/categories/category_action.dart';
 import 'package:solarisdemo/redux/categories/category_state.dart';
 
-import '../../cubits/login_cubit_test.dart';
 import '../../setup/create_app_state.dart';
 import '../../setup/create_store.dart';
+import '../auth/auth_mocks.dart';
 import 'categories_mocks.dart';
 
 void main() {

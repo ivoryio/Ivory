@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/transactions/transactions_action.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/ivory_tab.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../config.dart';
-import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../models/amount_value.dart';
 import '../../models/transactions/transaction_model.dart';
 import '../../models/transactions/upcoming_transaction_model.dart';
@@ -36,7 +35,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
+    final user =
+        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
 
     return StoreConnector<AppState, TransactionsViewModel>(
         onInit: (store) {
@@ -188,7 +188,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             const SizedBox(height: 16),
             Text(
               "Please apply different filters or search terms.",
-              style: ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(color: const Color(0xFF56555E)),
+              style: ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(color: ClientConfig.getCustomColors().neutral700),
             ),
           ],
         );
@@ -215,7 +215,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         return Text(
           "Please apply different filters and search again.",
           textAlign: TextAlign.center,
-          style: ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(color: const Color(0xFF56555E)),
+          style: ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(color: ClientConfig.getCustomColors().neutral700),
         );
       }
 
@@ -445,16 +445,19 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           children: [
             Padding(
               padding: const EdgeInsets.only(bottom: 10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    formattedDayMonthYear,
-                    style: ClientConfig.getTextStyleScheme().labelLarge,
-                  ),
-                  Text(formatAmountWithCurrency(sumOfDay(transactions)),
-                      style: ClientConfig.getTextStyleScheme().labelSmall),
-                ],
+              child: Padding(
+                padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      formattedDayMonthYear,
+                      style: ClientConfig.getTextStyleScheme().labelLarge,
+                    ),
+                    Text(formatAmountWithCurrency(sumOfDay(transactions)),
+                        style: ClientConfig.getTextStyleScheme().labelSmall),
+                  ],
+                ),
               ),
             ),
             ListView.separated(

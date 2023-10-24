@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_state.dart';
 import 'package:solarisdemo/redux/categories/category_state.dart';
 import 'package:solarisdemo/redux/credit_line/credit_line_state.dart';
@@ -33,6 +34,7 @@ class AppState extends Equatable {
   final NotificationState notificationState;
   final TransactionApprovalState transactionApprovalState;
   final AccountSummaryState accountSummaryState;
+  final AuthState authState;
   final TransactionsState homePageTransactionsState;
   final OnboardingSignupState onboardingSignupState;
 
@@ -53,6 +55,7 @@ class AppState extends Equatable {
     required this.notificationState,
     required this.transactionApprovalState,
     required this.accountSummaryState,
+    required this.authState,
     required this.homePageTransactionsState,
     required this.onboardingSignupState,
   });
@@ -75,6 +78,7 @@ class AppState extends Equatable {
       notificationState: NotificationInitialState(),
       transactionApprovalState: TransactionApprovalInitialState(),
       accountSummaryState: AccountSummaryInitialState(),
+      authState: AuthInitialState(),
       homePageTransactionsState: TransactionsInitialState(),
       onboardingSignupState: OnboardingSignupSubmittedState(),
     );
@@ -98,6 +102,7 @@ class AppState extends Equatable {
         notificationState,
         transactionApprovalState,
         accountSummaryState,
+        authState,
         homePageTransactionsState,
         onboardingSignupState,
       ];
