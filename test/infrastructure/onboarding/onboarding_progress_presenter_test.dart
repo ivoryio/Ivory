@@ -43,7 +43,7 @@ void main() {
 
     // then
     const progress = OnboardingProgress(
-      activeStep: OnboardingStepperProgress.signUp,
+      activeStep: StepperItemType.signUp,
       progressPercentage: 1,
       routeName: OnboardingBasicInfoScreen.routeName,
     );
@@ -65,7 +65,7 @@ void main() {
 
     // then
     const progress = OnboardingProgress(
-      activeStep: OnboardingStepperProgress.personalDetails,
+      activeStep: StepperItemType.personalDetails,
       progressPercentage: 20,
       routeName: WelcomeScreen.routeName, // TODO: currently the date & place of birth screen is not implemented
     );

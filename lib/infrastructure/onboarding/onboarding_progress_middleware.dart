@@ -16,12 +16,11 @@ class OnboardingProgressMiddleware extends MiddlewareClass<AppState> {
 
     if (action is GetOnboardingProgressCommandAction) {
       if (store.state.authState is! AuthenticationInitializedState) {
-        store.dispatch(OnboardingProgressFetchedEvendAction(step: OnboardingStep.start));
+        store.dispatch(OnboardingProgressFetchedEvendAction(step: OnboardingStep.signUp));
         return;
       }
 
       final user = (store.state.authState as AuthenticationInitializedState).cognitoUser;
-
       final response = await _onboardingService.getOnboardingProgress(user: user);
 
       if (response is OnboardingProgressSuccessResponse) {

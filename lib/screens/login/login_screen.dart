@@ -53,7 +53,6 @@ class LoginScreen extends StatelessWidget {
           Navigator.pushNamedAndRemoveUntil(
             context,
             OnboardingStepperScreen.routeName,
-            arguments: OnboardingStepperScreenParams(step: OnboardingStepType.signUp),
             (route) => false,
           );
         }

@@ -1,11 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'package:solarisdemo/redux/onboarding/onboarding_progress_state.dart';
 import 'package:solarisdemo/screens/onboarding/signup/onboarding_basic_info_screen.dart';
-import 'package:solarisdemo/screens/welcome/welcome_screen.dart';
 
 import '../../models/onboarding/onboarding_progress.dart';
 
-enum OnboardingStepperProgress { signUp, personalDetails, financialDetails, identityVerification, cardConfiguration }
+enum StepperItemType { signUp, personalDetails, financialDetails, identityVerification, cardConfiguration }
 
 class OnboardingProgressPresenter {
   static OnboardingProgressViewModel presentOnboardingProgress({
@@ -42,7 +41,7 @@ class OnboardingProgressFetchedViewModel extends OnboardingProgressViewModel {
 class OnboardingProgressErrorViewModel extends OnboardingProgressViewModel {}
 
 class OnboardingProgress extends Equatable {
-  final OnboardingStepperProgress activeStep;
+  final StepperItemType activeStep;
   final int progressPercentage;
   final String routeName;
 
@@ -60,19 +59,13 @@ OnboardingProgress _onboardingProgressMapper(OnboardingStep step) {
   switch (step) {
     case OnboardingStep.start:
       return const OnboardingProgress(
-        activeStep: OnboardingStepperProgress.signUp,
+        activeStep: StepperItemType.signUp,
         progressPercentage: 1,
         routeName: OnboardingBasicInfoScreen.routeName,
       );
-    case OnboardingStep.signUp:
-      return const OnboardingProgress(
-        activeStep: OnboardingStepperProgress.personalDetails,
-        progressPercentage: 20,
-        routeName: WelcomeScreen.routeName, // TODO: date & place of birth screen route (currently not implemented)
-      );
     default:
       return const OnboardingProgress(
-        activeStep: OnboardingStepperProgress.signUp,
+        activeStep: StepperItemType.signUp,
         progressPercentage: 1,
         routeName: OnboardingBasicInfoScreen.routeName,
       );
