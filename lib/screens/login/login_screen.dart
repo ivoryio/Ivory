@@ -6,11 +6,11 @@ import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/auth/auth_presenter.dart';
 import 'package:solarisdemo/models/auth/auth_error_type.dart';
 import 'package:solarisdemo/models/auth/auth_type.dart';
-import 'package:solarisdemo/navigator.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/auth/auth_action.dart';
 import 'package:solarisdemo/screens/login/login_with_tan_screen.dart';
 import 'package:solarisdemo/screens/login/modals/mobile_number_country_picker_popup.dart';
+import 'package:solarisdemo/screens/onboarding/onboarding_stepper_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/checkbox.dart';
 import 'package:solarisdemo/widgets/continue_button_controller.dart';
@@ -42,9 +42,20 @@ class LoginScreen extends StatelessWidget {
         if (previousViewModel is AuthLoadingViewModel &&
             newViewModel is AuthInitializedViewModel &&
             newViewModel.authType == AuthType.withTan) {
-          Navigator.of(
-            navigatorKey.currentContext as BuildContext,
-          ).pushNamed(LoginWithTanScreen.routeName);
+          Navigator.pushNamed(
+            context,
+            LoginWithTanScreen.routeName,
+          );
+        }
+        if (previousViewModel is AuthLoadingViewModel &&
+            newViewModel is AuthErrorViewModel &&
+            newViewModel.errorType == AuthErrorType.incompleteOnboarding) {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            OnboardingStepperScreen.routeName,
+            arguments: OnboardingStepperScreenParams(step: OnboardingStepType.signUp),
+            (route) => false,
+          );
         }
       },
       converter: (store) => AuthPresenter.presentAuth(authState: store.state.authState),
