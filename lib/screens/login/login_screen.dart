@@ -86,16 +86,17 @@ class LoginScreen extends StatelessWidget {
                       const SizedBox(height: 24),
                       Expanded(
                         child: TabView(
+                          initialSelectedTabIndex: 1,
                           tabs: [
+                            const TabViewItem(
+                              text: "Mobile",
+                              child: PhoneNumberLoginForm(),
+                            ),
                             TabViewItem(
                               text: "Email",
                               child: EmailLoginForm(
                                 viewModel: viewModel,
                               ),
-                            ),
-                            const TabViewItem(
-                              text: "Mobile",
-                              child: PhoneNumberLoginForm(),
                             ),
                           ],
                         ),
@@ -372,25 +373,34 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
   void onChangePassword() {
     String password = _passwordInputController.text;
     bool isPasswordInputValid = password.isNotEmpty && password.length >= 6;
-    if (!isPasswordInputValid && !_passwordInputController.hasError) {
-      _passwordInputController.setErrorText('Please input a valid password with at least 6 characters');
-      if (hasAuthError) {
-        hasAuthError = false;
-        _emailInputController.setError(false);
+    if (password.length > 3) {
+      if (!isPasswordInputValid && !_passwordInputController.hasError) {
+        _passwordInputController.setErrorText('Please input a valid password with at least 6 characters');
+        if (hasAuthError) {
+          hasAuthError = false;
+          _emailInputController.setError(false);
+        }
+      } else if (isPasswordInputValid && _passwordInputController.hasError && !hasAuthError) {
+        _passwordInputController.setError(false);
       }
-    } else if (isPasswordInputValid && _passwordInputController.hasError && !hasAuthError) {
-      _passwordInputController.setError(false);
-    }
 
-    if (((_emailInputController.hasError) || _passwordInputController.hasError) &&
-        _continueButtonController.isEnabled) {
-      _continueButtonController.setDisabled();
-    }
-    if (!_emailInputController.hasError &&
-        !_passwordInputController.hasError &&
-        _emailInputController.text.isNotEmpty &&
-        !_continueButtonController.isEnabled) {
-      _continueButtonController.setEnabled();
+      if (((_emailInputController.hasError) || _passwordInputController.hasError) &&
+          _continueButtonController.isEnabled) {
+        _continueButtonController.setDisabled();
+      }
+      if (!_emailInputController.hasError &&
+          !_passwordInputController.hasError &&
+          _emailInputController.text.isNotEmpty &&
+          !_continueButtonController.isEnabled) {
+        _continueButtonController.setEnabled();
+      }
+    } else {
+      if (_passwordInputController.hasError) {
+        _passwordInputController.setError(false);
+      }
+      if (_continueButtonController.isEnabled) {
+        _continueButtonController.setDisabled();
+      }
     }
   }
 
@@ -398,7 +408,8 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
     String emailAddress = _emailInputController.text;
     bool isEmailInputValid = emailAddress.isNotEmpty && Validator.isValidEmailAddress(emailAddress);
 
-    if (!isEmailInputValid && !_emailInputController.hasError) {
+    if (emailAddress.length > 3) {
+      if (!isEmailInputValid && !_emailInputController.hasError) {
       _emailInputController.setErrorText('Please input a valid email address: example@gmail.com');
       if (hasAuthError) {
         hasAuthError = false;
@@ -417,6 +428,15 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
         !_continueButtonController.isEnabled) {
       _continueButtonController.setEnabled();
     }
+    } else {
+      if (_emailInputController.hasError) {
+        _emailInputController.setError(false);
+      }
+      if (_continueButtonController.isEnabled) {
+        _continueButtonController.setDisabled();
+      }
+    }
+    
   }
 
   void handleAuthError() {
