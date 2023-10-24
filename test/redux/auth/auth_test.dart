@@ -8,7 +8,6 @@ import 'package:solarisdemo/redux/auth/auth_state.dart';
 
 import '../../setup/create_app_state.dart';
 import '../../setup/create_store.dart';
-import '../notification/notification_mocks.dart';
 import '../person/person_mocks.dart';
 import '../transactions/transaction_mocks.dart';
 import 'auth_mocks.dart';
@@ -80,7 +79,7 @@ void main() {
       },
     );
   });
-  group("Authenticating the user", () {
+  group("Init Authentication", () {
     test("Should authenticate the user without bound device succesfully", () async {
       final Map<String, Object> values = <String, Object>{
         'deviceId': '',
@@ -177,15 +176,14 @@ void main() {
     });
   });
 
-  group("Confirm authentication", () {
-    test(
-        "Succesfully confirm authentication with a bound device (with biometrics), should return AuthenticatedAndConfirmedState",
+  group("Authenticate", () {
+    test("Succesfully confirm authentication with a bound device (with biometrics), should return AuthenticatedState",
         () async {
       //given
       final store = createTestStore(
-        pushNotificationService: FakePushNotificationService(),
         personService: FakePersonService(),
         biometricsService: FakeBiometricsService(),
+        pushNotificationService: FakeNotificationService(),
         initialState: createAppState(
           authState: AuthInitialState(),
         ),
@@ -235,13 +233,12 @@ void main() {
       expect(((await appState).authState as AuthErrorState).errorType, equals(AuthErrorType.biometricAuthFailed));
     });
 
-    test(
-        "Succesfully confirm authentication without a bound device (only with OTP), should return AuthenticatedAndConfirmedState",
+    test("Succesfully confirm authentication without a bound device (only with OTP), should return AuthenticatedState",
         () async {
       //given
       final store = createTestStore(
-        pushNotificationService: FakePushNotificationService(),
         personService: FakePersonService(),
+        pushNotificationService: FakeNotificationService(),
         initialState: createAppState(
           authState: AuthInitialState(),
         ),

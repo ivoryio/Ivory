@@ -1,0 +1,4 @@
+enum CognitoUserGroup {
+  registering,
+  registered,
+}
