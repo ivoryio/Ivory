@@ -8,6 +8,7 @@ import 'package:solarisdemo/redux/auth/auth_state.dart';
 
 import '../../setup/create_app_state.dart';
 import '../../setup/create_store.dart';
+import '../notification/notification_mocks.dart';
 import '../person/person_mocks.dart';
 import '../transactions/transaction_mocks.dart';
 import 'auth_mocks.dart';
@@ -101,8 +102,7 @@ void main() {
       );
 
       final loadingState = store.onChange.firstWhere((element) => element.authState is AuthLoadingState);
-      final appState =
-          store.onChange.firstWhere((element) => element.authState is AuthenticationInitializedState);
+      final appState = store.onChange.firstWhere((element) => element.authState is AuthenticationInitializedState);
 
       //when
       store.dispatch(
@@ -146,9 +146,7 @@ void main() {
       //then
       expect((await loadingState).authState, isA<AuthLoadingState>());
       expect((await appState).authState, isA<AuthenticationInitializedState>());
-      expect(
-          ((await appState).authState as AuthenticationInitializedState).authType, equals(AuthType.withBiometrics));
-
+      expect(((await appState).authState as AuthenticationInitializedState).authType, equals(AuthType.withBiometrics));
     });
 
     test("If credentials are invalid should fail with AuthErrorType.invalidCredentials", () async {
@@ -185,6 +183,7 @@ void main() {
         () async {
       //given
       final store = createTestStore(
+        pushNotificationService: FakePushNotificationService(),
         personService: FakePersonService(),
         biometricsService: FakeBiometricsService(),
         initialState: createAppState(
@@ -206,7 +205,6 @@ void main() {
       expect((await loadingState).authState, isA<AuthLoadingState>());
       expect((await appState).authState, isA<AuthenticatedState>());
       expect(((await appState).authState as AuthenticatedState).authType, equals(AuthType.withBiometrics));
-
     });
     test("If biometrics are not confirmed, should fail with AuthErrorType.biometricAuthFailed ", () async {
       //given
@@ -242,6 +240,7 @@ void main() {
         () async {
       //given
       final store = createTestStore(
+        pushNotificationService: FakePushNotificationService(),
         personService: FakePersonService(),
         initialState: createAppState(
           authState: AuthInitialState(),
