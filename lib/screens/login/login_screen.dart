@@ -373,7 +373,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
   void onChangePassword() {
     String password = _passwordInputController.text;
     bool isPasswordInputValid = password.isNotEmpty && password.length >= 6;
-    if (password.length > 3) {
+    if (password.isNotEmpty) {
       if (!isPasswordInputValid && !_passwordInputController.hasError) {
         _passwordInputController.setErrorText('Please input a valid password with at least 6 characters');
         if (hasAuthError) {
@@ -408,7 +408,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
     String emailAddress = _emailInputController.text;
     bool isEmailInputValid = emailAddress.isNotEmpty && Validator.isValidEmailAddress(emailAddress);
 
-    if (emailAddress.length > 3) {
+    if (emailAddress.isNotEmpty) {
       if (!isEmailInputValid && !_emailInputController.hasError) {
       _emailInputController.setErrorText('Please input a valid email address: example@gmail.com');
       if (hasAuthError) {
