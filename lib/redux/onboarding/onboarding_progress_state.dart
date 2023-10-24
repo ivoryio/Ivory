@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:solarisdemo/models/onboarding/onboarding_progress.dart';
 import 'package:solarisdemo/models/onboarding/onboarding_service_error_type.dart';
 
 abstract class OnboardingProgressState extends Equatable {
@@ -9,12 +10,12 @@ abstract class OnboardingProgressState extends Equatable {
 class OnboardingProgressInitialLoadingState extends OnboardingProgressState {}
 
 class OnboardingProgressFetchedState extends OnboardingProgressState {
-  final String currentStep;
+  final OnboardingStep step;
 
-  OnboardingProgressFetchedState({required this.currentStep});
+  OnboardingProgressFetchedState({required this.step});
 
   @override
-  List<Object?> get props => [currentStep];
+  List<Object?> get props => [step];
 }
 
 class OnboardingProgressErrorState extends OnboardingProgressState {

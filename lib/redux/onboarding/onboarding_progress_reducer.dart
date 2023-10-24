@@ -4,7 +4,7 @@ import 'onboarding_progress_state.dart';
 
 OnboardingProgressState onboardingProgressReducer(OnboardingProgressState currentState, dynamic action) {
   if (action is OnboardingProgressFetchedEvendAction) {
-    return OnboardingProgressFetchedState(currentStep: action.currentStep);
+    return OnboardingProgressFetchedState(step: action.step);
   } else if (action is GetOnboardingProgressFailedEventAction) {
     return OnboardingProgressErrorState();
   }

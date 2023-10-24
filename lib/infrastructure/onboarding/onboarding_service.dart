@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:solarisdemo/models/onboarding/onboarding_progress.dart';
 import 'package:solarisdemo/models/onboarding/onboarding_service_error_type.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/services/api_service.dart';
@@ -12,9 +13,9 @@ class OnboardingService extends ApiService {
     }
     try {
       final data = await get('onboarding/progress');
-      final currentStep = data['currentStep'] as String;
+      final currentStep = OnboardingStepExtension.fromString(data['currentStep']);
 
-      return OnboardingProgressSuccessResponse(currentStep: currentStep);
+      return OnboardingProgressSuccessResponse(step: currentStep);
     } catch (error) {
       return OnboardingProgressErrorResponse();
     }
@@ -27,12 +28,12 @@ abstract class OnboardingServiceResponse extends Equatable {
 }
 
 class OnboardingProgressSuccessResponse extends OnboardingServiceResponse {
-  final String currentStep;
+  final OnboardingStep step;
 
-  OnboardingProgressSuccessResponse({required this.currentStep});
+  OnboardingProgressSuccessResponse({required this.step});
 
   @override
-  List<Object?> get props => [currentStep];
+  List<Object?> get props => [step];
 }
 
 class OnboardingProgressErrorResponse extends OnboardingServiceResponse {

@@ -1,9 +1,11 @@
+import 'package:solarisdemo/models/onboarding/onboarding_progress.dart';
+
 class GetOnboardingProgressCommandAction {}
 
 class OnboardingProgressFetchedEvendAction {
-  final String currentStep;
+  final OnboardingStep step;
 
-  OnboardingProgressFetchedEvendAction({required this.currentStep});
+  OnboardingProgressFetchedEvendAction({required this.step});
 }
 
 class GetOnboardingProgressFailedEventAction {}
