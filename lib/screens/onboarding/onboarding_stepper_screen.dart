@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/onboarding/onboarding_progress_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/auth/auth_action.dart';
 import 'package:solarisdemo/redux/onboarding/onboarding_progress_action.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
@@ -19,6 +20,7 @@ class OnboardingStepperScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenScaffold(
+      popAction: () => _onScreenPop(context),
       body: StoreConnector<AppState, OnboardingProgressViewModel>(
         onInit: (store) => store.dispatch(GetOnboardingProgressCommandAction()),
         converter: (store) => OnboardingProgressPresenter.presentOnboardingProgress(
@@ -28,19 +30,25 @@ class OnboardingStepperScreen extends StatelessWidget {
           return viewModel is OnboardingProgressFetchedViewModel
               ? _buildContent(context, viewModel)
               : viewModel is OnboardingProgressErrorViewModel
-                  ? _buildErrorContent()
-                  : _buildLoadingContent();
+                  ? _buildErrorContent(context)
+                  : _buildLoadingContent(context);
         },
       ),
     );
   }
 
-  Widget _buildLoadingContent() {
+  void _onScreenPop(BuildContext context) {
+    Navigator.pop(context);
+    StoreProvider.of<AppState>(context).dispatch(LogoutUserCommandAction());
+  }
+
+  Widget _buildLoadingContent(BuildContext context) {
     return Column(
       children: [
         AppToolbar(
           padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
           actions: const [AppbarLogo()],
+          onBackButtonPressed: () => _onScreenPop(context),
         ),
         const Expanded(
           child: Center(child: CircularProgressIndicator()),
@@ -49,12 +57,13 @@ class OnboardingStepperScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildErrorContent() {
+  Widget _buildErrorContent(BuildContext context) {
     return Column(
       children: [
         AppToolbar(
           padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
           actions: const [AppbarLogo()],
+          onBackButtonPressed: () => _onScreenPop(context),
         ),
         Padding(
           padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
@@ -84,6 +93,7 @@ class OnboardingStepperScreen extends StatelessWidget {
         AppToolbar(
           padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
           actions: const [AppbarLogo()],
+          onBackButtonPressed: () => _onScreenPop(context),
         ),
         Expanded(
           child: SingleChildScrollView(
