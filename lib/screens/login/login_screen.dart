@@ -350,17 +350,17 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
     _passwordFocusNode = FocusNode();
     _continueButtonController = ContinueButtonController();
 
-    _emailInputController.addListener(onChangeEmail);
-    _passwordInputController.addListener(onChangePassword);
+    _emailInputController.addListener(onChange);
+    _passwordInputController.addListener(onChange);
     _emailFocusNode.addListener(onFocus);
     _passwordFocusNode.addListener(onFocus);
   }
 
   void onFocus() {
-    if (_emailFocusNode.hasFocus && _emailInputController.hasError && hasAuthError) {
+    if (_emailFocusNode.hasFocus && _emailInputController.hasError) {
       _emailInputController.setError(false);
     }
-    if (_passwordFocusNode.hasFocus && _passwordInputController.hasError && hasAuthError) {
+    if (_passwordFocusNode.hasFocus && _passwordInputController.hasError) {
       _passwordInputController.setError(false);
     }
     if (!_emailInputController.hasError && !_passwordInputController.hasError && hasAuthError) {
@@ -370,73 +370,20 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
     }
   }
 
-  void onChangePassword() {
-    String password = _passwordInputController.text;
-    bool isPasswordInputValid = password.isNotEmpty && password.length >= 6;
-    if (password.isNotEmpty) {
-      if (!isPasswordInputValid && !_passwordInputController.hasError) {
-        _passwordInputController.setErrorText('Please input a valid password with at least 6 characters');
-        if (hasAuthError) {
-          hasAuthError = false;
-          _emailInputController.setError(false);
-        }
-      } else if (isPasswordInputValid && _passwordInputController.hasError && !hasAuthError) {
-        _passwordInputController.setError(false);
-      }
-
-      if (((_emailInputController.hasError) || _passwordInputController.hasError) &&
-          _continueButtonController.isEnabled) {
-        _continueButtonController.setDisabled();
-      }
-      if (!_emailInputController.hasError &&
-          !_passwordInputController.hasError &&
-          _emailInputController.text.isNotEmpty &&
-          !_continueButtonController.isEnabled) {
-        _continueButtonController.setEnabled();
-      }
-    } else {
-      if (_passwordInputController.hasError) {
-        _passwordInputController.setError(false);
-      }
-      if (_continueButtonController.isEnabled) {
-        _continueButtonController.setDisabled();
-      }
-    }
+  bool isEmailValid(String email) {
+    return email.isNotEmpty && Validator.isValidEmailAddress(email);
   }
 
-  void onChangeEmail() {
-    String emailAddress = _emailInputController.text;
-    bool isEmailInputValid = emailAddress.isNotEmpty && Validator.isValidEmailAddress(emailAddress);
+  bool isPasswordValid(String password) {
+    return password.isNotEmpty && password.length >= 8;
+  }
 
-    if (emailAddress.isNotEmpty) {
-      if (!isEmailInputValid && !_emailInputController.hasError) {
-      _emailInputController.setErrorText('Please input a valid email address: example@gmail.com');
-      if (hasAuthError) {
-        hasAuthError = false;
-        _passwordInputController.setError(false);
-      }
-    } else if (isEmailInputValid && _emailInputController.hasError && !hasAuthError) {
-      _emailInputController.setError(false);
-    }
-
-    if ((_emailInputController.hasError || _passwordInputController.hasError) && _continueButtonController.isEnabled) {
+  void onChange() {
+    if (_emailInputController.text.isNotEmpty && _passwordInputController.text.isNotEmpty) {
+      _continueButtonController.setEnabled();
+    } else {
       _continueButtonController.setDisabled();
     }
-    if (!_emailInputController.hasError &&
-        _passwordInputController.text.isNotEmpty &&
-        !_passwordInputController.hasError &&
-        !_continueButtonController.isEnabled) {
-      _continueButtonController.setEnabled();
-    }
-    } else {
-      if (_emailInputController.hasError) {
-        _emailInputController.setError(false);
-      }
-      if (_continueButtonController.isEnabled) {
-        _continueButtonController.setDisabled();
-      }
-    }
-    
   }
 
   void handleAuthError() {
@@ -498,14 +445,6 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                       focusNode: _emailFocusNode,
                       inputType: TextFieldInputType.email,
                     ),
-                    if (_emailInputController.hasError) const SizedBox(height: 8),
-                    if (_emailInputController.hasError)
-                      Text(
-                        'Please input a valid email address: example@gmail.com',
-                        style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(
-                              color: const Color(0xFFE61F27),
-                            ),
-                      ),
                     const SizedBox(
                       height: 24,
                     ),
@@ -567,12 +506,24 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                                     _continueButtonController.setDisabled();
                                     _emailFocusNode.unfocus();
                                     _passwordFocusNode.unfocus();
-                                    StoreProvider.of<AppState>(context).dispatch(
-                                      InitUserAuthenticationCommandAction(
-                                        email: _emailInputController.text.toLowerCase(),
-                                        password: _passwordInputController.text,
-                                      ),
-                                    );
+                                    if (isEmailValid(_emailInputController.text) &&
+                                        isPasswordValid(_passwordInputController.text)) {
+                                      StoreProvider.of<AppState>(context).dispatch(
+                                        InitUserAuthenticationCommandAction(
+                                          email: _emailInputController.text.toLowerCase(),
+                                          password: _passwordInputController.text,
+                                        ),
+                                      );
+                                    } else {
+                                      if (!isEmailValid(_emailInputController.text)) {
+                                        _emailInputController
+                                            .setErrorText('Please input a valid email address: example@gmail.com');
+                                      }
+                                      if (!isPasswordValid(_passwordInputController.text)) {
+                                        _passwordInputController
+                                            .setErrorText('Please input a valid password with at least 8 characters');
+                                      }
+                                    }
                                   }
                                 : null,
                           );
