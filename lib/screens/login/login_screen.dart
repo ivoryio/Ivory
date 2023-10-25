@@ -461,9 +461,11 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                       children: [
                         CheckboxWidget(
                           isChecked: false,
-                          onChanged: (bool value) {
-                            _passwordInputController.setObscureText(!value);
-                          },
+                          onChanged: viewModel is AuthLoadingViewModel
+                              ? null
+                              : (bool value) {
+                                  _passwordInputController.setObscureText(!value);
+                                },
                         ),
                         const SizedBox(width: 8),
                         const Text('Show password'),
@@ -508,6 +510,8 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                                     _passwordFocusNode.unfocus();
                                     if (isEmailValid(_emailInputController.text) &&
                                         isPasswordValid(_passwordInputController.text)) {
+                                      _emailInputController.setEnabled(false);
+                                      _passwordInputController.setEnabled(false);
                                       StoreProvider.of<AppState>(context).dispatch(
                                         InitUserAuthenticationCommandAction(
                                           email: _emailInputController.text.toLowerCase(),
