@@ -6,6 +6,7 @@ import 'package:solarisdemo/infrastructure/bank_card/bank_card_service.dart';
 import 'package:solarisdemo/infrastructure/categories/categories_middleware.dart';
 import 'package:solarisdemo/infrastructure/categories/categories_service.dart';
 import 'package:solarisdemo/infrastructure/change_request/change_request_service.dart';
+import 'package:solarisdemo/infrastructure/common/action_logger_middleware.dart';
 import 'package:solarisdemo/infrastructure/credit_line/credit_line_middleware.dart';
 import 'package:solarisdemo/infrastructure/credit_line/credit_line_service.dart';
 import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
@@ -86,6 +87,7 @@ Store<AppState> createStore({
       AuthMiddleware(authService, deviceService, deviceFingerprintService, personService, biometricsService),
       OnboardingSignupMiddleware(pushNotificationService),
       OnboardingProgressMiddleware(onboardingService),
+      ActionLoggerMiddleware(),
     ],
   );
 }
