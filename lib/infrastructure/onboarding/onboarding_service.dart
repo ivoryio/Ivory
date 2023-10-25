@@ -8,9 +8,8 @@ class OnboardingService extends ApiService {
   OnboardingService({super.user});
 
   Future<OnboardingServiceResponse> getOnboardingProgress({required User user}) async {
-    if (this.user == null) {
-      this.user = user;
-    }
+    this.user = user;
+
     try {
       final data = await get('signup/progress');
       final currentStep = OnboardingStepExtension.fromString(data['currentStep']);
