@@ -174,6 +174,32 @@ void main() {
       expect((await appState).authState, isA<AuthErrorState>());
       expect(((await appState).authState as AuthErrorState).errorType, equals(AuthErrorType.invalidCredentials));
     });
+
+    test("When user group is onboarding it should return AuthenticationInitializedState with authType onboarding",
+        () async {
+      //given
+      final store = createTestStore(
+        deviceService: FakeDeviceService(),
+        authService: FakeAuthServiceWithOnboardingUser(),
+        deviceFingerprintService: FakeDeviceFingerprintService(),
+        initialState: createAppState(
+          authState: AuthInitialState(),
+        ),
+      );
+
+      final loadingState = store.onChange.firstWhere((element) => element.authState is AuthLoadingState);
+      final appState = store.onChange.firstWhere((element) => element.authState is AuthenticationInitializedState);
+
+      //when
+      store.dispatch(
+        InitUserAuthenticationCommandAction(email: "email@example.com", password: "123456"),
+      );
+
+      //then
+      expect((await loadingState).authState, isA<AuthLoadingState>());
+      expect((await appState).authState, isA<AuthenticationInitializedState>());
+      expect(((await appState).authState as AuthenticationInitializedState).authType, AuthType.onboarding);
+    });
   });
 
   group("Authenticate", () {

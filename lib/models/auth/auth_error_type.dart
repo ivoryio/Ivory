@@ -7,5 +7,4 @@ enum AuthErrorType {
   biometricAuthFailed,
   cantGetPersonData,
   cantGetPersonAccountData,
-  incompleteOnboarding
 }

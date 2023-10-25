@@ -49,8 +49,8 @@ class LoginScreen extends StatelessWidget {
           );
         }
         if (previousViewModel is AuthLoadingViewModel &&
-            newViewModel is AuthErrorViewModel &&
-            newViewModel.errorType == AuthErrorType.incompleteOnboarding) {
+            newViewModel is AuthInitializedViewModel &&
+            newViewModel.authType == AuthType.onboarding) {
           Navigator.pushNamedAndRemoveUntil(
             context,
             OnboardingStepperScreen.routeName,
