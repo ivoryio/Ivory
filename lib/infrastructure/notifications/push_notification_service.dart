@@ -34,28 +34,34 @@ void saveNotificationMessage(RemoteMessage message) async {
 abstract class PushNotificationService extends ApiService {
   PushNotificationService({super.user});
 
-  Future<void> init(Store<AppState> store, {User? user});
+  Future<void> init(Store<AppState> store);
 
   Future<bool> hasPermission();
 
   Future<void> handleSavedNotification();
 
   Future<void> clearNotification();
+
+  void handleTokenRefresh({User user});
 }
 
 class FirebasePushNotificationService extends PushNotificationService {
   final _messaging = FirebaseMessaging.instance;
   late final Store<AppState> store;
   final PushNotificationStorageService storageService;
+  bool isInitialized = false;
 
   FirebasePushNotificationService({super.user, required this.storageService}) {
     handleAndroidLocalNotifications();
   }
 
   @override
-  Future<void> init(Store<AppState> store, {User? user}) async {
+  Future<void> init(Store<AppState> store) async {
+    if (isInitialized) {
+      return;
+    }
+
     this.store = store;
-    if (user != null) this.user = user;
 
     final settings = await _messaging.requestPermission();
     if (settings.authorizationStatus != AuthorizationStatus.authorized) {
@@ -97,6 +103,13 @@ class FirebasePushNotificationService extends PushNotificationService {
     FirebaseMessaging.onMessageOpenedApp.listen(_onMessage); // App was in background and notification clicked
     FirebaseMessaging.instance.getInitialMessage().then(_onMessage); // App was terminated and notification clicked
     FirebaseMessaging.onMessage.listen(_pushNotificationReceived);
+
+    isInitialized = true;
+  }
+
+  @override
+  void handleTokenRefresh({User? user}) {
+    if (user != null) this.user = user;
 
     // Handle token
     _messaging.getToken().then(_onTokenRefresh); // Initial token (on app start)
@@ -154,7 +167,7 @@ class FirebasePushNotificationService extends PushNotificationService {
 
   @override
   Future<bool> hasPermission() async {
-    final settings = await _messaging.requestPermission();
+    final settings = await _messaging.getNotificationSettings();
     return settings.authorizationStatus == AuthorizationStatus.authorized;
   }
 

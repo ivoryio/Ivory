@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
-import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/infrastructure/bank_card/bank_card_presenter.dart';
 import 'package:solarisdemo/models/bank_card.dart';
 import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_state.dart';
 import 'package:solarisdemo/screens/wallet/card_activation/card_activation_info.dart';
@@ -27,7 +26,8 @@ class CardActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = context.read<AuthCubit>().state.user!;
+    final user =
+        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
 
     return StoreConnector<AppState, BankCardViewModel>(
       onInit: (store) {
@@ -120,7 +120,7 @@ class InactiveCard extends StatelessWidget {
             width: double.infinity,
             child: Button(
               text: "Activate my card",
-              disabledColor: const Color(0xFFDFE2E6),
+              disabledColor: ClientConfig.getCustomColors().neutral300,
               color: ClientConfig.getColorScheme().tertiary,
               textColor: ClientConfig.getColorScheme().surface,
               onPressed: () {
@@ -326,7 +326,7 @@ class CardOptionsButton extends StatelessWidget {
         ElevatedButton(
           onPressed: () => onPressed(),
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF15141E),
+            backgroundColor: ClientConfig.getCustomColors().neutral900,
             fixedSize: const Size(48, 48),
             shape: const CircleBorder(),
             splashFactory: NoSplash.splashFactory,
@@ -341,7 +341,7 @@ class CardOptionsButton extends StatelessWidget {
           padding: const EdgeInsets.only(top: 10),
           child: Text(
             textLabel,
-            style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: const Color(0xFF15141E)),
+            style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: ClientConfig.getCustomColors().neutral900),
           ),
         )
       ],

@@ -150,3 +150,24 @@ class AppbarLogo extends StatelessWidget {
     return SvgPicture.asset(ClientConfig.getAssetIconPath('appbar_logo.svg'));
   }
 }
+
+class StepRichTextTitle extends RichText {
+  final int step;
+  final int totalSteps;
+
+  StepRichTextTitle({super.key, required this.step, required this.totalSteps})
+      : super(
+          text: TextSpan(
+            children: [
+              TextSpan(
+                text: 'Step $step',
+                style: ClientConfig.getTextStyleScheme().heading4,
+              ),
+              TextSpan(
+                text: " out of $totalSteps",
+                style: ClientConfig.getTextStyleScheme().heading4.copyWith(color: ClientConfig.getCustomColors().neutral700),
+              ),
+            ],
+          ),
+        );
+}

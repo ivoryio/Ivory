@@ -3,9 +3,9 @@ import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/person/account_summary/account_summay_action.dart';
 import 'package:solarisdemo/redux/person/account_summary/account_summay_state.dart';
 
-import '../../../cubits/login_cubit_test.dart';
 import '../../../setup/create_app_state.dart';
 import '../../../setup/create_store.dart';
+import '../../auth/auth_mocks.dart';
 import 'account_summary_mocks.dart';
 
 void main() {

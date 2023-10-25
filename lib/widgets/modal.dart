@@ -9,6 +9,7 @@ Future<dynamic> showBottomModal({
   Widget? textWidget,
   bool showCloseButton = true,
   bool isScrollControlled = true,
+  bool addContentPadding = true,
 }) async {
   return showModalBottomSheet(
     context: context,
@@ -22,9 +23,9 @@ Future<dynamic> showBottomModal({
     ),
     builder: (context) => SingleChildScrollView(
       padding: EdgeInsets.fromLTRB(
-        24,
+        addContentPadding ? 24 : 0,
         8,
-        24,
+        addContentPadding ? 24 : 0,
         MediaQuery.of(context).padding.bottom + MediaQuery.of(context).viewInsets.bottom + 16,
       ),
       child: Column(
@@ -37,31 +38,34 @@ Future<dynamic> showBottomModal({
               height: 4,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: const Color(0xFFDFE2E6),
+                color: ClientConfig.getCustomColors().neutral300,
               ),
             ),
           ),
           const SizedBox(height: 24),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (title != null)
-                Expanded(
-                  child: Text(
-                    title,
-                    style: ClientConfig.getTextStyleScheme().heading4,
+          Padding(
+            padding: addContentPadding ? EdgeInsets.zero : const EdgeInsets.symmetric(horizontal: 24),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (title != null)
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: ClientConfig.getTextStyleScheme().heading4,
+                    ),
+                  )
+                else
+                  const Spacer(),
+                if (showCloseButton)
+                  IconButton(
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                    icon: const Icon(Icons.close),
+                    onPressed: () => Navigator.pop(context),
                   ),
-                )
-              else
-                const Spacer(),
-              if (showCloseButton)
-                IconButton(
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                  icon: const Icon(Icons.close),
-                  onPressed: () => Navigator.pop(context),
-                ),
-            ],
+              ],
+            ),
           ),
           if (title != null || showCloseButton) const SizedBox(height: 24),
           if (textWidget != null) textWidget,

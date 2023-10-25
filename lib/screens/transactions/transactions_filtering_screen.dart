@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/infrastructure/categories/categories_presenter.dart';
+import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/categories/category_action.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/checkbox.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../config.dart';
-import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../models/categories/category.dart';
 import '../../models/transactions/transaction_model.dart';
-import '../../models/user.dart';
 import '../../redux/app_state.dart';
 import '../../redux/transactions/transactions_action.dart';
 import '../../utilities/format.dart';
@@ -47,7 +45,8 @@ class _TransactionsFilteringScreenState extends State<TransactionsFilteringScree
     bool isFilterSelected =
         transactionListFilter?.bookingDateMin != null || transactionListFilter?.bookingDateMax != null;
 
-    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
+    final user =
+        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
 
     return ScreenScaffold(
       body: Padding(

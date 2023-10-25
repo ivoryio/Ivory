@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
-import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/infrastructure/bank_card/bank_card_presenter.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
 import 'package:solarisdemo/screens/wallet/card_activation/card_activation_confirm_pin_screen.dart';
 import 'package:solarisdemo/utilities/validator.dart';
@@ -32,7 +31,8 @@ class _BankCardDetailsChoosePinScreenState extends State<BankCardDetailsChoosePi
 
   @override
   Widget build(BuildContext context) {
-    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
+    final user =
+        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
 
     return StoreConnector<AppState, BankCardViewModel>(
       converter: (store) => BankCardPresenter.presentBankCard(
@@ -47,13 +47,13 @@ class _BankCardDetailsChoosePinScreenState extends State<BankCardDetailsChoosePi
                 richTextTitle: RichText(
                     text: TextSpan(
                   style: ClientConfig.getTextStyleScheme().heading4,
-                  children: const <TextSpan>[
-                    TextSpan(
+                  children: <TextSpan>[
+                    const TextSpan(
                       text: 'Step 2 ',
                     ),
                     TextSpan(
                       text: 'out of 4',
-                      style: TextStyle(color: Color(0xFF56555E)),
+                      style: TextStyle(color: ClientConfig.getCustomColors().neutral700),
                     ),
                   ],
                 )),
@@ -66,7 +66,7 @@ class _BankCardDetailsChoosePinScreenState extends State<BankCardDetailsChoosePi
               LinearProgressIndicator(
                 value: 2 / 3,
                 color: ClientConfig.getColorScheme().secondary,
-                backgroundColor: const Color(0xFFE9EAEB),
+                backgroundColor: ClientConfig.getCustomColors().neutral200,
               ),
               const SizedBox(
                 height: 16,
@@ -135,28 +135,28 @@ class _BankCardDetailsChoosePinScreenState extends State<BankCardDetailsChoosePi
                         isValid: pinDiffersBirthDate,
                         text: 'Your date of birth',
                         icon: Icons.close,
-                        validColor: const Color(0xFF15141E),
+                        validColor: ClientConfig.getCustomColors().neutral900,
                         invalidColor: const Color(0xFFE61F27),
                       ),
                       PinValidityRule(
                         isValid: pinDiffersPostalCode,
                         text: 'Your postal code',
                         icon: Icons.close,
-                        validColor: const Color(0xFF15141E),
+                        validColor: ClientConfig.getCustomColors().neutral900,
                         invalidColor: const Color(0xFFE61F27),
                       ),
                       PinValidityRule(
                         isValid: pinIsNotASequence,
                         text: 'Number sequences, e.g. 1234',
                         icon: Icons.close,
-                        validColor: const Color(0xFF15141E),
+                        validColor: ClientConfig.getCustomColors().neutral900,
                         invalidColor: const Color(0xFFE61F27),
                       ),
                       PinValidityRule(
                         isValid: pinNotContainsRepeatingDigits,
                         text: 'More than two digits repeating',
                         icon: Icons.close,
-                        validColor: const Color(0xFF15141E),
+                        validColor: ClientConfig.getCustomColors().neutral900,
                         invalidColor: const Color(0xFFE61F27),
                       ),
                       const SizedBox(

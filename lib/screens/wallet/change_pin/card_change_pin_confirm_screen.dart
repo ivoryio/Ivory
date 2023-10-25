@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
-import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/infrastructure/bank_card/bank_card_presenter.dart';
-import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
 import 'package:solarisdemo/screens/wallet/change_pin/card_change_pin_success_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -19,7 +17,8 @@ class BankCardConfirmPinConfirmScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = context.read<AuthCubit>().state.user!;
+    final user =
+        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
     final GlobalKey<_ConfirmPinBodyState> confirmPinBodyKey = GlobalKey<_ConfirmPinBodyState>();
 
     ValueNotifier<bool> matchingPinErrorNotifier = ValueNotifier<bool>(false);
@@ -65,7 +64,7 @@ class BankCardConfirmPinConfirmScreen extends StatelessWidget {
                           ),
                           TextSpan(
                             text: " out of 2",
-                            style: ClientConfig.getTextStyleScheme().heading4.copyWith(color: const Color(0xFF56555E)),
+                            style: ClientConfig.getTextStyleScheme().heading4.copyWith(color: ClientConfig.getCustomColors().neutral700),
                           ),
                         ],
                       ),
@@ -77,7 +76,7 @@ class BankCardConfirmPinConfirmScreen extends StatelessWidget {
                   child: LinearProgressIndicator(
                     value: 0.5,
                     color: ClientConfig.getColorScheme().secondary,
-                    backgroundColor: const Color(0xFFADADB4),
+                    backgroundColor: ClientConfig.getCustomColors().neutral500,
                   ),
                 ),
                 ConfirmPinBody(
@@ -161,7 +160,8 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> {
 
   @override
   Widget build(BuildContext context) {
-    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
+    final user =
+        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: Column(
@@ -200,10 +200,10 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> {
                       color: hasError
                           ? const Color(0xffE61F27)
                           : isCompleted == true
-                              ? const Color(0xff00774C)
+                              ? ClientConfig.getCustomColors().success
                               : index >= _newPIN.length
-                                  ? const Color(0xffadadb4)
-                                  : const Color(0xff15141E),
+                                  ? ClientConfig.getCustomColors().neutral500
+                                  : ClientConfig.getCustomColors().neutral900,
                     ),
                   );
                 },
@@ -296,7 +296,7 @@ class ConfirmPinChecks extends StatelessWidget {
                     Icon(
                       Icons.check,
                       size: 24,
-                      color: matchingPinErrorNotifier.value ? const Color(0xffE61F27) : const Color(0xFF56555E),
+                      color: matchingPinErrorNotifier.value ? const Color(0xffE61F27) : ClientConfig.getCustomColors().neutral700,
                     ),
                     const SizedBox(
                       width: 4,
@@ -304,7 +304,7 @@ class ConfirmPinChecks extends StatelessWidget {
                     Text(
                       "Your PIN should match",
                       style: ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(
-                          color: matchingPinErrorNotifier.value ? const Color(0xffE61F27) : const Color(0xFF56555E)),
+                          color: matchingPinErrorNotifier.value ? const Color(0xffE61F27) : ClientConfig.getCustomColors().neutral700),
                     ),
                   ],
                 );

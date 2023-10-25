@@ -1,12 +1,11 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/infrastructure/credit_line/credit_line_presenter.dart';
 import 'package:solarisdemo/infrastructure/repayments/more_credit/more_credit_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/credit_line/credit_line_action.dart';
 import 'package:solarisdemo/screens/repayments/bills/bills_screen.dart';
 import 'package:solarisdemo/screens/repayments/change_repayment_rate.dart';
@@ -34,7 +33,8 @@ class RepaymentsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = context.read<AuthCubit>().state.user!;
+    final user =
+        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
     final ScrollController scrollController = ScrollController();
 
     return ScreenScaffold(
@@ -61,7 +61,7 @@ class RepaymentsScreen extends StatelessWidget {
                         const SizedBox(height: 24),
                         Material(
                           clipBehavior: Clip.none,
-                          color: const Color(0xFFF8F9FA),
+                          color: ClientConfig.getCustomColors().neutral100,
                           shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(
                               Radius.circular(16),
@@ -241,7 +241,7 @@ class _DetailsContentState extends State<_DetailsContent> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
               'Due on ${Format.date(widget.viewModel.creditLine.dueDate, pattern: 'MMM dd')}',
-              style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: const Color(0xFF15141E)),
+              style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: ClientConfig.getCustomColors().neutral900),
             ),
           ),
           const SizedBox(height: 12),

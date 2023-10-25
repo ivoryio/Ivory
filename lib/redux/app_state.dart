@@ -1,9 +1,12 @@
 import 'package:equatable/equatable.dart';
+import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_state.dart';
 import 'package:solarisdemo/redux/categories/category_state.dart';
 import 'package:solarisdemo/redux/credit_line/credit_line_state.dart';
 import 'package:solarisdemo/redux/device/device_state.dart';
 import 'package:solarisdemo/redux/notification/notification_state.dart';
+import 'package:solarisdemo/redux/onboarding/onboarding_progress_state.dart';
+import 'package:solarisdemo/redux/onboarding/signup/onboarding_signup_state.dart';
 import 'package:solarisdemo/redux/person/account_summary/account_summay_state.dart';
 import 'package:solarisdemo/redux/person/person_account/person_account_state.dart';
 import 'package:solarisdemo/redux/person/reference_account/reference_account_state.dart';
@@ -32,7 +35,10 @@ class AppState extends Equatable {
   final NotificationState notificationState;
   final TransactionApprovalState transactionApprovalState;
   final AccountSummaryState accountSummaryState;
+  final AuthState authState;
   final TransactionsState homePageTransactionsState;
+  final OnboardingSignupState onboardingSignupState;
+  final OnboardingProgressState onboardingProgressState;
 
   const AppState({
     required this.transactionsState,
@@ -51,7 +57,10 @@ class AppState extends Equatable {
     required this.notificationState,
     required this.transactionApprovalState,
     required this.accountSummaryState,
+    required this.authState,
     required this.homePageTransactionsState,
+    required this.onboardingSignupState,
+    required this.onboardingProgressState,
   });
 
   factory AppState.initialState() {
@@ -72,29 +81,36 @@ class AppState extends Equatable {
       notificationState: NotificationInitialState(),
       transactionApprovalState: TransactionApprovalInitialState(),
       accountSummaryState: AccountSummaryInitialState(),
+      authState: AuthInitialState(),
       homePageTransactionsState: TransactionsInitialState(),
+      onboardingSignupState: OnboardingSignupSubmittedState(),
+      onboardingProgressState: OnboardingProgressInitialLoadingState(),
     );
   }
 
   @override
   List<Object?> get props => [
-    transactionsState,
-    creditLineState,
-    repaymentReminderState,
-    cardApplicationState,
-    billsState,
-    moreCreditState,
-    bankCardState,
-    bankCardsState,
-    categoriesState,
-    referenceAccountState,
-    personAccountState,
-    transferState,
-    deviceBindingState,
-    notificationState,
-    transactionApprovalState,
-    homePageTransactionsState,
-  ];
+        transactionsState,
+        creditLineState,
+        repaymentReminderState,
+        cardApplicationState,
+        billsState,
+        moreCreditState,
+        bankCardState,
+        bankCardsState,
+        categoriesState,
+        referenceAccountState,
+        personAccountState,
+        transferState,
+        deviceBindingState,
+        notificationState,
+        transactionApprovalState,
+        accountSummaryState,
+        authState,
+        homePageTransactionsState,
+        onboardingSignupState,
+        onboardingProgressState,
+      ];
 
   @override
   bool get stringify => true;

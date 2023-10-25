@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
-import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/infrastructure/bank_card/bank_card_presenter.dart';
-import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
 import 'package:solarisdemo/screens/wallet/card_activation/card_activation_success_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -22,7 +20,8 @@ class BankCardDetailsAppleWalletScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
+    final user =
+        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
 
     return ScreenScaffold(
       body: Column(
@@ -32,13 +31,13 @@ class BankCardDetailsAppleWalletScreen extends StatelessWidget {
             richTextTitle: RichText(
               text: TextSpan(
                 style: ClientConfig.getTextStyleScheme().heading4,
-                children: const <TextSpan>[
-                  TextSpan(
+                children: <TextSpan>[
+                  const TextSpan(
                     text: 'Step 4 ',
                   ),
                   TextSpan(
                     text: 'out of 4',
-                    style: TextStyle(color: Color(0xFF56555E)),
+                    style: TextStyle(color: ClientConfig.getCustomColors().neutral700),
                   ),
                 ],
               ),
@@ -52,7 +51,7 @@ class BankCardDetailsAppleWalletScreen extends StatelessWidget {
           LinearProgressIndicator(
             value: 4 / 4,
             color: ClientConfig.getColorScheme().secondary,
-            backgroundColor: const Color(0xFFE9EAEB),
+            backgroundColor: ClientConfig.getCustomColors().neutral200,
           ),
           const SizedBox(
             height: 16,

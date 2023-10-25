@@ -137,6 +137,7 @@ class BankCardShowDetailsWidget extends StatelessWidget {
                                         context,
                                         text: "Copied to clipboard",
                                         icon: const Icon(Icons.copy, color: Colors.white),
+                                        backgroundColor: ClientConfig.getCustomColors().neutral900,
                                       );
                                     },
                                   ),
@@ -195,6 +196,7 @@ class BankCardShowDetailsWidget extends StatelessWidget {
                                             context,
                                             text: "Copied to clipboard",
                                             icon: const Icon(Icons.copy, color: Colors.white),
+                                            backgroundColor: ClientConfig.getCustomColors().neutral900,
                                           );
                                         },
                                       ),

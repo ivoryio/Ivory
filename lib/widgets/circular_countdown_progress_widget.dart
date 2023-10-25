@@ -112,7 +112,7 @@ class _CircularCountdownProgressState extends State<CircularCountdownProgress> {
           child: Center(
             child: Text(
               _isRunning ? _showValue : '00:00',
-              style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: const Color(0xFF15141E)),
+              style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: ClientConfig.getCustomColors().neutral900),
             ),
           ),
         ),
@@ -122,9 +122,8 @@ class _CircularCountdownProgressState extends State<CircularCountdownProgress> {
             value: widget.duration!.inSeconds > 0
                 ? _remainingTime / widget.duration!.inSeconds
                 : 0,
-            backgroundColor: const Color(0xFFE9EAEB),
+            backgroundColor: ClientConfig.getCustomColors().neutral200,
             valueColor: AlwaysStoppedAnimation<Color>( ClientConfig.getColorScheme().secondary),
-            
           ),
         ),
       ],

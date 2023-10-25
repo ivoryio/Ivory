@@ -1,5 +1,6 @@
 import 'package:redux/redux.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:solarisdemo/infrastructure/device/device_fingerprint_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/device/device_action.dart';
@@ -12,8 +13,9 @@ class DeviceBindingMiddleware extends MiddlewareClass<AppState> {
   final DeviceInfoService _deviceInfoService;
   final DeviceBindingService _deviceBindingService;
   final DeviceService _deviceService;
+  final DeviceFingerprintService _deviceFingerprintService;
 
-  DeviceBindingMiddleware(this._deviceBindingService, this._deviceService, this._deviceInfoService);
+  DeviceBindingMiddleware(this._deviceBindingService, this._deviceService, this._deviceInfoService, this._deviceFingerprintService);
 
   @override
   call(Store<AppState> store, action, NextDispatcher next) async {
@@ -29,7 +31,7 @@ class DeviceBindingMiddleware extends MiddlewareClass<AppState> {
         return null;
       }
 
-      String? deviceFingerPrint = await _deviceService.getDeviceFingerprint(consentId);
+      String? deviceFingerPrint = await _deviceFingerprintService.getDeviceFingerprint(consentId);
       if (deviceFingerPrint == null || deviceFingerPrint.isEmpty) {
         store.dispatch(DeviceBindingFailedEventAction());
         return null;
@@ -78,7 +80,7 @@ class DeviceBindingMiddleware extends MiddlewareClass<AppState> {
         return null;
       }
 
-      String? deviceFingerPrint = await _deviceService.getDeviceFingerprint(consentId);
+      String? deviceFingerPrint = await _deviceFingerprintService.getDeviceFingerprint(consentId);
       if (deviceFingerPrint == null || deviceFingerPrint.isEmpty) {
         store.dispatch(DeviceBindingFailedEventAction());
         return null;

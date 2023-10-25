@@ -1,127 +1,223 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/infrastructure/onboarding/onboarding_progress_presenter.dart';
+import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/auth/auth_action.dart';
+import 'package:solarisdemo/redux/onboarding/onboarding_progress_action.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/circular_percent_indicator.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
-
-class OnboardingStepperScreenParams {
-  final OnboardingStepType step;
-
-  OnboardingStepperScreenParams({
-    required this.step,
-  });
-}
+import 'package:solarisdemo/widgets/screen_title.dart';
 
 class OnboardingStepperScreen extends StatelessWidget {
   static const routeName = "/onboardingStepperScreen";
-  final OnboardingStepperScreenParams params;
 
-  const OnboardingStepperScreen({
-    super.key,
-    required this.params,
-  });
+  const OnboardingStepperScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    int currentStep = onboardingSteps.indexWhere((step) => step.type == params.step);
-
     return ScreenScaffold(
-      body: Column(
-        children: [
-          AppToolbar(
-            padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-            actions: [
-              SvgPicture.asset("assets/icons/default/appbar_logo.svg"),
+      popAction: () => _onScreenPop(context),
+      body: StoreConnector<AppState, OnboardingProgressViewModel>(
+        onInit: (store) => store.dispatch(GetOnboardingProgressCommandAction()),
+        converter: (store) => OnboardingProgressPresenter.presentOnboardingProgress(
+          onboardingProgressState: store.state.onboardingProgressState,
+        ),
+        builder: (context, viewModel) {
+          return viewModel is OnboardingProgressFetchedViewModel
+              ? _buildContent(context, viewModel)
+              : viewModel is OnboardingProgressErrorViewModel
+                  ? _buildErrorContent(context)
+                  : _buildLoadingContent(context);
+        },
+      ),
+    );
+  }
+
+  void _onScreenPop(BuildContext context) {
+    Navigator.pop(context);
+    StoreProvider.of<AppState>(context).dispatch(LogoutUserCommandAction());
+  }
+
+  Widget _buildLoadingContent(BuildContext context) {
+    return Column(
+      children: [
+        AppToolbar(
+          padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+          actions: const [AppbarLogo()],
+          onBackButtonPressed: () => _onScreenPop(context),
+        ),
+        const Expanded(
+          child: Center(child: CircularProgressIndicator()),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildErrorContent(BuildContext context) {
+    return Column(
+      children: [
+        AppToolbar(
+          padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+          actions: const [AppbarLogo()],
+          onBackButtonPressed: () => _onScreenPop(context),
+        ),
+        Padding(
+          padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const ScreenTitle("An error has occured"),
+              const SizedBox(height: 16),
+              Text(
+                "We're sorry, but it seems an error has cropped up, which is preventing you from completing this step",
+                style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+              ),
             ],
           ),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Your progress',
-                            style: ClientConfig.getTextStyleScheme().heading1,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(width: 16),
-                      SizedBox(
-                        width: 70,
-                        height: 70,
-                        child: CircularPercentIndicator(
-                          percent: currentStep == 0 ? 0.01 : currentStep / onboardingSteps.length,
-                        ),
-                      ),
-                    ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildContent(BuildContext context, OnboardingProgressFetchedViewModel viewModel) {
+    final percent = viewModel.progress.progressPercentage / 100;
+    final activeStep = viewModel.progress.activeStep;
+    final routeName = viewModel.progress.routeName;
+
+    return Column(
+      children: [
+        AppToolbar(
+          padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+          actions: const [AppbarLogo()],
+          onBackButtonPressed: () => _onScreenPop(context),
+        ),
+        Expanded(
+          child: SingleChildScrollView(
+            padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const ScreenTitle("Your progress"),
+                    SizedBox(
+                      width: 70,
+                      height: 70,
+                      child: CircularPercentIndicator(percent: percent),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    viewModel.progress.activeStep != StepperItemType.signUp
+                        ? 'If you need to pause at any point, you can sign in later and pick up right where you left off.'
+                        : 'Let\'s get you an account!',
+                    style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
                   ),
-                  const SizedBox(height: 8),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: (currentStep != 0)
-                        ? Text(
-                            'If you need to pause at any point, you can sign in later and pick up right where you left off.',
-                            style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                          )
-                        : Text(
-                            'Let\'s get you an account!',
-                            style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                          ),
-                  ),
-                  const SizedBox(height: 24),
-                  for (int index = 0; index < onboardingSteps.length; index++) ...[
-                    if (currentStep < index)
-                      OnboardingStepListTile(
-                          step: onboardingSteps[index],
-                          positionInList: index + 1,
-                          state: OnboardingStepState.notStarted),
-                    if (currentStep > index)
-                      OnboardingStepListTile(
-                          step: onboardingSteps[index],
-                          positionInList: index + 1,
-                          state: OnboardingStepState.completed),
-                    if (currentStep == index)
-                      OnboardingStepListTile(
-                          step: onboardingSteps[index],
-                          positionInList: index + 1,
-                          state: OnboardingStepState.inProgress),
-                    if (index != onboardingSteps.length - 1) const SizedBox(height: 16),
-                  ]
-                ],
-              ),
+                ),
+                const SizedBox(height: 24),
+                OnboardingStepper(activeStep: activeStep),
+              ],
             ),
           ),
-          Padding(
-            padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-            child: SizedBox(
-              width: double.infinity,
-              child: PrimaryButton(text: "Continue", onPressed: () {}),
+        ),
+        Padding(
+          padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
+          child: SizedBox(
+            width: double.infinity,
+            child: PrimaryButton(
+              text: "Continue",
+              onPressed: () {
+                Navigator.pushNamed(context, routeName);
+              },
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
 
+class OnboardingStepper extends StatelessWidget {
+  final StepperItemType activeStep;
+
+  const OnboardingStepper({super.key, required this.activeStep});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: OnboardingStepper.steps.length,
+      separatorBuilder: (context, index) => const SizedBox(height: 16),
+      itemBuilder: (context, index) {
+        final item = OnboardingStepper.steps[index];
+        final state = item.type == activeStep
+            ? OnboardingStepState.inProgress
+            : item.type.index < activeStep.index
+                ? OnboardingStepState.completed
+                : OnboardingStepState.notStarted;
+
+        return OnboardingStepListTile(
+          item: item,
+          state: state,
+          index: index + 1,
+        );
+      },
+    );
+  }
+
+  static const List<OnboardingStepperItem> steps = [
+    OnboardingStepperItem(
+      type: StepperItemType.signUp,
+      title: 'Sign up',
+      description: 'Fill in your title, name, email address and choose your password. It\'s that easy.',
+      timeEstimation: 2,
+    ),
+    OnboardingStepperItem(
+      type: StepperItemType.personalDetails,
+      title: 'Personal details',
+      description: 'We\'ll need a few personal details from you. Rest assured your data is in good hands with us.',
+      timeEstimation: 3,
+    ),
+    OnboardingStepperItem(
+      type: StepperItemType.financialDetails,
+      title: 'Financial details',
+      description:
+          'Tailored to your financial needs, we\'ll gather essential information through a few simple questions.',
+      timeEstimation: 5,
+    ),
+    OnboardingStepperItem(
+      type: StepperItemType.identityVerification,
+      title: 'Identity verification',
+      description: 'Verify your identity quickly and easily with your preferred method.',
+      timeEstimation: 15,
+    ),
+    OnboardingStepperItem(
+      type: StepperItemType.cardConfiguration,
+      title: 'Card configuration',
+      description: 'Provide your reference account, select your repayment option and let\'s get you your credit card.',
+      timeEstimation: 1,
+    ),
+  ];
+}
+
 class OnboardingStepListTile extends StatelessWidget {
-  final OnboardingStep step;
+  final int index;
   final OnboardingStepState state;
-  final int positionInList;
+  final OnboardingStepperItem item;
 
   const OnboardingStepListTile({
     super.key,
-    required this.step,
+    required this.item,
     required this.state,
-    required this.positionInList,
+    required this.index,
   });
 
   @override
@@ -142,27 +238,13 @@ class OnboardingStepListTile extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                if (state == OnboardingStepState.completed) ...[
-                  TileIcon(
-                    state: state,
-                    positionInList: positionInList,
-                  )
-                ],
-                if (state == OnboardingStepState.inProgress) ...[
-                  TileIcon(
-                    state: state,
-                    positionInList: positionInList,
-                  )
-                ],
-                if (state == OnboardingStepState.notStarted) ...[
-                  TileIcon(
-                    state: state,
-                    positionInList: positionInList,
-                  )
-                ],
+                TileIcon(
+                  state: state,
+                  index: index,
+                ),
                 const SizedBox(width: 16),
                 Text(
-                  step.title,
+                  item.title,
                   style: (state == OnboardingStepState.notStarted)
                       ? ClientConfig.getTextStyleScheme()
                           .labelMedium
@@ -173,7 +255,7 @@ class OnboardingStepListTile extends StatelessWidget {
                 if (state == OnboardingStepState.inProgress) ...[
                   Row(
                     children: [
-                      Text('${step.timeEstimation} MIN', style: ClientConfig.getTextStyleScheme().labelCaps),
+                      Text('${item.timeEstimation} MIN', style: ClientConfig.getTextStyleScheme().labelCaps),
                       const SizedBox(width: 8),
                       SvgPicture.asset('assets/icons/clock.svg', width: 16, height: 16),
                     ],
@@ -181,7 +263,7 @@ class OnboardingStepListTile extends StatelessWidget {
                 ] else if (state == OnboardingStepState.notStarted) ...[
                   Row(
                     children: [
-                      Text('${step.timeEstimation} MIN',
+                      Text('${item.timeEstimation} MIN',
                           style: ClientConfig.getTextStyleScheme()
                               .labelCaps
                               .copyWith(color: ClientConfig.getCustomColors().neutral500)),
@@ -203,7 +285,7 @@ class OnboardingStepListTile extends StatelessWidget {
                   const SizedBox(width: 48),
                   Flexible(
                     child: Text(
-                      step.description,
+                      item.description,
                       style: ClientConfig.getTextStyleScheme().bodySmallRegular,
                     ),
                   ),
@@ -219,68 +301,59 @@ class OnboardingStepListTile extends StatelessWidget {
 
 class TileIcon extends StatelessWidget {
   final OnboardingStepState state;
-  final int positionInList;
+  final int index;
 
   const TileIcon({
     super.key,
     required this.state,
-    required this.positionInList,
+    required this.index,
   });
 
   @override
   Widget build(BuildContext context) {
     if (state == OnboardingStepState.completed) {
-      return InkWell(
-        onTap: () {},
-        child: Container(
-          width: 32,
-          height: 32,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: ClientConfig.getColorScheme().secondary,
-          ),
-          child: Icon(Icons.check, size: 16, color: ClientConfig.getColorScheme().surface),
+      return Container(
+        width: 32,
+        height: 32,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: ClientConfig.getColorScheme().secondary,
         ),
+        child: Icon(Icons.check, size: 16, color: ClientConfig.getColorScheme().surface),
       );
     }
     if (state == OnboardingStepState.inProgress) {
-      return InkWell(
-        onTap: () {},
-        child: Container(
-          width: 32,
-          height: 32,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: ClientConfig.getColorScheme().primary,
-          ),
-          child: Center(
-            child: Text(
-              '$positionInList',
-              style: TextStyle(color: ClientConfig.getColorScheme().surface, fontSize: 16, fontWeight: FontWeight.bold),
-            ),
+      return Container(
+        width: 32,
+        height: 32,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: ClientConfig.getColorScheme().primary,
+        ),
+        child: Center(
+          child: Text(
+            '$index',
+            style: TextStyle(color: ClientConfig.getColorScheme().surface, fontSize: 16, fontWeight: FontWeight.bold),
           ),
         ),
       );
     }
 
-    return InkWell(
-      onTap: () {},
-      child: Container(
-        width: 32,
-        height: 32,
-        decoration: BoxDecoration(
-          border: Border.all(width: 2, color: ClientConfig.getCustomColors().neutral500),
-          shape: BoxShape.circle,
-          color: const Color(0x00000000),
-        ),
-        child: Center(
-          child: Text(
-            '$positionInList',
-            style: TextStyle(
-              color: ClientConfig.getCustomColors().neutral500,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
+    return Container(
+      width: 32,
+      height: 32,
+      decoration: BoxDecoration(
+        border: Border.all(width: 2, color: ClientConfig.getCustomColors().neutral500),
+        shape: BoxShape.circle,
+        color: const Color(0x00000000),
+      ),
+      child: Center(
+        child: Text(
+          '$index',
+          style: TextStyle(
+            color: ClientConfig.getCustomColors().neutral500,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
           ),
         ),
       ),
@@ -288,60 +361,18 @@ class TileIcon extends StatelessWidget {
   }
 }
 
-List<OnboardingStep> onboardingSteps = [
-  OnboardingStep(
-    type: OnboardingStepType.signUp,
-    title: 'Sign up',
-    description: 'Fill in your title, name, email address and choose your password. It\'s that easy.',
-    timeEstimation: 2,
-  ),
-  OnboardingStep(
-    type: OnboardingStepType.personalDetails,
-    title: 'Personal details',
-    description: 'We\'ll need a few personal details from you. Rest assured your data is in good hands with us.',
-    timeEstimation: 3,
-  ),
-  OnboardingStep(
-    type: OnboardingStepType.financialDetails,
-    title: 'Financial details',
-    description:
-        'Tailored to your financial needs, we\'ll gather essential information through a few simple questions.',
-    timeEstimation: 5,
-  ),
-  OnboardingStep(
-    type: OnboardingStepType.identityVerification,
-    title: 'Identity verification',
-    description: 'Verify your identity quickly and easily with your preferred method.',
-    timeEstimation: 15,
-  ),
-  OnboardingStep(
-    type: OnboardingStepType.cardConfiguration,
-    title: 'Card configuration',
-    description: 'Provide your reference account, select your repayment option and let\'s get you your credit card.',
-    timeEstimation: 1,
-  ),
-];
-
-class OnboardingStep {
-  final OnboardingStepType type;
+class OnboardingStepperItem {
+  final StepperItemType type;
   final String title;
   final String description;
   final int timeEstimation;
 
-  OnboardingStep({
+  const OnboardingStepperItem({
     required this.type,
     required this.title,
     required this.description,
     required this.timeEstimation,
   });
-}
-
-enum OnboardingStepType {
-  signUp,
-  personalDetails,
-  financialDetails,
-  identityVerification,
-  cardConfiguration,
 }
 
 enum OnboardingStepState {

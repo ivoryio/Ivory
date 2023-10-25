@@ -1,9 +1,12 @@
 import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_state.dart';
 import 'package:solarisdemo/redux/categories/category_state.dart';
 import 'package:solarisdemo/redux/credit_line/credit_line_state.dart';
 import 'package:solarisdemo/redux/device/device_state.dart';
 import 'package:solarisdemo/redux/notification/notification_state.dart';
+import 'package:solarisdemo/redux/onboarding/onboarding_progress_state.dart';
+import 'package:solarisdemo/redux/onboarding/signup/onboarding_signup_state.dart';
 import 'package:solarisdemo/redux/person/account_summary/account_summay_state.dart';
 import 'package:solarisdemo/redux/person/person_account/person_account_state.dart';
 import 'package:solarisdemo/redux/person/reference_account/reference_account_state.dart';
@@ -32,7 +35,10 @@ AppState createAppState({
   NotificationState? notificationState,
   TransactionApprovalState? transactionApprovalState,
   AccountSummaryState? accountSummaryState,
+  AuthState? authState,
   TransactionsState? homePageTransactionsState,
+  OnboardingSignupState? onboardingSignupState,
+  OnboardingProgressState? onboardingProgressState,
 }) {
   return AppState(
     transactionsState: transactionsState ?? TransactionsInitialState(),
@@ -51,6 +57,9 @@ AppState createAppState({
     notificationState: notificationState ?? NotificationInitialState(),
     transactionApprovalState: transactionApprovalState ?? TransactionApprovalInitialState(),
     accountSummaryState: accountSummaryState ?? AccountSummaryInitialState(),
+    authState: authState ?? AuthInitialState(),
     homePageTransactionsState: homePageTransactionsState ?? TransactionsInitialState(),
+    onboardingSignupState: onboardingSignupState ?? OnboardingSignupSubmittedState(),
+    onboardingProgressState: onboardingProgressState ?? OnboardingProgressInitialLoadingState(),
   );
 }

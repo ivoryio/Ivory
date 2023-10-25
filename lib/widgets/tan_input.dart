@@ -29,7 +29,7 @@ class InputCodeBox extends StatefulWidget {
 class _InputCodeBoxState extends State<InputCodeBox> {
   @override
   Widget build(BuildContext context) {
-    final borderColor = widget.isFocused ? ClientConfig.getColorScheme().primary : const Color(0xFFCFD4D9);
+    final borderColor = widget.isFocused ? ClientConfig.getColorScheme().primary : ClientConfig.getCustomColors().neutral400;
 
     return Container(
       padding: const EdgeInsets.only(left: 4),
@@ -41,7 +41,7 @@ class _InputCodeBoxState extends State<InputCodeBox> {
           width: 1,
           color: borderColor,
         ),
-        color: const Color(0xFFF8F9FA),
+        color: ClientConfig.getCustomColors().neutral100,
       ),
       child: Center(
         child: TextFormField(
@@ -59,10 +59,10 @@ class _InputCodeBoxState extends State<InputCodeBox> {
             border: InputBorder.none,
             contentPadding: EdgeInsets.zero,
             hintText: widget.hintText ?? '',
-            hintStyle: const TextStyle(
+            hintStyle: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w500,
-              color: Color(0xFFADADB4),
+              color: ClientConfig.getCustomColors().neutral500,
             ),
           ),
         ),

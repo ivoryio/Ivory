@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_presenter.dart';
 import 'package:solarisdemo/ivory_app.dart';
 import 'package:solarisdemo/models/user.dart';
+import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_state.dart';
 import 'package:solarisdemo/redux/device/device_action.dart';
@@ -32,7 +31,8 @@ class SettingsDevicePairingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = context.read<AuthCubit>().state.user!;
+    final user =
+        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
     final scrollController = ScrollController();
 
     return ScreenScaffold(
@@ -114,11 +114,11 @@ class SettingsDevicePairingScreen extends StatelessWidget {
       children: [
         Container(
           margin: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(
               Radius.circular(16),
             ),
-            color: Color(0xFFF8F9FA),
+            color: ClientConfig.getCustomColors().neutral100,
           ),
           child: Column(
             children: [
@@ -166,7 +166,7 @@ class SettingsDevicePairingScreen extends StatelessWidget {
               ),
               Container(
                 height: 1,
-                color: const Color(0xFFDFE2E6),
+                color: ClientConfig.getCustomColors().neutral300,
               ),
               SizedBox(
                 width: double.infinity,
@@ -190,7 +190,7 @@ class SettingsDevicePairingScreen extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8),
                         child: LinearPercentIndicator(
-                          backgroundColor: const Color(0xFFE9EAEB),
+                          backgroundColor: ClientConfig.getCustomColors().neutral200,
                           progressColor: ClientConfig.getColorScheme().secondary,
                           lineHeight: 8,
                           barRadius: const Radius.circular(1000),
@@ -211,7 +211,7 @@ class SettingsDevicePairingScreen extends StatelessWidget {
               if (viewModel is DeviceBindingFetchedButEmptyViewModel)
                 Container(
                   height: 1,
-                  color: const Color(0xFFDFE2E6),
+                  color: ClientConfig.getCustomColors().neutral300,
                 ),
               if (viewModel is DeviceBindingFetchedButEmptyViewModel)
                 GestureDetector(

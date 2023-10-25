@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:solarisdemo/infrastructure/person/account_summary/account_summary_presenter.dart';
 import 'package:solarisdemo/models/person_model.dart';
+import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/screens/account/account_details_screen.dart';
 import 'package:solarisdemo/screens/available_balance/available_balance_screen.dart';
 import 'package:solarisdemo/screens/repayments/repayments_screen.dart';
@@ -13,7 +13,6 @@ import 'package:solarisdemo/widgets/rewards.dart';
 import 'package:solarisdemo/widgets/screen.dart';
 
 import '../../config.dart';
-import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../infrastructure/transactions/transaction_presenter.dart';
 import '../../models/transactions/transaction_model.dart';
 import '../../models/user.dart';
@@ -40,7 +39,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
+    final user = (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
 
     return Screen(
       title: 'Welcome ${user.cognito.firstName}!',
@@ -92,54 +91,55 @@ class HomePageContent extends StatelessWidget {
             customer: user.person,
             user: user,
           ),
-          Padding(
-            padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-            child: Column(
-              children: [
-                const TransactionListTitle(
+          Column(
+            children: [
+              Padding(
+                padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+                child: const TransactionListTitle(
                   displayShowAllButton: true,
                 ),
-                StoreConnector<AppState, TransactionsViewModel>(
-                  onInit: (store) => store.dispatch(
-                    GetHomeTransactionsCommandAction(
-                      filter: _defaultTransactionListFilter,
-                      user: user.cognito,
-                      forceReloadTransactions: false,
-                    ),
+              ),
+              StoreConnector<AppState, TransactionsViewModel>(
+                onInit: (store) => store.dispatch(
+                  GetHomeTransactionsCommandAction(
+                    filter: _defaultTransactionListFilter,
+                    user: user.cognito,
+                    forceReloadTransactions: false,
                   ),
-                  converter: (store) =>
-                      TransactionPresenter.presentTransactions(transactionsState: store.state.homePageTransactionsState),
-                  builder: (context, viewModel) {
-                    if (viewModel is TransactionsErrorViewModel) {
-                      return const Center(
-                        child: Text('Could not load transactions'),
-                      );
-                    }
-
-                    if (viewModel is TransactionsFetchedViewModel) {
-                      return Column(
-                        children: [
-                          for (var transaction in viewModel.transactions!)
-                            TransactionListItem(
-                              transaction: transaction,
-                            ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 24,
-                            ),
-                            child: Analytics(
-                              transactions: viewModel.transactions!,
-                            ),
-                          ),
-                        ],
-                      );
-                    }
-
-                    return const Center(child: CircularProgressIndicator());
-                  },
                 ),
-              ],
-            ),
+                converter: (store) =>
+                    TransactionPresenter.presentTransactions(transactionsState: store.state.homePageTransactionsState),
+                builder: (context, viewModel) {
+                  if (viewModel is TransactionsErrorViewModel) {
+                    return const Center(
+                      child: Text('Could not load transactions'),
+                    );
+                  }
+
+                  if (viewModel is TransactionsFetchedViewModel) {
+                    return Column(
+                      children: [
+                        for (var transaction in viewModel.transactions!)
+                          TransactionListItem(
+                            transaction: transaction,
+                          ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 24,
+                            horizontal: 24,
+                          ),
+                          child: Analytics(
+                            transactions: viewModel.transactions!,
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+
+                  return const Center(child: CircularProgressIndicator());
+                },
+              ),
+            ],
           ),
           Padding(
             padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,

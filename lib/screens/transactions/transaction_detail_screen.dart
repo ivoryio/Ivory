@@ -1,13 +1,14 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
-import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/models/amount_value.dart';
 import 'package:solarisdemo/models/categories/category.dart';
 import 'package:solarisdemo/models/transactions/transaction_model.dart';
 import 'package:solarisdemo/models/transactions/upcoming_transaction_model.dart';
+import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/screens/repayments/repayments_screen.dart';
 import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -27,7 +28,8 @@ class TransactionDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final argument = ModalRoute.of(context)!.settings.arguments;
-    final user = context.read<AuthCubit>().state.user!;
+    final user =
+        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
     final scrollController = ScrollController();
 
     AmountValue amountValue;
@@ -110,7 +112,7 @@ class TransactionDetailScreen extends StatelessWidget {
             ),
             TextSpan(
               text: 'to view the repayment to be debited from your reference account.',
-              style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(color: const Color(0xFF15141E)),
+              style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(color: ClientConfig.getCustomColors().neutral900),
             ),
           ],
           style: ClientConfig.getTextStyleScheme()
@@ -207,7 +209,7 @@ class _Content extends StatelessWidget {
           child: Column(
             children: [
               Material(
-                color: const Color(0xFFF8F9FA),
+                color: ClientConfig.getCustomColors().neutral100,
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(
                     Radius.circular(16),
@@ -310,7 +312,7 @@ class _Content extends StatelessWidget {
                       width: double.infinity,
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF8F9FA),
+                        color: ClientConfig.getCustomColors().neutral100,
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Text(note!),

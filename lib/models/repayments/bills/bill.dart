@@ -32,7 +32,7 @@ class Bill {
   factory Bill.fromJson(Map<String, dynamic> json) {
     return Bill(
       id: json['id'],
-      postboxItemId: json['postbox_item_id'],
+      postboxItemId: json['postbox_item_id'] ?? "",
       statementDate: DateTime.parse(json['statement_date']),
       dueDate: DateTime.parse(json['due_date']),
       amountSpent:

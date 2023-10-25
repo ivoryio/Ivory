@@ -149,12 +149,12 @@ class BankCardWidget extends StatelessWidget {
 
   LinearGradient _buildGradient() {
     if (isFrozen) {
-      return const LinearGradient(
-        begin: Alignment(-1.0, -1.0),
-        end: Alignment(1.0, 1.0),
+      return LinearGradient(
+        begin: const Alignment(-1.0, -1.0),
+        end: const Alignment(1.0, 1.0),
         colors: [
-          Color(0xFFCFD4D9),
-          Color(0xFF56555E),
+          ClientConfig.getCustomColors().neutral400,
+          ClientConfig.getCustomColors().neutral700,
         ],
       );
     } else {

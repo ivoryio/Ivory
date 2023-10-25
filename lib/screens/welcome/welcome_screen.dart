@@ -1,10 +1,17 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/infrastructure/auth/auth_presenter.dart';
 import 'package:solarisdemo/ivory_app.dart';
+import 'package:solarisdemo/models/auth/auth_type.dart';
+import 'package:solarisdemo/navigator.dart';
+import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/auth/auth_action.dart';
 import 'package:solarisdemo/screens/login/login_screen.dart';
+import 'package:solarisdemo/screens/login/login_with_biometrics_screen.dart';
 import 'package:solarisdemo/screens/onboarding/start/onboarding_start_screen.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
@@ -19,16 +26,50 @@ class WelcomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const ScreenScaffold(
+    return ScreenScaffold(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.light,
       extendBodyBehindAppBar: true,
       body: ScrollableScreenContainer(
-        child: Column(
-          children: [
-            HeroVideo(),
-            WelcomeScreenContent(),
-          ],
+        child: StoreConnector<AppState, AuthViewModel>(
+          onInit: (store) {
+            store.dispatch(
+              LoadCredentialsCommandAction(),
+            );
+          },
+          onWillChange: (previousViewModel, newViewModel) {
+            if (previousViewModel is AuthLoadingViewModel &&
+                newViewModel is AuthCredentialsLoadedViewModel &&
+                newViewModel.email!.isNotEmpty &&
+                newViewModel.password!.isNotEmpty &&
+                newViewModel.deviceId!.isNotEmpty) {
+              StoreProvider.of<AppState>(context).dispatch(
+                InitUserAuthenticationCommandAction(
+                  email: newViewModel.email!,
+                  password: newViewModel.password!,
+                ),
+              );
+            }
+            if (previousViewModel is AuthLoadingViewModel &&
+                newViewModel is AuthInitializedViewModel &&
+                newViewModel.authType == AuthType.withBiometrics) {
+              Navigator.of(
+                navigatorKey.currentContext as BuildContext,
+              ).pushNamedAndRemoveUntil(LoginWithBiometricsScreen.routeName, (route) => false);
+            }
+          },
+          builder: (context, viewModel) {
+            if (viewModel is AuthLoadingViewModel) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            return const Column(
+              children: [
+                HeroVideo(),
+                WelcomeScreenContent(),
+              ],
+            );
+          },
+          converter: (store) => AuthPresenter.presentAuth(authState: store.state.authState),
         ),
       ),
     );
@@ -70,6 +111,10 @@ class _HeroVideoState extends State<HeroVideo> with WidgetsBindingObserver, Rout
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (IvoryApp.generalRouteObserver.routeStack.last != WelcomeScreen.routeName) {
+      return;
+    }
+
     if (state == AppLifecycleState.paused && _controller.value.isPlaying) {
       log("Pausing video", name: "didChangeAppLifecycleState: paused");
       _controller.pause();
@@ -159,7 +204,7 @@ class WelcomeScreenContent extends StatelessWidget {
         padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
         child: Column(
           children: [
-            const _Carousel(),
+            _Carousel(),
             const Spacer(),
             SizedBox(
               width: double.infinity,
@@ -185,8 +230,6 @@ class WelcomeScreenContent extends StatelessWidget {
 }
 
 class _Carousel extends StatelessWidget {
-  const _Carousel({super.key});
-
   @override
   Widget build(BuildContext context) {
     final pageController = PageController();

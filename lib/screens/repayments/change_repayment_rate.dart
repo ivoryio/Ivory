@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
-import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/infrastructure/repayments/change_repayment/change_repayment_presenter.dart';
+import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/repayments/change_repayment/change_repayment_action.dart';
 import 'package:solarisdemo/screens/repayments/repayment_successfully_changed.dart';
 import 'package:solarisdemo/screens/repayments/repayments_screen.dart';
@@ -46,7 +45,8 @@ class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final user = context.read<AuthCubit>().state.user!;
+    final user =
+        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
 
     return ScreenScaffold(
       body: ScrollableScreenContainer(
@@ -214,7 +214,7 @@ class _PageContentState extends State<PageContent> {
             height: 48,
             child: Button(
               text: "Save changes",
-              disabledColor: const Color(0xFFDFE2E6),
+              disabledColor: ClientConfig.getCustomColors().neutral300,
               color: ClientConfig.getColorScheme().tertiary,
               textColor: ClientConfig.getColorScheme().surface,
               onPressed: canContinue
@@ -299,7 +299,7 @@ class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
         border: Border.fromBorderSide(
           BorderSide(
             width: 1,
-            color: selectedRepaymentType == type ? ClientConfig.getColorScheme().secondary : const Color(0xFFE9EAEB),
+            color: selectedRepaymentType == type ? ClientConfig.getColorScheme().secondary : ClientConfig.getCustomColors().neutral200,
             style: BorderStyle.solid,
           ),
         ),
@@ -456,7 +456,7 @@ class _PercentageRepaymentState extends State<PercentageRepayment> {
                 trackHeight: 8,
                 trackShape: const RoundedRectSliderTrackShape(),
                 activeTrackColor: ClientConfig.getColorScheme().secondary,
-                inactiveTrackColor: const Color(0xFFE9EAEB),
+                inactiveTrackColor: ClientConfig.getCustomColors().neutral200,
                 thumbColor: ClientConfig.getColorScheme().primary,
                 thumbShape: CustomThumb(label: sliderValue),
                 overlayColor: const Color(0x00FFFF00),
@@ -572,15 +572,15 @@ class _FixedRepaymentState extends State<FixedRepayment> {
               decoration: BoxDecoration(
                 border: Border.all(
                   width: 1,
-                  color: isErrorRange ? Colors.red : const Color(0xFFADADB4),
+                  color: isErrorRange ? Colors.red : ClientConfig.getCustomColors().neutral500,
                   style: BorderStyle.solid,
                 ),
                 borderRadius: const BorderRadius.only(topLeft: Radius.circular(8), bottomLeft: Radius.circular(8)),
-                color: const Color(0xFFF8F9FA),
+                color: ClientConfig.getCustomColors().neutral100,
               ),
               child: Text(
                 '€',
-                style: ClientConfig.getTextStyleScheme().heading2.copyWith(color: const Color(0xFFADADB4)),
+                style: ClientConfig.getTextStyleScheme().heading2.copyWith(color: ClientConfig.getCustomColors().neutral500),
               ),
             ),
             Expanded(
@@ -625,7 +625,7 @@ class _FixedRepaymentState extends State<FixedRepayment> {
                     vertical: 12,
                   ),
                   filled: true,
-                  fillColor: const Color(0xFFF8F9FA),
+                  fillColor: ClientConfig.getCustomColors().neutral100,
                   border: OutlineInputBorder(
                     borderRadius: const BorderRadius.only(
                       topRight: Radius.circular(8),
@@ -633,7 +633,7 @@ class _FixedRepaymentState extends State<FixedRepayment> {
                     ),
                     borderSide: BorderSide(
                       width: 1,
-                      color: isErrorRange ? Colors.red : const Color(0xFFADADB4),
+                      color: isErrorRange ? Colors.red : ClientConfig.getCustomColors().neutral500,
                       style: BorderStyle.solid,
                     ),
                   ),
@@ -644,7 +644,7 @@ class _FixedRepaymentState extends State<FixedRepayment> {
                     ),
                     borderSide: BorderSide(
                       width: 1,
-                      color: isErrorRange ? Colors.red : const Color(0xFFADADB4),
+                      color: isErrorRange ? Colors.red : ClientConfig.getCustomColors().neutral500,
                       style: BorderStyle.solid,
                     ),
                   ),
