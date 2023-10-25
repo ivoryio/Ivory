@@ -11,6 +11,7 @@ import 'package:solarisdemo/redux/auth/auth_action.dart';
 import 'package:solarisdemo/screens/login/login_with_tan_screen.dart';
 import 'package:solarisdemo/screens/login/modals/mobile_number_country_picker_popup.dart';
 import 'package:solarisdemo/screens/onboarding/onboarding_stepper_screen.dart';
+import 'package:solarisdemo/screens/welcome/welcome_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/checkbox.dart';
 import 'package:solarisdemo/widgets/continue_button_controller.dart';
@@ -53,7 +54,7 @@ class LoginScreen extends StatelessWidget {
           Navigator.pushNamedAndRemoveUntil(
             context,
             OnboardingStepperScreen.routeName,
-            (route) => false,
+            (route) => route.settings.name == WelcomeScreen.routeName,
           );
         }
       },
@@ -409,24 +410,25 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
 
     if (emailAddress.isNotEmpty) {
       if (!isEmailInputValid && !_emailInputController.hasError) {
-      _emailInputController.setErrorText('Please input a valid email address: example@gmail.com');
-      if (hasAuthError) {
-        hasAuthError = false;
-        _passwordInputController.setError(false);
+        _emailInputController.setErrorText('Please input a valid email address: example@gmail.com');
+        if (hasAuthError) {
+          hasAuthError = false;
+          _passwordInputController.setError(false);
+        }
+      } else if (isEmailInputValid && _emailInputController.hasError && !hasAuthError) {
+        _emailInputController.setError(false);
       }
-    } else if (isEmailInputValid && _emailInputController.hasError && !hasAuthError) {
-      _emailInputController.setError(false);
-    }
 
-    if ((_emailInputController.hasError || _passwordInputController.hasError) && _continueButtonController.isEnabled) {
-      _continueButtonController.setDisabled();
-    }
-    if (!_emailInputController.hasError &&
-        _passwordInputController.text.isNotEmpty &&
-        !_passwordInputController.hasError &&
-        !_continueButtonController.isEnabled) {
-      _continueButtonController.setEnabled();
-    }
+      if ((_emailInputController.hasError || _passwordInputController.hasError) &&
+          _continueButtonController.isEnabled) {
+        _continueButtonController.setDisabled();
+      }
+      if (!_emailInputController.hasError &&
+          _passwordInputController.text.isNotEmpty &&
+          !_passwordInputController.hasError &&
+          !_continueButtonController.isEnabled) {
+        _continueButtonController.setEnabled();
+      }
     } else {
       if (_emailInputController.hasError) {
         _emailInputController.setError(false);
@@ -435,7 +437,6 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
         _continueButtonController.setDisabled();
       }
     }
-    
   }
 
   void handleAuthError() {
