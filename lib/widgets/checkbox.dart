@@ -4,10 +4,9 @@ import '../config.dart';
 
 class CheckboxWidget extends StatefulWidget {
   final bool isChecked;
-  final Function(bool) onChanged;
+  final Null Function(bool)? onChanged;
 
-  const CheckboxWidget(
-      {super.key, required this.isChecked, required this.onChanged});
+  const CheckboxWidget({super.key, required this.isChecked, required this.onChanged});
 
   @override
   State<StatefulWidget> createState() => _CheckboxWidgetState();
@@ -33,24 +32,38 @@ class _CheckboxWidgetState extends State<CheckboxWidget> {
           visualDensity: const VisualDensity(
             horizontal: VisualDensity.minimumDensity,
           ),
-          activeColor: ClientConfig.getColorScheme().secondary,
-          side: MaterialStateBorderSide.resolveWith(
-                  (states) {
-                    if(states.contains((MaterialState.selected))) {
-                      return BorderSide(width: 1.0, color: ClientConfig.getColorScheme().secondary);
-                    }
-                    return const BorderSide(width: 1.0, color: Color.fromRGBO(110, 117, 124, 1));
-                  }),
+          fillColor: MaterialStateColor.resolveWith((states) {
+            if (states.contains((MaterialState.disabled))) {
+              return ClientConfig.getCustomColors().neutral500;
+            } else {
+              return ClientConfig.getColorScheme().secondary;
+            }
+          }),
+          side: MaterialStateBorderSide.resolveWith((states) {
+            if (states.contains((MaterialState.selected))) {
+              if (states.contains((MaterialState.disabled))) {
+                return BorderSide(width: 1.0, color: ClientConfig.getCustomColors().neutral500);
+              }
+              return BorderSide(width: 1.0, color: ClientConfig.getColorScheme().secondary);
+            } else {
+              if (states.contains((MaterialState.disabled))) {
+                return BorderSide(width: 1.0, color: ClientConfig.getCustomColors().neutral500);
+              }
+              return BorderSide(width: 1.0, color: ClientConfig.getCustomColors().neutral600);
+            }
+          }),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(2.0),
           ),
           value: _isChecked,
-          onChanged: (checked) {
-            setState(() {
-              _isChecked = checked!;
-              widget.onChanged(checked);
-            });
-          },
+          onChanged: widget.onChanged != null
+              ? (checked) {
+                  setState(() {
+                    _isChecked = checked!;
+                    widget.onChanged!(checked);
+                  });
+                }
+              : null,
         ),
       ),
     );
