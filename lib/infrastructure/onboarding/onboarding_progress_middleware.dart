@@ -16,7 +16,7 @@ class OnboardingProgressMiddleware extends MiddlewareClass<AppState> {
 
     if (action is GetOnboardingProgressCommandAction) {
       if (store.state.authState is! AuthenticationInitializedState) {
-        store.dispatch(OnboardingProgressFetchedEvendAction(step: OnboardingStep.signUp));
+        store.dispatch(OnboardingProgressFetchedEvendAction(step: OnboardingStep.start));
         return;
       }
 

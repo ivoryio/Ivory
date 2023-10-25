@@ -57,6 +57,26 @@ void main() {
     expect((await appState).onboardingProgressState, isA<OnboardingProgressFetchedState>());
   });
 
+  test("When fetching the progress, the state should change to loading", () async {
+    // given
+    final store = createTestStore(
+      onboardingService: FakeOnboardingService(),
+      initialState: createAppState(
+        authState: authentionInitializedState,
+        onboardingProgressState: OnboardingProgressFetchedState(step: OnboardingStep.start),
+      ),
+    );
+
+    final appState = store.onChange
+        .firstWhere((element) => element.onboardingProgressState is OnboardingProgressInitialLoadingState);
+
+    // when
+    store.dispatch(GetOnboardingProgressCommandAction());
+
+    // then
+    expect((await appState).onboardingProgressState, isA<OnboardingProgressInitialLoadingState>());
+  });
+
   test("When onboarding progress has failed fetching the state should change to error", () async {
     // given
     final store = createTestStore(

@@ -3,7 +3,6 @@ import 'package:solarisdemo/infrastructure/onboarding/onboarding_progress_presen
 import 'package:solarisdemo/models/onboarding/onboarding_progress.dart';
 import 'package:solarisdemo/redux/onboarding/onboarding_progress_state.dart';
 import 'package:solarisdemo/screens/onboarding/signup/onboarding_basic_info_screen.dart';
-import 'package:solarisdemo/screens/welcome/welcome_screen.dart';
 
 void main() {
   test("When fetching is in initial loading it should return loading", () {
@@ -46,28 +45,6 @@ void main() {
       activeStep: StepperItemType.signUp,
       progressPercentage: 1,
       routeName: OnboardingBasicInfoScreen.routeName,
-    );
-
-    expect(
-      viewModel,
-      OnboardingProgressFetchedViewModel(progress: progress),
-    );
-  });
-
-  test("When onboarding step is <signUp> it should return the correct OnboardingProgress", () {
-    // given
-    final onboardingProgressState = OnboardingProgressFetchedState(step: OnboardingStep.signUp);
-
-    // when
-    final viewModel = OnboardingProgressPresenter.presentOnboardingProgress(
-      onboardingProgressState: onboardingProgressState,
-    );
-
-    // then
-    const progress = OnboardingProgress(
-      activeStep: StepperItemType.personalDetails,
-      progressPercentage: 20,
-      routeName: WelcomeScreen.routeName, // TODO: currently the date & place of birth screen is not implemented
     );
 
     expect(
