@@ -11,6 +11,7 @@ import 'package:solarisdemo/redux/auth/auth_action.dart';
 import 'package:solarisdemo/screens/login/login_with_tan_screen.dart';
 import 'package:solarisdemo/screens/login/modals/mobile_number_country_picker_popup.dart';
 import 'package:solarisdemo/screens/onboarding/onboarding_stepper_screen.dart';
+import 'package:solarisdemo/screens/welcome/welcome_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/checkbox.dart';
 import 'package:solarisdemo/widgets/continue_button_controller.dart';
@@ -48,13 +49,12 @@ class LoginScreen extends StatelessWidget {
           );
         }
         if (previousViewModel is AuthLoadingViewModel &&
-            newViewModel is AuthErrorViewModel &&
-            newViewModel.errorType == AuthErrorType.incompleteOnboarding) {
+            newViewModel is AuthInitializedViewModel &&
+            newViewModel.authType == AuthType.onboarding) {
           Navigator.pushNamedAndRemoveUntil(
             context,
             OnboardingStepperScreen.routeName,
-            arguments: OnboardingStepperScreenParams(step: OnboardingStepType.signUp),
-            (route) => false,
+            (route) => route.settings.name == WelcomeScreen.routeName,
           );
         }
       },

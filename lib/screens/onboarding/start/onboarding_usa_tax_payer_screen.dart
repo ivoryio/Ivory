@@ -97,7 +97,6 @@ class OnboardingUsaTaxPayerScreen extends StatelessWidget {
                         Navigator.pushNamed(
                           context,
                           OnboardingStepperScreen.routeName,
-                          arguments: OnboardingStepperScreenParams(step: OnboardingStepType.signUp),
                         );
                       },
                     ),

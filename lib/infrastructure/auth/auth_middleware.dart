@@ -65,16 +65,15 @@ class AuthMiddleware extends MiddlewareClass<AppState> {
         return;
       }
 
-
       final user = loginResponse.user;
 
       await _deviceService.saveCredentialsInCache(
         action.email,
         action.password,
       );
-      
+
       if (loginResponse.user.userGroup == CognitoUserGroup.registering) {
-        store.dispatch(AuthFailedEventAction(errorType: AuthErrorType.incompleteOnboarding));
+        store.dispatch(AuthenticationInitializedEventAction(cognitoUser: user, authType: AuthType.onboarding));
         return;
       }
 

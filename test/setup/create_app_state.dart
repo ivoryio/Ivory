@@ -5,6 +5,7 @@ import 'package:solarisdemo/redux/categories/category_state.dart';
 import 'package:solarisdemo/redux/credit_line/credit_line_state.dart';
 import 'package:solarisdemo/redux/device/device_state.dart';
 import 'package:solarisdemo/redux/notification/notification_state.dart';
+import 'package:solarisdemo/redux/onboarding/onboarding_progress_state.dart';
 import 'package:solarisdemo/redux/onboarding/signup/onboarding_signup_state.dart';
 import 'package:solarisdemo/redux/person/account_summary/account_summay_state.dart';
 import 'package:solarisdemo/redux/person/person_account/person_account_state.dart';
@@ -37,6 +38,7 @@ AppState createAppState({
   AuthState? authState,
   TransactionsState? homePageTransactionsState,
   OnboardingSignupState? onboardingSignupState,
+  OnboardingProgressState? onboardingProgressState,
 }) {
   return AppState(
     transactionsState: transactionsState ?? TransactionsInitialState(),
@@ -58,5 +60,6 @@ AppState createAppState({
     authState: authState ?? AuthInitialState(),
     homePageTransactionsState: homePageTransactionsState ?? TransactionsInitialState(),
     onboardingSignupState: onboardingSignupState ?? OnboardingSignupSubmittedState(),
+    onboardingProgressState: onboardingProgressState ?? OnboardingProgressInitialLoadingState(),
   );
 }
