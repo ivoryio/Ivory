@@ -33,7 +33,6 @@ class CardActions extends StatelessWidget {
       onInit: (store) {
         store.dispatch(
           GetBankCardCommandAction(
-            user: user,
             cardId: initialCardId,
             forceReloadCardData: false,
           ),);
@@ -179,7 +178,6 @@ class ActiveCard extends StatelessWidget {
                     BankCardFreezeCommandAction(
                       bankCards:
                           (StoreProvider.of<AppState>(context).state.bankCardsState as BankCardsFetchedState).bankCards,
-                      user: viewModel.user!,
                       bankCard: viewModel.bankCard!,
                     ),
                   );
@@ -276,7 +274,6 @@ class FrozenCard extends StatelessWidget {
               onPressed: () async {
                 StoreProvider.of<AppState>(context).dispatch(
                   BankCardUnfreezeCommandAction(
-                    user: viewModel.user!,
                     bankCard: viewModel.bankCard!,
                     bankCards:
                         (StoreProvider.of<AppState>(context).state.bankCardsState as BankCardsFetchedState).bankCards,

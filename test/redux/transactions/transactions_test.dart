@@ -1,15 +1,16 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:solarisdemo/models/transactions/transaction_model.dart';
-import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/transactions/transactions_action.dart';
 import 'package:solarisdemo/redux/transactions/transactions_state.dart';
 
+import '../../setup/authentication_helper.dart';
 import '../../setup/create_app_state.dart';
 import '../../setup/create_store.dart';
-import '../auth/auth_mocks.dart';
 import 'transaction_mocks.dart';
 
 void main() {
+  final authState = AuthStatePlaceholder.loggedInState();
+
   test("When asking to fetch transactions the first time you enter the screen it should have a loading state",
       () async {
     //given
@@ -17,6 +18,7 @@ void main() {
       transactionService: FakeTransactionService(),
       initialState: createAppState(
         transactionsState: TransactionsInitialState(),
+        authState: authState,
       ),
     );
 
@@ -25,11 +27,6 @@ void main() {
     store.dispatch(
       GetTransactionsCommandAction(
         filter: null,
-        user: User(
-          session: MockUserSession(),
-          attributes: [],
-          cognitoUser: MockCognitoUser(),
-        ),
         forceReloadTransactions: false,
       ),
     );
@@ -43,6 +40,7 @@ void main() {
       transactionService: FakeTransactionService(),
       initialState: createAppState(
         transactionsState: TransactionsInitialState(),
+        authState: authState,
       ),
     );
 
@@ -51,11 +49,6 @@ void main() {
     store.dispatch(
       GetTransactionsCommandAction(
         filter: null,
-        user: User(
-          session: MockUserSession(),
-          attributes: [],
-          cognitoUser: MockCognitoUser(),
-        ),
         forceReloadTransactions: false,
       ),
     );
@@ -70,6 +63,7 @@ void main() {
       transactionService: FakeFailingTransactionService(),
       initialState: createAppState(
         transactionsState: TransactionsInitialState(),
+        authState: authState,
       ),
     );
 
@@ -78,11 +72,6 @@ void main() {
     store.dispatch(
       GetTransactionsCommandAction(
         filter: null,
-        user: User(
-          session: MockUserSession(),
-          attributes: [],
-          cognitoUser: MockCognitoUser(),
-        ),
         forceReloadTransactions: false,
       ),
     );
@@ -97,6 +86,7 @@ void main() {
       transactionService: FakeTransactionService(),
       initialState: createAppState(
         transactionsState: TransactionsInitialState(),
+        authState: authState,
       ),
     );
 
@@ -104,11 +94,6 @@ void main() {
     //when
     store.dispatch(
       GetUpcomingTransactionsCommandAction(
-        user: User(
-          session: MockUserSession(),
-          attributes: [],
-          cognitoUser: MockCognitoUser(),
-        ),
         filter: null,
       ),
     );
@@ -122,6 +107,7 @@ void main() {
       transactionService: FakeTransactionService(),
       initialState: createAppState(
         transactionsState: TransactionsInitialState(),
+        authState: authState,
       ),
     );
 
@@ -130,11 +116,6 @@ void main() {
     //when
     store.dispatch(
       GetUpcomingTransactionsCommandAction(
-        user: User(
-          session: MockUserSession(),
-          attributes: [],
-          cognitoUser: MockCognitoUser(),
-        ),
         filter: null,
       ),
     );
@@ -151,6 +132,7 @@ void main() {
       transactionService: FakeTransactionService(),
       initialState: createAppState(
         homePageTransactionsState: TransactionsInitialState(),
+        authState: authState,
       ),
     );
 
@@ -162,11 +144,6 @@ void main() {
           size: 3,
           page: 1,
           sort: '-recorded_at',
-        ),
-        user: User(
-          session: MockUserSession(),
-          attributes: [],
-          cognitoUser: MockCognitoUser(),
         ),
         forceReloadTransactions: false,
       ),
@@ -181,6 +158,7 @@ void main() {
       transactionService: FakeTransactionService(),
       initialState: createAppState(
         transactionsState: TransactionsInitialState(),
+        authState: authState,
       ),
     );
 
@@ -192,11 +170,6 @@ void main() {
           size: 3,
           page: 1,
           sort: '-recorded_at',
-        ),
-        user: User(
-          session: MockUserSession(),
-          attributes: [],
-          cognitoUser: MockCognitoUser(),
         ),
         forceReloadTransactions: false,
       ),
@@ -212,6 +185,7 @@ void main() {
       transactionService: FakeFailingTransactionService(),
       initialState: createAppState(
         transactionsState: TransactionsInitialState(),
+        authState: authState,
       ),
     );
 
@@ -223,11 +197,6 @@ void main() {
           size: 3,
           page: 1,
           sort: '-recorded_at',
-        ),
-        user: User(
-          session: MockUserSession(),
-          attributes: [],
-          cognitoUser: MockCognitoUser(),
         ),
         forceReloadTransactions: false,
       ),

@@ -103,7 +103,6 @@ class HomePageContent extends StatelessWidget {
                 onInit: (store) => store.dispatch(
                   GetHomeTransactionsCommandAction(
                     filter: _defaultTransactionListFilter,
-                    user: user.cognito,
                     forceReloadTransactions: false,
                   ),
                 ),

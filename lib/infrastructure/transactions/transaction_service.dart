@@ -11,11 +11,10 @@ class TransactionService extends ApiService {
 
   Future<TransactionsServiceResponse> getTransactions({
     TransactionListFilter? filter,
-    User? user,
+    required User user,
   }) async {
-    if (user != null) {
-      this.user = user;
-    }
+    this.user = user;
+
     try {
       var data = await get(
         '/transactions',
@@ -31,12 +30,9 @@ class TransactionService extends ApiService {
   }
 
   Future<UpcomingTransactionServiceResponse> getUpcomingTransactions({
-    User? user,
+    required User user,
   }) async {
-    if (user != null) {
-      this.user = user;
-    }
-
+    this.user = user;
     try {
       var data = await get('/bills/upcoming_bills');
 

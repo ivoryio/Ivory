@@ -30,7 +30,7 @@ class BankCardsScreen extends StatelessWidget {
 
     return StoreConnector<AppState, BankCardsViewModel>(
       onInit: (store) {
-        store.dispatch(GetBankCardsCommandAction(user: user.cognito, forceCardsReload: false));
+        store.dispatch(GetBankCardsCommandAction(forceCardsReload: false));
       },
       converter: (store) {
         return BankCardPresenter.presentBankCards(
@@ -103,8 +103,6 @@ class _CardSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user =
-        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
     if (cards.isEmpty) {
       return Padding(
         padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
@@ -133,7 +131,6 @@ class _CardSlider extends StatelessWidget {
             clipBehavior: Clip.none,
             itemCount: cards.length,
             onPageChanged: (cardIndex) => StoreProvider.of<AppState>(context).dispatch(GetBankCardCommandAction(
-              user: user,
               cardId: cards[cardIndex].id,
               forceReloadCardData: false,
             )),
@@ -205,7 +202,6 @@ void addNewCard(BuildContext context) {
       (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
   StoreProvider.of<AppState>(context).dispatch(
     CreateCardCommandAction(
-      user: user,
       firstName: user.person.firstName!,
       lastName: user.person.lastName!,
       type: BankCardType.VIRTUAL_VISA_CREDIT,

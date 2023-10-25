@@ -294,7 +294,6 @@ class SettingsDevicePairingScreen extends StatelessWidget {
       Navigator.popUntil(context, ModalRoute.withName(BankCardDetailsScreen.routeName));
       StoreProvider.of<AppState>(context).dispatch(
         BankCardFetchDetailsCommandAction(
-          user: user,
           bankCard: (StoreProvider.of<AppState>(context).state.bankCardState as BankCardNoBoundedDevicesState).bankCard,
         ),
       );
@@ -302,7 +301,6 @@ class SettingsDevicePairingScreen extends StatelessWidget {
       Navigator.popUntil(context, ModalRoute.withName(BankCardChangePinChooseScreen.routeName));
       StoreProvider.of<AppState>(context).dispatch(
         BankCardInitiatePinChangeCommandAction(
-          user: user,
           bankCard: (StoreProvider.of<AppState>(context).state.bankCardState as BankCardNoBoundedDevicesState).bankCard,
         ),
       );

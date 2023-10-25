@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
-import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/transactions/transactions_action.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/ivory_tab.dart';
@@ -12,7 +11,6 @@ import '../../config.dart';
 import '../../models/amount_value.dart';
 import '../../models/transactions/transaction_model.dart';
 import '../../models/transactions/upcoming_transaction_model.dart';
-import '../../models/user.dart';
 import '../../utilities/format.dart';
 import '../../widgets/empty_list_message.dart';
 import '../../widgets/pill_button.dart';
@@ -35,12 +33,9 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final user =
-        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
-
     return StoreConnector<AppState, TransactionsViewModel>(
         onInit: (store) {
-          store.dispatch(GetTransactionsCommandAction(filter: null, user: user.cognito, forceReloadTransactions: false));
+          store.dispatch(GetTransactionsCommandAction(filter: null, forceReloadTransactions: false));
         },
         converter: (store) =>
             TransactionPresenter.presentTransactions(transactionsState: store.state.transactionsState),
@@ -52,7 +47,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             body: RefreshIndicator(
               onRefresh: () async {
                 StoreProvider.of<AppState>(context).dispatch(
-                  GetTransactionsCommandAction(filter: viewModel.transactionListFilter, user: user.cognito, forceReloadTransactions: true),
+                  GetTransactionsCommandAction(filter: viewModel.transactionListFilter, forceReloadTransactions: true),
                 );
               },
               child: Column(
@@ -94,13 +89,13 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                             );
                           }
                           StoreProvider.of<AppState>(context)
-                              .dispatch(GetTransactionsCommandAction(filter: filter, user: user.cognito, forceReloadTransactions: true));
+                              .dispatch(GetTransactionsCommandAction(filter: filter, forceReloadTransactions: true));
                         },
                         onChangedSearch: (String value) {
                           return;
                         },
                       ),
-                      _buildFilterListDisplay(viewModel, user),
+                      _buildFilterListDisplay(viewModel),
                       const SizedBox(height: 16),
                       IvoryTabBar(
                         controller: tabController,
@@ -110,7 +105,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                             onPressed: () => StoreProvider.of<AppState>(context).dispatch(
                               GetTransactionsCommandAction(
                                 filter: viewModel.transactionListFilter,
-                                user: user.cognito,
                                 forceReloadTransactions: true,
                               ),
                             ),
@@ -119,7 +113,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                             title: "Upcoming",
                             onPressed: () => StoreProvider.of<AppState>(context).dispatch(
                               GetUpcomingTransactionsCommandAction(
-                                user: user.cognito,
                                 filter: viewModel.transactionListFilter,
                               ),
                             ),
@@ -478,7 +471,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     );
   }
 
-  Widget _buildFilterListDisplay(TransactionsViewModel viewModel, AuthenticatedUser user) {
+  Widget _buildFilterListDisplay(TransactionsViewModel viewModel) {
     List<Widget> widgetList = [];
 
     if (viewModel.transactionListFilter?.bookingDateMax != null ||
@@ -499,7 +492,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       searchString: viewModel.transactionListFilter!.searchString,
                       categories: viewModel.transactionListFilter!.categories,
                     ),
-                    user: user.cognito,
                     forceReloadTransactions: true));
               },
               icon: const Icon(
@@ -530,7 +522,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                         searchString: viewModel.transactionListFilter!.searchString,
                         categories: newCategories,
                       ),
-                      user: user.cognito,
                       forceReloadTransactions: true));
                 },
                 icon: const Icon(

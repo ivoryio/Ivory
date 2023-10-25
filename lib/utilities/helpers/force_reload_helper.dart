@@ -13,7 +13,7 @@ void forceReloadAppStates(Store<AppState> store, User user) {
   final filter = (transactionsState is TransactionsFetchedState) ? transactionsState.transactionListFilter:null;
 
   store.dispatch(
-    GetTransactionsCommandAction(filter: filter, user: user, forceReloadTransactions: true),
+    GetTransactionsCommandAction(filter: filter, forceReloadTransactions: true),
   );
 
   store.dispatch(GetHomeTransactionsCommandAction(
@@ -22,11 +22,10 @@ void forceReloadAppStates(Store<AppState> store, User user) {
       page: 1,
       sort: '-recorded_at',
     ),
-    user: user,
     forceReloadTransactions: true,
   ));
 
-  store.dispatch(GetBankCardsCommandAction(user: user, forceCardsReload: true));
+  store.dispatch(GetBankCardsCommandAction(forceCardsReload: true));
 
   store.dispatch(GetAccountSummaryCommandAction(user: user, forceAccountSummaryReload: true));
 }

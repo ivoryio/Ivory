@@ -1,10 +1,7 @@
 import '../../models/categories/category.dart';
-import '../../models/user.dart';
 
 class GetCategoriesCommandAction {
-  final User user;
-
-  GetCategoriesCommandAction({required this.user});
+  GetCategoriesCommandAction();
 }
 
 class CategoriesLoadingEventAction {}

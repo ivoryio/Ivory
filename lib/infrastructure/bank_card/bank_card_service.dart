@@ -9,11 +9,10 @@ class BankCardService extends ApiService {
 
   Future<BankCardServiceResponse> createBankCard({
     required CreateBankCardReqBody reqBody,
-    required User? user,
+    required User user,
   }) async {
-    if (user != null) {
-      this.user = user;
-    }
+    this.user = user;
+
     try {
       final data = await post('/account/cards', body: reqBody.toJson());
 
@@ -27,11 +26,10 @@ class BankCardService extends ApiService {
 
   Future<BankCardServiceResponse> getBankCardById({
     required String cardId,
-    required User? user,
+    required User user,
   }) async {
-    if (user != null) {
-      this.user = user;
-    }
+    this.user = user;
+
     try {
       final data = await get('/account/cards/$cardId');
 
@@ -44,11 +42,10 @@ class BankCardService extends ApiService {
   }
 
   Future<BankCardServiceResponse> getBankCards({
-    required User? user,
+    required User user,
   }) async {
-    if (user != null) {
-      this.user = user;
-    }
+    this.user = user;
+
     try {
       final data = await get('/account/cards');
 
@@ -62,11 +59,10 @@ class BankCardService extends ApiService {
 
   Future<BankCardServiceResponse> activateBankCard({
     required String cardId,
-    required User? user,
+    required User user,
   }) async {
-    if (user != null) {
-      this.user = user;
-    }
+    this.user = user;
+
     try {
       final data = await post('/account/cards/$cardId');
 
@@ -80,12 +76,11 @@ class BankCardService extends ApiService {
 
   Future<BankCardServiceResponse> getCardDetails({
     required String cardId,
-    required User? user,
+    required User user,
     required GetCardDetailsRequestBody reqBody,
   }) async {
-    if (user != null) {
-      this.user = user;
-    }
+    this.user = user;
+
     try {
       //Uncomment this after and remove the row below after final implementation
       // final data = await post(
@@ -103,25 +98,16 @@ class BankCardService extends ApiService {
         ),
       );
     } catch (e) {
-      return GetCardDetailsSuccessResponse(
-        cardDetails: BankCardFetchedDetails(
-          cardHolder: 'John Doe',
-          cardExpiry: '11/24',
-          cvv: '8315',
-          cardNumber: '4526 1612 3862 1856',
-        ),
-      );
       return BankCardErrorResponse();
     }
   }
 
   Future<BankCardServiceResponse> getLatestPinKey({
     required String cardId,
-    required User? user,
+    required User user,
   }) async {
-    if (user != null) {
-      this.user = user;
-    }
+    this.user = user;
+
     try {
       final data = await get('/account/cards/$cardId/pin_keys/latest');
 
@@ -151,11 +137,10 @@ class BankCardService extends ApiService {
 
   Future<BankCardServiceResponse> freezeCard({
     required String cardId,
-    required User? user,
+    required User user,
   }) async {
-    if (user != null) {
-      this.user = user;
-    }
+    this.user = user;
+
     try {
       final data = await post('/account/cards/$cardId/block');
 
@@ -169,11 +154,10 @@ class BankCardService extends ApiService {
 
   Future<BankCardServiceResponse> unfreezeCard({
     required String cardId,
-    required User? user,
+    required User user,
   }) async {
-    if (user != null) {
-      this.user = user;
-    }
+    this.user = user;
+
     try {
       final data = await post('/account/cards/$cardId/unblock');
 

@@ -3,16 +3,17 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:solarisdemo/models/bank_card.dart';
-import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_state.dart';
 
-import '../../infrastructure/bank_card/bank_card_presenter_test.dart';
+import '../../setup/authentication_helper.dart';
 import '../../setup/create_app_state.dart';
 import '../../setup/create_store.dart';
 import 'bank_card_mocks.dart';
 
 void main() {
+  final authState = AuthStatePlaceholder.loggedInState();
+
   group("Fetching bank card", () {
     test("When fetching bank card successfully should update with bank card", () async {
       // given
@@ -20,6 +21,7 @@ void main() {
         bankCardService: FakeBankCardService(),
         initialState: createAppState(
           bankCardState: BankCardInitialState(),
+          authState: authState,
         ),
       );
 
@@ -30,11 +32,6 @@ void main() {
       store.dispatch(
         GetBankCardCommandAction(
           cardId: "inactive-card-id",
-          user: AuthenticatedUser(
-            person: MockPerson(),
-            cognito: MockUser(),
-            personAccount: MockPersonAccount(),
-          ),
           forceReloadCardData: false,
         ),
       );
@@ -50,6 +47,7 @@ void main() {
         bankCardService: FakeFailingBankCardService(),
         initialState: createAppState(
           bankCardState: BankCardInitialState(),
+          authState: authState,
         ),
       );
       final loadingState = store.onChange.firstWhere((element) => element.bankCardState is BankCardLoadingState);
@@ -59,11 +57,6 @@ void main() {
       store.dispatch(
         GetBankCardCommandAction(
           cardId: "",
-          user: AuthenticatedUser(
-            person: MockPerson(),
-            cognito: MockUser(),
-            personAccount: MockPersonAccount(),
-          ),
           forceReloadCardData: false,
         ),
       );
@@ -73,6 +66,7 @@ void main() {
       expect((await appState).bankCardState, isA<BankCardErrorState>());
     });
   });
+
   group("Activate bank card", () {
     test("When activating bank card successfully should update with bank card", () async {
       // given
@@ -80,6 +74,7 @@ void main() {
         bankCardService: FakeBankCardService(),
         initialState: createAppState(
           bankCardState: BankCardInitialState(),
+          authState: authState,
         ),
       );
 
@@ -90,11 +85,6 @@ void main() {
       store.dispatch(
         BankCardActivateCommandAction(
           cardId: "inactive-card-id",
-          user: AuthenticatedUser(
-            person: MockPerson(),
-            cognito: MockUser(),
-            personAccount: MockPersonAccount(),
-          ),
         ),
       );
 
@@ -112,6 +102,7 @@ void main() {
         bankCardService: FakeFailingBankCardService(),
         initialState: createAppState(
           bankCardState: BankCardInitialState(),
+          authState: authState,
         ),
       );
       final loadingState = store.onChange.firstWhere((element) => element.bankCardState is BankCardLoadingState);
@@ -121,11 +112,6 @@ void main() {
       store.dispatch(
         BankCardActivateCommandAction(
           cardId: "",
-          user: AuthenticatedUser(
-            person: MockPerson(),
-            cognito: MockUser(),
-            personAccount: MockPersonAccount(),
-          ),
         ),
       );
 
@@ -169,6 +155,7 @@ void main() {
         biometricsService: FakeBiometricsService(),
         initialState: createAppState(
           bankCardState: BankCardInitialState(),
+          authState: authState,
         ),
       );
 
@@ -189,11 +176,6 @@ void main() {
               maskedPan: '493441******9641',
               formattedExpirationDate: '06/26',
             ),
-          ),
-          user: AuthenticatedUser(
-            person: MockPerson(),
-            cognito: MockUser(),
-            personAccount: MockPersonAccount(),
           ),
         ),
       );
@@ -212,6 +194,7 @@ void main() {
         biometricsService: FakeBiometricsService(),
         initialState: createAppState(
           bankCardState: BankCardInitialState(),
+          authState: authState,
         ),
       );
       final loadingState = store.onChange.firstWhere((element) => element.bankCardState is BankCardLoadingState);
@@ -231,11 +214,6 @@ void main() {
               maskedPan: '493441******9641',
               formattedExpirationDate: '06/26',
             ),
-          ),
-          user: AuthenticatedUser(
-            person: MockPerson(),
-            cognito: MockUser(),
-            personAccount: MockPersonAccount(),
           ),
         ),
       );
@@ -284,6 +262,7 @@ void main() {
             deviceFingerprintService: FakeDeviceFingerprintService(),
             initialState: createAppState(
               bankCardState: BankCardInitialState(),
+              authState: authState,
             ),
           );
           final loadingState = store.onChange.firstWhere((element) => element.bankCardState is BankCardLoadingState);
@@ -303,11 +282,6 @@ void main() {
                   maskedPan: '493441******9641',
                   formattedExpirationDate: '06/26',
                 ),
-              ),
-              user: AuthenticatedUser(
-                person: MockPerson(),
-                cognito: MockUser(),
-                personAccount: MockPersonAccount(),
               ),
               pin: '1324',
             ),
@@ -330,6 +304,7 @@ void main() {
             deviceFingerprintService: FakeDeviceFingerprintService(),
             initialState: createAppState(
               bankCardState: BankCardInitialState(),
+              authState: authState,
             ),
           );
 
@@ -350,11 +325,6 @@ void main() {
                   maskedPan: '493441******9641',
                   formattedExpirationDate: '06/26',
                 ),
-              ),
-              user: AuthenticatedUser(
-                person: MockPerson(),
-                cognito: MockUser(),
-                personAccount: MockPersonAccount(),
               ),
               pin: '1324',
             ),
@@ -377,6 +347,7 @@ void main() {
           bankCardService: FakeBankCardService(),
           initialState: createAppState(
             bankCardState: BankCardInitialState(),
+            authState: authState,
           ),
         );
 
@@ -397,11 +368,6 @@ void main() {
                 maskedPan: '493441******9641',
                 formattedExpirationDate: '06/26',
               ),
-            ),
-            user: AuthenticatedUser(
-              person: MockPerson(),
-              cognito: MockUser(),
-              personAccount: MockPersonAccount(),
             ),
               bankCards: [
                 BankCard(
@@ -431,6 +397,7 @@ void main() {
           bankCardService: FakeFailingBankCardService(),
           initialState: createAppState(
             bankCardState: BankCardInitialState(),
+            authState: authState,
           ),
         );
         final loadingState = store.onChange.firstWhere((element) => element.bankCardState is BankCardLoadingState);
@@ -450,11 +417,6 @@ void main() {
                 maskedPan: '493441******9641',
                 formattedExpirationDate: '06/26',
               ),
-            ),
-            user: AuthenticatedUser(
-              person: MockPerson(),
-              cognito: MockUser(),
-              personAccount: MockPersonAccount(),
             ),
               bankCards: [
                 BankCard(
@@ -483,6 +445,7 @@ void main() {
         final store = createTestStore(
           bankCardService: FakeBankCardService(),
           initialState: createAppState(
+            authState: authState,
             bankCardState: BankCardInitialState(),
             bankCardsState: BankCardsFetchedState(
               [
@@ -521,11 +484,6 @@ void main() {
                 formattedExpirationDate: '06/26',
               ),
             ),
-            user: AuthenticatedUser(
-              person: MockPerson(),
-              cognito: MockUser(),
-              personAccount: MockPersonAccount(),
-            ),
             bankCards: [
               BankCard(
                 id: "active-card-id",
@@ -553,6 +511,7 @@ void main() {
         final store = createTestStore(
           bankCardService: FakeFailingBankCardService(),
           initialState: createAppState(
+            authState: authState,
             bankCardState: BankCardInitialState(),
             bankCardsState: BankCardsFetchedState(
               [
@@ -589,11 +548,6 @@ void main() {
                 maskedPan: '493441******9641',
                 formattedExpirationDate: '06/26',
               ),
-            ),
-            user: AuthenticatedUser(
-              person: MockPerson(),
-              cognito: MockUser(),
-              personAccount: MockPersonAccount(),
             ),
             bankCards: [
               BankCard(
@@ -624,6 +578,7 @@ void main() {
           bankCardService: FakeBankCardService(),
           initialState: createAppState(
             bankCardsState: BankCardsFetchedState(bankCards),
+            authState: authState,
           ),
         );
 
@@ -637,11 +592,6 @@ void main() {
         // when
         store.dispatch(
           CreateCardCommandAction(
-            user: AuthenticatedUser(
-              person: MockPerson(),
-              cognito: MockUser(),
-              personAccount: MockPersonAccount(),
-            ),
             firstName: 'Joe',
             lastName: 'Doe',
             type: BankCardType.VIRTUAL_VISA_CREDIT,
@@ -661,6 +611,7 @@ void main() {
           bankCardService: FakeFailingBankCardService(),
           initialState: createAppState(
             bankCardsState: BankCardsFetchedState(bankCards),
+            authState: authState,
           ),
         );
         final loadingState = store.onChange.firstWhere((element) => element.bankCardsState is BankCardsLoadingState);
@@ -669,11 +620,6 @@ void main() {
         // when
         store.dispatch(
           CreateCardCommandAction(
-            user: AuthenticatedUser(
-              person: MockPerson(),
-              cognito: MockUser(),
-              personAccount: MockPersonAccount(),
-            ),
             firstName: 'Joe',
             lastName: 'Doe',
             type: BankCardType.VIRTUAL_VISA_CREDIT,

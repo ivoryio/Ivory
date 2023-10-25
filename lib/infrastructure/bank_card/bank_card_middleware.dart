@@ -8,6 +8,7 @@ import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_state.dart';
 
 import '../../../redux/bank_card/bank_card_action.dart';
+import '../../redux/auth/auth_state.dart';
 import 'bank_card_service.dart';
 
 class BankCardMiddleware extends MiddlewareClass<AppState> {
@@ -23,10 +24,15 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
   call(Store<AppState> store, action, NextDispatcher next) async {
     next(action);
 
+    final authState = store.state.authState;
+    if(authState is! AuthenticatedState) {
+      return;
+    }
+
     if (action is CreateCardCommandAction) {
       store.dispatch(BankCardsLoadingEventAction());
       final response = await _bankCardService.createBankCard(
-        user: action.user.cognito,
+        user: authState.authenticatedUser.cognito,
         reqBody: CreateBankCardReqBody(
           action.firstName,
           action.lastName,
@@ -55,14 +61,14 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
 
       store.dispatch(BankCardLoadingEventAction());
       final response = await _bankCardService.getBankCardById(
-        user: action.user.cognito,
+        user: authState.authenticatedUser.cognito,
         cardId: action.cardId,
       );
 
       if (response is GetBankCardSuccessResponse) {
         store.dispatch(BankCardFetchedEventAction(
           bankCard: response.bankCard,
-          user: action.user,
+          user: authState.authenticatedUser,
         ));
       } else {
         store.dispatch(BankCardFailedEventAction());
@@ -76,7 +82,7 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
       store.dispatch(BankCardsLoadingEventAction());
 
       final response = await _bankCardService.getBankCards(
-        user: action.user,
+        user: authState.authenticatedUser.cognito,
       );
 
       if (response is GetBankCardsServiceResponse) {
@@ -97,11 +103,11 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
         return null;
       }
 
-      store.dispatch(BankCardFetchedEventAction(bankCard: action.bankCard, user: action.user));
+      store.dispatch(BankCardFetchedEventAction(bankCard: action.bankCard, user: authState.authenticatedUser));
     }
 
     if (action is BankCardChoosePinCommandAction) {
-      store.dispatch(BankCardPinChoosenEventAction(pin: action.pin, user: action.user, bankcard: action.bankCard));
+      store.dispatch(BankCardPinChoosenEventAction(pin: action.pin, user: authState.authenticatedUser, bankcard: action.bankCard));
     }
 
     if (action is BankCardConfirmPinCommandAction) {
@@ -119,7 +125,7 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
       }
 
       final getLatestPinKeyResponse = await _bankCardService.getLatestPinKey(
-        user: action.user.cognito,
+        user: authState.authenticatedUser.cognito,
         cardId: action.bankCard.id,
       );
 
@@ -162,7 +168,7 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
       );
 
       final changePinResponse = await _bankCardService.changePin(
-        user: action.user.cognito,
+        user: authState.authenticatedUser.cognito,
         cardId: action.bankCard.id,
         reqBody: reqBody,
       );
@@ -172,20 +178,20 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
         return null;
       }
 
-      store.dispatch(BankCardPinConfirmedEventAction(pin: action.pin, user: action.user, bankcard: action.bankCard));
+      store.dispatch(BankCardPinConfirmedEventAction(pin: action.pin, user: authState.authenticatedUser, bankcard: action.bankCard));
     }
 
     if (action is BankCardActivateCommandAction) {
       store.dispatch(BankCardLoadingEventAction());
       final response = await _bankCardService.activateBankCard(
-        user: action.user.cognito,
+        user: authState.authenticatedUser.cognito,
         cardId: action.cardId,
       );
 
       if (response is ActivateBankCardSuccessResponse) {
         store.dispatch(BankCardActivatedEventAction(
           bankCard: response.bankCard,
-          user: action.user,
+          user: authState.authenticatedUser,
         ));
       } else {
         store.dispatch(BankCardFailedEventAction());
@@ -261,7 +267,7 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
       );
 
       final response = await _bankCardService.getCardDetails(
-        user: action.user.cognito,
+        user: authState.authenticatedUser.cognito,
         cardId: action.bankCard.id,
         reqBody: reqBody,
       );
@@ -281,13 +287,13 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
       store.dispatch(BankCardLoadingEventAction());
       final response = await _bankCardService.freezeCard(
         cardId: action.bankCard.id,
-        user: action.user.cognito,
+        user: authState.authenticatedUser.cognito,
       );
 
       if (response is FreezeBankCardSuccessResponse) {
         store.dispatch(BankCardFetchedEventAction(
           bankCard: response.bankCard,
-          user: action.user,
+          user: authState.authenticatedUser,
         ));
         store.dispatch(UpdateBankCardsEventAction(
           bankCards: action.bankCards,
@@ -302,13 +308,13 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
       store.dispatch(BankCardLoadingEventAction());
       final response = await _bankCardService.unfreezeCard(
         cardId: action.bankCard.id,
-        user: action.user.cognito,
+        user: authState.authenticatedUser.cognito,
       );
 
       if (response is UnfreezeBankCardSuccessResponse) {
         store.dispatch(BankCardFetchedEventAction(
           bankCard: response.bankCard,
-          user: action.user,
+          user: authState.authenticatedUser,
         ));
         store.dispatch(UpdateBankCardsEventAction(
           bankCards: action.bankCards,

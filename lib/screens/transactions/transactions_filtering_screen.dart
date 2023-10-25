@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/infrastructure/categories/categories_presenter.dart';
-import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/categories/category_action.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/checkbox.dart';
@@ -44,9 +43,6 @@ class _TransactionsFilteringScreenState extends State<TransactionsFilteringScree
   Widget build(BuildContext context) {
     bool isFilterSelected =
         transactionListFilter?.bookingDateMin != null || transactionListFilter?.bookingDateMax != null;
-
-    final user =
-        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
 
     return ScreenScaffold(
       body: Padding(
@@ -139,7 +135,7 @@ class _TransactionsFilteringScreenState extends State<TransactionsFilteringScree
                     ),
                     StoreConnector<AppState, CategoriesViewModel>(
                       onInit: (store) {
-                        store.dispatch(GetCategoriesCommandAction(user: user.cognito));
+                        store.dispatch(GetCategoriesCommandAction());
                       },
                       converter: (store) =>
                           CategoriesPresenter.presentCategories(categoriesState: store.state.categoriesState),
@@ -184,7 +180,7 @@ class _TransactionsFilteringScreenState extends State<TransactionsFilteringScree
                 ),
                 onPressed: () {
                   StoreProvider.of<AppState>(context)
-                      .dispatch(GetTransactionsCommandAction(filter: transactionListFilter, user: user.cognito, forceReloadTransactions: true));
+                      .dispatch(GetTransactionsCommandAction(filter: transactionListFilter, forceReloadTransactions: true));
 
                   Navigator.pop(context);
                 },

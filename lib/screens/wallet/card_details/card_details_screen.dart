@@ -45,7 +45,6 @@ class BankCardDetailsScreen extends StatelessWidget {
                 Navigator.popUntil(context, ModalRoute.withName(HomeScreen.routeName));
                 StoreProvider.of<AppState>(context).dispatch(
                   GetBankCardCommandAction(
-                    user: user,
                     cardId: params.card.id,
                     forceReloadCardData: false,
                   ),
@@ -67,7 +66,6 @@ class BankCardDetailsScreen extends StatelessWidget {
               onInit: (store) => {
                 store.dispatch(
                   BankCardFetchDetailsCommandAction(
-                    user: user,
                     bankCard: params.card,
                   ),
                 ),
@@ -122,7 +120,6 @@ class BankCardDetailsScreen extends StatelessWidget {
                                   Navigator.pop(context);
                                   StoreProvider.of<AppState>(context).dispatch(
                                     GetBankCardCommandAction(
-                                      user: user,
                                       cardId: params.card.id,
                                       forceReloadCardData: false,
                                     ),
@@ -147,7 +144,6 @@ class BankCardDetailsScreen extends StatelessWidget {
                               Navigator.pop(context);
                               StoreProvider.of<AppState>(context).dispatch(
                                 GetBankCardCommandAction(
-                                  user: user,
                                   cardId: params.card.id,
                                   forceReloadCardData: false,
                                 ),
@@ -219,7 +215,6 @@ class BankCardDetailsScreen extends StatelessWidget {
       // ignore: use_build_context_synchronously
       StoreProvider.of<AppState>(context).dispatch(
         GetBankCardCommandAction(
-          user: user,
           cardId: params.card.id,
           forceReloadCardData: false,
         ),
