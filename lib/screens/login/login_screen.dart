@@ -375,7 +375,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
   }
 
   bool isPasswordValid(String password) {
-    return password.isNotEmpty && password.length >= 8;
+    return password.isNotEmpty && password.length >= 6;
   }
 
   void onChange() {
@@ -402,16 +402,16 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
   Widget build(BuildContext context) {
     return StoreConnector<AppState, AuthViewModel>(
       onDidChange: (previousViewModel, newViewModel) {
-        if (newViewModel is AuthCredentialsLoadedViewModel) {
-          _emailInputController.text = widget.viewModel.email!;
-          _passwordInputController.text = widget.viewModel.password!;
-        }
         if (previousViewModel is AuthLoadingViewModel && newViewModel is AuthErrorViewModel) {
           handleAuthError();
         }
       },
       converter: (store) => AuthPresenter.presentAuth(authState: store.state.authState),
       builder: (context, viewModel) {
+        if (viewModel is AuthCredentialsLoadedViewModel) {
+          _emailInputController.text = viewModel.email ?? '';
+          _passwordInputController.text = viewModel.password ?? '';
+        }
         return Expanded(
           child: Padding(
             padding: const EdgeInsets.only(top: 20),
@@ -521,7 +521,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                                       }
                                       if (!isPasswordValid(_passwordInputController.text)) {
                                         _passwordInputController
-                                            .setErrorText('Please input a valid password with at least 8 characters');
+                                            .setErrorText('Please input a valid password with at least 6 characters');
                                       }
                                     }
                                   }
