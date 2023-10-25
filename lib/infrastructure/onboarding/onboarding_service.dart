@@ -12,7 +12,7 @@ class OnboardingService extends ApiService {
       this.user = user;
     }
     try {
-      final data = await get('onboarding/progress');
+      final data = await get('signup/progress');
       final currentStep = OnboardingStepExtension.fromString(data['currentStep']);
 
       return OnboardingProgressSuccessResponse(step: currentStep);

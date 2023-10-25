@@ -36,11 +36,42 @@ class OnboardingStepperScreen extends StatelessWidget {
   }
 
   Widget _buildLoadingContent() {
-    return Container();
+    return Column(
+      children: [
+        AppToolbar(
+          padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+          actions: const [AppbarLogo()],
+        ),
+        const Expanded(
+          child: Center(child: CircularProgressIndicator()),
+        ),
+      ],
+    );
   }
 
   Widget _buildErrorContent() {
-    return Container();
+    return Column(
+      children: [
+        AppToolbar(
+          padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+          actions: const [AppbarLogo()],
+        ),
+        Padding(
+          padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const ScreenTitle("An error has occured"),
+              const SizedBox(height: 16),
+              Text(
+                "We're sorry, but it seems an error has cropped up, which is preventing you from completing this step",
+                style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 
   Widget _buildContent(BuildContext context, OnboardingProgressFetchedViewModel viewModel) {
