@@ -33,10 +33,13 @@ class _CheckboxWidgetState extends State<CheckboxWidget> {
             horizontal: VisualDensity.minimumDensity,
           ),
           fillColor: MaterialStateColor.resolveWith((states) {
-            if (states.contains((MaterialState.disabled))) {
-              return ClientConfig.getCustomColors().neutral500;
-            } else {
+            if (states.contains((MaterialState.selected))) {
+              if (states.contains((MaterialState.disabled))) {
+                return ClientConfig.getCustomColors().neutral500;
+              }
               return ClientConfig.getColorScheme().secondary;
+            } else {
+              return ClientConfig.getColorScheme().surface;
             }
           }),
           side: MaterialStateBorderSide.resolveWith((states) {
