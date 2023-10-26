@@ -1,3 +1,21 @@
+// class OnboardingSignupAttributes {
+//   final String title;
+//   final String firstName;
+//   final String lastName;
+//   final String email;
+//   final String password;
+//   final bool pushNotificationsAllowed;
+
+//   OnboardingSignupAttributes({
+//     required this.title,
+//     required this.firstName,
+//     required this.lastName,
+//     required this.email,
+//     required this.password,
+//     required this.pushNotificationsAllowed,
+//   });
+// }
+
 class SubmitOnboardingBasicInfoCommandAction {
   final String title;
   final String firstName;
@@ -22,6 +40,12 @@ class SubmitOnboardingPasswordCommandAction {
   SubmitOnboardingPasswordCommandAction({required this.password});
 }
 
+// class SubmitOnboardingSignupCommandAction {
+//   final OnboardingSignupAttributes? signupAttributes;
+
+//   SubmitOnboardingSignupCommandAction({this.signupAttributes});
+// }
+
 class RequestPushNotificationsPermissionCommandAction {}
 
 class CheckPushNotificationPermissionCommandAction {}
@@ -31,3 +55,7 @@ class UpdatedPushNotificationsPermissionEventAction {
 
   UpdatedPushNotificationsPermissionEventAction({required this.allowed});
 }
+
+class OnboardingSignupSuccessEventAction {}
+
+class OnboardingSignupFailedEventAction {}

@@ -1,11 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-abstract class OnboardingSignupState extends Equatable {
-  @override
-  List<Object?> get props => [];
-}
-
-class OnboardingSignupSubmittedState extends OnboardingSignupState {
+class OnboardingSignupSubmittedState extends Equatable {
   final String? title;
   final String? firstName;
   final String? lastName;

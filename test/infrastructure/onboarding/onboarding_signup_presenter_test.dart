@@ -15,7 +15,7 @@ void main() {
     );
 
     //when
-    final viewModel = OnboardingSignupPresenter.presentSignup(state: state);
+    final viewModel = OnboardingSignupPresenter.presentSignup(signupState: state);
 
     //then
     expect(viewModel, NotificationsPermissionAllowedViewModel());
@@ -33,7 +33,7 @@ void main() {
     );
 
     //when
-    final viewModel = OnboardingSignupPresenter.presentSignup(state: state);
+    final viewModel = OnboardingSignupPresenter.presentSignup(signupState: state);
 
     //then
     expect(viewModel, NotificationsPermissionNotAllowedViewModel());
@@ -44,7 +44,7 @@ void main() {
     final state = OnboardingSignupSubmittedState(notificationsAllowed: true);
 
     //when
-    final viewModel = OnboardingSignupPresenter.presentSignup(state: state);
+    final viewModel = OnboardingSignupPresenter.presentSignup(signupState: state);
 
     //then
     expect(viewModel, OnboardingSignupInitialViewModel());
@@ -55,7 +55,7 @@ void main() {
     final state = OnboardingSignupSubmittedState(notificationsAllowed: false);
 
     //when
-    final viewModel = OnboardingSignupPresenter.presentSignup(state: state);
+    final viewModel = OnboardingSignupPresenter.presentSignup(signupState: state);
 
     //then
     expect(viewModel, OnboardingSignupInitialViewModel());

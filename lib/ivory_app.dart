@@ -13,8 +13,11 @@ import 'package:solarisdemo/screens/available_balance/available_balance_screen.d
 import 'package:solarisdemo/screens/login/login_with_biometrics_screen.dart';
 import 'package:solarisdemo/screens/login/login_with_tan_screen.dart';
 import 'package:solarisdemo/screens/onboarding/signup/onboarding_email_screen.dart';
+import 'package:solarisdemo/screens/onboarding/signup/onboarding_error_email_screen.dart';
+import 'package:solarisdemo/screens/onboarding/signup/onboarding_general_error_screen.dart';
 import 'package:solarisdemo/screens/onboarding/signup/onboarding_password_screen.dart';
 import 'package:solarisdemo/screens/onboarding/signup/onboarding_basic_info_screen.dart';
+import 'package:solarisdemo/screens/onboarding/signup/onboarding_term_conditions_screen.dart';
 import 'package:solarisdemo/screens/onboarding/start/onboarding_german_residency_error_screen.dart';
 import 'package:solarisdemo/screens/onboarding/start/onboarding_german_residency_screen.dart';
 import 'package:solarisdemo/screens/onboarding/start/onboarding_usa_tax_payer_error_screen.dart';
@@ -123,7 +126,7 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
           ],
           debugShowCheckedModeBanner: false,
           navigatorKey: navigatorKey,
-          initialRoute: WelcomeScreen.routeName,
+          initialRoute: OnboardingBasicInfoScreen.routeName,
           routes: {
             // landing
             WelcomeScreen.routeName: (context) => const WelcomeScreen(),
@@ -239,6 +242,9 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
             OnboardingEmailScreen.routeName: (context) => const OnboardingEmailScreen(),
             OnboardingPasswordScreen.routeName: (context) => const OnboardingPasswordScreen(),
             OnboardingAllowNotificationsScreen.routeName: (context) => const OnboardingAllowNotificationsScreen(),
+            OnboardingTermConditionsScreen.routeName: (context) => const OnboardingTermConditionsScreen(),
+            OnboardingErrorEmailScreen.routeName: (context) => const OnboardingErrorEmailScreen(),
+            OnboardingGeneralErrorScreen.routeName: (context) => const OnboardingGeneralErrorScreen(),
           },
         );
       }),

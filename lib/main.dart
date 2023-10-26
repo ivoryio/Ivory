@@ -15,6 +15,7 @@ import 'package:solarisdemo/infrastructure/device/device_fingerprint_service.dar
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_storage_service.dart';
+import 'package:solarisdemo/infrastructure/onboarding/onboarding_signup_service.dart';
 import 'package:solarisdemo/infrastructure/person/account_summary/account_summary_service.dart';
 import 'package:solarisdemo/infrastructure/person/person_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/bills/bill_service.dart';
@@ -74,6 +75,7 @@ Store<AppState> _buildStore() {
     accountSummaryService: AccountSummaryService(),
     deviceFingerprintService: DeviceFingerprintService(),
     authService: AuthService(),
+    onboardingSignupService: OnboardingSignupService(),
   );
 
   return store;
