@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/screens/onboarding/onboarding_stepper_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/continue_button_controller.dart';
@@ -89,8 +90,12 @@ class OnboardingGeneralErrorScreen extends StatelessWidget {
                             ? () {
                                 continueButtonController.setLoading();
 
-                                log(continueButtonController.state.toString());
-                                // Navigator.popUntil(context, ModalRoute.withName(''));
+                                log('continueButtonController.state ===> ${continueButtonController.state}');
+                                Navigator.pushNamed(
+                                  context,
+                                  OnboardingStepperScreen.routeName,
+                                  arguments: OnboardingStepperScreenParams(step: OnboardingStepType.personalDetails),
+                                );
                               }
                             : null,
                       ),

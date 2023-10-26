@@ -2,31 +2,15 @@ import 'package:solarisdemo/redux/onboarding/signup/onboarding_signup_action.dar
 import 'package:solarisdemo/redux/onboarding/signup/onboarding_signup_state.dart';
 
 OnboardingSignupSubmittedState onboardingSignupReducer(OnboardingSignupSubmittedState state, dynamic action) {
-  if (action is SubmitOnboardingBasicInfoCommandAction) {
+  if (action is SubmitOnboardingSignupCommandAction) {
     return OnboardingSignupSubmittedState(
-      title: action.title,
-      firstName: action.firstName,
-      lastName: action.lastName,
-      email: state.email,
-      password: state.password,
-      notificationsAllowed: state.notificationsAllowed,
-    );
-  } else if (action is SubmitOnboardingEmailCommandAction) {
-    return OnboardingSignupSubmittedState(
-      email: action.email,
-      firstName: state.firstName,
-      lastName: state.lastName,
-      title: state.title,
-      notificationsAllowed: state.notificationsAllowed,
-    );
-  } else if (action is SubmitOnboardingPasswordCommandAction) {
-    return OnboardingSignupSubmittedState(
-      email: state.email,
-      firstName: state.firstName,
-      lastName: state.lastName,
-      password: action.password,
-      title: state.title,
-      notificationsAllowed: state.notificationsAllowed,
+      title: action.signupAttributes.title,
+      firstName: action.signupAttributes.firstName,
+      lastName: action.signupAttributes.lastName,
+      email: action.signupAttributes.email,
+      password: action.signupAttributes.password,
+      notificationsAllowed: action.signupAttributes.pushNotificationsAllowed,
+      tsAndCsSignedAt: action.signupAttributes.tsAndCsSignedAt,
     );
   } else if (action is UpdatedPushNotificationsPermissionEventAction) {
     return OnboardingSignupSubmittedState(
@@ -36,6 +20,7 @@ OnboardingSignupSubmittedState onboardingSignupReducer(OnboardingSignupSubmitted
       password: state.password,
       title: state.title,
       notificationsAllowed: action.allowed,
+      tsAndCsSignedAt: state.tsAndCsSignedAt,
     );
   } else if (action is OnboardingSignupSuccessEventAction) {
     return OnboardingSignupSubmittedState(
@@ -45,6 +30,7 @@ OnboardingSignupSubmittedState onboardingSignupReducer(OnboardingSignupSubmitted
       lastName: state.lastName,
       password: state.password,
       notificationsAllowed: state.notificationsAllowed,
+      tsAndCsSignedAt: state.tsAndCsSignedAt,
     );
   } else if (action is OnboardingSignupFailedEventAction) {
     return OnboardingSignupSubmittedState(
@@ -54,6 +40,7 @@ OnboardingSignupSubmittedState onboardingSignupReducer(OnboardingSignupSubmitted
       email: state.email,
       password: state.password,
       notificationsAllowed: state.notificationsAllowed,
+      tsAndCsSignedAt: state.tsAndCsSignedAt,
     );
   }
 

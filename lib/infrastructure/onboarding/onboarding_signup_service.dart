@@ -8,13 +8,17 @@ class OnboardingSignupService extends ApiService {
     required String email,
     required String firstName,
     required String lastName,
+    required bool pushNotificationsAllowed,
+    required String tsAndCsSignedAt,
   }) async {
     String path = '/signup/person';
     Map<String, dynamic> body = {
       'title': title,
-      'email': email,
       'firstName': firstName,
       'lastName': lastName,
+      'email': email,
+      'pushNotificationsAllowed': pushNotificationsAllowed,
+      'tsAndCsSignedAt': tsAndCsSignedAt,
     };
 
     try {

@@ -1,50 +1,28 @@
-// class OnboardingSignupAttributes {
-//   final String title;
-//   final String firstName;
-//   final String lastName;
-//   final String email;
-//   final String password;
-//   final bool pushNotificationsAllowed;
+class OnboardingSignupAttributes {
+  final String? title;
+  final String? firstName;
+  final String? lastName;
+  final String? email;
+  final String? password;
+  final bool? pushNotificationsAllowed;
+  final String? tsAndCsSignedAt;
 
-//   OnboardingSignupAttributes({
-//     required this.title,
-//     required this.firstName,
-//     required this.lastName,
-//     required this.email,
-//     required this.password,
-//     required this.pushNotificationsAllowed,
-//   });
-// }
-
-class SubmitOnboardingBasicInfoCommandAction {
-  final String title;
-  final String firstName;
-  final String lastName;
-
-  const SubmitOnboardingBasicInfoCommandAction({
-    required this.title,
-    required this.firstName,
-    required this.lastName,
+  OnboardingSignupAttributes({
+    this.title,
+    this.firstName,
+    this.lastName,
+    this.email,
+    this.password,
+    this.pushNotificationsAllowed,
+    this.tsAndCsSignedAt,
   });
 }
 
-class SubmitOnboardingEmailCommandAction {
-  final String email;
+class SubmitOnboardingSignupCommandAction {
+  final OnboardingSignupAttributes signupAttributes;
 
-  SubmitOnboardingEmailCommandAction({required this.email});
+  SubmitOnboardingSignupCommandAction({required this.signupAttributes});
 }
-
-class SubmitOnboardingPasswordCommandAction {
-  final String password;
-
-  SubmitOnboardingPasswordCommandAction({required this.password});
-}
-
-// class SubmitOnboardingSignupCommandAction {
-//   final OnboardingSignupAttributes? signupAttributes;
-
-//   SubmitOnboardingSignupCommandAction({this.signupAttributes});
-// }
 
 class RequestPushNotificationsPermissionCommandAction {}
 
@@ -59,3 +37,5 @@ class UpdatedPushNotificationsPermissionEventAction {
 class OnboardingSignupSuccessEventAction {}
 
 class OnboardingSignupFailedEventAction {}
+
+class OnboardingSignupFailedServerEventAction {}

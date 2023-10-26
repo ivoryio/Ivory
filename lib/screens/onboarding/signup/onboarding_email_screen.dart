@@ -94,8 +94,25 @@ class _OnboardingEmailScreenState extends State<OnboardingEmailScreen> {
                             ? () {
                                 if (isValidEmail(_emailController.text)) {
                                   StoreProvider.of<AppState>(context).dispatch(
-                                    SubmitOnboardingEmailCommandAction(
-                                      email: _emailController.text,
+                                    SubmitOnboardingSignupCommandAction(
+                                      signupAttributes: OnboardingSignupAttributes(
+                                        title: StoreProvider.of<AppState>(context).state.onboardingSignupState.title,
+                                        firstName:
+                                            StoreProvider.of<AppState>(context).state.onboardingSignupState.firstName,
+                                        lastName:
+                                            StoreProvider.of<AppState>(context).state.onboardingSignupState.lastName,
+                                        email: _emailController.text,
+                                        password:
+                                            StoreProvider.of<AppState>(context).state.onboardingSignupState.password,
+                                        pushNotificationsAllowed: StoreProvider.of<AppState>(context)
+                                            .state
+                                            .onboardingSignupState
+                                            .notificationsAllowed,
+                                        tsAndCsSignedAt: StoreProvider.of<AppState>(context)
+                                            .state
+                                            .onboardingSignupState
+                                            .tsAndCsSignedAt,
+                                      ),
                                     ),
                                   );
 

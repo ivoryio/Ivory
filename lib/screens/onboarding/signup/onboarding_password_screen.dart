@@ -56,8 +56,6 @@ class _OnboardingPasswordScreenState extends State<OnboardingPasswordScreen> {
     return StoreConnector<AppState, OnboardingSignupViewModel>(
       converter: (store) => OnboardingSignupPresenter.presentSignup(signupState: store.state.onboardingSignupState),
       builder: (context, viewModel) {
-        log(viewModel.toString());
-
         return ScreenScaffold(
           body: Column(
             children: [
@@ -87,44 +85,28 @@ class _OnboardingPasswordScreenState extends State<OnboardingPasswordScreen> {
                         controller: passwordController,
                         focusNode: passwordFocusNode,
                       ),
-                      (viewModel is OnboardingPasswordSubmittedViewModel)
-                          ? Container(
-                              margin: const EdgeInsets.only(top: 8),
-                              child: FieldValidators(
-                                validators: passwordValidators,
-                                controller: TextEditingController(text: viewModel.password),
-                                onInvalid: () {
-                                  passwordController.setError(true);
-                                  _checkPasswordsMatch();
-                                },
-                                onValid: () {
-                                  passwordController.setError(false);
-                                  _checkPasswordsMatch();
-                                },
-                              ),
-                            )
-                          : ListenableBuilder(
-                              listenable: passwordFocusNode,
-                              builder: (context, child) {
-                                return passwordFocusNode.hasFocus
-                                    ? Container(
-                                        margin: const EdgeInsets.only(top: 8),
-                                        child: FieldValidators(
-                                          validators: passwordValidators,
-                                          controller: passwordController.textEditingController,
-                                          onInvalid: () {
-                                            passwordController.setError(true);
-                                            _checkPasswordsMatch();
-                                          },
-                                          onValid: () {
-                                            passwordController.setError(false);
-                                            _checkPasswordsMatch();
-                                          },
-                                        ),
-                                      )
-                                    : Container();
-                              },
-                            ),
+                      ListenableBuilder(
+                        listenable: passwordFocusNode,
+                        builder: (context, child) {
+                          return passwordFocusNode.hasFocus
+                              ? Container(
+                                  margin: const EdgeInsets.only(top: 8),
+                                  child: FieldValidators(
+                                    validators: passwordValidators,
+                                    controller: passwordController.textEditingController,
+                                    onInvalid: () {
+                                      passwordController.setError(true);
+                                      _checkPasswordsMatch();
+                                    },
+                                    onValid: () {
+                                      passwordController.setError(false);
+                                      _checkPasswordsMatch();
+                                    },
+                                  ),
+                                )
+                              : Container();
+                        },
+                      ),
                       const SizedBox(height: 24),
                       IvoryTextField(
                         label: 'Repeat password',
@@ -198,7 +180,29 @@ class _OnboardingPasswordScreenState extends State<OnboardingPasswordScreen> {
                             onPressed: _continueButtonController.isEnabled
                                 ? () {
                                     StoreProvider.of<AppState>(context).dispatch(
-                                      SubmitOnboardingPasswordCommandAction(password: passwordController.text),
+                                      SubmitOnboardingSignupCommandAction(
+                                        signupAttributes: OnboardingSignupAttributes(
+                                          title: StoreProvider.of<AppState>(context).state.onboardingSignupState.title,
+                                          firstName:
+                                              StoreProvider.of<AppState>(context).state.onboardingSignupState.firstName,
+                                          lastName:
+                                              StoreProvider.of<AppState>(context).state.onboardingSignupState.lastName,
+                                          email: StoreProvider.of<AppState>(context).state.onboardingSignupState.email,
+                                          password: StoreProvider.of<AppState>(context)
+                                                  .state
+                                                  .onboardingSignupState
+                                                  .password ??
+                                              passwordController.text,
+                                          pushNotificationsAllowed: StoreProvider.of<AppState>(context)
+                                              .state
+                                              .onboardingSignupState
+                                              .notificationsAllowed,
+                                          tsAndCsSignedAt: StoreProvider.of<AppState>(context)
+                                              .state
+                                              .onboardingSignupState
+                                              .tsAndCsSignedAt,
+                                        ),
+                                      ),
                                     );
 
                                     Navigator.pushNamed(context, OnboardingAllowNotificationsScreen.routeName);

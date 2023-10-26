@@ -3,7 +3,6 @@ import 'package:solarisdemo/infrastructure/notifications/push_notification_servi
 import 'package:solarisdemo/infrastructure/onboarding/onboarding_signup_service.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/onboarding/signup/onboarding_signup_action.dart';
-import 'package:solarisdemo/redux/onboarding/signup/onboarding_signup_state.dart';
 
 class OnboardingSignupMiddleware extends MiddlewareClass<AppState> {
   final PushNotificationService _pushNotificationService;
@@ -31,20 +30,33 @@ class OnboardingSignupMiddleware extends MiddlewareClass<AppState> {
       store.dispatch(UpdatedPushNotificationsPermissionEventAction(allowed: hasPermission));
     }
 
-    if (action is SubmitOnboardingEmailCommandAction) {
-      final currentState = store.state.onboardingSignupState;
+    if (action is SubmitOnboardingSignupCommandAction) {
+      try {
+        late final response;
 
-      final response = await _onboardingSignupService.createPerson(
-        title: currentState.title!,
-        email: action.email,
-        firstName: currentState.firstName!,
-        lastName: currentState.lastName!,
-      );
+        if (action.signupAttributes.title != null &&
+            action.signupAttributes.email != null &&
+            action.signupAttributes.firstName != null &&
+            action.signupAttributes.lastName != null &&
+            action.signupAttributes.pushNotificationsAllowed != null &&
+            action.signupAttributes.tsAndCsSignedAt != null) {
+          response = await _onboardingSignupService.createPerson(
+            title: action.signupAttributes.title!,
+            email: action.signupAttributes.email!,
+            firstName: action.signupAttributes.firstName!,
+            lastName: action.signupAttributes.lastName!,
+            pushNotificationsAllowed: action.signupAttributes.pushNotificationsAllowed!,
+            tsAndCsSignedAt: action.signupAttributes.tsAndCsSignedAt!,
+          );
+        }
 
-      if (response is CreatePersonSuccesResponse) {
-        store.dispatch(OnboardingSignupSuccessEventAction());
-      } else {
-        store.dispatch(OnboardingSignupFailedEventAction());
+        if (response is CreatePersonSuccesResponse) {
+          store.dispatch(OnboardingSignupSuccessEventAction());
+        } else if (response is CreatePersonErrorResponse) {
+          store.dispatch(OnboardingSignupFailedEventAction());
+        }
+      } catch (e) {
+        store.dispatch(OnboardingSignupFailedServerEventAction());
       }
     }
   }

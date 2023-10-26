@@ -7,6 +7,7 @@ class OnboardingSignupSubmittedState extends Equatable {
   final String? email;
   final String? password;
   final bool? notificationsAllowed;
+  final String? tsAndCsSignedAt;
 
   OnboardingSignupSubmittedState({
     this.title,
@@ -15,8 +16,9 @@ class OnboardingSignupSubmittedState extends Equatable {
     this.email,
     this.password,
     this.notificationsAllowed,
+    this.tsAndCsSignedAt,
   });
 
   @override
-  List<Object?> get props => [title, firstName, lastName, email, password, notificationsAllowed];
+  List<Object?> get props => [title, firstName, lastName, email, password, notificationsAllowed, tsAndCsSignedAt];
 }
