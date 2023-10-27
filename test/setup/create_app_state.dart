@@ -38,6 +38,7 @@ AppState createAppState({
   AuthState? authState,
   TransactionsState? homePageTransactionsState,
   OnboardingProgressState? onboardingProgressState,
+  OnboardingSignupState? onboardingSignupState,
 }) {
   return AppState(
     transactionsState: transactionsState ?? TransactionsInitialState(),
@@ -58,7 +59,7 @@ AppState createAppState({
     accountSummaryState: accountSummaryState ?? AccountSummaryInitialState(),
     authState: authState ?? AuthInitialState(),
     homePageTransactionsState: homePageTransactionsState ?? TransactionsInitialState(),
-    onboardingSignupState: onboardingSignupState ?? OnboardingSignupSubmittedState(),
     onboardingProgressState: onboardingProgressState ?? OnboardingProgressInitialLoadingState(),
+    onboardingSignupState: onboardingSignupState ?? OnboardingSignupState(),
   );
 }

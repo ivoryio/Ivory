@@ -1,46 +1,32 @@
 import 'package:solarisdemo/redux/onboarding/signup/onboarding_signup_action.dart';
 import 'package:solarisdemo/redux/onboarding/signup/onboarding_signup_state.dart';
 
-OnboardingSignupSubmittedState onboardingSignupReducer(OnboardingSignupSubmittedState state, dynamic action) {
-  if (action is SubmitOnboardingSignupCommandAction) {
-    return OnboardingSignupSubmittedState(
-      title: action.signupAttributes.title,
-      firstName: action.signupAttributes.firstName,
-      lastName: action.signupAttributes.lastName,
-      email: action.signupAttributes.email,
-      password: action.signupAttributes.password,
-      notificationsAllowed: action.signupAttributes.pushNotificationsAllowed,
-      tsAndCsSignedAt: action.signupAttributes.tsAndCsSignedAt,
+OnboardingSignupState onboardingSignupReducer(OnboardingSignupState state, dynamic action) {
+  if (action is SubmitOnboardingBasicInfoCommandAction) {
+    return OnboardingSignupState(
+      signupAttributes: state.signupAttributes.copyWith(
+        title: action.title,
+        firstName: action.firstName,
+        lastName: action.lastName,
+      ),
+    );
+  } else if (action is SubmitOnboardingEmailCommandAction) {
+    return OnboardingSignupState(
+      signupAttributes: state.signupAttributes.copyWith(
+        email: action.email,
+      ),
+    );
+  } else if (action is SubmitOnboardingPasswordCommandAction) {
+    return OnboardingSignupState(
+      signupAttributes: state.signupAttributes.copyWith(
+        password: action.password,
+      ),
     );
   } else if (action is UpdatedPushNotificationsPermissionEventAction) {
-    return OnboardingSignupSubmittedState(
-      email: state.email,
-      firstName: state.firstName,
-      lastName: state.lastName,
-      password: state.password,
-      title: state.title,
-      notificationsAllowed: action.allowed,
-      tsAndCsSignedAt: state.tsAndCsSignedAt,
-    );
-  } else if (action is OnboardingSignupSuccessEventAction) {
-    return OnboardingSignupSubmittedState(
-      title: state.title,
-      email: state.email,
-      firstName: state.firstName,
-      lastName: state.lastName,
-      password: state.password,
-      notificationsAllowed: state.notificationsAllowed,
-      tsAndCsSignedAt: state.tsAndCsSignedAt,
-    );
-  } else if (action is OnboardingSignupFailedEventAction) {
-    return OnboardingSignupSubmittedState(
-      title: state.title,
-      firstName: state.firstName,
-      lastName: state.lastName,
-      email: state.email,
-      password: state.password,
-      notificationsAllowed: state.notificationsAllowed,
-      tsAndCsSignedAt: state.tsAndCsSignedAt,
+    return OnboardingSignupState(
+      signupAttributes: state.signupAttributes.copyWith(
+        notificationsAllowed: action.allowed,
+      ),
     );
   }
 

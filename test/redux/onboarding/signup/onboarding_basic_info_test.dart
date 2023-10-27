@@ -1,20 +1,21 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:solarisdemo/models/onboarding/onboarding_signup_attributes.dart';
 import 'package:solarisdemo/redux/onboarding/signup/onboarding_signup_action.dart';
 import 'package:solarisdemo/redux/onboarding/signup/onboarding_signup_state.dart';
 
 import '../../../setup/create_app_state.dart';
 import '../../../setup/create_store.dart';
+import 'onboarding_singup_mocks.dart';
 
 void main() {
   test("When the user submits the basic info, the state should be updated", () async {
     //given
     final store = createTestStore(
       initialState: createAppState(
-        onboardingSignupState: OnboardingSignupSubmittedState(),
+        onboardingSignupState: OnboardingSignupState(),
       ),
     );
-    final appState =
-        store.onChange.firstWhere((state) => state.onboardingSignupState is OnboardingSignupSubmittedState);
+    final appState = store.onChange.firstWhere((state) => state.onboardingSignupState.signupAttributes.hasBasicInfo);
 
     //when
     store.dispatch(const SubmitOnboardingBasicInfoCommandAction(
@@ -26,124 +27,193 @@ void main() {
     //then
     final onboardingSignupSubmittedState = (await appState).onboardingSignupState;
 
-    expect(onboardingSignupSubmittedState, isA<OnboardingSignupSubmittedState>());
-    expect((onboardingSignupSubmittedState as OnboardingSignupSubmittedState).title, "title");
-    expect(onboardingSignupSubmittedState.firstName, "firstName");
-    expect(onboardingSignupSubmittedState.lastName, "lastName");
-  });
-
-  test(
-      "When the user submits the basic info but the notification permission is already updated, the state should be updated",
-      () async {
-    //given
-    final store = createTestStore(
-      initialState: createAppState(
-        onboardingSignupState: OnboardingSignupSubmittedState(
-          notificationsAllowed: true,
-        ),
+    expect(
+      onboardingSignupSubmittedState.signupAttributes,
+      const OnboardingSignupAttributes(
+        title: "title",
+        firstName: "firstName",
+        lastName: "lastName",
       ),
     );
-    final appState =
-        store.onChange.firstWhere((state) => state.onboardingSignupState is OnboardingSignupSubmittedState);
-
-    //when
-    store.dispatch(const SubmitOnboardingBasicInfoCommandAction(
-      title: "title",
-      firstName: "firstName",
-      lastName: "lastName",
-    ));
-
-    //then
-    final onboardingSignupSubmittedState = (await appState).onboardingSignupState;
-
-    expect(onboardingSignupSubmittedState, isA<OnboardingSignupSubmittedState>());
-    expect((onboardingSignupSubmittedState as OnboardingSignupSubmittedState).title, "title");
-    expect(onboardingSignupSubmittedState.firstName, "firstName");
-    expect(onboardingSignupSubmittedState.lastName, "lastName");
-    expect(onboardingSignupSubmittedState.notificationsAllowed, true);
   });
 
   test('when the user submit email address, the state should be updated', () async {
     //given
     final store = createTestStore(
       initialState: createAppState(
-        onboardingSignupState: OnboardingSignupSubmittedState(
-          title: "title",
-          firstName: "firstName",
-          lastName: "lastName",
-          notificationsAllowed: true,
+        onboardingSignupState: OnboardingSignupState(
+          signupAttributes: const OnboardingSignupAttributes(
+            title: "title",
+            firstName: "firstName",
+            lastName: "lastName",
+          ),
         ),
       ),
     );
-    final appState =
-        store.onChange.firstWhere((state) => state.onboardingSignupState is OnboardingSignupSubmittedState);
+    final appState = store.onChange.firstWhere((state) => state.onboardingSignupState.signupAttributes.email != null);
 
     //when
-    store.dispatch(SubmitOnboardingEmailCommandAction(email: "email"));
+    store.dispatch(const SubmitOnboardingEmailCommandAction(email: "email"));
 
     //then
     final onboardingSignupSubmittedState = (await appState).onboardingSignupState;
 
-    expect(onboardingSignupSubmittedState, isA<OnboardingSignupSubmittedState>());
-    expect((onboardingSignupSubmittedState as OnboardingSignupSubmittedState).email, "email");
-    expect(onboardingSignupSubmittedState.notificationsAllowed, true);
+    expect(
+      onboardingSignupSubmittedState.signupAttributes,
+      const OnboardingSignupAttributes(
+        title: "title",
+        firstName: "firstName",
+        lastName: "lastName",
+        email: "email",
+      ),
+    );
   });
 
-  test('when the user submit password, the state should be updated', () async {
+  test('when the user submit the password, the state should be updated', () async {
     //given
     final store = createTestStore(
       initialState: createAppState(
-        onboardingSignupState: OnboardingSignupSubmittedState(
-          title: "title",
-          firstName: "firstName",
-          lastName: "lastName",
-          email: "email@example.com",
+        onboardingSignupState: OnboardingSignupState(
+          signupAttributes: const OnboardingSignupAttributes(
+            title: "title",
+            firstName: "firstName",
+            lastName: "lastName",
+            email: "email",
+          ),
         ),
       ),
     );
-    final appState =
-        store.onChange.firstWhere((state) => state.onboardingSignupState is OnboardingSignupSubmittedState);
+    final appState = store.onChange.firstWhere((state) => state.onboardingSignupState.signupAttributes.email != null);
 
     //when
-    store.dispatch(SubmitOnboardingPasswordCommandAction(password: "password"));
+    store.dispatch(const SubmitOnboardingPasswordCommandAction(password: "password"));
 
     //then
     final onboardingSignupSubmittedState = (await appState).onboardingSignupState;
 
-    expect(onboardingSignupSubmittedState, isA<OnboardingSignupSubmittedState>());
-    expect((onboardingSignupSubmittedState as OnboardingSignupSubmittedState).password, "password");
+    expect(
+      onboardingSignupSubmittedState.signupAttributes,
+      const OnboardingSignupAttributes(
+        title: "title",
+        firstName: "firstName",
+        lastName: "lastName",
+        email: "email",
+        password: "password",
+      ),
+    );
   });
 
-  test("When the user updated the push notifications permission, the state should be updated", () async {
-    // given
+  test('when the user approves the notification permission, the state should be updated', () async {
+    //given
     final store = createTestStore(
+      pushNotificationService: FakeNotificationService(),
       initialState: createAppState(
-        onboardingSignupState: OnboardingSignupSubmittedState(
-          title: "mr",
-          firstName: "firstName",
-          lastName: "lastName",
-          email: "email",
-          password: "password",
-          notificationsAllowed: null,
+        onboardingSignupState: OnboardingSignupState(
+          signupAttributes: const OnboardingSignupAttributes(
+            title: "title",
+            firstName: "firstName",
+            lastName: "lastName",
+            email: "email",
+            password: "password",
+          ),
         ),
       ),
     );
-    final appState = store.onChange.firstWhere(
-      (state) => state.onboardingSignupState is OnboardingSignupSubmittedState,
-    );
+    final appState =
+        store.onChange.firstWhere((state) => state.onboardingSignupState.signupAttributes.notificationsAllowed != null);
 
-    // when
-    store.dispatch(UpdatedPushNotificationsPermissionEventAction(allowed: true));
+    //when
+    store.dispatch(RequestPushNotificationsPermissionCommandAction());
 
-    // then
+    //then
     final onboardingSignupSubmittedState = (await appState).onboardingSignupState;
 
-    expect(onboardingSignupSubmittedState, isA<OnboardingSignupSubmittedState>());
-    expect((onboardingSignupSubmittedState as OnboardingSignupSubmittedState).notificationsAllowed, true);
-    expect(onboardingSignupSubmittedState.title, "mr");
-    expect(onboardingSignupSubmittedState.firstName, "firstName");
-    expect(onboardingSignupSubmittedState.lastName, "lastName");
-    expect(onboardingSignupSubmittedState.email, "email");
-    expect(onboardingSignupSubmittedState.password, "password");
+    expect(
+      onboardingSignupSubmittedState.signupAttributes,
+      const OnboardingSignupAttributes(
+        title: "title",
+        firstName: "firstName",
+        lastName: "lastName",
+        email: "email",
+        password: "password",
+        notificationsAllowed: true,
+      ),
+    );
+  });
+
+  test('when the user denies the notification permission, the state should be updated', () async {
+    //given
+    final store = createTestStore(
+      pushNotificationService: FakeNotificationServiceWithNoPermission(),
+      initialState: createAppState(
+        onboardingSignupState: OnboardingSignupState(
+          signupAttributes: const OnboardingSignupAttributes(
+            title: "title",
+            firstName: "firstName",
+            lastName: "lastName",
+            email: "email",
+            password: "password",
+          ),
+        ),
+      ),
+    );
+    final appState =
+        store.onChange.firstWhere((state) => state.onboardingSignupState.signupAttributes.notificationsAllowed != null);
+
+    //when
+    store.dispatch(RequestPushNotificationsPermissionCommandAction());
+
+    //then
+    final onboardingSignupSubmittedState = (await appState).onboardingSignupState;
+
+    expect(
+      onboardingSignupSubmittedState.signupAttributes,
+      const OnboardingSignupAttributes(
+        title: "title",
+        firstName: "firstName",
+        lastName: "lastName",
+        email: "email",
+        password: "password",
+        notificationsAllowed: false,
+      ),
+    );
+  });
+
+  test('when the user changes the notification permission from app settings, the state should be updated', () async {
+    //given
+    final store = createTestStore(
+      pushNotificationService: FakeNotificationService(),
+      initialState: createAppState(
+        onboardingSignupState: OnboardingSignupState(
+          signupAttributes: const OnboardingSignupAttributes(
+            title: "title",
+            firstName: "firstName",
+            lastName: "lastName",
+            email: "email",
+            password: "password",
+          ),
+        ),
+      ),
+    );
+    final appState =
+        store.onChange.firstWhere((state) => state.onboardingSignupState.signupAttributes.notificationsAllowed != null);
+
+    //when
+    store.dispatch(CheckPushNotificationPermissionCommandAction());
+
+    //then
+    final onboardingSignupSubmittedState = (await appState).onboardingSignupState;
+
+    expect(
+      onboardingSignupSubmittedState.signupAttributes,
+      const OnboardingSignupAttributes(
+        title: "title",
+        firstName: "firstName",
+        lastName: "lastName",
+        email: "email",
+        password: "password",
+        notificationsAllowed: true,
+      ),
+    );
   });
 }

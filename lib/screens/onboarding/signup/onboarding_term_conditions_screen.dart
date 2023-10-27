@@ -176,12 +176,7 @@ class _OnboardingTermConditionsScreenState extends State<OnboardingTermCondition
                               .copyWith(color: const Color(0xFF406FE6)),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () => _launchFileInBrowser(
-                                  Uri(
-                                    scheme: 'https',
-                                    host: 'www.solarisgroup.com',
-                                    path:
-                                        '/customer-information/germany/de-iban/english/customer-information-on-data-processing',
-                                  ),
+                                  '/customer-information/germany/de-iban/english/customer-information-on-data-processing',
                                 ),
                         ),
                         const TextSpan(text: ', '),
@@ -192,12 +187,7 @@ class _OnboardingTermConditionsScreenState extends State<OnboardingTermCondition
                               .copyWith(color: const Color(0xFF406FE6)),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () => _launchFileInBrowser(
-                                  Uri(
-                                    scheme: 'https',
-                                    host: 'www.solarisgroup.com',
-                                    path: '/customer-information/germany/de-iban/english/depositor-information-sheet',
-                                  ),
-                                ),
+                                '/customer-information/germany/de-iban/english/depositor-information-sheet'),
                         ),
                         const TextSpan(text: ', and '),
                         TextSpan(
@@ -207,11 +197,7 @@ class _OnboardingTermConditionsScreenState extends State<OnboardingTermCondition
                               .copyWith(color: const Color(0xFF406FE6)),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () => _launchFileInBrowser(
-                                  Uri(
-                                    scheme: 'https',
-                                    host: 'www.solarisgroup.com',
-                                    path: '/en/customer-information/germany/de-iban/english/',
-                                  ),
+                                  '/en/customer-information/germany/de-iban/english/',
                                 ),
                         ),
                         const TextSpan(text: '.'),
@@ -251,8 +237,8 @@ class _OnboardingTermConditionsScreenState extends State<OnboardingTermCondition
                       },
                       textFragments: [
                         TextFragment(
-                            text: 'I act only in my own economic interest and not on the initiative of a third party.',
-                            hasCustomColor: false)
+                          text: 'I act only in my own economic interest and not on the initiative of a third party.',
+                        )
                       ],
                     ),
                   ),
@@ -288,11 +274,9 @@ class _OnboardingTermConditionsScreenState extends State<OnboardingTermCondition
                     builder: (context, child) => CheckCard(
                       isChecked: false,
                       isDisabled: _continueButtonController.isLoading,
-                      onChanged: (checked) => {},
+                      onChanged: (checked) {},
                       textFragments: [
-                        TextFragment(
-                            text: 'I want to receive product & marketing updates from Ivory. (Optional)',
-                            hasCustomColor: false)
+                        TextFragment(text: 'I want to receive product & marketing updates from Ivory. (Optional)')
                       ],
                     ),
                   ),
@@ -309,35 +293,6 @@ class _OnboardingTermConditionsScreenState extends State<OnboardingTermCondition
                               ? () {
                                   _continueButtonController.setLoading();
 
-                                  setState(() {
-                                    checkCardsValues = [null, null, null, null];
-                                  });
-
-                                  StoreProvider.of<AppState>(context).dispatch(
-                                    SubmitOnboardingSignupCommandAction(
-                                      signupAttributes: OnboardingSignupAttributes(
-                                        title: StoreProvider.of<AppState>(context).state.onboardingSignupState.title,
-                                        firstName:
-                                            StoreProvider.of<AppState>(context).state.onboardingSignupState.firstName,
-                                        lastName:
-                                            StoreProvider.of<AppState>(context).state.onboardingSignupState.lastName,
-                                        email: StoreProvider.of<AppState>(context).state.onboardingSignupState.email,
-                                        password:
-                                            StoreProvider.of<AppState>(context).state.onboardingSignupState.password,
-                                        pushNotificationsAllowed: StoreProvider.of<AppState>(context)
-                                            .state
-                                            .onboardingSignupState
-                                            .notificationsAllowed,
-                                        tsAndCsSignedAt: DateTime.now().toIso8601String(),
-                                      ),
-                                    ),
-                                  );
-
-                                  // Navigator.pushNamed(
-                                  //   context,
-                                  //   OnboardingStepperScreen.routeName,
-                                  //   arguments: OnboardingStepperScreenParams(step: OnboardingStepType.personalDetails),
-                                  // );
                                   Navigator.pushNamed(context, OnboardingErrorEmailScreen.routeName);
                                 }
                               : null,
@@ -409,7 +364,7 @@ class CheckCard extends StatelessWidget {
                     TextSpan(
                       text: textFragment.text,
                       style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold.copyWith(
-                            color: textFragment.hasCustomColor ? const Color(0xFF406FE6) : null,
+                            color: textFragment.filePath != null ? const Color(0xFF406FE6) : null,
                           ),
                       recognizer: (textFragment.filePath != null)
                           ? (TapGestureRecognizer()..onTap = () => _launchFileInBrowser(textFragment.filePath!))
@@ -425,8 +380,13 @@ class CheckCard extends StatelessWidget {
   }
 }
 
-Future<void> _launchFileInBrowser(Uri filePath) async {
-  final requestFile = await launchUrl(filePath, mode: LaunchMode.externalApplication);
+Future<void> _launchFileInBrowser(String filePath) async {
+  final url = Uri(
+    scheme: 'https',
+    host: 'www.solarisgroup.com',
+    path: filePath,
+  );
+  final requestFile = await launchUrl(url, mode: LaunchMode.externalApplication);
 
   if (!requestFile) {
     throw Exception('Could not launch $filePath');
@@ -434,95 +394,41 @@ Future<void> _launchFileInBrowser(Uri filePath) async {
 }
 
 List<TextFragment> firstCardTextFragments = [
-  TextFragment(
-    text: 'I accept the ',
-    hasCustomColor: false,
-  ),
+  TextFragment(text: 'I accept the '),
   TextFragment(
     text: 'General Terms & Conditions',
-    hasCustomColor: true,
-    filePath: Uri(
-      scheme: 'https',
-      host: 'www.solarisgroup.com',
-      path: '/customer-information/germany/de-iban/english/general-terms-and-conditions',
-    ),
+    filePath: '/customer-information/germany/de-iban/english/general-terms-and-conditions',
   ),
-  TextFragment(
-    text: ', the ',
-    hasCustomColor: false,
-  ),
+  TextFragment(text: ', the '),
   TextFragment(
     text: 'List of Prices and Services ',
-    hasCustomColor: true,
-    filePath: Uri(
-      scheme: 'https',
-      host: 'www.solarisgroup.com',
-      path: '/customer-information/germany/de-iban/english/list-of-prices-and-services',
-    ),
+    filePath: '/customer-information/germany/de-iban/english/list-of-prices-and-services',
   ),
-  TextFragment(
-    text: 'and ',
-    hasCustomColor: false,
-  ),
+  TextFragment(text: 'and '),
   TextFragment(
     text: 'all other conditions of Ivory.',
-    hasCustomColor: true,
-    filePath: Uri(
-      scheme: 'https',
-      host: 'www.solarisgroup.com',
-      path: '/customer-information/germany/de-iban/english/special-conditions-for-credit-cards',
-    ),
+    filePath: '/customer-information/germany/de-iban/english/special-conditions-for-credit-cards',
   ),
 ];
 
 List<TextFragment> secondCardTextFragments = [
-  TextFragment(
-    text: 'I agree to the ',
-    hasCustomColor: false,
-  ),
-  TextFragment(
-    text: 'Bureau Score Assessment T&Cs',
-    hasCustomColor: true,
-    filePath: Uri(
-      scheme: 'https',
-      host: 'www.solarisgroup.com',
-      path: '/',
-    ),
-  ),
-  TextFragment(
-    text: '.',
-    hasCustomColor: false,
-  ),
+  TextFragment(text: 'I agree to the '),
+  TextFragment(text: 'Bureau Score Assessment T&Cs', filePath: '/'),
+  TextFragment(text: '.'),
 ];
 
 List<TextFragment> thirdCardTextFragments = [
-  TextFragment(
-    text: 'I agree to the ',
-    hasCustomColor: false,
-  ),
-  TextFragment(
-    text: 'Data Processing, Privacy Terms and General Data Protection Regulation (GDPR)',
-    hasCustomColor: true,
-    filePath: Uri(
-      scheme: 'https',
-      host: 'www.solarisgroup.com',
-      path: '/',
-    ),
-  ),
-  TextFragment(
-    text: '.',
-    hasCustomColor: false,
-  ),
+  TextFragment(text: 'I agree to the '),
+  TextFragment(text: 'Data Processing, Privacy Terms and General Data Protection Regulation (GDPR)', filePath: '/'),
+  TextFragment(text: '.'),
 ];
 
 class TextFragment {
   final String text;
-  final bool hasCustomColor;
-  final Uri? filePath;
+  final String? filePath;
 
   TextFragment({
     required this.text,
-    required this.hasCustomColor,
     this.filePath,
   });
 }

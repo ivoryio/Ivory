@@ -49,8 +49,7 @@ class _OnboardingAllowNotificationsScreenState extends State<OnboardingAllowNoti
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, OnboardingSignupViewModel>(
-      converter: (store) =>
-          OnboardingSignupPresenter.presentNotification(signupState: store.state.onboardingSignupState),
+      converter: (store) => OnboardingSignupPresenter.present(signupState: store.state.onboardingSignupState),
       builder: (context, viewModel) => ScreenScaffold(
         body: Column(
           children: [
@@ -63,7 +62,7 @@ class _OnboardingAllowNotificationsScreenState extends State<OnboardingAllowNoti
             Expanded(
               child: ScrollableScreenContainer(
                 padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                child: viewModel is NotificationsPermissionAllowedViewModel
+                child: viewModel.signupAttributes.notificationsAllowed == true
                     ? const _AllowedPermissionContent()
                     : _RequestNotificationPermissionContent(viewModel),
               ),
@@ -132,7 +131,7 @@ class _RequestNotificationPermissionContent extends StatelessWidget {
           },
         ),
         const SizedBox(height: 16),
-        viewModel is NotificationsPermissionNotAllowedViewModel
+        viewModel.signupAttributes.notificationsAllowed == false
             ? PrimaryButton(
                 text: "Go to notification settings",
                 onPressed: () async {

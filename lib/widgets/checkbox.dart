@@ -59,7 +59,7 @@ class _CheckboxWidgetState extends State<CheckboxWidget> {
               return BorderSide(width: 1, color: ClientConfig.getColorScheme().secondary);
             }
 
-            return BorderSide(width: 1, color: ClientConfig.getCustomColors().neutral500);
+            return BorderSide(width: 1, color: ClientConfig.getCustomColors().neutral600);
           }),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(2.0),
@@ -70,8 +70,8 @@ class _CheckboxWidgetState extends State<CheckboxWidget> {
               : (checked) {
                   setState(() {
                     _isChecked = checked!;
-                    widget.onChanged?.call(checked);
                   });
+                  widget.onChanged?.call(checked!);
                 },
         ),
       ),

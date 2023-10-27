@@ -1,27 +1,25 @@
-class OnboardingSignupAttributes {
-  final String? title;
-  final String? firstName;
-  final String? lastName;
-  final String? email;
-  final String? password;
-  final bool? pushNotificationsAllowed;
-  final String? tsAndCsSignedAt;
+class SubmitOnboardingBasicInfoCommandAction {
+  final String title;
+  final String firstName;
+  final String lastName;
 
-  const OnboardingSignupAttributes({
-    this.title,
-    this.firstName,
-    this.lastName,
-    this.email,
-    this.password,
-    this.pushNotificationsAllowed,
-    this.tsAndCsSignedAt,
+  const SubmitOnboardingBasicInfoCommandAction({
+    required this.title,
+    required this.firstName,
+    required this.lastName,
   });
 }
 
-class SubmitOnboardingSignupCommandAction {
-  final OnboardingSignupAttributes signupAttributes;
+class SubmitOnboardingEmailCommandAction {
+  final String email;
 
-  SubmitOnboardingSignupCommandAction({required this.signupAttributes});
+  const SubmitOnboardingEmailCommandAction({required this.email});
+}
+
+class SubmitOnboardingPasswordCommandAction {
+  final String password;
+
+  const SubmitOnboardingPasswordCommandAction({required this.password});
 }
 
 class RequestPushNotificationsPermissionCommandAction {}

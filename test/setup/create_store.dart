@@ -12,6 +12,7 @@ import 'package:solarisdemo/infrastructure/device/device_fingerprint_service.dar
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/onboarding_service.dart';
+import 'package:solarisdemo/infrastructure/onboarding/onboarding_signup_service.dart';
 import 'package:solarisdemo/infrastructure/person/account_summary/account_summary_service.dart';
 import 'package:solarisdemo/infrastructure/person/person_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/bills/bill_service.dart';
@@ -53,6 +54,7 @@ Store<AppState> createTestStore({
   DeviceFingerprintService? deviceFingerprintService,
   AuthService? authService,
   OnboardingService? onboardingService,
+  OnboardingSignupService? onboardingSignupService,
 }) {
   return createStore(
     initialState: initialState,
@@ -76,6 +78,7 @@ Store<AppState> createTestStore({
     deviceFingerprintService: deviceFingerprintService ?? NotImplementedDeviceFingerprintService(),
     authService: authService ?? NotImplementedAuthService(),
     onboardingService: onboardingService ?? NotImplementedOnboardingService(),
+    onboardingSignupService: onboardingSignupService ?? NotImplementedOnboardingSignupService(),
   );
 }
 
@@ -388,6 +391,20 @@ class NotImplementedAuthService extends AuthService {
 class NotImplementedOnboardingService extends OnboardingService {
   @override
   Future<OnboardingServiceResponse> getOnboardingProgress({required User user}) {
+    throw UnimplementedError();
+  }
+}
+
+class NotImplementedOnboardingSignupService extends OnboardingSignupService {
+  @override
+  Future<OnboardingSignupServiceResponse> createPerson({
+    required String title,
+    required String email,
+    required String firstName,
+    required String lastName,
+    required bool pushNotificationsAllowed,
+    required String tsAndCsSignedAt,
+  }) async {
     throw UnimplementedError();
   }
 }

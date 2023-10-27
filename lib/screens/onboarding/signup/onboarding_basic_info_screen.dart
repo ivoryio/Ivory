@@ -116,23 +116,10 @@ class _OnboardingBasicInfoScreenState extends State<OnboardingBasicInfoScreen> {
                                 log(_lastNameController.text, name: "lastName");
 
                                 StoreProvider.of<AppState>(context).dispatch(
-                                  SubmitOnboardingSignupCommandAction(
-                                    signupAttributes: OnboardingSignupAttributes(
-                                      title: _selectTitleController.selectedOptions.first.value,
-                                      firstName: _firstNameController.text,
-                                      lastName: _lastNameController.text,
-                                      email: StoreProvider.of<AppState>(context).state.onboardingSignupState.email,
-                                      password:
-                                          StoreProvider.of<AppState>(context).state.onboardingSignupState.password,
-                                      pushNotificationsAllowed: StoreProvider.of<AppState>(context)
-                                          .state
-                                          .onboardingSignupState
-                                          .notificationsAllowed,
-                                      tsAndCsSignedAt: StoreProvider.of<AppState>(context)
-                                          .state
-                                          .onboardingSignupState
-                                          .tsAndCsSignedAt,
-                                    ),
+                                  SubmitOnboardingBasicInfoCommandAction(
+                                    title: _selectTitleController.selectedOptions.first.value,
+                                    firstName: _firstNameController.text,
+                                    lastName: _lastNameController.text,
                                   ),
                                 );
 

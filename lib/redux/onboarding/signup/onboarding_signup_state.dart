@@ -1,28 +1,17 @@
 import 'package:equatable/equatable.dart';
+import 'package:solarisdemo/models/onboarding/onboarding_signup_attributes.dart';
 
-class OnboardingSignupSubmittedState extends Equatable {
-  final String? title;
-  final String? firstName;
-  final String? lastName;
-  final String? email;
-  final String? password;
-  final bool? notificationsAllowed;
-  final String? tsAndCsSignedAt;
+class OnboardingSignupState extends Equatable {
+  final OnboardingSignupAttributes signupAttributes;
   final bool isLoading;
   final bool hasError;
 
-  const OnboardingSignupSubmittedState({
-    this.title,
-    this.firstName,
-    this.lastName,
-    this.email,
-    this.password,
-    this.notificationsAllowed,
-    this.tsAndCsSignedAt,
+  OnboardingSignupState({
+    this.signupAttributes = const OnboardingSignupAttributes(),
     this.isLoading = false,
     this.hasError = false,
   });
 
   @override
-  List<Object?> get props => [title, firstName, lastName, email, password, notificationsAllowed, tsAndCsSignedAt];
+  List<Object?> get props => [signupAttributes, isLoading, hasError];
 }

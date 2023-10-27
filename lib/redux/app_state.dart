@@ -38,7 +38,7 @@ class AppState extends Equatable {
   final AuthState authState;
   final TransactionsState homePageTransactionsState;
   final OnboardingProgressState onboardingProgressState;
-  final OnboardingSignupSubmittedState onboardingSignupState;
+  final OnboardingSignupState onboardingSignupState;
 
   const AppState({
     required this.transactionsState,
@@ -83,7 +83,7 @@ class AppState extends Equatable {
       accountSummaryState: AccountSummaryInitialState(),
       authState: AuthInitialState(),
       homePageTransactionsState: TransactionsInitialState(),
-      onboardingSignupState: OnboardingSignupSubmittedState(),
+      onboardingSignupState: OnboardingSignupState(),
       onboardingProgressState: OnboardingProgressInitialLoadingState(),
     );
   }

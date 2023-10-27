@@ -54,10 +54,8 @@ class _OnboardingPasswordScreenState extends State<OnboardingPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, OnboardingSignupViewModel>(
-      converter: (store) =>
-          OnboardingSignupPresenter.presentSignupAttributes(signupState: store.state.onboardingSignupState),
+      converter: (store) => OnboardingSignupPresenter.present(signupState: store.state.onboardingSignupState),
       builder: (context, viewModel) {
-        log('viewModel ===> $viewModel');
         return ScreenScaffold(
           body: Column(
             children: [
@@ -82,18 +80,11 @@ class _OnboardingPasswordScreenState extends State<OnboardingPasswordScreen> {
                       Text('Choose your password and verify it below.',
                           style: ClientConfig.getTextStyleScheme().bodyLargeRegular),
                       const SizedBox(height: 24),
-                      (viewModel.signupAttributes?.password != null)
-                          ? IvoryTextField(
-                              label: 'Password',
-                              controller: IvoryTextFieldController(
-                                  text: viewModel.signupAttributes?.password), // passwordController,
-                              focusNode: passwordFocusNode,
-                            )
-                          : IvoryTextField(
-                              label: 'Password',
-                              controller: passwordController,
-                              focusNode: passwordFocusNode,
-                            ),
+                      IvoryTextField(
+                        label: 'Password',
+                        controller: passwordController,
+                        focusNode: passwordFocusNode,
+                      ),
                       ListenableBuilder(
                         listenable: passwordFocusNode,
                         builder: (context, child) {
@@ -189,29 +180,7 @@ class _OnboardingPasswordScreenState extends State<OnboardingPasswordScreen> {
                             onPressed: _continueButtonController.isEnabled
                                 ? () {
                                     StoreProvider.of<AppState>(context).dispatch(
-                                      SubmitOnboardingSignupCommandAction(
-                                        signupAttributes: OnboardingSignupAttributes(
-                                          title: StoreProvider.of<AppState>(context).state.onboardingSignupState.title,
-                                          firstName:
-                                              StoreProvider.of<AppState>(context).state.onboardingSignupState.firstName,
-                                          lastName:
-                                              StoreProvider.of<AppState>(context).state.onboardingSignupState.lastName,
-                                          email: StoreProvider.of<AppState>(context).state.onboardingSignupState.email,
-                                          password: StoreProvider.of<AppState>(context)
-                                                  .state
-                                                  .onboardingSignupState
-                                                  .password ??
-                                              passwordController.text,
-                                          pushNotificationsAllowed: StoreProvider.of<AppState>(context)
-                                              .state
-                                              .onboardingSignupState
-                                              .notificationsAllowed,
-                                          tsAndCsSignedAt: StoreProvider.of<AppState>(context)
-                                              .state
-                                              .onboardingSignupState
-                                              .tsAndCsSignedAt,
-                                        ),
-                                      ),
+                                      SubmitOnboardingPasswordCommandAction(password: passwordController.text),
                                     );
 
                                     Navigator.pushNamed(context, OnboardingAllowNotificationsScreen.routeName);
