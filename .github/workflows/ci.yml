@@ -1,6 +1,10 @@
 name: CI checks
 
-on: push
+on:
+  push:
+    branches:
+      - main
+      - SOL-*
 
 jobs:
   test:
