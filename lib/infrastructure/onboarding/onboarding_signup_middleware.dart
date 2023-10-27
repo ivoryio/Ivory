@@ -31,32 +31,28 @@ class OnboardingSignupMiddleware extends MiddlewareClass<AppState> {
     }
 
     if (action is SubmitOnboardingSignupCommandAction) {
-      try {
-        late final response;
+      late final response;
 
-        if (action.signupAttributes.title != null &&
-            action.signupAttributes.email != null &&
-            action.signupAttributes.firstName != null &&
-            action.signupAttributes.lastName != null &&
-            action.signupAttributes.pushNotificationsAllowed != null &&
-            action.signupAttributes.tsAndCsSignedAt != null) {
-          response = await _onboardingSignupService.createPerson(
-            title: action.signupAttributes.title!,
-            email: action.signupAttributes.email!,
-            firstName: action.signupAttributes.firstName!,
-            lastName: action.signupAttributes.lastName!,
-            pushNotificationsAllowed: action.signupAttributes.pushNotificationsAllowed!,
-            tsAndCsSignedAt: action.signupAttributes.tsAndCsSignedAt!,
-          );
-        }
+      if (action.signupAttributes.title != null &&
+          action.signupAttributes.email != null &&
+          action.signupAttributes.firstName != null &&
+          action.signupAttributes.lastName != null &&
+          action.signupAttributes.pushNotificationsAllowed != null &&
+          action.signupAttributes.tsAndCsSignedAt != null) {
+        response = await _onboardingSignupService.createPerson(
+          title: action.signupAttributes.title!,
+          email: action.signupAttributes.email!,
+          firstName: action.signupAttributes.firstName!,
+          lastName: action.signupAttributes.lastName!,
+          pushNotificationsAllowed: action.signupAttributes.pushNotificationsAllowed!,
+          tsAndCsSignedAt: action.signupAttributes.tsAndCsSignedAt!,
+        );
+      }
 
-        if (response is CreatePersonSuccesResponse) {
-          store.dispatch(OnboardingSignupSuccessEventAction());
-        } else if (response is CreatePersonErrorResponse) {
-          store.dispatch(OnboardingSignupFailedEventAction());
-        }
-      } catch (e) {
-        store.dispatch(OnboardingSignupFailedServerEventAction());
+      if (response is CreatePersonSuccesResponse) {
+        store.dispatch(OnboardingSignupSuccessEventAction());
+      } else if (response is CreatePersonErrorResponse) {
+        store.dispatch(OnboardingSignupFailedEventAction());
       }
     }
   }

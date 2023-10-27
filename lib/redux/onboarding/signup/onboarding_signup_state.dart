@@ -8,8 +8,10 @@ class OnboardingSignupSubmittedState extends Equatable {
   final String? password;
   final bool? notificationsAllowed;
   final String? tsAndCsSignedAt;
+  final bool isLoading;
+  final bool hasError;
 
-  OnboardingSignupSubmittedState({
+  const OnboardingSignupSubmittedState({
     this.title,
     this.firstName,
     this.lastName,
@@ -17,6 +19,8 @@ class OnboardingSignupSubmittedState extends Equatable {
     this.password,
     this.notificationsAllowed,
     this.tsAndCsSignedAt,
+    this.isLoading = false,
+    this.hasError = false,
   });
 
   @override

@@ -5,39 +5,37 @@ import 'package:solarisdemo/redux/onboarding/signup/onboarding_signup_action.dar
 import 'package:solarisdemo/redux/onboarding/signup/onboarding_signup_state.dart';
 
 class OnboardingSignupPresenter {
-  static OnboardingSignupViewModel presentSignup({required OnboardingSignupSubmittedState signupState}) {
-    log('1 - In presenter [$signupState]');
+  static OnboardingSignupViewModel presentSignupAttributes({required OnboardingSignupSubmittedState signupState}) {
+    return OnboardingSignupSubmittedViewModel(
+      signupAttributes: OnboardingSignupAttributes(
+        email: signupState.email,
+        password: signupState.password,
+        firstName: signupState.firstName,
+        lastName: signupState.lastName,
+        pushNotificationsAllowed: signupState.notificationsAllowed,
+        title: signupState.title,
+        tsAndCsSignedAt: signupState.tsAndCsSignedAt,
+      ),
+    );
+  }
 
-    if (_allPropertiesNotNull(signupState)) {
+  static OnboardingSignupViewModel presentNotification({required OnboardingSignupSubmittedState signupState}) {
+    if (signupState.notificationsAllowed != null) {
       if (signupState.notificationsAllowed == true) {
         return NotificationsPermissionAllowedViewModel();
       } else if (signupState.notificationsAllowed == false) {
         return NotificationsPermissionNotAllowedViewModel();
       }
-      log('2 - In presenter [$signupState]');
-      return OnboardingSignupSubmittedViewModel(password: signupState.password as OnboardingSignupAttributes);
     }
 
-    log('3 - In presenter [$signupState]');
     return OnboardingSignupInitialViewModel();
   }
-}
-
-bool _allPropertiesNotNull(OnboardingSignupSubmittedState state) {
-  return state.firstName != null &&
-      state.lastName != null &&
-      state.notificationsAllowed != null &&
-      state.password != null &&
-      state.title != null &&
-      state.email != null;
 }
 
 abstract class OnboardingSignupViewModel extends Equatable {
   final OnboardingSignupAttributes? signupAttributes;
 
-  const OnboardingSignupViewModel({
-    this.signupAttributes,
-  });
+  const OnboardingSignupViewModel({this.signupAttributes});
 
   @override
   List<Object?> get props => [signupAttributes];
@@ -52,6 +50,5 @@ class NotificationsPermissionNotAllowedViewModel extends OnboardingSignupViewMod
 class NotificationsPermissionUnknownViewModel extends OnboardingSignupViewModel {}
 
 class OnboardingSignupSubmittedViewModel extends OnboardingSignupViewModel {
-  const OnboardingSignupSubmittedViewModel({required OnboardingSignupAttributes password})
-      : super(signupAttributes: password);
+  const OnboardingSignupSubmittedViewModel({super.signupAttributes});
 }

@@ -54,8 +54,10 @@ class _OnboardingPasswordScreenState extends State<OnboardingPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, OnboardingSignupViewModel>(
-      converter: (store) => OnboardingSignupPresenter.presentSignup(signupState: store.state.onboardingSignupState),
+      converter: (store) =>
+          OnboardingSignupPresenter.presentSignupAttributes(signupState: store.state.onboardingSignupState),
       builder: (context, viewModel) {
+        log('viewModel ===> $viewModel');
         return ScreenScaffold(
           body: Column(
             children: [
@@ -80,11 +82,18 @@ class _OnboardingPasswordScreenState extends State<OnboardingPasswordScreen> {
                       Text('Choose your password and verify it below.',
                           style: ClientConfig.getTextStyleScheme().bodyLargeRegular),
                       const SizedBox(height: 24),
-                      IvoryTextField(
-                        label: 'Password',
-                        controller: passwordController,
-                        focusNode: passwordFocusNode,
-                      ),
+                      (viewModel.signupAttributes?.password != null)
+                          ? IvoryTextField(
+                              label: 'Password',
+                              controller: IvoryTextFieldController(
+                                  text: viewModel.signupAttributes?.password), // passwordController,
+                              focusNode: passwordFocusNode,
+                            )
+                          : IvoryTextField(
+                              label: 'Password',
+                              controller: passwordController,
+                              focusNode: passwordFocusNode,
+                            ),
                       ListenableBuilder(
                         listenable: passwordFocusNode,
                         builder: (context, child) {

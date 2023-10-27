@@ -7,7 +7,7 @@ class OnboardingSignupAttributes {
   final bool? pushNotificationsAllowed;
   final String? tsAndCsSignedAt;
 
-  OnboardingSignupAttributes({
+  const OnboardingSignupAttributes({
     this.title,
     this.firstName,
     this.lastName,

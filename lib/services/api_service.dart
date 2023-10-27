@@ -46,17 +46,22 @@ class ApiService<T> {
     bool authNeeded = true,
   }) async {
     try {
-      String? accessToken = authNeeded ? await this.getAccessToken() : "";
+      String? accessToken;
+
+      if (authNeeded) {
+        accessToken = await this.getAccessToken();
+      }
 
       final response = await http.post(
         ApiService.url(path, queryParameters: queryParameters),
-        headers: authNeeded & accessToken.isNotEmpty
+        headers: authNeeded && accessToken != null
             ? {
                 "Authorization": "Bearer $accessToken",
               }
             : {},
         body: jsonEncode(body),
       );
+
       if (response.statusCode != 200 && response.statusCode != 201) {
         throw Exception("POST request response code: ${response.statusCode}");
       }

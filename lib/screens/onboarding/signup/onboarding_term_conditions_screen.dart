@@ -334,11 +334,12 @@ class _OnboardingTermConditionsScreenState extends State<OnboardingTermCondition
                                     ),
                                   );
 
-                                  Navigator.pushNamed(
-                                    context,
-                                    OnboardingStepperScreen.routeName,
-                                    arguments: OnboardingStepperScreenParams(step: OnboardingStepType.personalDetails),
-                                  );
+                                  // Navigator.pushNamed(
+                                  //   context,
+                                  //   OnboardingStepperScreen.routeName,
+                                  //   arguments: OnboardingStepperScreenParams(step: OnboardingStepType.personalDetails),
+                                  // );
+                                  Navigator.pushNamed(context, OnboardingErrorEmailScreen.routeName);
                                 }
                               : null,
                         );

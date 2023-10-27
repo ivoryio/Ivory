@@ -49,7 +49,8 @@ class _OnboardingAllowNotificationsScreenState extends State<OnboardingAllowNoti
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, OnboardingSignupViewModel>(
-      converter: (store) => OnboardingSignupPresenter.presentSignup(signupState: store.state.onboardingSignupState),
+      converter: (store) =>
+          OnboardingSignupPresenter.presentNotification(signupState: store.state.onboardingSignupState),
       builder: (context, viewModel) => ScreenScaffold(
         body: Column(
           children: [
