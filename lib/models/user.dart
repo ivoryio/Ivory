@@ -1,4 +1,6 @@
 import 'package:amazon_cognito_identity_dart_2/cognito.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:solarisdemo/models/auth/auth_user_group.dart';
 
 import 'person_account.dart';
 import 'person_model.dart';
@@ -9,6 +11,7 @@ class User {
   late String? lastName;
   late String? firstName;
   late String? accountId;
+  late CognitoUserGroup? userGroup;
 
   final CognitoUser cognitoUser;
   late CognitoUserSession session;
@@ -56,7 +59,21 @@ class User {
       }
     }
 
+    user.userGroup = user.getUserGroup(session.getAccessToken().getJwtToken()!);
+
     return user;
+  }
+
+  CognitoUserGroup getUserGroup(String accessToken) {
+    final decoded = JwtDecoder.decode(accessToken);
+    final groups = decoded['cognito:groups'];
+
+    if (groups is List) {
+      if (groups.contains('Registered')) {
+        return CognitoUserGroup.registered;
+      }
+    }
+    return CognitoUserGroup.registering;
   }
 }
 

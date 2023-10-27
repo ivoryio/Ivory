@@ -4,7 +4,6 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/onboarding/signup/onboarding_signup_action.dart';
-import 'package:solarisdemo/screens/onboarding/onboarding_stepper_screen.dart';
 import 'package:solarisdemo/screens/onboarding/signup/onboarding_error_email_screen.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';

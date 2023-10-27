@@ -94,7 +94,6 @@ class OnboardingGeneralErrorScreen extends StatelessWidget {
                                 Navigator.pushNamed(
                                   context,
                                   OnboardingStepperScreen.routeName,
-                                  arguments: OnboardingStepperScreenParams(step: OnboardingStepType.personalDetails),
                                 );
                               }
                             : null,

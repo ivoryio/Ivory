@@ -61,6 +61,8 @@ class FirebasePushNotificationService extends PushNotificationService {
       return;
     }
 
+    this.store = store;
+
     final settings = await _messaging.requestPermission();
     if (settings.authorizationStatus != AuthorizationStatus.authorized) {
       debugPrint('User declined or has not accepted notifications');

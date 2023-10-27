@@ -4,8 +4,9 @@ import '../config.dart';
 
 class CheckboxWidget extends StatefulWidget {
   final bool isChecked;
-  final Function(bool) onChanged;
+
   final bool isDisabled;
+  final Null Function(bool)? onChanged;
 
   const CheckboxWidget({
     super.key,
@@ -38,6 +39,16 @@ class _CheckboxWidgetState extends State<CheckboxWidget> {
           visualDensity: const VisualDensity(
             horizontal: VisualDensity.minimumDensity,
           ),
+          fillColor: MaterialStateColor.resolveWith((states) {
+            if (states.contains((MaterialState.selected))) {
+              if (states.contains((MaterialState.disabled))) {
+                return ClientConfig.getCustomColors().neutral500;
+              }
+              return ClientConfig.getColorScheme().secondary;
+            } else {
+              return ClientConfig.getColorScheme().surface;
+            }
+          }),
           activeColor: ClientConfig.getColorScheme().secondary,
           side: MaterialStateBorderSide.resolveWith((states) {
             if (states.contains(MaterialState.disabled)) {
@@ -59,7 +70,7 @@ class _CheckboxWidgetState extends State<CheckboxWidget> {
               : (checked) {
                   setState(() {
                     _isChecked = checked!;
-                    widget.onChanged(checked);
+                    widget.onChanged?.call(checked);
                   });
                 },
         ),
