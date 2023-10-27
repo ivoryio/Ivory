@@ -357,16 +357,18 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
   }
 
   void onFocus() {
+    if ((_emailFocusNode.hasFocus || _passwordFocusNode.hasFocus) && hasAuthError) {
+      _emailInputController.setError(false);
+      _passwordInputController.setError(false);
+      setState(() {
+        hasAuthError = false;
+      });
+    }
     if (_emailFocusNode.hasFocus && _emailInputController.hasError) {
       _emailInputController.setError(false);
     }
     if (_passwordFocusNode.hasFocus && _passwordInputController.hasError) {
       _passwordInputController.setError(false);
-    }
-    if (!_emailInputController.hasError && !_passwordInputController.hasError && hasAuthError) {
-      setState(() {
-        hasAuthError = false;
-      });
     }
   }
 
@@ -389,12 +391,10 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
   void handleAuthError() {
     if (mounted) {
       hasAuthError = true;
-      if (!_emailInputController.hasError) {
-        _emailInputController.setError(true);
-      }
-      if (!_passwordInputController.hasError) {
-        _passwordInputController.setError(true);
-      }
+      _emailInputController.setEnabled(true);
+      _emailInputController.setError(true);
+      _passwordInputController.setEnabled(true);
+      _passwordInputController.setError(true);
     }
   }
 
