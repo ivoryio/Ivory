@@ -3,7 +3,6 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/device/device_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
-import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/device/device_action.dart';
 import 'package:solarisdemo/screens/settings/device_pairing/settings_device_pairing_screen.dart';
 import 'package:solarisdemo/screens/settings/device_pairing/settings_device_pairing_success_screen.dart';
@@ -32,9 +31,6 @@ class _SettingsDevicePairingVerifyPairingScreenState extends State<SettingsDevic
 
   @override
   Widget build(BuildContext context) {
-    final user = (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState)
-        .authenticatedUser
-        .cognito;
     return ScreenScaffold(
       body: StoreConnector<AppState, DeviceBindingViewModel>(
         onDidChange: (previousViewModel, viewModel) {
@@ -121,7 +117,6 @@ class _SettingsDevicePairingVerifyPairingScreenState extends State<SettingsDevic
                               ? () {
                                   StoreProvider.of<AppState>(context)
                                       .dispatch(VerifyDeviceBindingSignatureCommandAction(
-                                    user: user,
                                     tan: '212212', //static tan
                                   ));
                                 }

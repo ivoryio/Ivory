@@ -3,7 +3,6 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/transfer/transfer_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
-import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/transfer/transfer_action.dart';
 import 'package:solarisdemo/screens/transfer/transfer_failed_screen.dart';
 import 'package:solarisdemo/screens/transfer/transfer_successful_screen.dart';
@@ -18,9 +17,6 @@ class TransferSignScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user =
-        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
-
     return StoreConnector<AppState, TransferViewModel>(
       converter: (store) => TransferPresenter.presentTransfer(
         transferState: store.state.transferState,
@@ -69,7 +65,6 @@ class TransferSignScreen extends StatelessWidget {
                         onCompleted: (tan) {
                           StoreProvider.of<AppState>(context).dispatch(
                             ConfirmTransferCommandAction(
-                              user: user.cognito,
                               changeRequestId: viewModel.changeRequestId,
                               tan: tan,
                             ),

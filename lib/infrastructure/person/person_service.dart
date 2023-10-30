@@ -25,10 +25,8 @@ class PersonService extends ApiService {
     }
   }
 
-  Future<PersonServiceResponse> getReferenceAccount({User? user}) async {
-    if (user != null) {
-      this.user = user;
-    }
+  Future<PersonServiceResponse> getReferenceAccount({required User user}) async {
+    this.user = user;
 
     try {
       final data = await get('person/reference_accounts');
@@ -48,10 +46,8 @@ class PersonService extends ApiService {
     }
   }
 
-  Future<PersonServiceResponse> getPersonAccount({User? user}) async {
-    if (user != null) {
-      this.user = user;
-    }
+  Future<PersonServiceResponse> getPersonAccount({required User user}) async {
+    this.user = user;
 
     try {
       final data = await get('account');

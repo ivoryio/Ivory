@@ -49,7 +49,6 @@ class BankCardConfirmPinConfirmScreen extends StatelessWidget {
                       Navigator.pop(context);
                       StoreProvider.of<AppState>(context).dispatch(
                         GetBankCardCommandAction(
-                          user: user,
                           cardId: viewModel.bankCard!.id,
                           forceReloadCardData: true,
                         ),
@@ -160,8 +159,6 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> {
 
   @override
   Widget build(BuildContext context) {
-    final user =
-        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: Column(
@@ -253,7 +250,6 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> {
                             StoreProvider.of<AppState>(context).dispatch(
                               BankCardConfirmPinCommandAction(
                                 pin: _newPIN,
-                                user: user,
                                 bankCard: widget.viewModel.bankCard!,
                               ),
                             );

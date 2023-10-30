@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/infrastructure/device/device_presenter.dart';
 import 'package:solarisdemo/models/device.dart';
-import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
-import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/device/device_action.dart';
 import 'package:solarisdemo/screens/settings/device_pairing/settings_device_pairing_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -36,10 +34,6 @@ class SettingsPairedDeviceDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState)
-        .authenticatedUser
-        .cognito;
-
     return ScreenScaffold(
       body: StoreConnector<AppState, DeviceBindingViewModel>(
         onDidChange: (previousViewModel, newViewModel) {
@@ -217,7 +211,6 @@ class SettingsPairedDeviceDetailsScreen extends StatelessWidget {
                           _showUnpairModal(
                             context: context,
                             viewModel: viewModel,
-                            user: user,
                           );
                         },
                       ),
@@ -235,7 +228,6 @@ class SettingsPairedDeviceDetailsScreen extends StatelessWidget {
   void _showUnpairModal({
     required BuildContext context,
     required DeviceBindingViewModel viewModel,
-    required User user,
   }) {
     showBottomModal(
       context: context,
@@ -271,7 +263,6 @@ class SettingsPairedDeviceDetailsScreen extends StatelessWidget {
               Navigator.pop(context);
               StoreProvider.of<AppState>(context).dispatch(
                 DeleteBoundDeviceCommandAction(
-                  user: user,
                   deviceId: viewModel.thisDevice!.deviceId,
                 ),
               );

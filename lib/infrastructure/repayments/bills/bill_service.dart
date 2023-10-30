@@ -10,11 +10,10 @@ class BillService extends ApiService {
   BillService({super.user});
 
   Future<BillServiceResponse> getBills({
-    User? user,
+    required User user,
   }) async {
-    if (user != null) {
-      this.user = user;
-    }
+    this.user = user;
+
     try {
       final data = await get('bills/past_bills');
       final bills = (data as List).map((e) => Bill.fromJson(e)).toList();
@@ -25,10 +24,9 @@ class BillService extends ApiService {
     }
   }
 
-  Future<BillServiceResponse> getBillById({required String id, User? user}) async {
-    if (user != null) {
-      this.user = user;
-    }
+  Future<BillServiceResponse> getBillById({required String id, required User user}) async {
+    this.user = user;
+
     try {
       final data = await get('bills/$id');
 
@@ -40,11 +38,7 @@ class BillService extends ApiService {
 
   Future<Uint8List?> downloadBillAsPdf({
     required String postboxItemId,
-    User? user,
   }) async {
-    if (user != null) {
-      this.user = user;
-    }
     try {
       final data = await downloadPdf('postbox_items/$postboxItemId');
 

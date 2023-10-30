@@ -4,12 +4,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:solarisdemo/redux/device/device_action.dart';
 import 'package:solarisdemo/redux/device/device_state.dart';
 
+import '../../setup/authentication_helper.dart';
 import '../../setup/create_app_state.dart';
 import '../../setup/create_store.dart';
 
 import 'device_mocks.dart';
 
 void main() {
+  final authState = AuthStatePlaceholder.loggedInState();
+
   setUp(() async {
     SharedPreferences.setMockInitialValues(
       {
@@ -41,6 +44,7 @@ void main() {
         deviceInfoService: FakeDeviceInfoService(),
         initialState: createAppState(
           deviceBindingState: DeviceBindingInitialState(),
+          authState: authState,
         ),
       );
 
@@ -49,7 +53,7 @@ void main() {
       final appState = store.onChange.firstWhere((element) => element.deviceBindingState is DeviceBindingCreatedState);
       // when
       store.dispatch(
-        CreateDeviceBindingCommandAction(user: MockUser()),
+        CreateDeviceBindingCommandAction(),
       );
 
       // then
@@ -66,6 +70,7 @@ void main() {
         deviceInfoService: FakeDeviceInfoService(),
         initialState: createAppState(
           deviceBindingState: DeviceBindingInitialState(),
+          authState: authState,
         ),
       );
       final loadingState =
@@ -73,7 +78,7 @@ void main() {
       final appState = store.onChange.firstWhere((element) => element.deviceBindingState is DeviceBindingErrorState);
       // when
       store.dispatch(
-        CreateDeviceBindingCommandAction(user: MockUser()),
+        CreateDeviceBindingCommandAction(),
       );
       // then
       expect((await loadingState).deviceBindingState, isA<DeviceBindingLoadingState>());
@@ -91,6 +96,7 @@ void main() {
         deviceInfoService: FakeDeviceInfoService(),
         initialState: createAppState(
           deviceBindingState: DeviceBindingInitialState(),
+          authState: authState,
         ),
       );
 
@@ -99,7 +105,7 @@ void main() {
       final appState = store.onChange.firstWhere((element) => element.deviceBindingState is DeviceBindingDeletedState);
       // when
       store.dispatch(
-        DeleteBoundDeviceCommandAction(user: MockUser(), deviceId: 'deviceId'),
+        DeleteBoundDeviceCommandAction(deviceId: 'deviceId'),
       );
 
       // then
@@ -115,6 +121,7 @@ void main() {
         deviceInfoService: FakeDeviceInfoService(),
         initialState: createAppState(
           deviceBindingState: DeviceBindingInitialState(),
+          authState: authState,
         ),
       );
       final loadingState =
@@ -122,7 +129,7 @@ void main() {
       final appState = store.onChange.firstWhere((element) => element.deviceBindingState is DeviceBindingErrorState);
       // when
       store.dispatch(
-        DeleteBoundDeviceCommandAction(user: MockUser(), deviceId: 'deviceId'),
+        DeleteBoundDeviceCommandAction(deviceId: 'deviceId'),
       );
       // then
       expect((await loadingState).deviceBindingState, isA<DeviceBindingLoadingState>());
@@ -140,6 +147,7 @@ void main() {
         deviceFingerprintService: FakeDeviceFingerprintService(),
         initialState: createAppState(
           deviceBindingState: DeviceBindingInitialState(),
+          authState: authState,
         ),
       );
 
@@ -149,7 +157,7 @@ void main() {
           store.onChange.firstWhere((element) => element.deviceBindingState is DeviceBindingChallengeVerifiedState);
       // when
       store.dispatch(
-        VerifyDeviceBindingSignatureCommandAction(user: MockUser(), tan: '212212'),
+        VerifyDeviceBindingSignatureCommandAction(tan: '212212'),
       );
 
       // then
@@ -166,6 +174,7 @@ void main() {
         deviceFingerprintService: FakeDeviceFingerprintService(),
         initialState: createAppState(
           deviceBindingState: DeviceBindingInitialState(),
+          authState: authState,
         ),
       );
       final loadingState =
@@ -173,7 +182,7 @@ void main() {
       final appState = store.onChange.firstWhere((element) => element.deviceBindingState is DeviceBindingErrorState);
       // when
       store.dispatch(
-        VerifyDeviceBindingSignatureCommandAction(user: MockUser(), tan: '212212'),
+        VerifyDeviceBindingSignatureCommandAction(tan: '212212'),
       );
       // then
       expect((await loadingState).deviceBindingState, isA<DeviceBindingLoadingState>());

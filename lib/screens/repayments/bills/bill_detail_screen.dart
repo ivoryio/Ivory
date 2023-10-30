@@ -4,7 +4,6 @@ import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/repayments/bills/bill_detail_presenter.dart';
 import 'package:solarisdemo/models/repayments/bills/bill.dart';
 import 'package:solarisdemo/redux/app_state.dart';
-import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/repayments/bills/bills_action.dart';
 import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -20,8 +19,6 @@ class BillDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final billId = ModalRoute.of(context)!.settings.arguments as String;
-    final user =
-        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
     final scrollController = ScrollController();
 
     return ScreenScaffold(
@@ -38,7 +35,7 @@ class BillDetailScreen extends StatelessWidget {
               padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
               child: StoreConnector<AppState, BillDetailViewModel>(
                 onInit: (store) {
-                  store.dispatch(GetBillByIdCommandAction(id: billId, user: user.cognito));
+                  store.dispatch(GetBillByIdCommandAction(id: billId));
                 },
                 converter: (store) => BillDetailPresenter.presentBillDetail(
                   billState: store.state.billsState,

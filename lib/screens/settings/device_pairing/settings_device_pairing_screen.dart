@@ -4,8 +4,6 @@ import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_presenter.dart';
 import 'package:solarisdemo/ivory_app.dart';
-import 'package:solarisdemo/models/user.dart';
-import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_state.dart';
 import 'package:solarisdemo/redux/device/device_action.dart';
@@ -31,8 +29,6 @@ class SettingsDevicePairingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user =
-        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
     final scrollController = ScrollController();
 
     return ScreenScaffold(
@@ -44,7 +40,7 @@ class SettingsDevicePairingScreen extends StatelessWidget {
             padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
             scrollController: scrollController,
             onBackButtonPressed: () {
-              _handleBackNavigation(user: user, context: context);
+              _handleBackNavigation(context: context);
             },
           ),
           Expanded(
@@ -85,7 +81,6 @@ class SettingsDevicePairingScreen extends StatelessWidget {
                         return _buildPageContent(
                           context: context,
                           viewModel: viewModel,
-                          user: user,
                         );
                       }
                       return const Expanded(
@@ -105,7 +100,6 @@ class SettingsDevicePairingScreen extends StatelessWidget {
   }
 
   Widget _buildPageContent({
-    required AuthenticatedUser user,
     required BuildContext context,
     required DeviceBindingViewModel viewModel,
   }) {
@@ -288,13 +282,11 @@ class SettingsDevicePairingScreen extends StatelessWidget {
 
   void _handleBackNavigation({
     required BuildContext context,
-    required AuthenticatedUser user,
   }) {
     if (IvoryApp.generalRouteObserver.isRouteInStackButNotCurrent(BankCardDetailsScreen.routeName)) {
       Navigator.popUntil(context, ModalRoute.withName(BankCardDetailsScreen.routeName));
       StoreProvider.of<AppState>(context).dispatch(
         BankCardFetchDetailsCommandAction(
-          user: user,
           bankCard: (StoreProvider.of<AppState>(context).state.bankCardState as BankCardNoBoundedDevicesState).bankCard,
         ),
       );
@@ -302,7 +294,6 @@ class SettingsDevicePairingScreen extends StatelessWidget {
       Navigator.popUntil(context, ModalRoute.withName(BankCardChangePinChooseScreen.routeName));
       StoreProvider.of<AppState>(context).dispatch(
         BankCardInitiatePinChangeCommandAction(
-          user: user,
           bankCard: (StoreProvider.of<AppState>(context).state.bankCardState as BankCardNoBoundedDevicesState).bankCard,
         ),
       );

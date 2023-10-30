@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:solarisdemo/infrastructure/person/account_summary/account_summary_presenter.dart';
-import 'package:solarisdemo/models/person_model.dart';
 import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/screens/account/account_details_screen.dart';
 import 'package:solarisdemo/screens/available_balance/available_balance_screen.dart';
@@ -15,7 +14,6 @@ import 'package:solarisdemo/widgets/screen.dart';
 import '../../config.dart';
 import '../../infrastructure/transactions/transaction_presenter.dart';
 import '../../models/transactions/transaction_model.dart';
-import '../../models/user.dart';
 import '../../redux/app_state.dart';
 import '../../redux/person/account_summary/account_summay_action.dart';
 import '../../redux/transactions/transactions_action.dart';
@@ -65,19 +63,15 @@ class HomeScreen extends StatelessWidget {
       ],
       titleTextStyle: ClientConfig.getTextStyleScheme().heading3.copyWith(color: Colors.white),
       centerTitle: false,
-      child: HomePageContent(
-        user: user,
-      ),
+      child: const HomePageContent(),
     );
   }
 }
 
 class HomePageContent extends StatelessWidget {
-  final AuthenticatedUser user;
 
   const HomePageContent({
     super.key,
-    required this.user,
   });
 
   @override
@@ -87,10 +81,7 @@ class HomePageContent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          HomePageHeader(
-            customer: user.person,
-            user: user,
-          ),
+          const HomePageHeader(),
           Column(
             children: [
               Padding(
@@ -103,7 +94,6 @@ class HomePageContent extends StatelessWidget {
                 onInit: (store) => store.dispatch(
                   GetHomeTransactionsCommandAction(
                     filter: _defaultTransactionListFilter,
-                    user: user.cognito,
                     forceReloadTransactions: false,
                   ),
                 ),
@@ -152,20 +142,16 @@ class HomePageContent extends StatelessWidget {
 }
 
 class HomePageHeader extends StatelessWidget {
-  final Person customer;
-  final AuthenticatedUser user;
 
   const HomePageHeader({
     super.key,
-    required this.customer,
-    required this.user,
   });
 
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, AccountSummaryViewModel>(
       onInit: (store) {
-        store.dispatch(GetAccountSummaryCommandAction(user: user.cognito, forceAccountSummaryReload: false));
+        store.dispatch(GetAccountSummaryCommandAction(forceAccountSummaryReload: false));
       },
       converter: (store) =>
           AccountSummaryPresenter.presentAccountSummary(accountSummaryState: store.state.accountSummaryState),

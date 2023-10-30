@@ -103,11 +103,8 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       final store = widget.store;
-      if (user == null) {
-        return;
-      }
 
-      forceReloadAppStates(store, user!);
+      forceReloadAppStates(store);
     }
   }
 

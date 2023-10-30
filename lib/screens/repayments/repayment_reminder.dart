@@ -7,9 +7,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/repayments/reminder/repayment_reminder_presenter.dart';
 import 'package:solarisdemo/models/repayments/reminder/repayment_reminder.dart';
-import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
-import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/repayments/reminder/repayment_reminder_action.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
@@ -35,9 +33,6 @@ class _RepaymentReminderScreenState extends State<RepaymentReminderScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final user =
-        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
-
     return ScreenScaffold(
       body: Padding(
         padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
@@ -59,7 +54,7 @@ class _RepaymentReminderScreenState extends State<RepaymentReminderScreen> {
             const SizedBox(height: 24),
             Expanded(
               child: StoreConnector<AppState, RepaymentReminderViewModel>(
-                onInit: (store) => store.dispatch(GetRepaymentRemindersCommandAction(user: user.cognito)),
+                onInit: (store) => store.dispatch(GetRepaymentRemindersCommandAction()),
                 converter: (store) => RepaymentReminderPresenter.presentRepaymentReminder(
                   repaymentReminderState: store.state.repaymentReminderState,
                   creditLineState: store.state.creditLineState,
@@ -181,7 +176,7 @@ class _RepaymentReminderScreenState extends State<RepaymentReminderScreen> {
               height: 48,
               child: Button(
                 text: "Save",
-                onPressed: _reminders.isNotEmpty ? () => _onSaveTap(user.cognito) : null,
+                onPressed: _reminders.isNotEmpty ? () => _onSaveTap() : null,
                 color: ClientConfig.getColorScheme().tertiary,
                 textColor: ClientConfig.getColorScheme().surface,
               ),
@@ -198,12 +193,12 @@ class _RepaymentReminderScreenState extends State<RepaymentReminderScreen> {
     }
   }
 
-  void _onSaveTap(User user) {
+  void _onSaveTap() {
     final remindersToAdd = _reminders.where((reminder) => !_initialReminders.contains(reminder)).toList();
 
     if (remindersToAdd.isNotEmpty) {
       StoreProvider.of<AppState>(context).dispatch(
-        UpdateRepaymentRemindersCommandAction(user: user, reminders: remindersToAdd),
+        UpdateRepaymentRemindersCommandAction(reminders: remindersToAdd),
       );
     }
 

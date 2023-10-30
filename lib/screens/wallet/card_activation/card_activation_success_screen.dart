@@ -83,7 +83,6 @@ class BankCardDetailsActivationSuccessScreen extends StatelessWidget {
                           ModalRoute.withName(HomeScreen.routeName),
                         );
                         StoreProvider.of<AppState>(context).dispatch(GetBankCardCommandAction(
-                          user: user,
                           cardId: viewModel.bankCard!.id,
                           forceReloadCardData: true,
                         ));

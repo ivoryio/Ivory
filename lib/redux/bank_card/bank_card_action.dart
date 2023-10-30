@@ -2,14 +2,12 @@ import '../../../models/bank_card.dart';
 import '../../../models/user.dart';
 
 class CreateCardCommandAction {
-  final AuthenticatedUser user;
   final String firstName;
   final String lastName;
   final BankCardType type;
   final String businessId;
 
   CreateCardCommandAction({
-    required this.user,
     required this.firstName,
     required this.lastName,
     required this.type,
@@ -19,77 +17,66 @@ class CreateCardCommandAction {
 
 class GetBankCardCommandAction {
   final String cardId;
-  final AuthenticatedUser user;
   final bool forceReloadCardData;
 
   GetBankCardCommandAction({
-    required this.user,
     required this.cardId,
     required this.forceReloadCardData,
   });
 }
 
 class GetBankCardsCommandAction {
-  final User user;
   final bool forceCardsReload;
 
   GetBankCardsCommandAction({
-    required this.user,
     required this.forceCardsReload,
   });
 }
 
 class BankCardChoosePinCommandAction {
-  final AuthenticatedUser user;
   final BankCard bankCard;
   final String pin;
 
-  BankCardChoosePinCommandAction({required this.pin, required this.user, required this.bankCard});
+  BankCardChoosePinCommandAction({required this.pin, required this.bankCard});
 }
 
 class BankCardConfirmPinCommandAction {
-  final AuthenticatedUser user;
   final BankCard bankCard;
   final String pin;
 
-  BankCardConfirmPinCommandAction({required this.pin, required this.user, required this.bankCard});
+  BankCardConfirmPinCommandAction({required this.pin, required this.bankCard});
 }
 
 class BankCardActivateCommandAction {
-  final AuthenticatedUser user;
   final String cardId;
 
-  BankCardActivateCommandAction({required this.cardId, required this.user});
+  BankCardActivateCommandAction({required this.cardId});
 }
 
 class BankCardFetchDetailsCommandAction {
-  final AuthenticatedUser user;
   final BankCard bankCard;
 
-  BankCardFetchDetailsCommandAction({required this.bankCard, required this.user});
+  BankCardFetchDetailsCommandAction({required this.bankCard});
 }
 
 class BankCardFreezeCommandAction {
-  final AuthenticatedUser user;
   final BankCard bankCard;
   final List<BankCard> bankCards;
 
-  BankCardFreezeCommandAction({required this.bankCard, required this.user, required this.bankCards});
+  BankCardFreezeCommandAction({required this.bankCard, required this.bankCards});
 }
 
 class BankCardUnfreezeCommandAction {
-  final AuthenticatedUser user;
   final BankCard bankCard;
   final List<BankCard> bankCards;
 
-  BankCardUnfreezeCommandAction({required this.bankCard, required this.user, required this.bankCards});
+  BankCardUnfreezeCommandAction({required this.bankCard, required this.bankCards});
 }
 
 class BankCardInitiatePinChangeCommandAction {
-  final AuthenticatedUser user;
   final BankCard bankCard;
 
-  BankCardInitiatePinChangeCommandAction({required this.bankCard, required this.user});
+  BankCardInitiatePinChangeCommandAction({required this.bankCard});
 }
 
 class BankCardLoadingEventAction {}

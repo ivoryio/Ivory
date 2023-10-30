@@ -4,7 +4,6 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/repayments/change_repayment/change_repayment_presenter.dart';
-import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/repayments/change_repayment/change_repayment_action.dart';
 import 'package:solarisdemo/screens/repayments/repayment_successfully_changed.dart';
 import 'package:solarisdemo/screens/repayments/repayments_screen.dart';
@@ -16,7 +15,6 @@ import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
 
-import '../../models/user.dart';
 import '../../redux/app_state.dart';
 
 class ChangeRepaymentRateScreen extends StatefulWidget {
@@ -45,9 +43,6 @@ class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final user =
-        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
-
     return ScreenScaffold(
       body: ScrollableScreenContainer(
         child: Padding(
@@ -72,7 +67,7 @@ class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
               ),
               const SizedBox(height: 16),
               StoreConnector<AppState, CardApplicationViewModel>(
-                onInit: (store) => store.dispatch(GetCardApplicationCommandAction(user: user.cognito)),
+                onInit: (store) => store.dispatch(GetCardApplicationCommandAction()),
                 converter: (store) => CardApplicationPresenter.presentCardApplication(
                   cardApplicationState: store.state.cardApplicationState,
                 ),
@@ -93,7 +88,6 @@ class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
                           const SizedBox(height: 24),
                           PageContent(
                             viewModel: viewModel,
-                            user: user.cognito,
                             acceptToContinue: (value) => {
                               setState(() {
                                 canGoBack = value;
@@ -118,13 +112,11 @@ class _ChangeRepaymentRateScreenState extends State<ChangeRepaymentRateScreen> {
 
 class PageContent extends StatefulWidget {
   final CardApplicationFetchedViewModel viewModel;
-  final User user;
   final Function(bool value) acceptToContinue;
 
   const PageContent({
     super.key,
     required this.viewModel,
-    required this.user,
     required this.acceptToContinue,
   });
 
@@ -227,7 +219,6 @@ class _PageContentState extends State<PageContent> {
 
                       StoreProvider.of<AppState>(context).dispatch(
                         UpdateCardApplicationCommandAction(
-                          user: widget.user,
                           fixedRate: chosenFixedRate,
                           percentageRate: chosenPercentageRate,
                           id: widget.viewModel.cardApplication!.id,

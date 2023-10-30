@@ -1,11 +1,7 @@
-import 'package:solarisdemo/models/user.dart';
-
 class AuthorizeTransactionCommandAction {
-  final User user;
   final String changeRequestId;
 
   AuthorizeTransactionCommandAction({
-    required this.user,
     required this.changeRequestId,
   });
 }
@@ -25,14 +21,12 @@ class AuthorizedTransactionEventAction {
 }
 
 class ConfirmTransactionCommandAction {
-  final User user;
   final String deviceId;
   final String deviceData;
   final String stringToSign;
   final String changeRequestId;
 
   ConfirmTransactionCommandAction({
-    required this.user,
     required this.deviceId,
     required this.deviceData,
     required this.stringToSign,
@@ -41,14 +35,12 @@ class ConfirmTransactionCommandAction {
 }
 
 class RejectTransactionCommandAction {
-  final User user;
   final String deviceId;
   final String deviceData;
   final String stringToSign;
   final String declineChangeRequestId;
 
   RejectTransactionCommandAction({
-    required this.user,
     required this.deviceId,
     required this.deviceData,
     required this.stringToSign,

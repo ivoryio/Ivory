@@ -205,7 +205,6 @@ class _BankCardDetailsChoosePinScreenState extends State<BankCardDetailsChoosePi
       StoreProvider.of<AppState>(context).dispatch(
         BankCardChoosePinCommandAction(
           bankCard: viewModel.bankCard!,
-          user: user,
           pin: pin,
         ),
       );

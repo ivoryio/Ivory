@@ -4,7 +4,6 @@ import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/transfer/transfer_presenter.dart';
 import 'package:solarisdemo/models/transfer/reference_account_transfer.dart';
 import 'package:solarisdemo/redux/app_state.dart';
-import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/transfer/transfer_action.dart';
 import 'package:solarisdemo/screens/transfer/transfer_sign_screen.dart';
 import 'package:solarisdemo/utilities/format.dart';
@@ -36,9 +35,6 @@ class _TransferReviewScreenState extends State<TransferReviewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final user =
-        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
-
     return StoreConnector<AppState, TransferViewModel>(
       converter: (store) => TransferPresenter.presentTransfer(
         transferState: store.state.transferState,
@@ -72,7 +68,6 @@ class _TransferReviewScreenState extends State<TransferReviewScreen> {
 
                         StoreProvider.of<AppState>(context).dispatch(
                           TransferCommandAction(
-                            user: user.cognito,
                             transfer: ReferenceAccountTransfer(
                               description: noteController.text,
                               amount: ReferenceAccountTransferAmount(

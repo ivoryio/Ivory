@@ -9,10 +9,8 @@ class AccountSummaryService extends ApiService {
     super.user,
   });
 
-  Future<AccountSummaryServiceResponse> getPersonAccountSummary({User? user}) async {
-    if (user != null) {
-      this.user = user;
-    }
+  Future<AccountSummaryServiceResponse> getPersonAccountSummary({required User user}) async {
+    this.user = user;
     try {
       String path = 'account/summary';
 

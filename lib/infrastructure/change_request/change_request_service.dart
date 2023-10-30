@@ -10,13 +10,11 @@ class ChangeRequestService extends ApiService {
   ChangeRequestService({super.user});
 
   Future<ChangeRequestServiceResponse> confirmTransferChangeRequest({
-    User? user,
+    required User user,
     required String changeRequestId,
     required String tan,
   }) async {
-    if (user != null) {
-      this.user = user;
-    }
+    this.user = user;
 
     try {
       String path = '/change_requests/$changeRequestId/confirm';
@@ -49,14 +47,13 @@ class ChangeRequestService extends ApiService {
   }
 
   Future<ChangeRequestServiceResponse> authorizeWithDevice({
-    User? user,
+    required User user,
     required String changeRequestId,
     required String deviceId,
     required String deviceData,
   }) async {
-    if (user != null) {
-      this.user = user;
-    }
+    this.user = user;
+
     try {
       final data = await post(
         '/change_requests/$changeRequestId/authorize',
@@ -79,15 +76,13 @@ class ChangeRequestService extends ApiService {
   }
 
   Future<ChangeRequestServiceResponse> confirmWithDevice({
-    User? user,
+    required User user,
     required String changeRequestId,
     required String deviceId,
     required String signature,
     required String deviceData,
   }) async {
-    if (user != null) {
-      this.user = user;
-    }
+    this.user = user;
 
     try {
       final data = await post(
@@ -96,7 +91,7 @@ class ChangeRequestService extends ApiService {
         body: {
           'delivery_method': ChangeRequestDeliveryMethod.deviceSigning.name,
           'device_data': deviceData,
-          'person_id': user?.personId,
+          'person_id': user.personId,
           'device_id': deviceId,
           'signature': signature,
         },

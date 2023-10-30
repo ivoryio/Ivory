@@ -5,12 +5,14 @@ import 'package:solarisdemo/models/transfer/transfer_authorization_request.dart'
 import 'package:solarisdemo/redux/transfer/transfer_action.dart';
 import 'package:solarisdemo/redux/transfer/transfer_state.dart';
 
-import '../../infrastructure/bank_card/bank_card_presenter_test.dart';
+import '../../setup/authentication_helper.dart';
 import '../../setup/create_app_state.dart';
 import '../../setup/create_store.dart';
 import 'transfer_mocks.dart';
 
 void main() {
+  final authState = AuthStatePlaceholder.loggedInState();
+
   const transfer = ReferenceAccountTransfer(
     description: "transfer description",
     amount: ReferenceAccountTransferAmount(
@@ -33,13 +35,14 @@ void main() {
         changeRequestService: FakeChangeRequestService(),
         initialState: createAppState(
           transferState: TransferInitialState(),
+          authState: authState,
         ),
       );
 
       final appState = store.onChange.firstWhere((state) => state.transferState is TransferLoadingState);
 
       //when
-      store.dispatch(TransferCommandAction(user: MockUser(), transfer: transfer));
+      store.dispatch(TransferCommandAction(transfer: transfer));
 
       //then
       expect((await appState).transferState, isA<TransferLoadingState>());
@@ -52,13 +55,14 @@ void main() {
         changeRequestService: FakeChangeRequestService(),
         initialState: createAppState(
           transferState: TransferInitialState(),
+          authState: authState,
         ),
       );
 
       final appState = store.onChange.firstWhere((state) => state.transferState is TransferNeedConfirmationState);
 
       //when
-      store.dispatch(TransferCommandAction(user: MockUser(), transfer: transfer));
+      store.dispatch(TransferCommandAction(transfer: transfer));
 
       //then
       expect((await appState).transferState, isA<TransferNeedConfirmationState>());
@@ -71,13 +75,14 @@ void main() {
         changeRequestService: FakeChangeRequestService(),
         initialState: createAppState(
           transferState: TransferInitialState(),
+          authState: authState,
         ),
       );
 
       final appState = store.onChange.firstWhere((state) => state.transferState is TransferFailedState);
 
       //when
-      store.dispatch(TransferCommandAction(user: MockUser(), transfer: transfer));
+      store.dispatch(TransferCommandAction(transfer: transfer));
 
       //then
       expect((await appState).transferState, isA<TransferFailedState>());
@@ -92,12 +97,12 @@ void main() {
         changeRequestService: FakeChangeRequestService(),
         initialState: createAppState(
           transferState: TransferNeedConfirmationState(transferAuthorizationRequest: transferAuthorizationRequest),
+          authState: authState,
         ),
       );
 
       //when
       store.dispatch(ConfirmTransferCommandAction(
-        user: MockUser(),
         changeRequestId: "changeRequestId",
         tan: "tan",
       ));
@@ -113,6 +118,7 @@ void main() {
         changeRequestService: FakeChangeRequestService(),
         initialState: createAppState(
           transferState: TransferNeedConfirmationState(transferAuthorizationRequest: transferAuthorizationRequest),
+          authState: authState,
         ),
       );
 
@@ -120,7 +126,6 @@ void main() {
 
       //when
       store.dispatch(ConfirmTransferCommandAction(
-        user: MockUser(),
         changeRequestId: "changeRequestId",
         tan: "tan",
       ));
@@ -138,6 +143,7 @@ void main() {
           transferState: TransferNeedConfirmationState(
             transferAuthorizationRequest: transferAuthorizationRequest,
           ),
+          authState: authState,
         ),
       );
 
@@ -145,7 +151,6 @@ void main() {
 
       //when
       store.dispatch(ConfirmTransferCommandAction(
-        user: MockUser(),
         changeRequestId: "changeRequestId",
         tan: "tan",
       ));

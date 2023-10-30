@@ -35,7 +35,6 @@ class BankCardChangePinChooseScreen extends StatelessWidget {
       body: StoreConnector<AppState, BankCardViewModel>(
         onInit: (store) => store.dispatch(
           BankCardInitiatePinChangeCommandAction(
-            user: user,
             bankCard: (store.state.bankCardState as BankCardFetchedState).bankCard,
           ),
         ),
@@ -78,7 +77,6 @@ class BankCardChangePinChooseScreen extends StatelessWidget {
                     Navigator.pop(context);
                     StoreProvider.of<AppState>(context).dispatch(
                       GetBankCardCommandAction(
-                        user: user,
                         cardId: viewModel.bankCard!.id,
                         forceReloadCardData: true,
                       ),
@@ -178,7 +176,6 @@ class BankCardChangePinChooseScreen extends StatelessWidget {
       // ignore: use_build_context_synchronously
       StoreProvider.of<AppState>(context).dispatch(
         GetBankCardCommandAction(
-          user: user,
           cardId: viewModel.bankCard!.id,
           forceReloadCardData: true,
         ),
@@ -410,7 +407,6 @@ class _ChangePinBodyState extends State<ChangePinBody> {
                         StoreProvider.of<AppState>(context).dispatch(
                           BankCardChoosePinCommandAction(
                             pin: _newPIN,
-                            user: user,
                             bankCard: widget.viewModel.bankCard!,
                           ),
                         );

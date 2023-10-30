@@ -7,6 +7,8 @@ import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/transactions/approval/transaction_approval_action.dart';
 
+import '../../redux/auth/auth_state.dart';
+
 class TransactionApprovalMiddleware extends MiddlewareClass<AppState> {
   final DeviceService _deviceService;
   final DeviceFingerprintService _deviceFingerprintService;
@@ -24,6 +26,11 @@ class TransactionApprovalMiddleware extends MiddlewareClass<AppState> {
   call(Store<AppState> store, action, NextDispatcher next) async {
     next(action);
 
+    final authState = store.state.authState;
+    if(authState is! AuthenticatedState) {
+      return;
+    }
+
     if (action is AuthorizeTransactionCommandAction) {
       final consentId = await _deviceService.getConsentId();
       final deviceId = await _deviceService.getDeviceId();
@@ -34,7 +41,7 @@ class TransactionApprovalMiddleware extends MiddlewareClass<AppState> {
 
       if (isDeviceIdNotEmpty && isDeviceDataNotEmpty) {
         final response = await _changeRequestService.authorizeWithDevice(
-          user: action.user,
+          user: authState.authenticatedUser.cognito,
           changeRequestId: action.changeRequestId,
           deviceId: deviceId,
           deviceData: deviceData,
@@ -59,7 +66,7 @@ class TransactionApprovalMiddleware extends MiddlewareClass<AppState> {
       final response = await _confirmWithDevice(
         store,
         stringToSign: action.stringToSign,
-        user: action.user,
+        user: authState.authenticatedUser.cognito,
         changeRequestId: action.changeRequestId,
         deviceData: action.deviceData,
         deviceId: action.deviceId,
@@ -74,7 +81,7 @@ class TransactionApprovalMiddleware extends MiddlewareClass<AppState> {
 
     if (action is RejectTransactionCommandAction) {
       final authorizeResponse = await _changeRequestService.authorizeWithDevice(
-        user: action.user,
+        user:authState.authenticatedUser.cognito,
         changeRequestId: action.declineChangeRequestId,
         deviceId: action.deviceId,
         deviceData: action.deviceData,
@@ -84,7 +91,7 @@ class TransactionApprovalMiddleware extends MiddlewareClass<AppState> {
         final response = await _confirmWithDevice(
           store,
           stringToSign: authorizeResponse.stringToSign,
-          user: action.user,
+          user: authState.authenticatedUser.cognito,
           changeRequestId: action.declineChangeRequestId,
           deviceData: action.deviceData,
           deviceId: action.deviceId,
