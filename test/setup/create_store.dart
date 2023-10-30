@@ -11,6 +11,7 @@ import 'package:solarisdemo/infrastructure/device/device_binding_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_fingerprint_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
+import 'package:solarisdemo/infrastructure/onboarding/onboarding_service.dart';
 import 'package:solarisdemo/infrastructure/person/account_summary/account_summary_service.dart';
 import 'package:solarisdemo/infrastructure/person/person_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/bills/bill_service.dart';
@@ -51,6 +52,7 @@ Store<AppState> createTestStore({
   AccountSummaryService? accountSummaryService,
   DeviceFingerprintService? deviceFingerprintService,
   AuthService? authService,
+  OnboardingService? onboardingService,
 }) {
   return createStore(
     initialState: initialState,
@@ -73,6 +75,7 @@ Store<AppState> createTestStore({
     accountSummaryService: accountSummaryService ?? NotImplementedAccountSummaryService(),
     deviceFingerprintService: deviceFingerprintService ?? NotImplementedDeviceFingerprintService(),
     authService: authService ?? NotImplementedAuthService(),
+    onboardingService: onboardingService ?? NotImplementedOnboardingService(),
   );
 }
 
@@ -378,6 +381,13 @@ class NotImplementedDeviceFingerprintService extends DeviceFingerprintService {
 class NotImplementedAuthService extends AuthService {
   @override
   Future<AuthServiceResponse> login(String userName, String password) {
+    throw UnimplementedError();
+  }
+}
+
+class NotImplementedOnboardingService extends OnboardingService {
+  @override
+  Future<OnboardingServiceResponse> getOnboardingProgress({required User user}) {
     throw UnimplementedError();
   }
 }

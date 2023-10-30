@@ -111,7 +111,7 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
       store: widget.store,
       child: Builder(builder: (context) {
         return MaterialApp(
-          title: "Solaris Demo",
+          title: "Ivory Demo",
           theme: widget.clientConfig.uiSettings.themeData,
           navigatorObservers: [
             IvoryApp.routeObserver,
@@ -221,11 +221,7 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
             // account
             AccountDetailsScreen.routeName: (context) => const AccountDetailsScreen(),
             // onboarding
-            OnboardingStepperScreen.routeName: (context) {
-              final params = ModalRoute.of(context)?.settings.arguments as OnboardingStepperScreenParams;
-
-              return OnboardingStepperScreen(params: params);
-            },
+            OnboardingStepperScreen.routeName: (context) => const OnboardingStepperScreen(),
             OnboardingStartScreen.routeName: (context) => const OnboardingStartScreen(),
             OnboardingGermanResidencyScreen.routeName: (context) => const OnboardingGermanResidencyScreen(),
             OnboardingGermanResidencyErrorScreen.routeName: (context) => const OnboardingGermanResidencyErrorScreen(),

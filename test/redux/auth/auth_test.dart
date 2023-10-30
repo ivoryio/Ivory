@@ -101,8 +101,7 @@ void main() {
       );
 
       final loadingState = store.onChange.firstWhere((element) => element.authState is AuthLoadingState);
-      final appState =
-          store.onChange.firstWhere((element) => element.authState is AuthenticationInitializedState);
+      final appState = store.onChange.firstWhere((element) => element.authState is AuthenticationInitializedState);
 
       //when
       store.dispatch(
@@ -146,9 +145,7 @@ void main() {
       //then
       expect((await loadingState).authState, isA<AuthLoadingState>());
       expect((await appState).authState, isA<AuthenticationInitializedState>());
-      expect(
-          ((await appState).authState as AuthenticationInitializedState).authType, equals(AuthType.withBiometrics));
-
+      expect(((await appState).authState as AuthenticationInitializedState).authType, equals(AuthType.withBiometrics));
     });
 
     test("If credentials are invalid should fail with AuthErrorType.invalidCredentials", () async {
@@ -177,11 +174,36 @@ void main() {
       expect((await appState).authState, isA<AuthErrorState>());
       expect(((await appState).authState as AuthErrorState).errorType, equals(AuthErrorType.invalidCredentials));
     });
+
+    test("When user group is onboarding it should return AuthenticationInitializedState with authType onboarding",
+        () async {
+      //given
+      final store = createTestStore(
+        deviceService: FakeDeviceService(),
+        authService: FakeAuthServiceWithOnboardingUser(),
+        deviceFingerprintService: FakeDeviceFingerprintService(),
+        initialState: createAppState(
+          authState: AuthInitialState(),
+        ),
+      );
+
+      final loadingState = store.onChange.firstWhere((element) => element.authState is AuthLoadingState);
+      final appState = store.onChange.firstWhere((element) => element.authState is AuthenticationInitializedState);
+
+      //when
+      store.dispatch(
+        InitUserAuthenticationCommandAction(email: "email@example.com", password: "123456"),
+      );
+
+      //then
+      expect((await loadingState).authState, isA<AuthLoadingState>());
+      expect((await appState).authState, isA<AuthenticationInitializedState>());
+      expect(((await appState).authState as AuthenticationInitializedState).authType, AuthType.onboarding);
+    });
   });
 
   group("Authenticate", () {
-    test(
-        "Succesfully confirm authentication with a bound device (with biometrics), should return AuthenticatedState",
+    test("Succesfully confirm authentication with a bound device (with biometrics), should return AuthenticatedState",
         () async {
       //given
       final store = createTestStore(
@@ -207,7 +229,6 @@ void main() {
       expect((await loadingState).authState, isA<AuthLoadingState>());
       expect((await appState).authState, isA<AuthenticatedState>());
       expect(((await appState).authState as AuthenticatedState).authType, equals(AuthType.withBiometrics));
-
     });
     test("If biometrics are not confirmed, should fail with AuthErrorType.biometricAuthFailed ", () async {
       //given
@@ -238,8 +259,7 @@ void main() {
       expect(((await appState).authState as AuthErrorState).errorType, equals(AuthErrorType.biometricAuthFailed));
     });
 
-    test(
-        "Succesfully confirm authentication without a bound device (only with OTP), should return AuthenticatedState",
+    test("Succesfully confirm authentication without a bound device (only with OTP), should return AuthenticatedState",
         () async {
       //given
       final store = createTestStore(

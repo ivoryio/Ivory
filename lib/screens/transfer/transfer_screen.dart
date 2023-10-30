@@ -116,7 +116,6 @@ class _TransferScreenState extends State<TransferScreen> {
                   _Card(
                     title: "Reference account",
                     iban: viewModel.referenceAccount.iban,
-                    bankName: viewModel.referenceAccount.name,
                   ),
                   const SizedBox(height: 32),
                   Text(
@@ -193,13 +192,11 @@ class _Card extends StatelessWidget {
   final String title;
   final String iban;
   final double? balance;
-  final String? bankName;
 
   const _Card({
     required this.title,
     required this.iban,
     this.balance,
-    this.bankName,
   });
 
   @override
@@ -246,20 +243,6 @@ class _Card extends StatelessWidget {
               ],
             ),
           ),
-          if (bankName != null) ...[
-            const SizedBox(height: 4),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: [
-                  Text(
-                    bankName!,
-                    style: ClientConfig.getTextStyleScheme().bodySmallRegular,
-                  ),
-                ],
-              ),
-            ),
-          ],
           const SizedBox(height: 16),
           if (balance != null) ...[
             const Divider(height: 1),
