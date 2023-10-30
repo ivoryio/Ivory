@@ -1,19 +1,14 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/repayments/change_repayment/change_repayment_action.dart';
 import 'package:solarisdemo/redux/repayments/change_repayment/change_repayment_state.dart';
 
+import '../../../setup/authentication_helper.dart';
 import '../../../setup/create_store.dart';
 import '../../../setup/create_app_state.dart';
-import '../../auth/auth_mocks.dart';
 import 'change_repayment_mocks.dart';
 
 void main() {
-  User user = User(
-    session: MockUserSession(),
-    attributes: [],
-    cognitoUser: MockCognitoUser(),
-  );
+  final authState = AuthStatePlaceholder.loggedInState();
 
   test('When asking to fetch card application the first time you enter the screen it should have a loading state',
       () async {
@@ -22,12 +17,13 @@ void main() {
       cardApplicationService: FakeCardApplicationService(),
       initialState: createAppState(
         cardApplicationState: CardApplicationInitialState(),
+        authState: authState,
       ),
     );
     final appState = store.onChange.isEmpty;
 
     //when
-    store.dispatch(GetCardApplicationCommandAction(user: user));
+    store.dispatch(GetCardApplicationCommandAction());
 
     //then
     expect(await appState, false);
@@ -39,12 +35,13 @@ void main() {
       cardApplicationService: FakeFailingCardApplicationService(),
       initialState: createAppState(
         cardApplicationState: CardApplicationInitialState(),
+        authState: authState,
       ),
     );
     final appState = store.onChange.firstWhere((element) => element.cardApplicationState is CardApplicationErrorState);
 
     //when
-    store.dispatch(GetCardApplicationCommandAction(user: user));
+    store.dispatch(GetCardApplicationCommandAction());
 
     //then
     expect((await appState).cardApplicationState, isA<CardApplicationErrorState>());
@@ -56,13 +53,13 @@ void main() {
       cardApplicationService: FakeFailingCardApplicationService(),
       initialState: createAppState(
         cardApplicationState: CardApplicationInitialState(),
+        authState: authState,
       ),
     );
     final appState = store.onChange.firstWhere((element) => element.cardApplicationState is CardApplicationErrorState);
 
     //when
     store.dispatch(UpdateCardApplicationCommandAction(
-      user: user,
       fixedRate: 1000,
       percentageRate: 10,
       id: 'ff46c26e244f482a955ec0bb9a0170d4ccla',
@@ -78,13 +75,14 @@ void main() {
       cardApplicationService: FakeCardApplicationService(),
       initialState: createAppState(
         cardApplicationState: CardApplicationInitialState(),
+        authState: authState,
       ),
     );
     final appState =
         store.onChange.firstWhere((element) => element.cardApplicationState is CardApplicationFetchedState);
 
     //when
-    store.dispatch(GetCardApplicationCommandAction(user: user));
+    store.dispatch(GetCardApplicationCommandAction());
 
     //then
     expect((await appState).cardApplicationState, isA<CardApplicationFetchedState>());

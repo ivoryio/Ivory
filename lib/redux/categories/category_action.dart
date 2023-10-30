@@ -1,8 +1,6 @@
 import '../../models/categories/category.dart';
 
-class GetCategoriesCommandAction {
-  GetCategoriesCommandAction();
-}
+class GetCategoriesCommandAction {}
 
 class CategoriesLoadingEventAction {}
 class CategoriesFailedEventAction {}

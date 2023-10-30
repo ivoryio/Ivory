@@ -5,6 +5,8 @@ import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/repayments/reminder/repayment_reminder_action.dart';
 import 'package:solarisdemo/redux/repayments/reminder/repayment_reminder_state.dart';
 
+import '../../../redux/auth/auth_state.dart';
+
 class RepaymentRemindersMiddleware extends MiddlewareClass<AppState> {
   final RepaymentReminderService _repaymentReminderService;
 
@@ -15,8 +17,13 @@ class RepaymentRemindersMiddleware extends MiddlewareClass<AppState> {
     next(action);
 
     if (action is GetRepaymentRemindersCommandAction) {
+      final authState = store.state.authState;
+      if(authState is! AuthenticatedState) {
+        return;
+      }
+
       store.dispatch(RepaymentReminderLoadingEventAction());
-      final response = await _repaymentReminderService.getRepaymentReminders(user: action.user);
+      final response = await _repaymentReminderService.getRepaymentReminders(user: authState.authenticatedUser.cognito);
 
       if (response is GetRepaymentReminderSuccessResponse) {
         store.dispatch(RepaymentReminderFetchedEventAction(repaymentReminders: response.repaymentReminders));

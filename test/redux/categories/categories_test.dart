@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/categories/category_action.dart';
 import 'package:solarisdemo/redux/categories/category_state.dart';
 

@@ -12,6 +12,7 @@ class AuthStatePlaceholder {
       session: MockUserSession(),
       attributes: [],
       cognitoUser: MockCognitoUser(),
+      personId: "personID",
     );
     final person = Person();
     final personAccount = PersonAccount();

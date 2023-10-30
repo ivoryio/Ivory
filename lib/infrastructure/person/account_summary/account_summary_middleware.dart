@@ -3,6 +3,7 @@ import 'package:solarisdemo/infrastructure/person/account_summary/account_summar
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/person/account_summary/account_summay_action.dart';
 
+import '../../../redux/auth/auth_state.dart';
 import '../../../redux/person/account_summary/account_summay_state.dart';
 
 class GetAccountSummaryMiddleware extends MiddlewareClass<AppState>
@@ -15,6 +16,11 @@ class GetAccountSummaryMiddleware extends MiddlewareClass<AppState>
   call(Store<AppState> store, action, NextDispatcher next) async{
     next(action);
 
+    final authState = store.state.authState;
+    if(authState is! AuthenticatedState) {
+      return;
+    }
+
     if(action is GetAccountSummaryCommandAction) {
       if((store.state.accountSummaryState is WithAccountSummaryState) && (action.forceAccountSummaryReload == false)) {
         return;
@@ -22,7 +28,7 @@ class GetAccountSummaryMiddleware extends MiddlewareClass<AppState>
 
       store.dispatch(AccountSummaryLoadingEventAction());
 
-      final response = await _accountSummaryService.getPersonAccountSummary(user: action.user);
+      final response = await _accountSummaryService.getPersonAccountSummary(user: authState.authenticatedUser.cognito);
       if(response is GetAccountSummarySuccessResponse) {
         store.dispatch(AccountSummaryFetchedEventAction(accountSummary: response.accountSummary));
       } else {

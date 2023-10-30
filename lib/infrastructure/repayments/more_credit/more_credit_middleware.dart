@@ -3,6 +3,7 @@ import 'package:solarisdemo/infrastructure/repayments/more_credit/more_credit_se
 import 'package:solarisdemo/redux/repayments/more_credit/more_credit_action.dart';
 
 import '../../../redux/app_state.dart';
+import '../../../redux/auth/auth_state.dart';
 
 class GetMoreCreditMiddleware extends MiddlewareClass<AppState> {
   final MoreCreditService moreCreditService;
@@ -14,10 +15,15 @@ class GetMoreCreditMiddleware extends MiddlewareClass<AppState> {
       Store<AppState> store, dynamic action, NextDispatcher next) async {
     next(action);
 
+    final authState = store.state.authState;
+    if(authState is! AuthenticatedState) {
+      return;
+    }
+
     if (action is GetMoreCreditCommandAction) {
       store.dispatch(MoreCreditLoadingEventAction());
       final response = await moreCreditService.getWaitlistStatus(
-        user: action.user,
+        user: authState.authenticatedUser.cognito,
       );
 
       if (response is GetMoreCreditSuccessResponse) {
@@ -32,7 +38,7 @@ class GetMoreCreditMiddleware extends MiddlewareClass<AppState> {
     if (action is UpdateMoreCreditCommandAction) {
       store.dispatch(MoreCreditLoadingEventAction());
       final response = await moreCreditService.changeWaitlistStatus(
-        user: action.user,
+        user: authState.authenticatedUser.cognito,
       );
 
       if (response is GetMoreCreditSuccessResponse) {

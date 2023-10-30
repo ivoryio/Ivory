@@ -12,12 +12,10 @@ class TransferService extends ApiService {
   TransferService({super.user});
 
   Future<TransferServiceResponse> createPayoutTransfer({
-    User? user,
+    required User user,
     required ReferenceAccountTransfer transfer,
   }) async {
-    if (user != null) {
-      this.user = user;
-    }
+    this.user = user;
 
     try {
       var data = await post(

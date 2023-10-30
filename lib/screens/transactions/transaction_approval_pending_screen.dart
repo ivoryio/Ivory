@@ -6,9 +6,7 @@ import 'package:solarisdemo/infrastructure/transactions/transaction_approval_pre
 import 'package:solarisdemo/models/amount_value.dart';
 import 'package:solarisdemo/models/categories/category.dart';
 import 'package:solarisdemo/models/transactions/transaction_model.dart';
-import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
-import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
 import 'package:solarisdemo/redux/notification/notification_state.dart';
 import 'package:solarisdemo/redux/transactions/approval/transaction_approval_action.dart';
@@ -30,9 +28,6 @@ class TransactionApprovalPendingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user =
-        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
-
     return ScreenScaffold(
       body: Padding(
         padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
@@ -67,7 +62,7 @@ class TransactionApprovalPendingScreen extends StatelessWidget {
                   children: [
                     const _Appbar(),
                     ...(viewModel is WithApprovalChallengeViewModel && !viewModel.isLoading)
-                        ? _buildPageContent(context, user, viewModel)
+                        ? _buildPageContent(context, viewModel)
                         : [const Expanded(child: Center(child: CircularProgressIndicator()))],
                     const SizedBox(height: 16),
                   ],
@@ -78,11 +73,10 @@ class TransactionApprovalPendingScreen extends StatelessWidget {
 
   List<Widget> _buildPageContent(
     BuildContext context,
-    AuthenticatedUser user,
     WithApprovalChallengeViewModel viewModel,
   ) {
     return [
-      _buildPaymentInfo(context, user, viewModel),
+      _buildPaymentInfo(context, viewModel),
       SizedBox(
         width: double.infinity,
         child: SecondaryButton(
@@ -99,7 +93,6 @@ class TransactionApprovalPendingScreen extends StatelessWidget {
               content: _RejectPopUp(
                 onConfirm: () => StoreProvider.of<AppState>(context).dispatch(
                   RejectTransactionCommandAction(
-                    user: user.cognito,
                     declineChangeRequestId: viewModel.message.declineChangeRequestId,
                     deviceData: viewModel.deviceData,
                     deviceId: viewModel.deviceId,
@@ -119,7 +112,6 @@ class TransactionApprovalPendingScreen extends StatelessWidget {
           onPressed: () async {
             StoreProvider.of<AppState>(context).dispatch(
               ConfirmTransactionCommandAction(
-                user: user.cognito,
                 changeRequestId: viewModel.changeRequestId,
                 deviceData: viewModel.deviceData,
                 deviceId: viewModel.deviceId,
@@ -134,7 +126,6 @@ class TransactionApprovalPendingScreen extends StatelessWidget {
 
   Widget _buildPaymentInfo(
     BuildContext context,
-    AuthenticatedUser user,
     WithApprovalChallengeViewModel viewModel,
   ) {
     final cardMaskedPan = viewModel.bankCard.representation?.maskedPan ?? "";

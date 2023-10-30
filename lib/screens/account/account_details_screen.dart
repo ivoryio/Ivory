@@ -4,7 +4,6 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:solarisdemo/infrastructure/person/account_summary/account_summary_presenter.dart';
-import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/person/account_summary/account_summay_action.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
@@ -62,9 +61,6 @@ class AccountDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user =
-        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
-
     return ScreenScaffold(
       body: Padding(
         padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
@@ -92,7 +88,7 @@ class AccountDetailsScreen extends StatelessWidget {
               ),
               child: StoreConnector<AppState, AccountSummaryViewModel>(
                 onInit: (store) {
-                  store.dispatch(GetAccountSummaryCommandAction(user: user.cognito, forceAccountSummaryReload: false));
+                  store.dispatch(GetAccountSummaryCommandAction(forceAccountSummaryReload: false));
                 },
                 converter: (store) =>
                     AccountSummaryPresenter.presentAccountSummary(accountSummaryState: store.state.accountSummaryState),

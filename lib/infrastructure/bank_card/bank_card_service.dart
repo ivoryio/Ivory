@@ -121,12 +121,11 @@ class BankCardService extends ApiService {
 
   Future<BankCardServiceResponse> changePin({
     required String cardId,
-    required User? user,
+    required User user,
     required ChangePinRequestBody reqBody,
   }) async {
-    if (user != null) {
-      this.user = user;
-    }
+    this.user = user;
+
     try {
       await post('/account/cards/$cardId/change_card_pin', body: reqBody.toJson());
       return ChangePinSuccessResponse();

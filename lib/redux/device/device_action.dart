@@ -1,34 +1,23 @@
 import '../../models/device.dart';
-import '../../models/user.dart';
 
 class DeviceBindingLoadingEventAction {}
 
 class DeviceBindingFailedEventAction {}
 
-class CreateDeviceBindingCommandAction {
-  final User user;
-
-  CreateDeviceBindingCommandAction({
-    required this.user,
-  });
-}
+class CreateDeviceBindingCommandAction {}
 
 class VerifyDeviceBindingSignatureCommandAction {
-  final User user;
   final String tan;
 
   VerifyDeviceBindingSignatureCommandAction({
-    required this.user,
     required this.tan,
   });
 }
 
 class DeleteBoundDeviceCommandAction {
-  final User user;
   final String deviceId;
 
   DeleteBoundDeviceCommandAction({
-    required this.user,
     required this.deviceId,
   });
 }

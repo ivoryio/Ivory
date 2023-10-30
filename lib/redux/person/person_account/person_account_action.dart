@@ -1,11 +1,6 @@
 import 'package:solarisdemo/models/person_account.dart';
-import 'package:solarisdemo/models/user.dart';
 
-class GetPersonAccountCommandAction {
-  final User user;
-
-  GetPersonAccountCommandAction({required this.user});
-}
+class GetPersonAccountCommandAction {}
 
 class PersonAccountLoadingEventAction {}
 

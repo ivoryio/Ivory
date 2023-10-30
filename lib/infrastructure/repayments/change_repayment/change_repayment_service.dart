@@ -8,14 +8,12 @@ class CardApplicationService extends ApiService {
   CardApplicationService({super.user});
 
   Future<ChangeRepaymentResponse> updateChangeRepayment({
-    User? user,
+    required User user,
     required double fixedRate,
     required int percentageRate,
     required String id,
   }) async {
-    if (user != null) {
-      this.user = user;
-    }
+    this.user = user;
 
     String url = '/credit_card_applications/$id';
     Map<String, dynamic> body = {
@@ -34,10 +32,8 @@ class CardApplicationService extends ApiService {
     }
   }
 
-  Future<ChangeRepaymentResponse> getCardApplication({User? user}) async {
-    if (user != null) {
-      this.user = user;
-    }
+  Future<ChangeRepaymentResponse> getCardApplication({required User user}) async {
+    this.user = user;
 
     String url = '/credit_card_applications';
 

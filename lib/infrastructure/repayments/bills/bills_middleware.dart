@@ -5,6 +5,8 @@ import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/repayments/bills/bills_action.dart';
 import 'package:solarisdemo/redux/repayments/bills/bills_state.dart';
 
+import '../../../redux/auth/auth_state.dart';
+
 class GetBillsMiddleware extends MiddlewareClass<AppState> {
   final BillService _billService;
 
@@ -14,9 +16,14 @@ class GetBillsMiddleware extends MiddlewareClass<AppState> {
   call(Store<AppState> store, action, NextDispatcher next) async {
     next(action);
 
+    final authState = store.state.authState;
+    if(authState is! AuthenticatedState) {
+      return;
+    }
+
     if (action is GetBillsCommandAction) {
       store.dispatch(BillsLoadingEventAction());
-      final response = await _billService.getBills(user: action.user);
+      final response = await _billService.getBills(user: authState.authenticatedUser.cognito);
 
       if (response is GetBillsSuccessResponse) {
         store.dispatch(BillsFetchedEventAction(bills: response.bills));
@@ -26,7 +33,7 @@ class GetBillsMiddleware extends MiddlewareClass<AppState> {
     }
 
     if (action is GetBillByIdCommandAction) {
-      final response = await _billService.getBillById(id: action.id, user: action.user);
+      final response = await _billService.getBillById(id: action.id, user: authState.authenticatedUser.cognito);
 
       if (response is GetBillByIdSuccessResponse) {
         final newBills = (store.state.billsState as BillsFetchedState).bills.map((bill) {

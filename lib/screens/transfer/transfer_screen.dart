@@ -3,7 +3,6 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/transfer/transfer_accounts_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
-import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/person/person_account/person_account_action.dart';
 import 'package:solarisdemo/redux/person/reference_account/reference_account_action.dart';
 import 'package:solarisdemo/screens/transfer/transfer_review_screen.dart';
@@ -40,14 +39,11 @@ class _TransferScreenState extends State<TransferScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final user =
-        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
-
     return ScreenScaffold(
       body: StoreConnector<AppState, TransferAccountsViewModel>(
         onInit: (store) {
-          store.dispatch(GetPersonAccountCommandAction(user: user.cognito));
-          store.dispatch(GetReferenceAccountCommandAction(user: user.cognito));
+          store.dispatch(GetPersonAccountCommandAction());
+          store.dispatch(GetReferenceAccountCommandAction());
         },
         converter: (store) => TransferAccountsPresenter.presentTransfer(
           referenceAccountState: store.state.referenceAccountState,

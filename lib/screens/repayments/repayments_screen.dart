@@ -69,7 +69,7 @@ class RepaymentsScreen extends StatelessWidget {
                           ),
                           child: StoreConnector<AppState, CreditLineViewModel>(
                             onInit: (store) {
-                              store.dispatch(GetCreditLineCommandAction(user: user.cognito));
+                              store.dispatch(GetCreditLineCommandAction());
                             },
                             converter: (store) => CreditLinePresenter.presentCreditLine(
                               creditLineState: store.state.creditLineState,
@@ -137,15 +137,12 @@ class RepaymentsScreen extends StatelessWidget {
                   StoreConnector<AppState, MoreCreditViewModel>(
                     converter: (store) => MoreCreditPresenter.presentMoreCredit(
                       moreCreditState: store.state.moreCreditState,
-                      user: user,
                     ),
                     distinct: true,
                     builder: (context, viewModel) {
                       if (viewModel is MoreCreditInitialViewModel) {
                         StoreProvider.of<AppState>(context).dispatch(
-                          GetMoreCreditCommandAction(
-                            user: user.cognito,
-                          ),
+                          GetMoreCreditCommandAction(),
                         );
                       }
 

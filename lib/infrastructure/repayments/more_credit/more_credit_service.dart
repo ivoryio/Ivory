@@ -6,12 +6,9 @@ import '../../../models/user.dart';
 class MoreCreditService extends ApiService {
   MoreCreditService({super.user});
 
-  Future<MoreCreditServiceResponse> changeWaitlistStatus({User? user}) async {
+  Future<MoreCreditServiceResponse> changeWaitlistStatus({required User user}) async {
     String path = '/repayment/waitlist';
-
-    if (user != null) {
-      this.user = user;
-    }
+    this.user = user;
 
     try {
       bool waitlist = await post(path);
@@ -22,13 +19,10 @@ class MoreCreditService extends ApiService {
     }
   }
 
-  Future<MoreCreditServiceResponse> getWaitlistStatus({User? user}) async {
+  Future<MoreCreditServiceResponse> getWaitlistStatus({required User user}) async {
     String path = '/repayment/waitlist';
 
-    if (user != null) {
-      this.user = user;
-    }
-
+    this.user = user;
     try {
       bool waitlist = await get(path);
 
