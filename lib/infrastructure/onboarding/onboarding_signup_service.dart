@@ -30,7 +30,7 @@ class OnboardingSignupService extends ApiService {
         return const CreatePersonErrorResponse(errorType: OnboardingSignupErrorType.emailAlreadyExists);
       }
 
-      return const CreatePersonErrorResponse();
+      return const CreatePersonErrorResponse(errorType: OnboardingSignupErrorType.unknown);
     }
   }
 }
