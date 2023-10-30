@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
@@ -55,6 +53,11 @@ class _OnboardingPasswordScreenState extends State<OnboardingPasswordScreen> {
   Widget build(BuildContext context) {
     return StoreConnector<AppState, OnboardingSignupViewModel>(
       converter: (store) => OnboardingSignupPresenter.present(signupState: store.state.onboardingSignupState),
+      onInitialBuild: (viewModel) {
+        passwordController.text = viewModel.signupAttributes.password ?? "";
+        confirmPasswordController.text = viewModel.signupAttributes.password ?? "";
+        _continueButtonController.setEnabled();
+      },
       builder: (context, viewModel) {
         return ScreenScaffold(
           body: Column(

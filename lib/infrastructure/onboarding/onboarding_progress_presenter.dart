@@ -63,6 +63,12 @@ OnboardingProgress _onboardingProgressMapper(OnboardingStep step) {
         progressPercentage: 1,
         routeName: OnboardingBasicInfoScreen.routeName,
       );
+    case OnboardingStep.signUp:
+      return const OnboardingProgress(
+        activeStep: StepperItemType.personalDetails,
+        progressPercentage: 20,
+        routeName: OnboardingBasicInfoScreen.routeName, // TODO: Update route name
+      );
     default:
       return const OnboardingProgress(
         activeStep: StepperItemType.signUp,

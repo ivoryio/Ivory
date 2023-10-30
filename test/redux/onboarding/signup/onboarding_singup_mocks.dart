@@ -1,58 +1,36 @@
-import 'package:redux/redux.dart';
-import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
-import 'package:solarisdemo/models/user.dart';
-import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/infrastructure/onboarding/onboarding_signup_service.dart';
+import 'package:solarisdemo/models/onboarding/onboarding_signup_attributes.dart';
+import 'package:solarisdemo/models/onboarding/onboarding_signup_error_type.dart';
 
-class FakeNotificationService extends PushNotificationService {
+class FakeOnboardingSignupService extends OnboardingSignupService {
   @override
-  Future<void> init(Store<AppState> store) {
-    return Future.value();
-  }
-
-  @override
-  Future<void> clearNotification() {
-    return Future.value();
-  }
-
-  @override
-  Future<void> handleSavedNotification() {
-    return Future.value();
-  }
-
-  @override
-  void handleTokenRefresh({User? user}) {
-    return;
-  }
-
-  @override
-  Future<bool> hasPermission() {
-    return Future.value(true);
+  Future<OnboardingSignupServiceResponse> createPerson({
+    required OnboardingSignupAttributes signupAttributes,
+    required String deviceToken,
+    required String tsAndCsSignedAt,
+  }) async {
+    return CreatePersonSuccesResponse();
   }
 }
 
-class FakeNotificationServiceWithNoPermission extends PushNotificationService {
+class FakeFailingOnboardingSignupService extends OnboardingSignupService {
   @override
-  Future<void> init(Store<AppState> store) {
-    return Future.value();
+  Future<OnboardingSignupServiceResponse> createPerson({
+    required OnboardingSignupAttributes signupAttributes,
+    required String deviceToken,
+    required String tsAndCsSignedAt,
+  }) async {
+    return const CreatePersonErrorResponse();
   }
+}
 
+class FakeFailingOnboardingSignupServiceWithDuplicateEmail extends OnboardingSignupService {
   @override
-  Future<void> clearNotification() {
-    return Future.value();
-  }
-
-  @override
-  Future<void> handleSavedNotification() {
-    return Future.value();
-  }
-
-  @override
-  void handleTokenRefresh({User? user}) {
-    return;
-  }
-
-  @override
-  Future<bool> hasPermission() {
-    return Future.value(false);
+  Future<OnboardingSignupServiceResponse> createPerson({
+    required OnboardingSignupAttributes signupAttributes,
+    required String deviceToken,
+    required String tsAndCsSignedAt,
+  }) async {
+    return const CreatePersonErrorResponse(errorType: OnboardingSignupErrorType.emailAlreadyExists);
   }
 }

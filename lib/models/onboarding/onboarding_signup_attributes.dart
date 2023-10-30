@@ -7,7 +7,6 @@ class OnboardingSignupAttributes extends Equatable {
   final String? email;
   final String? password;
   final bool? notificationsAllowed;
-  final String? tsAndCsSignedAt;
 
   const OnboardingSignupAttributes({
     this.title,
@@ -16,7 +15,6 @@ class OnboardingSignupAttributes extends Equatable {
     this.email,
     this.password,
     this.notificationsAllowed,
-    this.tsAndCsSignedAt,
   });
 
   bool get hasBasicInfo => title != null && firstName != null && lastName != null;
@@ -37,10 +35,9 @@ class OnboardingSignupAttributes extends Equatable {
       email: email ?? this.email,
       password: password ?? this.password,
       notificationsAllowed: notificationsAllowed ?? this.notificationsAllowed,
-      tsAndCsSignedAt: tsAndCsSignedAt ?? this.tsAndCsSignedAt,
     );
   }
 
   @override
-  List<Object?> get props => [title, firstName, lastName, email, password, notificationsAllowed, tsAndCsSignedAt];
+  List<Object?> get props => [title, firstName, lastName, email, password, notificationsAllowed];
 }

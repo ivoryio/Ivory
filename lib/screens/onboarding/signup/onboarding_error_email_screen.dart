@@ -1,12 +1,14 @@
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/infrastructure/onboarding/onboarding_signup_presenter.dart';
+import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/screens/onboarding/signup/onboarding_email_screen.dart';
 import 'package:solarisdemo/utilities/ivory_color_mapper.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
-import 'package:solarisdemo/widgets/continue_button_controller.dart';
 import 'package:solarisdemo/widgets/ivory_asset_with_badge.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
@@ -18,9 +20,8 @@ class OnboardingErrorEmailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ContinueButtonController continueButtonController = ContinueButtonController(isEnabled: true);
-
     return ScreenScaffold(
+      shouldPop: false,
       body: Column(
         children: [
           AppToolbar(
@@ -40,18 +41,25 @@ class OnboardingErrorEmailScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  Text.rich(
-                    TextSpan(
-                      style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                      children: [
-                        const TextSpan(text: 'The email address '),
-                        TextSpan(
-                          text: 'laura.lehmann@gmail.com',
-                          style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
-                        ),
-                        const TextSpan(text: ' is already in use. Please choose a different one and try again.'),
-                      ],
+                  StoreConnector<AppState, OnboardingSignupViewModel>(
+                    converter: (store) => OnboardingSignupPresenter.present(
+                      signupState: store.state.onboardingSignupState,
                     ),
+                    builder: (context, viewModel) {
+                      return Text.rich(
+                        TextSpan(
+                          style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                          children: [
+                            const TextSpan(text: 'The email address '),
+                            TextSpan(
+                              text: viewModel.signupAttributes.email,
+                              style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
+                            ),
+                            const TextSpan(text: ' is already in use. Please choose a different one and try again.'),
+                          ],
+                        ),
+                      );
+                    },
                   ),
                   Expanded(
                     child: IvoryAssetWithBadge(
@@ -70,14 +78,10 @@ class OnboardingErrorEmailScreen extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: PrimaryButton(
-                      text: "Go to email address",
-                      isLoading: continueButtonController.isLoading,
-                      onPressed: continueButtonController.isEnabled
-                          ? () {
-                              Navigator.popUntil(context, ModalRoute.withName(OnboardingEmailScreen.routeName));
-                            }
-                          : null,
-                    ),
+                        text: "Go to email address",
+                        onPressed: () {
+                          Navigator.popUntil(context, ModalRoute.withName(OnboardingEmailScreen.routeName));
+                        }),
                   ),
                   const SizedBox(height: 16),
                 ],

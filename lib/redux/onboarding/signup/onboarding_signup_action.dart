@@ -1,3 +1,5 @@
+import 'package:solarisdemo/models/onboarding/onboarding_signup_error_type.dart';
+
 class SubmitOnboardingBasicInfoCommandAction {
   final String title;
   final String firstName;
@@ -34,6 +36,14 @@ class UpdatedPushNotificationsPermissionEventAction {
 
 class OnboardingSignupSuccessEventAction {}
 
-class OnboardingSignupFailedEventAction {}
+class OnboardingSignupFailedEventAction {
+  final OnboardingSignupErrorType errorType;
 
-class OnboardingSignupFailedServerEventAction {}
+  OnboardingSignupFailedEventAction({this.errorType = OnboardingSignupErrorType.unknown});
+}
+
+class CreateAccountCommandAction {}
+
+class OnboardingSignupLoadingEventAction {}
+
+class ResetOnboardingSignupCommandAction {}

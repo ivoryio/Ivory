@@ -24,6 +24,7 @@ import 'package:solarisdemo/infrastructure/transfer/transfer_service.dart';
 import 'package:solarisdemo/models/bank_card.dart';
 import 'package:solarisdemo/models/device.dart';
 import 'package:solarisdemo/models/device_activity.dart';
+import 'package:solarisdemo/models/onboarding/onboarding_signup_attributes.dart';
 import 'package:solarisdemo/models/transactions/transaction_model.dart';
 import 'package:solarisdemo/models/transfer/reference_account_transfer.dart';
 import 'package:solarisdemo/models/user.dart';
@@ -107,6 +108,11 @@ class NotImplementedPushNotificationService extends PushNotificationService {
 
   @override
   Future<void> clearNotification() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> getToken() {
     throw UnimplementedError();
   }
 
@@ -398,11 +404,8 @@ class NotImplementedOnboardingService extends OnboardingService {
 class NotImplementedOnboardingSignupService extends OnboardingSignupService {
   @override
   Future<OnboardingSignupServiceResponse> createPerson({
-    required String title,
-    required String email,
-    required String firstName,
-    required String lastName,
-    required bool pushNotificationsAllowed,
+    required OnboardingSignupAttributes signupAttributes,
+    required String deviceToken,
     required String tsAndCsSignedAt,
   }) async {
     throw UnimplementedError();

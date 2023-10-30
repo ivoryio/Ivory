@@ -8,6 +8,7 @@ import 'package:solarisdemo/redux/auth/auth_state.dart';
 
 import '../../setup/create_app_state.dart';
 import '../../setup/create_store.dart';
+import '../notification/notification_mocks.dart';
 import '../person/person_mocks.dart';
 import '../transactions/transaction_mocks.dart';
 import 'auth_mocks.dart';

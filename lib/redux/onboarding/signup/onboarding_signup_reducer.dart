@@ -28,6 +28,26 @@ OnboardingSignupState onboardingSignupReducer(OnboardingSignupState state, dynam
         notificationsAllowed: action.allowed,
       ),
     );
+  } else if (action is OnboardingSignupLoadingEventAction) {
+    return OnboardingSignupState(
+      signupAttributes: state.signupAttributes,
+      isLoading: true,
+    );
+  } else if (action is OnboardingSignupSuccessEventAction) {
+    return OnboardingSignupState(
+      signupAttributes: state.signupAttributes,
+      isLoading: false,
+      isSuccessful: true,
+    );
+  } else if (action is OnboardingSignupFailedEventAction) {
+    return OnboardingSignupState(
+      signupAttributes: state.signupAttributes,
+      isLoading: false,
+      isSuccessful: false,
+      errorType: action.errorType,
+    );
+  } else if (action is ResetOnboardingSignupCommandAction) {
+    return const OnboardingSignupState();
   }
 
   return state;
