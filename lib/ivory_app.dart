@@ -114,7 +114,7 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
       store: widget.store,
       child: Builder(builder: (context) {
         return MaterialApp(
-          title: "Solaris Demo",
+          title: "Ivory Demo",
           theme: widget.clientConfig.uiSettings.themeData,
           navigatorObservers: [
             IvoryApp.routeObserver,
