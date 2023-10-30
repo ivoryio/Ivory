@@ -407,7 +407,10 @@ List<TermsAndConditionsCheck> termsAndConditionsChecks = [
     isRequired: true,
     textFragments: [
       TextFragment(text: 'I agree to the '),
-      TextFragment(text: 'Data Processing, Privacy Terms and General Data Protection Regulation (GDPR)', filePath: '/'),
+      TextFragment(
+        text: 'Data Processing, Privacy Terms and General Data Protection Regulation (GDPR)',
+        filePath: '/customer-information/germany/de-iban/english/customer-information-on-data-processing	',
+      ),
       TextFragment(text: '.'),
     ],
   ),
