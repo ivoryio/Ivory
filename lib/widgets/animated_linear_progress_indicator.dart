@@ -34,7 +34,11 @@ class AnimatedLinearProgressIndicator extends StatelessWidget {
     );
   }
 
-  factory AnimatedLinearProgressIndicator.step({required int current, required int totalSteps}) {
+  factory AnimatedLinearProgressIndicator.step({
+    required int current,
+    required int totalSteps,
+    bool isCompleted = false,
+  }) {
     const firstStepPercent = 5 / 100;
 
     double begin, stepValue;
@@ -45,9 +49,12 @@ class AnimatedLinearProgressIndicator extends StatelessWidget {
     } else if (current == 1) {
       begin = 0;
       stepValue = firstStepPercent;
+    } else if (current == 2) {
+      begin = firstStepPercent;
+      stepValue = (current - 1) / totalSteps;
     } else {
-      begin = current == 2 ? firstStepPercent : (current - 2) / totalSteps;
-      stepValue = current == 1 ? firstStepPercent : (current - 1) / totalSteps;
+      begin = (current - 2) / totalSteps;
+      stepValue = (current - (isCompleted ? 0 : 1)) / totalSteps;
     }
 
     return AnimatedLinearProgressIndicator(
