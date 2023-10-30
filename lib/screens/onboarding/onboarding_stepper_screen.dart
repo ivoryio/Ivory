@@ -6,6 +6,8 @@ import 'package:solarisdemo/infrastructure/onboarding/onboarding_progress_presen
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/auth/auth_action.dart';
 import 'package:solarisdemo/redux/onboarding/onboarding_progress_action.dart';
+import 'package:solarisdemo/redux/onboarding/signup/onboarding_signup_action.dart';
+import 'package:solarisdemo/screens/welcome/welcome_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/circular_percent_indicator.dart';
@@ -38,8 +40,9 @@ class OnboardingStepperScreen extends StatelessWidget {
   }
 
   void _onScreenPop(BuildContext context) {
-    Navigator.pop(context);
+    Navigator.popUntil(context, ModalRoute.withName(WelcomeScreen.routeName));
     StoreProvider.of<AppState>(context).dispatch(LogoutUserCommandAction());
+    StoreProvider.of<AppState>(context).dispatch(ResetOnboardingSignupCommandAction());
   }
 
   Widget _buildLoadingContent(BuildContext context) {
