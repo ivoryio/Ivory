@@ -48,14 +48,14 @@ class Transaction {
     endToEndId = json['end_to_end_id'] ?? "ID";
     recipientBic = json['recipient_bic'];
     recipientIban = json['recipient_iban'];
-    recipientName = json['recipient_name'] ?? "SOLARIS";
+    recipientName =  processRecipient(json['recipient_name']);
     reference = json['reference'];
     bookingDate = json['booking_date'];
     valutaDate = json['valuta_date'];
     metaInfo = json['meta_info'];
     recordedAt = DateTime.parse(json['recorded_at']).toLocal();
     senderIban = json['sender_iban'];
-    senderName = json['sender_name'] ?? "SOLARIS";
+    senderName = json['sender_name'] ?? "Bank account";
     category = json['category'] != null ? Category.fromJson(json['category']) : null;
   }
 
@@ -82,6 +82,18 @@ class Transaction {
     data['category'] = category;
 
     return data;
+  }
+
+  String processRecipient(String? recipientName) {
+    if(recipientName == null) {
+      return "E-car";
+    }
+
+    if(recipientName.toLowerCase().contains("solaris")) {
+      return "E-car";
+    }
+
+    return recipientName;
   }
 }
 
