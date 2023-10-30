@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
@@ -11,7 +9,6 @@ import 'package:solarisdemo/redux/auth/auth_action.dart';
 import 'package:solarisdemo/screens/login/login_with_tan_screen.dart';
 import 'package:solarisdemo/screens/login/modals/mobile_number_country_picker_popup.dart';
 import 'package:solarisdemo/screens/onboarding/onboarding_stepper_screen.dart';
-import 'package:solarisdemo/screens/welcome/welcome_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/checkbox.dart';
 import 'package:solarisdemo/widgets/continue_button_controller.dart';
@@ -54,7 +51,7 @@ class LoginScreen extends StatelessWidget {
           Navigator.pushNamedAndRemoveUntil(
             context,
             OnboardingStepperScreen.routeName,
-            (route) => route.settings.name == WelcomeScreen.routeName,
+            (route) => false,
           );
         }
       },

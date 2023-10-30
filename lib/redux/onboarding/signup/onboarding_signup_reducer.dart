@@ -46,8 +46,6 @@ OnboardingSignupState onboardingSignupReducer(OnboardingSignupState state, dynam
       isSuccessful: false,
       errorType: action.errorType,
     );
-  } else if (action is ResetOnboardingSignupCommandAction) {
-    return const OnboardingSignupState();
   }
 
   return state;

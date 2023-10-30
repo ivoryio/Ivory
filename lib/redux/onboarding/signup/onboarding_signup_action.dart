@@ -45,5 +45,3 @@ class OnboardingSignupFailedEventAction {
 class CreateAccountCommandAction {}
 
 class OnboardingSignupLoadingEventAction {}
-
-class ResetOnboardingSignupCommandAction {}

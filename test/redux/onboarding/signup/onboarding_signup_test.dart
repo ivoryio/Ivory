@@ -311,33 +311,4 @@ void main() {
       expect(onboardingSignupState.errorType, OnboardingSignupErrorType.emailAlreadyExists);
     });
   });
-
-  test("When the user goes back from the stepper, the onboarding signup should be reseted", () async {
-    // given
-    const initialOnboardingAttributes = OnboardingSignupAttributes();
-
-    final store = createTestStore(
-      initialState: createAppState(
-        onboardingSignupState: const OnboardingSignupState(
-          signupAttributes: OnboardingSignupAttributes(
-            title: "title",
-            firstName: "firstName",
-            lastName: "lastName",
-            email: "email",
-            password: "password",
-            notificationsAllowed: true,
-          ),
-        ),
-      ),
-    );
-    final appState = store.onChange
-        .firstWhere((state) => state.onboardingSignupState.signupAttributes == initialOnboardingAttributes);
-
-    // when
-    store.dispatch(ResetOnboardingSignupCommandAction());
-
-    // then
-    final onboardingSignupState = (await appState).onboardingSignupState;
-    expect(onboardingSignupState.signupAttributes, initialOnboardingAttributes);
-  });
 }

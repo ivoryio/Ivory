@@ -9,7 +9,6 @@ import 'package:solarisdemo/redux/onboarding/signup/onboarding_signup_action.dar
 import 'package:solarisdemo/screens/onboarding/onboarding_stepper_screen.dart';
 import 'package:solarisdemo/screens/onboarding/signup/onboarding_error_email_screen.dart';
 import 'package:solarisdemo/screens/onboarding/signup/onboarding_general_error_screen.dart';
-import 'package:solarisdemo/screens/welcome/welcome_screen.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
@@ -57,7 +56,7 @@ class _OnboardingTermConditionsScreenState extends State<OnboardingTermCondition
           Navigator.pushNamedAndRemoveUntil(
             context,
             OnboardingStepperScreen.routeName,
-            ModalRoute.withName(WelcomeScreen.routeName),
+            (route) => false,
           );
         } else if (newViewModel.isSuccessful == false &&
             newViewModel.errorType == OnboardingSignupErrorType.emailAlreadyExists) {
@@ -79,7 +78,7 @@ class _OnboardingTermConditionsScreenState extends State<OnboardingTermCondition
                 actions: const [AppbarLogo()],
                 backButtonAppearanceDisabled: _continueButtonController.isLoading,
               ),
-              AnimatedLinearProgressIndicator.step(current: 5, totalSteps: 5),
+              AnimatedLinearProgressIndicator.step(current: 5, totalSteps: 5, isCompleted: viewModel.isLoading),
               Expanded(
                 child: SingleChildScrollView(
                   controller: _scrollController,
