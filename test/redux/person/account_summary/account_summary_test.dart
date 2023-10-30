@@ -1,14 +1,15 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/person/account_summary/account_summay_action.dart';
 import 'package:solarisdemo/redux/person/account_summary/account_summay_state.dart';
 
+import '../../../setup/authentication_helper.dart';
 import '../../../setup/create_app_state.dart';
 import '../../../setup/create_store.dart';
-import '../../auth/auth_mocks.dart';
 import 'account_summary_mocks.dart';
 
 void main() {
+
+  final authState = AuthStatePlaceholder.loggedInState();
 
   test("When asking to fetch account summary it should have a loading state", () async {
     //given
@@ -16,6 +17,7 @@ void main() {
         accountSummaryService: FakeAccountSummaryService(),
         initialState: createAppState(
           accountSummaryState: AccountSummaryInitialState(),
+          authState: authState,
         )
     );
 
@@ -23,11 +25,6 @@ void main() {
     //when
     store.dispatch(
       GetAccountSummaryCommandAction(
-        user: User(
-          session: MockUserSession(),
-          attributes: [],
-          cognitoUser: MockCognitoUser(),
-        ),
         forceAccountSummaryReload: false,
       ),
     );
@@ -41,6 +38,7 @@ void main() {
         accountSummaryService: FakeAccountSummaryService(),
         initialState: createAppState(
           accountSummaryState: AccountSummaryInitialState(),
+          authState: authState,
         )
     );
 
@@ -48,11 +46,6 @@ void main() {
     //when
     store.dispatch(
       GetAccountSummaryCommandAction(
-        user: User(
-          session: MockUserSession(),
-          attributes: [],
-          cognitoUser: MockCognitoUser(),
-        ),
         forceAccountSummaryReload: false,
       ),
     );
@@ -67,6 +60,7 @@ void main() {
         accountSummaryService: FakeFailingAccountSummaryService(),
         initialState: createAppState(
           accountSummaryState: AccountSummaryInitialState(),
+          authState: authState,
         )
     );
 
@@ -74,11 +68,6 @@ void main() {
     //when
     store.dispatch(
       GetAccountSummaryCommandAction(
-        user: User(
-          session: MockUserSession(),
-          attributes: [],
-          cognitoUser: MockCognitoUser(),
-        ),
         forceAccountSummaryReload: false,
       ),
     );

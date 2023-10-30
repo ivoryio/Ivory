@@ -7,11 +7,10 @@ class RepaymentReminderService extends ApiService {
   RepaymentReminderService({super.user});
 
   Future<RepaymentReminderServiceResponse> getRepaymentReminders({
-    User? user,
+    required User user,
   }) async {
-    if (user != null) {
-      this.user = user;
-    }
+    this.user = user;
+
     try {
       final data = await get('notifications/scheduled');
       final reminders = (data as List).map<RepaymentReminder>((e) {
@@ -29,13 +28,8 @@ class RepaymentReminderService extends ApiService {
   }
 
   Future<RepaymentReminderServiceResponse> addRepaymentReminder({
-    User? user,
     required RepaymentReminder reminder,
   }) async {
-    if (user != null) {
-      this.user = user;
-    }
-
     try {
       final datetime = "${reminder.datetime.toIso8601String().replaceAll("Z", "")}Z"; // TODO: Fix this hack
       final data = await post('notifications/scheduled', body: {
@@ -61,13 +55,8 @@ class RepaymentReminderService extends ApiService {
   }
 
   Future<RepaymentReminderServiceResponse> batchAddRepaymentReminders({
-    User? user,
     required List<RepaymentReminder> reminders,
   }) async {
-    if (user != null) {
-      this.user = user;
-    }
-
     try {
       final addedReminders = <RepaymentReminder>[];
 
@@ -88,13 +77,8 @@ class RepaymentReminderService extends ApiService {
   }
 
   Future<RepaymentReminderServiceResponse> deleteRepaymentReminder({
-    User? user,
     required RepaymentReminder reminder,
   }) async {
-    if (user != null) {
-      this.user = user;
-    }
-
     try {
       await delete('notifications/scheduled/${reminder.id}');
 

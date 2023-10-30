@@ -126,7 +126,7 @@ class FirebasePushNotificationService extends PushNotificationService {
   }
 
   void _pushNotificationReceived(RemoteMessage? message) {
-    forceReloadAppStates(store, user!);
+    forceReloadAppStates(store);
   }
 
   Future<void> handleAndroidLocalNotifications() async {

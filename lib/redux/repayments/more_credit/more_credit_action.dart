@@ -1,12 +1,4 @@
-import 'package:solarisdemo/models/user.dart';
-
-class GetMoreCreditCommandAction {
-  final User user;
-
-  GetMoreCreditCommandAction({
-    required this.user,
-  });
-}
+class GetMoreCreditCommandAction {}
 
 class MoreCreditLoadingEventAction {}
 
@@ -18,10 +10,4 @@ class MoreCreditFetchedEventAction {
   MoreCreditFetchedEventAction({required this.waitlist});
 }
 
-class UpdateMoreCreditCommandAction {
-  final User user;
-
-  UpdateMoreCreditCommandAction({
-    required this.user,
-  });
-}
+class UpdateMoreCreditCommandAction {}

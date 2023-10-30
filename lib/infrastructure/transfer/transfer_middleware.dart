@@ -4,6 +4,8 @@ import 'package:solarisdemo/infrastructure/transfer/transfer_service.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/transfer/transfer_action.dart';
 
+import '../../redux/auth/auth_state.dart';
+
 class TransferMiddleware extends MiddlewareClass<AppState> {
   final TransferService _transferService;
   final ChangeRequestService _changeRequestService;
@@ -14,9 +16,17 @@ class TransferMiddleware extends MiddlewareClass<AppState> {
   call(Store<AppState> store, action, NextDispatcher next) async {
     next(action);
 
+    final authState = store.state.authState;
+    if(authState is! AuthenticatedState) {
+      return;
+    }
+
+
     if (action is TransferCommandAction) {
       final response = await _transferService.createPayoutTransfer(
-          user: action.user, transfer: action.transfer);
+        user: authState.authenticatedUser.cognito,
+        transfer: action.transfer,
+      );
 
       if (response is CreatePayoutTransferSuccessResponse) {
         store.dispatch(
@@ -29,7 +39,7 @@ class TransferMiddleware extends MiddlewareClass<AppState> {
       }
     } else if (action is ConfirmTransferCommandAction) {
       final response = await _changeRequestService.confirmTransferChangeRequest(
-        user: action.user,
+        user: authState.authenticatedUser.cognito,
         changeRequestId: action.changeRequestId,
         tan: action.tan,
       );

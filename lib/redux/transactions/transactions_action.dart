@@ -1,14 +1,12 @@
 import 'package:solarisdemo/models/transactions/upcoming_transaction_model.dart';
 
 import '../../models/transactions/transaction_model.dart';
-import '../../models/user.dart';
 
 class GetTransactionsCommandAction {
   final TransactionListFilter? filter;
-  final User user;
   final bool forceReloadTransactions;
 
-  GetTransactionsCommandAction({required this.filter, required this.user, required this.forceReloadTransactions});
+  GetTransactionsCommandAction({required this.filter, required this.forceReloadTransactions});
 }
 
 class TransactionsLoadingEventAction {
@@ -29,10 +27,9 @@ class TransactionsFetchedEventAction {
 
 class GetUpcomingTransactionsCommandAction {
   final TransactionListFilter? filter;
-  final User user;
 
   GetUpcomingTransactionsCommandAction(
-      {required this.filter, required this.user});
+      {required this.filter});
 }
 
 class UpcomingTransactionsFetchedEventAction {
@@ -47,10 +44,9 @@ class UpcomingTransactionsFetchedEventAction {
 
 class GetHomeTransactionsCommandAction {
   final TransactionListFilter? filter;
-  final User user;
   final bool forceReloadTransactions;
 
-  GetHomeTransactionsCommandAction({required this.filter, required this.user, required this.forceReloadTransactions});
+  GetHomeTransactionsCommandAction({required this.filter, required this.forceReloadTransactions});
 }
 
 class HomeTransactionsLoadingEventAction {}

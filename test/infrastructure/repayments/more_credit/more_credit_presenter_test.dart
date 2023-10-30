@@ -13,12 +13,6 @@ class MockPerson extends Mock implements Person {}
 class MockPersonAccount extends Mock implements PersonAccount {}
 
 void main() {
-  final user = AuthenticatedUser(
-    cognito: MockUser(),
-    person: MockPerson(),
-    personAccount: MockPersonAccount(),
-  );
-
   const waitlist = true;
 
   test('When fetching is in progress it should return loading', () {
@@ -27,7 +21,6 @@ void main() {
     // when
     final viewModel = MoreCreditPresenter.presentMoreCredit(
       moreCreditState: moreCreditState,
-      user: user,
     );
     // then
     expect(viewModel, MoreCreditLoadingViewModel());
@@ -39,7 +32,6 @@ void main() {
     // when
     final viewModel = MoreCreditPresenter.presentMoreCredit(
       moreCreditState: moreCreditState,
-      user: user,
     );
     // then
     expect(viewModel, const MoreCreditFetchedViewModel(waitlist: waitlist));
@@ -51,7 +43,6 @@ void main() {
     // when
     final viewModel = MoreCreditPresenter.presentMoreCredit(
       moreCreditState: moreCreditState,
-      user: user,
     );
     // then
     expect(viewModel, MoreCreditErrorViewModel());

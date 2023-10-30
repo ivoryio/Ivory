@@ -7,6 +7,7 @@ import 'package:solarisdemo/redux/device/device_action.dart';
 import 'package:solarisdemo/utilities/device_info/device_info.dart';
 
 import '../../models/device.dart';
+import '../../redux/auth/auth_state.dart';
 import 'device_binding_service.dart';
 
 class DeviceBindingMiddleware extends MiddlewareClass<AppState> {
@@ -21,7 +22,13 @@ class DeviceBindingMiddleware extends MiddlewareClass<AppState> {
   call(Store<AppState> store, action, NextDispatcher next) async {
     next(action);
 
+    final authState = store.state.authState;
+
     if (action is CreateDeviceBindingCommandAction) {
+      if(authState is! AuthenticatedState) {
+        return;
+      }
+
       store.dispatch(DeviceBindingLoadingEventAction());
 
       String? consentId = await _deviceService.getConsentId();
@@ -49,14 +56,14 @@ class DeviceBindingMiddleware extends MiddlewareClass<AppState> {
 
       String deviceName = await _deviceInfoService.getDeviceName();
 
-      if (action.user.personId == null) {
+      if (authState.authenticatedUser.cognito.personId == null) {
         store.dispatch(DeviceBindingFailedEventAction());
         return null;
       }
       final createBindingResponse = await _deviceBindingService.createDeviceBinding(
-          user: action.user,
+          user: authState.authenticatedUser.cognito,
           reqBody: CreateDeviceBindingRequest(
-            personId: action.user.personId!,
+            personId: authState.authenticatedUser.cognito.personId!,
             key: newKeypair.publicKey,
             name: deviceName,
             deviceData: deviceFingerPrint,
@@ -70,6 +77,10 @@ class DeviceBindingMiddleware extends MiddlewareClass<AppState> {
     }
 
     if (action is VerifyDeviceBindingSignatureCommandAction) {
+      if(authState is! AuthenticatedState) {
+        return;
+      }
+
       store.dispatch(DeviceBindingLoadingEventAction());
 
       final deviceId = await _deviceService.getDeviceId();
@@ -104,7 +115,7 @@ class DeviceBindingMiddleware extends MiddlewareClass<AppState> {
       }
 
       final verifyDeviceBindingChallenegeResponse = await _deviceBindingService.verifyDeviceBindingSignature(
-        user: action.user,
+        user: authState.authenticatedUser.cognito,
         deviceId: deviceId!,
         deviceFingerPrint: deviceFingerPrint,
         signature: signature,
@@ -140,7 +151,7 @@ class DeviceBindingMiddleware extends MiddlewareClass<AppState> {
       );
 
       final createRestrictedKeyResponse = await _deviceBindingService.createRestrictedKey(
-        user: action.user,
+        user: authState.authenticatedUser.cognito,
         reqBody: reqBody,
       );
       if (createRestrictedKeyResponse is DeviceBindingServiceErrorResponse) {
@@ -182,9 +193,13 @@ class DeviceBindingMiddleware extends MiddlewareClass<AppState> {
     }
 
     if (action is DeleteBoundDeviceCommandAction) {
+      if(authState is! AuthenticatedState) {
+        return;
+      }
+
       store.dispatch(DeviceBindingLoadingEventAction());
       final unpairDeviceResponse = await _deviceBindingService.deleteDeviceBinding(
-        user: action.user,
+        user: authState.authenticatedUser.cognito,
         deviceId: action.deviceId,
       );
 

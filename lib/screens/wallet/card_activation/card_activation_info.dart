@@ -52,7 +52,6 @@ class BankCardDetailsInfoScreen extends StatelessWidget {
                   onBackButtonPressed: () {
                     Navigator.pop(context);
                     StoreProvider.of<AppState>(context).dispatch(GetBankCardCommandAction(
-                      user: user,
                       cardId: viewModel.bankCard!.id,
                       forceReloadCardData: false,
                     ));

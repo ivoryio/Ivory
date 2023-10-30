@@ -29,12 +29,14 @@ class DeviceBindingService extends ApiService {
     }
   }
 
-  Future<DeviceBindingServiceResponse> verifyDeviceBindingSignature(
-      {required User user,
-      required String deviceId,
-      required String deviceFingerPrint,
-      required String signature}) async {
+  Future<DeviceBindingServiceResponse> verifyDeviceBindingSignature({
+    required User user,
+    required String deviceId,
+    required String deviceFingerPrint,
+    required String signature
+  }) async {
     this.user = user;
+
     try {
       await post(
         'person/device/verify_signature/$deviceId',

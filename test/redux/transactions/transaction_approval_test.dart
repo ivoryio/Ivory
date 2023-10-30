@@ -2,12 +2,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:solarisdemo/redux/transactions/approval/transaction_approval_action.dart';
 import 'package:solarisdemo/redux/transactions/approval/transaction_approval_state.dart';
 
+import '../../setup/authentication_helper.dart';
 import '../../setup/create_app_state.dart';
 import '../../setup/create_store.dart';
 import '../auth/auth_mocks.dart';
 import 'transaction_mocks.dart';
 
 void main() {
+  final authState = AuthStatePlaceholder.loggedInState();
+
   group("Authorization", () {
     test("When requesting transaction approval challenge the state should change to loading", () async {
       // given
@@ -18,6 +21,7 @@ void main() {
         deviceFingerprintService: FakeDeviceFingerprintService(),
         initialState: createAppState(
           transactionApprovalState: TransactionApprovalInitialState(),
+          authState: authState,
         ),
       );
       final appState =
@@ -26,7 +30,6 @@ void main() {
       // when
       store.dispatch(
         AuthorizeTransactionCommandAction(
-          user: MockUser(),
           changeRequestId: "changeRequestId",
         ),
       );
@@ -44,6 +47,7 @@ void main() {
         deviceFingerprintService: FakeDeviceFingerprintService(),
         initialState: createAppState(
           transactionApprovalState: TransactionApprovalInitialState(),
+          authState: authState,
         ),
       );
       final loadingState =
@@ -54,7 +58,6 @@ void main() {
       // when
       store.dispatch(
         AuthorizeTransactionCommandAction(
-          user: MockUser(),
           changeRequestId: "changeRequestId",
         ),
       );
@@ -73,6 +76,7 @@ void main() {
         deviceFingerprintService: FakeDeviceFingerprintService(),
         initialState: createAppState(
           transactionApprovalState: TransactionApprovalInitialState(),
+          authState: authState,
         ),
       );
       final loadingState =
@@ -83,7 +87,6 @@ void main() {
       // when
       store.dispatch(
         AuthorizeTransactionCommandAction(
-          user: MockUser(),
           changeRequestId: "changeRequestId",
         ),
       );
@@ -101,6 +104,7 @@ void main() {
         deviceFingerprintService: FakeDeviceFingerprintService(),
         initialState: createAppState(
           transactionApprovalState: TransactionApprovalInitialState(),
+          authState: authState,
         ),
       );
       final loadingState =
@@ -111,7 +115,6 @@ void main() {
       // when
       store.dispatch(
         AuthorizeTransactionCommandAction(
-          user: MockUser(),
           changeRequestId: "changeRequestId",
         ),
       );
@@ -131,6 +134,7 @@ void main() {
         deviceFingerprintService: FakeDeviceFingerprintService(),
         initialState: createAppState(
           transactionApprovalState: TransactionApprovalInitialState(),
+          authState: authState,
         ),
       );
       final appState =
@@ -138,7 +142,6 @@ void main() {
 
       // when
       store.dispatch(ConfirmTransactionCommandAction(
-        user: MockUser(),
         changeRequestId: "changeRequestId",
         deviceData: "deviceData",
         deviceId: "deviceId",
@@ -158,6 +161,7 @@ void main() {
         deviceFingerprintService: FakeDeviceFingerprintService(),
         initialState: createAppState(
           transactionApprovalState: TransactionApprovalInitialState(),
+          authState: authState,
         ),
       );
       final loadingState =
@@ -167,7 +171,6 @@ void main() {
 
       // when
       store.dispatch(ConfirmTransactionCommandAction(
-        user: MockUser(),
         changeRequestId: "changeRequestId",
         deviceData: "deviceData",
         deviceId: "deviceId",
@@ -194,6 +197,7 @@ void main() {
         deviceFingerprintService: FakeDeviceFingerprintService(),
         initialState: createAppState(
           transactionApprovalState: transactionApprovalAuthorizedState,
+          authState: authState,
         ),
       );
       final loadingState =
@@ -203,7 +207,6 @@ void main() {
 
       // when
       store.dispatch(ConfirmTransactionCommandAction(
-        user: MockUser(),
         changeRequestId: "changeRequestId",
         deviceData: "deviceData",
         deviceId: "deviceId",
@@ -226,6 +229,7 @@ void main() {
         deviceFingerprintService: FakeDeviceFingerprintService(),
         initialState: createAppState(
           transactionApprovalState: TransactionApprovalInitialState(),
+          authState: authState,
         ),
       );
       final loadingState =
@@ -235,7 +239,6 @@ void main() {
 
       // when
       store.dispatch(RejectTransactionCommandAction(
-        user: MockUser(),
         declineChangeRequestId: "declineChangeRequestId",
         deviceData: "deviceData",
         deviceId: "deviceId",
@@ -256,6 +259,7 @@ void main() {
         deviceFingerprintService: FakeDeviceFingerprintService(),
         initialState: createAppState(
           transactionApprovalState: TransactionApprovalInitialState(),
+          authState: authState,
         ),
       );
       final loadingState =
@@ -265,7 +269,6 @@ void main() {
 
       // when
       store.dispatch(RejectTransactionCommandAction(
-        user: MockUser(),
         declineChangeRequestId: "declineChangeRequestId",
         deviceData: "deviceData",
         deviceId: "deviceId",

@@ -1,19 +1,14 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/categories/category_action.dart';
 import 'package:solarisdemo/redux/categories/category_state.dart';
 
+import '../../setup/authentication_helper.dart';
 import '../../setup/create_app_state.dart';
 import '../../setup/create_store.dart';
-import '../auth/auth_mocks.dart';
 import 'categories_mocks.dart';
 
 void main() {
-  final user = User(
-    session: MockUserSession(),
-    attributes: [],
-    cognitoUser: MockCognitoUser(),
-  );
+  final authState = AuthStatePlaceholder.loggedInState();
 
   test("When asking to fetch for categories it should firstly display a loading state", () async {
     //given
@@ -21,11 +16,12 @@ void main() {
       categoriesService: FakeCategoryService(),
         initialState: createAppState(
           categoriesState: CategoriesInitialState(),
+          authState: authState,
         ));
 
     final appState = store.onChange.firstWhere((element) => element.categoriesState is CategoriesLoadingState);
     //when
-    store.dispatch(GetCategoriesCommandAction(user: user));
+    store.dispatch(GetCategoriesCommandAction());
     //then
     expect((await appState).categoriesState, isA<CategoriesLoadingState>());
   });
@@ -36,11 +32,12 @@ void main() {
         categoriesService: FakeFailingCategoriesService(),
         initialState: createAppState(
           categoriesState: CategoriesInitialState(),
+          authState: authState,
         ));
 
     final appState = store.onChange.firstWhere((element) => element.categoriesState is CategoriesErrorState);
     //when
-    store.dispatch(GetCategoriesCommandAction(user: user));
+    store.dispatch(GetCategoriesCommandAction());
     //then
     expect((await appState).categoriesState, isA<CategoriesErrorState>());
   });
@@ -51,11 +48,12 @@ void main() {
         categoriesService: FakeCategoryService(),
         initialState: createAppState(
           categoriesState: CategoriesInitialState(),
+          authState: authState,
         ));
 
     final appState = store.onChange.firstWhere((element) => element.categoriesState is CategoriesFetchedState);
     //when
-    store.dispatch(GetCategoriesCommandAction(user: user));
+    store.dispatch(GetCategoriesCommandAction());
     //then
     final CategoriesFetchedState categoriesFetchedState = (await appState).categoriesState as CategoriesFetchedState;
     expect((await appState).categoriesState, isA<CategoriesFetchedState>());

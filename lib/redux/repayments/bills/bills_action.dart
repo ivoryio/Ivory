@@ -1,16 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:solarisdemo/models/repayments/bills/bill.dart';
-import 'package:solarisdemo/models/user.dart';
 
-class GetBillsCommandAction {
-  final User user;
-  GetBillsCommandAction({required this.user});
-}
+class GetBillsCommandAction {}
 
 class GetBillByIdCommandAction {
   final String id;
-  final User user;
-  GetBillByIdCommandAction({required this.id, required this.user});
+  GetBillByIdCommandAction({required this.id});
 }
 
 class DownloadBillCommandAction {

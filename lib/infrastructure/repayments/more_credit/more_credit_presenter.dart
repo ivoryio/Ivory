@@ -1,11 +1,9 @@
 import 'package:equatable/equatable.dart';
-import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/repayments/more_credit/more_credit_state.dart';
 
 class MoreCreditPresenter {
   static MoreCreditViewModel presentMoreCredit({
     required MoreCreditState moreCreditState,
-    required AuthenticatedUser user,
   }) {
     if (moreCreditState is MoreCreditLoadingState) {
       return MoreCreditLoadingViewModel();
@@ -22,8 +20,7 @@ class MoreCreditPresenter {
 }
 
 abstract class MoreCreditViewModel extends Equatable {
-  final AuthenticatedUser? user;
-  const MoreCreditViewModel({this.user});
+  const MoreCreditViewModel();
 
   @override
   List<Object?> get props => [];

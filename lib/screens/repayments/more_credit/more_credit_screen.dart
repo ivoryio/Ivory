@@ -4,7 +4,6 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/infrastructure/repayments/more_credit/more_credit_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
-import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/repayments/more_credit/more_credit_action.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -27,9 +26,6 @@ class MoreCreditScreen extends StatefulWidget {
 class _MoreCreditScreenState extends State<MoreCreditScreen> {
   @override
   Widget build(BuildContext context) {
-    final user =
-        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
-
     return ScreenScaffold(
       body: Padding(
         padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
@@ -93,7 +89,6 @@ class _MoreCreditScreenState extends State<MoreCreditScreen> {
                 onInit: (store) => {},
                 converter: (store) => MoreCreditPresenter.presentMoreCredit(
                   moreCreditState: store.state.moreCreditState,
-                  user: user,
                 ),
                 distinct: true,
                 builder: (context, viewModel) => Button(
@@ -103,9 +98,7 @@ class _MoreCreditScreenState extends State<MoreCreditScreen> {
                   textColor: ClientConfig.getColorScheme().surface,
                   onPressed: () {
                     StoreProvider.of<AppState>(context).dispatch(
-                      UpdateMoreCreditCommandAction(
-                        user: user.cognito,
-                      ),
+                      UpdateMoreCreditCommandAction(),
                     );
                     Navigator.pushNamed(
                       context,
