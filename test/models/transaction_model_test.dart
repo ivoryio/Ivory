@@ -56,7 +56,7 @@ void main() {
       expect(fromJson.endToEndId, 'ID');
       expect(fromJson.recipientBic, isNull);
       expect(fromJson.recipientIban, isNull);
-      expect(fromJson.recipientName, 'SOLARIS');
+      expect(fromJson.recipientName, 'E-car');
       expect(fromJson.reference, isNull);
       expect(fromJson.bookingDate, isNull);
       expect(fromJson.valutaDate, isNull);

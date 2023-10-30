@@ -48,7 +48,7 @@ class Transaction {
     endToEndId = json['end_to_end_id'] ?? "ID";
     recipientBic = json['recipient_bic'];
     recipientIban = json['recipient_iban'];
-    recipientName =  processRecipient(json['recipient_name']);
+    recipientName = processRecipient(json['recipient_name']);
     reference = json['reference'];
     bookingDate = json['booking_date'];
     valutaDate = json['valuta_date'];
@@ -85,11 +85,11 @@ class Transaction {
   }
 
   String processRecipient(String? recipientName) {
-    if(recipientName == null) {
+    if (recipientName == null) {
       return "E-car";
     }
 
-    if(recipientName.toLowerCase().contains("solaris")) {
+    if (recipientName.toLowerCase().contains("solaris")) {
       return "E-car";
     }
 
