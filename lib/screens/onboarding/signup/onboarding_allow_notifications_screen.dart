@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
-import 'package:solarisdemo/infrastructure/onboarding/onboarding_signup_presenter.dart';
+import 'package:solarisdemo/infrastructure/onboarding/signup/onboarding_signup_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/onboarding/signup/onboarding_signup_action.dart';
+import 'package:solarisdemo/screens/onboarding/signup/onboarding_term_conditions_screen.dart';
 import 'package:solarisdemo/utilities/ivory_color_mapper.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -48,7 +49,7 @@ class _OnboardingAllowNotificationsScreenState extends State<OnboardingAllowNoti
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, OnboardingSignupViewModel>(
-      converter: (store) => OnboardingSignupPresenter.presentSignup(state: store.state.onboardingSignupState),
+      converter: (store) => OnboardingSignupPresenter.present(signupState: store.state.onboardingSignupState),
       builder: (context, viewModel) => ScreenScaffold(
         body: Column(
           children: [
@@ -61,7 +62,7 @@ class _OnboardingAllowNotificationsScreenState extends State<OnboardingAllowNoti
             Expanded(
               child: ScrollableScreenContainer(
                 padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                child: viewModel is NotificationsPermissionAllowedViewModel
+                child: viewModel.signupAttributes.notificationsAllowed == true
                     ? const _AllowedPermissionContent()
                     : _RequestNotificationPermissionContent(viewModel),
               ),
@@ -125,10 +126,12 @@ class _RequestNotificationPermissionContent extends StatelessWidget {
         SecondaryButton(
           text: "Not right now",
           borderWidth: 2,
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushNamed(context, OnboardingTermConditionsScreen.routeName);
+          },
         ),
         const SizedBox(height: 16),
-        viewModel is NotificationsPermissionNotAllowedViewModel
+        viewModel.signupAttributes.notificationsAllowed == false
             ? PrimaryButton(
                 text: "Go to notification settings",
                 onPressed: () async {
@@ -179,7 +182,9 @@ class _AllowedPermissionContent extends StatelessWidget {
         ),
         PrimaryButton(
           text: "Continue",
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushNamed(context, OnboardingTermConditionsScreen.routeName);
+          },
         ),
         const SizedBox(height: 16)
       ],

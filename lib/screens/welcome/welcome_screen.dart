@@ -94,9 +94,13 @@ class _HeroVideoState extends State<HeroVideo> with WidgetsBindingObserver, Rout
     WidgetsBinding.instance.addObserver(this);
 
     final videoPath = ClientConfig.getClientConfig().uiSettings.welcomeVideoPath;
-    _controller = VideoPlayerController.asset(videoPath);
+    _controller =
+        VideoPlayerController.asset(videoPath, videoPlayerOptions: VideoPlayerOptions(allowBackgroundPlayback: false));
 
-    _initializeVideoPlayerFuture = _controller.initialize();
+    _initializeVideoPlayerFuture = _controller.initialize().then((_) {
+      _controller.play();
+      log("Playing video", name: "initState");
+    });
 
     _controller.setLooping(true);
     _controller.setVolume(0);
@@ -174,9 +178,7 @@ class _HeroVideoState extends State<HeroVideo> with WidgetsBindingObserver, Rout
             );
           }
 
-          if (snapshot.connectionState == ConnectionState.done) {
-            _controller.play();
-
+          if (snapshot.connectionState == ConnectionState.done && _controller.value.isInitialized) {
             return FittedBox(
               fit: BoxFit.cover,
               child: SizedBox(

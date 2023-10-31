@@ -1,3 +1,5 @@
+import 'package:solarisdemo/models/onboarding/onboarding_signup_error_type.dart';
+
 class SubmitOnboardingBasicInfoCommandAction {
   final String title;
   final String firstName;
@@ -13,13 +15,13 @@ class SubmitOnboardingBasicInfoCommandAction {
 class SubmitOnboardingEmailCommandAction {
   final String email;
 
-  SubmitOnboardingEmailCommandAction({required this.email});
+  const SubmitOnboardingEmailCommandAction({required this.email});
 }
 
 class SubmitOnboardingPasswordCommandAction {
   final String password;
 
-  SubmitOnboardingPasswordCommandAction({required this.password});
+  const SubmitOnboardingPasswordCommandAction({required this.password});
 }
 
 class RequestPushNotificationsPermissionCommandAction {}
@@ -31,3 +33,15 @@ class UpdatedPushNotificationsPermissionEventAction {
 
   UpdatedPushNotificationsPermissionEventAction({required this.allowed});
 }
+
+class OnboardingSignupSuccessEventAction {}
+
+class OnboardingSignupFailedEventAction {
+  final OnboardingSignupErrorType errorType;
+
+  OnboardingSignupFailedEventAction({required this.errorType});
+}
+
+class CreateAccountCommandAction {}
+
+class OnboardingSignupLoadingEventAction {}

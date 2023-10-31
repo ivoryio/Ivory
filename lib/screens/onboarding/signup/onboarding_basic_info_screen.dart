@@ -110,7 +110,6 @@ class _OnboardingBasicInfoScreenState extends State<OnboardingBasicInfoScreen> {
                         isLoading: _continueButtonController.isLoading,
                         onPressed: _continueButtonController.isEnabled
                             ? () {
-                                _continueButtonController.setLoading();
                                 log(_selectTitleController.selectedOptions.toString(), name: "selectedOptions");
                                 log(_firstNameController.text, name: "firstName");
                                 log(_lastNameController.text, name: "lastName");

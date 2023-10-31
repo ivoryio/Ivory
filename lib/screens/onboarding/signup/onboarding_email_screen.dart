@@ -40,7 +40,7 @@ class _OnboardingEmailScreenState extends State<OnboardingEmailScreen> {
   }
 
   bool isValidEmail(String email) {
-    final emailRegExp = RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$');
+    final emailRegExp = RegExp(r'^[\w-+]+(\.[\w-+]+)*@[\w-]+(\.[\w-]+)+$');
 
     return emailRegExp.hasMatch(email);
   }
@@ -94,9 +94,7 @@ class _OnboardingEmailScreenState extends State<OnboardingEmailScreen> {
                             ? () {
                                 if (isValidEmail(_emailController.text)) {
                                   StoreProvider.of<AppState>(context).dispatch(
-                                    SubmitOnboardingEmailCommandAction(
-                                      email: _emailController.text,
-                                    ),
+                                    SubmitOnboardingEmailCommandAction(email: _emailController.text),
                                   );
 
                                   Navigator.pushNamed(context, OnboardingPasswordScreen.routeName);

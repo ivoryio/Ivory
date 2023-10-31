@@ -14,6 +14,8 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: "stable" # or: 'beta', 'dev' or 'master'
+      - run: |
+          touch .env
       - run: flutter --version
       - run: flutter pub get
       - run: flutter analyze --no-fatal-infos --no-fatal-warnings

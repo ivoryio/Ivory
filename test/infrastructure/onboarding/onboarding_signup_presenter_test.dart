@@ -1,63 +1,94 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:solarisdemo/infrastructure/onboarding/onboarding_signup_presenter.dart';
+import 'package:solarisdemo/infrastructure/onboarding/signup/onboarding_signup_presenter.dart';
+import 'package:solarisdemo/models/auth/auth_type.dart';
+import 'package:solarisdemo/models/onboarding/onboarding_signup_attributes.dart';
+import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/onboarding/signup/onboarding_signup_state.dart';
 
+import '../bank_card/bank_card_presenter_test.dart';
+
 void main() {
-  test("When notifications are allowed", () {
+  const signupAttributes = OnboardingSignupAttributes(
+    email: "email",
+    firstName: "firstName",
+    lastName: "lastName",
+    notificationsAllowed: true,
+    password: "password",
+    title: "title",
+  );
+
+  test("When signing up and authState is null, the signup attributes should match the state", () {
     //given
-    final state = OnboardingSignupSubmittedState(
-      email: "email",
-      firstName: "firstName",
-      lastName: "lastName",
-      notificationsAllowed: true,
-      password: "password",
-      title: "title",
+    const signupState = OnboardingSignupState(
+      signupAttributes: signupAttributes,
     );
 
     //when
-    final viewModel = OnboardingSignupPresenter.presentSignup(state: state);
+    final viewModel = OnboardingSignupPresenter.present(signupState: signupState);
 
     //then
-    expect(viewModel, NotificationsPermissionAllowedViewModel());
+    expect(viewModel, const OnboardingSignupViewModel(signupAttributes: signupAttributes));
   });
 
-  test("When notifications are not allowed", () {
+  test("When both auth and signup are loading, isLoading should be true", () {
     //given
-    final state = OnboardingSignupSubmittedState(
-      email: "email",
-      firstName: "firstName",
-      lastName: "lastName",
-      notificationsAllowed: false,
-      password: "password",
-      title: "title",
+    final authState = AuthLoadingState();
+    const signupState = OnboardingSignupState(
+      signupAttributes: signupAttributes,
+      isLoading: true,
     );
 
     //when
-    final viewModel = OnboardingSignupPresenter.presentSignup(state: state);
+    final viewModel = OnboardingSignupPresenter.present(signupState: signupState, authState: authState);
 
     //then
-    expect(viewModel, NotificationsPermissionNotAllowedViewModel());
+    expect(viewModel, const OnboardingSignupViewModel(signupAttributes: signupAttributes, isLoading: true));
   });
 
-  test("When user has given the permission, but some properties are missing", () {
+  test("When auth is loading and signup is not, isLoading should be true", () {
     //given
-    final state = OnboardingSignupSubmittedState(notificationsAllowed: true);
+    final authState = AuthLoadingState();
+    const signupState = OnboardingSignupState(
+      signupAttributes: signupAttributes,
+    );
 
     //when
-    final viewModel = OnboardingSignupPresenter.presentSignup(state: state);
+    final viewModel = OnboardingSignupPresenter.present(signupState: signupState, authState: authState);
 
     //then
-    expect(viewModel, OnboardingSignupInitialViewModel());
+    expect(viewModel, const OnboardingSignupViewModel(signupAttributes: signupAttributes, isLoading: true));
   });
 
-  test("When user has not given the permission, but some properties are missing", () {
+  test("When signup is loading and auth is not, isLoading should be true", () {
     //given
-    final state = OnboardingSignupSubmittedState(notificationsAllowed: false);
+    final authState = AuthenticationInitializedState(MockUser(), AuthType.onboarding);
+    const signupState = OnboardingSignupState(
+      signupAttributes: signupAttributes,
+      isLoading: true,
+    );
 
     //when
-    final viewModel = OnboardingSignupPresenter.presentSignup(state: state);
+    final viewModel = OnboardingSignupPresenter.present(signupState: signupState, authState: authState);
 
     //then
-    expect(viewModel, OnboardingSignupInitialViewModel());
+    expect(viewModel, const OnboardingSignupViewModel(signupAttributes: signupAttributes, isLoading: true));
+  });
+
+  test("When both auth is initialized and signup is successful, isSuccessful should be true", () {
+    // given
+    final authState = AuthenticationInitializedState(MockUser(), AuthType.onboarding);
+    const signupState = OnboardingSignupState(
+      signupAttributes: signupAttributes,
+      isSuccessful: true,
+    );
+
+    // when
+    final viewModel = OnboardingSignupPresenter.present(signupState: signupState, authState: authState);
+
+    // then
+    expect(
+      viewModel,
+      const OnboardingSignupViewModel(signupAttributes: signupAttributes, isLoading: false, isSuccessful: true),
+    );
   });
 }

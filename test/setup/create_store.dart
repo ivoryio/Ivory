@@ -12,6 +12,7 @@ import 'package:solarisdemo/infrastructure/device/device_fingerprint_service.dar
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/onboarding_service.dart';
+import 'package:solarisdemo/infrastructure/onboarding/signup/onboarding_signup_service.dart';
 import 'package:solarisdemo/infrastructure/person/account_summary/account_summary_service.dart';
 import 'package:solarisdemo/infrastructure/person/person_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/bills/bill_service.dart';
@@ -23,6 +24,7 @@ import 'package:solarisdemo/infrastructure/transfer/transfer_service.dart';
 import 'package:solarisdemo/models/bank_card.dart';
 import 'package:solarisdemo/models/device.dart';
 import 'package:solarisdemo/models/device_activity.dart';
+import 'package:solarisdemo/models/onboarding/onboarding_signup_attributes.dart';
 import 'package:solarisdemo/models/transactions/transaction_model.dart';
 import 'package:solarisdemo/models/transfer/reference_account_transfer.dart';
 import 'package:solarisdemo/models/user.dart';
@@ -53,6 +55,7 @@ Store<AppState> createTestStore({
   DeviceFingerprintService? deviceFingerprintService,
   AuthService? authService,
   OnboardingService? onboardingService,
+  OnboardingSignupService? onboardingSignupService,
 }) {
   return createStore(
     initialState: initialState,
@@ -76,6 +79,7 @@ Store<AppState> createTestStore({
     deviceFingerprintService: deviceFingerprintService ?? NotImplementedDeviceFingerprintService(),
     authService: authService ?? NotImplementedAuthService(),
     onboardingService: onboardingService ?? NotImplementedOnboardingService(),
+    onboardingSignupService: onboardingSignupService ?? NotImplementedOnboardingSignupService(),
   );
 }
 
@@ -104,6 +108,11 @@ class NotImplementedPushNotificationService extends PushNotificationService {
 
   @override
   Future<void> clearNotification() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> getToken() {
     throw UnimplementedError();
   }
 
@@ -388,6 +397,17 @@ class NotImplementedAuthService extends AuthService {
 class NotImplementedOnboardingService extends OnboardingService {
   @override
   Future<OnboardingServiceResponse> getOnboardingProgress({required User user}) {
+    throw UnimplementedError();
+  }
+}
+
+class NotImplementedOnboardingSignupService extends OnboardingSignupService {
+  @override
+  Future<OnboardingSignupServiceResponse> createPerson({
+    required OnboardingSignupAttributes signupAttributes,
+    required String deviceToken,
+    required String tsAndCsSignedAt,
+  }) async {
     throw UnimplementedError();
   }
 }

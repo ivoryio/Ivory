@@ -14,6 +14,7 @@ class AppToolbar extends StatefulWidget {
   final Color backgroundColor;
   final double? toolbarHeight;
   final bool backButtonEnabled;
+  final bool backButtonAppearanceDisabled;
   final RichText? richTextTitle;
   final double titleMaxOpacityScrollOffset;
   final ScrollController? scrollController;
@@ -30,6 +31,7 @@ class AppToolbar extends StatefulWidget {
     this.actions = const [],
     this.onBackButtonPressed,
     this.backButtonEnabled = true,
+    this.backButtonAppearanceDisabled = false,
     this.scrollController,
     this.includeBottomScreenTitle = false,
     this.titleMaxOpacityScrollOffset = 56,
@@ -108,12 +110,14 @@ class _AppToolbarState extends State<AppToolbar> {
             toolbarHeight: widget.toolbarHeight,
             elevation: 0,
             leadingWidth: 25,
-            leading: (widget.backButtonEnabled && Navigator.canPop(context))
+            leading: (widget.backButtonEnabled && Navigator.canPop(context) && !widget.backButtonAppearanceDisabled)
                 ? InkWell(
                     onTap: widget.onBackButtonPressed ?? () => Navigator.of(context).pop(),
                     child: widget.backIcon,
                   )
-                : null,
+                : (widget.backButtonEnabled && widget.backButtonAppearanceDisabled)
+                    ? Icon(widget.backIcon.icon, color: ClientConfig.getCustomColors().neutral500)
+                    : null,
             title: Opacity(
               opacity: titleOpacity,
               child: widget.richTextTitle ?? Text(widget.title),

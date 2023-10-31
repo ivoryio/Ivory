@@ -12,7 +12,10 @@ class NavigationGeneralObserver extends RouteObserver<ModalRoute<dynamic>> {
   @override
   void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
     super.didPop(route, previousRoute);
-    routeStack.removeLast();
+
+    if (routeStack.length > 1) {
+      routeStack.removeLast();
+    }
   }
 
   @override

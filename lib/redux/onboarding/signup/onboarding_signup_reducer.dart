@@ -2,41 +2,50 @@ import 'package:solarisdemo/redux/onboarding/signup/onboarding_signup_action.dar
 import 'package:solarisdemo/redux/onboarding/signup/onboarding_signup_state.dart';
 
 OnboardingSignupState onboardingSignupReducer(OnboardingSignupState state, dynamic action) {
-  if (state is OnboardingSignupSubmittedState) {
-    if (action is SubmitOnboardingBasicInfoCommandAction) {
-      return OnboardingSignupSubmittedState(
+  if (action is SubmitOnboardingBasicInfoCommandAction) {
+    return OnboardingSignupState(
+      signupAttributes: state.signupAttributes.copyWith(
         title: action.title,
         firstName: action.firstName,
         lastName: action.lastName,
-        notificationsAllowed: state.notificationsAllowed,
-      );
-    } else if (action is SubmitOnboardingEmailCommandAction) {
-      return OnboardingSignupSubmittedState(
+      ),
+    );
+  } else if (action is SubmitOnboardingEmailCommandAction) {
+    return OnboardingSignupState(
+      signupAttributes: state.signupAttributes.copyWith(
         email: action.email,
-        firstName: state.firstName,
-        lastName: state.lastName,
-        title: state.title,
-        notificationsAllowed: state.notificationsAllowed,
-      );
-    } else if (action is SubmitOnboardingPasswordCommandAction) {
-      return OnboardingSignupSubmittedState(
-        email: state.email,
-        firstName: state.firstName,
-        lastName: state.lastName,
+      ),
+    );
+  } else if (action is SubmitOnboardingPasswordCommandAction) {
+    return OnboardingSignupState(
+      signupAttributes: state.signupAttributes.copyWith(
         password: action.password,
-        title: state.title,
-        notificationsAllowed: state.notificationsAllowed,
-      );
-    } else if (action is UpdatedPushNotificationsPermissionEventAction) {
-      return OnboardingSignupSubmittedState(
-        email: state.email,
-        firstName: state.firstName,
-        lastName: state.lastName,
-        password: state.password,
-        title: state.title,
+      ),
+    );
+  } else if (action is UpdatedPushNotificationsPermissionEventAction) {
+    return OnboardingSignupState(
+      signupAttributes: state.signupAttributes.copyWith(
         notificationsAllowed: action.allowed,
-      );
-    }
+      ),
+    );
+  } else if (action is OnboardingSignupLoadingEventAction) {
+    return OnboardingSignupState(
+      signupAttributes: state.signupAttributes,
+      isLoading: true,
+    );
+  } else if (action is OnboardingSignupSuccessEventAction) {
+    return OnboardingSignupState(
+      signupAttributes: state.signupAttributes,
+      isLoading: false,
+      isSuccessful: true,
+    );
+  } else if (action is OnboardingSignupFailedEventAction) {
+    return OnboardingSignupState(
+      signupAttributes: state.signupAttributes,
+      isLoading: false,
+      isSuccessful: false,
+      errorType: action.errorType,
+    );
   }
 
   return state;

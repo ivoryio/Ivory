@@ -26,17 +26,13 @@ class ScreenScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (shouldPop) {
-      if (popAction != null) {
-        return WillPopScope(
-          onWillPop: () async {
-            popAction!();
-            return true;
-          },
-          child: _buildScaffold(),
-        );
-      } else {
-        return _buildScaffold();
-      }
+      return WillPopScope(
+        onWillPop: () async {
+          popAction?.call();
+          return true;
+        },
+        child: _buildScaffold(),
+      );
     } else {
       return WillPopScope(onWillPop: () async => false, child: _buildScaffold());
     }

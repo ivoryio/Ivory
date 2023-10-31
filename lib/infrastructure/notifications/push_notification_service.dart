@@ -42,6 +42,8 @@ abstract class PushNotificationService extends ApiService {
 
   Future<void> clearNotification();
 
+  Future<String?> getToken();
+
   void handleTokenRefresh({User user});
 }
 
@@ -197,6 +199,11 @@ class FirebasePushNotificationService extends PushNotificationService {
     final notification = RemoteMessage.fromMap(jsonDecode(message));
     _redirect(notification);
     clearNotification();
+  }
+
+  @override
+  Future<String?> getToken() async {
+    return await _messaging.getToken();
   }
 
   @override
