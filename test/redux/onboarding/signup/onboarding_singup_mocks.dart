@@ -1,4 +1,4 @@
-import 'package:solarisdemo/infrastructure/onboarding/onboarding_signup_service.dart';
+import 'package:solarisdemo/infrastructure/onboarding/signup/onboarding_signup_service.dart';
 import 'package:solarisdemo/models/onboarding/onboarding_signup_attributes.dart';
 import 'package:solarisdemo/models/onboarding/onboarding_signup_error_type.dart';
 
@@ -20,7 +20,7 @@ class FakeFailingOnboardingSignupService extends OnboardingSignupService {
     required String deviceToken,
     required String tsAndCsSignedAt,
   }) async {
-    return const CreatePersonErrorResponse();
+    return const CreatePersonErrorResponse(errorType: OnboardingSignupErrorType.unknown);
   }
 }
 

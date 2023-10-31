@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:solarisdemo/infrastructure/onboarding/onboarding_signup_presenter.dart';
+import 'package:solarisdemo/infrastructure/onboarding/signup/onboarding_signup_presenter.dart';
 import 'package:solarisdemo/models/auth/auth_type.dart';
 import 'package:solarisdemo/models/onboarding/onboarding_signup_attributes.dart';
 import 'package:solarisdemo/redux/auth/auth_state.dart';

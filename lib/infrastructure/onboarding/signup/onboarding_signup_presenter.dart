@@ -7,9 +7,9 @@ import 'package:solarisdemo/redux/onboarding/signup/onboarding_signup_state.dart
 
 class OnboardingSignupPresenter {
   static OnboardingSignupViewModel present({required OnboardingSignupState signupState, AuthState? authState}) {
-    final isAuthenticated = authState != null && authState is AuthenticationInitializedState;
+    final isAuthenticated = authState is AuthenticationInitializedState;
     final isAccountCreated = signupState.isSuccessful == true;
-    final isAuthLoading = authState != null && authState is AuthLoadingState;
+    final isAuthLoading = authState is AuthLoadingState;
 
     return OnboardingSignupViewModel(
       signupAttributes: signupState.signupAttributes,

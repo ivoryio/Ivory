@@ -39,7 +39,7 @@ class OnboardingSignupSuccessEventAction {}
 class OnboardingSignupFailedEventAction {
   final OnboardingSignupErrorType errorType;
 
-  OnboardingSignupFailedEventAction({this.errorType = OnboardingSignupErrorType.unknown});
+  OnboardingSignupFailedEventAction({required this.errorType});
 }
 
 class CreateAccountCommandAction {}

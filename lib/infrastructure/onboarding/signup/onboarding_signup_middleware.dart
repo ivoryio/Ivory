@@ -1,6 +1,6 @@
 import 'package:redux/redux.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
-import 'package:solarisdemo/infrastructure/onboarding/onboarding_signup_service.dart';
+import 'package:solarisdemo/infrastructure/onboarding/signup/onboarding_signup_service.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/auth/auth_action.dart';
 import 'package:solarisdemo/redux/onboarding/signup/onboarding_signup_action.dart';

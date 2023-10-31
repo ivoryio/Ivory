@@ -47,7 +47,7 @@ class CreatePersonSuccesResponse extends OnboardingSignupServiceResponse {}
 class CreatePersonErrorResponse extends OnboardingSignupServiceResponse {
   final OnboardingSignupErrorType errorType;
 
-  const CreatePersonErrorResponse({this.errorType = OnboardingSignupErrorType.unknown});
+  const CreatePersonErrorResponse({required this.errorType});
 
   @override
   List<Object?> get props => [errorType];
