@@ -96,6 +96,7 @@ void main() {
         deviceService: FakeDeviceServiceWithNoDeviceId(),
         authService: FakeAuthService(),
         deviceFingerprintService: FakeDeviceFingerprintService(),
+        pushNotificationService: FakeNotificationService(),
         initialState: createAppState(
           authState: AuthInitialState(),
         ),
@@ -130,6 +131,7 @@ void main() {
         deviceService: FakeDeviceService(),
         authService: FakeAuthService(),
         deviceFingerprintService: FakeDeviceFingerprintService(),
+        pushNotificationService: FakeNotificationService(),
         initialState: createAppState(
           authState: AuthInitialState(),
         ),
@@ -183,6 +185,7 @@ void main() {
         deviceService: FakeDeviceService(),
         authService: FakeAuthServiceWithOnboardingUser(),
         deviceFingerprintService: FakeDeviceFingerprintService(),
+        pushNotificationService: FakeNotificationService(),
         initialState: createAppState(
           authState: AuthInitialState(),
         ),
