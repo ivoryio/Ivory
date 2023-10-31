@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:solarisdemo/config.dart';
 
-enum TextFieldInputType { text, name, email, number }
+enum TextFieldInputType { text, name, email, number, password }
 
 class IvoryTextField extends StatefulWidget {
   final FocusNode? focusNode;
@@ -208,6 +208,10 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
       case TextFieldInputType.number:
         return [
           FilteringTextInputFormatter.allow(RegExp(r'[0-9\.,]')),
+        ];
+      case TextFieldInputType.password:
+        return [
+          FilteringTextInputFormatter.deny(RegExp(r'[\s]')),
         ];
       default:
         return null;
