@@ -6,6 +6,7 @@ import 'package:solarisdemo/redux/credit_line/credit_line_state.dart';
 import 'package:solarisdemo/redux/device/device_state.dart';
 import 'package:solarisdemo/redux/notification/notification_state.dart';
 import 'package:solarisdemo/redux/onboarding/onboarding_progress_state.dart';
+import 'package:solarisdemo/redux/onboarding/personal_details/onboarding_personal_details_state.dart';
 import 'package:solarisdemo/redux/onboarding/signup/onboarding_signup_state.dart';
 import 'package:solarisdemo/redux/person/account_summary/account_summay_state.dart';
 import 'package:solarisdemo/redux/person/person_account/person_account_state.dart';
@@ -39,6 +40,7 @@ class AppState extends Equatable {
   final TransactionsState homePageTransactionsState;
   final OnboardingProgressState onboardingProgressState;
   final OnboardingSignupState onboardingSignupState;
+  final OnboardingPersonalDetailsState onboardingPersonalDetailsState;
 
   const AppState({
     required this.transactionsState,
@@ -61,6 +63,7 @@ class AppState extends Equatable {
     required this.homePageTransactionsState,
     required this.onboardingSignupState,
     required this.onboardingProgressState,
+    required this.onboardingPersonalDetailsState,
   });
 
   factory AppState.initialState() {
@@ -85,6 +88,7 @@ class AppState extends Equatable {
       homePageTransactionsState: TransactionsInitialState(),
       onboardingSignupState: OnboardingSignupState(),
       onboardingProgressState: OnboardingProgressInitialLoadingState(),
+      onboardingPersonalDetailsState: OnboardingPersonalDetailsInitialState(),
     );
   }
 
@@ -110,6 +114,7 @@ class AppState extends Equatable {
         homePageTransactionsState,
         onboardingSignupState,
         onboardingProgressState,
+        onboardingPersonalDetailsState
       ];
 
   @override

@@ -34,8 +34,8 @@ class ApiService<T> {
       if (response.statusCode != 200) {
         throw Exception("GET request response code: ${response.statusCode}");
       }
-
-      return jsonDecode(response.body);
+      final decodedData = utf8.decode(response.bodyBytes);
+      return jsonDecode(decodedData);
     } catch (e, s) {
       debugPrintStack(stackTrace: s);
       rethrow;

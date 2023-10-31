@@ -5,6 +5,7 @@ import 'package:solarisdemo/infrastructure/person/account_summary/account_summar
 import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/screens/account/account_details_screen.dart';
 import 'package:solarisdemo/screens/available_balance/available_balance_screen.dart';
+import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_adress_of_residence_screen.dart';
 import 'package:solarisdemo/screens/repayments/repayments_screen.dart';
 import 'package:solarisdemo/screens/transactions/transactions_screen.dart';
 import 'package:solarisdemo/screens/transfer/transfer_screen.dart';
@@ -359,7 +360,9 @@ class AccountOptions extends StatelessWidget {
               AssetImage('assets/icons/info.png'),
               size: 24,
             ),
-            onPressed: () => Navigator.pushNamed(context, AccountDetailsScreen.routeName),
+            // onPressed: () => Navigator.pushNamed(context, AccountDetailsScreen.routeName),
+            onPressed: () => Navigator.pushNamed(context, OnboardingAddressOfResidenceScreen.routeName),
+            
           ),
         ],
       ),

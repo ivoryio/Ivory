@@ -1,1 +1,1 @@
-enum OnboardingServiceErrorType { unknown }
+enum OnboardingServiceErrorType { unknown, cantGetAddressSuggestions }
