@@ -104,4 +104,13 @@ class InputFormatter {
       "0": RegExp(r"[0-9]"),
     },
   );
+
+  static MaskTextInputFormatter date = MaskTextInputFormatter(
+    mask: "00/00/0000",
+    type: MaskAutoCompletionType.eager,
+    filter: {
+      "0": RegExp(r"[0-9]"),
+      "s": RegExp(r"[\s]*"),
+    },
+  );
 }

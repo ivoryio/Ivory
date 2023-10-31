@@ -56,7 +56,6 @@ class _OnboardingPasswordScreenState extends State<OnboardingPasswordScreen> {
       onInitialBuild: (viewModel) {
         passwordController.text = viewModel.signupAttributes.password ?? "";
         confirmPasswordController.text = viewModel.signupAttributes.password ?? "";
-        _continueButtonController.setEnabled();
       },
       builder: (context, viewModel) {
         return ScreenScaffold(

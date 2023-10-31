@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:solarisdemo/redux/onboarding/onboarding_progress_state.dart';
+import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_date_and_place_of_birth_screen.dart';
 import 'package:solarisdemo/screens/onboarding/signup/onboarding_basic_info_screen.dart';
 
 import '../../models/onboarding/onboarding_progress.dart';
@@ -67,7 +68,7 @@ OnboardingProgress _onboardingProgressMapper(OnboardingStep step) {
       return const OnboardingProgress(
         activeStep: StepperItemType.personalDetails,
         progressPercentage: 20,
-        routeName: OnboardingBasicInfoScreen.routeName, // TODO: Update route name
+        routeName: OnboardingDateAndPlaceOfBirthScreen.routeName,
       );
     default:
       return const OnboardingProgress(
