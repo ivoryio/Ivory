@@ -16,6 +16,7 @@ class IvoryTextField extends StatefulWidget {
   final List<TextInputFormatter>? inputFormatters;
   final String? errorText;
   final String? label;
+  final String? bottomSheetTitle;
   final String? placeholder;
   final TextCapitalization? textCapitalization;
   final TextFieldInputType inputType;
@@ -48,6 +49,7 @@ class IvoryTextField extends StatefulWidget {
     this.prefix,
     this.suffix,
     this.textCapitalization,
+    this.bottomSheetTitle,
   });
 
   @override
@@ -267,7 +269,7 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
 
           showBottomModal(
             context: context,
-            title: "Select your date of birth",
+            title: widget.bottomSheetTitle,
             content: _DatePickerContent(
               currentDate: currentDate,
               initialDate: initialDate,

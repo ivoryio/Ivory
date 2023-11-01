@@ -6,7 +6,10 @@ import 'package:solarisdemo/widgets/modal.dart';
 
 class IvorySelectOption extends StatefulWidget {
   final String label;
-  final String? bottomSheetLabel;
+  final String? bottomSheetTitle;
+  final bool enabledSearch;
+  final String placeholder;
+  final String searchFieldPlaceholder;
   final List<SelectOption>? options;
   final void Function(SelectOption)? onOptionSelected;
   final IvorySelectOptionController? controller;
@@ -15,11 +18,14 @@ class IvorySelectOption extends StatefulWidget {
   const IvorySelectOption({
     super.key,
     required this.label,
-    required this.bottomSheetLabel,
+    required this.bottomSheetTitle,
     this.options,
     this.onOptionSelected,
     this.controller,
+    this.placeholder = "Select an option",
+    this.searchFieldPlaceholder = "Search",
     this.onBottomSheetOpened,
+    this.enabledSearch = false,
   });
 
   @override
@@ -100,7 +106,7 @@ class _IvorySelectOptionState extends State<IvorySelectOption> {
                         )
                       else
                         Text(
-                          widget.bottomSheetLabel ?? widget.label,
+                          widget.placeholder,
                           style: ClientConfig.getTextStyleScheme()
                               .bodyLargeRegular
                               .copyWith(color: ClientConfig.getCustomColors().neutral500),
@@ -130,47 +136,99 @@ class _IvorySelectOptionState extends State<IvorySelectOption> {
 
     showBottomModal(
       context: context,
-      title: "Select your preferred title",
+      title: widget.bottomSheetTitle,
       addContentPadding: false,
       useSafeArea: true,
       isScrollControlled: true,
-      content: Column(
-        children: [
+      content: _BottomSheetContent(
+        options: _controller.options,
+        enabledSearch: widget.enabledSearch,
+        multiselect: widget.controller?.multiselect ?? false,
+        searchFieldPlaceholder: widget.searchFieldPlaceholder,
+        onOptionSelected: (option) {
+          _controller.selectOption(option);
+          widget.onOptionSelected?.call(option);
+        },
+      ),
+    );
+  }
+}
+
+class _BottomSheetContent extends StatefulWidget {
+  final List<SelectOption> options;
+  final String searchFieldPlaceholder;
+  final Function(SelectOption) onOptionSelected;
+  final bool multiselect;
+  final bool enabledSearch;
+
+  const _BottomSheetContent({
+    required this.options,
+    required this.onOptionSelected,
+    required this.multiselect,
+    required this.enabledSearch,
+    required this.searchFieldPlaceholder,
+  });
+
+  @override
+  State<_BottomSheetContent> createState() => _BottomSheetContentState();
+}
+
+class _BottomSheetContentState extends State<_BottomSheetContent> {
+  late List<SelectOption> _filteredOptions;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _filteredOptions = widget.options;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        if (widget.enabledSearch) ...[
           Padding(
             padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
             child: IvoryTextField(
-              placeholder: "Search country",
+              placeholder: widget.searchFieldPlaceholder,
               onChanged: (value) {
-                _controller.setLoading(true);
-                final List<SelectOption> filteredOptions = _controller.options
-                    .where((option) => option.textLabel.toLowerCase().contains(value.toLowerCase()))
-                    .toList();
-                _controller.setOptions(filteredOptions);
-                _controller.setLoading(false);
+                setState(() {
+                  _filteredOptions = widget.options
+                      .where((option) => option.textLabel.toLowerCase().contains(value.toLowerCase()))
+                      .toList();
+                });
               },
             ),
           ),
-          SizedBox(height: 24),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: _controller.options.length,
-            itemBuilder: (context, index) {
-              final SelectOption option = _controller.options[index];
-              return _BottomSheetOption(
-                textLabel: option.textLabel,
-                isSelected: option.selected,
-                multiselect: widget.controller?.multiselect ?? false,
-                onTap: () {
-                  _controller.selectOption(option);
-                  widget.onOptionSelected?.call(option);
-                },
-                prefix: option.prefix,
-              );
-            },
-          ),
+          const SizedBox(height: 24),
         ],
-      ),
+        _filteredOptions.isEmpty
+            ? Text(
+                "No results found",
+                style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
+              )
+            : ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: _filteredOptions.length,
+                itemBuilder: (context, index) {
+                  SelectOption option = _filteredOptions[index];
+
+                  return _BottomSheetOption(
+                    key: UniqueKey(),
+                    textLabel: option.textLabel,
+                    isSelected: option.selected,
+                    multiselect: widget.multiselect,
+                    onTap: () {
+                      widget.onOptionSelected(option);
+                    },
+                    prefix: option.prefix,
+                  );
+                },
+              ),
+        const SizedBox(height: 24),
+      ],
     );
   }
 }
@@ -183,6 +241,7 @@ class _BottomSheetOption extends StatefulWidget {
   final Widget? prefix;
 
   const _BottomSheetOption({
+    super.key,
     required this.textLabel,
     required this.isSelected,
     required this.onTap,
@@ -303,18 +362,4 @@ class SelectOption extends Equatable {
 
   @override
   List<Object?> get props => [value, textLabel, selected, prefix];
-}
-
-class _BottomSheetContent extends StatefulWidget {
-  const _BottomSheetContent({super.key});
-
-  @override
-  State<_BottomSheetContent> createState() => _BottomSheetContentState();
-}
-
-class _BottomSheetContentState extends State<_BottomSheetContent> {
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
 }

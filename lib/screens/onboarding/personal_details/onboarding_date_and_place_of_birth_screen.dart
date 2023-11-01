@@ -23,9 +23,7 @@ class OnboardingDateAndPlaceOfBirthScreen extends StatefulWidget {
 class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndPlaceOfBirthScreen> {
   late List<SelectOption> _countries;
   final IvoryTextFieldController _dateOfBirthController = IvoryTextFieldController();
-  final IvorySelectOptionController _selectCountryController = IvorySelectOptionController(
-    loading: true,
-  );
+  final IvorySelectOptionController _selectCountryController = IvorySelectOptionController(loading: true);
 
   @override
   void initState() {
@@ -62,13 +60,17 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
                   IvoryTextField(
                     label: "Date of birth",
                     placeholder: "DD / MM / YYYY",
+                    bottomSheetTitle: "Select your date of birth",
                     controller: _dateOfBirthController,
                     inputType: TextFieldInputType.date,
                   ),
                   const SizedBox(height: 24),
                   IvorySelectOption(
                     label: "Country of birth",
-                    bottomSheetLabel: "Select country of birth",
+                    placeholder: "Select country of birth",
+                    bottomSheetTitle: "Select your country of birth",
+                    searchFieldPlaceholder: "Search country...",
+                    enabledSearch: true,
                     controller: _selectCountryController,
                     onBottomSheetOpened: () => FocusScope.of(context).unfocus(),
                     onOptionSelected: (option) {},
@@ -101,7 +103,7 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
           value: country['isoCode'],
           prefix: Text(
             "${country['flag']} ",
-            style: const TextStyle(fontSize: 16),
+            style: const TextStyle(fontSize: 20, height: 24 / 20),
           ),
         ),
       );
