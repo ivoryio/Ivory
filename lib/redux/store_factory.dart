@@ -20,6 +20,7 @@ import 'package:solarisdemo/infrastructure/onboarding/signup/onboarding_signup_m
 import 'package:solarisdemo/infrastructure/onboarding/onboarding_progress_middleware.dart';
 import 'package:solarisdemo/infrastructure/onboarding/onboarding_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/signup/onboarding_signup_service.dart';
+import 'package:solarisdemo/infrastructure/onboarding/personal_details/onboarding_personal_details_middleware.dart';
 import 'package:solarisdemo/infrastructure/person/account_summary/account_summary_middleware.dart';
 import 'package:solarisdemo/infrastructure/person/account_summary/account_summary_service.dart';
 import 'package:solarisdemo/infrastructure/person/person_account_middleware.dart';
@@ -89,6 +90,7 @@ Store<AppState> createStore({
       AuthMiddleware(authService, deviceService, deviceFingerprintService, personService, biometricsService),
       OnboardingSignupMiddleware(pushNotificationService, onboardingSignupService),
       OnboardingProgressMiddleware(onboardingService),
+      OnboardingPersonalDetailsMiddleware(onboardingService),
       ActionLoggerMiddleware(),
     ],
   );

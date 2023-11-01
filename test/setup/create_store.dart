@@ -399,6 +399,11 @@ class NotImplementedOnboardingService extends OnboardingService {
   Future<OnboardingServiceResponse> getOnboardingProgress({required User user}) {
     throw UnimplementedError();
   }
+
+  @override
+  Future<OnboardingServiceResponse> getAddressSuggestions({required User user, required String queryString}) {
+    throw UnimplementedError();
+  }
 }
 
 class NotImplementedOnboardingSignupService extends OnboardingSignupService {

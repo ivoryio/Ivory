@@ -96,7 +96,9 @@ class BankCardDetailsScreen extends StatelessWidget {
                         BankCardShowDetailsWidget(
                           cardDetails: viewModel.cardDetails!,
                           cardType: viewModel.bankCard?.type,
-                          cardTypeLabel: 'Physical card',
+                          cardTypeLabel: viewModel.bankCard!.type.toString().toLowerCase().contains('virtual')
+                              ? 'Virtual card'
+                              : 'Physical card',
                         ),
                         const Spacer(),
                         Row(
