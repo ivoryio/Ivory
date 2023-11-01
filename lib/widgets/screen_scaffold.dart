@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:solarisdemo/config.dart';
@@ -25,17 +27,15 @@ class ScreenScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (shouldPop) {
-      return WillPopScope(
-        onWillPop: () async {
-          popAction?.call();
-          return true;
-        },
-        child: _buildScaffold(),
-      );
-    } else {
-      return WillPopScope(onWillPop: () async => false, child: _buildScaffold());
-    }
+    return WillPopScope(
+      onWillPop: (Platform.isIOS && shouldPop == true && popAction == null)
+          ? null
+          : () async {
+              popAction?.call();
+              return shouldPop;
+            },
+      child: _buildScaffold(),
+    );
   }
 
   Scaffold _buildScaffold() {
