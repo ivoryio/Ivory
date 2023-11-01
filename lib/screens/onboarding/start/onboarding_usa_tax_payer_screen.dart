@@ -58,7 +58,7 @@ class OnboardingUsaTaxPayerScreen extends StatelessWidget {
                   InkWell(
                     onTap: () => showBottomModal(
                       context: context,
-                      title: "How to top up your Ivory account?",
+                      title: "Why am I being asked this?",
                       content: const _TaxpayerBottomSheetContent(),
                     ),
                     child: Text(
