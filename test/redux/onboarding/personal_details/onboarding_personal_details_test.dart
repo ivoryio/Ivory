@@ -1,9 +1,5 @@
-import 'dart:math';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:solarisdemo/models/auth/auth_type.dart';
-import 'package:solarisdemo/models/onboarding/onboarding_persona_details_address_suggestions.dart';
-import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/onboarding/personal_details/onboarding_personal_details_action.dart';
 import 'package:solarisdemo/redux/onboarding/personal_details/onboarding_personal_details_state.dart';
@@ -14,12 +10,8 @@ import '../../../setup/create_store.dart';
 import 'onboarding_personal_details_mocks.dart';
 
 void main() {
-  final user = AuthenticatedUser(
-    cognito: MockUser(),
-    person: MockPerson(),
-    personAccount: MockPersonAccount(),
-  );
-  final authentionInitializedState = AuthenticatedState(user, AuthType.withTan);
+  final user = MockUser();
+  final authentionInitializedState = AuthenticationInitializedState(user, AuthType.withTan);
 
   group("Address of residence", () {
     test("When address suggestions are requested and arrive succesfully, state should be updated", () async {
