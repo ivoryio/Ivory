@@ -30,19 +30,18 @@ class _OnboardingPasswordScreenState extends State<OnboardingPasswordScreen> {
   final FocusNode passwordFocusNode = FocusNode();
   final FocusNode confirmPasswordFocusNode = FocusNode();
 
-  @override
-  void initState() {
-    super.initState();
-
-    _continueButtonController.setDisabled();
-  }
-
   void _checkPasswordsMatch() {
     if (!mounted) {
       return;
     }
 
-    if (passwordController.text == confirmPasswordController.text) {
+    bool isValidPrimaryField = passwordValidators.every((validator) => validator.validate(passwordController.text));
+    bool isValidSecondaryField =
+        passwordValidators.every((validator) => validator.validate(confirmPasswordController.text));
+
+    if (isValidPrimaryField && isValidSecondaryField && passwordController.text == confirmPasswordController.text) {
+      passwordController.setError(false);
+      confirmPasswordController.setError(false);
       _continueButtonController.setEnabled();
     } else {
       _continueButtonController.setDisabled();
@@ -56,6 +55,7 @@ class _OnboardingPasswordScreenState extends State<OnboardingPasswordScreen> {
       onInitialBuild: (viewModel) {
         passwordController.text = viewModel.signupAttributes.password ?? "";
         confirmPasswordController.text = viewModel.signupAttributes.password ?? "";
+        _checkPasswordsMatch();
       },
       builder: (context, viewModel) {
         return ScreenScaffold(
@@ -86,6 +86,7 @@ class _OnboardingPasswordScreenState extends State<OnboardingPasswordScreen> {
                         label: 'Password',
                         controller: passwordController,
                         focusNode: passwordFocusNode,
+                        inputType: TextFieldInputType.password,
                       ),
                       ListenableBuilder(
                         listenable: passwordFocusNode,
@@ -114,6 +115,7 @@ class _OnboardingPasswordScreenState extends State<OnboardingPasswordScreen> {
                         label: 'Repeat password',
                         controller: confirmPasswordController,
                         focusNode: confirmPasswordFocusNode,
+                        inputType: TextFieldInputType.password,
                       ),
                       ListenableBuilder(
                         listenable: confirmPasswordFocusNode,

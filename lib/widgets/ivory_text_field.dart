@@ -6,7 +6,7 @@ import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/modal.dart';
 
-enum TextFieldInputType { text, name, email, number, date }
+enum TextFieldInputType { text, name, email, number, password, date }
 
 const datePattern = "dd/MM/yyyy";
 
@@ -209,6 +209,10 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
       case TextFieldInputType.number:
         return [
           FilteringTextInputFormatter.allow(RegExp(r'[0-9\.,]')),
+        ];
+      case TextFieldInputType.password:
+        return [
+          FilteringTextInputFormatter.deny(RegExp(r'[\s]')),
         ];
       case TextFieldInputType.date:
         return [InputFormatter.date];
