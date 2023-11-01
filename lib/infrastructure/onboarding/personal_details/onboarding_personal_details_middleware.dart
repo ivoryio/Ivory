@@ -13,11 +13,10 @@ class OnboardingPersonalDetailsMiddleware extends MiddlewareClass<AppState> {
   call(Store<AppState> store, action, NextDispatcher next) async {
     next(action);
 
-    if (action is FetchOnboardingPersonalDetailsAddressSuggestions) {
-      //MODIFY AUTH STATE VERIFICATION HERE
-      if (store.state.authState is AuthenticatedState) {
+    if (action is FetchOnboardingPersonalDetailsAddressSuggestionsCommandAction) {
+      if (store.state.authState is AuthenticationInitializedState) {
         store.dispatch(OnboardingPersonalDetailsLoadingEventAction());
-        final user = (store.state.authState as AuthenticatedState).authenticatedUser.cognito;
+        final user = (store.state.authState as AuthenticationInitializedState).cognitoUser;
         final response = await _onboardingService.getAddressSuggestions(
           user: user,
           queryString: action.queryString,
@@ -33,8 +32,7 @@ class OnboardingPersonalDetailsMiddleware extends MiddlewareClass<AppState> {
     }
 
     if (action is SelectOnboardingPersonalDetailsAddressSuggestionCommandAction) {
-      //MODIFY AUTH STATE VERIFICATION HERE
-      if (store.state.authState is AuthenticatedState) {
+      if (store.state.authState is AuthenticationInitializedState) {
         store.dispatch(
           OnboardingPersonalDetailsAddressSuggestionSelectedEventAction(selectedSuggestion: action.selectedSuggestion),
         );

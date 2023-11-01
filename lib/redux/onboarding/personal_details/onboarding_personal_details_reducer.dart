@@ -5,7 +5,7 @@ OnboardingPersonalDetailsState onboardingPersonDetailsReducer(OnboardingPersonal
   if (action is OnboardingPersonalDetailsLoadingEventAction) {
     return OnboardingPersonalDetailsLoadingState();
   } else if (action is OnboardingPersonalDetailsAddressSuggestionsFetchedEventAction) {
-    return OnboardingPersonalDetailsSuggestionsFetchedState(action.suggestions);
+    return OnboardingPersonalDetailsAddressSuggestionsFetchedState(action.suggestions);
   } else if (action is OnboardingPersonalDetailFetchingAddressSuggestionsFailedEventAction) {
     return OnboardingPersonalDetailsErrorState();
   } else if (action is OnboardingPersonalDetailsAddressSuggestionSelectedEventAction) {

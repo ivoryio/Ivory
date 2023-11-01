@@ -12,10 +12,10 @@ class OnboardingPersonalDetailsLoadingState extends OnboardingPersonalDetailsSta
 
 class OnboardingPersonalDetailsErrorState extends OnboardingPersonalDetailsState {}
 
-class OnboardingPersonalDetailsSuggestionsFetchedState extends OnboardingPersonalDetailsState {
+class OnboardingPersonalDetailsAddressSuggestionsFetchedState extends OnboardingPersonalDetailsState {
   final List<AddressSuggestion> suggestions;
 
-  OnboardingPersonalDetailsSuggestionsFetchedState(this.suggestions);
+  OnboardingPersonalDetailsAddressSuggestionsFetchedState(this.suggestions);
 
   @override
   List<Object?> get props => [suggestions];

@@ -1,9 +1,9 @@
 import 'package:solarisdemo/models/onboarding/onboarding_persona_details_address_suggestions.dart';
 
-class FetchOnboardingPersonalDetailsAddressSuggestions {
+class FetchOnboardingPersonalDetailsAddressSuggestionsCommandAction {
   final String queryString;
 
-  FetchOnboardingPersonalDetailsAddressSuggestions({required this.queryString});
+  FetchOnboardingPersonalDetailsAddressSuggestionsCommandAction({required this.queryString});
 }
 
 class SelectOnboardingPersonalDetailsAddressSuggestionCommandAction {

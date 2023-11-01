@@ -6,7 +6,7 @@ class OnboardingPersonalDetailsPresenter {
   static OnboardingPersonalDetailsViewModel presentOnboardingPersonalDetails({
     required OnboardingPersonalDetailsState onboardingPersonalDetailsState,
   }) {
-    if (onboardingPersonalDetailsState is OnboardingPersonalDetailsSuggestionsFetchedState) {
+    if (onboardingPersonalDetailsState is OnboardingPersonalDetailsAddressSuggestionsFetchedState) {
       return OnboardingPersonalDetailsFetchedViewModel(
         suggestions: onboardingPersonalDetailsState.suggestions,
       );
