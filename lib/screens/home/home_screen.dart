@@ -360,8 +360,7 @@ class AccountOptions extends StatelessWidget {
               AssetImage('assets/icons/info.png'),
               size: 24,
             ),
-            // onPressed: () => Navigator.pushNamed(context, AccountDetailsScreen.routeName),
-            onPressed: () => Navigator.pushNamed(context, OnboardingAddressOfResidenceScreen.routeName),
+            onPressed: () => Navigator.pushNamed(context, AccountDetailsScreen.routeName),
             
           ),
         ],
