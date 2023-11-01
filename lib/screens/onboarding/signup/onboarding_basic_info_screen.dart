@@ -80,9 +80,9 @@ class _OnboardingBasicInfoScreenState extends State<OnboardingBasicInfoScreen> {
                     controller: _selectTitleController,
                     onBottomSheetOpened: () => FocusScope.of(context).unfocus(),
                     options: const [
-                      SelectOption(label: "Mr.", value: "mr"),
-                      SelectOption(label: "Ms.", value: "ms"),
-                      SelectOption(label: "Other", value: "other"),
+                      SelectOption(textLabel: "Mr.", value: "mr"),
+                      SelectOption(textLabel: "Ms.", value: "ms"),
+                      SelectOption(textLabel: "Other", value: "other"),
                     ],
                   ),
                   const SizedBox(height: 24),

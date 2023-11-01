@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -18,8 +21,18 @@ class OnboardingDateAndPlaceOfBirthScreen extends StatefulWidget {
 }
 
 class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndPlaceOfBirthScreen> {
-  final IvorySelectOptionController _selectCountryController = IvorySelectOptionController();
+  late List<SelectOption> _countries;
   final IvoryTextFieldController _dateOfBirthController = IvoryTextFieldController();
+  final IvorySelectOptionController _selectCountryController = IvorySelectOptionController(
+    loading: true,
+  );
+
+  @override
+  void initState() {
+    super.initState();
+
+    _loadCuntries();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,11 +71,7 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
                     bottomSheetLabel: "Select country of birth",
                     controller: _selectCountryController,
                     onBottomSheetOpened: () => FocusScope.of(context).unfocus(),
-                    options: const [
-                      SelectOption(label: "Germany", value: "germany"),
-                      SelectOption(label: "Afghanistan", value: "afghanistan"),
-                      SelectOption(label: "Albania", value: "albania"),
-                    ],
+                    onOptionSelected: (option) {},
                   ),
                   const Spacer(),
                   const SizedBox(height: 24),
@@ -78,5 +87,31 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
         ],
       ),
     );
+  }
+
+  Future<void> _loadCuntries() async {
+    final countriesJson = await rootBundle.loadString('assets/data/countries.json');
+    final countries = jsonDecode(countriesJson);
+    final List<SelectOption> options = List.empty(growable: true);
+
+    for (final country in countries) {
+      options.add(
+        SelectOption(
+          textLabel: country['name'],
+          value: country['isoCode'],
+          prefix: Text(
+            "${country['flag']} ",
+            style: const TextStyle(fontSize: 16),
+          ),
+        ),
+      );
+    }
+    _selectCountryController.setOptions(options);
+
+    setState(() {
+      _countries = options;
+    });
+
+    _selectCountryController.setLoading(false);
   }
 }

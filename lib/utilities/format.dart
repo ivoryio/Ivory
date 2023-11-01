@@ -93,6 +93,14 @@ class Format {
   static String date(DateTime date, {String? pattern = "yyyy-MM-dd"}) {
     return DateFormat(pattern).format(date);
   }
+
+  static DateTime? tryParseDate(String date, {String? pattern = "yyyy-MM-dd"}) {
+    try {
+      return DateFormat(pattern).parse(date);
+    } catch (_) {
+      return null;
+    }
+  }
 }
 
 class InputFormatter {

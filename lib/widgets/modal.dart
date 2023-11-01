@@ -10,11 +10,13 @@ Future<dynamic> showBottomModal({
   bool showCloseButton = true,
   bool isScrollControlled = true,
   bool addContentPadding = true,
+  bool useSafeArea = false,
 }) async {
   return showModalBottomSheet(
     context: context,
     isScrollControlled: isScrollControlled,
     backgroundColor: Colors.white,
+    useSafeArea: useSafeArea,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.only(
         topLeft: Radius.circular(24),

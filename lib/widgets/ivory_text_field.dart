@@ -8,6 +8,8 @@ import 'package:solarisdemo/widgets/modal.dart';
 
 enum TextFieldInputType { text, name, email, number, date }
 
+const datePattern = "dd/MM/yyyy";
+
 class IvoryTextField extends StatefulWidget {
   final FocusNode? focusNode;
   final IvoryTextFieldController? controller;
@@ -255,44 +257,18 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
       return GestureDetector(
         onTap: () {
           final currentDate = DateTime.now();
-          final formattedInputDateTime = _controller.text.split("/").reversed.join("-"); // date format: dd/MM/yyyy
-          final inputDate = DateTime.tryParse(formattedInputDateTime) ?? currentDate;
+          final initialDate = _controller.text.isNotEmpty
+              ? Format.tryParseDate(_controller.text, pattern: datePattern) ?? currentDate
+              : currentDate;
 
           showBottomModal(
             context: context,
             title: "Select your date of birth",
-            content: Column(
-              children: [
-                Container(
-                  height: 160,
-                  padding: EdgeInsets.symmetric(vertical: 25),
-                  child: CupertinoTheme(
-                    data: CupertinoThemeData(
-                      textTheme: CupertinoTextThemeData(
-                        dateTimePickerTextStyle: ClientConfig.getTextStyleScheme().heading2.copyWith(
-                              color: ClientConfig.getCustomColors().neutral900,
-                              fontWeight: FontWeight.w400,
-                            ),
-                      ),
-                    ),
-                    child: CupertinoDatePicker(
-                      mode: CupertinoDatePickerMode.date,
-                      maximumDate: currentDate,
-                      initialDateTime: inputDate.isAfter(currentDate) ? currentDate : inputDate,
-                      onDateTimeChanged: (DateTime newDate) {
-                        _controller.text = Format.date(newDate, pattern: "dd/MM/yyyy");
-                      },
-                      dateOrder: DatePickerDateOrder.dmy,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 24),
-                PrimaryButton(
-                  text: "Confirm",
-                  onPressed: () {},
-                ),
-                const SizedBox(height: 16),
-              ],
+            content: _DatePickerContent(
+              currentDate: currentDate,
+              initialDate: initialDate,
+              maximumDate: currentDate,
+              onConfirm: (value) => _controller.text = value,
             ),
           );
         },
@@ -394,20 +370,39 @@ class IvoryTextFieldController extends ChangeNotifier {
 }
 
 class _DatePickerContent extends StatefulWidget {
-  const _DatePickerContent({super.key});
+  final DateTime currentDate;
+  final DateTime initialDate;
+  final DateTime maximumDate;
+
+  final void Function(String) onConfirm;
+
+  const _DatePickerContent({
+    required this.onConfirm,
+    required this.currentDate,
+    required this.initialDate,
+    required this.maximumDate,
+  });
 
   @override
   State<_DatePickerContent> createState() => _DatePickerContentState();
 }
 
 class _DatePickerContentState extends State<_DatePickerContent> {
+  late String _formattedDate;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _formattedDate = Format.date(widget.initialDate, pattern: datePattern);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
+        SizedBox(
           height: 160,
-          padding: EdgeInsets.symmetric(vertical: 25),
           child: CupertinoTheme(
             data: CupertinoThemeData(
               textTheme: CupertinoTextThemeData(
@@ -419,10 +414,12 @@ class _DatePickerContentState extends State<_DatePickerContent> {
             ),
             child: CupertinoDatePicker(
               mode: CupertinoDatePickerMode.date,
-              // maximumDate: currentDate,
-              // initialDateTime: inputDate.isAfter(currentDate) ? currentDate : inputDate,
+              maximumDate: widget.maximumDate,
+              initialDateTime: widget.initialDate.isAfter(widget.maximumDate) ? widget.maximumDate : widget.initialDate,
               onDateTimeChanged: (DateTime newDate) {
-                // _controller.text = Format.date(newDate, pattern: "dd/MM/yyyy");
+                setState(() {
+                  _formattedDate = Format.date(newDate, pattern: datePattern);
+                });
               },
               dateOrder: DatePickerDateOrder.dmy,
             ),
@@ -431,7 +428,10 @@ class _DatePickerContentState extends State<_DatePickerContent> {
         const SizedBox(height: 24),
         PrimaryButton(
           text: "Confirm",
-          onPressed: () {},
+          onPressed: () {
+            widget.onConfirm(_formattedDate);
+            Navigator.pop(context);
+          },
         ),
         const SizedBox(height: 16),
       ],
