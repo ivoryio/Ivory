@@ -1,0 +1,1 @@
+enum SearchCitiesErrorType { unknown }

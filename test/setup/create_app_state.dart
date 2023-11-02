@@ -15,6 +15,7 @@ import 'package:solarisdemo/redux/repayments/bills/bills_state.dart';
 import 'package:solarisdemo/redux/repayments/change_repayment/change_repayment_state.dart';
 import 'package:solarisdemo/redux/repayments/more_credit/more_credit_state.dart';
 import 'package:solarisdemo/redux/repayments/reminder/repayment_reminder_state.dart';
+import 'package:solarisdemo/redux/search/search_cities_state.dart';
 import 'package:solarisdemo/redux/transactions/approval/transaction_approval_state.dart';
 import 'package:solarisdemo/redux/transactions/transactions_state.dart';
 import 'package:solarisdemo/redux/transfer/transfer_state.dart';
@@ -41,6 +42,7 @@ AppState createAppState({
   OnboardingProgressState? onboardingProgressState,
   OnboardingSignupState? onboardingSignupState,
   OnboardingPersonalDetailsState? onboardingPersonalDetailsState,
+  SearchCitiesState? searchCitiesState,
 }) {
   return AppState(
     transactionsState: transactionsState ?? TransactionsInitialState(),
@@ -64,5 +66,6 @@ AppState createAppState({
     onboardingProgressState: onboardingProgressState ?? OnboardingProgressInitialLoadingState(),
     onboardingSignupState: onboardingSignupState ?? OnboardingSignupState(),
     onboardingPersonalDetailsState: onboardingPersonalDetailsState ?? OnboardingPersonalDetailsInitialState(),
+    searchCitiesState: searchCitiesState ?? SearchCitiesInitialState(),
   );
 }
