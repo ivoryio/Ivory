@@ -13,7 +13,9 @@ class IvorySelectOption extends StatefulWidget {
   final List<SelectOption>? options;
   final void Function(SelectOption)? onOptionSelected;
   final IvorySelectOptionController? controller;
+  final void Function(String)? onSearchChanged;
   final VoidCallback? onBottomSheetOpened;
+  final bool filterOptions;
 
   const IvorySelectOption({
     super.key,
@@ -26,6 +28,8 @@ class IvorySelectOption extends StatefulWidget {
     this.searchFieldPlaceholder = "Search",
     this.onBottomSheetOpened,
     this.enabledSearch = false,
+    this.onSearchChanged,
+    this.filterOptions = true,
   });
 
   @override
@@ -146,10 +150,11 @@ class _IvorySelectOptionState extends State<IvorySelectOption> {
       useScrollableChild: false,
       content: Expanded(
         child: _BottomSheetContent(
-          options: _controller.options,
+          controller: _controller,
           enabledSearch: widget.enabledSearch,
-          multiselect: widget.controller?.multiselect ?? false,
           searchFieldPlaceholder: widget.searchFieldPlaceholder,
+          onSearchChanged: widget.onSearchChanged,
+          filterOptions: widget.filterOptions,
           onOptionSelected: (option) {
             _controller.selectOption(option);
             widget.onOptionSelected?.call(option);
@@ -161,18 +166,20 @@ class _IvorySelectOptionState extends State<IvorySelectOption> {
 }
 
 class _BottomSheetContent extends StatefulWidget {
-  final List<SelectOption> options;
+  final IvorySelectOptionController controller;
   final String searchFieldPlaceholder;
-  final Function(SelectOption) onOptionSelected;
-  final bool multiselect;
+  final void Function(SelectOption) onOptionSelected;
+  final void Function(String)? onSearchChanged;
   final bool enabledSearch;
+  final bool filterOptions;
 
   const _BottomSheetContent({
-    required this.options,
+    required this.controller,
     required this.onOptionSelected,
-    required this.multiselect,
     required this.enabledSearch,
     required this.searchFieldPlaceholder,
+    required this.filterOptions,
+    this.onSearchChanged,
   });
 
   @override
@@ -186,7 +193,7 @@ class _BottomSheetContentState extends State<_BottomSheetContent> {
   void initState() {
     super.initState();
 
-    _filteredOptions = widget.options;
+    _filteredOptions = widget.controller.options;
   }
 
   @override
@@ -198,43 +205,74 @@ class _BottomSheetContentState extends State<_BottomSheetContent> {
             padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
             child: IvoryTextField(
               placeholder: widget.searchFieldPlaceholder,
+              suffix: Padding(
+                padding: const EdgeInsets.only(right: 16),
+                child: Icon(Icons.search, color: ClientConfig.getCustomColors().neutral700, size: 24),
+              ),
               onChanged: (value) {
-                setState(() {
-                  _filteredOptions = widget.options
-                      .where((option) => option.textLabel.toLowerCase().contains(value.toLowerCase()))
-                      .toList();
-                });
+                widget.onSearchChanged?.call(value);
+
+                if (widget.filterOptions) {
+                  setState(() {
+                    _filteredOptions = widget.controller.options
+                        .where((option) => option.textLabel.toLowerCase().contains(value.toLowerCase()))
+                        .toList();
+                  });
+                }
               },
             ),
           ),
           const SizedBox(height: 24),
         ],
-        _filteredOptions.isEmpty
-            ? Text(
-                "No results found",
-                style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
-              )
-            : Expanded(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: _filteredOptions.length,
-                  itemBuilder: (context, index) {
-                    SelectOption option = _filteredOptions[index];
-
-                    return _BottomSheetOption(
-                      key: UniqueKey(),
-                      textLabel: option.textLabel,
-                      isSelected: option.selected,
-                      multiselect: widget.multiselect,
-                      onTap: () {
-                        widget.onOptionSelected(option);
-                      },
-                      prefix: option.prefix,
+        widget.filterOptions
+            ? Expanded(child: _buildListView(options: _filteredOptions))
+            : ListenableBuilder(
+                listenable: widget.controller,
+                builder: (context, child) {
+                  if (widget.controller.loading) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        strokeWidth: 3,
+                        color: ClientConfig.getCustomColors().neutral700,
+                      ),
                     );
-                  },
-                ),
+                  }
+
+                  return Expanded(child: _buildListView(options: _filteredOptions));
+                },
               ),
       ],
+    );
+  }
+
+  Widget _buildListView({required List<SelectOption> options}) {
+    if (options.isEmpty) {
+      return Align(
+        alignment: Alignment.topCenter,
+        child: Text(
+          "No results found",
+          style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
+        ),
+      );
+    }
+
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: options.length,
+      itemBuilder: (context, index) {
+        SelectOption option = options[index];
+
+        return _BottomSheetOption(
+          key: UniqueKey(),
+          textLabel: option.textLabel,
+          isSelected: option.selected,
+          multiselect: widget.controller.multiselect,
+          onTap: () {
+            widget.onOptionSelected(option);
+          },
+          prefix: option.prefix,
+        );
+      },
     );
   }
 }

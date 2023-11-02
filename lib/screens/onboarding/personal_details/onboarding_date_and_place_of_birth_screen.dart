@@ -21,7 +21,6 @@ class OnboardingDateAndPlaceOfBirthScreen extends StatefulWidget {
 }
 
 class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndPlaceOfBirthScreen> {
-  late List<SelectOption> _countries;
   final IvoryTextFieldController _dateOfBirthController = IvoryTextFieldController();
   final IvorySelectOptionController _selectCountryController = IvorySelectOptionController(loading: true);
 
@@ -70,16 +69,21 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
                     placeholder: "Select country of birth",
                     bottomSheetTitle: "Select your country of birth",
                     searchFieldPlaceholder: "Search country...",
-                    enabledSearch: true,
                     controller: _selectCountryController,
+                    enabledSearch: true,
                     onBottomSheetOpened: () => FocusScope.of(context).unfocus(),
-                    onOptionSelected: (option) {},
                   ),
                   const Spacer(),
                   const SizedBox(height: 24),
                   SizedBox(
                     width: double.infinity,
-                    child: PrimaryButton(text: "Continue", onPressed: () {}),
+                    child: PrimaryButton(
+                      text: "Continue",
+                      onPressed: () {
+                        print("Date of birth: ${_dateOfBirthController.text}");
+                        print("Selected country: ${_selectCountryController.selectedOptions.first.value}");
+                      },
+                    ),
                   ),
                   const SizedBox(height: 16),
                 ],
@@ -95,6 +99,7 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
     final countriesJson = await rootBundle.loadString('assets/data/countries.json');
     final countries = jsonDecode(countriesJson);
     final List<SelectOption> options = List.empty(growable: true);
+    await Future.delayed(const Duration(seconds: 5));
 
     for (final country in countries) {
       options.add(
@@ -109,11 +114,6 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
       );
     }
     _selectCountryController.setOptions(options);
-
-    setState(() {
-      _countries = options;
-    });
-
     _selectCountryController.setLoading(false);
   }
 }
