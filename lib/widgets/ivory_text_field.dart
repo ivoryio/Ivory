@@ -274,7 +274,10 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
               currentDate: currentDate,
               initialDate: initialDate,
               maximumDate: currentDate,
-              onConfirm: (value) => _controller.text = value,
+              onConfirm: (value) {
+                widget.onChanged?.call(value);
+                _controller.text = value;
+              },
             ),
           );
         },

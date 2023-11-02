@@ -11,6 +11,7 @@ import 'package:solarisdemo/utilities/debouncer.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
+import 'package:solarisdemo/widgets/continue_button_controller.dart';
 import 'package:solarisdemo/widgets/ivory_select_option.dart';
 import 'package:solarisdemo/widgets/ivory_text_field.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
@@ -30,6 +31,7 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
   final IvorySelectOptionController _selectCountryController = IvorySelectOptionController(loading: true);
   final IvorySelectOptionController _selectCityController = IvorySelectOptionController(enabled: false);
   final IvorySelectOptionController _selectNationalityController = IvorySelectOptionController(loading: true);
+  final ContinueButtonController _continueButtonController = ContinueButtonController();
 
   final _debouncer = Debouncer(milliseconds: 1000);
 
@@ -38,6 +40,17 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
     super.initState();
 
     _loadCountries();
+  }
+
+  void onChanged() {
+    if (_dateOfBirthController.text.isNotEmpty &&
+        _selectCountryController.selectedOptions.isNotEmpty &&
+        _selectCityController.selectedOptions.isNotEmpty &&
+        _selectNationalityController.selectedOptions.isNotEmpty) {
+      _continueButtonController.setEnabled();
+    } else {
+      _continueButtonController.setDisabled();
+    }
   }
 
   @override
@@ -71,6 +84,7 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
                     bottomSheetTitle: "Select your date of birth",
                     controller: _dateOfBirthController,
                     inputType: TextFieldInputType.date,
+                    onChanged: (input) => onChanged(),
                   ),
                   const SizedBox(height: 24),
                   IvorySelectOption(
@@ -85,6 +99,7 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
                       final countryCode = option.value;
                       _selectCityController.reset();
                       StoreProvider.of<AppState>(context).dispatch(FetchCitiesCommandAction(countryCode: countryCode));
+                      onChanged();
                     },
                   ),
                   const SizedBox(height: 24),
@@ -115,7 +130,9 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
                       controller: _selectCityController,
                       enabledSearch: true,
                       filterOptions: false,
-                      onOptionSelected: (option) {},
+                      onOptionSelected: (option) {
+                        onChanged();
+                      },
                       onSearchChanged: (value) {
                         _debouncer.run(() {
                           if (value.isNotEmpty) {
@@ -141,16 +158,24 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
                     controller: _selectNationalityController,
                     enabledSearch: true,
                     onBottomSheetOpened: () => FocusScope.of(context).unfocus(),
+                    onOptionSelected: (option) => onChanged(),
                   ),
                   const Spacer(),
                   const SizedBox(height: 24),
                   SizedBox(
                     width: double.infinity,
-                    child: PrimaryButton(
-                      text: "Continue",
-                      onPressed: () {
-                        print("Date of birth: ${_dateOfBirthController.text}");
-                        print("Selected country: ${_selectCountryController.selectedOptions.first.value}");
+                    child: ListenableBuilder(
+                      listenable: _continueButtonController,
+                      builder: (context, child) {
+                        return PrimaryButton(
+                          text: "Continue",
+                          onPressed: _continueButtonController.isEnabled
+                              ? () {
+                                  print("Date of birth: ${_dateOfBirthController.text}");
+                                  print("Selected country: ${_selectCountryController.selectedOptions.first.value}");
+                                }
+                              : null,
+                        );
                       },
                     ),
                   ),
