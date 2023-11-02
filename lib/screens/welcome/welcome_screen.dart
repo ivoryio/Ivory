@@ -26,52 +26,65 @@ class WelcomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenScaffold(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light,
-      extendBodyBehindAppBar: true,
-      body: ScrollableScreenContainer(
-        child: StoreConnector<AppState, AuthViewModel>(
-          onInit: (store) {
-            store.dispatch(
-              LoadCredentialsCommandAction(),
-            );
-          },
-          onWillChange: (previousViewModel, newViewModel) {
-            if (previousViewModel is AuthLoadingViewModel &&
-                newViewModel is AuthCredentialsLoadedViewModel &&
-                newViewModel.email!.isNotEmpty &&
-                newViewModel.password!.isNotEmpty &&
-                newViewModel.deviceId!.isNotEmpty) {
-              StoreProvider.of<AppState>(context).dispatch(
-                InitUserAuthenticationCommandAction(
-                  email: newViewModel.email!,
-                  password: newViewModel.password!,
-                ),
-              );
-            }
-            if (previousViewModel is AuthLoadingViewModel &&
-                newViewModel is AuthInitializedViewModel &&
-                newViewModel.authType == AuthType.withBiometrics) {
-              Navigator.of(
-                navigatorKey.currentContext as BuildContext,
-              ).pushNamedAndRemoveUntil(LoginWithBiometricsScreen.routeName, (route) => false);
-            }
-          },
-          builder: (context, viewModel) {
-            if (viewModel is AuthLoadingViewModel) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            return const Column(
+    return StoreConnector<AppState, AuthViewModel>(
+      onInit: (store) {
+        store.dispatch(
+          LoadCredentialsCommandAction(),
+        );
+      },
+      distinct: true,
+      onWillChange: (previousViewModel, newViewModel) {
+        if (previousViewModel is AuthLoadingViewModel &&
+            newViewModel is AuthCredentialsLoadedViewModel &&
+            newViewModel.email!.isNotEmpty &&
+            newViewModel.password!.isNotEmpty &&
+            newViewModel.deviceId!.isEmpty) {
+          Navigator.pushNamed(context, LoginScreen.routeName);
+        }
+        if (previousViewModel is AuthLoadingViewModel &&
+            newViewModel is AuthCredentialsLoadedViewModel &&
+            newViewModel.email!.isNotEmpty &&
+            newViewModel.password!.isNotEmpty &&
+            newViewModel.deviceId!.isNotEmpty) {
+          StoreProvider.of<AppState>(context).dispatch(
+            InitUserAuthenticationCommandAction(
+              email: newViewModel.email!,
+              password: newViewModel.password!,
+            ),
+          );
+        }
+        if (previousViewModel is AuthLoadingViewModel &&
+            newViewModel is AuthInitializedViewModel &&
+            newViewModel.authType == AuthType.withBiometrics) {
+          Navigator.of(
+            navigatorKey.currentContext as BuildContext,
+          ).pushNamedAndRemoveUntil(LoginWithBiometricsScreen.routeName, (route) => false);
+        }
+      },
+      builder: (context, viewModel) {
+        if (viewModel is AuthLoadingViewModel) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (viewModel is AuthCredentialsLoadedViewModel) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        return const ScreenScaffold(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+          extendBodyBehindAppBar: true,
+          body: ScrollableScreenContainer(
+            child: Column(
               children: [
                 HeroVideo(),
                 WelcomeScreenContent(),
               ],
-            );
-          },
-          converter: (store) => AuthPresenter.presentAuth(authState: store.state.authState),
-        ),
-      ),
+            ),
+          ),
+        );
+      },
+      converter: (store) => AuthPresenter.presentAuth(authState: store.state.authState),
     );
   }
 }
