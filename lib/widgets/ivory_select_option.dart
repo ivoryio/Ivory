@@ -139,16 +139,18 @@ class _IvorySelectOptionState extends State<IvorySelectOption> {
       title: widget.bottomSheetTitle,
       addContentPadding: false,
       useSafeArea: true,
-      isScrollControlled: true,
-      content: _BottomSheetContent(
-        options: _controller.options,
-        enabledSearch: widget.enabledSearch,
-        multiselect: widget.controller?.multiselect ?? false,
-        searchFieldPlaceholder: widget.searchFieldPlaceholder,
-        onOptionSelected: (option) {
-          _controller.selectOption(option);
-          widget.onOptionSelected?.call(option);
-        },
+      useScrollableChild: false,
+      content: Expanded(
+        child: _BottomSheetContent(
+          options: _controller.options,
+          enabledSearch: widget.enabledSearch,
+          multiselect: widget.controller?.multiselect ?? false,
+          searchFieldPlaceholder: widget.searchFieldPlaceholder,
+          onOptionSelected: (option) {
+            _controller.selectOption(option);
+            widget.onOptionSelected?.call(option);
+          },
+        ),
       ),
     );
   }
@@ -208,26 +210,26 @@ class _BottomSheetContentState extends State<_BottomSheetContent> {
                 "No results found",
                 style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
               )
-            : ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: _filteredOptions.length,
-                itemBuilder: (context, index) {
-                  SelectOption option = _filteredOptions[index];
+            : Expanded(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: _filteredOptions.length,
+                  itemBuilder: (context, index) {
+                    SelectOption option = _filteredOptions[index];
 
-                  return _BottomSheetOption(
-                    key: UniqueKey(),
-                    textLabel: option.textLabel,
-                    isSelected: option.selected,
-                    multiselect: widget.multiselect,
-                    onTap: () {
-                      widget.onOptionSelected(option);
-                    },
-                    prefix: option.prefix,
-                  );
-                },
+                    return _BottomSheetOption(
+                      key: UniqueKey(),
+                      textLabel: option.textLabel,
+                      isSelected: option.selected,
+                      multiselect: widget.multiselect,
+                      onTap: () {
+                        widget.onOptionSelected(option);
+                      },
+                      prefix: option.prefix,
+                    );
+                  },
+                ),
               ),
-        const SizedBox(height: 24),
       ],
     );
   }
