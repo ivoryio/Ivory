@@ -2,7 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/infrastructure/search/search_cities_presenter.dart';
+import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/search/search_cities_action.dart';
+import 'package:solarisdemo/utilities/debouncer.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
@@ -23,12 +28,16 @@ class OnboardingDateAndPlaceOfBirthScreen extends StatefulWidget {
 class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndPlaceOfBirthScreen> {
   final IvoryTextFieldController _dateOfBirthController = IvoryTextFieldController();
   final IvorySelectOptionController _selectCountryController = IvorySelectOptionController(loading: true);
+  final IvorySelectOptionController _selectCityController = IvorySelectOptionController(enabled: false);
+  final IvorySelectOptionController _selectNationalityController = IvorySelectOptionController(loading: true);
+
+  final _debouncer = Debouncer(milliseconds: 1000);
 
   @override
   void initState() {
     super.initState();
 
-    _loadCuntries();
+    _loadCountries();
   }
 
   @override
@@ -72,6 +81,66 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
                     controller: _selectCountryController,
                     enabledSearch: true,
                     onBottomSheetOpened: () => FocusScope.of(context).unfocus(),
+                    onOptionSelected: (option) {
+                      final countryCode = option.value;
+                      _selectCityController.reset();
+                      StoreProvider.of<AppState>(context).dispatch(FetchCitiesCommandAction(countryCode: countryCode));
+                    },
+                  ),
+                  const SizedBox(height: 24),
+                  StoreConnector<AppState, SearchCitiesViewModel>(
+                    converter: (store) => SearchCitiesPresenter.present(
+                      searchCitiesState: store.state.searchCitiesState,
+                    ),
+                    onWillChange: (previousViewModel, newViewModel) {
+                      if (newViewModel is SearchCitiesLoadingViewModel) {
+                        _selectCityController.setLoading(true);
+                        _selectCityController.setEnabled(false);
+                      } else if (newViewModel is SearchCitiesFetchedViewModel) {
+                        _selectCityController.setOptions(newViewModel.cities
+                            .map((city) => SelectOption(
+                                  textLabel: city,
+                                  value: city,
+                                ))
+                            .toList());
+                        _selectCityController.setLoading(false);
+                        _selectCityController.setEnabled(true);
+                      }
+                    },
+                    builder: (context, viewModel) => IvorySelectOption(
+                      label: "City of birth",
+                      placeholder: "Select city of birth",
+                      bottomSheetTitle: "Select your city of birth",
+                      searchFieldPlaceholder: "Search city...",
+                      controller: _selectCityController,
+                      enabledSearch: true,
+                      filterOptions: false,
+                      onOptionSelected: (option) {},
+                      onSearchChanged: (value) {
+                        _debouncer.run(() {
+                          if (value.isNotEmpty) {
+                            _selectCityController.setLoading(true);
+                            StoreProvider.of<AppState>(context).dispatch(
+                              FetchCitiesCommandAction(
+                                countryCode: _selectCountryController.selectedOptions.first.value,
+                                searchTerm: value,
+                              ),
+                            );
+                          }
+                        });
+                      },
+                      onBottomSheetOpened: () => FocusScope.of(context).unfocus(),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  IvorySelectOption(
+                    label: "Nationality",
+                    placeholder: "Select nationality",
+                    bottomSheetTitle: "Select your nationality",
+                    searchFieldPlaceholder: "Search nationality...",
+                    controller: _selectNationalityController,
+                    enabledSearch: true,
+                    onBottomSheetOpened: () => FocusScope.of(context).unfocus(),
                   ),
                   const Spacer(),
                   const SizedBox(height: 24),
@@ -95,11 +164,10 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
     );
   }
 
-  Future<void> _loadCuntries() async {
+  Future<void> _loadCountries() async {
     final countriesJson = await rootBundle.loadString('assets/data/countries.json');
     final countries = jsonDecode(countriesJson);
     final List<SelectOption> options = List.empty(growable: true);
-    await Future.delayed(const Duration(seconds: 5));
 
     for (final country in countries) {
       options.add(
@@ -114,6 +182,9 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
       );
     }
     _selectCountryController.setOptions(options);
+    _selectNationalityController.setOptions(options);
+
     _selectCountryController.setLoading(false);
+    _selectNationalityController.setLoading(false);
   }
 }

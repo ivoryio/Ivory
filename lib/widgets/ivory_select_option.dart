@@ -136,7 +136,7 @@ class _IvorySelectOptionState extends State<IvorySelectOption> {
   }
 
   void _onTap() {
-    if (_controller.loading) {
+    if (_controller.loading || !_controller.enabled) {
       return;
     }
 
@@ -337,15 +337,18 @@ class _BottomSheetOptionState extends State<_BottomSheetOption> {
 class IvorySelectOptionController extends ChangeNotifier {
   final bool multiselect;
   bool _loading;
+  bool _enabled;
 
   final List<SelectOption> _options;
 
   IvorySelectOptionController({
     this.multiselect = false,
     bool loading = false,
+    bool enabled = true,
     List<SelectOption>? options,
   })  : _options = options ?? List.empty(growable: true),
-        _loading = loading;
+        _loading = loading,
+        _enabled = enabled;
 
   void setOptions(List<SelectOption> options) {
     _options.clear();
@@ -372,7 +375,21 @@ class IvorySelectOptionController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setEnabled(bool enabled) {
+    _enabled = enabled;
+    notifyListeners();
+  }
+
+  void reset() {
+    _options.clear();
+    _loading = false;
+    _enabled = true;
+
+    notifyListeners();
+  }
+
   bool get loading => _loading;
+  bool get enabled => _enabled;
   List<SelectOption> get options => _options;
   List<SelectOption> get selectedOptions => _options.where((option) => option.selected).toList();
 }
