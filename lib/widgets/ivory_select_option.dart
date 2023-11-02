@@ -132,6 +132,10 @@ class _IvorySelectOptionState extends State<IvorySelectOption> {
   }
 
   void _onTap() {
+    if (_controller.loading) {
+      return;
+    }
+
     widget.onBottomSheetOpened?.call();
 
     showBottomModal(
