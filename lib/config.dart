@@ -9,6 +9,8 @@ import 'themes/default_theme.dart';
 class Config {
   static String cognitoUserPoolId = dotenv.env['COGNITO_USER_POOL_ID'] ?? 'NO_COGNITO_USER_POOL_ID';
   static String cognitoClientId = dotenv.env['COGNITO_CLIENT_ID'] ?? 'NO_COGNITO_CLIENT_ID';
+  static String geonamesApiUrl = dotenv.env['GEONAMES_API_URL'] ?? 'NO_GEONAMES_API_URL';
+  static String geonamesUsername = dotenv.env['GEONAMES_USERNAME'] ?? 'NO_GEONAMES_USERNAME';
 
   static String apiBaseUrl = dotenv.env['API_BASE_URL'] ?? 'NO_API_BASE_URL';
 }
