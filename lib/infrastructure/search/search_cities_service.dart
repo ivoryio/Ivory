@@ -34,7 +34,7 @@ class SearchCitiesService {
 
   static url(String path, {Map<String, String> queryParameters = const {}}) {
     return Uri.http(
-      Config.geonamesApiUrl,
+      "api.geonames.org",
       path,
       {'username': Config.geonamesUsername}..addAll(queryParameters),
     );

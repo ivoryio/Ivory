@@ -80,7 +80,7 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
                   const SizedBox(height: 24),
                   IvoryTextField(
                     label: "Date of birth",
-                    placeholder: "DD / MM / YYYY",
+                    placeholder: "DD/MM/YYYY",
                     bottomSheetTitle: "Select your date of birth",
                     controller: _dateOfBirthController,
                     inputType: TextFieldInputType.date,
