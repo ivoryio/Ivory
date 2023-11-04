@@ -6,7 +6,9 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/suggestions/city/city_suggestions_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/onboarding/personal_details/onboarding_personal_details_action.dart';
 import 'package:solarisdemo/redux/suggestions/city/city_suggestions_action.dart';
+import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_adress_of_residence_screen.dart';
 import 'package:solarisdemo/utilities/debouncer.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -94,6 +96,7 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
                     searchFieldPlaceholder: "Search country...",
                     controller: _selectCountryController,
                     enabledSearch: true,
+                    bottomSheetExpanded: true,
                     onBottomSheetOpened: () => FocusScope.of(context).unfocus(),
                     onOptionSelected: (option) {
                       final countryCode = option.value;
@@ -134,6 +137,7 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
                       controller: _selectCityController,
                       enabledSearch: true,
                       filterOptions: false,
+                      bottomSheetExpanded: true,
                       onOptionSelected: (option) {
                         onChanged();
                       },
@@ -161,6 +165,7 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
                     searchFieldPlaceholder: "Search nationality...",
                     controller: _selectNationalityController,
                     enabledSearch: true,
+                    bottomSheetExpanded: true,
                     onBottomSheetOpened: () => FocusScope.of(context).unfocus(),
                     onOptionSelected: (option) => onChanged(),
                   ),
@@ -175,8 +180,16 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
                           text: "Continue",
                           onPressed: _continueButtonController.isEnabled
                               ? () {
-                                  print("Date of birth: ${_dateOfBirthController.text}");
-                                  print("Selected country: ${_selectCountryController.selectedOptions.first.value}");
+                                  StoreProvider.of<AppState>(context).dispatch(
+                                    SubmitOnboardingBirthInfoCommandAction(
+                                      birthDate: _dateOfBirthController.text,
+                                      country: _selectCountryController.selectedOptions.first.value,
+                                      city: _selectCityController.selectedOptions.first.value,
+                                      nationality: _selectNationalityController.selectedOptions.first.value,
+                                    ),
+                                  );
+
+                                  Navigator.pushNamed(context, OnboardingAddressOfResidenceScreen.routeName);
                                 }
                               : null,
                         );

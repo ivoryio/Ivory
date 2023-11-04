@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/widgets/ivory_builder.dart';
 import 'package:solarisdemo/widgets/ivory_text_field.dart';
 import 'package:solarisdemo/widgets/modal.dart';
 
@@ -16,6 +17,7 @@ class IvorySelectOption extends StatefulWidget {
   final void Function(String)? onSearchChanged;
   final VoidCallback? onBottomSheetOpened;
   final bool filterOptions;
+  final bool bottomSheetExpanded;
 
   const IvorySelectOption({
     super.key,
@@ -30,6 +32,7 @@ class IvorySelectOption extends StatefulWidget {
     this.enabledSearch = false,
     this.onSearchChanged,
     this.filterOptions = true,
+    this.bottomSheetExpanded = false,
   });
 
   @override
@@ -148,18 +151,17 @@ class _IvorySelectOptionState extends State<IvorySelectOption> {
       addContentPadding: false,
       useSafeArea: true,
       useScrollableChild: false,
-      content: Expanded(
-        child: _BottomSheetContent(
-          controller: _controller,
-          enabledSearch: widget.enabledSearch,
-          searchFieldPlaceholder: widget.searchFieldPlaceholder,
-          onSearchChanged: widget.onSearchChanged,
-          filterOptions: widget.filterOptions,
-          onOptionSelected: (option) {
-            _controller.selectOption(option);
-            widget.onOptionSelected?.call(option);
-          },
-        ),
+      content: _BottomSheetContent(
+        controller: _controller,
+        enabledSearch: widget.enabledSearch,
+        searchFieldPlaceholder: widget.searchFieldPlaceholder,
+        onSearchChanged: widget.onSearchChanged,
+        filterOptions: widget.filterOptions,
+        expanded: widget.bottomSheetExpanded,
+        onOptionSelected: (option) {
+          _controller.selectOption(option);
+          widget.onOptionSelected?.call(option);
+        },
       ),
     );
   }
@@ -172,6 +174,7 @@ class _BottomSheetContent extends StatefulWidget {
   final void Function(String)? onSearchChanged;
   final bool enabledSearch;
   final bool filterOptions;
+  final bool expanded;
 
   const _BottomSheetContent({
     required this.controller,
@@ -180,6 +183,7 @@ class _BottomSheetContent extends StatefulWidget {
     required this.searchFieldPlaceholder,
     required this.filterOptions,
     this.onSearchChanged,
+    this.expanded = false,
   });
 
   @override
@@ -198,50 +202,59 @@ class _BottomSheetContentState extends State<_BottomSheetContent> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        if (widget.enabledSearch) ...[
-          Padding(
-            padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-            child: IvoryTextField(
-              placeholder: widget.searchFieldPlaceholder,
-              suffix: Padding(
-                padding: const EdgeInsets.only(right: 16),
-                child: Icon(Icons.search, color: ClientConfig.getCustomColors().neutral700, size: 24),
-              ),
-              onChanged: (value) {
-                widget.onSearchChanged?.call(value);
+    return IvoryBuilder(
+      builder: (BuildContext context, child) {
+        if (widget.expanded) {
+          return Expanded(child: child!);
+        }
 
-                if (widget.filterOptions) {
-                  setState(() {
-                    _filteredOptions = widget.controller.options
-                        .where((option) => option.textLabel.toLowerCase().contains(value.toLowerCase()))
-                        .toList();
-                  });
-                }
-              },
-            ),
-          ),
-          const SizedBox(height: 24),
-        ],
-        widget.filterOptions
-            ? Expanded(child: _buildListView(options: _filteredOptions))
-            : ListenableBuilder(
-                listenable: widget.controller,
-                builder: (context, child) {
-                  if (widget.controller.loading) {
-                    return Center(
-                      child: CircularProgressIndicator(
-                        strokeWidth: 3,
-                        color: ClientConfig.getCustomColors().neutral700,
-                      ),
-                    );
+        return child!;
+      },
+      child: Column(
+        children: [
+          if (widget.enabledSearch) ...[
+            Padding(
+              padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+              child: IvoryTextField(
+                placeholder: widget.searchFieldPlaceholder,
+                suffix: Padding(
+                  padding: const EdgeInsets.only(right: 16),
+                  child: Icon(Icons.search, color: ClientConfig.getCustomColors().neutral700, size: 24),
+                ),
+                onChanged: (value) {
+                  widget.onSearchChanged?.call(value);
+
+                  if (widget.filterOptions) {
+                    setState(() {
+                      _filteredOptions = widget.controller.options
+                          .where((option) => option.textLabel.toLowerCase().contains(value.toLowerCase()))
+                          .toList();
+                    });
                   }
-
-                  return Expanded(child: _buildListView(options: _filteredOptions));
                 },
               ),
-      ],
+            ),
+            const SizedBox(height: 24),
+          ],
+          widget.filterOptions
+              ? _buildListView(options: _filteredOptions)
+              : ListenableBuilder(
+                  listenable: widget.controller,
+                  builder: (context, child) {
+                    if (widget.controller.loading) {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 3,
+                          color: ClientConfig.getCustomColors().neutral700,
+                        ),
+                      );
+                    }
+
+                    return _buildListView(options: _filteredOptions);
+                  },
+                ),
+        ],
+      ),
     );
   }
 
@@ -256,23 +269,32 @@ class _BottomSheetContentState extends State<_BottomSheetContent> {
       );
     }
 
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: options.length,
-      itemBuilder: (context, index) {
-        SelectOption option = options[index];
+    return IvoryBuilder(
+      builder: (context, child) {
+        if (widget.expanded) {
+          return Expanded(child: child!);
+        }
 
-        return _BottomSheetOption(
-          key: UniqueKey(),
-          textLabel: option.textLabel,
-          isSelected: option.selected,
-          multiselect: widget.controller.multiselect,
-          onTap: () {
-            widget.onOptionSelected(option);
-          },
-          prefix: option.prefix,
-        );
+        return child!;
       },
+      child: ListView.builder(
+        shrinkWrap: true,
+        itemCount: options.length,
+        itemBuilder: (context, index) {
+          SelectOption option = options[index];
+
+          return _BottomSheetOption(
+            key: UniqueKey(),
+            textLabel: option.textLabel,
+            isSelected: option.selected,
+            multiselect: widget.controller.multiselect,
+            onTap: () {
+              widget.onOptionSelected(option);
+            },
+            prefix: option.prefix,
+          );
+        },
+      ),
     );
   }
 }
