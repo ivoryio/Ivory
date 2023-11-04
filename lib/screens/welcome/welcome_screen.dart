@@ -42,6 +42,13 @@ class WelcomeScreen extends StatelessWidget {
                 newViewModel is AuthCredentialsLoadedViewModel &&
                 newViewModel.email!.isNotEmpty &&
                 newViewModel.password!.isNotEmpty &&
+                newViewModel.deviceId!.isEmpty) {
+              Navigator.pushNamed(context, LoginScreen.routeName);
+            }
+            if (previousViewModel is AuthLoadingViewModel &&
+                newViewModel is AuthCredentialsLoadedViewModel &&
+                newViewModel.email!.isNotEmpty &&
+                newViewModel.password!.isNotEmpty &&
                 newViewModel.deviceId!.isNotEmpty) {
               StoreProvider.of<AppState>(context).dispatch(
                 InitUserAuthenticationCommandAction(
@@ -62,6 +69,7 @@ class WelcomeScreen extends StatelessWidget {
             if (viewModel is AuthLoadingViewModel) {
               return const Center(child: CircularProgressIndicator());
             }
+
             return const Column(
               children: [
                 HeroVideo(),

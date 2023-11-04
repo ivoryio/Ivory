@@ -31,11 +31,6 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     ScrollController scrollController = ScrollController();
     return StoreConnector<AppState, AuthViewModel>(
-      onInit: (store) {
-        store.dispatch(
-          LoadCredentialsCommandAction(),
-        );
-      },
       onWillChange: (previousViewModel, newViewModel) {
         if (previousViewModel is AuthLoadingViewModel &&
             newViewModel is AuthInitializedViewModel &&
@@ -64,6 +59,7 @@ class LoginScreen extends StatelessWidget {
               AppToolbar(
                 title: "Login",
                 backButtonEnabled: viewModel is! AuthLoadingViewModel,
+                onBackButtonPressed: () => Navigator.pop(context),
                 scrollController: scrollController,
                 padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
                 actions: const [

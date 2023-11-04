@@ -161,9 +161,7 @@ class _OnboardingAddressOfResidenceScreenState extends State<OnboardingAddressOf
                                       text: TextSpan(
                                         children: [
                                           TextSpan(
-                                            text: (viewModel as OnboardingPersonalDetailsFetchedViewModel)
-                                                .suggestions?[index]
-                                                .address,
+                                            text: viewModel.suggestions?[index].address,
                                             style: ClientConfig.getTextStyleScheme().heading4,
                                           ),
                                           TextSpan(
