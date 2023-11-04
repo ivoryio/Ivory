@@ -1,7 +1,8 @@
 import 'package:redux/redux.dart';
-import 'package:solarisdemo/infrastructure/suggestions/city_suggestions_service.dart';
+import 'package:solarisdemo/infrastructure/suggestions/city/city_suggestions_service.dart';
+
 import 'package:solarisdemo/redux/app_state.dart';
-import 'package:solarisdemo/redux/suggestions/city_suggestions_action.dart';
+import 'package:solarisdemo/redux/suggestions/city/city_suggestions_action.dart';
 
 class CitySuggestionsMiddleware extends MiddlewareClass<AppState> {
   final CitySuggestionsService _citySuggestionsService;

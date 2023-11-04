@@ -14,7 +14,7 @@ import 'package:solarisdemo/redux/repayments/bills/bills_reducer.dart';
 import 'package:solarisdemo/redux/repayments/change_repayment/change_repayment_reducer.dart';
 import 'package:solarisdemo/redux/repayments/more_credit/more_credit_reducer.dart';
 import 'package:solarisdemo/redux/repayments/reminder/repayment_reminder_reducer.dart';
-import 'package:solarisdemo/redux/suggestions/city_suggestions_reducer.dart';
+import 'package:solarisdemo/redux/suggestions/city/city_suggestions_reducer.dart';
 import 'package:solarisdemo/redux/transactions/approval/transaction_approval_reducer.dart';
 import 'package:solarisdemo/redux/transactions/transactions_reducer.dart';
 import 'package:solarisdemo/redux/transfer/transfer_reducer.dart';

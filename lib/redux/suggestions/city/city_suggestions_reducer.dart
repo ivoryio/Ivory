@@ -1,5 +1,5 @@
-import 'package:solarisdemo/redux/suggestions/city_suggestions_action.dart';
-import 'package:solarisdemo/redux/suggestions/city_suggestions_state.dart';
+import 'package:solarisdemo/redux/suggestions/city/city_suggestions_action.dart';
+import 'package:solarisdemo/redux/suggestions/city/city_suggestions_state.dart';
 
 CitySuggestionsState citySuggestionsReducer(CitySuggestionsState state, dynamic action) {
   if (action is CitySuggestionsLoadingEventAction) {

@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
-import 'package:solarisdemo/infrastructure/suggestions/city_suggestions_presenter.dart';
+import 'package:solarisdemo/infrastructure/suggestions/city/city_suggestions_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
-import 'package:solarisdemo/redux/suggestions/city_suggestions_action.dart';
+import 'package:solarisdemo/redux/suggestions/city/city_suggestions_action.dart';
 import 'package:solarisdemo/utilities/debouncer.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -98,8 +98,11 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
                     onOptionSelected: (option) {
                       final countryCode = option.value;
                       _selectCityController.reset();
-                      StoreProvider.of<AppState>(context)
-                          .dispatch(FetchCitySuggestionsCommandAction(countryCode: countryCode));
+
+                      StoreProvider.of<AppState>(context).dispatch(
+                        FetchCitySuggestionsCommandAction(countryCode: countryCode),
+                      );
+
                       onChanged();
                     },
                   ),

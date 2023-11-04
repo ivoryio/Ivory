@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:solarisdemo/infrastructure/suggestions/city_suggestions_presenter.dart';
+import 'package:solarisdemo/infrastructure/suggestions/city/city_suggestions_presenter.dart';
 import 'package:solarisdemo/models/suggestions/city_suggestions_error_type.dart';
-import 'package:solarisdemo/redux/suggestions/city_suggestions_state.dart';
+import 'package:solarisdemo/redux/suggestions/city/city_suggestions_state.dart';
 
 void main() {
   test("When state is initial it should return initial view model", () {

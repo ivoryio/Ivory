@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:solarisdemo/redux/suggestions/city_suggestions_state.dart';
+import 'package:solarisdemo/redux/suggestions/city/city_suggestions_state.dart';
 
 class CitySuggestionsPresenter {
   static CitySuggestionsViewModel present({required CitySuggestionsState citySuggestionsState}) {

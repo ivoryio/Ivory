@@ -1,4 +1,4 @@
-import 'package:solarisdemo/infrastructure/suggestions/city_suggestions_service.dart';
+import 'package:solarisdemo/infrastructure/suggestions/city/city_suggestions_service.dart';
 import 'package:solarisdemo/models/suggestions/city_suggestions_error_type.dart';
 
 class FakeCitySuggestionsService extends CitySuggestionsService {

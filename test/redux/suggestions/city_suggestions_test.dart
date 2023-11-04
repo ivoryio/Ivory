@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:solarisdemo/redux/suggestions/city_suggestions_action.dart';
-import 'package:solarisdemo/redux/suggestions/city_suggestions_state.dart';
+import 'package:solarisdemo/redux/suggestions/city/city_suggestions_action.dart';
+import 'package:solarisdemo/redux/suggestions/city/city_suggestions_state.dart';
 
 import '../../setup/create_app_state.dart';
 import '../../setup/create_store.dart';

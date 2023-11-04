@@ -23,7 +23,7 @@ import 'package:solarisdemo/infrastructure/repayments/bills/bill_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/change_repayment/change_repayment_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/more_credit/more_credit_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/reminder/repayment_reminder_service.dart';
-import 'package:solarisdemo/infrastructure/suggestions/city_suggestions_service.dart';
+import 'package:solarisdemo/infrastructure/suggestions/city/city_suggestions_service.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart';
 import 'package:solarisdemo/infrastructure/transfer/transfer_service.dart';
 import 'package:solarisdemo/ivory_app.dart';
