@@ -1,29 +1,21 @@
-import 'package:solarisdemo/models/onboarding/onboarding_persona_details_address_suggestions.dart';
+import 'package:solarisdemo/models/suggestions/address_suggestion.dart';
 
-class FetchOnboardingPersonalDetailsAddressSuggestionsCommandAction {
-  final String queryString;
+class SubmitOnboardingBirthInfoCommandAction {
+  final String birthDate;
+  final String country;
+  final String city;
+  final String nationality;
 
-  FetchOnboardingPersonalDetailsAddressSuggestionsCommandAction({required this.queryString});
+  SubmitOnboardingBirthInfoCommandAction({
+    required this.birthDate,
+    required this.country,
+    required this.city,
+    required this.nationality,
+  });
 }
 
-class SelectOnboardingPersonalDetailsAddressSuggestionCommandAction {
-  final AddressSuggestion selectedSuggestion;
+class SelectOnboardingAddressSuggestionCommandAction {
+  final AddressSuggestion suggestion;
 
-  SelectOnboardingPersonalDetailsAddressSuggestionCommandAction({required this.selectedSuggestion});
+  SelectOnboardingAddressSuggestionCommandAction({required this.suggestion});
 }
-
-class OnboardingPersonalDetailsAddressSuggestionsFetchedEventAction {
-  final List<AddressSuggestion> suggestions;
-
-  OnboardingPersonalDetailsAddressSuggestionsFetchedEventAction({required this.suggestions});
-}
-
-class OnboardingPersonalDetailsAddressSuggestionSelectedEventAction {
-  final AddressSuggestion selectedSuggestion;
-
-  OnboardingPersonalDetailsAddressSuggestionSelectedEventAction({required this.selectedSuggestion});
-}
-
-class OnboardingPersonalDetailsLoadingEventAction {}
-
-class OnboardingPersonalDetailFetchingAddressSuggestionsFailedEventAction {}

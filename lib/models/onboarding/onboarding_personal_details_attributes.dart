@@ -21,6 +21,8 @@ class OnboardingPersonalDetailsAttributes extends Equatable {
     this.postCode,
   });
 
+  bool get hasBirthInfo => birthDate != null && country != null && city != null && nationality != null;
+
   @override
   List<Object?> get props => [birthDate, country, city, nationality, address, houseNumber, addressLine, postCode];
 

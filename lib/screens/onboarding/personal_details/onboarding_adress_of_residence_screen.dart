@@ -42,9 +42,9 @@ class _OnboardingAddressOfResidenceScreenState extends State<OnboardingAddressOf
       () {
         if (_addressController.text.length >= 3 &&
             _addressController.text.toLowerCase() != _previousText.toLowerCase()) {
-          StoreProvider.of<AppState>(context).dispatch(
-            FetchOnboardingPersonalDetailsAddressSuggestionsCommandAction(queryString: _addressController.text),
-          );
+          // StoreProvider.of<AppState>(context).dispatch(
+          //   FetchOnboardingPersonalDetailsAddressSuggestionsCommandAction(queryString: _addressController.text),
+          // );
           _addressFocusNode.unfocus();
           _previousText = _addressController.text;
         }
@@ -85,6 +85,9 @@ class _OnboardingAddressOfResidenceScreenState extends State<OnboardingAddressOf
 
   @override
   Widget build(BuildContext context) {
+    // TODO: FIXME
+    return Container();
+    /*
     return StoreConnector<AppState, OnboardingPersonalDetailsViewModel>(
         converter: (store) => OnboardingPersonalDetailsPresenter.presentOnboardingPersonalDetails(
             onboardingPersonalDetailsState: store.state.onboardingPersonalDetailsState),
@@ -119,7 +122,7 @@ class _OnboardingAddressOfResidenceScreenState extends State<OnboardingAddressOf
                           ),
                           const SizedBox(height: 24),
                           IvoryTextField(
-                            enabled: viewModel is! OnboardingPersonalDetailsLoadingViewModel,
+                            // enabled: viewModel is! OnboardingPersonalDetailsLoadingViewModel,
                             label: 'Search address',
                             placeholder: 'Search address',
                             suffix: Icon(
@@ -147,11 +150,11 @@ class _OnboardingAddressOfResidenceScreenState extends State<OnboardingAddressOf
                                 itemBuilder: (context, index) {
                                   return GestureDetector(
                                     onTap: () {
-                                      StoreProvider.of<AppState>(context).dispatch(
-                                        SelectOnboardingPersonalDetailsAddressSuggestionCommandAction(
-                                          selectedSuggestion: viewModel.suggestions![index],
-                                        ),
-                                      );
+                                      // StoreProvider.of<AppState>(context).dispatch(
+                                      //   SelectOnboardingPersonalDetailsAddressSuggestionCommandAction(
+                                      //     selectedSuggestion: viewModel.suggestions![index],
+                                      //   ),
+                                      // );
                                       _previousText = viewModel.suggestions![index].address;
                                       capitalizeWords(viewModel.suggestions![index].address);
                                       _addressFocusNode.unfocus();
@@ -225,71 +228,72 @@ class _OnboardingAddressOfResidenceScreenState extends State<OnboardingAddressOf
             ),
           );
         });
+        */
   }
 }
 
-Widget _buildSelectedAddress({
-  required OnboardingPersonalDetailsAddressSuggestionSelectedViewModel viewModel,
-  required IvoryTextFieldController houseNumberController,
-  required FocusNode houseNumberFocusNode,
-  required IvoryTextFieldController addressLineController,
-  required FocusNode addressLineFocusNode,
-}) {
-  return Expanded(
-    child: SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          IvoryTextField(
-            placeholder: 'Please type',
-            label: 'House number (Optional)',
-            controller: houseNumberController,
-            focusNode: houseNumberFocusNode,
-          ),
-          const SizedBox(
-            height: 24,
-          ),
-          IvoryTextField(
-            placeholder: 'Please type',
-            label: 'Address line (Optional)',
-            controller: addressLineController,
-            focusNode: addressLineFocusNode,
-          ),
-          const SizedBox(
-            height: 24,
-          ),
-          Text(
-            'Postcode',
-            style: ClientConfig.getTextStyleScheme().labelSmall,
-          ),
-          Text(
-            '43234',
-            style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-          ),
-          const SizedBox(
-            height: 24,
-          ),
-          Text(
-            'City',
-            style: ClientConfig.getTextStyleScheme().labelSmall,
-          ),
-          Text(
-            viewModel.selectedSuggestion!.city,
-            style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-          ),
-          const SizedBox(
-            height: 24,
-          ),
-          Text(
-            'Country',
-            style: ClientConfig.getTextStyleScheme().labelSmall,
-          ),
-          Text(
-            viewModel.selectedSuggestion!.country,
-            style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-          ),
-        ],
-      ),
-    ),
-  );
-}
+// Widget _buildSelectedAddress({
+//   required OnboardingPersonalDetailsAddressSuggestionSelectedViewModel viewModel,
+//   required IvoryTextFieldController houseNumberController,
+//   required FocusNode houseNumberFocusNode,
+//   required IvoryTextFieldController addressLineController,
+//   required FocusNode addressLineFocusNode,
+// }) {
+//   return Expanded(
+//     child: SingleChildScrollView(
+//       child: Column(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           IvoryTextField(
+//             placeholder: 'Please type',
+//             label: 'House number (Optional)',
+//             controller: houseNumberController,
+//             focusNode: houseNumberFocusNode,
+//           ),
+//           const SizedBox(
+//             height: 24,
+//           ),
+//           IvoryTextField(
+//             placeholder: 'Please type',
+//             label: 'Address line (Optional)',
+//             controller: addressLineController,
+//             focusNode: addressLineFocusNode,
+//           ),
+//           const SizedBox(
+//             height: 24,
+//           ),
+//           Text(
+//             'Postcode',
+//             style: ClientConfig.getTextStyleScheme().labelSmall,
+//           ),
+//           Text(
+//             '43234',
+//             style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+//           ),
+//           const SizedBox(
+//             height: 24,
+//           ),
+//           Text(
+//             'City',
+//             style: ClientConfig.getTextStyleScheme().labelSmall,
+//           ),
+//           Text(
+//             viewModel.selectedSuggestion!.city,
+//             style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+//           ),
+//           const SizedBox(
+//             height: 24,
+//           ),
+//           Text(
+//             'Country',
+//             style: ClientConfig.getTextStyleScheme().labelSmall,
+//           ),
+//           Text(
+//             viewModel.selectedSuggestion!.country,
+//             style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+//           ),
+//         ],
+//       ),
+//     ),
+//   );
+// }

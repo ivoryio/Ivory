@@ -94,7 +94,7 @@ class AppState extends Equatable {
         homePageTransactionsState: TransactionsInitialState(),
         onboardingSignupState: OnboardingSignupState(),
         onboardingProgressState: OnboardingProgressInitialLoadingState(),
-        onboardingPersonalDetailsState: OnboardingPersonalDetailsInitialState(),
+        onboardingPersonalDetailsState: const OnboardingPersonalDetailsState(),
         citySuggestionsState: CitySuggestionsInitialState(),
         addressSuggestionsState: AddressSuggestionsInitialState());
   }

@@ -1,31 +1,21 @@
 import 'package:equatable/equatable.dart';
-import 'package:solarisdemo/models/onboarding/onboarding_persona_details_address_suggestions.dart';
+import 'package:solarisdemo/models/onboarding/onboarding_personal_details_attributes.dart';
 
-abstract class OnboardingPersonalDetailsState extends Equatable {
-  @override
-  List<Object?> get props => [];
-}
+class OnboardingPersonalDetailsState extends Equatable {
+  final OnboardingPersonalDetailsAttributes attributes;
+  final bool isLoading;
+  final DateTime? tanRequestedAt;
+  final bool? isAddressSaved;
+  final bool? isMobileConfirmed;
 
-class OnboardingPersonalDetailsInitialState extends OnboardingPersonalDetailsState {}
-
-class OnboardingPersonalDetailsLoadingState extends OnboardingPersonalDetailsState {}
-
-class OnboardingPersonalDetailsErrorState extends OnboardingPersonalDetailsState {}
-
-class OnboardingPersonalDetailsAddressSuggestionsFetchedState extends OnboardingPersonalDetailsState {
-  final List<AddressSuggestion> suggestions;
-
-  OnboardingPersonalDetailsAddressSuggestionsFetchedState(this.suggestions);
-
-  @override
-  List<Object?> get props => [suggestions];
-}
-
-class OnboardingPersonalDetailsAddressSuggestionSelectedState extends OnboardingPersonalDetailsState {
-  final AddressSuggestion selectedSuggestion;
-
-  OnboardingPersonalDetailsAddressSuggestionSelectedState(this.selectedSuggestion);
+  const OnboardingPersonalDetailsState({
+    this.attributes = const OnboardingPersonalDetailsAttributes(),
+    this.isLoading = false,
+    this.tanRequestedAt,
+    this.isAddressSaved,
+    this.isMobileConfirmed,
+  });
 
   @override
-  List<Object?> get props => [selectedSuggestion];
+  List<Object?> get props => [attributes, isLoading, tanRequestedAt, isAddressSaved, isMobileConfirmed];
 }

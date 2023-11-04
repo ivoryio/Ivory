@@ -67,7 +67,7 @@ AppState createAppState({
     homePageTransactionsState: homePageTransactionsState ?? TransactionsInitialState(),
     onboardingProgressState: onboardingProgressState ?? OnboardingProgressInitialLoadingState(),
     onboardingSignupState: onboardingSignupState ?? OnboardingSignupState(),
-    onboardingPersonalDetailsState: onboardingPersonalDetailsState ?? OnboardingPersonalDetailsInitialState(),
+    onboardingPersonalDetailsState: onboardingPersonalDetailsState ?? const OnboardingPersonalDetailsState(),
     citySuggestionsState: citySuggestionsState ?? CitySuggestionsInitialState(),
     addressSuggestionsState: addressSuggestionsState ?? AddressSuggestionsInitialState(),
   );
