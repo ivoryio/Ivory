@@ -1,6 +1,7 @@
 enum OnboardingStep {
   start,
-  signUp,
+  signedUp,
+  unknown,
 }
 
 extension OnboardingStepExtension on OnboardingStep {
@@ -8,10 +9,10 @@ extension OnboardingStepExtension on OnboardingStep {
     switch (value) {
       case "start":
         return OnboardingStep.start;
-      case "signup":
-        return OnboardingStep.signUp;
+      case "signedUp":
+        return OnboardingStep.signedUp;
       default:
-        throw Exception("Unknown onboarding step");
+        throw OnboardingStep.unknown;
     }
   }
 }

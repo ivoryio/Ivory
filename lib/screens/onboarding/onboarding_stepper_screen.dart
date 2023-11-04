@@ -123,9 +123,11 @@ class OnboardingStepperScreen extends StatelessWidget {
             width: double.infinity,
             child: PrimaryButton(
               text: "Continue",
-              onPressed: () {
-                Navigator.pushNamed(context, routeName);
-              },
+              onPressed: activeStep != StepperItemType.unknown
+                  ? () {
+                      Navigator.pushNamed(context, routeName);
+                    }
+                  : null,
             ),
           ),
         ),

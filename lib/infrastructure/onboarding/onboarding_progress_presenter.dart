@@ -5,7 +5,7 @@ import 'package:solarisdemo/screens/onboarding/signup/onboarding_basic_info_scre
 
 import '../../models/onboarding/onboarding_progress.dart';
 
-enum StepperItemType { signUp, personalDetails, financialDetails, identityVerification, cardConfiguration }
+enum StepperItemType { signUp, personalDetails, financialDetails, identityVerification, cardConfiguration, unknown }
 
 class OnboardingProgressPresenter {
   static OnboardingProgressViewModel presentOnboardingProgress({
@@ -57,24 +57,24 @@ class OnboardingProgress extends Equatable {
 }
 
 OnboardingProgress _onboardingProgressMapper(OnboardingStep step) {
-  switch (step) {
-    case OnboardingStep.start:
-      return const OnboardingProgress(
-        activeStep: StepperItemType.signUp,
-        progressPercentage: 1,
-        routeName: OnboardingBasicInfoScreen.routeName,
-      );
-    case OnboardingStep.signUp:
-      return const OnboardingProgress(
-        activeStep: StepperItemType.personalDetails,
-        progressPercentage: 20,
-        routeName: OnboardingDateAndPlaceOfBirthScreen.routeName,
-      );
-    default:
-      return const OnboardingProgress(
-        activeStep: StepperItemType.signUp,
-        progressPercentage: 1,
-        routeName: OnboardingBasicInfoScreen.routeName,
-      );
-  }
+  const unknownProgress = OnboardingProgress(
+    activeStep: StepperItemType.unknown,
+    progressPercentage: 0,
+    routeName: OnboardingBasicInfoScreen.routeName,
+  );
+
+  final Map<OnboardingStep, OnboardingProgress> map = {
+    OnboardingStep.start: const OnboardingProgress(
+      activeStep: StepperItemType.signUp,
+      progressPercentage: 1,
+      routeName: OnboardingBasicInfoScreen.routeName,
+    ),
+    OnboardingStep.signedUp: const OnboardingProgress(
+      activeStep: StepperItemType.personalDetails,
+      progressPercentage: 20,
+      routeName: OnboardingDateAndPlaceOfBirthScreen.routeName,
+    ),
+  };
+
+  return map[step] ?? unknownProgress;
 }
