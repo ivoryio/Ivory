@@ -19,6 +19,7 @@ import 'package:solarisdemo/infrastructure/repayments/bills/bill_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/change_repayment/change_repayment_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/more_credit/more_credit_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/reminder/repayment_reminder_service.dart';
+import 'package:solarisdemo/infrastructure/suggestions/address/address_suggestions_service.dart';
 import 'package:solarisdemo/infrastructure/suggestions/city/city_suggestions_service.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart';
 import 'package:solarisdemo/infrastructure/transfer/transfer_service.dart';
@@ -58,6 +59,7 @@ Store<AppState> createTestStore({
   OnboardingService? onboardingService,
   OnboardingSignupService? onboardingSignupService,
   CitySuggestionsService? citySuggestionsService,
+  AddressSuggestionsService? addressSuggestionsService,
 }) {
   return createStore(
     initialState: initialState,
@@ -83,6 +85,7 @@ Store<AppState> createTestStore({
     onboardingService: onboardingService ?? NotImplementedOnboardingService(),
     onboardingSignupService: onboardingSignupService ?? NotImplementedOnboardingSignupService(),
     citySuggestionsService: citySuggestionsService ?? NotImplementedCitySuggestionsService(),
+    addressSuggestionsService: addressSuggestionsService ?? NotImplementedAddressSuggestionsService(),
   );
 }
 
@@ -423,6 +426,13 @@ class NotImplementedOnboardingSignupService extends OnboardingSignupService {
 class NotImplementedCitySuggestionsService extends CitySuggestionsService {
   @override
   Future<CitySuggestionsServiceResponse> fetchCities({required String countryCode, String? searchTerm}) {
+    throw UnimplementedError();
+  }
+}
+
+class NotImplementedAddressSuggestionsService extends AddressSuggestionsService {
+  @override
+  Future<AddressSuggestionsServiceResponse> getAddressSuggestions({required User user, required String query}) {
     throw UnimplementedError();
   }
 }

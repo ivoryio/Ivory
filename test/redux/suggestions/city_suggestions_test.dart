@@ -4,7 +4,7 @@ import 'package:solarisdemo/redux/suggestions/city/city_suggestions_state.dart';
 
 import '../../setup/create_app_state.dart';
 import '../../setup/create_store.dart';
-import 'city_suggestions_mocks.dart';
+import 'suggestions_mocks.dart';
 
 void main() {
   test("When asking to fetch cities, state should change to loading", () async {

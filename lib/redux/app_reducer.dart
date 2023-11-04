@@ -14,6 +14,7 @@ import 'package:solarisdemo/redux/repayments/bills/bills_reducer.dart';
 import 'package:solarisdemo/redux/repayments/change_repayment/change_repayment_reducer.dart';
 import 'package:solarisdemo/redux/repayments/more_credit/more_credit_reducer.dart';
 import 'package:solarisdemo/redux/repayments/reminder/repayment_reminder_reducer.dart';
+import 'package:solarisdemo/redux/suggestions/address/address_suggestions_reducer.dart';
 import 'package:solarisdemo/redux/suggestions/city/city_suggestions_reducer.dart';
 import 'package:solarisdemo/redux/transactions/approval/transaction_approval_reducer.dart';
 import 'package:solarisdemo/redux/transactions/transactions_reducer.dart';
@@ -45,5 +46,6 @@ AppState appReducer(AppState currentState, dynamic action) {
     onboardingProgressState: onboardingProgressReducer(currentState.onboardingProgressState, action),
     onboardingPersonalDetailsState: onboardingPersonDetailsReducer(currentState.onboardingPersonalDetailsState, action),
     citySuggestionsState: citySuggestionsReducer(currentState.citySuggestionsState, action),
+    addressSuggestionsState: addressSuggestionsReducer(currentState.addressSuggestionsState, action),
   );
 }

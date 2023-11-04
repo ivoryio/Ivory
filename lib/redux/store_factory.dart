@@ -34,6 +34,8 @@ import 'package:solarisdemo/infrastructure/repayments/more_credit/more_credit_mi
 import 'package:solarisdemo/infrastructure/repayments/more_credit/more_credit_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/reminder/repayment_reminder_middleware.dart';
 import 'package:solarisdemo/infrastructure/repayments/reminder/repayment_reminder_service.dart';
+import 'package:solarisdemo/infrastructure/suggestions/address/address_suggestions_middleware.dart';
+import 'package:solarisdemo/infrastructure/suggestions/address/address_suggestions_service.dart';
 import 'package:solarisdemo/infrastructure/suggestions/city/city_suggestions_middleware.dart';
 import 'package:solarisdemo/infrastructure/suggestions/city/city_suggestions_service.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_approval_middleware.dart';
@@ -70,6 +72,7 @@ Store<AppState> createStore({
   required OnboardingService onboardingService,
   required OnboardingSignupService onboardingSignupService,
   required CitySuggestionsService citySuggestionsService,
+  required AddressSuggestionsService addressSuggestionsService,
 }) {
   return Store<AppState>(
     appReducer,
@@ -96,6 +99,7 @@ Store<AppState> createStore({
       OnboardingPersonalDetailsMiddleware(onboardingService),
       ActionLoggerMiddleware(),
       CitySuggestionsMiddleware(citySuggestionsService),
+      AddressSuggestionsMiddleware(addressSuggestionsService),
     ],
   );
 }
