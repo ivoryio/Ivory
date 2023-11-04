@@ -15,7 +15,7 @@ import 'package:solarisdemo/redux/repayments/bills/bills_state.dart';
 import 'package:solarisdemo/redux/repayments/change_repayment/change_repayment_state.dart';
 import 'package:solarisdemo/redux/repayments/more_credit/more_credit_state.dart';
 import 'package:solarisdemo/redux/repayments/reminder/repayment_reminder_state.dart';
-import 'package:solarisdemo/redux/search/search_cities_state.dart';
+import 'package:solarisdemo/redux/suggestions/city_suggestions_state.dart';
 import 'package:solarisdemo/redux/transactions/approval/transaction_approval_state.dart';
 import 'package:solarisdemo/redux/transactions/transactions_state.dart';
 import 'package:solarisdemo/redux/transfer/transfer_state.dart';
@@ -42,7 +42,7 @@ class AppState extends Equatable {
   final OnboardingProgressState onboardingProgressState;
   final OnboardingSignupState onboardingSignupState;
   final OnboardingPersonalDetailsState onboardingPersonalDetailsState;
-  final SearchCitiesState searchCitiesState;
+  final CitySuggestionsState citySuggestionsState;
 
   const AppState({
     required this.transactionsState,
@@ -66,7 +66,7 @@ class AppState extends Equatable {
     required this.onboardingSignupState,
     required this.onboardingProgressState,
     required this.onboardingPersonalDetailsState,
-    required this.searchCitiesState,
+    required this.citySuggestionsState,
   });
 
   factory AppState.initialState() {
@@ -92,7 +92,7 @@ class AppState extends Equatable {
       onboardingSignupState: OnboardingSignupState(),
       onboardingProgressState: OnboardingProgressInitialLoadingState(),
       onboardingPersonalDetailsState: OnboardingPersonalDetailsInitialState(),
-      searchCitiesState: SearchCitiesInitialState(),
+      citySuggestionsState: CitySuggestionsInitialState(),
     );
   }
 
@@ -119,7 +119,7 @@ class AppState extends Equatable {
         onboardingSignupState,
         onboardingProgressState,
         onboardingPersonalDetailsState,
-        searchCitiesState,
+        citySuggestionsState,
       ];
 
   @override

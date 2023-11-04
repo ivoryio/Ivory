@@ -19,7 +19,7 @@ import 'package:solarisdemo/infrastructure/repayments/bills/bill_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/change_repayment/change_repayment_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/more_credit/more_credit_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/reminder/repayment_reminder_service.dart';
-import 'package:solarisdemo/infrastructure/search/search_cities_service.dart';
+import 'package:solarisdemo/infrastructure/suggestions/city_suggestions_service.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart';
 import 'package:solarisdemo/infrastructure/transfer/transfer_service.dart';
 import 'package:solarisdemo/models/bank_card.dart';
@@ -57,7 +57,7 @@ Store<AppState> createTestStore({
   AuthService? authService,
   OnboardingService? onboardingService,
   OnboardingSignupService? onboardingSignupService,
-  SearchCitiesService? searchCitiesService,
+  CitySuggestionsService? citySuggestionsService,
 }) {
   return createStore(
     initialState: initialState,
@@ -82,7 +82,7 @@ Store<AppState> createTestStore({
     authService: authService ?? NotImplementedAuthService(),
     onboardingService: onboardingService ?? NotImplementedOnboardingService(),
     onboardingSignupService: onboardingSignupService ?? NotImplementedOnboardingSignupService(),
-    searchCitiesService: searchCitiesService ?? NotImplementedSearchCitiesService(),
+    citySuggestionsService: citySuggestionsService ?? NotImplementedCitySuggestionsService(),
   );
 }
 
@@ -420,9 +420,9 @@ class NotImplementedOnboardingSignupService extends OnboardingSignupService {
   }
 }
 
-class NotImplementedSearchCitiesService extends SearchCitiesService {
+class NotImplementedCitySuggestionsService extends CitySuggestionsService {
   @override
-  Future<SearchCitiesServiceResponse> fetchCities({required String countryCode, String? searchTerm}) {
+  Future<CitySuggestionsServiceResponse> fetchCities({required String countryCode, String? searchTerm}) {
     throw UnimplementedError();
   }
 }

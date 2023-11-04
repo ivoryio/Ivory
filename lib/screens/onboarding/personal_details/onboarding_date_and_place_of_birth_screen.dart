@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
-import 'package:solarisdemo/infrastructure/search/search_cities_presenter.dart';
+import 'package:solarisdemo/infrastructure/suggestions/city_suggestions_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
-import 'package:solarisdemo/redux/search/search_cities_action.dart';
+import 'package:solarisdemo/redux/suggestions/city_suggestions_action.dart';
 import 'package:solarisdemo/utilities/debouncer.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -98,20 +98,21 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
                     onOptionSelected: (option) {
                       final countryCode = option.value;
                       _selectCityController.reset();
-                      StoreProvider.of<AppState>(context).dispatch(FetchCitiesCommandAction(countryCode: countryCode));
+                      StoreProvider.of<AppState>(context)
+                          .dispatch(FetchCitySuggestionsCommandAction(countryCode: countryCode));
                       onChanged();
                     },
                   ),
                   const SizedBox(height: 24),
-                  StoreConnector<AppState, SearchCitiesViewModel>(
-                    converter: (store) => SearchCitiesPresenter.present(
-                      searchCitiesState: store.state.searchCitiesState,
+                  StoreConnector<AppState, CitySuggestionsViewModel>(
+                    converter: (store) => CitySuggestionsPresenter.present(
+                      citySuggestionsState: store.state.citySuggestionsState,
                     ),
                     onWillChange: (previousViewModel, newViewModel) {
-                      if (newViewModel is SearchCitiesLoadingViewModel) {
+                      if (newViewModel is CitySuggestionsLoadingViewModel) {
                         _selectCityController.setLoading(true);
                         _selectCityController.setEnabled(false);
-                      } else if (newViewModel is SearchCitiesFetchedViewModel) {
+                      } else if (newViewModel is CitySuggestionsFetchedViewModel) {
                         _selectCityController.setOptions(newViewModel.cities
                             .map((city) => SelectOption(
                                   textLabel: city,
@@ -138,7 +139,7 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
                           if (value.isNotEmpty) {
                             _selectCityController.setLoading(true);
                             StoreProvider.of<AppState>(context).dispatch(
-                              FetchCitiesCommandAction(
+                              FetchCitySuggestionsCommandAction(
                                 countryCode: _selectCountryController.selectedOptions.first.value,
                                 searchTerm: value,
                               ),

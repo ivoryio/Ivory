@@ -3,12 +3,12 @@ import 'dart:convert';
 import 'package:equatable/equatable.dart';
 import 'package:http/http.dart' as http;
 import 'package:solarisdemo/config.dart';
-import 'package:solarisdemo/models/search/search_cities_error_type.dart';
+import 'package:solarisdemo/models/suggestions/city_suggestions_error_type.dart';
 
-class SearchCitiesService {
-  Future<SearchCitiesServiceResponse> fetchCities({required String countryCode, String? searchTerm}) async {
+class CitySuggestionsService {
+  Future<CitySuggestionsServiceResponse> fetchCities({required String countryCode, String? searchTerm}) async {
     try {
-      final response = await http.get(SearchCitiesService.url('/searchJSON', queryParameters: {
+      final response = await http.get(CitySuggestionsService.url('/searchJSON', queryParameters: {
         'country': countryCode,
         'cities': 'cities15000',
         if (searchTerm != null) 'name_startsWith': searchTerm,
@@ -20,7 +20,7 @@ class SearchCitiesService {
 
       final responseData = jsonDecode(response.body.isNotEmpty ? response.body : "{}");
 
-      return SearchCitiesSuccessResponse(
+      return FetchCitySuggestionsSuccessResponse(
         cities: (responseData['geonames'] as List)
             .map<String>(
               (city) => city['toponymName'],
@@ -28,7 +28,7 @@ class SearchCitiesService {
             .toList(),
       );
     } catch (error) {
-      return SearchCitiesErrorResponse(errorType: SearchCitiesErrorType.unknown);
+      return FetchCitySuggestionsErrorResponse(errorType: CitySuggestionsErrorType.unknown);
     }
   }
 
@@ -41,24 +41,24 @@ class SearchCitiesService {
   }
 }
 
-abstract class SearchCitiesServiceResponse extends Equatable {
+abstract class CitySuggestionsServiceResponse extends Equatable {
   @override
   List<Object> get props => [];
 }
 
-class SearchCitiesSuccessResponse extends SearchCitiesServiceResponse {
+class FetchCitySuggestionsSuccessResponse extends CitySuggestionsServiceResponse {
   final List<String> cities;
 
-  SearchCitiesSuccessResponse({required this.cities});
+  FetchCitySuggestionsSuccessResponse({required this.cities});
 
   @override
   List<Object> get props => [cities];
 }
 
-class SearchCitiesErrorResponse extends SearchCitiesServiceResponse {
-  final SearchCitiesErrorType errorType;
+class FetchCitySuggestionsErrorResponse extends CitySuggestionsServiceResponse {
+  final CitySuggestionsErrorType errorType;
 
-  SearchCitiesErrorResponse({required this.errorType});
+  FetchCitySuggestionsErrorResponse({required this.errorType});
 
   @override
   List<Object> get props => [errorType];
