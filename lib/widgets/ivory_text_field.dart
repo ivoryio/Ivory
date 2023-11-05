@@ -256,7 +256,10 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
 
   Widget? _buildSuffix(BuildContext context) {
     if (widget.suffix != null) {
-      return widget.suffix;
+      return Padding(
+        padding: const EdgeInsets.only(right: 16),
+        child: widget.suffix,
+      );
     }
 
     if (widget.inputType == TextFieldInputType.date) {

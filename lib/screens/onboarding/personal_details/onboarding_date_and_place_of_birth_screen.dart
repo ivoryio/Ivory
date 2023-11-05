@@ -35,7 +35,7 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
   final IvorySelectOptionController _selectNationalityController = IvorySelectOptionController(loading: true);
   final ContinueButtonController _continueButtonController = ContinueButtonController();
 
-  final _debouncer = Debouncer(milliseconds: 1000);
+  final _debouncer = Debouncer(const Duration(seconds: 1));
 
   @override
   void initState() {
@@ -53,6 +53,18 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
     } else {
       _continueButtonController.setDisabled();
     }
+  }
+
+  @override
+  void dispose() {
+    _dateOfBirthController.dispose();
+    _selectCountryController.dispose();
+    _selectCityController.dispose();
+    _selectNationalityController.dispose();
+    _continueButtonController.dispose();
+    _debouncer.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -114,6 +126,7 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
                     converter: (store) => CitySuggestionsPresenter.present(
                       citySuggestionsState: store.state.citySuggestionsState,
                     ),
+                    distinct: true,
                     onWillChange: (previousViewModel, newViewModel) {
                       if (newViewModel is CitySuggestionsLoadingViewModel) {
                         _selectCityController.setLoading(true);
@@ -225,7 +238,7 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
     }
     _selectCountryController.setOptions(options);
     _selectNationalityController.setOptions(options);
-
+    print("Countries loaded");
     _selectCountryController.setLoading(false);
     _selectNationalityController.setLoading(false);
   }

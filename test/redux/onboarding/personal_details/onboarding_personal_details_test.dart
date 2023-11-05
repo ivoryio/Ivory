@@ -1,28 +1,19 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:solarisdemo/models/auth/auth_type.dart';
 
 import 'package:solarisdemo/models/onboarding/onboarding_personal_details_attributes.dart';
 import 'package:solarisdemo/models/suggestions/address_suggestion.dart';
-import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/onboarding/personal_details/onboarding_personal_details_action.dart';
 import 'package:solarisdemo/redux/onboarding/personal_details/onboarding_personal_details_state.dart';
 
-import '../../../infrastructure/repayments/more_credit/more_credit_presenter_test.dart';
 import '../../../setup/create_app_state.dart';
 import '../../../setup/create_store.dart';
 
 void main() {
-  final user = MockUser();
-  final authentionInitializedState = AuthenticationInitializedState(user, AuthType.withTan);
-
   const birthDate = "03/11/2023";
   const country = "DE";
   const city = "Berlin";
   const nationality = "DE";
-  const address = "Berlin address";
-  const postCode = "44135";
-  const houseNumber = 63;
-  const addressLine = "Berlin address line";
+  const addressSuggestion = AddressSuggestion(address: 'address', city: 'city', country: 'DE');
 
   group("Date & place of birth", () {
     test("When user submits the date and place of birth info, the state should be updated", () async {
@@ -78,14 +69,14 @@ void main() {
       // when
       store.dispatch(
         SelectOnboardingAddressSuggestionCommandAction(
-          suggestion: const AddressSuggestion(address: address, city: "city", country: "DE"),
+          suggestion: addressSuggestion,
         ),
       );
 
       // then
       final onboardingPersonalDetailsState = (await appState).onboardingPersonalDetailsState;
 
-      expect(onboardingPersonalDetailsState.attributes.address, address);
+      expect(onboardingPersonalDetailsState.attributes.selectedAddress, addressSuggestion);
     });
   });
 }

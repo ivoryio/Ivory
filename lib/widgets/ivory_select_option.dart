@@ -69,9 +69,9 @@ class _IvorySelectOptionState extends State<IvorySelectOption> {
       listenable: _controller,
       builder: (context, child) {
         final bool isLoading = _controller.loading;
-        final List<SelectOption> selectedOptions = _controller.selectedOptions;
+
         List<Widget> prefixItems = List.empty(growable: true);
-        for (final option in selectedOptions) {
+        for (final option in _controller.selectedOptions) {
           if (option.prefix != null) {
             prefixItems.add(option.prefix!);
           }
@@ -89,7 +89,7 @@ class _IvorySelectOptionState extends State<IvorySelectOption> {
                     color: ClientConfig.getCustomColors().neutral100,
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
-                        color: selectedOptions.isNotEmpty
+                        color: _controller.selectedOptions.isNotEmpty
                             ? ClientConfig.getCustomColors().neutral500
                             : ClientConfig.getCustomColors().neutral400),
                   ),
@@ -101,10 +101,10 @@ class _IvorySelectOptionState extends State<IvorySelectOption> {
                         ...prefixItems,
                         const SizedBox(width: 8),
                       ],
-                      if (selectedOptions.isNotEmpty)
+                      if (_controller.selectedOptions.isNotEmpty)
                         Expanded(
                           child: Text(
-                            selectedOptions.map((e) => e.textLabel).join(", "),
+                            _controller.selectedOptions.map((e) => e.textLabel).join(", "),
                             style: ClientConfig.getTextStyleScheme()
                                 .bodyLargeRegular
                                 .copyWith(color: ClientConfig.getCustomColors().neutral700),
@@ -217,10 +217,7 @@ class _BottomSheetContentState extends State<_BottomSheetContent> {
               padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
               child: IvoryTextField(
                 placeholder: widget.searchFieldPlaceholder,
-                suffix: Padding(
-                  padding: const EdgeInsets.only(right: 16),
-                  child: Icon(Icons.search, color: ClientConfig.getCustomColors().neutral700, size: 24),
-                ),
+                suffix: Icon(Icons.search, color: ClientConfig.getCustomColors().neutral700, size: 20),
                 onChanged: (value) {
                   widget.onSearchChanged?.call(value);
 

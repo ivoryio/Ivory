@@ -13,7 +13,7 @@ OnboardingPersonalDetailsState onboardingPersonDetailsReducer(OnboardingPersonal
     );
   } else if (action is SelectOnboardingAddressSuggestionCommandAction) {
     return OnboardingPersonalDetailsState(
-      attributes: state.attributes.copyWith(address: action.suggestion.address),
+      attributes: state.attributes.copyWith(selectedAddress: action.suggestion),
     );
   }
 
