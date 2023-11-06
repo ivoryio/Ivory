@@ -277,6 +277,7 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
               currentDate: currentDate,
               initialDate: initialDate,
               maximumDate: currentDate,
+              maximumYear: currentDate.year,
               onConfirm: (value) {
                 widget.onChanged?.call(value);
                 _controller.text = value;
@@ -384,15 +385,21 @@ class IvoryTextFieldController extends ChangeNotifier {
 class _DatePickerContent extends StatefulWidget {
   final DateTime currentDate;
   final DateTime initialDate;
+  final DateTime? minimumDate;
   final DateTime maximumDate;
+  final int minimumYear;
+  final int maximumYear;
 
   final void Function(String) onConfirm;
 
   const _DatePickerContent({
     required this.onConfirm,
-    required this.currentDate,
     required this.initialDate,
+    required this.currentDate,
+    this.minimumDate,
     required this.maximumDate,
+    this.minimumYear = 1900,
+    required this.maximumYear,
   });
 
   @override
@@ -413,27 +420,34 @@ class _DatePickerContentState extends State<_DatePickerContent> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(
-          height: 160,
-          child: CupertinoTheme(
-            data: CupertinoThemeData(
-              textTheme: CupertinoTextThemeData(
-                dateTimePickerTextStyle: ClientConfig.getTextStyleScheme().heading2.copyWith(
-                      color: ClientConfig.getCustomColors().neutral900,
-                      fontWeight: FontWeight.w400,
-                    ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 25),
+          child: SizedBox(
+            height: 160,
+            child: CupertinoTheme(
+              data: CupertinoThemeData(
+                textTheme: CupertinoTextThemeData(
+                  dateTimePickerTextStyle: ClientConfig.getTextStyleScheme().heading2.copyWith(
+                        color: ClientConfig.getCustomColors().neutral900,
+                        fontWeight: FontWeight.w400,
+                      ),
+                ),
               ),
-            ),
-            child: CupertinoDatePicker(
-              mode: CupertinoDatePickerMode.date,
-              maximumDate: widget.maximumDate,
-              initialDateTime: widget.initialDate.isAfter(widget.maximumDate) ? widget.maximumDate : widget.initialDate,
-              onDateTimeChanged: (DateTime newDate) {
-                setState(() {
-                  _formattedDate = Format.date(newDate, pattern: datePattern);
-                });
-              },
-              dateOrder: DatePickerDateOrder.dmy,
+              child: CupertinoDatePicker(
+                mode: CupertinoDatePickerMode.date,
+                minimumDate: widget.minimumDate,
+                maximumDate: widget.maximumDate,
+                minimumYear: widget.minimumYear,
+                maximumYear: widget.maximumYear,
+                initialDateTime:
+                    widget.initialDate.isAfter(widget.maximumDate) ? widget.maximumDate : widget.initialDate,
+                onDateTimeChanged: (DateTime newDate) {
+                  setState(() {
+                    _formattedDate = Format.date(newDate, pattern: datePattern);
+                  });
+                },
+                dateOrder: DatePickerDateOrder.dmy,
+              ),
             ),
           ),
         ),
