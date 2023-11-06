@@ -169,7 +169,7 @@ class _OnboardingAddressOfResidenceScreenState extends State<OnboardingAddressOf
                                   style: ClientConfig.getTextStyleScheme().labelSmall,
                                 ),
                                 Text(
-                                  onboardingViewModel.attributes.city ?? "",
+                                  onboardingViewModel.attributes.selectedAddress?.city ?? "",
                                   style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
                                 ),
                                 const SizedBox(
@@ -180,7 +180,7 @@ class _OnboardingAddressOfResidenceScreenState extends State<OnboardingAddressOf
                                   style: ClientConfig.getTextStyleScheme().labelSmall,
                                 ),
                                 Text(
-                                  onboardingViewModel.attributes.country ?? "",
+                                  onboardingViewModel.attributes.selectedAddress?.country ?? "",
                                   style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
                                 ),
                               ],
