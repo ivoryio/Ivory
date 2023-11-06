@@ -16,7 +16,7 @@ import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
 import '../../../config.dart';
 
 class OnboardingAddressOfResidenceScreen extends StatefulWidget {
-  static const routeName = '/onboardingAddressScreen';
+  static const routeName = '/onboardingAddressOfResidenceScreen';
 
   const OnboardingAddressOfResidenceScreen({super.key});
 
