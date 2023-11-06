@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/utilities/debouncer.dart';
 import 'package:solarisdemo/widgets/ivory_builder.dart';
 import 'package:solarisdemo/widgets/ivory_text_field.dart';
 import 'package:solarisdemo/widgets/modal.dart';
@@ -107,7 +108,7 @@ class _IvorySelectOptionState extends State<IvorySelectOption> {
                             _controller.selectedOptions.map((e) => e.textLabel).join(", "),
                             style: ClientConfig.getTextStyleScheme()
                                 .bodyLargeRegular
-                                .copyWith(color: ClientConfig.getCustomColors().neutral700),
+                                .copyWith(color: ClientConfig.getCustomColors().neutral900),
                             overflow: TextOverflow.ellipsis,
                           ),
                         )
@@ -193,6 +194,7 @@ class IvoryOptionPicker extends StatefulWidget {
 
 class _IvoryOptionPickerState extends State<IvoryOptionPicker> {
   late List<SelectOption> _filteredOptions;
+  final _debouncer = Debouncer(milliseconds: 500);
 
   @override
   void initState() {
@@ -223,11 +225,13 @@ class _IvoryOptionPickerState extends State<IvoryOptionPicker> {
                   widget.onSearchChanged?.call(value);
 
                   if (widget.filterOptions) {
-                    setState(() {
-                      _filteredOptions = widget.controller.options
-                          .where((option) => option.textLabel.toLowerCase().contains(value.toLowerCase()))
-                          .toList();
-                    });
+                    _debouncer.run(
+                      () => setState(() {
+                        _filteredOptions = widget.controller.options
+                            .where((option) => option.textLabel.toLowerCase().contains(value.toLowerCase()))
+                            .toList();
+                      }),
+                    );
                   }
                 },
               ),

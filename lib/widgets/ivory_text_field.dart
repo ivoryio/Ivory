@@ -123,7 +123,7 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
                           ? ClientConfig.getCustomColors().neutral500
                           : hasError
                               ? ClientConfig.getColorScheme().error
-                              : ClientConfig.getCustomColors().neutral600),
+                              : ClientConfig.getCustomColors().neutral700),
                 ),
                 const SizedBox(height: 8),
               ],
@@ -161,6 +161,7 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
                 minLines: widget.minLines,
                 maxLines: widget.maxLines ?? widget.minLines ?? 1,
                 style: ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(
+                    fontWeight: FontWeight.w400,
                     color: _controller.isEnabled
                         ? ClientConfig.getCustomColors().neutral900
                         : ClientConfig.getCustomColors().neutral500),

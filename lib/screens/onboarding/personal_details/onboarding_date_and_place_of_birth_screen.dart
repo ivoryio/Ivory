@@ -35,7 +35,7 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
   final IvorySelectOptionController _selectNationalityController = IvorySelectOptionController(loading: true);
   final ContinueButtonController _continueButtonController = ContinueButtonController();
 
-  final _debouncer = Debouncer(const Duration(seconds: 1));
+  final _debouncer = Debouncer(seconds: 1);
 
   @override
   void initState() {
@@ -62,7 +62,7 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
     _selectCityController.dispose();
     _selectNationalityController.dispose();
     _continueButtonController.dispose();
-    _debouncer.dispose();
+    _debouncer.cancel();
 
     super.dispose();
   }
@@ -156,15 +156,14 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
                       },
                       onSearchChanged: (value) {
                         _debouncer.run(() {
-                          if (value.isNotEmpty) {
-                            _selectCityController.setLoading(true);
-                            StoreProvider.of<AppState>(context).dispatch(
-                              FetchCitySuggestionsCommandAction(
-                                countryCode: _selectCountryController.selectedOptions.first.value,
-                                searchTerm: value,
-                              ),
-                            );
-                          }
+                          _selectCityController.setLoading(true);
+
+                          StoreProvider.of<AppState>(context).dispatch(
+                            FetchCitySuggestionsCommandAction(
+                              countryCode: _selectCountryController.selectedOptions.first.value,
+                              searchTerm: value,
+                            ),
+                          );
                         });
                       },
                       onBottomSheetOpened: () => FocusScope.of(context).unfocus(),

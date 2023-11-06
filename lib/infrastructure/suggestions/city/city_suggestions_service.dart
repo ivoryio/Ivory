@@ -11,7 +11,7 @@ class CitySuggestionsService {
       final response = await http.get(CitySuggestionsService.url('/searchJSON', queryParameters: {
         'country': countryCode,
         'cities': 'cities15000',
-        if (searchTerm != null) 'name_startsWith': searchTerm,
+        if (searchTerm != null && searchTerm.isNotEmpty) 'name_startsWith': searchTerm,
       }));
 
       if (response.statusCode != 200) {

@@ -35,7 +35,7 @@ class _OnboardingAddressOfResidenceScreenState extends State<OnboardingAddressOf
   late FocusNode _addressLineFocusNode;
   late ContinueButtonController _continueButtonController;
 
-  final _debouncer = Debouncer(const Duration(seconds: 1));
+  final _debouncer = Debouncer(seconds: 1);
 
   @override
   void initState() {
@@ -52,7 +52,7 @@ class _OnboardingAddressOfResidenceScreenState extends State<OnboardingAddressOf
   @override
   void dispose() {
     _addressController.dispose();
-    _debouncer.dispose();
+    _debouncer.cancel();
     super.dispose();
   }
 
