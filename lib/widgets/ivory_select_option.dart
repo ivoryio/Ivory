@@ -19,6 +19,7 @@ class IvorySelectOption extends StatefulWidget {
   final VoidCallback? onBottomSheetOpened;
   final bool filterOptions;
   final bool bottomSheetExpanded;
+  final Widget Function(BuildContext, SelectOption)? optionSeparatorBuilder;
 
   const IvorySelectOption({
     super.key,
@@ -34,6 +35,7 @@ class IvorySelectOption extends StatefulWidget {
     this.onSearchChanged,
     this.filterOptions = true,
     this.bottomSheetExpanded = false,
+    this.optionSeparatorBuilder,
   });
 
   @override
@@ -159,6 +161,7 @@ class _IvorySelectOptionState extends State<IvorySelectOption> {
         onSearchChanged: widget.onSearchChanged,
         filterOptions: widget.filterOptions,
         expanded: widget.bottomSheetExpanded,
+        optionSeparatorBuilder: widget.optionSeparatorBuilder,
         onOptionSelected: (option) {
           _controller.selectOption(option);
           widget.onOptionSelected?.call(option);
@@ -173,6 +176,7 @@ class IvoryOptionPicker extends StatefulWidget {
   final String searchFieldPlaceholder;
   final void Function(SelectOption) onOptionSelected;
   final void Function(String)? onSearchChanged;
+  final Widget Function(BuildContext, SelectOption)? optionSeparatorBuilder;
   final bool enabledSearch;
   final bool filterOptions;
   final bool expanded;
@@ -186,6 +190,7 @@ class IvoryOptionPicker extends StatefulWidget {
     required this.filterOptions,
     this.onSearchChanged,
     this.expanded = false,
+    this.optionSeparatorBuilder,
   });
 
   @override
@@ -279,9 +284,18 @@ class _IvoryOptionPickerState extends State<IvoryOptionPicker> {
 
         return child!;
       },
-      child: ListView.builder(
+      child: ListView.separated(
         shrinkWrap: true,
         itemCount: options.length,
+        separatorBuilder: (context, index) {
+          final SelectOption option = options[index];
+
+          if (widget.optionSeparatorBuilder != null) {
+            return widget.optionSeparatorBuilder!(context, option);
+          }
+
+          return const SizedBox();
+        },
         itemBuilder: (context, index) {
           SelectOption option = options[index];
 
