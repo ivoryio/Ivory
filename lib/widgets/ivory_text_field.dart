@@ -1,8 +1,14 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/utilities/format.dart';
+import 'package:solarisdemo/widgets/button.dart';
+import 'package:solarisdemo/widgets/modal.dart';
 
-enum TextFieldInputType { text, name, email, number, password }
+enum TextFieldInputType { text, name, email, number, password, date }
+
+const datePattern = "dd/MM/yyyy";
 
 class IvoryTextField extends StatefulWidget {
   final FocusNode? focusNode;
@@ -10,6 +16,7 @@ class IvoryTextField extends StatefulWidget {
   final List<TextInputFormatter>? inputFormatters;
   final String? errorText;
   final String? label;
+  final String? bottomSheetTitle;
   final String? placeholder;
   final TextCapitalization? textCapitalization;
   final TextFieldInputType inputType;
@@ -42,6 +49,7 @@ class IvoryTextField extends StatefulWidget {
     this.prefix,
     this.suffix,
     this.textCapitalization,
+    this.bottomSheetTitle,
   });
 
   @override
@@ -148,12 +156,7 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
                         child: widget.prefix,
                       )
                     : null,
-                suffix: widget.suffix != null
-                    ? Padding(
-                        padding: const EdgeInsets.only(right: 16),
-                        child: widget.suffix,
-                      )
-                    : null,
+                suffix: _buildSuffix(context),
                 keyboardType: keyboardType,
                 minLines: widget.minLines,
                 maxLines: widget.maxLines ?? widget.minLines ?? 1,
@@ -213,6 +216,8 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
         return [
           FilteringTextInputFormatter.deny(RegExp(r'[\s]')),
         ];
+      case TextFieldInputType.date:
+        return [InputFormatter.date];
       default:
         return null;
     }
@@ -232,6 +237,8 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
         return TextInputType.emailAddress;
       case TextFieldInputType.number:
         return TextInputType.number;
+      case TextFieldInputType.date:
+        return TextInputType.datetime;
       default:
         return null;
     }
@@ -245,6 +252,50 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
     }
 
     return TextCapitalization.none;
+  }
+
+  Widget? _buildSuffix(BuildContext context) {
+    if (widget.suffix != null) {
+      return Padding(
+        padding: const EdgeInsets.only(right: 16),
+        child: widget.suffix,
+      );
+    }
+
+    if (widget.inputType == TextFieldInputType.date) {
+      return GestureDetector(
+        onTap: () {
+          final currentDate = DateTime.now();
+          final initialDate = _controller.text.isNotEmpty
+              ? Format.tryParseDate(_controller.text, pattern: datePattern) ?? currentDate
+              : currentDate;
+
+          showBottomModal(
+            context: context,
+            title: widget.bottomSheetTitle,
+            content: _DatePickerContent(
+              currentDate: currentDate,
+              initialDate: initialDate,
+              maximumDate: currentDate,
+              onConfirm: (value) {
+                widget.onChanged?.call(value);
+                _controller.text = value;
+              },
+            ),
+          );
+        },
+        child: Padding(
+          padding: const EdgeInsets.only(right: 16),
+          child: Icon(
+            Icons.calendar_month,
+            color: ClientConfig.getCustomColors().neutral700,
+            size: 20,
+          ),
+        ),
+      );
+    }
+
+    return null;
   }
 }
 
@@ -327,5 +378,75 @@ class IvoryTextFieldController extends ChangeNotifier {
   set selection(TextSelection value) {
     _textEditingController.selection = value;
     notifyListeners();
+  }
+}
+
+class _DatePickerContent extends StatefulWidget {
+  final DateTime currentDate;
+  final DateTime initialDate;
+  final DateTime maximumDate;
+
+  final void Function(String) onConfirm;
+
+  const _DatePickerContent({
+    required this.onConfirm,
+    required this.currentDate,
+    required this.initialDate,
+    required this.maximumDate,
+  });
+
+  @override
+  State<_DatePickerContent> createState() => _DatePickerContentState();
+}
+
+class _DatePickerContentState extends State<_DatePickerContent> {
+  late String _formattedDate;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _formattedDate = Format.date(widget.initialDate, pattern: datePattern);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(
+          height: 160,
+          child: CupertinoTheme(
+            data: CupertinoThemeData(
+              textTheme: CupertinoTextThemeData(
+                dateTimePickerTextStyle: ClientConfig.getTextStyleScheme().heading2.copyWith(
+                      color: ClientConfig.getCustomColors().neutral900,
+                      fontWeight: FontWeight.w400,
+                    ),
+              ),
+            ),
+            child: CupertinoDatePicker(
+              mode: CupertinoDatePickerMode.date,
+              maximumDate: widget.maximumDate,
+              initialDateTime: widget.initialDate.isAfter(widget.maximumDate) ? widget.maximumDate : widget.initialDate,
+              onDateTimeChanged: (DateTime newDate) {
+                setState(() {
+                  _formattedDate = Format.date(newDate, pattern: datePattern);
+                });
+              },
+              dateOrder: DatePickerDateOrder.dmy,
+            ),
+          ),
+        ),
+        const SizedBox(height: 24),
+        PrimaryButton(
+          text: "Confirm",
+          onPressed: () {
+            widget.onConfirm(_formattedDate);
+            Navigator.pop(context);
+          },
+        ),
+        const SizedBox(height: 16),
+      ],
+    );
   }
 }

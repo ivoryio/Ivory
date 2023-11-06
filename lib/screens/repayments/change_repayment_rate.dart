@@ -146,6 +146,7 @@ class _PageContentState extends State<PageContent> {
   @override
   void initState() {
     super.initState();
+
     minFixedRate = (widget.viewModel.cardApplication!.repaymentOptions!.minimumAmountUpperThreshold.value / 100) * 0.05;
     maxFixedRate = (widget.viewModel.cardApplication!.repaymentOptions!.minimumAmountUpperThreshold.value / 100) * 0.9;
     inputFixedRateController.text =
@@ -153,6 +154,10 @@ class _PageContentState extends State<PageContent> {
             ? minFixedRate.toStringAsFixed(2)
             : (widget.viewModel.cardApplication!.repaymentOptions!.minimumAmount.value / 100).toStringAsFixed(2);
     initialPercentageRate = widget.viewModel.cardApplication!.repaymentOptions!.minimumPercentage;
+
+    if(initialPercentageRate >= 10){
+      thumbPercentage = initialPercentageRate;
+    }
 
     inputFixedRateController.addListener(() {
       if (double.parse(inputFixedRateController.text) >= minFixedRate &&
@@ -190,7 +195,7 @@ class _PageContentState extends State<PageContent> {
       child: Column(
         children: [
           ChooseRepaymentType(
-            repaymentType: RepaymentType.percentage,
+            repaymentType: (initialPercentageRate >= 10) ? RepaymentType.percentage : RepaymentType.fixed,
             minFixedRate: minFixedRate,
             maxFixedRate: maxFixedRate,
             minPercentageRate: minPercentageRate,
@@ -268,7 +273,14 @@ class ChooseRepaymentType extends StatefulWidget {
 }
 
 class _ChooseRepaymentTypeState extends State<ChooseRepaymentType> {
-  late RepaymentType selectedRepaymentType = RepaymentType.percentage;
+  late RepaymentType selectedRepaymentType;
+
+  @override
+  void initState() {
+    super.initState();
+
+    selectedRepaymentType = widget.repaymentType;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -577,7 +589,6 @@ class _FixedRepaymentState extends State<FixedRepayment> {
             Expanded(
               child: TextField(
                 style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                autofocus: true,
                 controller: widget.controller,
                 onChanged: (inputValue) {
                   if (inputValue.isEmpty) inputValue = '0';

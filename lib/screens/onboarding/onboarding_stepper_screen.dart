@@ -123,9 +123,11 @@ class OnboardingStepperScreen extends StatelessWidget {
             width: double.infinity,
             child: PrimaryButton(
               text: "Continue",
-              onPressed: () {
-                Navigator.pushNamed(context, routeName);
-              },
+              onPressed: activeStep != StepperItemType.unknown
+                  ? () {
+                      Navigator.pushNamed(context, routeName);
+                    }
+                  : null,
             ),
           ),
         ),
@@ -148,11 +150,17 @@ class OnboardingStepper extends StatelessWidget {
       separatorBuilder: (context, index) => const SizedBox(height: 16),
       itemBuilder: (context, index) {
         final item = OnboardingStepper.steps[index];
-        final state = item.type == activeStep
-            ? OnboardingStepState.inProgress
-            : item.type.index < activeStep.index
-                ? OnboardingStepState.completed
-                : OnboardingStepState.notStarted;
+
+        OnboardingStepState state;
+        if (activeStep == StepperItemType.unknown) {
+          state = OnboardingStepState.notStarted;
+        } else if (item.type == activeStep) {
+          state = OnboardingStepState.inProgress;
+        } else if (item.type.index < activeStep.index) {
+          state = OnboardingStepState.completed;
+        } else {
+          state = OnboardingStepState.notStarted;
+        }
 
         return OnboardingStepListTile(
           item: item,

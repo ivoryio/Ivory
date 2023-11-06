@@ -93,6 +93,14 @@ class Format {
   static String date(DateTime date, {String? pattern = "yyyy-MM-dd"}) {
     return DateFormat(pattern).format(date);
   }
+
+  static DateTime? tryParseDate(String date, {String? pattern = "yyyy-MM-dd"}) {
+    try {
+      return DateFormat(pattern).parse(date);
+    } catch (_) {
+      return null;
+    }
+  }
 }
 
 class InputFormatter {
@@ -102,6 +110,14 @@ class InputFormatter {
       "A": RegExp(r"[A-Za-z]"),
       "B": RegExp(r"[A-Za-z0-9]"),
       "0": RegExp(r"[0-9]"),
+    },
+  );
+
+  static MaskTextInputFormatter date = MaskTextInputFormatter(
+    mask: "##/##/####",
+    type: MaskAutoCompletionType.eager,
+    filter: {
+      "#": RegExp(r"[0-9]"),
     },
   );
 }

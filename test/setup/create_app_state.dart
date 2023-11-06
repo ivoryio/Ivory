@@ -15,6 +15,8 @@ import 'package:solarisdemo/redux/repayments/bills/bills_state.dart';
 import 'package:solarisdemo/redux/repayments/change_repayment/change_repayment_state.dart';
 import 'package:solarisdemo/redux/repayments/more_credit/more_credit_state.dart';
 import 'package:solarisdemo/redux/repayments/reminder/repayment_reminder_state.dart';
+import 'package:solarisdemo/redux/suggestions/address/address_suggestions_state.dart';
+import 'package:solarisdemo/redux/suggestions/city/city_suggestions_state.dart';
 import 'package:solarisdemo/redux/transactions/approval/transaction_approval_state.dart';
 import 'package:solarisdemo/redux/transactions/transactions_state.dart';
 import 'package:solarisdemo/redux/transfer/transfer_state.dart';
@@ -41,6 +43,8 @@ AppState createAppState({
   OnboardingProgressState? onboardingProgressState,
   OnboardingSignupState? onboardingSignupState,
   OnboardingPersonalDetailsState? onboardingPersonalDetailsState,
+  CitySuggestionsState? citySuggestionsState,
+  AddressSuggestionsState? addressSuggestionsState,
 }) {
   return AppState(
     transactionsState: transactionsState ?? TransactionsInitialState(),
@@ -63,6 +67,8 @@ AppState createAppState({
     homePageTransactionsState: homePageTransactionsState ?? TransactionsInitialState(),
     onboardingProgressState: onboardingProgressState ?? OnboardingProgressInitialLoadingState(),
     onboardingSignupState: onboardingSignupState ?? OnboardingSignupState(),
-    onboardingPersonalDetailsState: onboardingPersonalDetailsState ?? OnboardingPersonalDetailsInitialState(),
+    onboardingPersonalDetailsState: onboardingPersonalDetailsState ?? const OnboardingPersonalDetailsState(),
+    citySuggestionsState: citySuggestionsState ?? CitySuggestionsInitialState(),
+    addressSuggestionsState: addressSuggestionsState ?? AddressSuggestionsInitialState(),
   );
 }

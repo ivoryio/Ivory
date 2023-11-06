@@ -15,6 +15,8 @@ import 'package:solarisdemo/redux/repayments/bills/bills_state.dart';
 import 'package:solarisdemo/redux/repayments/change_repayment/change_repayment_state.dart';
 import 'package:solarisdemo/redux/repayments/more_credit/more_credit_state.dart';
 import 'package:solarisdemo/redux/repayments/reminder/repayment_reminder_state.dart';
+import 'package:solarisdemo/redux/suggestions/address/address_suggestions_state.dart';
+import 'package:solarisdemo/redux/suggestions/city/city_suggestions_state.dart';
 import 'package:solarisdemo/redux/transactions/approval/transaction_approval_state.dart';
 import 'package:solarisdemo/redux/transactions/transactions_state.dart';
 import 'package:solarisdemo/redux/transfer/transfer_state.dart';
@@ -41,6 +43,8 @@ class AppState extends Equatable {
   final OnboardingProgressState onboardingProgressState;
   final OnboardingSignupState onboardingSignupState;
   final OnboardingPersonalDetailsState onboardingPersonalDetailsState;
+  final CitySuggestionsState citySuggestionsState;
+  final AddressSuggestionsState addressSuggestionsState;
 
   const AppState({
     required this.transactionsState,
@@ -64,32 +68,35 @@ class AppState extends Equatable {
     required this.onboardingSignupState,
     required this.onboardingProgressState,
     required this.onboardingPersonalDetailsState,
+    required this.citySuggestionsState,
+    required this.addressSuggestionsState,
   });
 
   factory AppState.initialState() {
     return AppState(
-      transactionsState: TransactionsInitialState(),
-      creditLineState: CreditLineInitialState(),
-      repaymentReminderState: RepaymentReminderInitialState(),
-      cardApplicationState: CardApplicationInitialState(),
-      billsState: BillsInitialState(),
-      moreCreditState: MoreCreditInitialState(),
-      bankCardState: BankCardInitialState(),
-      bankCardsState: BankCardsInitialState(),
-      categoriesState: CategoriesInitialState(),
-      referenceAccountState: ReferenceAccountInitialState(),
-      personAccountState: PersonAccountInitialState(),
-      transferState: TransferInitialState(),
-      deviceBindingState: DeviceBindingInitialState(),
-      notificationState: NotificationInitialState(),
-      transactionApprovalState: TransactionApprovalInitialState(),
-      accountSummaryState: AccountSummaryInitialState(),
-      authState: AuthInitialState(),
-      homePageTransactionsState: TransactionsInitialState(),
-      onboardingSignupState: OnboardingSignupState(),
-      onboardingProgressState: OnboardingProgressInitialLoadingState(),
-      onboardingPersonalDetailsState: OnboardingPersonalDetailsInitialState(),
-    );
+        transactionsState: TransactionsInitialState(),
+        creditLineState: CreditLineInitialState(),
+        repaymentReminderState: RepaymentReminderInitialState(),
+        cardApplicationState: CardApplicationInitialState(),
+        billsState: BillsInitialState(),
+        moreCreditState: MoreCreditInitialState(),
+        bankCardState: BankCardInitialState(),
+        bankCardsState: BankCardsInitialState(),
+        categoriesState: CategoriesInitialState(),
+        referenceAccountState: ReferenceAccountInitialState(),
+        personAccountState: PersonAccountInitialState(),
+        transferState: TransferInitialState(),
+        deviceBindingState: DeviceBindingInitialState(),
+        notificationState: NotificationInitialState(),
+        transactionApprovalState: TransactionApprovalInitialState(),
+        accountSummaryState: AccountSummaryInitialState(),
+        authState: AuthInitialState(),
+        homePageTransactionsState: TransactionsInitialState(),
+        onboardingSignupState: OnboardingSignupState(),
+        onboardingProgressState: OnboardingProgressInitialLoadingState(),
+        onboardingPersonalDetailsState: const OnboardingPersonalDetailsState(),
+        citySuggestionsState: CitySuggestionsInitialState(),
+        addressSuggestionsState: AddressSuggestionsInitialState());
   }
 
   @override
@@ -114,7 +121,9 @@ class AppState extends Equatable {
         homePageTransactionsState,
         onboardingSignupState,
         onboardingProgressState,
-        onboardingPersonalDetailsState
+        onboardingPersonalDetailsState,
+        citySuggestionsState,
+        addressSuggestionsState,
       ];
 
   @override

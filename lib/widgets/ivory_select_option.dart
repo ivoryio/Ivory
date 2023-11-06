@@ -1,24 +1,38 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/widgets/ivory_builder.dart';
+import 'package:solarisdemo/widgets/ivory_text_field.dart';
 import 'package:solarisdemo/widgets/modal.dart';
 
 class IvorySelectOption extends StatefulWidget {
   final String label;
-  final String? bottomSheetLabel;
-  final List<SelectOption> options;
+  final String? bottomSheetTitle;
+  final bool enabledSearch;
+  final String placeholder;
+  final String searchFieldPlaceholder;
+  final List<SelectOption>? options;
   final void Function(SelectOption)? onOptionSelected;
   final IvorySelectOptionController? controller;
+  final void Function(String)? onSearchChanged;
   final VoidCallback? onBottomSheetOpened;
+  final bool filterOptions;
+  final bool bottomSheetExpanded;
 
   const IvorySelectOption({
     super.key,
     required this.label,
-    required this.bottomSheetLabel,
-    required this.options,
+    required this.bottomSheetTitle,
+    this.options,
     this.onOptionSelected,
     this.controller,
+    this.placeholder = "Select an option",
+    this.searchFieldPlaceholder = "Search",
     this.onBottomSheetOpened,
+    this.enabledSearch = false,
+    this.onSearchChanged,
+    this.filterOptions = true,
+    this.bottomSheetExpanded = false,
   });
 
   @override
@@ -33,7 +47,10 @@ class _IvorySelectOptionState extends State<IvorySelectOption> {
     super.initState();
 
     _controller = widget.controller ?? IvorySelectOptionController();
-    _controller.init(widget.options);
+
+    if (widget.options != null) {
+      _controller.setOptions(widget.options!);
+    }
   }
 
   @override
@@ -51,7 +68,14 @@ class _IvorySelectOptionState extends State<IvorySelectOption> {
     return ListenableBuilder(
       listenable: _controller,
       builder: (context, child) {
-        final List<SelectOption> selectedOptions = _controller.selectedOptions;
+        final bool isLoading = _controller.loading;
+
+        List<Widget> prefixItems = List.empty(growable: true);
+        for (final option in _controller.selectedOptions) {
+          if (option.prefix != null) {
+            prefixItems.add(option.prefix!);
+          }
+        }
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,7 +89,7 @@ class _IvorySelectOptionState extends State<IvorySelectOption> {
                     color: ClientConfig.getCustomColors().neutral100,
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
-                        color: selectedOptions.isNotEmpty
+                        color: _controller.selectedOptions.isNotEmpty
                             ? ClientConfig.getCustomColors().neutral500
                             : ClientConfig.getCustomColors().neutral400),
                   ),
@@ -73,10 +97,14 @@ class _IvorySelectOptionState extends State<IvorySelectOption> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      if (selectedOptions.isNotEmpty)
+                      if (prefixItems.isNotEmpty) ...[
+                        ...prefixItems,
+                        const SizedBox(width: 8),
+                      ],
+                      if (_controller.selectedOptions.isNotEmpty)
                         Expanded(
                           child: Text(
-                            selectedOptions.map((e) => e.label).join(", "),
+                            _controller.selectedOptions.map((e) => e.textLabel).join(", "),
                             style: ClientConfig.getTextStyleScheme()
                                 .bodyLargeRegular
                                 .copyWith(color: ClientConfig.getCustomColors().neutral700),
@@ -85,13 +113,22 @@ class _IvorySelectOptionState extends State<IvorySelectOption> {
                         )
                       else
                         Text(
-                          widget.bottomSheetLabel ?? widget.label,
+                          widget.placeholder,
                           style: ClientConfig.getTextStyleScheme()
                               .bodyLargeRegular
                               .copyWith(color: ClientConfig.getCustomColors().neutral500),
                         ),
                       const SizedBox(width: 8),
-                      Icon(Icons.keyboard_arrow_down, color: ClientConfig.getCustomColors().neutral700),
+                      isLoading
+                          ? SizedBox(
+                              height: 16,
+                              width: 16,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 3,
+                                color: ClientConfig.getCustomColors().neutral700,
+                              ),
+                            )
+                          : Icon(Icons.keyboard_arrow_down, color: ClientConfig.getCustomColors().neutral700),
                     ],
                   )),
             ),
@@ -102,42 +139,177 @@ class _IvorySelectOptionState extends State<IvorySelectOption> {
   }
 
   void _onTap() {
+    if (_controller.loading || !_controller.enabled) {
+      return;
+    }
+
     widget.onBottomSheetOpened?.call();
 
     showBottomModal(
       context: context,
-      title: "Select your preferred title",
+      title: widget.bottomSheetTitle,
       addContentPadding: false,
-      content: Column(
-        children: _controller._options
-            .map(
-              (option) => _BottomSheetOption(
-                label: option.label,
-                isSelected: option.selected,
-                multiselect: _controller.multiselect,
-                onTap: () {
-                  _controller.selectOption(option);
-                  widget.onOptionSelected?.call(option);
+      useSafeArea: true,
+      useScrollableChild: false,
+      content: _BottomSheetContent(
+        controller: _controller,
+        enabledSearch: widget.enabledSearch,
+        searchFieldPlaceholder: widget.searchFieldPlaceholder,
+        onSearchChanged: widget.onSearchChanged,
+        filterOptions: widget.filterOptions,
+        expanded: widget.bottomSheetExpanded,
+        onOptionSelected: (option) {
+          _controller.selectOption(option);
+          widget.onOptionSelected?.call(option);
+        },
+      ),
+    );
+  }
+}
+
+class _BottomSheetContent extends StatefulWidget {
+  final IvorySelectOptionController controller;
+  final String searchFieldPlaceholder;
+  final void Function(SelectOption) onOptionSelected;
+  final void Function(String)? onSearchChanged;
+  final bool enabledSearch;
+  final bool filterOptions;
+  final bool expanded;
+
+  const _BottomSheetContent({
+    required this.controller,
+    required this.onOptionSelected,
+    required this.enabledSearch,
+    required this.searchFieldPlaceholder,
+    required this.filterOptions,
+    this.onSearchChanged,
+    this.expanded = false,
+  });
+
+  @override
+  State<_BottomSheetContent> createState() => _BottomSheetContentState();
+}
+
+class _BottomSheetContentState extends State<_BottomSheetContent> {
+  late List<SelectOption> _filteredOptions;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _filteredOptions = widget.controller.options;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return IvoryBuilder(
+      builder: (BuildContext context, child) {
+        if (widget.expanded) {
+          return Expanded(child: child!);
+        }
+
+        return child!;
+      },
+      child: Column(
+        children: [
+          if (widget.enabledSearch) ...[
+            Padding(
+              padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+              child: IvoryTextField(
+                placeholder: widget.searchFieldPlaceholder,
+                suffix: Icon(Icons.search, color: ClientConfig.getCustomColors().neutral700, size: 20),
+                onChanged: (value) {
+                  widget.onSearchChanged?.call(value);
+
+                  if (widget.filterOptions) {
+                    setState(() {
+                      _filteredOptions = widget.controller.options
+                          .where((option) => option.textLabel.toLowerCase().contains(value.toLowerCase()))
+                          .toList();
+                    });
+                  }
                 },
               ),
-            )
-            .toList(),
+            ),
+            const SizedBox(height: 24),
+          ],
+          widget.filterOptions
+              ? _buildListView(options: _filteredOptions)
+              : ListenableBuilder(
+                  listenable: widget.controller,
+                  builder: (context, child) {
+                    if (widget.controller.loading) {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 3,
+                          color: ClientConfig.getCustomColors().neutral700,
+                        ),
+                      );
+                    }
+
+                    return _buildListView(options: _filteredOptions);
+                  },
+                ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildListView({required List<SelectOption> options}) {
+    if (options.isEmpty) {
+      return Align(
+        alignment: Alignment.topCenter,
+        child: Text(
+          "No results found",
+          style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
+        ),
+      );
+    }
+
+    return IvoryBuilder(
+      builder: (context, child) {
+        if (widget.expanded) {
+          return Expanded(child: child!);
+        }
+
+        return child!;
+      },
+      child: ListView.builder(
+        shrinkWrap: true,
+        itemCount: options.length,
+        itemBuilder: (context, index) {
+          SelectOption option = options[index];
+
+          return _BottomSheetOption(
+            key: UniqueKey(),
+            textLabel: option.textLabel,
+            isSelected: option.selected,
+            multiselect: widget.controller.multiselect,
+            onTap: () {
+              widget.onOptionSelected(option);
+            },
+            prefix: option.prefix,
+          );
+        },
       ),
     );
   }
 }
 
 class _BottomSheetOption extends StatefulWidget {
-  final String label;
+  final String textLabel;
   final bool isSelected;
   final bool multiselect;
   final VoidCallback onTap;
+  final Widget? prefix;
 
   const _BottomSheetOption({
-    required this.label,
+    super.key,
+    required this.textLabel,
     required this.isSelected,
     required this.onTap,
     this.multiselect = false,
+    this.prefix,
   });
 
   @override
@@ -169,9 +341,10 @@ class _BottomSheetOptionState extends State<_BottomSheetOption> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(widget.label, style: ClientConfig.getTextStyleScheme().heading4),
+            if (widget.prefix != null) widget.prefix!,
+            Text(widget.textLabel, style: ClientConfig.getTextStyleScheme().heading4),
+            const Spacer(),
             if (_isSelected) Icon(Icons.check, color: ClientConfig.getCustomColors().success),
           ],
         ),
@@ -182,21 +355,31 @@ class _BottomSheetOptionState extends State<_BottomSheetOption> {
 
 class IvorySelectOptionController extends ChangeNotifier {
   final bool multiselect;
+  bool _loading;
+  bool _enabled;
 
   final List<SelectOption> _options;
 
-  IvorySelectOptionController({this.multiselect = false, List<SelectOption>? options})
-      : _options = options ?? List.empty(growable: true);
+  IvorySelectOptionController({
+    this.multiselect = false,
+    bool loading = false,
+    bool enabled = true,
+    List<SelectOption>? options,
+  })  : _options = options ?? List.empty(growable: true),
+        _loading = loading,
+        _enabled = enabled;
 
-  void init(List<SelectOption> options) {
+  void setOptions(List<SelectOption> options) {
     _options.clear();
     _options.addAll(options);
+
+    notifyListeners();
   }
 
   void selectOption(SelectOption selectedOption) {
     for (int optionIndex = 0; optionIndex < _options.length; optionIndex++) {
       SelectOption option = _options[optionIndex];
-      if (selectedOption == option) {
+      if (selectedOption.value == option.value) {
         _options[optionIndex] = option.copyWith(selected: !option.selected);
       } else {
         _options[optionIndex] = multiselect ? option : option.copyWith(selected: false);
@@ -206,36 +389,57 @@ class IvorySelectOptionController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setLoading(bool loading) {
+    _loading = loading;
+    notifyListeners();
+  }
+
+  void setEnabled(bool enabled) {
+    _enabled = enabled;
+    notifyListeners();
+  }
+
+  void reset() {
+    _options.clear();
+    _loading = false;
+    _enabled = true;
+
+    notifyListeners();
+  }
+
+  bool get loading => _loading;
+  bool get enabled => _enabled;
   List<SelectOption> get options => _options;
   List<SelectOption> get selectedOptions => _options.where((option) => option.selected).toList();
 }
 
 class SelectOption extends Equatable {
-  final String label;
+  final Widget? prefix;
+  final String textLabel;
   final bool selected;
   final String value;
 
   const SelectOption({
     required this.value,
-    required this.label,
+    required this.textLabel,
     this.selected = false,
+    this.prefix,
   });
 
   SelectOption copyWith({
     String? value,
-    String? label,
+    String? textLabel,
     bool? selected,
+    Widget? prefix,
   }) {
     return SelectOption(
       value: value ?? this.value,
-      label: label ?? this.label,
+      textLabel: textLabel ?? this.textLabel,
       selected: selected ?? this.selected,
+      prefix: prefix ?? this.prefix,
     );
   }
 
   @override
-  List<Object?> get props => [value, label, selected];
-
-  @override
-  bool get stringify => true;
+  List<Object?> get props => [value, textLabel, selected, prefix];
 }
