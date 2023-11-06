@@ -151,7 +151,7 @@ class _IvorySelectOptionState extends State<IvorySelectOption> {
       addContentPadding: false,
       useSafeArea: true,
       useScrollableChild: false,
-      content: _BottomSheetContent(
+      content: IvoryOptionPicker(
         controller: _controller,
         enabledSearch: widget.enabledSearch,
         searchFieldPlaceholder: widget.searchFieldPlaceholder,
@@ -167,7 +167,7 @@ class _IvorySelectOptionState extends State<IvorySelectOption> {
   }
 }
 
-class _BottomSheetContent extends StatefulWidget {
+class IvoryOptionPicker extends StatefulWidget {
   final IvorySelectOptionController controller;
   final String searchFieldPlaceholder;
   final void Function(SelectOption) onOptionSelected;
@@ -176,7 +176,8 @@ class _BottomSheetContent extends StatefulWidget {
   final bool filterOptions;
   final bool expanded;
 
-  const _BottomSheetContent({
+  const IvoryOptionPicker({
+    super.key,
     required this.controller,
     required this.onOptionSelected,
     required this.enabledSearch,
@@ -187,10 +188,10 @@ class _BottomSheetContent extends StatefulWidget {
   });
 
   @override
-  State<_BottomSheetContent> createState() => _BottomSheetContentState();
+  State<IvoryOptionPicker> createState() => _IvoryOptionPickerState();
 }
 
-class _BottomSheetContentState extends State<_BottomSheetContent> {
+class _IvoryOptionPickerState extends State<IvoryOptionPicker> {
   late List<SelectOption> _filteredOptions;
 
   @override
