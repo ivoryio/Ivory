@@ -1,11 +1,12 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/screens/login/modals/mobile_number_country_picker_popup.dart';
+import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
+import 'package:solarisdemo/widgets/button.dart';
+import 'package:solarisdemo/widgets/continue_button_controller.dart';
 import 'package:solarisdemo/widgets/ivory_text_field.dart';
 import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
@@ -23,24 +24,29 @@ class _OnboardingMobileNumberScreenState extends State<OnboardingMobileNumberScr
   late IvoryTextFieldController _mobileNumberController;
   late FocusNode _mobileNumberFocusNode;
   late ValueNotifier<CountryPrefixItem> _selectedCountryNotifier;
+  late ContinueButtonController _continueButtonController;
+  late MaskTextInputFormatter _phoneNumberFormatter;
 
   @override
   void initState() {
-    _mobileNumberController = IvoryTextFieldController();
+    _mobileNumberController = IvoryTextFieldController(text: CountryPrefixItem.defaultCountryPrefix.phoneCode);
+    _mobileNumberController.addListener(onChanged);
     _mobileNumberFocusNode = FocusNode();
-    _selectedCountryNotifier = ValueNotifier<CountryPrefixItem>(
-      CountryPrefixItem(
-        name: "Germany",
-        flagPath: "assets/images/germany_flag.png",
-        phonePrefix: "+49",
-      ),
+    _continueButtonController = ContinueButtonController();
+    _selectedCountryNotifier = ValueNotifier<CountryPrefixItem>(CountryPrefixItem.defaultCountryPrefix);
+
+    _phoneNumberFormatter = InputFormatter.createPhoneNumberFormatter(
+      _selectedCountryNotifier.value.phoneNumberFormat!,
     );
     super.initState();
   }
 
-  Future<void> initCountries() async {
-    final countriesJson = await rootBundle.loadString('assets/data/countries.json');
-    final countries = jsonDecode(countriesJson);
+  void onChanged() {
+    final formattedText = _phoneNumberFormatter.getUnmaskedText();
+
+    print('formattedText $formattedText');
+    print('maskedText ${_phoneNumberFormatter.getMaskedText()}');
+    print('controller value ${_mobileNumberController.text}');
   }
 
   @override
@@ -81,10 +87,17 @@ class _OnboardingMobileNumberScreenState extends State<OnboardingMobileNumberScr
                       return IvoryTextField(
                         label: 'Mobile number',
                         keyboardType: TextInputType.phone,
+                        inputFormatters: selectedCountry.phoneNumberFormat != null
+                            ? [
+                                _phoneNumberFormatter,
+                              ]
+                            : null,
+                        inputType: TextFieldInputType.number,
                         controller: _mobileNumberController,
                         focusNode: _mobileNumberFocusNode,
                         prefix: GestureDetector(
                           onTap: () {
+                            _mobileNumberFocusNode.unfocus();
                             showBottomModal(
                               addContentPadding: false,
                               context: context,
@@ -92,7 +105,10 @@ class _OnboardingMobileNumberScreenState extends State<OnboardingMobileNumberScr
                               content: CountryPrefixPicker(
                                 onCountrySelected: (country) {
                                   _selectedCountryNotifier.value = country;
-                                  _mobileNumberController.text = country.phonePrefix;
+                                  _mobileNumberController.text = country.phoneCode;
+                                  _phoneNumberFormatter = InputFormatter.createPhoneNumberFormatter(
+                                    country.phoneNumberFormat!,
+                                  );
                                 },
                                 selectedCountry: _selectedCountryNotifier.value,
                               ),
@@ -103,7 +119,10 @@ class _OnboardingMobileNumberScreenState extends State<OnboardingMobileNumberScr
                             width: 80,
                             child: Row(
                               children: [
-                                Image.asset(selectedCountry.flagPath),
+                                Text(
+                                  selectedCountry.flag,
+                                  style: const TextStyle(fontSize: 20, height: 24 / 20),
+                                ),
                                 const SizedBox(width: 4),
                                 Icon(
                                   Icons.expand_more,
@@ -124,6 +143,20 @@ class _OnboardingMobileNumberScreenState extends State<OnboardingMobileNumberScr
                     },
                   ),
                   const SizedBox(height: 24),
+                  const Spacer(),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ListenableBuilder(
+                      listenable: _continueButtonController,
+                      builder: (context, child) {
+                        return PrimaryButton(
+                          text: "Continue",
+                          onPressed: _continueButtonController.isEnabled ? () {} : null,
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 16),
                 ],
               ),
             ),

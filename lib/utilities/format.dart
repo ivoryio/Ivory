@@ -120,4 +120,14 @@ class InputFormatter {
       "#": RegExp(r"[0-9]"),
     },
   );
+
+  static MaskTextInputFormatter createPhoneNumberFormatter(String phoneNumberFormat) {
+    return MaskTextInputFormatter(
+      mask: phoneNumberFormat,
+      
+      filter: {
+        "#": RegExp(r"[0-9]"),
+      },
+    );
+  }
 }
