@@ -16,6 +16,8 @@ import 'package:solarisdemo/infrastructure/device/device_binding_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/notifications_middleware.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
+import 'package:solarisdemo/infrastructure/onboarding/financial_details/onboarding_financial_details_middleware.dart';
+import 'package:solarisdemo/infrastructure/onboarding/financial_details/onboarding_financial_details_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/signup/onboarding_signup_middleware.dart';
 import 'package:solarisdemo/infrastructure/onboarding/onboarding_progress_middleware.dart';
 import 'package:solarisdemo/infrastructure/onboarding/onboarding_service.dart';
@@ -67,6 +69,7 @@ Store<AppState> createStore({
   required AuthService authService,
   required OnboardingService onboardingService,
   required OnboardingSignupService onboardingSignupService,
+  required OnboardingFinancialDetailsService onboardingFinancialDetailsService,
 }) {
   return Store<AppState>(
     appReducer,
@@ -91,6 +94,7 @@ Store<AppState> createStore({
       OnboardingSignupMiddleware(pushNotificationService, onboardingSignupService),
       OnboardingProgressMiddleware(onboardingService),
       OnboardingPersonalDetailsMiddleware(onboardingService),
+      OnboardingFinancialDetailsMiddleware(onboardingFinancialDetailsService),
       ActionLoggerMiddleware(),
     ],
   );
