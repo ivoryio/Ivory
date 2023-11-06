@@ -104,4 +104,12 @@ class InputFormatter {
       "0": RegExp(r"[0-9]"),
     },
   );
+
+  static MaskTextInputFormatter taxId(String initialText) => MaskTextInputFormatter(
+        initialText: initialText,
+        mask: "000 000 000 000 000 000",
+        filter: {
+          "0": RegExp(r"[0-9]"),
+        },
+      );
 }
