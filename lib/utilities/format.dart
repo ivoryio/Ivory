@@ -113,11 +113,12 @@ class InputFormatter {
     },
   );
 
-  static MaskTextInputFormatter date = MaskTextInputFormatter(
-    mask: "##/##/####",
-    type: MaskAutoCompletionType.eager,
-    filter: {
-      "#": RegExp(r"[0-9]"),
-    },
-  );
+  static MaskTextInputFormatter date({String? initialText}) => MaskTextInputFormatter(
+        mask: "##/##/####",
+        initialText: initialText,
+        type: MaskAutoCompletionType.eager,
+        filter: {
+          "#": RegExp(r"[0-9]"),
+        },
+      );
 }

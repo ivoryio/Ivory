@@ -217,7 +217,7 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
           FilteringTextInputFormatter.deny(RegExp(r'[\s]')),
         ];
       case TextFieldInputType.date:
-        return [InputFormatter.date];
+        return [InputFormatter.date(initialText: _controller.text)];
       default:
         return null;
     }
