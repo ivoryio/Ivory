@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/utilities/debouncer.dart';
-import 'package:solarisdemo/widgets/ivory_builder.dart';
+import 'package:solarisdemo/widgets/custom_builder.dart';
 import 'package:solarisdemo/widgets/ivory_text_field.dart';
 import 'package:solarisdemo/widgets/modal.dart';
 
@@ -210,7 +210,7 @@ class _IvoryOptionPickerState extends State<IvoryOptionPicker> {
 
   @override
   Widget build(BuildContext context) {
-    return IvoryBuilder(
+    return CustomBuilder(
       builder: (BuildContext context, child) {
         if (widget.expanded) {
           return Expanded(child: child!);
@@ -276,7 +276,7 @@ class _IvoryOptionPickerState extends State<IvoryOptionPicker> {
       );
     }
 
-    return IvoryBuilder(
+    return CustomBuilder(
       builder: (context, child) {
         if (widget.expanded) {
           return Expanded(child: child!);
