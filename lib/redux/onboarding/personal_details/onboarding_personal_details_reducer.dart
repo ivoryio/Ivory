@@ -20,6 +20,19 @@ OnboardingPersonalDetailsState onboardingPersonDetailsReducer(OnboardingPersonal
       attributes: state.attributes,
       isLoading: true,
     );
+  } else if (action is CreatePersonSuccessEventAction) {
+    return OnboardingPersonalDetailsState(
+      attributes: state.attributes,
+      isAddressSaved: true,
+      isLoading: false,
+    );
+  } else if (action is CreatePersonFailedEventAction) {
+    return OnboardingPersonalDetailsState(
+      attributes: state.attributes,
+      isAddressSaved: false,
+      isLoading: false,
+      errorType: action.errorType,
+    );
   }
 
   return state;

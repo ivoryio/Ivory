@@ -1,3 +1,4 @@
+import 'package:solarisdemo/models/onboarding/onboarding_personal_details_error_type.dart';
 import 'package:solarisdemo/models/suggestions/address_suggestion.dart';
 
 class SubmitOnboardingBirthInfoCommandAction {
@@ -20,6 +21,18 @@ class SelectOnboardingAddressSuggestionCommandAction {
   SelectOnboardingAddressSuggestionCommandAction({required this.suggestion});
 }
 
-class SaveAddressOfResidenceCommandAction {}
+class CreatePersonCommandAction {}
 
 class OnboardingPersonalDetailsLoadingEventAction {}
+
+class CreatePersonSuccessEventAction {
+  final String personId;
+
+  CreatePersonSuccessEventAction({required this.personId});
+}
+
+class CreatePersonFailedEventAction {
+  final OnboardingPersonalDetailsErrorType errorType;
+
+  CreatePersonFailedEventAction({required this.errorType});
+}
