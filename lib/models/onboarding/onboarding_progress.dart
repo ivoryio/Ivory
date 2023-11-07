@@ -8,7 +8,7 @@ extension OnboardingStepExtension on OnboardingStep {
     switch (value) {
       case "start":
         return OnboardingStep.start;
-      case "signup":
+      case "signedUp":
         return OnboardingStep.signUp;
       default:
         throw Exception("Unknown onboarding step");
