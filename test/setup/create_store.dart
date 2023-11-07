@@ -12,6 +12,7 @@ import 'package:solarisdemo/infrastructure/device/device_fingerprint_service.dar
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/onboarding_service.dart';
+import 'package:solarisdemo/infrastructure/onboarding/personal_details/onboarding_personal_details_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/signup/onboarding_signup_service.dart';
 import 'package:solarisdemo/infrastructure/person/account_summary/account_summary_service.dart';
 import 'package:solarisdemo/infrastructure/person/person_service.dart';
@@ -60,6 +61,7 @@ Store<AppState> createTestStore({
   OnboardingSignupService? onboardingSignupService,
   CitySuggestionsService? citySuggestionsService,
   AddressSuggestionsService? addressSuggestionsService,
+  OnboardingPersonalDetailsService? onboardingPersonalDetailsService,
 }) {
   return createStore(
     initialState: initialState,
@@ -86,6 +88,8 @@ Store<AppState> createTestStore({
     onboardingSignupService: onboardingSignupService ?? NotImplementedOnboardingSignupService(),
     citySuggestionsService: citySuggestionsService ?? NotImplementedCitySuggestionsService(),
     addressSuggestionsService: addressSuggestionsService ?? NotImplementedAddressSuggestionsService(),
+    onboardingPersonalDetailsService:
+        onboardingPersonalDetailsService ?? NotImplementedOnboardingPersonalDetailsService(),
   );
 }
 
@@ -428,6 +432,13 @@ class NotImplementedCitySuggestionsService extends CitySuggestionsService {
 class NotImplementedAddressSuggestionsService extends AddressSuggestionsService {
   @override
   Future<AddressSuggestionsServiceResponse> getAddressSuggestions({required User user, required String query}) {
+    throw UnimplementedError();
+  }
+}
+
+class NotImplementedOnboardingPersonalDetailsService extends OnboardingPersonalDetailsService {
+  @override
+  Future<OnboardingPersonalDetailsServiceResponse> createPerson({required User user}) {
     throw UnimplementedError();
   }
 }

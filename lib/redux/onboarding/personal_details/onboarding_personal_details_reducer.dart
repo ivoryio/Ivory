@@ -15,6 +15,11 @@ OnboardingPersonalDetailsState onboardingPersonDetailsReducer(OnboardingPersonal
     return OnboardingPersonalDetailsState(
       attributes: state.attributes.copyWith(selectedAddress: action.suggestion),
     );
+  } else if (action is OnboardingPersonalDetailsLoadingEventAction) {
+    return OnboardingPersonalDetailsState(
+      attributes: state.attributes,
+      isLoading: true,
+    );
   }
 
   return state;

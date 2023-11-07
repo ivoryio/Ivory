@@ -78,5 +78,36 @@ void main() {
 
       expect(onboardingPersonalDetailsState.attributes.selectedAddress, addressSuggestion);
     });
+
+    group("Person creation", () {
+      test("When the user is saving the address or residence, isLoading should change to true", () async {
+        // given
+        const attributes = OnboardingPersonalDetailsAttributes(
+          birthDate: birthDate,
+          city: city,
+          country: country,
+          nationality: nationality,
+          selectedAddress: addressSuggestion,
+        );
+
+        final store = createTestStore(
+          initialState: createAppState(
+            onboardingPersonalDetailsState: const OnboardingPersonalDetailsState(
+              attributes: attributes,
+            ),
+          ),
+        );
+        final appState = store.onChange.firstWhere((state) => state.onboardingPersonalDetailsState.isLoading);
+
+        // when
+        store.dispatch(SaveAddressOfResidenceCommandAction());
+
+        // then
+        final onboardingPersonalDetailsState = (await appState).onboardingPersonalDetailsState;
+
+        expect(onboardingPersonalDetailsState.isLoading, true);
+        expect(onboardingPersonalDetailsState.attributes, attributes);
+      });
+    });
   });
 }

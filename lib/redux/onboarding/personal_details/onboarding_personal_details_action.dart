@@ -19,3 +19,7 @@ class SelectOnboardingAddressSuggestionCommandAction {
 
   SelectOnboardingAddressSuggestionCommandAction({required this.suggestion});
 }
+
+class SaveAddressOfResidenceCommandAction {}
+
+class OnboardingPersonalDetailsLoadingEventAction {}
