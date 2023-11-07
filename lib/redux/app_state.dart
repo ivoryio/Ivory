@@ -42,7 +42,7 @@ class AppState extends Equatable {
   final OnboardingProgressState onboardingProgressState;
   final OnboardingSignupState onboardingSignupState;
   final OnboardingPersonalDetailsState onboardingPersonalDetailsState;
-  final OnboardingFinancialDetailsState onboardingFinancialDetailsState;
+  // final OnboardingFinancialDetailsState onboardingFinancialDetailsState;
 
   const AppState({
     required this.transactionsState,
@@ -66,7 +66,7 @@ class AppState extends Equatable {
     required this.onboardingSignupState,
     required this.onboardingProgressState,
     required this.onboardingPersonalDetailsState,
-    required this.onboardingFinancialDetailsState,
+    // required this.onboardingFinancialDetailsState,
   });
 
   factory AppState.initialState() {
@@ -92,7 +92,7 @@ class AppState extends Equatable {
       onboardingSignupState: OnboardingSignupState(),
       onboardingProgressState: OnboardingProgressInitialLoadingState(),
       onboardingPersonalDetailsState: OnboardingPersonalDetailsInitialState(),
-      onboardingFinancialDetailsState: OnboardingFinancialDetailsState(),
+      // onboardingFinancialDetailsState: OnboardingFinancialDetailsState(),
     );
   }
 
@@ -119,7 +119,7 @@ class AppState extends Equatable {
         onboardingSignupState,
         onboardingProgressState,
         onboardingPersonalDetailsState,
-        onboardingFinancialDetailsState,
+        // onboardingFinancialDetailsState,
       ];
 
   @override

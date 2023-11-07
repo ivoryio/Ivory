@@ -44,7 +44,7 @@ AppState appReducer(AppState currentState, dynamic action) {
     onboardingSignupState: onboardingSignupReducer(currentState.onboardingSignupState, action),
     onboardingProgressState: onboardingProgressReducer(currentState.onboardingProgressState, action),
     onboardingPersonalDetailsState: onboardingPersonDetailsReducer(currentState.onboardingPersonalDetailsState, action),
-    onboardingFinancialDetailsState:
-        onboardingFinancialDetailsReducer(currentState.onboardingFinancialDetailsState, action),
+    // onboardingFinancialDetailsState:
+    //     onboardingFinancialDetailsReducer(currentState.onboardingFinancialDetailsState, action),
   );
 }

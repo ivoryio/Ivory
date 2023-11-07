@@ -6,7 +6,7 @@ class OnboardingFinancialDetailsService extends ApiService {
   OnboardingFinancialDetailsService({super.user});
 
   Future<OnboardingFinancialDetailsResponse> createTaxIdentification({
-    required User user,
+    // required User user,
     required String taxId,
   }) async {
     this.user = user;

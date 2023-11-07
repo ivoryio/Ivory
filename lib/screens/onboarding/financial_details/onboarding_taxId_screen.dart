@@ -73,14 +73,15 @@ class _OnboardingTaxIdScreenState extends State<OnboardingTaxIdScreen> {
                     keyboardType: TextInputType.number,
                   ),
                   const Spacer(),
-                  StoreConnector<AppState, OnboardingFinancialDetailsViewModel>(
-                    converter: (store) => OnboardingFinancialDetailsPresenter.present(
-                        financialDetailsState: store.state.onboardingFinancialDetailsState),
-                    onWillChange: (previousViewModel, newViewModel) {
-                      if (newViewModel.taxId.isNotEmpty) {
-                        Navigator.pushNamed(context, WelcomeScreen.routeName);
-                      }
-                    },
+                  StoreConnector<AppState, dynamic>(
+                    converter: (store) => store.state.toString(),
+                    // converter: (store) => OnboardingFinancialDetailsPresenter.present(
+                    //     financialDetailsState: store.state.onboardingFinancialDetailsState),
+                    // onWillChange: (previousViewModel, newViewModel) {
+                    //   if (newViewModel.taxId.isNotEmpty) {
+                    //     Navigator.pushNamed(context, WelcomeScreen.routeName);
+                    //   }
+                    // },
                     distinct: true,
                     builder: (context, viewModel) {
                       return SizedBox(
@@ -92,10 +93,10 @@ class _OnboardingTaxIdScreenState extends State<OnboardingTaxIdScreen> {
                               ? () {
                                   _continueButtonController.setLoading();
 
-                                  StoreProvider.of<AppState>(context).dispatch(
-                                    SubmitOnboardingTaxIdCommandAction(
-                                        taxId: _taxIdController.text.replaceAll(' ', '')),
-                                  );
+                                  // StoreProvider.of<AppState>(context).dispatch(
+                                  //   SubmitOnboardingTaxIdCommandAction(
+                                  //       taxId: _taxIdController.text.replaceAll(' ', '')),
+                                  // );
 
                                   _taxIdController
                                       .setErrorText('This Tax ID is invalid for Germany. Please try another.');

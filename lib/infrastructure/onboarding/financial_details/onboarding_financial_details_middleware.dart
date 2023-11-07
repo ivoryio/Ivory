@@ -14,9 +14,9 @@ class OnboardingFinancialDetailsMiddleware extends MiddlewareClass<AppState> {
     next(action);
 
     if (action is SubmitOnboardingTaxIdCommandAction) {
-      final user = (store.state.authState as AuthenticationInitializedState).cognitoUser;
+      // final user = (store.state.authState as AuthenticationInitializedState).cognitoUser;
 
-      await _onboardingFinancialDetailsService.createTaxIdentification(taxId: action.taxId, user: user);
+      // await _onboardingFinancialDetailsService.createTaxIdentification(taxId: action.taxId, user: user);
 
       store.dispatch(UpdateTaxIdSuccessEventAction());
     } else {

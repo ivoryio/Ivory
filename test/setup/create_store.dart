@@ -57,7 +57,7 @@ Store<AppState> createTestStore({
   AuthService? authService,
   OnboardingService? onboardingService,
   OnboardingSignupService? onboardingSignupService,
-  OnboardingFinancialDetailsService? onboardingFinancialDetailsService,
+  // OnboardingFinancialDetailsService? onboardingFinancialDetailsService,
 }) {
   return createStore(
     initialState: initialState,
@@ -82,8 +82,8 @@ Store<AppState> createTestStore({
     authService: authService ?? NotImplementedAuthService(),
     onboardingService: onboardingService ?? NotImplementedOnboardingService(),
     onboardingSignupService: onboardingSignupService ?? NotImplementedOnboardingSignupService(),
-    onboardingFinancialDetailsService:
-        onboardingFinancialDetailsService ?? NotImplementedOnboardingFinancialDetailsService(),
+    // onboardingFinancialDetailsService:
+    //     onboardingFinancialDetailsService ?? NotImplementedOnboardingFinancialDetailsService(),
   );
 }
 
@@ -425,7 +425,7 @@ class NotImplementedOnboardingFinancialDetailsService extends OnboardingFinancia
   @override
   Future<CreateTaxIdentificationSuccessResponse> createTaxIdentification({
     required String taxId,
-    required User user,
+    // required User user,
   }) {
     throw UnimplementedError();
   }

@@ -69,7 +69,7 @@ Store<AppState> createStore({
   required AuthService authService,
   required OnboardingService onboardingService,
   required OnboardingSignupService onboardingSignupService,
-  required OnboardingFinancialDetailsService onboardingFinancialDetailsService,
+  // required OnboardingFinancialDetailsService onboardingFinancialDetailsService,
 }) {
   return Store<AppState>(
     appReducer,
@@ -94,7 +94,7 @@ Store<AppState> createStore({
       OnboardingSignupMiddleware(pushNotificationService, onboardingSignupService),
       OnboardingProgressMiddleware(onboardingService),
       OnboardingPersonalDetailsMiddleware(onboardingService),
-      OnboardingFinancialDetailsMiddleware(onboardingFinancialDetailsService),
+      // OnboardingFinancialDetailsMiddleware(onboardingFinancialDetailsService),
       ActionLoggerMiddleware(),
     ],
   );
