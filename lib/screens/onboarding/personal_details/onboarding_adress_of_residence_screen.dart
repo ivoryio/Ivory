@@ -62,14 +62,21 @@ class _OnboardingAddressOfResidenceScreenState extends State<OnboardingAddressOf
       converter: (store) => OnboardingPersonalDetailsPresenter.presentOnboardingPersonalDetails(
         onboardingPersonalDetailsState: store.state.onboardingPersonalDetailsState,
       ),
+      onWillChange: (previousViewModel, newViewModel) {
+        if (newViewModel.isLoading) {
+          _continueButtonController.setLoading();
+        }
+      },
       builder: (context, onboardingViewModel) {
         return ScreenScaffold(
+          shouldPop: !onboardingViewModel.isLoading,
           body: Column(
             children: [
               AppToolbar(
                 richTextTitle: StepRichTextTitle(step: 2, totalSteps: 4),
                 actions: const [AppbarLogo()],
                 padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+                backButtonAppearanceDisabled: onboardingViewModel.isLoading,
               ),
               AnimatedLinearProgressIndicator.step(current: 2, totalSteps: 4),
               Expanded(
@@ -204,11 +211,12 @@ class _OnboardingAddressOfResidenceScreenState extends State<OnboardingAddressOf
                       isLoading: _continueButtonController.isLoading,
                       onPressed: _continueButtonController.isEnabled
                           ? () {
-                              print(onboardingViewModel);
-                              // _continueButtonController.setLoading();
-                              // _addressController.setEnabled(false);
-                              // _houseNumberController.setEnabled(false);
-                              // _addressLineController.setEnabled(false);
+                              StoreProvider.of<AppState>(context).dispatch(
+                                CreatePersonAccountCommandAction(
+                                  houseNumber: _houseNumberController.text,
+                                  addressLine: _addressLineController.text,
+                                ),
+                              );
                             }
                           : null,
                     ),

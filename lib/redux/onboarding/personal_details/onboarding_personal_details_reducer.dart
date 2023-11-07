@@ -20,13 +20,13 @@ OnboardingPersonalDetailsState onboardingPersonDetailsReducer(OnboardingPersonal
       attributes: state.attributes,
       isLoading: true,
     );
-  } else if (action is CreatePersonSuccessEventAction) {
+  } else if (action is CreatePersonAccountSuccessEventAction) {
     return OnboardingPersonalDetailsState(
       attributes: state.attributes,
       isAddressSaved: true,
       isLoading: false,
     );
-  } else if (action is CreatePersonFailedEventAction) {
+  } else if (action is CreatePersonAccountFailedEventAction) {
     return OnboardingPersonalDetailsState(
       attributes: state.attributes,
       isAddressSaved: false,

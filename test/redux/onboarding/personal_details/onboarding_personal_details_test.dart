@@ -111,7 +111,7 @@ void main() {
             store.onChange.firstWhere((state) => state.onboardingPersonalDetailsState.isAddressSaved == true);
 
         // when
-        store.dispatch(CreatePersonCommandAction());
+        store.dispatch(CreatePersonAccountCommandAction(addressLine: "", houseNumber: ""));
 
         // then
         expect((await loadingState).onboardingPersonalDetailsState.isLoading, true);
@@ -144,7 +144,7 @@ void main() {
             store.onChange.firstWhere((state) => state.onboardingPersonalDetailsState.isAddressSaved == false);
 
         // when
-        store.dispatch(CreatePersonCommandAction());
+        store.dispatch(CreatePersonAccountCommandAction(addressLine: "", houseNumber: ""));
 
         // then
         expect((await loadingState).onboardingPersonalDetailsState.isLoading, true);

@@ -21,18 +21,26 @@ class SelectOnboardingAddressSuggestionCommandAction {
   SelectOnboardingAddressSuggestionCommandAction({required this.suggestion});
 }
 
-class CreatePersonCommandAction {}
+class CreatePersonAccountCommandAction {
+  final String houseNumber;
+  final String addressLine;
+
+  CreatePersonAccountCommandAction({
+    required this.houseNumber,
+    required this.addressLine,
+  });
+}
 
 class OnboardingPersonalDetailsLoadingEventAction {}
 
-class CreatePersonSuccessEventAction {
+class CreatePersonAccountSuccessEventAction {
   final String personId;
 
-  CreatePersonSuccessEventAction({required this.personId});
+  CreatePersonAccountSuccessEventAction({required this.personId});
 }
 
-class CreatePersonFailedEventAction {
+class CreatePersonAccountFailedEventAction {
   final OnboardingPersonalDetailsErrorType errorType;
 
-  CreatePersonFailedEventAction({required this.errorType});
+  CreatePersonAccountFailedEventAction({required this.errorType});
 }

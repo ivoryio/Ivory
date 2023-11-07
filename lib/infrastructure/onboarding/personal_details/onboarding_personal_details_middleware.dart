@@ -13,17 +13,26 @@ class OnboardingPersonalDetailsMiddleware extends MiddlewareClass<AppState> {
   call(Store<AppState> store, action, NextDispatcher next) async {
     next(action);
 
-    if (action is CreatePersonCommandAction) {
+    if (action is CreatePersonAccountCommandAction) {
       if (store.state.authState is AuthenticationInitializedState) {
         store.dispatch(OnboardingPersonalDetailsLoadingEventAction());
 
         final user = (store.state.authState as AuthenticationInitializedState).cognitoUser;
-        final response = await _onboardingPersonalDetailsService.createPerson(user: user);
+        final personalDetailsAttributes = store.state.onboardingPersonalDetailsState.attributes;
+
+        final response = await _onboardingPersonalDetailsService.createPerson(
+          user: user,
+          address: personalDetailsAttributes.selectedAddress!,
+          birthCity: personalDetailsAttributes.city ?? "",
+          birthCountry: personalDetailsAttributes.country ?? "",
+          birthDate: personalDetailsAttributes.birthDate ?? "",
+          nationality: personalDetailsAttributes.nationality ?? "",
+        );
 
         if (response is OnboardingCreatePersonSuccessResponse) {
-          store.dispatch(CreatePersonSuccessEventAction(personId: response.personId));
+          store.dispatch(CreatePersonAccountSuccessEventAction(personId: response.personId));
         } else if (response is OnboardingPersonalDetailsServiceErrorResponse) {
-          store.dispatch(CreatePersonFailedEventAction(errorType: response.errorType));
+          store.dispatch(CreatePersonAccountFailedEventAction(errorType: response.errorType));
         }
       }
     }

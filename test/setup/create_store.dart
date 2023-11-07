@@ -28,6 +28,7 @@ import 'package:solarisdemo/models/bank_card.dart';
 import 'package:solarisdemo/models/device.dart';
 import 'package:solarisdemo/models/device_activity.dart';
 import 'package:solarisdemo/models/onboarding/onboarding_signup_attributes.dart';
+import 'package:solarisdemo/models/suggestions/address_suggestion.dart';
 import 'package:solarisdemo/models/transactions/transaction_model.dart';
 import 'package:solarisdemo/models/transfer/reference_account_transfer.dart';
 import 'package:solarisdemo/models/user.dart';
@@ -438,7 +439,14 @@ class NotImplementedAddressSuggestionsService extends AddressSuggestionsService 
 
 class NotImplementedOnboardingPersonalDetailsService extends OnboardingPersonalDetailsService {
   @override
-  Future<OnboardingPersonalDetailsServiceResponse> createPerson({required User user}) {
+  Future<OnboardingPersonalDetailsServiceResponse> createPerson({
+    required User user,
+    required AddressSuggestion address,
+    required String birthDate,
+    required String birthCity,
+    required String birthCountry,
+    required String nationality,
+  }) async {
     throw UnimplementedError();
   }
 }
