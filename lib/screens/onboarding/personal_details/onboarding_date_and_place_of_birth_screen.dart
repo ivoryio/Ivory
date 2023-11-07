@@ -9,6 +9,7 @@ import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/onboarding/personal_details/onboarding_personal_details_action.dart';
 import 'package:solarisdemo/redux/suggestions/city/city_suggestions_action.dart';
 import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_adress_of_residence_screen.dart';
+import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_nationality_not_supported_screen.dart';
 import 'package:solarisdemo/utilities/debouncer.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -53,6 +54,10 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
     } else {
       _continueButtonController.setDisabled();
     }
+  }
+
+  bool _notValidNationality() {
+    return _selectNationalityController.selectedOptions.first.value != "DE";
   }
 
   @override
@@ -195,6 +200,11 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
                           text: "Continue",
                           onPressed: _continueButtonController.isEnabled
                               ? () {
+                                  if (_notValidNationality()) {
+                                    Navigator.pushNamed(context, OnboardingNationalityNotSupportedScreen.routeName);
+                                    return;
+                                  }
+
                                   StoreProvider.of<AppState>(context).dispatch(
                                     SubmitOnboardingBirthInfoCommandAction(
                                       birthDate: _dateOfBirthController.text,
