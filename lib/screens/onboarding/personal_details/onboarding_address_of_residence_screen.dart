@@ -35,7 +35,7 @@ class _OnboardingAddressOfResidenceScreenState extends State<OnboardingAddressOf
   late FocusNode _addressLineFocusNode;
   late ContinueButtonController _continueButtonController;
 
-  final _debouncer = Debouncer(const Duration(seconds: 1));
+  final _debouncer = Debouncer(seconds: 1);
 
   @override
   void initState() {
@@ -52,7 +52,7 @@ class _OnboardingAddressOfResidenceScreenState extends State<OnboardingAddressOf
   @override
   void dispose() {
     _addressController.dispose();
-    _debouncer.dispose();
+    _debouncer.cancel();
     super.dispose();
   }
 
@@ -62,14 +62,21 @@ class _OnboardingAddressOfResidenceScreenState extends State<OnboardingAddressOf
       converter: (store) => OnboardingPersonalDetailsPresenter.presentOnboardingPersonalDetails(
         onboardingPersonalDetailsState: store.state.onboardingPersonalDetailsState,
       ),
+      onWillChange: (previousViewModel, newViewModel) {
+        if (newViewModel.isLoading) {
+          _continueButtonController.setLoading();
+        }
+      },
       builder: (context, onboardingViewModel) {
         return ScreenScaffold(
+          shouldPop: !onboardingViewModel.isLoading,
           body: Column(
             children: [
               AppToolbar(
                 richTextTitle: StepRichTextTitle(step: 2, totalSteps: 4),
                 actions: const [AppbarLogo()],
                 padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+                backButtonAppearanceDisabled: onboardingViewModel.isLoading,
               ),
               AnimatedLinearProgressIndicator.step(current: 2, totalSteps: 4),
               Expanded(
@@ -169,7 +176,7 @@ class _OnboardingAddressOfResidenceScreenState extends State<OnboardingAddressOf
                                   style: ClientConfig.getTextStyleScheme().labelSmall,
                                 ),
                                 Text(
-                                  onboardingViewModel.attributes.city ?? "",
+                                  onboardingViewModel.attributes.selectedAddress?.city ?? "",
                                   style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
                                 ),
                                 const SizedBox(
@@ -180,7 +187,7 @@ class _OnboardingAddressOfResidenceScreenState extends State<OnboardingAddressOf
                                   style: ClientConfig.getTextStyleScheme().labelSmall,
                                 ),
                                 Text(
-                                  onboardingViewModel.attributes.country ?? "",
+                                  onboardingViewModel.attributes.selectedAddress?.country ?? "",
                                   style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
                                 ),
                               ],
@@ -204,11 +211,12 @@ class _OnboardingAddressOfResidenceScreenState extends State<OnboardingAddressOf
                       isLoading: _continueButtonController.isLoading,
                       onPressed: _continueButtonController.isEnabled
                           ? () {
-                              print(onboardingViewModel);
-                              // _continueButtonController.setLoading();
-                              // _addressController.setEnabled(false);
-                              // _houseNumberController.setEnabled(false);
-                              // _addressLineController.setEnabled(false);
+                              StoreProvider.of<AppState>(context).dispatch(
+                                CreatePersonAccountCommandAction(
+                                  houseNumber: _houseNumberController.text,
+                                  addressLine: _addressLineController.text,
+                                ),
+                              );
                             }
                           : null,
                     ),

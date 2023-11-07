@@ -20,6 +20,24 @@ OnboardingPersonalDetailsState onboardingPersonDetailsReducer(OnboardingPersonal
     return OnboardingPersonalDetailsState(
       tanRequestedAt: DateTime.now(),
     );
+  } else if (action is OnboardingPersonalDetailsLoadingEventAction) {
+    return OnboardingPersonalDetailsState(
+      attributes: state.attributes,
+      isLoading: true,
+    );
+  } else if (action is CreatePersonAccountSuccessEventAction) {
+    return OnboardingPersonalDetailsState(
+      attributes: state.attributes,
+      isAddressSaved: true,
+      isLoading: false,
+    );
+  } else if (action is CreatePersonAccountFailedEventAction) {
+    return OnboardingPersonalDetailsState(
+      attributes: state.attributes,
+      isAddressSaved: false,
+      isLoading: false,
+      errorType: action.errorType,
+    );
   }
 
   return state;

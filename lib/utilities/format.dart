@@ -113,14 +113,6 @@ class InputFormatter {
     },
   );
 
-  static MaskTextInputFormatter date = MaskTextInputFormatter(
-    mask: "##/##/####",
-    type: MaskAutoCompletionType.eager,
-    filter: {
-      "#": RegExp(r"[0-9]"),
-    },
-  );
-
   static MaskTextInputFormatter createPhoneNumberFormatter(String phoneNumberFormat) {
     return MaskTextInputFormatter(
       type: MaskAutoCompletionType.eager,
@@ -130,4 +122,12 @@ class InputFormatter {
       },
     );
   }
+  static MaskTextInputFormatter date({String? initialText}) => MaskTextInputFormatter(
+        mask: "##/##/####",
+        initialText: initialText,
+        type: MaskAutoCompletionType.eager,
+        filter: {
+          "#": RegExp(r"[0-9]"),
+        },
+      );
 }

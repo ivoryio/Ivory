@@ -9,6 +9,7 @@ import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/onboarding/personal_details/onboarding_personal_details_action.dart';
 import 'package:solarisdemo/redux/suggestions/city/city_suggestions_action.dart';
 import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_address_of_residence_screen.dart';
+import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_nationality_not_supported_screen.dart';
 import 'package:solarisdemo/utilities/debouncer.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -35,7 +36,7 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
   final IvorySelectOptionController _selectNationalityController = IvorySelectOptionController(loading: true);
   final ContinueButtonController _continueButtonController = ContinueButtonController();
 
-  final _debouncer = Debouncer(const Duration(seconds: 1));
+  final _debouncer = Debouncer(seconds: 1);
 
   @override
   void initState() {
@@ -55,6 +56,10 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
     }
   }
 
+  bool _notValidNationality() {
+    return _selectNationalityController.selectedOptions.first.value != "DE";
+  }
+
   @override
   void dispose() {
     _dateOfBirthController.dispose();
@@ -62,7 +67,7 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
     _selectCityController.dispose();
     _selectNationalityController.dispose();
     _continueButtonController.dispose();
-    _debouncer.dispose();
+    _debouncer.cancel();
 
     super.dispose();
   }
@@ -107,6 +112,9 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
                     bottomSheetTitle: "Select your country of birth",
                     searchFieldPlaceholder: "Search country...",
                     controller: _selectCountryController,
+                    optionSeparatorBuilder: (context, option) => option.value == "DE"
+                        ? Divider(height: 2, color: ClientConfig.getCustomColors().neutral200)
+                        : const SizedBox(),
                     enabledSearch: true,
                     bottomSheetExpanded: true,
                     onBottomSheetOpened: () => FocusScope.of(context).unfocus(),
@@ -156,15 +164,14 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
                       },
                       onSearchChanged: (value) {
                         _debouncer.run(() {
-                          if (value.isNotEmpty) {
-                            _selectCityController.setLoading(true);
-                            StoreProvider.of<AppState>(context).dispatch(
-                              FetchCitySuggestionsCommandAction(
-                                countryCode: _selectCountryController.selectedOptions.first.value,
-                                searchTerm: value,
-                              ),
-                            );
-                          }
+                          _selectCityController.setLoading(true);
+
+                          StoreProvider.of<AppState>(context).dispatch(
+                            FetchCitySuggestionsCommandAction(
+                              countryCode: _selectCountryController.selectedOptions.first.value,
+                              searchTerm: value,
+                            ),
+                          );
                         });
                       },
                       onBottomSheetOpened: () => FocusScope.of(context).unfocus(),
@@ -193,6 +200,11 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
                           text: "Continue",
                           onPressed: _continueButtonController.isEnabled
                               ? () {
+                                  if (_notValidNationality()) {
+                                    Navigator.pushNamed(context, OnboardingNationalityNotSupportedScreen.routeName);
+                                    return;
+                                  }
+
                                   StoreProvider.of<AppState>(context).dispatch(
                                     SubmitOnboardingBirthInfoCommandAction(
                                       birthDate: _dateOfBirthController.text,

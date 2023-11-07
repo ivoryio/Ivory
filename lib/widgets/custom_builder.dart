@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class IvoryBuilder extends StatelessWidget {
+class CustomBuilder extends StatelessWidget {
   final Widget? child;
   final Widget Function(BuildContext context, Widget? child) builder;
 
-  const IvoryBuilder({
+  const CustomBuilder({
     super.key,
     required this.builder,
     this.child,

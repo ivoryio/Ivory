@@ -12,6 +12,7 @@ import 'package:solarisdemo/infrastructure/device/device_fingerprint_service.dar
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/onboarding_service.dart';
+import 'package:solarisdemo/infrastructure/onboarding/personal_details/onboarding_personal_details_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/signup/onboarding_signup_service.dart';
 import 'package:solarisdemo/infrastructure/person/account_summary/account_summary_service.dart';
 import 'package:solarisdemo/infrastructure/person/person_service.dart';
@@ -27,6 +28,7 @@ import 'package:solarisdemo/models/bank_card.dart';
 import 'package:solarisdemo/models/device.dart';
 import 'package:solarisdemo/models/device_activity.dart';
 import 'package:solarisdemo/models/onboarding/onboarding_signup_attributes.dart';
+import 'package:solarisdemo/models/suggestions/address_suggestion.dart';
 import 'package:solarisdemo/models/transactions/transaction_model.dart';
 import 'package:solarisdemo/models/transfer/reference_account_transfer.dart';
 import 'package:solarisdemo/models/user.dart';
@@ -60,6 +62,7 @@ Store<AppState> createTestStore({
   OnboardingSignupService? onboardingSignupService,
   CitySuggestionsService? citySuggestionsService,
   AddressSuggestionsService? addressSuggestionsService,
+  OnboardingPersonalDetailsService? onboardingPersonalDetailsService,
 }) {
   return createStore(
     initialState: initialState,
@@ -86,6 +89,8 @@ Store<AppState> createTestStore({
     onboardingSignupService: onboardingSignupService ?? NotImplementedOnboardingSignupService(),
     citySuggestionsService: citySuggestionsService ?? NotImplementedCitySuggestionsService(),
     addressSuggestionsService: addressSuggestionsService ?? NotImplementedAddressSuggestionsService(),
+    onboardingPersonalDetailsService:
+        onboardingPersonalDetailsService ?? NotImplementedOnboardingPersonalDetailsService(),
   );
 }
 
@@ -428,6 +433,20 @@ class NotImplementedCitySuggestionsService extends CitySuggestionsService {
 class NotImplementedAddressSuggestionsService extends AddressSuggestionsService {
   @override
   Future<AddressSuggestionsServiceResponse> getAddressSuggestions({required User user, required String query}) {
+    throw UnimplementedError();
+  }
+}
+
+class NotImplementedOnboardingPersonalDetailsService extends OnboardingPersonalDetailsService {
+  @override
+  Future<OnboardingPersonalDetailsServiceResponse> createPerson({
+    required User user,
+    required AddressSuggestion address,
+    required String birthDate,
+    required String birthCity,
+    required String birthCountry,
+    required String nationality,
+  }) async {
     throw UnimplementedError();
   }
 }

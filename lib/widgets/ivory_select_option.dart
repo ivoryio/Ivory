@@ -1,7 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:solarisdemo/config.dart';
-import 'package:solarisdemo/widgets/ivory_builder.dart';
+import 'package:solarisdemo/utilities/debouncer.dart';
+import 'package:solarisdemo/widgets/custom_builder.dart';
 import 'package:solarisdemo/widgets/ivory_text_field.dart';
 import 'package:solarisdemo/widgets/modal.dart';
 
@@ -18,6 +19,7 @@ class IvorySelectOption extends StatefulWidget {
   final VoidCallback? onBottomSheetOpened;
   final bool filterOptions;
   final bool bottomSheetExpanded;
+  final Widget Function(BuildContext, SelectOption)? optionSeparatorBuilder;
 
   const IvorySelectOption({
     super.key,
@@ -33,6 +35,7 @@ class IvorySelectOption extends StatefulWidget {
     this.onSearchChanged,
     this.filterOptions = true,
     this.bottomSheetExpanded = false,
+    this.optionSeparatorBuilder,
   });
 
   @override
@@ -107,7 +110,7 @@ class _IvorySelectOptionState extends State<IvorySelectOption> {
                             _controller.selectedOptions.map((e) => e.textLabel).join(", "),
                             style: ClientConfig.getTextStyleScheme()
                                 .bodyLargeRegular
-                                .copyWith(color: ClientConfig.getCustomColors().neutral700),
+                                .copyWith(color: ClientConfig.getCustomColors().neutral900),
                             overflow: TextOverflow.ellipsis,
                           ),
                         )
@@ -151,13 +154,14 @@ class _IvorySelectOptionState extends State<IvorySelectOption> {
       addContentPadding: false,
       useSafeArea: true,
       useScrollableChild: false,
-      content: _BottomSheetContent(
+      content: IvoryOptionPicker(
         controller: _controller,
         enabledSearch: widget.enabledSearch,
         searchFieldPlaceholder: widget.searchFieldPlaceholder,
         onSearchChanged: widget.onSearchChanged,
         filterOptions: widget.filterOptions,
         expanded: widget.bottomSheetExpanded,
+        optionSeparatorBuilder: widget.optionSeparatorBuilder,
         onOptionSelected: (option) {
           _controller.selectOption(option);
           widget.onOptionSelected?.call(option);
@@ -167,16 +171,18 @@ class _IvorySelectOptionState extends State<IvorySelectOption> {
   }
 }
 
-class _BottomSheetContent extends StatefulWidget {
+class IvoryOptionPicker extends StatefulWidget {
   final IvorySelectOptionController controller;
   final String searchFieldPlaceholder;
   final void Function(SelectOption) onOptionSelected;
   final void Function(String)? onSearchChanged;
+  final Widget Function(BuildContext, SelectOption)? optionSeparatorBuilder;
   final bool enabledSearch;
   final bool filterOptions;
   final bool expanded;
 
-  const _BottomSheetContent({
+  const IvoryOptionPicker({
+    super.key,
     required this.controller,
     required this.onOptionSelected,
     required this.enabledSearch,
@@ -184,14 +190,16 @@ class _BottomSheetContent extends StatefulWidget {
     required this.filterOptions,
     this.onSearchChanged,
     this.expanded = false,
+    this.optionSeparatorBuilder,
   });
 
   @override
-  State<_BottomSheetContent> createState() => _BottomSheetContentState();
+  State<IvoryOptionPicker> createState() => _IvoryOptionPickerState();
 }
 
-class _BottomSheetContentState extends State<_BottomSheetContent> {
+class _IvoryOptionPickerState extends State<IvoryOptionPicker> {
   late List<SelectOption> _filteredOptions;
+  final _debouncer = Debouncer(milliseconds: 500);
 
   @override
   void initState() {
@@ -202,7 +210,7 @@ class _BottomSheetContentState extends State<_BottomSheetContent> {
 
   @override
   Widget build(BuildContext context) {
-    return IvoryBuilder(
+    return CustomBuilder(
       builder: (BuildContext context, child) {
         if (widget.expanded) {
           return Expanded(child: child!);
@@ -222,11 +230,13 @@ class _BottomSheetContentState extends State<_BottomSheetContent> {
                   widget.onSearchChanged?.call(value);
 
                   if (widget.filterOptions) {
-                    setState(() {
-                      _filteredOptions = widget.controller.options
-                          .where((option) => option.textLabel.toLowerCase().contains(value.toLowerCase()))
-                          .toList();
-                    });
+                    _debouncer.run(
+                      () => setState(() {
+                        _filteredOptions = widget.controller.options
+                            .where((option) => option.textLabel.toLowerCase().contains(value.toLowerCase()))
+                            .toList();
+                      }),
+                    );
                   }
                 },
               ),
@@ -266,7 +276,7 @@ class _BottomSheetContentState extends State<_BottomSheetContent> {
       );
     }
 
-    return IvoryBuilder(
+    return CustomBuilder(
       builder: (context, child) {
         if (widget.expanded) {
           return Expanded(child: child!);
@@ -274,9 +284,18 @@ class _BottomSheetContentState extends State<_BottomSheetContent> {
 
         return child!;
       },
-      child: ListView.builder(
+      child: ListView.separated(
         shrinkWrap: true,
         itemCount: options.length,
+        separatorBuilder: (context, index) {
+          final SelectOption option = options[index];
+
+          if (widget.optionSeparatorBuilder != null) {
+            return widget.optionSeparatorBuilder!(context, option);
+          }
+
+          return const SizedBox();
+        },
         itemBuilder: (context, index) {
           SelectOption option = options[index];
 
