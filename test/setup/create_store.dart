@@ -11,6 +11,7 @@ import 'package:solarisdemo/infrastructure/device/device_binding_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_fingerprint_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
+import 'package:solarisdemo/infrastructure/onboarding/financial_details/onboarding_financial_details_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/onboarding_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/signup/onboarding_signup_service.dart';
 import 'package:solarisdemo/infrastructure/person/account_summary/account_summary_service.dart';
@@ -56,6 +57,7 @@ Store<AppState> createTestStore({
   AuthService? authService,
   OnboardingService? onboardingService,
   OnboardingSignupService? onboardingSignupService,
+  OnboardingFinancialDetailsService? onboardingFinancialDetailsService,
 }) {
   return createStore(
     initialState: initialState,
@@ -80,6 +82,8 @@ Store<AppState> createTestStore({
     authService: authService ?? NotImplementedAuthService(),
     onboardingService: onboardingService ?? NotImplementedOnboardingService(),
     onboardingSignupService: onboardingSignupService ?? NotImplementedOnboardingSignupService(),
+    onboardingFinancialDetailsService:
+        onboardingFinancialDetailsService ?? NotImplementedOnboardingFinancialDetailsService(),
   );
 }
 
@@ -413,6 +417,13 @@ class NotImplementedOnboardingSignupService extends OnboardingSignupService {
     required String deviceToken,
     required String tsAndCsSignedAt,
   }) async {
+    throw UnimplementedError();
+  }
+}
+
+class NotImplementedOnboardingFinancialDetailsService extends OnboardingFinancialDetailsService {
+  @override
+  Future<CreateTaxIdentificationSuccessResponse> createTaxIdentification({required String taxId}) {
     throw UnimplementedError();
   }
 }
