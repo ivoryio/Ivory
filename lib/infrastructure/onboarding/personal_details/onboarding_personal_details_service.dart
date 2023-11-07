@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:equatable/equatable.dart';
+import 'package:flutter/services.dart';
 import 'package:solarisdemo/models/onboarding/onboarding_personal_details_error_type.dart';
 import 'package:solarisdemo/models/suggestions/address_suggestion.dart';
 import 'package:solarisdemo/models/user.dart';
@@ -24,7 +27,7 @@ class OnboardingPersonalDetailsService extends ApiService {
           'line_2': "",
           'postal_code': "44135", // TODO: get postal code from address
           'city': address.city,
-          'country': address.country,
+          'country': await _isoCodeFromCountryName(address.country),
         },
         'birthDate': birthDate,
         'birthCity': birthCity,
@@ -59,4 +62,17 @@ class OnboardingPersonalDetailsServiceErrorResponse extends OnboardingPersonalDe
 
   @override
   List<Object?> get props => [errorType];
+}
+
+Future<String> _isoCodeFromCountryName(String countryName) async {
+  final countriesJson = await rootBundle.loadString('assets/data/countries.json');
+  final countries = jsonDecode(countriesJson);
+
+  for (var country in countries) {
+    if (country['name'] == countryName) {
+      return country['isoCode'];
+    }
+  }
+
+  return "";
 }

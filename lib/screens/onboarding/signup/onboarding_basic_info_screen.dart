@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
@@ -80,9 +78,9 @@ class _OnboardingBasicInfoScreenState extends State<OnboardingBasicInfoScreen> {
                     controller: _selectTitleController,
                     onBottomSheetOpened: () => FocusScope.of(context).unfocus(),
                     options: const [
-                      SelectOption(textLabel: "Mr.", value: "mr"),
-                      SelectOption(textLabel: "Ms.", value: "ms"),
-                      SelectOption(textLabel: "Other", value: "other"),
+                      SelectOption(textLabel: "Mr.", value: "MR"),
+                      SelectOption(textLabel: "Ms.", value: "MS"),
+                      SelectOption(textLabel: "Other", value: ""),
                     ],
                   ),
                   const SizedBox(height: 24),
@@ -110,10 +108,6 @@ class _OnboardingBasicInfoScreenState extends State<OnboardingBasicInfoScreen> {
                         isLoading: _continueButtonController.isLoading,
                         onPressed: _continueButtonController.isEnabled
                             ? () {
-                                log(_selectTitleController.selectedOptions.toString(), name: "selectedOptions");
-                                log(_firstNameController.text, name: "firstName");
-                                log(_lastNameController.text, name: "lastName");
-
                                 StoreProvider.of<AppState>(context).dispatch(
                                   SubmitOnboardingBasicInfoCommandAction(
                                     title: _selectTitleController.selectedOptions.first.value,
