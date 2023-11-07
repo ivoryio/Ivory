@@ -1,3 +1,4 @@
+import 'package:solarisdemo/redux/onboarding/mobile_number/mobile_number_action.dart';
 import 'package:solarisdemo/redux/onboarding/personal_details/onboarding_personal_details_action.dart';
 import 'package:solarisdemo/redux/onboarding/personal_details/onboarding_personal_details_state.dart';
 
@@ -14,6 +15,10 @@ OnboardingPersonalDetailsState onboardingPersonDetailsReducer(OnboardingPersonal
   } else if (action is SelectOnboardingAddressSuggestionCommandAction) {
     return OnboardingPersonalDetailsState(
       attributes: state.attributes.copyWith(selectedAddress: action.suggestion),
+    );
+  } else if (action is MobileNumberCreatedEventAction) {
+    return OnboardingPersonalDetailsState(
+      tanRequestedAt: DateTime.now(),
     );
   }
 

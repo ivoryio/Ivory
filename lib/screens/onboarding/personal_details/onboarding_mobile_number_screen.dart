@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/onboarding/mobile_number/mobile_number_action.dart';
 import 'package:solarisdemo/screens/login/modals/mobile_number_country_picker_popup.dart';
 import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
@@ -42,11 +45,18 @@ class _OnboardingMobileNumberScreenState extends State<OnboardingMobileNumberScr
   }
 
   void onChanged() {
+    if (_selectedCountryNotifier.value.phoneNumberFormat == null) {
+      _continueButtonController.setEnabled();
+      return;
+    }
     final formattedText = _phoneNumberFormatter.getUnmaskedText();
 
-    print('formattedText $formattedText');
-    print('maskedText ${_phoneNumberFormatter.getMaskedText()}');
-    print('controller value ${_mobileNumberController.text}');
+    if (formattedText.length ==
+        _selectedCountryNotifier.value.phoneNumberFormat!.split('').where((char) => char == '#').length) {
+      _continueButtonController.setEnabled();
+    } else {
+      _continueButtonController.setDisabled();
+    }
   }
 
   @override
@@ -86,6 +96,7 @@ class _OnboardingMobileNumberScreenState extends State<OnboardingMobileNumberScr
                     builder: (context, selectedCountry, child) {
                       return IvoryTextField(
                         label: 'Mobile number',
+                        placeholder: _mobileNumberController.text.isEmpty ? selectedCountry.phoneNumberFormat : null,
                         keyboardType: TextInputType.phone,
                         inputFormatters: selectedCountry.phoneNumberFormat != null
                             ? [
@@ -151,7 +162,17 @@ class _OnboardingMobileNumberScreenState extends State<OnboardingMobileNumberScr
                       builder: (context, child) {
                         return PrimaryButton(
                           text: "Continue",
-                          onPressed: _continueButtonController.isEnabled ? () {} : null,
+                          onPressed: _continueButtonController.isEnabled
+                              ? () {
+                                  _mobileNumberFocusNode.unfocus();
+                                  StoreProvider.of<AppState>(context).dispatch(
+                                    CreateMobileNumberCommandAction(
+                                      mobileNumber: _selectedCountryNotifier.value.phoneCode +
+                                          _phoneNumberFormatter.getUnmaskedText(),
+                                    ),
+                                  );
+                                }
+                              : null,
                         );
                       },
                     ),

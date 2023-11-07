@@ -123,8 +123,8 @@ class InputFormatter {
 
   static MaskTextInputFormatter createPhoneNumberFormatter(String phoneNumberFormat) {
     return MaskTextInputFormatter(
+      type: MaskAutoCompletionType.eager,
       mask: phoneNumberFormat,
-      
       filter: {
         "#": RegExp(r"[0-9]"),
       },
