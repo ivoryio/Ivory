@@ -20,6 +20,8 @@ import 'package:solarisdemo/infrastructure/repayments/bills/bill_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/change_repayment/change_repayment_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/more_credit/more_credit_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/reminder/repayment_reminder_service.dart';
+import 'package:solarisdemo/infrastructure/suggestions/address/address_suggestions_service.dart';
+import 'package:solarisdemo/infrastructure/suggestions/city/city_suggestions_service.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_service.dart';
 import 'package:solarisdemo/infrastructure/transfer/transfer_service.dart';
 import 'package:solarisdemo/models/bank_card.dart';
@@ -58,6 +60,8 @@ Store<AppState> createTestStore({
   OnboardingService? onboardingService,
   OnboardingSignupService? onboardingSignupService,
   // OnboardingFinancialDetailsService? onboardingFinancialDetailsService,
+  CitySuggestionsService? citySuggestionsService,
+  AddressSuggestionsService? addressSuggestionsService,
 }) {
   return createStore(
     initialState: initialState,
@@ -84,6 +88,8 @@ Store<AppState> createTestStore({
     onboardingSignupService: onboardingSignupService ?? NotImplementedOnboardingSignupService(),
     // onboardingFinancialDetailsService:
     //     onboardingFinancialDetailsService ?? NotImplementedOnboardingFinancialDetailsService(),
+    citySuggestionsService: citySuggestionsService ?? NotImplementedCitySuggestionsService(),
+    addressSuggestionsService: addressSuggestionsService ?? NotImplementedAddressSuggestionsService(),
   );
 }
 
@@ -403,11 +409,6 @@ class NotImplementedOnboardingService extends OnboardingService {
   Future<OnboardingServiceResponse> getOnboardingProgress({required User user}) {
     throw UnimplementedError();
   }
-
-  @override
-  Future<OnboardingServiceResponse> getAddressSuggestions({required User user, required String queryString}) {
-    throw UnimplementedError();
-  }
 }
 
 class NotImplementedOnboardingSignupService extends OnboardingSignupService {
@@ -427,6 +428,20 @@ class NotImplementedOnboardingFinancialDetailsService extends OnboardingFinancia
     required String taxId,
     // required User user,
   }) {
+    throw UnimplementedError();
+  }
+}
+
+class NotImplementedCitySuggestionsService extends CitySuggestionsService {
+  @override
+  Future<CitySuggestionsServiceResponse> fetchCities({required String countryCode, String? searchTerm}) {
+    throw UnimplementedError();
+  }
+}
+
+class NotImplementedAddressSuggestionsService extends AddressSuggestionsService {
+  @override
+  Future<AddressSuggestionsServiceResponse> getAddressSuggestions({required User user, required String query}) {
     throw UnimplementedError();
   }
 }

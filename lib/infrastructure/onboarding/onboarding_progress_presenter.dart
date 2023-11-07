@@ -1,10 +1,11 @@
 import 'package:equatable/equatable.dart';
 import 'package:solarisdemo/redux/onboarding/onboarding_progress_state.dart';
+import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_date_and_place_of_birth_screen.dart';
 import 'package:solarisdemo/screens/onboarding/signup/onboarding_basic_info_screen.dart';
 
 import '../../models/onboarding/onboarding_progress.dart';
 
-enum StepperItemType { signUp, personalDetails, financialDetails, identityVerification, cardConfiguration }
+enum StepperItemType { signUp, personalDetails, financialDetails, identityVerification, cardConfiguration, unknown }
 
 class OnboardingProgressPresenter {
   static OnboardingProgressViewModel presentOnboardingProgress({
@@ -56,24 +57,24 @@ class OnboardingProgress extends Equatable {
 }
 
 OnboardingProgress _onboardingProgressMapper(OnboardingStep step) {
-  switch (step) {
-    case OnboardingStep.start:
-      return const OnboardingProgress(
-        activeStep: StepperItemType.signUp,
-        progressPercentage: 1,
-        routeName: OnboardingBasicInfoScreen.routeName,
-      );
-    case OnboardingStep.signUp:
-      return const OnboardingProgress(
-        activeStep: StepperItemType.personalDetails,
-        progressPercentage: 20,
-        routeName: OnboardingBasicInfoScreen.routeName, // TODO: Update route name
-      );
-    default:
-      return const OnboardingProgress(
-        activeStep: StepperItemType.signUp,
-        progressPercentage: 1,
-        routeName: OnboardingBasicInfoScreen.routeName,
-      );
-  }
+  const unknownProgress = OnboardingProgress(
+    activeStep: StepperItemType.unknown,
+    progressPercentage: 0,
+    routeName: OnboardingBasicInfoScreen.routeName,
+  );
+
+  final Map<OnboardingStep, OnboardingProgress> map = {
+    OnboardingStep.start: const OnboardingProgress(
+      activeStep: StepperItemType.signUp,
+      progressPercentage: 1,
+      routeName: OnboardingBasicInfoScreen.routeName,
+    ),
+    OnboardingStep.signedUp: const OnboardingProgress(
+      activeStep: StepperItemType.personalDetails,
+      progressPercentage: 20,
+      routeName: OnboardingDateAndPlaceOfBirthScreen.routeName,
+    ),
+  };
+
+  return map[step] ?? unknownProgress;
 }

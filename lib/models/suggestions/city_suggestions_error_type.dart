@@ -1,0 +1,1 @@
+enum CitySuggestionsErrorType { unknown }
