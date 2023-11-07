@@ -14,7 +14,7 @@ class AccountData {
   String toRawJson() => json.encode(toJson());
 
   factory AccountData.fromJson(Map<String, dynamic> json) => AccountData(
-        ownerName: json['name'] ?? '',
+        ownerName: (json['name'] as String).toLowerCase().contains("solaris") ? "Reference account" : json['name'],
         iban: json['iban'] ?? '',
       );
 
