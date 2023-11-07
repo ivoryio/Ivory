@@ -1,7 +1,9 @@
 class SubmitOnboardingTaxIdCommandAction {
   final String taxId;
 
-  SubmitOnboardingTaxIdCommandAction(this.taxId);
+  SubmitOnboardingTaxIdCommandAction({required this.taxId});
 }
 
 class UpdateTaxIdSuccessEventAction {}
+
+class UpdateTaxIdFailedEventAction {}

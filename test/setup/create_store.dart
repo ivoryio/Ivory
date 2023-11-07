@@ -423,7 +423,10 @@ class NotImplementedOnboardingSignupService extends OnboardingSignupService {
 
 class NotImplementedOnboardingFinancialDetailsService extends OnboardingFinancialDetailsService {
   @override
-  Future<CreateTaxIdentificationSuccessResponse> createTaxIdentification({required String taxId}) {
+  Future<CreateTaxIdentificationSuccessResponse> createTaxIdentification({
+    required String taxId,
+    required User user,
+  }) {
     throw UnimplementedError();
   }
 }

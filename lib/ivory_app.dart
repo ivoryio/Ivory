@@ -126,7 +126,7 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
           ],
           debugShowCheckedModeBanner: false,
           navigatorKey: navigatorKey,
-          initialRoute: OnboardingRememberScreen.routeName,
+          initialRoute: WelcomeScreen.routeName,
           routes: {
             // landing
             WelcomeScreen.routeName: (context) => const WelcomeScreen(),
