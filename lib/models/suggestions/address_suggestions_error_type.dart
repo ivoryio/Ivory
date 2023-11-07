@@ -1,0 +1,1 @@
+enum AddressSuggestionsErrorType { unknown }

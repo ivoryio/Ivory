@@ -5,7 +5,7 @@ import 'package:solarisdemo/models/user.dart';
 class FakeOnboardingService extends OnboardingService {
   @override
   Future<OnboardingServiceResponse> getOnboardingProgress({User? user}) async {
-    return OnboardingProgressSuccessResponse(step: OnboardingStep.signUp);
+    return OnboardingProgressSuccessResponse(step: OnboardingStep.signedUp);
   }
 }
 

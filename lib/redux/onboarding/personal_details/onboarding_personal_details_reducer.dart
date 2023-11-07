@@ -2,14 +2,20 @@ import 'package:solarisdemo/redux/onboarding/personal_details/onboarding_persona
 import 'package:solarisdemo/redux/onboarding/personal_details/onboarding_personal_details_state.dart';
 
 OnboardingPersonalDetailsState onboardingPersonDetailsReducer(OnboardingPersonalDetailsState state, dynamic action) {
-  if (action is OnboardingPersonalDetailsLoadingEventAction) {
-    return OnboardingPersonalDetailsLoadingState();
-  } else if (action is OnboardingPersonalDetailsAddressSuggestionsFetchedEventAction) {
-    return OnboardingPersonalDetailsAddressSuggestionsFetchedState(action.suggestions);
-  } else if (action is OnboardingPersonalDetailFetchingAddressSuggestionsFailedEventAction) {
-    return OnboardingPersonalDetailsErrorState();
-  } else if (action is OnboardingPersonalDetailsAddressSuggestionSelectedEventAction) {
-    return OnboardingPersonalDetailsAddressSuggestionSelectedState(action.selectedSuggestion);
+  if (action is SubmitOnboardingBirthInfoCommandAction) {
+    return OnboardingPersonalDetailsState(
+      attributes: state.attributes.copyWith(
+        birthDate: action.birthDate,
+        country: action.country,
+        city: action.city,
+        nationality: action.nationality,
+      ),
+    );
+  } else if (action is SelectOnboardingAddressSuggestionCommandAction) {
+    return OnboardingPersonalDetailsState(
+      attributes: state.attributes.copyWith(selectedAddress: action.suggestion),
+    );
   }
+
   return state;
 }
