@@ -84,9 +84,9 @@ class _OnboardingVerifyMobileNumberScreenState extends State<OnboardingVerifyMob
           showBottomModal(
             context: context,
             showCloseButton: true,
-            title: "Invalid code",
+            title: "Code is incorrect",
             textWidget: const Text(
-              'Your code is invalid. We\'ve sent you a new one. Please use the new code to try again.',
+              'Please try again. After tapping the button below, we will send you a new code.',
             ),
             content: Column(
               children: [
