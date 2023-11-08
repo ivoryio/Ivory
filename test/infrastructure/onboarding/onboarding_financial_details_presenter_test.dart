@@ -14,7 +14,7 @@ void main() {
       isLoading: false,
     );
     //when
-    final viewModel = OnboardingFinancialDetailsPresenter.present(onboardingFinancialDetailsState);
+    final viewModel = OnboardingFinancialDetailsPresenter.present(financialState: onboardingFinancialDetailsState);
     //then
     expect(
       viewModel,
@@ -32,7 +32,7 @@ void main() {
       isLoading: false,
     );
     //when
-    final viewModel = OnboardingFinancialDetailsPresenter.present(onboardingFinancialDetailsState);
+    final viewModel = OnboardingFinancialDetailsPresenter.present(financialState: onboardingFinancialDetailsState);
     //then
     expect(
       viewModel,
@@ -48,7 +48,7 @@ void main() {
       isLoading: true,
     );
     //when
-    final viewModel = OnboardingFinancialDetailsPresenter.present(onboardingFinancialDetailsState);
+    final viewModel = OnboardingFinancialDetailsPresenter.present(financialState: onboardingFinancialDetailsState);
     //then
     expect(
       viewModel,
@@ -67,7 +67,7 @@ void main() {
       errorType: FinancialDetailsErrorType.taxId,
     );
     //when
-    final viewModel = OnboardingFinancialDetailsPresenter.present(onboardingFinancialDetailsState);
+    final viewModel = OnboardingFinancialDetailsPresenter.present(financialState: onboardingFinancialDetailsState);
     //then
     expect(
       viewModel,

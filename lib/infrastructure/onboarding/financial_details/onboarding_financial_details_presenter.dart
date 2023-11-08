@@ -4,7 +4,7 @@ import 'package:solarisdemo/models/onboarding/onboarding_financial_details_error
 import 'package:solarisdemo/redux/onboarding/financial_details/onboarding_financial_details_state.dart';
 
 class OnboardingFinancialDetailsPresenter {
-  static OnboardingFinancialDetailsViewModel present(OnboardingFinancialDetailsState financialState) {
+  static OnboardingFinancialDetailsViewModel present({required OnboardingFinancialDetailsState financialState}) {
     return OnboardingFinancialDetailsViewModel(
       financialDetailsAttributes: financialState.financialDetailsAttributes,
       isLoading: financialState.isLoading,

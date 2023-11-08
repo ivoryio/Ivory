@@ -4,6 +4,7 @@ import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/onboarding/financial_details/onboarding_financial_details_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/onboarding/financial_details/onboarding_financial_details_action.dart';
+import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_remember_screen.dart';
 import 'package:solarisdemo/screens/welcome/welcome_screen.dart';
 import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
@@ -73,15 +74,18 @@ class _OnboardingTaxIdScreenState extends State<OnboardingTaxIdScreen> {
                     keyboardType: TextInputType.number,
                   ),
                   const Spacer(),
-                  StoreConnector<AppState, dynamic>(
-                    converter: (store) => store.state.toString(),
-                    // converter: (store) => OnboardingFinancialDetailsPresenter.present(
-                    //     financialDetailsState: store.state.onboardingFinancialDetailsState),
-                    // onWillChange: (previousViewModel, newViewModel) {
-                    //   if (newViewModel.taxId.isNotEmpty) {
-                    //     Navigator.pushNamed(context, WelcomeScreen.routeName);
-                    //   }
-                    // },
+                  StoreConnector<AppState, OnboardingFinancialDetailsViewModel>(
+                    converter: (store) => OnboardingFinancialDetailsPresenter.present(
+                        financialState: store.state.onboardingFinancialDetailsState),
+                    onWillChange: (previousViewModel, newViewModel) {
+                      if (newViewModel.isLoading) {
+                        _continueButtonController.setLoading();
+                      } else if (newViewModel.financialDetailsAttributes.taxId != null) {
+                        Navigator.pushNamed(context, OnboardingRememberScreen.routeName);
+                      } else if (newViewModel.errorType != null) {
+                        _taxIdController.setErrorText('This Tax ID is invalid for Germany. Please try another.');
+                      }
+                    },
                     distinct: true,
                     builder: (context, viewModel) {
                       return SizedBox(
@@ -90,17 +94,8 @@ class _OnboardingTaxIdScreenState extends State<OnboardingTaxIdScreen> {
                           text: "Continue",
                           isLoading: _continueButtonController.isLoading,
                           onPressed: _continueButtonController.isEnabled
-                              ? () {
-                                  _continueButtonController.setLoading();
-
-                                  // StoreProvider.of<AppState>(context).dispatch(
-                                  //   SubmitOnboardingTaxIdCommandAction(
-                                  //       taxId: _taxIdController.text.replaceAll(' ', '')),
-                                  // );
-
-                                  _taxIdController
-                                      .setErrorText('This Tax ID is invalid for Germany. Please try another.');
-                                }
+                              ? () => StoreProvider.of<AppState>(context)
+                                  .dispatch(CreateTaxIdCommandAction(taxId: _taxIdController.text.replaceAll(' ', '')))
                               : null,
                         ),
                       );
