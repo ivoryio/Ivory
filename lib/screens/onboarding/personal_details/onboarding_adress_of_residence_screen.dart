@@ -65,6 +65,11 @@ class _OnboardingAddressOfResidenceScreenState extends State<OnboardingAddressOf
       onWillChange: (previousViewModel, newViewModel) {
         if (newViewModel.isLoading) {
           _continueButtonController.setLoading();
+        } else if (previousViewModel?.isLoading == true && newViewModel.isLoading == false) {
+          _continueButtonController.setEnabled();
+        } else if (newViewModel.isAddressSaved == true && previousViewModel?.isAddressSaved == false) {
+          // TODO: navigate to the next screen
+          // Navigator.pushReplacementNamed(context, mobileNumberScreen);
         }
       },
       builder: (context, onboardingViewModel) {
