@@ -1,9 +1,21 @@
-class SubmitOnboardingTaxIdCommandAction {
+import 'package:solarisdemo/models/onboarding/onboarding_financial_details_error_type.dart';
+
+class CreateTaxIdCommandAction {
   final String taxId;
 
-  SubmitOnboardingTaxIdCommandAction({required this.taxId});
+  CreateTaxIdCommandAction({required this.taxId});
 }
 
-class UpdateTaxIdSuccessEventAction {}
+class CreateTaxIdLoadingEventAction {}
 
-class UpdateTaxIdFailedEventAction {}
+class CreateTaxIdSuccessEventAction {
+  final String taxId;
+
+  CreateTaxIdSuccessEventAction({required this.taxId});
+}
+
+class CreateTaxIdFailedEventAction {
+  final FinancialDetailsErrorType errorType;
+
+  CreateTaxIdFailedEventAction({required this.errorType});
+}

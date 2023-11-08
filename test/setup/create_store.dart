@@ -59,9 +59,9 @@ Store<AppState> createTestStore({
   AuthService? authService,
   OnboardingService? onboardingService,
   OnboardingSignupService? onboardingSignupService,
-  // OnboardingFinancialDetailsService? onboardingFinancialDetailsService,
   CitySuggestionsService? citySuggestionsService,
   AddressSuggestionsService? addressSuggestionsService,
+  OnboardingFinancialDetailsService? onboardingFinancialDetailsService,
 }) {
   return createStore(
     initialState: initialState,
@@ -86,10 +86,10 @@ Store<AppState> createTestStore({
     authService: authService ?? NotImplementedAuthService(),
     onboardingService: onboardingService ?? NotImplementedOnboardingService(),
     onboardingSignupService: onboardingSignupService ?? NotImplementedOnboardingSignupService(),
-    // onboardingFinancialDetailsService:
-    //     onboardingFinancialDetailsService ?? NotImplementedOnboardingFinancialDetailsService(),
     citySuggestionsService: citySuggestionsService ?? NotImplementedCitySuggestionsService(),
     addressSuggestionsService: addressSuggestionsService ?? NotImplementedAddressSuggestionsService(),
+    onboardingFinancialDetailsService:
+        onboardingFinancialDetailsService ?? NotImplementedOnboardingFinancialDetailsService(),
   );
 }
 
@@ -424,9 +424,8 @@ class NotImplementedOnboardingSignupService extends OnboardingSignupService {
 
 class NotImplementedOnboardingFinancialDetailsService extends OnboardingFinancialDetailsService {
   @override
-  Future<CreateTaxIdentificationSuccessResponse> createTaxIdentification({
+  Future<CreateTaxIdResponse> createTaxIdentification({
     required String taxId,
-    // required User user,
   }) {
     throw UnimplementedError();
   }

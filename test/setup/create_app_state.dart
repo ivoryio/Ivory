@@ -44,9 +44,9 @@ AppState createAppState({
   OnboardingProgressState? onboardingProgressState,
   OnboardingSignupState? onboardingSignupState,
   OnboardingPersonalDetailsState? onboardingPersonalDetailsState,
-  // OnboardingFinancialDetailsState? onboardingFinancialDetailsState,
   CitySuggestionsState? citySuggestionsState,
   AddressSuggestionsState? addressSuggestionsState,
+  OnboardingFinancialDetailsState? onboardingFinancialDetailsState,
 }) {
   return AppState(
     transactionsState: transactionsState ?? TransactionsInitialState(),
@@ -68,10 +68,10 @@ AppState createAppState({
     authState: authState ?? AuthInitialState(),
     homePageTransactionsState: homePageTransactionsState ?? TransactionsInitialState(),
     onboardingProgressState: onboardingProgressState ?? OnboardingProgressInitialLoadingState(),
-    onboardingSignupState: onboardingSignupState ?? OnboardingSignupState(),
-    // onboardingFinancialDetailsState: onboardingFinancialDetailsState ?? OnboardingFinancialDetailsState(),
+    onboardingSignupState: onboardingSignupState ?? const OnboardingSignupState(),
     onboardingPersonalDetailsState: onboardingPersonalDetailsState ?? const OnboardingPersonalDetailsState(),
     citySuggestionsState: citySuggestionsState ?? CitySuggestionsInitialState(),
     addressSuggestionsState: addressSuggestionsState ?? AddressSuggestionsInitialState(),
+    onboardingFinancialDetailsState: onboardingFinancialDetailsState ?? const OnboardingFinancialDetailsState(),
   );
 }

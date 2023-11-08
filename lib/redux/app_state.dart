@@ -44,9 +44,9 @@ class AppState extends Equatable {
   final OnboardingProgressState onboardingProgressState;
   final OnboardingSignupState onboardingSignupState;
   final OnboardingPersonalDetailsState onboardingPersonalDetailsState;
-  // final OnboardingFinancialDetailsState onboardingFinancialDetailsState;
   final CitySuggestionsState citySuggestionsState;
   final AddressSuggestionsState addressSuggestionsState;
+  final OnboardingFinancialDetailsState onboardingFinancialDetailsState;
 
   const AppState({
     required this.transactionsState,
@@ -70,38 +70,38 @@ class AppState extends Equatable {
     required this.onboardingSignupState,
     required this.onboardingProgressState,
     required this.onboardingPersonalDetailsState,
-    // required this.onboardingFinancialDetailsState,
     required this.citySuggestionsState,
     required this.addressSuggestionsState,
+    required this.onboardingFinancialDetailsState,
   });
 
   factory AppState.initialState() {
     return AppState(
-        transactionsState: TransactionsInitialState(),
-        creditLineState: CreditLineInitialState(),
-        repaymentReminderState: RepaymentReminderInitialState(),
-        cardApplicationState: CardApplicationInitialState(),
-        billsState: BillsInitialState(),
-        moreCreditState: MoreCreditInitialState(),
-        bankCardState: BankCardInitialState(),
-        bankCardsState: BankCardsInitialState(),
-        categoriesState: CategoriesInitialState(),
-        referenceAccountState: ReferenceAccountInitialState(),
-        personAccountState: PersonAccountInitialState(),
-        transferState: TransferInitialState(),
-        deviceBindingState: DeviceBindingInitialState(),
-        notificationState: NotificationInitialState(),
-        transactionApprovalState: TransactionApprovalInitialState(),
-        accountSummaryState: AccountSummaryInitialState(),
-        authState: AuthInitialState(),
-        homePageTransactionsState: TransactionsInitialState(),
-        onboardingSignupState: OnboardingSignupState(),
-        onboardingProgressState: OnboardingProgressInitialLoadingState(),
-        onboardingPersonalDetailsState: const OnboardingPersonalDetailsState(),
-        citySuggestionsState: CitySuggestionsInitialState(),
-        addressSuggestionsState: AddressSuggestionsInitialState()
-        // onboardingFinancialDetailsState: OnboardingFinancialDetailsState(),
-        );
+      transactionsState: TransactionsInitialState(),
+      creditLineState: CreditLineInitialState(),
+      repaymentReminderState: RepaymentReminderInitialState(),
+      cardApplicationState: CardApplicationInitialState(),
+      billsState: BillsInitialState(),
+      moreCreditState: MoreCreditInitialState(),
+      bankCardState: BankCardInitialState(),
+      bankCardsState: BankCardsInitialState(),
+      categoriesState: CategoriesInitialState(),
+      referenceAccountState: ReferenceAccountInitialState(),
+      personAccountState: PersonAccountInitialState(),
+      transferState: TransferInitialState(),
+      deviceBindingState: DeviceBindingInitialState(),
+      notificationState: NotificationInitialState(),
+      transactionApprovalState: TransactionApprovalInitialState(),
+      accountSummaryState: AccountSummaryInitialState(),
+      authState: AuthInitialState(),
+      homePageTransactionsState: TransactionsInitialState(),
+      onboardingSignupState: OnboardingSignupState(),
+      onboardingProgressState: OnboardingProgressInitialLoadingState(),
+      onboardingPersonalDetailsState: const OnboardingPersonalDetailsState(),
+      citySuggestionsState: CitySuggestionsInitialState(),
+      addressSuggestionsState: AddressSuggestionsInitialState(),
+      onboardingFinancialDetailsState: OnboardingFinancialDetailsState(),
+    );
   }
 
   @override
@@ -127,9 +127,9 @@ class AppState extends Equatable {
         onboardingSignupState,
         onboardingProgressState,
         onboardingPersonalDetailsState,
-        // onboardingFinancialDetailsState,
         citySuggestionsState,
         addressSuggestionsState,
+        onboardingFinancialDetailsState,
       ];
 
   @override

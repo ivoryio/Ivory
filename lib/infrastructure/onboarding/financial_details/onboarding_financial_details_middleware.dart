@@ -1,7 +1,6 @@
 import 'package:redux/redux.dart';
 import 'package:solarisdemo/infrastructure/onboarding/financial_details/onboarding_financial_details_service.dart';
 import 'package:solarisdemo/redux/app_state.dart';
-import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/onboarding/financial_details/onboarding_financial_details_action.dart';
 
 class OnboardingFinancialDetailsMiddleware extends MiddlewareClass<AppState> {
@@ -13,14 +12,16 @@ class OnboardingFinancialDetailsMiddleware extends MiddlewareClass<AppState> {
   call(Store<AppState> store, dynamic action, NextDispatcher next) async {
     next(action);
 
-    if (action is SubmitOnboardingTaxIdCommandAction) {
-      // final user = (store.state.authState as AuthenticationInitializedState).cognitoUser;
+    if (action is CreateTaxIdCommandAction) {
+      store.dispatch(CreateTaxIdLoadingEventAction());
 
-      // await _onboardingFinancialDetailsService.createTaxIdentification(taxId: action.taxId, user: user);
+      final response = await _onboardingFinancialDetailsService.createTaxIdentification(taxId: action.taxId);
 
-      store.dispatch(UpdateTaxIdSuccessEventAction());
-    } else {
-      store.dispatch(UpdateTaxIdFailedEventAction());
+      if (response is CreateTaxIdSuccesResponse) {
+        store.dispatch(CreateTaxIdSuccessEventAction(taxId: action.taxId));
+      } else if (response is CreateTaxIdErrorResponse) {
+        store.dispatch(CreateTaxIdFailedEventAction(errorType: response.errorType));
+      }
     }
   }
 }

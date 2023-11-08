@@ -9,7 +9,7 @@ class OnboardingFinancialDetailsState extends Equatable {
 
   const OnboardingFinancialDetailsState({
     this.financialDetailsAttributes = const OnboardingFinancialDetailsAttributes(),
-    required this.isLoading,
+    this.isLoading = false,
     this.errorType,
   });
 

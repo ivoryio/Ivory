@@ -81,9 +81,9 @@ Store<AppState> _buildStore() {
     authService: AuthService(),
     onboardingService: OnboardingService(),
     onboardingSignupService: OnboardingSignupService(),
-    // onboardingFinancialDetailsService: OnboardingFinancialDetailsService(),
     citySuggestionsService: CitySuggestionsService(),
     addressSuggestionsService: AddressSuggestionsService(),
+    onboardingFinancialDetailsService: OnboardingFinancialDetailsService(),
   );
 
   return store;
