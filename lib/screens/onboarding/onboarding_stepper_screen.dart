@@ -11,11 +11,16 @@ import 'package:solarisdemo/widgets/circular_percent_indicator.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/screen_title.dart';
 
-class OnboardingStepperScreen extends StatelessWidget {
+class OnboardingStepperScreen extends StatefulWidget {
   static const routeName = "/onboardingStepperScreen";
 
   const OnboardingStepperScreen({super.key});
 
+  @override
+  State<OnboardingStepperScreen> createState() => _OnboardingStepperScreenState();
+}
+
+class _OnboardingStepperScreenState extends State<OnboardingStepperScreen> {
   @override
   Widget build(BuildContext context) {
     return ScreenScaffold(
@@ -28,7 +33,7 @@ class OnboardingStepperScreen extends StatelessWidget {
           return viewModel is OnboardingProgressFetchedViewModel
               ? _buildContent(context, viewModel)
               : viewModel is OnboardingProgressErrorViewModel
-                  ? _buildErrorContent(context)
+                  ? _buildErrorContent(context, viewModel)
                   : _buildLoadingContent(context);
         },
       ),
@@ -49,25 +54,70 @@ class OnboardingStepperScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildErrorContent(BuildContext context) {
+  Widget _buildErrorContent(BuildContext context, OnboardingProgressViewModel viewModel) {
     return Column(
       children: [
         AppToolbar(
           padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
           actions: const [AppbarLogo()],
         ),
-        Padding(
-          padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const ScreenTitle("An error has occured"),
-              const SizedBox(height: 16),
-              Text(
-                "We're sorry, but it seems an error has cropped up, which is preventing you from completing this step",
-                style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-              ),
-            ],
+        Expanded(
+          child: Padding(
+            padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const ScreenTitle("An error has occured"),
+                const SizedBox(height: 16),
+                Text.rich(
+                  TextSpan(
+                    style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                    children: [
+                      const TextSpan(
+                          text:
+                              'We\'re sorry, but it seems an error has cropped up, which is preventing you from completing this step. Here\'s what you can do:\n\n'),
+                      TextSpan(
+                        text:
+                            '1. Try closing the app and reopening it.\n\n2. Check your internet connection and try again.\n\n3. If the issue persists, reach out ',
+                        style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
+                      ),
+                      const TextSpan(text: 'to our friendly support team at '),
+                      TextSpan(
+                        text: '+49 (0)123 456789',
+                        style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold.copyWith(
+                            color: viewModel is OnboardingProgressLoadingViewModel
+                                ? ClientConfig.getCustomColors().neutral500
+                                : ClientConfig.getColorScheme().secondary),
+                      ),
+                      const TextSpan(text: ' or '),
+                      TextSpan(
+                        text: 'support@ivory.com',
+                        style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold.copyWith(
+                            color: viewModel is OnboardingProgressLoadingViewModel
+                                ? ClientConfig.getCustomColors().neutral500
+                                : ClientConfig.getColorScheme().secondary),
+                      ),
+                      const TextSpan(text: '. We\'re here to help.'),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Center(child: SvgPicture.asset('assets/images/general_error.svg')),
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: PrimaryButton(
+                      text: "Try again",
+                      isLoading: viewModel is OnboardingProgressLoadingViewModel,
+                      onPressed: viewModel is OnboardingProgressLoadingViewModel
+                          ? null
+                          : () {
+                              StoreProvider.of<AppState>(context).dispatch(GetOnboardingProgressCommandAction());
+                            }),
+                ),
+                const SizedBox(height: 16),
+              ],
+            ),
           ),
         ),
       ],
