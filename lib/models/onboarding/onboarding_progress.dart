@@ -12,7 +12,7 @@ extension OnboardingStepExtension on OnboardingStep {
       case "signedUp":
         return OnboardingStep.signedUp;
       default:
-        throw OnboardingStep.unknown;
+        return OnboardingStep.unknown;
     }
   }
 }
