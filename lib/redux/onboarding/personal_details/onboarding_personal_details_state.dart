@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:solarisdemo/models/onboarding/onboarding_personal_details_attributes.dart';
+import 'package:solarisdemo/models/onboarding/onboarding_personal_details_error_type.dart';
 
 class OnboardingPersonalDetailsState extends Equatable {
   final OnboardingPersonalDetailsAttributes attributes;
@@ -7,6 +8,7 @@ class OnboardingPersonalDetailsState extends Equatable {
   final DateTime? tanRequestedAt;
   final bool? isAddressSaved;
   final bool? isMobileConfirmed;
+  final OnboardingPersonalDetailsErrorType? errorType;
 
   const OnboardingPersonalDetailsState({
     this.attributes = const OnboardingPersonalDetailsAttributes(),
@@ -14,6 +16,7 @@ class OnboardingPersonalDetailsState extends Equatable {
     this.tanRequestedAt,
     this.isAddressSaved,
     this.isMobileConfirmed,
+    this.errorType,
   });
 
   @override
