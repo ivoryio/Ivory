@@ -69,7 +69,6 @@ class _OnboardingAddressOfResidenceScreenState extends State<OnboardingAddressOf
           _continueButtonController.setEnabled();
         } else if (newViewModel.isAddressSaved == true && previousViewModel?.isAddressSaved == false) {
           // TODO: navigate to the next screen
-          // Navigator.pushReplacementNamed(context, mobileNumberScreen);
         }
       },
       builder: (context, onboardingViewModel) {
