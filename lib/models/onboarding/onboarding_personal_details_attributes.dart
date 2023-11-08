@@ -10,6 +10,7 @@ class OnboardingPersonalDetailsAttributes extends Equatable {
   final int? houseNumber;
   final String? addressLine;
   final String? postCode;
+  final String? mobileNumber;
 
   const OnboardingPersonalDetailsAttributes({
     this.birthDate,
@@ -20,13 +21,14 @@ class OnboardingPersonalDetailsAttributes extends Equatable {
     this.houseNumber,
     this.addressLine,
     this.postCode,
+    this.mobileNumber,
   });
 
   bool get hasBirthInfo => birthDate != null && country != null && city != null && nationality != null;
 
   @override
   List<Object?> get props =>
-      [birthDate, country, city, nationality, selectedAddress, houseNumber, addressLine, postCode];
+      [birthDate, country, city, nationality, selectedAddress, houseNumber, addressLine, postCode, mobileNumber];
 
   OnboardingPersonalDetailsAttributes copyWith({
     String? birthDate,
@@ -37,6 +39,7 @@ class OnboardingPersonalDetailsAttributes extends Equatable {
     int? houseNumber,
     String? addressLine,
     String? postCode,
+    String? mobileNumber,
   }) {
     return OnboardingPersonalDetailsAttributes(
       birthDate: birthDate ?? this.birthDate,
@@ -47,6 +50,7 @@ class OnboardingPersonalDetailsAttributes extends Equatable {
       houseNumber: houseNumber ?? this.houseNumber,
       addressLine: addressLine ?? this.addressLine,
       postCode: postCode ?? this.postCode,
+      mobileNumber: mobileNumber ?? this.mobileNumber,
     );
   }
 }

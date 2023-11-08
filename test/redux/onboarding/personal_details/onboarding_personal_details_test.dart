@@ -11,6 +11,7 @@ import 'package:solarisdemo/redux/onboarding/personal_details/onboarding_persona
 import '../../../setup/create_app_state.dart';
 import '../../../setup/create_store.dart';
 import '../../auth/auth_mocks.dart';
+import '../../transactions/transaction_mocks.dart';
 import 'onboarding_personal_details_mocks.dart';
 
 void main() {
@@ -153,6 +154,81 @@ void main() {
         expect(onboardingPersonalDetailsState.isAddressSaved, false);
         expect(onboardingPersonalDetailsState.attributes, attributes);
         expect(onboardingPersonalDetailsState.errorType, OnboardingPersonalDetailsErrorType.unknown);
+      });
+    });
+
+    group("Create/confirm mobile number", () {
+      test("When mobile number is created, tanRequestedAt should change", () async {
+        //given
+        const attributes = OnboardingPersonalDetailsAttributes(
+          birthDate: birthDate,
+          city: city,
+          country: country,
+          nationality: nationality,
+          selectedAddress: addressSuggestion,
+        );
+
+        final store = createTestStore(
+          onboardingPersonalDetailsService: FakeOnboardingPersonalDetailsService(),
+          mobileNumberService: FakeMobileNumberService(),
+          deviceService: FakeDeviceService(),
+          deviceFingerprintService: FakeDeviceFingerprintService(),
+          initialState: createAppState(
+            authState: authInitializedState,
+            onboardingPersonalDetailsState: const OnboardingPersonalDetailsState(attributes: attributes),
+          ),
+        );
+
+        final loadingState = store.onChange.firstWhere((state) => state.onboardingPersonalDetailsState.isLoading);
+        final appState = store.onChange.firstWhere((state) =>
+            state.onboardingPersonalDetailsState.tanRequestedAt != null &&
+            state.onboardingPersonalDetailsState.attributes.mobileNumber == '123456');
+
+        // when
+        store.dispatch(CreateMobileNumberCommandAction(mobileNumber: '123456'));
+
+        //then
+        expect((await loadingState).onboardingPersonalDetailsState.isLoading, true);
+
+        final onboardingPersonalDetailsState = (await appState).onboardingPersonalDetailsState;
+        expect(onboardingPersonalDetailsState.tanRequestedAt, isNotNull);
+        expect(onboardingPersonalDetailsState.attributes.mobileNumber, '123456');
+      });
+
+      test("When mobile number confirmation happens, isMobileConfirmed should be true", () async {
+        //given
+        const attributes = OnboardingPersonalDetailsAttributes(
+          birthDate: birthDate,
+          city: city,
+          country: country,
+          nationality: nationality,
+          selectedAddress: addressSuggestion,
+          mobileNumber: '+15550101',
+        );
+
+        final store = createTestStore(
+          onboardingPersonalDetailsService: FakeOnboardingPersonalDetailsService(),
+          mobileNumberService: FakeMobileNumberService(),
+          deviceService: FakeDeviceService(),
+          deviceFingerprintService: FakeDeviceFingerprintService(),
+          initialState: createAppState(
+            authState: authInitializedState,
+            onboardingPersonalDetailsState: const OnboardingPersonalDetailsState(attributes: attributes),
+          ),
+        );
+
+        final loadingState = store.onChange.firstWhere((state) => state.onboardingPersonalDetailsState.isLoading);
+        final appState =
+            store.onChange.firstWhere((state) => state.onboardingPersonalDetailsState.isMobileConfirmed == true);
+
+        // when
+        store.dispatch(ConfirmMobileNumberCommandAction(mobileNumber: '+15550101', token: '212212'));
+
+        //then
+        expect((await loadingState).onboardingPersonalDetailsState.isLoading, true);
+
+        final onboardingPersonalDetailsState = (await appState).onboardingPersonalDetailsState;
+        expect(onboardingPersonalDetailsState.isMobileConfirmed, true);
       });
     });
   });

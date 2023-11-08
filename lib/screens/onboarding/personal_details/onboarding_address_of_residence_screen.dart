@@ -6,6 +6,7 @@ import 'package:solarisdemo/models/suggestions/address_suggestion.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/onboarding/personal_details/onboarding_personal_details_action.dart';
 import 'package:solarisdemo/redux/suggestions/address/address_suggestions_action.dart';
+import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_mobile_number_screen.dart';
 import 'package:solarisdemo/utilities/debouncer.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -66,6 +67,11 @@ class _OnboardingAddressOfResidenceScreenState extends State<OnboardingAddressOf
         if (newViewModel.isLoading) {
           _continueButtonController.setLoading();
         }
+        
+        if (previousViewModel!.isAddressSaved == null && newViewModel.isAddressSaved == true) {
+          Navigator.pushNamed(context, OnboardingMobileNumberScreen.routeName);
+        }
+        
       },
       builder: (context, onboardingViewModel) {
         return ScreenScaffold(

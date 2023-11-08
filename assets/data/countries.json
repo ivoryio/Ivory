@@ -7,7 +7,7 @@
     "phoneNumberFormat": "+49(##) #######"
   },
   {
-    "isoCode": "DE",
+    "isoCode": "DEMO",
     "name": "Demo country",
     "phoneCode": "+15550101",
     "flag": "🇪🇺",

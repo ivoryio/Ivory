@@ -10,6 +10,7 @@ import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_binding_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_fingerprint_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
+import 'package:solarisdemo/infrastructure/mobile_number/mobile_number_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/onboarding_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/personal_details/onboarding_personal_details_service.dart';
@@ -27,6 +28,7 @@ import 'package:solarisdemo/infrastructure/transfer/transfer_service.dart';
 import 'package:solarisdemo/models/bank_card.dart';
 import 'package:solarisdemo/models/device.dart';
 import 'package:solarisdemo/models/device_activity.dart';
+import 'package:solarisdemo/models/mobile_number/mobile_number.dart';
 import 'package:solarisdemo/models/onboarding/onboarding_signup_attributes.dart';
 import 'package:solarisdemo/models/suggestions/address_suggestion.dart';
 import 'package:solarisdemo/models/transactions/transaction_model.dart';
@@ -63,6 +65,7 @@ Store<AppState> createTestStore({
   CitySuggestionsService? citySuggestionsService,
   AddressSuggestionsService? addressSuggestionsService,
   OnboardingPersonalDetailsService? onboardingPersonalDetailsService,
+  MobileNumberService? mobileNumberService,
 }) {
   return createStore(
     initialState: initialState,
@@ -91,6 +94,7 @@ Store<AppState> createTestStore({
     addressSuggestionsService: addressSuggestionsService ?? NotImplementedAddressSuggestionsService(),
     onboardingPersonalDetailsService:
         onboardingPersonalDetailsService ?? NotImplementedOnboardingPersonalDetailsService(),
+    mobileNumberService: mobileNumberService ?? NotImplementedMobileNumberService(),
   );
 }
 
@@ -446,6 +450,16 @@ class NotImplementedOnboardingPersonalDetailsService extends OnboardingPersonalD
     required String birthCity,
     required String birthCountry,
     required String nationality,
+  }) async {
+    throw UnimplementedError();
+  }
+}
+
+class NotImplementedMobileNumberService extends MobileNumberService {
+  @override
+  Future<MobileNumberServiceResponse> createMobileNumber({
+    required User user,
+    required CreateVerifyMobileNumberRequestBody reqBody,
   }) async {
     throw UnimplementedError();
   }

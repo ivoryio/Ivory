@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/infrastructure/onboarding/personal_details/onboarding_personal_details_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
-import 'package:solarisdemo/redux/onboarding/mobile_number/mobile_number_action.dart';
+import 'package:solarisdemo/redux/onboarding/personal_details/onboarding_personal_details_action.dart';
 import 'package:solarisdemo/screens/login/modals/mobile_number_country_picker_popup.dart';
+import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_verify_mobile_number_screen.dart';
 import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -61,129 +63,146 @@ class _OnboardingMobileNumberScreenState extends State<OnboardingMobileNumberScr
 
   @override
   Widget build(BuildContext context) {
-    return ScreenScaffold(
-      body: Column(
-        children: [
-          AppToolbar(
-            richTextTitle: StepRichTextTitle(step: 3, totalSteps: 4),
-            actions: const [
-              AppbarLogo(),
-            ],
-            padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-          ),
-          AnimatedLinearProgressIndicator.step(
-            current: 3,
-            totalSteps: 4,
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 24.0,
+    return StoreConnector<AppState, OnboardingPersonalDetailsViewModel>(
+      converter: (store) => OnboardingPersonalDetailsPresenter.presentOnboardingPersonalDetails(
+        onboardingPersonalDetailsState: store.state.onboardingPersonalDetailsState,
+      ),
+      onWillChange: (previousViewModel, newViewModel) {
+        if (newViewModel.isLoading) {
+          _continueButtonController.setLoading();
+        }
+        if (previousViewModel!.attributes.mobileNumber != newViewModel.attributes.mobileNumber) {
+          Navigator.pushNamed(context, OnboardingVerifyMobileNumberScreen.routeName);
+        }
+      },
+      builder: (context, viewModel) {
+        return ScreenScaffold(
+          body: Column(
+            children: [
+              AppToolbar(
+                backButtonEnabled: false,
+                richTextTitle: StepRichTextTitle(step: 3, totalSteps: 4),
+                actions: const [
+                  AppbarLogo(),
+                ],
+                padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 24),
-                  Text('Mobile number', style: ClientConfig.getTextStyleScheme().heading2),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Fill in your mobile number below. We will verify it with a code in the next step.',
-                    style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+              AnimatedLinearProgressIndicator.step(
+                current: 3,
+                totalSteps: 4,
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24.0,
                   ),
-                  const SizedBox(height: 24),
-                  ValueListenableBuilder<CountryPrefixItem>(
-                    valueListenable: _selectedCountryNotifier,
-                    builder: (context, selectedCountry, child) {
-                      return IvoryTextField(
-                        label: 'Mobile number',
-                        placeholder: _mobileNumberController.text.isEmpty ? selectedCountry.phoneNumberFormat : null,
-                        keyboardType: TextInputType.phone,
-                        inputFormatters: selectedCountry.phoneNumberFormat != null
-                            ? [
-                                _phoneNumberFormatter,
-                              ]
-                            : null,
-                        inputType: TextFieldInputType.number,
-                        controller: _mobileNumberController,
-                        focusNode: _mobileNumberFocusNode,
-                        prefix: GestureDetector(
-                          onTap: () {
-                            _mobileNumberFocusNode.unfocus();
-                            showBottomModal(
-                              addContentPadding: false,
-                              context: context,
-                              title: "Select mobile number prefix",
-                              content: CountryPrefixPicker(
-                                onCountrySelected: (country) {
-                                  _selectedCountryNotifier.value = country;
-                                  _mobileNumberController.text = country.phoneCode;
-                                  _phoneNumberFormatter = InputFormatter.createPhoneNumberFormatter(
-                                    country.phoneNumberFormat!,
-                                  );
-                                },
-                                selectedCountry: _selectedCountryNotifier.value,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 24),
+                      Text('Mobile number', style: ClientConfig.getTextStyleScheme().heading2),
+                      const SizedBox(height: 16),
+                      Text(
+                        'Fill in your mobile number below. We will verify it with a code in the next step.',
+                        style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                      ),
+                      const SizedBox(height: 24),
+                      ValueListenableBuilder<CountryPrefixItem>(
+                        valueListenable: _selectedCountryNotifier,
+                        builder: (context, selectedCountry, child) {
+                          return IvoryTextField(
+                            label: 'Mobile number',
+                            keyboardType: TextInputType.phone,
+                            inputFormatters: selectedCountry.phoneNumberFormat != null
+                                ? [
+                                    _phoneNumberFormatter,
+                                  ]
+                                : null,
+                            inputType: TextFieldInputType.number,
+                            controller: _mobileNumberController,
+                            focusNode: _mobileNumberFocusNode,
+                            prefix: GestureDetector(
+                              onTap: () {
+                                _mobileNumberFocusNode.unfocus();
+                                showBottomModal(
+                                  addContentPadding: false,
+                                  context: context,
+                                  title: "Select mobile number prefix",
+                                  content: CountryPrefixPicker(
+                                    onCountrySelected: (country) {
+                                      _selectedCountryNotifier.value = country;
+                                      _mobileNumberController.text = country.phoneCode;
+                                      _phoneNumberFormatter = InputFormatter.createPhoneNumberFormatter(
+                                        country.phoneNumberFormat!,
+                                      );
+                                    },
+                                    selectedCountry: _selectedCountryNotifier.value,
+                                  ),
+                                );
+                              },
+                              child: SizedBox(
+                                height: 48,
+                                width: 70,
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      selectedCountry.flag,
+                                      style: const TextStyle(fontSize: 20, height: 24 / 20),
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Icon(
+                                      Icons.expand_more,
+                                      color: ClientConfig.getCustomColors().neutral700,
+                                    ),
+                                    VerticalDivider(
+                                      color: _mobileNumberFocusNode.hasFocus
+                                          ? ClientConfig.getCustomColors().neutral900
+                                          : ClientConfig.getCustomColors().neutral400,
+                                      thickness: 1,
+                                      width: 20,
+                                    ),
+                                  ],
+                                ),
                               ),
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 24),
+                      const Spacer(),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ListenableBuilder(
+                          listenable: _continueButtonController,
+                          builder: (context, child) {
+                            return PrimaryButton(
+                              text: "Continue",
+                              isLoading: _continueButtonController.isLoading,
+                              onPressed: _continueButtonController.isEnabled
+                                  ? () {
+                                      _mobileNumberFocusNode.unfocus();
+                                      _continueButtonController.setLoading();
+                                      StoreProvider.of<AppState>(context).dispatch(
+                                        CreateMobileNumberCommandAction(
+                                          mobileNumber: _selectedCountryNotifier.value.phoneCode +
+                                              _phoneNumberFormatter.getUnmaskedText(),
+                                        ),
+                                      );
+                                    }
+                                  : null,
                             );
                           },
-                          child: SizedBox(
-                            height: 48,
-                            width: 80,
-                            child: Row(
-                              children: [
-                                Text(
-                                  selectedCountry.flag,
-                                  style: const TextStyle(fontSize: 20, height: 24 / 20),
-                                ),
-                                const SizedBox(width: 4),
-                                Icon(
-                                  Icons.expand_more,
-                                  color: ClientConfig.getCustomColors().neutral700,
-                                ),
-                                VerticalDivider(
-                                  color: _mobileNumberFocusNode.hasFocus
-                                      ? ClientConfig.getCustomColors().neutral900
-                                      : ClientConfig.getCustomColors().neutral400,
-                                  thickness: 1,
-                                  width: 20,
-                                ),
-                              ],
-                            ),
-                          ),
                         ),
-                      );
-                    },
+                      ),
+                      const SizedBox(height: 16),
+                    ],
                   ),
-                  const SizedBox(height: 24),
-                  const Spacer(),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ListenableBuilder(
-                      listenable: _continueButtonController,
-                      builder: (context, child) {
-                        return PrimaryButton(
-                          text: "Continue",
-                          onPressed: _continueButtonController.isEnabled
-                              ? () {
-                                  _mobileNumberFocusNode.unfocus();
-                                  StoreProvider.of<AppState>(context).dispatch(
-                                    CreateMobileNumberCommandAction(
-                                      mobileNumber: _selectedCountryNotifier.value.phoneCode +
-                                          _phoneNumberFormatter.getUnmaskedText(),
-                                    ),
-                                  );
-                                }
-                              : null,
-                        );
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                ],
+                ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
