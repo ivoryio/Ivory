@@ -60,6 +60,7 @@ class _OnboardingStepperScreenState extends State<OnboardingStepperScreen> {
         AppToolbar(
           padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
           actions: const [AppbarLogo()],
+          backButtonEnabled: false,
         ),
         Expanded(
           child: Padding(
