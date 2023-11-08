@@ -1,14 +1,18 @@
 import 'package:equatable/equatable.dart';
+import 'package:solarisdemo/models/onboarding/onboarding_financial_details_attributes.dart';
+import 'package:solarisdemo/models/onboarding/onboarding_financial_details_error_type.dart';
 
 class OnboardingFinancialDetailsState extends Equatable {
-  final String taxId;
-  final String? errorMessage;
+  final OnboardingFinancialDetailsAttributes financialDetailsAttributes;
+  final bool isLoading;
+  final FinancialDetailsErrorType? errorType;
 
-  OnboardingFinancialDetailsState({
-    this.taxId = '',
-    this.errorMessage,
+  const OnboardingFinancialDetailsState({
+    this.financialDetailsAttributes = const OnboardingFinancialDetailsAttributes(),
+    required this.isLoading,
+    this.errorType,
   });
 
   @override
-  List<Object?> get props => [taxId];
+  List<Object?> get props => [financialDetailsAttributes, isLoading, errorType];
 }

@@ -1,0 +1,1 @@
+enum FinancialDetailsErrorType { taxId, unknown }
