@@ -1,9 +1,8 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/infrastructure/onboarding/personal_details/onboarding_personal_details_presenter.dart';
 import 'package:solarisdemo/infrastructure/suggestions/address/address_suggestions_presenter.dart';
+import 'package:solarisdemo/models/onboarding/onboarding_personal_details_error_type.dart';
 import 'package:solarisdemo/models/suggestions/address_suggestion.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/onboarding/personal_details/onboarding_personal_details_action.dart';
@@ -14,6 +13,7 @@ import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/continue_button_controller.dart';
 import 'package:solarisdemo/widgets/ivory_text_field.dart';
+import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
 
@@ -65,17 +65,54 @@ class _OnboardingAddressOfResidenceScreenState extends State<OnboardingAddressOf
         onboardingPersonalDetailsState: store.state.onboardingPersonalDetailsState,
       ),
       onWillChange: (previousViewModel, viewModel) {
-        if (viewModel.isAddressSaved == true) {
-          log("success");
-          // TODO: Navigate to next screen
-        }
-
         if (viewModel.isLoading) {
           _continueButtonController.setLoading();
-        } else if (previousViewModel?.isLoading == true && viewModel.isLoading == false) {
+        }
+        if (viewModel.errorType == OnboardingPersonalDetailsErrorType.unknown) {
           _continueButtonController.setEnabled();
+          showBottomModal(
+              context: context,
+              showCloseButton: false,
+              isDismissible: false,
+              title: "Server error",
+              content: Column(
+                children: [
+                  Text.rich(
+                    TextSpan(
+                      style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                      children: [
+                        const TextSpan(
+                          text:
+                              "We encountered an unexpected error while processing your address input. Please try again. If the issue persists, please contact our support team at ",
+                        ),
+                        TextSpan(
+                          text: "+49 (0)123 456789",
+                          style: ClientConfig.getTextStyleScheme()
+                              .bodyLargeRegularBold
+                              .copyWith(color: ClientConfig.getColorScheme().secondary),
+                        ),
+                        const TextSpan(text: "."),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  PrimaryButton(
+                    text: "Try again",
+                    onPressed: () {
+                      Navigator.pop(context);
+                      StoreProvider.of<AppState>(context).dispatch(
+                        CreatePersonAccountCommandAction(
+                          houseNumber: _houseNumberController.text,
+                          addressLine: _addressLineController.text,
+                        ),
+                      );
+                    },
+                  )
+                ],
+              ));
         }
       },
+      distinct: true,
       builder: (context, onboardingViewModel) {
         return ScreenScaffold(
           shouldPop: !onboardingViewModel.isLoading,
