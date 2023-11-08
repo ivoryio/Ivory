@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/infrastructure/onboarding/personal_details/onboarding_personal_details_presenter.dart';
@@ -66,18 +64,13 @@ class _OnboardingAddressOfResidenceScreenState extends State<OnboardingAddressOf
         onboardingPersonalDetailsState: store.state.onboardingPersonalDetailsState,
       ),
       onWillChange: (previousViewModel, viewModel) {
-        if (viewModel.isAddressSaved == true) {
-          log("success");
-          // TODO: Navigate to next screen
-        }
-
         if (viewModel.isLoading) {
           _continueButtonController.setLoading();
         } else if (previousViewModel?.isLoading == true && viewModel.isLoading == false) {
           _continueButtonController.setEnabled();
         }
         
-        if (previousViewModel!.isAddressSaved == null && newViewModel.isAddressSaved == true) {
+        if (previousViewModel!.isAddressSaved == null && viewModel.isAddressSaved == true) {
           Navigator.pushNamed(context, OnboardingMobileNumberScreen.routeName);
         }
         

@@ -61,6 +61,7 @@ class _CountryPrefixPickerState extends State<CountryPrefixPicker> {
               prefix: const Icon(Icons.search),
             ),
           ),
+          const SizedBox(height: 16),
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.65,
             child: ListView.builder(
@@ -71,6 +72,14 @@ class _CountryPrefixPickerState extends State<CountryPrefixPicker> {
                 return Container(
                   decoration: BoxDecoration(
                     color: isSelected ? ClientConfig.getCustomColors().neutral100 : Colors.transparent,
+                    border: isSelected
+                        ? Border(
+                            bottom: BorderSide(
+                              color: ClientConfig.getCustomColors().neutral200,
+                              width: 1,
+                            ),
+                          )
+                        : null,
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
