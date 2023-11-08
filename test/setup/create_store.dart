@@ -446,6 +446,7 @@ class NotImplementedOnboardingPersonalDetailsService extends OnboardingPersonalD
     required String birthCity,
     required String birthCountry,
     required String nationality,
+    required String addressLine,
   }) async {
     throw UnimplementedError();
   }

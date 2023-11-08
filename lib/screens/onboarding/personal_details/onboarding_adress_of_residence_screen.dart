@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/infrastructure/onboarding/personal_details/onboarding_personal_details_presenter.dart';
@@ -62,13 +64,16 @@ class _OnboardingAddressOfResidenceScreenState extends State<OnboardingAddressOf
       converter: (store) => OnboardingPersonalDetailsPresenter.presentOnboardingPersonalDetails(
         onboardingPersonalDetailsState: store.state.onboardingPersonalDetailsState,
       ),
-      onWillChange: (previousViewModel, newViewModel) {
-        if (newViewModel.isLoading) {
+      onWillChange: (previousViewModel, viewModel) {
+        if (viewModel.isAddressSaved == true) {
+          log("success");
+          // TODO: Navigate to next screen
+        }
+
+        if (viewModel.isLoading) {
           _continueButtonController.setLoading();
-        } else if (previousViewModel?.isLoading == true && newViewModel.isLoading == false) {
+        } else if (previousViewModel?.isLoading == true && viewModel.isLoading == false) {
           _continueButtonController.setEnabled();
-        } else if (newViewModel.isAddressSaved == true && previousViewModel?.isAddressSaved == false) {
-          // TODO: navigate to the next screen
         }
       },
       builder: (context, onboardingViewModel) {
