@@ -14,6 +14,7 @@ class FakeOnboardingPersonalDetailsService extends OnboardingPersonalDetailsServ
     required String birthCity,
     required String birthCountry,
     required String nationality,
+    required String addressLine,
   }) async {
     return OnboardingCreatePersonSuccessResponse(personId: "personId");
   }
@@ -28,6 +29,7 @@ class FakeFailingOnboardingPersonalDetailsService extends OnboardingPersonalDeta
     required String birthCity,
     required String birthCountry,
     required String nationality,
+    required String addressLine,
   }) async {
     return OnboardingPersonalDetailsServiceErrorResponse(errorType: OnboardingPersonalDetailsErrorType.unknown);
   }

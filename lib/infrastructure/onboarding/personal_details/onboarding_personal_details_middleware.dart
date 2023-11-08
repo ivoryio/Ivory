@@ -39,6 +39,7 @@ class OnboardingPersonalDetailsMiddleware extends MiddlewareClass<AppState> {
           birthCountry: personalDetailsAttributes.country ?? "",
           birthDate: personalDetailsAttributes.birthDate ?? "",
           nationality: personalDetailsAttributes.nationality ?? "",
+          addressLine: action.addressLine,
         );
 
         if (response is OnboardingCreatePersonSuccessResponse) {

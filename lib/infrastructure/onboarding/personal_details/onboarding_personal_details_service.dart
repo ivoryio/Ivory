@@ -17,6 +17,7 @@ class OnboardingPersonalDetailsService extends ApiService {
     required String birthCity,
     required String birthCountry,
     required String nationality,
+    required String addressLine,
   }) async {
     this.user = user;
 
@@ -24,7 +25,7 @@ class OnboardingPersonalDetailsService extends ApiService {
       final response = await post('/signup/person', body: {
         'address': {
           'line_1': address.address,
-          'line_2': "",
+          'line_2': addressLine,
           'postal_code': "44135", // TODO: get postal code from address
           'city': address.city,
           'country': await _isoCodeFromCountryName(address.country),

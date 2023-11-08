@@ -11,11 +11,16 @@ import 'package:solarisdemo/widgets/circular_percent_indicator.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/screen_title.dart';
 
-class OnboardingStepperScreen extends StatelessWidget {
+class OnboardingStepperScreen extends StatefulWidget {
   static const routeName = "/onboardingStepperScreen";
 
   const OnboardingStepperScreen({super.key});
 
+  @override
+  State<OnboardingStepperScreen> createState() => _OnboardingStepperScreenState();
+}
+
+class _OnboardingStepperScreenState extends State<OnboardingStepperScreen> {
   @override
   Widget build(BuildContext context) {
     return ScreenScaffold(
@@ -28,49 +33,15 @@ class OnboardingStepperScreen extends StatelessWidget {
           return viewModel is OnboardingProgressFetchedViewModel
               ? _buildContent(context, viewModel)
               : viewModel is OnboardingProgressErrorViewModel
-                  ? _buildErrorContent(context)
-                  : _buildLoadingContent(context);
+                  ? GenericErrorScreenBody(
+                      isLoading: viewModel is OnboardingProgressLoadingViewModel,
+                      onTryAgainPressed: () {
+                        StoreProvider.of<AppState>(context).dispatch(GetOnboardingProgressCommandAction());
+                      },
+                    )
+                  : const GenericLoadingScreenBody();
         },
       ),
-    );
-  }
-
-  Widget _buildLoadingContent(BuildContext context) {
-    return Column(
-      children: [
-        AppToolbar(
-          padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-          actions: const [AppbarLogo()],
-        ),
-        const Expanded(
-          child: Center(child: CircularProgressIndicator()),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildErrorContent(BuildContext context) {
-    return Column(
-      children: [
-        AppToolbar(
-          padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-          actions: const [AppbarLogo()],
-        ),
-        Padding(
-          padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const ScreenTitle("An error has occured"),
-              const SizedBox(height: 16),
-              Text(
-                "We're sorry, but it seems an error has cropped up, which is preventing you from completing this step",
-                style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-              ),
-            ],
-          ),
-        ),
-      ],
     );
   }
 
