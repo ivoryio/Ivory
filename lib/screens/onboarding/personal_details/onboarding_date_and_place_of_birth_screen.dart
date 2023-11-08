@@ -184,6 +184,9 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
                     bottomSheetTitle: "Select your nationality",
                     searchFieldPlaceholder: "Search nationality...",
                     controller: _selectNationalityController,
+                    optionSeparatorBuilder: (context, option) => option.value == "DE"
+                        ? Divider(height: 2, color: ClientConfig.getCustomColors().neutral200)
+                        : const SizedBox(),
                     enabledSearch: true,
                     bottomSheetExpanded: true,
                     onBottomSheetOpened: () => FocusScope.of(context).unfocus(),
