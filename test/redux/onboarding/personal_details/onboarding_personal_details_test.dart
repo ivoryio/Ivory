@@ -1,14 +1,22 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:solarisdemo/models/auth/auth_type.dart';
 
 import 'package:solarisdemo/models/onboarding/onboarding_personal_details_attributes.dart';
+import 'package:solarisdemo/models/onboarding/onboarding_personal_details_error_type.dart';
 import 'package:solarisdemo/models/suggestions/address_suggestion.dart';
+import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/onboarding/personal_details/onboarding_personal_details_action.dart';
 import 'package:solarisdemo/redux/onboarding/personal_details/onboarding_personal_details_state.dart';
 
 import '../../../setup/create_app_state.dart';
 import '../../../setup/create_store.dart';
+import '../../auth/auth_mocks.dart';
+import 'onboarding_personal_details_mocks.dart';
 
 void main() {
+  final mockUser = MockUser();
+  final authInitializedState = AuthenticationInitializedState(mockUser, AuthType.onboarding);
+
   const birthDate = "03/11/2023";
   const country = "DE";
   const city = "Berlin";
@@ -77,6 +85,75 @@ void main() {
       final onboardingPersonalDetailsState = (await appState).onboardingPersonalDetailsState;
 
       expect(onboardingPersonalDetailsState.attributes.selectedAddress, addressSuggestion);
+    });
+
+    group("Person creation", () {
+      test("When the person is successfully created, <isAddressSaved> should change to true", () async {
+        // given
+        const attributes = OnboardingPersonalDetailsAttributes(
+          birthDate: birthDate,
+          city: city,
+          country: country,
+          nationality: nationality,
+          selectedAddress: addressSuggestion,
+        );
+
+        final store = createTestStore(
+          onboardingPersonalDetailsService: FakeOnboardingPersonalDetailsService(),
+          initialState: createAppState(
+            authState: authInitializedState,
+            onboardingPersonalDetailsState: const OnboardingPersonalDetailsState(attributes: attributes),
+          ),
+        );
+
+        final loadingState = store.onChange.firstWhere((state) => state.onboardingPersonalDetailsState.isLoading);
+        final appState =
+            store.onChange.firstWhere((state) => state.onboardingPersonalDetailsState.isAddressSaved == true);
+
+        // when
+        store.dispatch(CreatePersonAccountCommandAction(addressLine: "", houseNumber: ""));
+
+        // then
+        expect((await loadingState).onboardingPersonalDetailsState.isLoading, true);
+
+        final onboardingPersonalDetailsState = (await appState).onboardingPersonalDetailsState;
+        expect(onboardingPersonalDetailsState.attributes, attributes);
+      });
+
+      test("When the person failed to create, <isAddressSaved> should be false and <errorType> should not be null",
+          () async {
+        // given
+        const attributes = OnboardingPersonalDetailsAttributes(
+          birthDate: birthDate,
+          city: city,
+          country: country,
+          nationality: nationality,
+          selectedAddress: addressSuggestion,
+        );
+
+        final store = createTestStore(
+          onboardingPersonalDetailsService: FakeFailingOnboardingPersonalDetailsService(),
+          initialState: createAppState(
+            authState: authInitializedState,
+            onboardingPersonalDetailsState: const OnboardingPersonalDetailsState(attributes: attributes),
+          ),
+        );
+
+        final loadingState = store.onChange.firstWhere((state) => state.onboardingPersonalDetailsState.isLoading);
+        final appState =
+            store.onChange.firstWhere((state) => state.onboardingPersonalDetailsState.isAddressSaved == false);
+
+        // when
+        store.dispatch(CreatePersonAccountCommandAction(addressLine: "", houseNumber: ""));
+
+        // then
+        expect((await loadingState).onboardingPersonalDetailsState.isLoading, true);
+
+        final onboardingPersonalDetailsState = (await appState).onboardingPersonalDetailsState;
+        expect(onboardingPersonalDetailsState.isAddressSaved, false);
+        expect(onboardingPersonalDetailsState.attributes, attributes);
+        expect(onboardingPersonalDetailsState.errorType, OnboardingPersonalDetailsErrorType.unknown);
+      });
     });
   });
 }

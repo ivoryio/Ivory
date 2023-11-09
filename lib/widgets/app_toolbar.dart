@@ -110,14 +110,17 @@ class _AppToolbarState extends State<AppToolbar> {
             toolbarHeight: widget.toolbarHeight,
             elevation: 0,
             leadingWidth: 25,
-            leading: (widget.backButtonEnabled && Navigator.canPop(context) && !widget.backButtonAppearanceDisabled)
+            leading: ((widget.backButtonEnabled && widget.onBackButtonPressed != null) || Navigator.canPop(context))
                 ? InkWell(
-                    onTap: widget.onBackButtonPressed ?? () => Navigator.of(context).pop(),
-                    child: widget.backIcon,
+                    onTap: widget.backButtonAppearanceDisabled
+                        ? null
+                        : widget.onBackButtonPressed ?? () => Navigator.canPop(context) ? Navigator.pop(context) : null,
+                    child: Icon(
+                      widget.backIcon.icon,
+                      color: widget.backButtonAppearanceDisabled ? ClientConfig.getCustomColors().neutral500 : null,
+                    ),
                   )
-                : (widget.backButtonEnabled && widget.backButtonAppearanceDisabled)
-                    ? Icon(widget.backIcon.icon, color: ClientConfig.getCustomColors().neutral500)
-                    : null,
+                : null,
             title: Opacity(
               opacity: titleOpacity,
               child: widget.richTextTitle ?? Text(widget.title),
@@ -169,7 +172,9 @@ class StepRichTextTitle extends RichText {
               ),
               TextSpan(
                 text: " out of $totalSteps",
-                style: ClientConfig.getTextStyleScheme().heading4.copyWith(color: ClientConfig.getCustomColors().neutral700),
+                style: ClientConfig.getTextStyleScheme()
+                    .heading4
+                    .copyWith(color: ClientConfig.getCustomColors().neutral700),
               ),
             ],
           ),

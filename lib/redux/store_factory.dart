@@ -18,6 +18,7 @@ import 'package:solarisdemo/infrastructure/notifications/notifications_middlewar
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/financial_details/onboarding_financial_details_middleware.dart';
 import 'package:solarisdemo/infrastructure/onboarding/financial_details/onboarding_financial_details_service.dart';
+import 'package:solarisdemo/infrastructure/onboarding/personal_details/onboarding_personal_details_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/signup/onboarding_signup_middleware.dart';
 import 'package:solarisdemo/infrastructure/onboarding/onboarding_progress_middleware.dart';
 import 'package:solarisdemo/infrastructure/onboarding/onboarding_service.dart';
@@ -76,6 +77,7 @@ Store<AppState> createStore({
   required CitySuggestionsService citySuggestionsService,
   required AddressSuggestionsService addressSuggestionsService,
   required OnboardingFinancialDetailsService onboardingFinancialDetailsService,
+  required OnboardingPersonalDetailsService onboardingPersonalDetailsService,
 }) {
   return Store<AppState>(
     appReducer,
@@ -99,7 +101,7 @@ Store<AppState> createStore({
       AuthMiddleware(authService, deviceService, deviceFingerprintService, personService, biometricsService),
       OnboardingSignupMiddleware(pushNotificationService, onboardingSignupService),
       OnboardingProgressMiddleware(onboardingService),
-      OnboardingPersonalDetailsMiddleware(onboardingService),
+      OnboardingPersonalDetailsMiddleware(onboardingPersonalDetailsService),
       ActionLoggerMiddleware(),
       CitySuggestionsMiddleware(citySuggestionsService),
       AddressSuggestionsMiddleware(addressSuggestionsService),
