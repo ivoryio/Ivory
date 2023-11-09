@@ -16,6 +16,7 @@ class IvoryTextField extends StatefulWidget {
   final List<TextInputFormatter>? inputFormatters;
   final String? errorText;
   final String? label;
+  final Widget? labelSuffix;
   final String? bottomSheetTitle;
   final String? placeholder;
   final TextCapitalization? textCapitalization;
@@ -41,6 +42,7 @@ class IvoryTextField extends StatefulWidget {
     this.inputType = TextFieldInputType.text,
     this.keyboardType,
     this.label,
+    this.labelSuffix,
     this.maxLines,
     this.minLines,
     this.obscureText = false,
@@ -116,14 +118,24 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (widget.label != null) ...[
-                Text(
-                  widget.label!,
-                  style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(
-                      color: isEnabled == false
-                          ? ClientConfig.getCustomColors().neutral500
-                          : hasError
-                              ? ClientConfig.getColorScheme().error
-                              : ClientConfig.getCustomColors().neutral700),
+                Row(
+                  children: [
+                    Flexible(
+                      child: Text(
+                        widget.label!,
+                        style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(
+                            color: isEnabled == false
+                                ? ClientConfig.getCustomColors().neutral500
+                                : hasError
+                                    ? ClientConfig.getColorScheme().error
+                                    : ClientConfig.getCustomColors().neutral700),
+                      ),
+                    ),
+                    if (widget.labelSuffix != null) ...[
+                      const SizedBox(width: 4),
+                      widget.labelSuffix!,
+                    ],
+                  ],
                 ),
                 const SizedBox(height: 8),
               ],
