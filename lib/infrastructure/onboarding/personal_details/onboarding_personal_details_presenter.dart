@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:solarisdemo/models/onboarding/onboarding_personal_details_attributes.dart';
+import 'package:solarisdemo/models/onboarding/onboarding_personal_details_error_type.dart';
 import 'package:solarisdemo/redux/onboarding/personal_details/onboarding_personal_details_state.dart';
 
 class OnboardingPersonalDetailsPresenter {
@@ -12,6 +13,7 @@ class OnboardingPersonalDetailsPresenter {
       tanRequestedAt: onboardingPersonalDetailsState.tanRequestedAt,
       isAddressSaved: onboardingPersonalDetailsState.isAddressSaved,
       isMobileConfirmed: onboardingPersonalDetailsState.isMobileConfirmed,
+      errorType: onboardingPersonalDetailsState.errorType,
     );
   }
 }
@@ -22,6 +24,7 @@ class OnboardingPersonalDetailsViewModel extends Equatable {
   final DateTime? tanRequestedAt;
   final bool? isAddressSaved;
   final bool? isMobileConfirmed;
+  final OnboardingPersonalDetailsErrorType? errorType;
 
   const OnboardingPersonalDetailsViewModel({
     required this.attributes,
@@ -29,8 +32,9 @@ class OnboardingPersonalDetailsViewModel extends Equatable {
     this.tanRequestedAt,
     this.isAddressSaved,
     this.isMobileConfirmed,
+    this.errorType,
   });
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [attributes, isLoading, tanRequestedAt, isAddressSaved, isMobileConfirmed, errorType];
 }
