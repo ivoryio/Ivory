@@ -4,7 +4,6 @@ import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/onboarding/financial_details/onboarding_financial_details_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/onboarding/financial_details/onboarding_financial_details_action.dart';
-import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_remember_screen.dart';
 import 'package:solarisdemo/screens/welcome/welcome_screen.dart';
 import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
@@ -32,6 +31,8 @@ class _OnboardingTaxIdScreenState extends State<OnboardingTaxIdScreen> {
   void initState() {
     super.initState();
 
+    isValidTaxId(_taxIdController.text);
+
     _taxIdController.addListener(() {
       setState(() {
         isValidTaxId(_taxIdController.text);
@@ -42,7 +43,7 @@ class _OnboardingTaxIdScreenState extends State<OnboardingTaxIdScreen> {
 
   isValidTaxId(String text) {
     text = text.replaceAll(' ', '');
-    (text.length >= 11) ? _continueButtonController.setEnabled() : _continueButtonController.setDisabled();
+    text.isNotEmpty ? _continueButtonController.setEnabled() : _continueButtonController.setDisabled();
   }
 
   @override
@@ -72,6 +73,7 @@ class _OnboardingTaxIdScreenState extends State<OnboardingTaxIdScreen> {
                     inputFormatters: [InputFormatter.taxId(_taxIdController.text)],
                     inputType: TextFieldInputType.number,
                     keyboardType: TextInputType.number,
+                    placeholder: '489 543 712 07',
                   ),
                   const Spacer(),
                   StoreConnector<AppState, OnboardingFinancialDetailsViewModel>(
@@ -81,7 +83,7 @@ class _OnboardingTaxIdScreenState extends State<OnboardingTaxIdScreen> {
                       if (newViewModel.isLoading) {
                         _continueButtonController.setLoading();
                       } else if (newViewModel.financialDetailsAttributes.taxId != null) {
-                        Navigator.pushNamed(context, OnboardingRememberScreen.routeName);
+                        Navigator.pushNamed(context, WelcomeScreen.routeName);
                       } else if (newViewModel.errorType != null) {
                         _taxIdController.setErrorText('This Tax ID is invalid for Germany. Please try another.');
                       }
