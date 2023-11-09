@@ -1,16 +1,20 @@
 import 'package:equatable/equatable.dart';
 import 'package:solarisdemo/models/onboarding/onboarding_financial_details_error_type.dart';
+import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/services/api_service.dart';
 
 class OnboardingFinancialDetailsService extends ApiService {
   OnboardingFinancialDetailsService({super.user});
 
   Future<CreateTaxIdResponse> createTaxIdentification({
+    required User user,
     required String taxId,
   }) async {
+    this.user = user;
+
     const path = '/person/tax_identification';
     Map<String, dynamic> body = {
-      'taxId': taxId,
+      'number': taxId,
       'country': 'DE',
       'primary': true,
     };
