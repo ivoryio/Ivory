@@ -29,6 +29,7 @@ class IvoryTextField extends StatefulWidget {
   final bool obscureText;
   final int? maxLines;
   final int? minLines;
+  final String initialText;
 
   const IvoryTextField({
     super.key,
@@ -50,6 +51,7 @@ class IvoryTextField extends StatefulWidget {
     this.suffix,
     this.textCapitalization,
     this.bottomSheetTitle,
+    this.initialText = "",
   });
 
   @override
@@ -68,6 +70,7 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
     _focusNode = widget.focusNode ?? FocusNode();
     _controller = widget.controller ??
         IvoryTextFieldController(
+          text: widget.initialText,
           error: widget.error,
           enabled: widget.enabled,
           errorText: widget.errorText,
