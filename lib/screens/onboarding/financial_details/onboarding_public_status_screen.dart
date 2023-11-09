@@ -7,6 +7,7 @@ import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/continue_button_controller.dart';
 import 'package:solarisdemo/widgets/ivory_select_option.dart';
 import 'package:solarisdemo/widgets/ivory_text_field.dart';
+import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
 
@@ -94,6 +95,34 @@ class _OnboardingPublicStatusScreenState extends State<OnboardingPublicStatusScr
                   const SizedBox(height: 24),
                   IvoryTextField(
                     label: 'Number of dependents',
+                    labelSuffix: InkWell(
+                      onTap: () {
+                        showBottomModal(
+                          context: context,
+                          title: 'Number of dependents',
+                          content: Text.rich(
+                            TextSpan(
+                              style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                              children: [
+                                const TextSpan(text: 'Dependents are '),
+                                TextSpan(
+                                    text:
+                                        'individuals who rely on your financial support, such as children or other family members.',
+                                    style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold),
+                                const TextSpan(
+                                    text:
+                                        ' By providing this information, you help us understand your financial responsibilities, which can be important for determining your credit card limit and eligibility.\n\n'),
+                                TextSpan(
+                                    text: 'If you do not have any dependents, simply enter \'0\'',
+                                    style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold),
+                                const TextSpan(text: ' to indicate that you are financially independent.'),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                      child: Icon(Icons.info_outline, color: ClientConfig.getColorScheme().primary, size: 16),
+                    ),
                     controller: _dependentsController,
                     keyboardType: TextInputType.number,
                   ),
