@@ -87,4 +87,25 @@ void main() {
     expect((await loadingState).citySuggestionsState, isA<CitySuggestionsLoadingState>());
     expect((await appState).citySuggestionsState, isA<CitySuggestionsErrorState>());
   });
+
+  test("When failed fetching cities with searchTerm, the error state should contain the searchTerm", () async {
+    // given
+    final store = createTestStore(
+      citySuggestionsService: FakeFailingCitySuggestionsService(),
+      initialState: createAppState(
+        citySuggestionsState: CitySuggestionsInitialState(),
+      ),
+    );
+    final loadingState =
+        store.onChange.firstWhere((element) => element.citySuggestionsState is CitySuggestionsLoadingState);
+    final appState = store.onChange.firstWhere((element) => element.citySuggestionsState is CitySuggestionsErrorState);
+
+    // when
+    store.dispatch(FetchCitySuggestionsCommandAction(countryCode: "DE", searchTerm: "Berlin"));
+
+    // then
+    expect((await loadingState).citySuggestionsState, isA<CitySuggestionsLoadingState>());
+    expect((await appState).citySuggestionsState, isA<CitySuggestionsErrorState>());
+    expect(((await appState).citySuggestionsState as CitySuggestionsErrorState).searchTerm, "Berlin");
+  });
 }

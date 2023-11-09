@@ -29,6 +29,7 @@ class _OnboardingStepperScreenState extends State<OnboardingStepperScreen> {
         converter: (store) => OnboardingProgressPresenter.presentOnboardingProgress(
           onboardingProgressState: store.state.onboardingProgressState,
         ),
+        distinct: true,
         builder: (context, viewModel) {
           return viewModel is OnboardingProgressFetchedViewModel
               ? _buildContent(context, viewModel)
