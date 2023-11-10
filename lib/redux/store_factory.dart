@@ -100,7 +100,7 @@ Store<AppState> createStore({
       AuthMiddleware(authService, deviceService, deviceFingerprintService, personService, biometricsService),
       OnboardingSignupMiddleware(pushNotificationService, onboardingSignupService),
       OnboardingProgressMiddleware(onboardingService),
-      OnboardingPersonalDetailsMiddleware(onboardingPersonalDetailsService, mobileNumberService, deviceFingerprintService, deviceService),
+      OnboardingPersonalDetailsMiddleware(onboardingPersonalDetailsService, mobileNumberService),
       ActionLoggerMiddleware(),
       CitySuggestionsMiddleware(citySuggestionsService),
       AddressSuggestionsMiddleware(addressSuggestionsService),

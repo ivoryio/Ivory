@@ -1,6 +1,4 @@
 import 'package:redux/redux.dart';
-import 'package:solarisdemo/infrastructure/device/device_fingerprint_service.dart';
-import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/infrastructure/mobile_number/mobile_number_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/personal_details/onboarding_personal_details_service.dart';
 import 'package:solarisdemo/models/mobile_number/mobile_number.dart';
@@ -11,14 +9,10 @@ import 'package:solarisdemo/redux/onboarding/personal_details/onboarding_persona
 class OnboardingPersonalDetailsMiddleware extends MiddlewareClass<AppState> {
   final OnboardingPersonalDetailsService _onboardingPersonalDetailsService;
   final MobileNumberService _mobileNumberService;
-  final DeviceFingerprintService _deviceFingerprintService;
-  final DeviceService _deviceService;
 
   OnboardingPersonalDetailsMiddleware(
     this._onboardingPersonalDetailsService,
     this._mobileNumberService,
-    this._deviceFingerprintService,
-    this._deviceService,
   );
 
   @override
@@ -56,18 +50,9 @@ class OnboardingPersonalDetailsMiddleware extends MiddlewareClass<AppState> {
 
         final user = (store.state.authState as AuthenticationInitializedState).cognitoUser;
 
-        final consentId = await _deviceService.getConsentId();
-        if (consentId == null) {
-          return;
-        }
-        final devideData = await _deviceFingerprintService.getDeviceFingerprint(consentId);
-        if (devideData == null) {
-          return;
-        }
-
         final response = await _mobileNumberService.createMobileNumber(
           reqBody: CreateVerifyMobileNumberRequestBody(
-            deviceData: devideData,
+            deviceData: '',
             number: action.mobileNumber,
           ),
           user: user,
@@ -88,18 +73,9 @@ class OnboardingPersonalDetailsMiddleware extends MiddlewareClass<AppState> {
 
         final user = (store.state.authState as AuthenticationInitializedState).cognitoUser;
 
-        final consentId = await _deviceService.getConsentId();
-        if (consentId == null) {
-          return;
-        }
-        final devideData = await _deviceFingerprintService.getDeviceFingerprint(consentId);
-        if (devideData == null) {
-          return;
-        }
-
         final response = await _mobileNumberService.confirmMobileNumber(
           reqBody: ConfirmMobileNumberRequestBody(
-            deviceData: devideData,
+            deviceData: '',
             number: action.mobileNumber,
             token: action.token,
           ),
@@ -119,18 +95,9 @@ class OnboardingPersonalDetailsMiddleware extends MiddlewareClass<AppState> {
       if (store.state.authState is AuthenticationInitializedState) {
         final user = (store.state.authState as AuthenticationInitializedState).cognitoUser;
 
-        final consentId = await _deviceService.getConsentId();
-        if (consentId == null) {
-          return;
-        }
-        final devideData = await _deviceFingerprintService.getDeviceFingerprint(consentId);
-        if (devideData == null) {
-          return;
-        }
-
         final response = await _mobileNumberService.verifyMobileNumber(
           reqBody: CreateVerifyMobileNumberRequestBody(
-            deviceData: devideData,
+            deviceData: '',
             number: action.mobileNumber,
           ),
           user: user,

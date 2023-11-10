@@ -11,7 +11,6 @@ import 'package:solarisdemo/redux/onboarding/personal_details/onboarding_persona
 import '../../../setup/create_app_state.dart';
 import '../../../setup/create_store.dart';
 import '../../auth/auth_mocks.dart';
-import '../../transactions/transaction_mocks.dart';
 import 'onboarding_personal_details_mocks.dart';
 
 void main() {
@@ -171,8 +170,6 @@ void main() {
         final store = createTestStore(
           onboardingPersonalDetailsService: FakeOnboardingPersonalDetailsService(),
           mobileNumberService: FakeMobileNumberService(),
-          deviceService: FakeDeviceService(),
-          deviceFingerprintService: FakeDeviceFingerprintService(),
           initialState: createAppState(
             authState: authInitializedState,
             onboardingPersonalDetailsState: const OnboardingPersonalDetailsState(attributes: attributes),
@@ -209,8 +206,6 @@ void main() {
         final store = createTestStore(
           onboardingPersonalDetailsService: FakeOnboardingPersonalDetailsService(),
           mobileNumberService: FakeMobileNumberService(),
-          deviceService: FakeDeviceService(),
-          deviceFingerprintService: FakeDeviceFingerprintService(),
           initialState: createAppState(
             authState: authInitializedState,
             onboardingPersonalDetailsState: const OnboardingPersonalDetailsState(attributes: attributes),
