@@ -18,6 +18,7 @@ class CitySuggestionsLoadingEventAction {}
 
 class FetchCitySuggestionsFailedEventAction {
   final CitySuggestionsErrorType errorType;
+  final String? searchTerm;
 
-  FetchCitySuggestionsFailedEventAction({required this.errorType});
+  FetchCitySuggestionsFailedEventAction({required this.errorType, this.searchTerm});
 }
