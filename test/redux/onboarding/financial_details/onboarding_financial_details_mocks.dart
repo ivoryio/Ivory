@@ -13,7 +13,7 @@ class FakeFailingOnbordingFinancialDetailsService extends OnboardingFinancialDet
   @override
   Future<CreateTaxIdResponse> createTaxIdentification({required User user, required String taxId}) async {
     return const CreateTaxIdErrorResponse(
-      errorType: FinancialDetailsErrorType.taxId,
+      errorType: FinancialDetailsErrorType.taxIdNotValid,
     );
   }
 }

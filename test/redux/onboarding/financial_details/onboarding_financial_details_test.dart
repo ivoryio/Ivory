@@ -74,8 +74,8 @@ void main() {
           )),
     );
 
-    final appState = store.onChange
-        .firstWhere((state) => state.onboardingFinancialDetailsState.errorType == FinancialDetailsErrorType.taxId);
+    final appState = store.onChange.firstWhere(
+        (state) => state.onboardingFinancialDetailsState.errorType == FinancialDetailsErrorType.taxIdNotValid);
 
     // when
     store.dispatch(CreateTaxIdCommandAction(taxId: taxId));
@@ -84,7 +84,7 @@ void main() {
     final financialDetailsState = (await appState).onboardingFinancialDetailsState;
 
     expect(financialDetailsState.isLoading, false);
-    expect(financialDetailsState.errorType, FinancialDetailsErrorType.taxId);
+    expect(financialDetailsState.errorType, FinancialDetailsErrorType.taxIdNotValid);
     expect(financialDetailsState.financialDetailsAttributes.taxId, null);
   });
 
@@ -98,7 +98,7 @@ void main() {
           onboardingFinancialDetailsState: const OnboardingFinancialDetailsState(
             financialDetailsAttributes: OnboardingFinancialDetailsAttributes(),
             isLoading: false,
-            errorType: FinancialDetailsErrorType.taxId,
+            errorType: FinancialDetailsErrorType.taxIdNotValid,
           )),
     );
 

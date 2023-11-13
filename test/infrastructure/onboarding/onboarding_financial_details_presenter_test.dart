@@ -64,7 +64,7 @@ void main() {
         taxId: '123',
       ),
       isLoading: false,
-      errorType: FinancialDetailsErrorType.taxId,
+      errorType: FinancialDetailsErrorType.taxIdNotValid,
     );
     //when
     final viewModel = OnboardingFinancialDetailsPresenter.present(financialState: onboardingFinancialDetailsState);
@@ -74,7 +74,7 @@ void main() {
       const OnboardingFinancialDetailsViewModel(
           financialDetailsAttributes: OnboardingFinancialDetailsAttributes(taxId: '123'),
           isLoading: false,
-          errorType: FinancialDetailsErrorType.taxId),
+          errorType: FinancialDetailsErrorType.taxIdNotValid),
     );
   });
 }

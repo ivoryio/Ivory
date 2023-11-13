@@ -1,1 +1,1 @@
-enum FinancialDetailsErrorType { taxId, unknown }
+enum FinancialDetailsErrorType { taxIdNotValid, unknown }

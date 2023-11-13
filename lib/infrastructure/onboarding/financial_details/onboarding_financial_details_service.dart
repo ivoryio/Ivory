@@ -24,7 +24,7 @@ class OnboardingFinancialDetailsService extends ApiService {
 
       return CreateTaxIdSuccesResponse();
     } catch (e) {
-      return const CreateTaxIdErrorResponse(errorType: FinancialDetailsErrorType.taxId);
+      return const CreateTaxIdErrorResponse(errorType: FinancialDetailsErrorType.taxIdNotValid);
     }
   }
 }
@@ -41,7 +41,7 @@ class CreateTaxIdSuccesResponse extends CreateTaxIdResponse {}
 class CreateTaxIdErrorResponse extends CreateTaxIdResponse {
   final FinancialDetailsErrorType errorType;
 
-  const CreateTaxIdErrorResponse({this.errorType = FinancialDetailsErrorType.taxId});
+  const CreateTaxIdErrorResponse({this.errorType = FinancialDetailsErrorType.taxIdNotValid});
 
   @override
   List<Object?> get props => [errorType];
