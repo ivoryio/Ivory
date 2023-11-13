@@ -59,4 +59,16 @@ void main() {
     // then
     expect(viewModel, isA<CitySuggestionsErrorViewModel>());
   });
+
+  test("When state is error and searchTerm is not null it should return error view model with searchTerm", () {
+    // given
+    final state = CitySuggestionsErrorState(errorType: CitySuggestionsErrorType.unknown, searchTerm: "search");
+
+    // when
+    final viewModel = CitySuggestionsPresenter.present(citySuggestionsState: state);
+
+    // then
+    expect(viewModel, isA<CitySuggestionsErrorViewModel>());
+    expect((viewModel as CitySuggestionsErrorViewModel).searchTerm, "search");
+  });
 }

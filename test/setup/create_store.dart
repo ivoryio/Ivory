@@ -10,7 +10,9 @@ import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_binding_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_fingerprint_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
+import 'package:solarisdemo/infrastructure/mobile_number/mobile_number_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
+import 'package:solarisdemo/infrastructure/onboarding/financial_details/onboarding_financial_details_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/onboarding_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/personal_details/onboarding_personal_details_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/signup/onboarding_signup_service.dart';
@@ -62,7 +64,9 @@ Store<AppState> createTestStore({
   OnboardingSignupService? onboardingSignupService,
   CitySuggestionsService? citySuggestionsService,
   AddressSuggestionsService? addressSuggestionsService,
+  OnboardingFinancialDetailsService? onboardingFinancialDetailsService,
   OnboardingPersonalDetailsService? onboardingPersonalDetailsService,
+  MobileNumberService? mobileNumberService,
 }) {
   return createStore(
     initialState: initialState,
@@ -89,8 +93,11 @@ Store<AppState> createTestStore({
     onboardingSignupService: onboardingSignupService ?? NotImplementedOnboardingSignupService(),
     citySuggestionsService: citySuggestionsService ?? NotImplementedCitySuggestionsService(),
     addressSuggestionsService: addressSuggestionsService ?? NotImplementedAddressSuggestionsService(),
+    onboardingFinancialDetailsService:
+        onboardingFinancialDetailsService ?? NotImplementedOnboardingFinancialDetailsService(),
     onboardingPersonalDetailsService:
         onboardingPersonalDetailsService ?? NotImplementedOnboardingPersonalDetailsService(),
+    mobileNumberService: mobileNumberService ?? NotImplementedMobileNumberService(),
   );
 }
 
@@ -423,6 +430,16 @@ class NotImplementedOnboardingSignupService extends OnboardingSignupService {
   }
 }
 
+class NotImplementedOnboardingFinancialDetailsService extends OnboardingFinancialDetailsService {
+  @override
+  Future<CreateTaxIdResponse> createTaxIdentification({
+    required User user,
+    required String taxId,
+  }) {
+    throw UnimplementedError();
+  }
+}
+
 class NotImplementedCitySuggestionsService extends CitySuggestionsService {
   @override
   Future<CitySuggestionsServiceResponse> fetchCities({required String countryCode, String? searchTerm}) {
@@ -447,6 +464,17 @@ class NotImplementedOnboardingPersonalDetailsService extends OnboardingPersonalD
     required String birthCountry,
     required String nationality,
     required String addressLine,
+  }) async {
+    throw UnimplementedError();
+  }
+}
+
+class NotImplementedMobileNumberService extends MobileNumberService {
+  @override
+  Future<MobileNumberServiceResponse> createMobileNumber({
+    required User user,
+    required String mobileNumber,
+    String deviceData = '',
   }) async {
     throw UnimplementedError();
   }

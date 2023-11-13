@@ -113,6 +113,24 @@ class InputFormatter {
     },
   );
 
+  static MaskTextInputFormatter taxId(String initialText) => MaskTextInputFormatter(
+        initialText: initialText,
+        mask: "000 000 000 000 000 000",
+        filter: {
+          "0": RegExp(r"[0-9]"),
+        },
+      );
+
+  static MaskTextInputFormatter createPhoneNumberFormatter(String phoneNumberFormat) {
+    return MaskTextInputFormatter(
+      type: MaskAutoCompletionType.eager,
+      mask: phoneNumberFormat,
+      filter: {
+        "#": RegExp(r"[0-9]"),
+      },
+    );
+  }
+
   static MaskTextInputFormatter date({String? initialText}) => MaskTextInputFormatter(
         mask: "##/##/####",
         initialText: initialText,

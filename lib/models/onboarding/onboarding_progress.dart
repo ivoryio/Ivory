@@ -1,6 +1,8 @@
 enum OnboardingStep {
   start,
   signedUp,
+  phoneNumberConfirmed,
+  taxIdAdded,
   unknown,
 }
 
@@ -11,6 +13,10 @@ extension OnboardingStepExtension on OnboardingStep {
         return OnboardingStep.start;
       case "signedUp":
         return OnboardingStep.signedUp;
+      case "phoneNumberConfirmed":
+        return OnboardingStep.phoneNumberConfirmed;
+      case "taxIdAdded":
+        return OnboardingStep.taxIdAdded;
       default:
         return OnboardingStep.unknown;
     }
