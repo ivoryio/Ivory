@@ -15,7 +15,7 @@ class OnboardingPersonalDetailsState extends Equatable {
     this.isLoading = false,
     this.tanRequestedAt,
     this.isAddressSaved,
-    this.isMobileConfirmed,
+    this.isMobileConfirmed = false,
     this.errorType,
   });
 

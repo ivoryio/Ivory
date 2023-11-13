@@ -1,6 +1,5 @@
 import 'package:solarisdemo/models/person_account.dart';
 
-import '../models/device.dart';
 import 'api_service.dart';
 import '../models/person_model.dart';
 
@@ -46,20 +45,6 @@ class PersonService extends ApiService {
       return CreatePersonResponse.fromJson(data);
     } catch (e) {
       throw Exception("Failed to create person");
-    }
-  }
-
-  Future<dynamic>? createMobileNumber(
-      CreateDeviceReqBody createDeviceReqBody) async {
-    try {
-      String path = 'person/device';
-
-      await post(
-        path,
-        body: createDeviceReqBody.toJson(),
-      );
-    } catch (e) {
-      throw Exception("Failed to create mobile number");
     }
   }
 

@@ -22,8 +22,9 @@ class CitySuggestionsLoadingState extends CitySuggestionsState {}
 
 class CitySuggestionsErrorState extends CitySuggestionsState {
   final CitySuggestionsErrorType errorType;
+  final String? searchTerm;
 
-  CitySuggestionsErrorState({required this.errorType});
+  CitySuggestionsErrorState({required this.errorType, this.searchTerm});
 
   @override
   List<Object> get props => [errorType];
