@@ -1,10 +1,13 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_taxId_screen.dart';
+import 'package:solarisdemo/utilities/ivory_color_mapper.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
+import 'package:solarisdemo/widgets/ivory_asset_with_badge.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
 
@@ -56,7 +59,14 @@ class OnboardingRememberScreen extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    child: SvgPicture.asset('assets/images/onboarding_remember.svg'),
+                    child: Center(
+                      child: SvgPicture(
+                        SvgAssetLoader(
+                          'assets/images/onboarding_remember.svg',
+                          colorMapper: IvoryColorMapper(baseColor: ClientConfig.getColorScheme().secondary),
+                        ),
+                      ),
+                    ),
                   ),
                   SizedBox(
                     width: double.infinity,
