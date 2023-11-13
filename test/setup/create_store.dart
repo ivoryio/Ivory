@@ -12,6 +12,7 @@ import 'package:solarisdemo/infrastructure/device/device_fingerprint_service.dar
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/infrastructure/mobile_number/mobile_number_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
+import 'package:solarisdemo/infrastructure/onboarding/financial_details/onboarding_financial_details_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/onboarding_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/personal_details/onboarding_personal_details_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/signup/onboarding_signup_service.dart';
@@ -63,6 +64,7 @@ Store<AppState> createTestStore({
   OnboardingSignupService? onboardingSignupService,
   CitySuggestionsService? citySuggestionsService,
   AddressSuggestionsService? addressSuggestionsService,
+  OnboardingFinancialDetailsService? onboardingFinancialDetailsService,
   OnboardingPersonalDetailsService? onboardingPersonalDetailsService,
   MobileNumberService? mobileNumberService,
 }) {
@@ -91,6 +93,8 @@ Store<AppState> createTestStore({
     onboardingSignupService: onboardingSignupService ?? NotImplementedOnboardingSignupService(),
     citySuggestionsService: citySuggestionsService ?? NotImplementedCitySuggestionsService(),
     addressSuggestionsService: addressSuggestionsService ?? NotImplementedAddressSuggestionsService(),
+    onboardingFinancialDetailsService:
+        onboardingFinancialDetailsService ?? NotImplementedOnboardingFinancialDetailsService(),
     onboardingPersonalDetailsService:
         onboardingPersonalDetailsService ?? NotImplementedOnboardingPersonalDetailsService(),
     mobileNumberService: mobileNumberService ?? NotImplementedMobileNumberService(),
@@ -422,6 +426,16 @@ class NotImplementedOnboardingSignupService extends OnboardingSignupService {
     required String deviceToken,
     required String tsAndCsSignedAt,
   }) async {
+    throw UnimplementedError();
+  }
+}
+
+class NotImplementedOnboardingFinancialDetailsService extends OnboardingFinancialDetailsService {
+  @override
+  Future<CreateTaxIdResponse> createTaxIdentification({
+    required User user,
+    required String taxId,
+  }) {
     throw UnimplementedError();
   }
 }

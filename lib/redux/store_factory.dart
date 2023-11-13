@@ -17,6 +17,8 @@ import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/infrastructure/mobile_number/mobile_number_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/notifications_middleware.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
+import 'package:solarisdemo/infrastructure/onboarding/financial_details/onboarding_financial_details_middleware.dart';
+import 'package:solarisdemo/infrastructure/onboarding/financial_details/onboarding_financial_details_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/personal_details/onboarding_personal_details_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/signup/onboarding_signup_middleware.dart';
 import 'package:solarisdemo/infrastructure/onboarding/onboarding_progress_middleware.dart';
@@ -75,6 +77,7 @@ Store<AppState> createStore({
   required OnboardingSignupService onboardingSignupService,
   required CitySuggestionsService citySuggestionsService,
   required AddressSuggestionsService addressSuggestionsService,
+  required OnboardingFinancialDetailsService onboardingFinancialDetailsService,
   required OnboardingPersonalDetailsService onboardingPersonalDetailsService,
   required MobileNumberService mobileNumberService,
 }) {
@@ -104,6 +107,7 @@ Store<AppState> createStore({
       ActionLoggerMiddleware(),
       CitySuggestionsMiddleware(citySuggestionsService),
       AddressSuggestionsMiddleware(addressSuggestionsService),
+      OnboardingFinancialDetailsMiddleware(onboardingFinancialDetailsService),
     ],
   );
 }

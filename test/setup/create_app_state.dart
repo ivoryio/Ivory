@@ -5,6 +5,7 @@ import 'package:solarisdemo/redux/categories/category_state.dart';
 import 'package:solarisdemo/redux/credit_line/credit_line_state.dart';
 import 'package:solarisdemo/redux/device/device_state.dart';
 import 'package:solarisdemo/redux/notification/notification_state.dart';
+import 'package:solarisdemo/redux/onboarding/financial_details/onboarding_financial_details_state.dart';
 import 'package:solarisdemo/redux/onboarding/onboarding_progress_state.dart';
 import 'package:solarisdemo/redux/onboarding/personal_details/onboarding_personal_details_state.dart';
 import 'package:solarisdemo/redux/onboarding/signup/onboarding_signup_state.dart';
@@ -45,6 +46,7 @@ AppState createAppState({
   OnboardingPersonalDetailsState? onboardingPersonalDetailsState,
   CitySuggestionsState? citySuggestionsState,
   AddressSuggestionsState? addressSuggestionsState,
+  OnboardingFinancialDetailsState? onboardingFinancialDetailsState,
 }) {
   return AppState(
     transactionsState: transactionsState ?? TransactionsInitialState(),
@@ -66,9 +68,10 @@ AppState createAppState({
     authState: authState ?? AuthInitialState(),
     homePageTransactionsState: homePageTransactionsState ?? TransactionsInitialState(),
     onboardingProgressState: onboardingProgressState ?? OnboardingProgressInitialLoadingState(),
-    onboardingSignupState: onboardingSignupState ?? OnboardingSignupState(),
+    onboardingSignupState: onboardingSignupState ?? const OnboardingSignupState(),
     onboardingPersonalDetailsState: onboardingPersonalDetailsState ?? const OnboardingPersonalDetailsState(),
     citySuggestionsState: citySuggestionsState ?? CitySuggestionsInitialState(),
     addressSuggestionsState: addressSuggestionsState ?? AddressSuggestionsInitialState(),
+    onboardingFinancialDetailsState: onboardingFinancialDetailsState ?? const OnboardingFinancialDetailsState(),
   );
 }
