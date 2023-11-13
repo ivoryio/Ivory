@@ -4,7 +4,7 @@ import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/onboarding/financial_details/onboarding_financial_details_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/onboarding/financial_details/onboarding_financial_details_action.dart';
-import 'package:solarisdemo/screens/welcome/welcome_screen.dart';
+import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_public_status_screen.dart';
 import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -83,7 +83,7 @@ class _OnboardingTaxIdScreenState extends State<OnboardingTaxIdScreen> {
                       if (newViewModel.isLoading) {
                         _continueButtonController.setLoading();
                       } else if (newViewModel.financialDetailsAttributes.taxId != null) {
-                        Navigator.pushNamed(context, WelcomeScreen.routeName);
+                        Navigator.pushNamed(context, OnboardingPublicStatusScreen.routeName);
                       } else if (newViewModel.errorType != null) {
                         _taxIdController.setErrorText('This Tax ID is invalid for Germany. Please try another.');
                       }
