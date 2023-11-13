@@ -8,7 +8,7 @@ import 'package:solarisdemo/infrastructure/suggestions/city/city_suggestions_pre
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/onboarding/personal_details/onboarding_personal_details_action.dart';
 import 'package:solarisdemo/redux/suggestions/city/city_suggestions_action.dart';
-import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_adress_of_residence_screen.dart';
+import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_address_of_residence_screen.dart';
 import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_nationality_not_supported_screen.dart';
 import 'package:solarisdemo/utilities/debouncer.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';

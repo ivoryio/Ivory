@@ -7,6 +7,7 @@ import 'package:solarisdemo/models/suggestions/address_suggestion.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/onboarding/personal_details/onboarding_personal_details_action.dart';
 import 'package:solarisdemo/redux/suggestions/address/address_suggestions_action.dart';
+import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_mobile_number_screen.dart';
 import 'package:solarisdemo/utilities/debouncer.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -20,7 +21,7 @@ import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
 import '../../../config.dart';
 
 class OnboardingAddressOfResidenceScreen extends StatefulWidget {
-  static const routeName = '/onboardingAddressScreen';
+  static const routeName = '/onboardingAddressOfResidenceScreen';
 
   const OnboardingAddressOfResidenceScreen({super.key});
 
@@ -82,6 +83,15 @@ class _OnboardingAddressOfResidenceScreenState extends State<OnboardingAddressOf
             );
           });
         }
+        
+        if (previousViewModel!.isAddressSaved == null && viewModel.isAddressSaved == true) {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            OnboardingMobileNumberScreen.routeName,
+            (route) => false,
+          );
+        }
+        
       },
       distinct: true,
       builder: (context, onboardingViewModel) {

@@ -10,6 +10,7 @@ import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_binding_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_fingerprint_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
+import 'package:solarisdemo/infrastructure/mobile_number/mobile_number_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/onboarding_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/personal_details/onboarding_personal_details_service.dart';
@@ -63,6 +64,7 @@ Store<AppState> createTestStore({
   CitySuggestionsService? citySuggestionsService,
   AddressSuggestionsService? addressSuggestionsService,
   OnboardingPersonalDetailsService? onboardingPersonalDetailsService,
+  MobileNumberService? mobileNumberService,
 }) {
   return createStore(
     initialState: initialState,
@@ -91,6 +93,7 @@ Store<AppState> createTestStore({
     addressSuggestionsService: addressSuggestionsService ?? NotImplementedAddressSuggestionsService(),
     onboardingPersonalDetailsService:
         onboardingPersonalDetailsService ?? NotImplementedOnboardingPersonalDetailsService(),
+    mobileNumberService: mobileNumberService ?? NotImplementedMobileNumberService(),
   );
 }
 
@@ -447,6 +450,17 @@ class NotImplementedOnboardingPersonalDetailsService extends OnboardingPersonalD
     required String birthCountry,
     required String nationality,
     required String addressLine,
+  }) async {
+    throw UnimplementedError();
+  }
+}
+
+class NotImplementedMobileNumberService extends MobileNumberService {
+  @override
+  Future<MobileNumberServiceResponse> createMobileNumber({
+    required User user,
+    required String mobileNumber,
+    String deviceData = '',
   }) async {
     throw UnimplementedError();
   }

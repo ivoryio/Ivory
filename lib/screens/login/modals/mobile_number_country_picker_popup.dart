@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/widgets/ivory_text_field.dart';
 
@@ -19,12 +22,15 @@ class CountryPrefixPicker extends StatefulWidget {
 class _CountryPrefixPickerState extends State<CountryPrefixPicker> {
   late IvoryTextFieldController _searchController;
   late List<CountryPrefixItem> _filteredCountries;
+  late List<CountryPrefixItem> _countries;
 
   @override
   void initState() {
     super.initState();
     _searchController = IvoryTextFieldController();
-    _filteredCountries = countries;
+    _filteredCountries = List.empty(growable: true);
+    _countries = List.empty(growable: true);
+    _loadCountries();
     _searchController.addListener(filterCountries);
   }
 
@@ -36,7 +42,7 @@ class _CountryPrefixPickerState extends State<CountryPrefixPicker> {
 
   filterCountries() {
     setState(() {
-      _filteredCountries = countries
+      _filteredCountries = _countries
           .where((country) => country.name.toLowerCase().contains(_searchController.text.toLowerCase()))
           .toList();
     });
@@ -55,6 +61,7 @@ class _CountryPrefixPickerState extends State<CountryPrefixPicker> {
               prefix: const Icon(Icons.search),
             ),
           ),
+          const SizedBox(height: 16),
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.65,
             child: ListView.builder(
@@ -65,6 +72,14 @@ class _CountryPrefixPickerState extends State<CountryPrefixPicker> {
                 return Container(
                   decoration: BoxDecoration(
                     color: isSelected ? ClientConfig.getCustomColors().neutral100 : Colors.transparent,
+                    border: isSelected
+                        ? Border(
+                            bottom: BorderSide(
+                              color: ClientConfig.getCustomColors().neutral200,
+                              width: 1,
+                            ),
+                          )
+                        : null,
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
@@ -78,14 +93,13 @@ class _CountryPrefixPickerState extends State<CountryPrefixPicker> {
                       },
                       child: Row(
                         children: [
-                          Image.asset(
-                            country.flagPath,
-                            height: 24,
-                            width: 24,
+                          Text(
+                            country.flag,
+                            style: const TextStyle(fontSize: 20, height: 24 / 20),
                           ),
                           const SizedBox(width: 16),
                           Text(
-                            '${country.phonePrefix} (${country.name})',
+                            '${country.phoneCode} (${country.name})',
                             style: ClientConfig.getTextStyleScheme().heading4,
                           ),
                           const SizedBox(width: 16),
@@ -108,27 +122,48 @@ class _CountryPrefixPickerState extends State<CountryPrefixPicker> {
     );
   }
 
-  List<CountryPrefixItem> countries = [
-    CountryPrefixItem(name: "Germany", flagPath: "assets/images/country_flags/germany.png", phonePrefix: "+49"),
-    CountryPrefixItem(name: "Afghanistan", flagPath: "assets/images/country_flags/afghanistan.png", phonePrefix: "+93"),
-    CountryPrefixItem(name: "Algeria", flagPath: "assets/images/country_flags/algeria.png", phonePrefix: "+213"),
-    CountryPrefixItem(name: "Andorra", flagPath: "assets/images/country_flags/andorra.png", phonePrefix: "+376"),
-    CountryPrefixItem(name: "Angola", flagPath: "assets/images/country_flags/angola.png", phonePrefix: "+244"),
-    CountryPrefixItem(name: "Argentina", flagPath: "assets/images/country_flags/argentina.png", phonePrefix: "+54"),
-    CountryPrefixItem(name: "Armenia", flagPath: "assets/images/country_flags/armenia.png", phonePrefix: "+374"),
-    CountryPrefixItem(name: "Australia", flagPath: "assets/images/country_flags/australia.png", phonePrefix: "+61"),
-    CountryPrefixItem(name: "Albania", flagPath: "assets/images/country_flags/albania.png", phonePrefix: "+355"),
-  ];
+  Future<void> _loadCountries() async {
+    final String countriesJson = await rootBundle.loadString('assets/data/countries.json');
+    final List<dynamic> countriesData = jsonDecode(countriesJson);
+    final List<CountryPrefixItem> options = countriesData.map((country) {
+      return CountryPrefixItem(
+        name: country['name'],
+        phoneCode: country['phoneCode'],
+        phoneNumberFormat: country['phoneNumberFormat'],
+        flag: country['flag'],
+      );
+    }).toList();
+
+    if (widget.selectedCountry != null) {
+      options.removeWhere((item) => item.name == widget.selectedCountry!.name);
+      options.insert(0, widget.selectedCountry!);
+    }
+
+    setState(() {
+      _countries = options;
+      _filteredCountries = options;
+    });
+  }
 }
 
 class CountryPrefixItem {
   final String name;
-  final String flagPath;
-  final String phonePrefix;
+  final String flag;
+  final String phoneCode;
+  final String? phoneNumberFormat;
 
   CountryPrefixItem({
     required this.name,
-    required this.flagPath,
-    required this.phonePrefix,
+    required this.flag,
+    required this.phoneCode,
+    this.phoneNumberFormat,
   });
+
+  static CountryPrefixItem defaultCountryPrefix = CountryPrefixItem(
+    name: "Germany",
+    flag: "🇩🇪",
+    phoneCode: "+49",
+    phoneNumberFormat: "+49(##) #######",
+  );
 }
+

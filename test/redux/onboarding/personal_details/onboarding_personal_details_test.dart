@@ -155,5 +155,76 @@ void main() {
         expect(onboardingPersonalDetailsState.errorType, OnboardingPersonalDetailsErrorType.unknown);
       });
     });
+
+    group("Create/confirm mobile number", () {
+      test("When mobile number is created, tanRequestedAt should change", () async {
+        //given
+        const attributes = OnboardingPersonalDetailsAttributes(
+          birthDate: birthDate,
+          city: city,
+          country: country,
+          nationality: nationality,
+          selectedAddress: addressSuggestion,
+        );
+
+        final store = createTestStore(
+          onboardingPersonalDetailsService: FakeOnboardingPersonalDetailsService(),
+          mobileNumberService: FakeMobileNumberService(),
+          initialState: createAppState(
+            authState: authInitializedState,
+            onboardingPersonalDetailsState: const OnboardingPersonalDetailsState(attributes: attributes),
+          ),
+        );
+
+        final loadingState = store.onChange.firstWhere((state) => state.onboardingPersonalDetailsState.isLoading);
+        final appState = store.onChange.firstWhere((state) =>
+            state.onboardingPersonalDetailsState.tanRequestedAt != null &&
+            state.onboardingPersonalDetailsState.attributes.mobileNumber == '123456');
+
+        // when
+        store.dispatch(CreateMobileNumberCommandAction(mobileNumber: '123456'));
+
+        //then
+        expect((await loadingState).onboardingPersonalDetailsState.isLoading, true);
+
+        final onboardingPersonalDetailsState = (await appState).onboardingPersonalDetailsState;
+        expect(onboardingPersonalDetailsState.tanRequestedAt, isNotNull);
+        expect(onboardingPersonalDetailsState.attributes.mobileNumber, '123456');
+      });
+
+      test("When mobile number confirmation happens, isMobileConfirmed should be true", () async {
+        //given
+        const attributes = OnboardingPersonalDetailsAttributes(
+          birthDate: birthDate,
+          city: city,
+          country: country,
+          nationality: nationality,
+          selectedAddress: addressSuggestion,
+          mobileNumber: '+15550101',
+        );
+
+        final store = createTestStore(
+          onboardingPersonalDetailsService: FakeOnboardingPersonalDetailsService(),
+          mobileNumberService: FakeMobileNumberService(),
+          initialState: createAppState(
+            authState: authInitializedState,
+            onboardingPersonalDetailsState: const OnboardingPersonalDetailsState(attributes: attributes),
+          ),
+        );
+
+        final loadingState = store.onChange.firstWhere((state) => state.onboardingPersonalDetailsState.isLoading);
+        final appState =
+            store.onChange.firstWhere((state) => state.onboardingPersonalDetailsState.isMobileConfirmed == true);
+
+        // when
+        store.dispatch(ConfirmMobileNumberCommandAction(mobileNumber: '+15550101', token: '212212'));
+
+        //then
+        expect((await loadingState).onboardingPersonalDetailsState.isLoading, true);
+
+        final onboardingPersonalDetailsState = (await appState).onboardingPersonalDetailsState;
+        expect(onboardingPersonalDetailsState.isMobileConfirmed, true);
+      });
+    });
   });
 }

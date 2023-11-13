@@ -131,13 +131,9 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
     _phoneInputController.addListener(onChangedPhoneNumber);
     _passwordInputController.addListener(onChangedPassword);
     _selectedCountryNotifier = ValueNotifier<CountryPrefixItem>(
-      CountryPrefixItem(
-        name: "Germany",
-        flagPath: "assets/images/germany_flag.png",
-        phonePrefix: "+49",
-      ),
+      CountryPrefixItem.defaultCountryPrefix,
     );
-    _phoneInputController.text = _selectedCountryNotifier.value.phonePrefix;
+    _phoneInputController.text = _selectedCountryNotifier.value.phoneCode;
   }
 
   void onChangedPhoneNumber() {
@@ -210,7 +206,7 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
                                 content: CountryPrefixPicker(
                                   onCountrySelected: (country) {
                                     _selectedCountryNotifier.value = country;
-                                    _phoneInputController.text = country.phonePrefix;
+                                    _phoneInputController.text = country.phoneCode;
                                   },
                                   selectedCountry: _selectedCountryNotifier.value,
                                 ),
@@ -221,7 +217,10 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
                               width: 80,
                               child: Row(
                                 children: [
-                                  Image.asset(selectedCountry.flagPath),
+                                  Text(
+                                    selectedCountry.flag,
+                                    style: const TextStyle(fontSize: 20, height: 24 / 20),
+                                  ),
                                   const SizedBox(width: 4),
                                   Icon(
                                     Icons.expand_more,

@@ -13,6 +13,7 @@ import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_binding_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_fingerprint_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
+import 'package:solarisdemo/infrastructure/mobile_number/mobile_number_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_storage_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/onboarding_service.dart';
@@ -84,6 +85,7 @@ Store<AppState> _buildStore() {
     citySuggestionsService: CitySuggestionsService(),
     addressSuggestionsService: AddressSuggestionsService(),
     onboardingPersonalDetailsService: OnboardingPersonalDetailsService(),
+    mobileNumberService: MobileNumberService(),
   );
 
   return store;
