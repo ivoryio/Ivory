@@ -8,10 +8,16 @@ class MobileNumberService extends ApiService {
   MobileNumberService({super.user});
 
   Future<MobileNumberServiceResponse> createMobileNumber({
-    required CreateVerifyMobileNumberRequestBody reqBody,
+    required String mobileNumber,
     required User user,
+    String deviceData = '',
   }) async {
     this.user = user;
+
+    final reqBody = CreateVerifyMobileNumberRequestBody(
+      deviceData: deviceData,
+      number: mobileNumber,
+    );
 
     try {
       String path = 'person/create_mobile_number';
@@ -27,10 +33,18 @@ class MobileNumberService extends ApiService {
   }
 
   Future<MobileNumberServiceResponse> confirmMobileNumber({
-    required ConfirmMobileNumberRequestBody reqBody,
+    required String mobileNumber,
+    required String token,
     required User user,
+    String deviceData = '',
   }) async {
     this.user = user;
+
+    final reqBody = ConfirmMobileNumberRequestBody(
+      deviceData: deviceData,
+      number: mobileNumber,
+      token: token,
+    );
 
     try {
       String path = 'person/confirm_mobile_number';
@@ -46,10 +60,16 @@ class MobileNumberService extends ApiService {
   }
 
   Future<MobileNumberServiceResponse> verifyMobileNumber({
-    required CreateVerifyMobileNumberRequestBody reqBody,
+    required String mobileNumber,
     required User user,
+    String deviceData = '',
   }) async {
     this.user = user;
+
+    final reqBody = CreateVerifyMobileNumberRequestBody(
+      deviceData: deviceData,
+      number: mobileNumber,
+    );
 
     try {
       String path = 'person/verify_mobile_number';

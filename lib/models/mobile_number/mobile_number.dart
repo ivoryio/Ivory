@@ -8,7 +8,7 @@ class CreateVerifyMobileNumberRequestBody {
 
   CreateVerifyMobileNumberRequestBody({
     required this.number,
-    required this.deviceData,
+    this.deviceData = '',
   });
 
   Map<String, dynamic> toJson() => {
@@ -27,7 +27,7 @@ class ConfirmMobileNumberRequestBody {
   ConfirmMobileNumberRequestBody({
     required this.token,
     required this.number,
-    required this.deviceData,
+    this.deviceData = '',
   });
 
   Map<String, dynamic> toJson() => {

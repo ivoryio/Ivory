@@ -1,7 +1,6 @@
 import 'package:redux/redux.dart';
 import 'package:solarisdemo/infrastructure/mobile_number/mobile_number_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/personal_details/onboarding_personal_details_service.dart';
-import 'package:solarisdemo/models/mobile_number/mobile_number.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/onboarding/personal_details/onboarding_personal_details_action.dart';
@@ -51,10 +50,7 @@ class OnboardingPersonalDetailsMiddleware extends MiddlewareClass<AppState> {
         final user = (store.state.authState as AuthenticationInitializedState).cognitoUser;
 
         final response = await _mobileNumberService.createMobileNumber(
-          reqBody: CreateVerifyMobileNumberRequestBody(
-            deviceData: '',
-            number: action.mobileNumber,
-          ),
+          mobileNumber: action.mobileNumber,
           user: user,
         );
 
@@ -62,7 +58,6 @@ class OnboardingPersonalDetailsMiddleware extends MiddlewareClass<AppState> {
           store.dispatch(MobileNumberCreatedEventAction(mobileNumber: action.mobileNumber));
         } else if (response is MobileNumberServiceErrorResponse) {
           store.dispatch(MobileNumberCreateFailedEventAction(errorType: response.errorType));
-          return;
         }
       }
     }
@@ -74,11 +69,8 @@ class OnboardingPersonalDetailsMiddleware extends MiddlewareClass<AppState> {
         final user = (store.state.authState as AuthenticationInitializedState).cognitoUser;
 
         final response = await _mobileNumberService.confirmMobileNumber(
-          reqBody: ConfirmMobileNumberRequestBody(
-            deviceData: '',
-            number: action.mobileNumber,
-            token: action.token,
-          ),
+          mobileNumber: action.mobileNumber,
+          token: action.token,
           user: user,
         );
 
@@ -86,7 +78,6 @@ class OnboardingPersonalDetailsMiddleware extends MiddlewareClass<AppState> {
           store.dispatch(MobileNumberConfirmedEventAction());
         } else if (response is MobileNumberServiceErrorResponse) {
           store.dispatch(MobileNumberConfirmationFailedEventAction(errorType: response.errorType));
-          return;
         }
       }
     }
@@ -96,10 +87,7 @@ class OnboardingPersonalDetailsMiddleware extends MiddlewareClass<AppState> {
         final user = (store.state.authState as AuthenticationInitializedState).cognitoUser;
 
         final response = await _mobileNumberService.verifyMobileNumber(
-          reqBody: CreateVerifyMobileNumberRequestBody(
-            deviceData: '',
-            number: action.mobileNumber,
-          ),
+          mobileNumber: action.mobileNumber,
           user: user,
         );
 
@@ -107,7 +95,6 @@ class OnboardingPersonalDetailsMiddleware extends MiddlewareClass<AppState> {
           store.dispatch(MobileNumberVerifiedEventAction());
         } else if (response is MobileNumberServiceErrorResponse) {
           store.dispatch(MobileNumberCreateFailedEventAction(errorType: response.errorType));
-          return;
         }
       }
     }

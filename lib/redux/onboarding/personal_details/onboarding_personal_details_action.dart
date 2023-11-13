@@ -73,13 +73,9 @@ class MobileNumberCreatedEventAction {
   MobileNumberCreatedEventAction({required this.mobileNumber});
 }
 
-class MobileNumberVerifiedEventAction {
-  MobileNumberVerifiedEventAction();
-}
+class MobileNumberVerifiedEventAction {}
 
-class MobileNumberConfirmedEventAction {
-  MobileNumberConfirmedEventAction();
-}
+class MobileNumberConfirmedEventAction {}
 
 class MobileNumberCreateFailedEventAction {
   final MobileNumberErrorType errorType;

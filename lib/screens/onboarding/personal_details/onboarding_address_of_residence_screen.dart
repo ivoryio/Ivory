@@ -85,7 +85,11 @@ class _OnboardingAddressOfResidenceScreenState extends State<OnboardingAddressOf
         }
         
         if (previousViewModel!.isAddressSaved == null && viewModel.isAddressSaved == true) {
-          Navigator.pushNamed(context, OnboardingMobileNumberScreen.routeName);
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            OnboardingMobileNumberScreen.routeName,
+            (route) => false,
+          );
         }
         
       },
