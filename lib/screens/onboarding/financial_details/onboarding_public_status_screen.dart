@@ -1,11 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
-import 'package:solarisdemo/infrastructure/onboarding/financial_details/onboarding_financial_details_presenter.dart';
+import 'package:solarisdemo/models/onboarding/onboarding_financial_details_attributes.dart';
 import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/onboarding/financial_details/onboarding_financial_details_action.dart';
 import 'package:solarisdemo/screens/onboarding/onboarding_stepper_screen.dart';
-import 'package:solarisdemo/screens/welcome/welcome_screen.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
@@ -52,122 +54,131 @@ class _OnboardingPublicStatusScreenState extends State<OnboardingPublicStatusScr
 
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, dynamic>(
-      converter: (store) => OnboardingFinancialDetailsPresenter.present(
-        financialState: store.state.onboardingFinancialDetailsState,
-      ),
-      distinct: true,
-      builder: (context, viewModel) {
-        return ScreenScaffold(
-          body: Column(
-            children: [
-              AppToolbar(
-                padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                richTextTitle: StepRichTextTitle(step: 3, totalSteps: 5),
-                actions: const [AppbarLogo()],
-                onBackButtonPressed: () =>
-                    Navigator.popUntil(context, ModalRoute.withName(OnboardingStepperScreen.routeName)),
-              ),
-              AnimatedLinearProgressIndicator.step(current: 3, totalSteps: 5),
-              Expanded(
-                child: ScrollableScreenContainer(
-                  padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 16),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text('Marital status, living situation & dependents',
-                            style: ClientConfig.getTextStyleScheme().heading2),
-                      ),
-                      const SizedBox(height: 24),
-                      IvorySelectOption(
-                        label: 'Marital status',
-                        bottomSheetTitle: 'Select your marital status',
-                        controller: _selectMaritalController,
-                        onBottomSheetOpened: () => FocusScope.of(context).unfocus(),
-                        options: const [
-                          SelectOption(textLabel: 'Not married', value: 'notMarried'),
-                          SelectOption(textLabel: 'Married', value: 'married'),
-                          SelectOption(textLabel: 'Divorced', value: 'divorced'),
-                          SelectOption(textLabel: 'Widowed', value: 'widowed'),
-                          SelectOption(textLabel: 'Prefer not to say', value: 'preferNotToSay'),
-                        ],
-                      ),
-                      const SizedBox(height: 24),
-                      IvorySelectOption(
-                        label: 'Living situation',
-                        bottomSheetTitle: 'Select your living situation',
-                        controller: _selectLivingController,
-                        options: const [
-                          SelectOption(textLabel: 'I live in my own home', value: 'liveInMyHome'),
-                          SelectOption(textLabel: 'I live in a rented home', value: 'liveInRentedHome'),
-                          SelectOption(textLabel: 'I live with my parents', value: 'liveWithParents'),
-                        ],
-                      ),
-                      const SizedBox(height: 24),
-                      IvoryTextField(
-                        label: 'Number of dependents',
-                        labelSuffix: InkWell(
-                          onTap: () {
-                            showBottomModal(
-                              context: context,
-                              title: 'Number of dependents',
-                              content: Text.rich(
-                                TextSpan(
-                                  style: ClientConfig.getTextStyleScheme().mixedStyles,
-                                  children: [
-                                    const TextSpan(text: 'Dependents are '),
-                                    TextSpan(
-                                        text:
-                                            'individuals who rely on your financial support, such as children or other family members.',
-                                        style: ClientConfig.getTextStyleScheme()
-                                            .mixedStyles
-                                            .copyWith(fontWeight: FontWeight.w600)),
-                                    const TextSpan(
-                                        text:
-                                            ' By providing this information, you help us understand your financial responsibilities, which can be important for determining your credit card limit and eligibility.\n\n'),
-                                    TextSpan(
-                                        text: 'If you do not have any dependents, simply enter \'0\'',
-                                        style: ClientConfig.getTextStyleScheme()
-                                            .mixedStyles
-                                            .copyWith(fontWeight: FontWeight.w600)),
-                                    const TextSpan(text: ' to indicate that you are financially independent.'),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                          child: Icon(Icons.info_outline, color: ClientConfig.getColorScheme().primary, size: 16),
-                        ),
-                        controller: _dependentsController,
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      ),
-                      const Spacer(),
-                      ListenableBuilder(
-                        listenable: _continueButtonController,
-                        builder: (context, child) {
-                          return PrimaryButton(
-                            text: "Continue",
-                            isLoading: _continueButtonController.isLoading,
-                            onPressed: _continueButtonController.isEnabled
-                                ? () {
-                                    Navigator.pushNamed(context, WelcomeScreen.routeName);
-                                  }
-                                : null,
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 16),
+    return ScreenScaffold(
+      body: Column(
+        children: [
+          AppToolbar(
+            padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+            richTextTitle: StepRichTextTitle(step: 3, totalSteps: 5),
+            actions: const [AppbarLogo()],
+            onBackButtonPressed: () =>
+                Navigator.popUntil(context, ModalRoute.withName(OnboardingStepperScreen.routeName)),
+          ),
+          AnimatedLinearProgressIndicator.step(current: 3, totalSteps: 5),
+          Expanded(
+            child: ScrollableScreenContainer(
+              padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
+              child: Column(
+                children: [
+                  const SizedBox(height: 16),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text('Marital status, living situation & dependents',
+                        style: ClientConfig.getTextStyleScheme().heading2),
+                  ),
+                  const SizedBox(height: 24),
+                  IvorySelectOption(
+                    label: 'Marital status',
+                    bottomSheetTitle: 'Select your marital status',
+                    controller: _selectMaritalController,
+                    onBottomSheetOpened: () => FocusScope.of(context).unfocus(),
+                    options: [
+                      SelectOption(textLabel: 'Not married', value: OnboardingMaritalStatus.notMarried.name),
+                      SelectOption(textLabel: 'Married', value: OnboardingMaritalStatus.married.name),
+                      SelectOption(textLabel: 'Divorced', value: OnboardingMaritalStatus.divorced.name),
+                      SelectOption(textLabel: 'Widowed', value: OnboardingMaritalStatus.widowed.name),
+                      SelectOption(textLabel: 'Prefer not to say', value: OnboardingMaritalStatus.preferNotToSay.name),
                     ],
                   ),
-                ),
-              )
-            ],
-          ),
-        );
-      },
+                  const SizedBox(height: 24),
+                  IvorySelectOption(
+                    label: 'Living situation',
+                    bottomSheetTitle: 'Select your living situation',
+                    controller: _selectLivingController,
+                    options: [
+                      SelectOption(textLabel: 'I live in my own home', value: OnboardingLivingSituation.own.name),
+                      SelectOption(textLabel: 'I live in a rented home', value: OnboardingLivingSituation.rent.name),
+                      SelectOption(textLabel: 'I live with my parents', value: OnboardingLivingSituation.parents.name),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  IvoryTextField(
+                    label: 'Number of dependents',
+                    labelSuffix: InkWell(
+                      onTap: () {
+                        showBottomModal(
+                          context: context,
+                          title: 'Number of dependents',
+                          content: Text.rich(
+                            TextSpan(
+                              style: ClientConfig.getTextStyleScheme().mixedStyles,
+                              children: [
+                                const TextSpan(text: 'Dependents are '),
+                                TextSpan(
+                                    text:
+                                        'individuals who rely on your financial support, such as children or other family members.',
+                                    style: ClientConfig.getTextStyleScheme()
+                                        .mixedStyles
+                                        .copyWith(fontWeight: FontWeight.w600)),
+                                const TextSpan(
+                                    text:
+                                        ' By providing this information, you help us understand your financial responsibilities, which can be important for determining your credit card limit and eligibility.\n\n'),
+                                TextSpan(
+                                    text: 'If you do not have any dependents, simply enter \'0\'',
+                                    style: ClientConfig.getTextStyleScheme()
+                                        .mixedStyles
+                                        .copyWith(fontWeight: FontWeight.w600)),
+                                const TextSpan(text: ' to indicate that you are financially independent.'),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                      child: Icon(Icons.info_outline, color: ClientConfig.getColorScheme().primary, size: 16),
+                    ),
+                    controller: _dependentsController,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  ),
+                  const Spacer(),
+                  ListenableBuilder(
+                    listenable: _continueButtonController,
+                    builder: (context, child) {
+                      return PrimaryButton(
+                        text: "Continue",
+                        isLoading: _continueButtonController.isLoading,
+                        onPressed: _continueButtonController.isEnabled
+                            ? () {
+                                log(OnboardingMaritalStatus.values
+                                    .firstWhere((element) =>
+                                        element.name == _selectMaritalController.selectedOptions.first.value)
+                                    .toString());
+                                log(OnboardingLivingSituation.values
+                                    .firstWhere((element) =>
+                                        element.name == _selectLivingController.selectedOptions.first.value)
+                                    .toString());
+                                log(int.parse(_dependentsController.text).toString());
+
+                                StoreProvider.of<AppState>(context).dispatch(CreatePublicStatusCommandAction(
+                                  maritalAttributes: OnboardingMaritalStatus.values.firstWhere((element) =>
+                                      element.name == _selectMaritalController.selectedOptions.first.value),
+                                  livingAttributes: OnboardingLivingSituation.values.firstWhere(
+                                      (element) => element.name == _selectLivingController.selectedOptions.first.value),
+                                  numberOfDependents: int.parse(_dependentsController.text),
+                                ));
+                                // Navigator.pushNamed(context, OnboardingOccupationalStatusScreen.routeName);
+                              }
+                            : null,
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 }
