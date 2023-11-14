@@ -18,15 +18,23 @@ class AddressSuggestionsService extends ApiService {
         },
       );
 
-      return GetAddressSuggestionsSuccessResponse(
-        suggestions: (data["suggestions"] as List)
-            .map((suggestion) => AddressSuggestion(
-                  address: suggestion['address'],
-                  city: suggestion['city'],
-                  country: suggestion['country'],
-                ))
-            .toList(),
-      );
+      final List<AddressSuggestion> suggestions = List.empty(growable: true);
+
+      for (final suggestion in (data["suggestions"] as List)) {
+        final address = (suggestion['address'] ?? "") as String;
+        final city = (suggestion['city'] ?? "") as String;
+        final country = (suggestion['country'] ?? "") as String;
+
+        if (address.isNotEmpty && city.isNotEmpty && country.isNotEmpty) {
+          suggestions.add(AddressSuggestion(
+            address: address,
+            city: city,
+            country: country,
+          ));
+        }
+      }
+
+      return GetAddressSuggestionsSuccessResponse(suggestions: suggestions);
     } catch (error) {
       return GetAddressSuggestionsErrorResponse(errorType: AddressSuggestionsErrorType.unknown);
     }
