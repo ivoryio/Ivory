@@ -13,6 +13,7 @@ import 'package:solarisdemo/screens/available_balance/available_balance_screen.d
 import 'package:solarisdemo/screens/login/login_with_biometrics_screen.dart';
 import 'package:solarisdemo/screens/login/login_with_tan_screen.dart';
 import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_occupational_status_screen.dart';
+import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_public_status_screen.dart';
 import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_remember_screen.dart';
 import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_taxId_screen.dart';
 import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_address_of_residence_screen.dart';
@@ -251,12 +252,13 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
             OnboardingNationalityNotSupportedScreen.routeName: (context) =>
                 const OnboardingNationalityNotSupportedScreen(),
             OnboardingAddressOfResidenceScreen.routeName: (context) => const OnboardingAddressOfResidenceScreen(),
-            OnboardingOccupationalStatusScreen.routeName: (context) => const OnboardingOccupationalStatusScreen(),
             OnboardingMobileNumberScreen.routeName: (context) => const OnboardingMobileNumberScreen(),
             OnboardingVerifyMobileNumberScreen.routeName: (context) => const OnboardingVerifyMobileNumberScreen(),
             // onboarding/financial_details
             OnboardingRememberScreen.routeName: (context) => const OnboardingRememberScreen(),
             OnboardingTaxIdScreen.routeName: (context) => const OnboardingTaxIdScreen(),
+            OnboardingPublicStatusScreen.routeName: (context) => const OnboardingPublicStatusScreen(),
+            OnboardingOccupationalStatusScreen.routeName: (context) => const OnboardingOccupationalStatusScreen(),
           },
         );
       }),

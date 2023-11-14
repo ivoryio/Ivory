@@ -6,6 +6,7 @@ import 'package:solarisdemo/infrastructure/onboarding/personal_details/onboardin
 import 'package:solarisdemo/models/onboarding/onboarding_personal_details_error_type.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/onboarding/personal_details/onboarding_personal_details_action.dart';
+import 'package:solarisdemo/screens/onboarding/onboarding_stepper_screen.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
@@ -75,6 +76,7 @@ class _OnboardingVerifyMobileNumberScreenState extends State<OnboardingVerifyMob
       converter: (store) => OnboardingPersonalDetailsPresenter.presentOnboardingPersonalDetails(
         onboardingPersonalDetailsState: store.state.onboardingPersonalDetailsState,
       ),
+      distinct: true,
       onWillChange: (previousViewModel, newViewModel) {
         if (newViewModel.isLoading) {
           _continueButtonController.setLoading();
@@ -111,6 +113,9 @@ class _OnboardingVerifyMobileNumberScreenState extends State<OnboardingVerifyMob
               ],
             ),
           );
+        }
+        if (newViewModel.isMobileConfirmed == true) {
+          Navigator.pushNamedAndRemoveUntil(context, OnboardingStepperScreen.routeName, (route) => false);
         }
       },
       builder: (context, viewModel) {
