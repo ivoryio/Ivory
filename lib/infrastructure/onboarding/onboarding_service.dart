@@ -14,7 +14,7 @@ class OnboardingService extends ApiService {
       final data = await get('signup/progress');
       final currentStep = OnboardingStepExtension.fromString(data['currentStep']);
 
-      return OnboardingProgressSuccessResponse(step: currentStep);
+      return OnboardingProgressSuccessResponse(step: currentStep, mobileNumber: data['mobileNumber'] ?? '');
     } catch (error) {
       return OnboardingProgressErrorResponse();
     }
@@ -28,11 +28,15 @@ abstract class OnboardingServiceResponse extends Equatable {
 
 class OnboardingProgressSuccessResponse extends OnboardingServiceResponse {
   final OnboardingStep step;
+  final String mobileNumber;
 
-  OnboardingProgressSuccessResponse({required this.step});
+  OnboardingProgressSuccessResponse({
+    required this.step,
+    required this.mobileNumber,
+  });
 
   @override
-  List<Object?> get props => [step];
+  List<Object?> get props => [step, mobileNumber];
 }
 
 class OnboardingProgressErrorResponse extends OnboardingServiceResponse {

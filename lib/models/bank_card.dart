@@ -108,6 +108,8 @@ BankCardType getCardType(String type) {
       return BankCardType.VISA_CREDIT;
     case 'VISA_DEBIT':
       return BankCardType.VISA_DEBIT;
+    case 'VISA_CREDIT01':
+      return BankCardType.VIRTUAL_VISA_CREDIT;
     default:
       throw Exception('Unknown CardType: $type');
   }
