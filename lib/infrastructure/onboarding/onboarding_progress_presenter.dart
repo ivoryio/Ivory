@@ -83,7 +83,7 @@ OnboardingProgress _onboardingProgressMapper(OnboardingStep step) {
       routeName: OnboardingMobileNumberScreen.routeName,
     ),
     OnboardingStep.phoneNumberVerified: const OnboardingProgress(
-      activeStep: StepperItemType.financialDetails,
+      activeStep: StepperItemType.personalDetails,
       progressPercentage: 20,
       routeName: OnboardingVerifyMobileNumberScreen.routeName,
     ),

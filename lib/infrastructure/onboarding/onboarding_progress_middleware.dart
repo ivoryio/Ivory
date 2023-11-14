@@ -4,6 +4,7 @@ import 'package:solarisdemo/models/onboarding/onboarding_progress.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/onboarding/onboarding_progress_action.dart';
+import 'package:solarisdemo/redux/onboarding/personal_details/onboarding_personal_details_action.dart';
 
 class OnboardingProgressMiddleware extends MiddlewareClass<AppState> {
   final OnboardingService _onboardingService;
@@ -23,6 +24,9 @@ class OnboardingProgressMiddleware extends MiddlewareClass<AppState> {
 
         if (response is OnboardingProgressSuccessResponse) {
           store.dispatch(OnboardingProgressFetchedEvendAction(step: response.step));
+          if (response.mobileNumber.isNotEmpty) {
+            store.dispatch(MobileNumberCreatedEventAction(mobileNumber: response.mobileNumber));
+          }
         } else {
           store.dispatch(GetOnboardingProgressFailedEventAction());
         }
