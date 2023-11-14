@@ -5,6 +5,7 @@ enum OnboardingStep {
   phoneNumberVerified,
   phoneNumberConfirmed,
   taxIdAdded,
+  creditCardApplicationCreated,
   unknown,
 }
 
@@ -23,6 +24,8 @@ extension OnboardingStepExtension on OnboardingStep {
         return OnboardingStep.phoneNumberConfirmed;
       case "taxIdAdded":
         return OnboardingStep.taxIdAdded;
+      case "creditCardApplicationCreated":
+        return OnboardingStep.creditCardApplicationCreated;
       default:
         return OnboardingStep.unknown;
     }
