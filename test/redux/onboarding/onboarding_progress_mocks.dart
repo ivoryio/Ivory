@@ -15,3 +15,10 @@ class FakeFailingOnboardingService extends OnboardingService {
     return OnboardingProgressErrorResponse();
   }
 }
+
+class FakeOnboardingServiceWithMobileNumber extends OnboardingService {
+  @override
+  Future<OnboardingServiceResponse> getOnboardingProgress({User? user}) async {
+    return OnboardingProgressSuccessResponse(step: OnboardingStep.phoneNumberVerified, mobileNumber: '123456');
+  }
+}

@@ -1,9 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:solarisdemo/models/auth/auth_type.dart';
+import 'package:solarisdemo/models/onboarding/onboarding_personal_details_attributes.dart';
 import 'package:solarisdemo/models/onboarding/onboarding_progress.dart';
 import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/onboarding/onboarding_progress_action.dart';
 import 'package:solarisdemo/redux/onboarding/onboarding_progress_state.dart';
+import 'package:solarisdemo/redux/onboarding/personal_details/onboarding_personal_details_state.dart';
 
 import '../../infrastructure/repayments/more_credit/more_credit_presenter_test.dart';
 import '../../setup/create_app_state.dart';
@@ -95,5 +97,30 @@ void main() {
 
     // then
     expect((await appState).onboardingProgressState, isA<OnboardingProgressErrorState>());
+  });
+
+  test(
+      "When onboarding progress contains a not empty mobileNumber, OnboardingPersonalDetailsState should update with that mobileNumber.",
+      () async {
+    // given
+    final store = createTestStore(
+      onboardingService: FakeOnboardingServiceWithMobileNumber(),
+      initialState: createAppState(
+        authState: authentionInitializedState,
+        onboardingProgressState: OnboardingProgressFetchedState(step: OnboardingStep.phoneNumberVerified),
+        onboardingPersonalDetailsState: const OnboardingPersonalDetailsState(
+          attributes: OnboardingPersonalDetailsAttributes(mobileNumber: ''),
+        ),
+      ),
+    );
+
+    final appState = store.onChange
+        .firstWhere((element) => element.onboardingPersonalDetailsState.attributes.mobileNumber!.isNotEmpty);
+
+    // when
+    store.dispatch(GetOnboardingProgressCommandAction());
+
+    // then
+    expect((await appState).onboardingPersonalDetailsState.attributes.mobileNumber, '123456');
   });
 }
