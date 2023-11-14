@@ -15,6 +15,8 @@ import 'package:solarisdemo/screens/login/login_with_tan_screen.dart';
 import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_public_status_screen.dart';
 import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_remember_screen.dart';
 import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_taxId_screen.dart';
+import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_identity_verification_method_screen.dart';
+import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_video_identification_not_available_screen.dart';
 import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_address_of_residence_screen.dart';
 import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_mobile_number_screen.dart';
 import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_date_and_place_of_birth_screen.dart';
@@ -257,6 +259,11 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
             OnboardingRememberScreen.routeName: (context) => const OnboardingRememberScreen(),
             OnboardingTaxIdScreen.routeName: (context) => const OnboardingTaxIdScreen(),
             OnboardingPublicStatusScreen.routeName: (context) => const OnboardingPublicStatusScreen(),
+            // onboarding/identity_verification
+            OnboardingIdentityVerificationMethodScreen.routeName: (context) =>
+                const OnboardingIdentityVerificationMethodScreen(),
+            OnboardingVideoIdentificationNotAvailableScreen.routeName: (context) =>
+                const OnboardingVideoIdentificationNotAvailableScreen(),
           },
         );
       }),
