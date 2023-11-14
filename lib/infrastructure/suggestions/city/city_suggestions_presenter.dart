@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:solarisdemo/models/suggestions/city_suggestions_error_type.dart';
 import 'package:solarisdemo/redux/suggestions/city/city_suggestions_state.dart';
 
 class CitySuggestionsPresenter {
@@ -7,9 +8,14 @@ class CitySuggestionsPresenter {
       return CitySuggestionsLoadingViewModel();
     } else if (citySuggestionsState is CitySuggestionsFetchedState) {
       return CitySuggestionsFetchedViewModel(
-          cities: citySuggestionsState.cities, searchTerm: citySuggestionsState.searchTerm);
+        cities: citySuggestionsState.cities,
+        searchTerm: citySuggestionsState.searchTerm,
+      );
     } else if (citySuggestionsState is CitySuggestionsErrorState) {
-      return CitySuggestionsErrorViewModel();
+      return CitySuggestionsErrorViewModel(
+        errorType: citySuggestionsState.errorType,
+        searchTerm: citySuggestionsState.searchTerm,
+      );
     }
 
     return CitySuggestionsInitialViewModel();
@@ -35,4 +41,12 @@ class CitySuggestionsFetchedViewModel extends CitySuggestionsViewModel {
   List<Object> get props => [cities];
 }
 
-class CitySuggestionsErrorViewModel extends CitySuggestionsViewModel {}
+class CitySuggestionsErrorViewModel extends CitySuggestionsViewModel {
+  final String? searchTerm;
+  final CitySuggestionsErrorType errorType;
+
+  CitySuggestionsErrorViewModel({required this.errorType, this.searchTerm});
+
+  @override
+  List<Object> get props => [errorType];
+}

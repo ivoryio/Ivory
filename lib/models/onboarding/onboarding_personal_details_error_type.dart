@@ -1,1 +1,1 @@
-enum OnboardingPersonalDetailsErrorType { unknown }
+enum OnboardingPersonalDetailsErrorType { unknown, invalidTan }

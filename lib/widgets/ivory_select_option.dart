@@ -20,6 +20,7 @@ class IvorySelectOption extends StatefulWidget {
   final bool filterOptions;
   final bool bottomSheetExpanded;
   final Widget Function(BuildContext, SelectOption)? optionSeparatorBuilder;
+  final String searchFieldInitialText;
 
   const IvorySelectOption({
     super.key,
@@ -30,6 +31,7 @@ class IvorySelectOption extends StatefulWidget {
     this.controller,
     this.placeholder = "Select an option",
     this.searchFieldPlaceholder = "Search",
+    this.searchFieldInitialText = "",
     this.onBottomSheetOpened,
     this.enabledSearch = false,
     this.onSearchChanged,
@@ -158,6 +160,7 @@ class _IvorySelectOptionState extends State<IvorySelectOption> {
         controller: _controller,
         enabledSearch: widget.enabledSearch,
         searchFieldPlaceholder: widget.searchFieldPlaceholder,
+        searchFieldInitialText: widget.searchFieldInitialText,
         onSearchChanged: widget.onSearchChanged,
         filterOptions: widget.filterOptions,
         expanded: widget.bottomSheetExpanded,
@@ -180,6 +183,7 @@ class IvoryOptionPicker extends StatefulWidget {
   final bool enabledSearch;
   final bool filterOptions;
   final bool expanded;
+  final String searchFieldInitialText;
 
   const IvoryOptionPicker({
     super.key,
@@ -191,6 +195,7 @@ class IvoryOptionPicker extends StatefulWidget {
     this.onSearchChanged,
     this.expanded = false,
     this.optionSeparatorBuilder,
+    this.searchFieldInitialText = "",
   });
 
   @override
@@ -225,6 +230,7 @@ class _IvoryOptionPickerState extends State<IvoryOptionPicker> {
               padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
               child: IvoryTextField(
                 placeholder: widget.searchFieldPlaceholder,
+                initialText: widget.searchFieldInitialText,
                 suffix: Icon(Icons.search, color: ClientConfig.getCustomColors().neutral700, size: 20),
                 onChanged: (value) {
                   widget.onSearchChanged?.call(value);

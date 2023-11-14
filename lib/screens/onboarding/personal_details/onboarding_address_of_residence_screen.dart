@@ -7,6 +7,7 @@ import 'package:solarisdemo/models/suggestions/address_suggestion.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/onboarding/personal_details/onboarding_personal_details_action.dart';
 import 'package:solarisdemo/redux/suggestions/address/address_suggestions_action.dart';
+import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_mobile_number_screen.dart';
 import 'package:solarisdemo/utilities/debouncer.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -20,7 +21,7 @@ import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
 import '../../../config.dart';
 
 class OnboardingAddressOfResidenceScreen extends StatefulWidget {
-  static const routeName = '/onboardingAddressScreen';
+  static const routeName = '/onboardingAddressOfResidenceScreen';
 
   const OnboardingAddressOfResidenceScreen({super.key});
 
@@ -70,47 +71,27 @@ class _OnboardingAddressOfResidenceScreenState extends State<OnboardingAddressOf
         }
         if (viewModel.errorType == OnboardingPersonalDetailsErrorType.unknown) {
           _continueButtonController.setEnabled();
-          showBottomModal(
-              context: context,
-              showCloseButton: false,
-              isDismissible: false,
-              title: "Server error",
-              content: Column(
-                children: [
-                  Text.rich(
-                    TextSpan(
-                      style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                      children: [
-                        const TextSpan(
-                          text:
-                              "We encountered an unexpected error while processing your address input. Please try again. If the issue persists, please contact our support team at ",
-                        ),
-                        TextSpan(
-                          text: "+49 (0)123 456789",
-                          style: ClientConfig.getTextStyleScheme()
-                              .bodyLargeRegularBold
-                              .copyWith(color: ClientConfig.getColorScheme().secondary),
-                        ),
-                        const TextSpan(text: "."),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  PrimaryButton(
-                    text: "Try again",
-                    onPressed: () {
-                      Navigator.pop(context);
-                      StoreProvider.of<AppState>(context).dispatch(
-                        CreatePersonAccountCommandAction(
-                          houseNumber: _houseNumberController.text,
-                          addressLine: _addressLineController.text,
-                        ),
-                      );
-                    },
-                  )
-                ],
-              ));
+          _showTryAgainBottomSheet(context,
+              text:
+                  "We encountered an unexpected error while processing your address input. Please try again. If the issue persists, please contact our support team at ",
+              retryCallback: () {
+            StoreProvider.of<AppState>(context).dispatch(
+              CreatePersonAccountCommandAction(
+                houseNumber: _houseNumberController.text,
+                addressLine: _addressLineController.text,
+              ),
+            );
+          });
         }
+        
+        if (previousViewModel!.isAddressSaved == null && viewModel.isAddressSaved == true) {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            OnboardingMobileNumberScreen.routeName,
+            (route) => false,
+          );
+        }
+        
       },
       distinct: true,
       builder: (context, onboardingViewModel) {
@@ -148,6 +129,21 @@ class _OnboardingAddressOfResidenceScreenState extends State<OnboardingAddressOf
                         converter: (store) => AddressSuggestionsPresenter.present(
                           addressSuggestionsState: store.state.addressSuggestionsState,
                         ),
+                        distinct: true,
+                        onWillChange: (previousViewModel, newViewModel) {
+                          if (newViewModel is AddressSuggestionsErrorViewModel) {
+                            _showTryAgainBottomSheet(context,
+                                text:
+                                    "We encountered an unexpected error while searching for your address. Please try again. If the issue persists, please contact our support team at ",
+                                retryCallback: () {
+                              StoreProvider.of<AppState>(context).dispatch(
+                                FetchAddressSuggestionsCommandAction(
+                                  query: _addressController.text,
+                                ),
+                              );
+                            });
+                          }
+                        },
                         builder: (context, addressSuggestionsViewModel) {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -313,5 +309,46 @@ class _OnboardingAddressOfResidenceScreenState extends State<OnboardingAddressOf
           ),
         )
         .toList();
+  }
+
+  void _showTryAgainBottomSheet(
+    BuildContext context, {
+    String title = "Server error",
+    required String text,
+    required VoidCallback retryCallback,
+  }) {
+    showBottomModal(
+      context: context,
+      showCloseButton: false,
+      isDismissible: false,
+      title: title,
+      content: Column(
+        children: [
+          Text.rich(
+            TextSpan(
+              style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+              children: [
+                TextSpan(text: text),
+                TextSpan(
+                  text: "+49 (0)123 456789",
+                  style: ClientConfig.getTextStyleScheme()
+                      .bodyLargeRegularBold
+                      .copyWith(color: ClientConfig.getColorScheme().secondary),
+                ),
+                const TextSpan(text: "."),
+              ],
+            ),
+          ),
+          const SizedBox(height: 24),
+          PrimaryButton(
+            text: "Try again",
+            onPressed: () {
+              Navigator.pop(context);
+              retryCallback();
+            },
+          )
+        ],
+      ),
+    );
   }
 }

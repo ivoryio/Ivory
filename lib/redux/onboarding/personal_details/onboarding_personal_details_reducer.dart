@@ -1,3 +1,4 @@
+import 'package:solarisdemo/models/onboarding/onboarding_personal_details_error_type.dart';
 import 'package:solarisdemo/redux/onboarding/personal_details/onboarding_personal_details_action.dart';
 import 'package:solarisdemo/redux/onboarding/personal_details/onboarding_personal_details_state.dart';
 
@@ -33,7 +34,31 @@ OnboardingPersonalDetailsState onboardingPersonDetailsReducer(OnboardingPersonal
       isLoading: false,
       errorType: action.errorType,
     );
-  }
+  } else if (action is MobileNumberCreatedEventAction) {
+    return OnboardingPersonalDetailsState(
+      attributes: state.attributes.copyWith(mobileNumber: action.mobileNumber),
+      isLoading: false,
+      tanRequestedAt: DateTime.now(),
+    );
+  } else if (action is MobileNumberConfirmedEventAction) {
+    return OnboardingPersonalDetailsState(
+      attributes: state.attributes,
+      isLoading: false,
+      isMobileConfirmed: true,
+    );
+  } else if (action is MobileNumberConfirmationFailedEventAction) {
+    return OnboardingPersonalDetailsState(
+      attributes: state.attributes,
+      isLoading: false,
+      isMobileConfirmed: false,
+      errorType: OnboardingPersonalDetailsErrorType.invalidTan,
+    );
+  } else if (action is VerifyMobileNumberCommandAction) {
+    return OnboardingPersonalDetailsState(
+      attributes: state.attributes,
+      isLoading: false,
+    ); 
+  } 
 
   return state;
 }

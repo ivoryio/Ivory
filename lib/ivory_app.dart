@@ -13,9 +13,13 @@ import 'package:solarisdemo/screens/available_balance/available_balance_screen.d
 import 'package:solarisdemo/screens/login/login_with_biometrics_screen.dart';
 import 'package:solarisdemo/screens/login/login_with_tan_screen.dart';
 import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_occupational_status_screen.dart';
-import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_adress_of_residence_screen.dart';
+import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_remember_screen.dart';
+import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_taxId_screen.dart';
+import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_address_of_residence_screen.dart';
+import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_mobile_number_screen.dart';
 import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_date_and_place_of_birth_screen.dart';
 import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_nationality_not_supported_screen.dart';
+import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_verify_mobile_number_screen.dart';
 import 'package:solarisdemo/screens/onboarding/signup/onboarding_email_screen.dart';
 import 'package:solarisdemo/screens/onboarding/signup/onboarding_error_email_screen.dart';
 import 'package:solarisdemo/screens/onboarding/signup/onboarding_general_error_screen.dart';
@@ -105,7 +109,7 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
+    if (state == AppLifecycleState.hidden) {
       final store = widget.store;
 
       forceReloadAppStates(store);
@@ -247,8 +251,12 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
             OnboardingNationalityNotSupportedScreen.routeName: (context) =>
                 const OnboardingNationalityNotSupportedScreen(),
             OnboardingAddressOfResidenceScreen.routeName: (context) => const OnboardingAddressOfResidenceScreen(),
-            // onboarding/financial_details
             OnboardingOccupationalStatusScreen.routeName: (context) => const OnboardingOccupationalStatusScreen(),
+            OnboardingMobileNumberScreen.routeName: (context) => const OnboardingMobileNumberScreen(),
+            OnboardingVerifyMobileNumberScreen.routeName: (context) => const OnboardingVerifyMobileNumberScreen(),
+            // onboarding/financial_details
+            OnboardingRememberScreen.routeName: (context) => const OnboardingRememberScreen(),
+            OnboardingTaxIdScreen.routeName: (context) => const OnboardingTaxIdScreen(),
           },
         );
       }),

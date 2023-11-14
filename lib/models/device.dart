@@ -16,23 +16,7 @@ const String _defaultChallengeType = 'sms';
 const DeviceBindingLanguageType _defaultLanguageType = DeviceBindingLanguageType.en;
 SmsChallenge _defaultSmsChallenge = SmsChallenge(appSignature: 'e2e-e2e-e2e');
 
-String createDeviceToJson(CreateDeviceReqBody data) =>
-    json.encode(data.toJson());
-
-class CreateDeviceReqBody {
-  String deviceData;
-
-  CreateDeviceReqBody({
-    required this.deviceData,
-  });
-
-  Map<String, dynamic> toJson() => {
-        "device_data": deviceData,
-      };
-}
-
-String addRestrictedKeyRequestToJson(CreateRestrictedKeyRequest data) =>
-    json.encode(data.toJson());
+String addRestrictedKeyRequestToJson(CreateRestrictedKeyRequest data) => json.encode(data.toJson());
 
 class CreateRestrictedKeyRequest {
   String deviceId;

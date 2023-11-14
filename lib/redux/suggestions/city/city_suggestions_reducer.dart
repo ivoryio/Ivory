@@ -7,7 +7,7 @@ CitySuggestionsState citySuggestionsReducer(CitySuggestionsState state, dynamic 
   } else if (action is CitySuggestionsFetchedEventAction) {
     return CitySuggestionsFetchedState(cities: action.cities, searchTerm: action.searchTerm);
   } else if (action is FetchCitySuggestionsFailedEventAction) {
-    return CitySuggestionsErrorState(errorType: action.errorType);
+    return CitySuggestionsErrorState(errorType: action.errorType, searchTerm: action.searchTerm);
   }
 
   return state;
