@@ -83,7 +83,7 @@ class _OnboardingAddressOfResidenceScreenState extends State<OnboardingAddressOf
             );
           });
         }
-        
+
         if (previousViewModel!.isAddressSaved == null && viewModel.isAddressSaved == true) {
           Navigator.pushNamedAndRemoveUntil(
             context,
@@ -91,7 +91,6 @@ class _OnboardingAddressOfResidenceScreenState extends State<OnboardingAddressOf
             (route) => false,
           );
         }
-        
       },
       distinct: true,
       builder: (context, onboardingViewModel) {
@@ -164,10 +163,11 @@ class _OnboardingAddressOfResidenceScreenState extends State<OnboardingAddressOf
                                 textCapitalization: TextCapitalization.words,
                                 onChanged: (value) {
                                   _debouncer.run(() {
-                                    if (value.isNotEmpty) {
+                                    final inputValue = value.trim();
+                                    if (inputValue.isNotEmpty) {
                                       StoreProvider.of<AppState>(context).dispatch(
                                         FetchAddressSuggestionsCommandAction(
-                                          query: value,
+                                          query: inputValue,
                                         ),
                                       );
                                     }
