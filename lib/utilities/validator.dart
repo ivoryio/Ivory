@@ -1,3 +1,5 @@
+import 'package:solarisdemo/utilities/format.dart';
+
 class Validator {
   static isValidEmailAddress(String email) {
     return RegexValidator.emailAddress.hasMatch(email);
@@ -10,6 +12,43 @@ class Validator {
   static isValidIban(String iban) {
     String valueWithoutSpaces = iban.replaceAll(" ", "");
     return RegexValidator.iban.hasMatch(valueWithoutSpaces);
+  }
+
+  static bool isValidDate(
+    String date, {
+    String? pattern = "yyyy-MM-dd",
+    int minYear = 1900,
+    int? maxYear,
+    int minDay = 1,
+    int maxDay = 31,
+    int minMonth = 1,
+    int maxMonth = 12,
+    bool allowFuture = false,
+  }) {
+    final currentDate = DateTime.now();
+
+    final dateTime = Format.tryParseDate(date, pattern: pattern);
+    if (dateTime == null) {
+      return false;
+    }
+
+    if (dateTime.year < minYear || (maxYear != null && dateTime.year > maxYear)) {
+      return false;
+    }
+
+    if (dateTime.month < minMonth || dateTime.month > maxMonth) {
+      return false;
+    }
+
+    if (dateTime.day < minDay || dateTime.day > maxDay) {
+      return false;
+    }
+
+    if (!allowFuture && dateTime.isAfter(currentDate)) {
+      return false;
+    }
+
+    return true;
   }
 
   //Todo: Add phone number validation
@@ -29,9 +68,7 @@ class PinValidator {
     String birthMonth = birthDate.toIso8601String().substring(5, 7);
     String birthDay = birthDate.toIso8601String().substring(8, 10);
 
-    return pin != birthYear &&
-        pin != birthMonth + birthDay &&
-        pin != birthDay + birthMonth;
+    return pin != birthYear && pin != birthMonth + birthDay && pin != birthDay + birthMonth;
   }
 
   static bool checkIfPinIsNotSequence(String pin) {
@@ -60,8 +97,7 @@ class PinValidator {
 
 class RegexValidator {
   static RegExp digitsWithTwoDecimals = RegExp(r'^\d+\.?\d{0,2}');
-  static RegExp emailAddress = RegExp(
-      r"^[^@]+@[^@]+\.[^@]+$");
+  static RegExp emailAddress = RegExp(r"^[^@]+@[^@]+\.[^@]+$");
 
   //Todo: Add phone number validation
   // ^\+    : start with a "+"

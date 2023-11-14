@@ -8,7 +8,7 @@ import 'package:solarisdemo/widgets/modal.dart';
 
 enum TextFieldInputType { text, name, email, number, password, date }
 
-const datePattern = "dd/MM/yyyy";
+const textFieldDatePattern = "dd/MM/yyyy";
 
 class IvoryTextField extends StatefulWidget {
   final FocusNode? focusNode;
@@ -283,7 +283,7 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
         onTap: () {
           final currentDate = DateTime.now();
           final initialDate = _controller.text.isNotEmpty
-              ? Format.tryParseDate(_controller.text, pattern: datePattern) ?? currentDate
+              ? Format.tryParseDate(_controller.text, pattern: textFieldDatePattern) ?? currentDate
               : currentDate;
 
           showBottomModal(
@@ -429,7 +429,7 @@ class _DatePickerContentState extends State<_DatePickerContent> {
   void initState() {
     super.initState();
 
-    _formattedDate = Format.date(widget.initialDate, pattern: datePattern);
+    _formattedDate = Format.date(widget.initialDate, pattern: textFieldDatePattern);
   }
 
   @override
@@ -459,7 +459,7 @@ class _DatePickerContentState extends State<_DatePickerContent> {
                     widget.initialDate.isAfter(widget.maximumDate) ? widget.maximumDate : widget.initialDate,
                 onDateTimeChanged: (DateTime newDate) {
                   setState(() {
-                    _formattedDate = Format.date(newDate, pattern: datePattern);
+                    _formattedDate = Format.date(newDate, pattern: textFieldDatePattern);
                   });
                 },
                 dateOrder: DatePickerDateOrder.dmy,

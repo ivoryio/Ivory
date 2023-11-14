@@ -11,6 +11,7 @@ import 'package:solarisdemo/redux/suggestions/city/city_suggestions_action.dart'
 import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_address_of_residence_screen.dart';
 import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_nationality_not_supported_screen.dart';
 import 'package:solarisdemo/utilities/debouncer.dart';
+import 'package:solarisdemo/utilities/validator.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
@@ -51,6 +52,7 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
         _selectCountryController.selectedOptions.isNotEmpty &&
         _selectCityController.selectedOptions.isNotEmpty &&
         _selectNationalityController.selectedOptions.isNotEmpty) {
+      print("change");
       _continueButtonController.setEnabled();
     } else {
       _continueButtonController.setDisabled();
@@ -266,6 +268,14 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
                                     Navigator.pushNamed(context, OnboardingNationalityNotSupportedScreen.routeName);
                                     return;
                                   }
+
+                                  if (!Validator.isValidDate(_dateOfBirthController.text,
+                                      pattern: textFieldDatePattern)) {
+                                    _dateOfBirthController.setErrorText("Invalid date of birth");
+                                    return;
+                                  }
+
+                                  _dateOfBirthController.setError(false);
 
                                   StoreProvider.of<AppState>(context).dispatch(
                                     SubmitOnboardingBirthInfoCommandAction(
