@@ -12,6 +12,7 @@ import 'package:solarisdemo/screens/account/account_details_screen.dart';
 import 'package:solarisdemo/screens/available_balance/available_balance_screen.dart';
 import 'package:solarisdemo/screens/login/login_with_biometrics_screen.dart';
 import 'package:solarisdemo/screens/login/login_with_tan_screen.dart';
+import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_public_status_screen.dart';
 import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_remember_screen.dart';
 import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_taxId_screen.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_identity_verification_method_screen.dart';
@@ -252,11 +253,12 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
             OnboardingNationalityNotSupportedScreen.routeName: (context) =>
                 const OnboardingNationalityNotSupportedScreen(),
             OnboardingAddressOfResidenceScreen.routeName: (context) => const OnboardingAddressOfResidenceScreen(),
+            OnboardingMobileNumberScreen.routeName: (context) => const OnboardingMobileNumberScreen(),
+            OnboardingVerifyMobileNumberScreen.routeName: (context) => const OnboardingVerifyMobileNumberScreen(),
             // onboarding/financial_details
             OnboardingRememberScreen.routeName: (context) => const OnboardingRememberScreen(),
             OnboardingTaxIdScreen.routeName: (context) => const OnboardingTaxIdScreen(),
-            OnboardingMobileNumberScreen.routeName: (context) => const OnboardingMobileNumberScreen(),
-            OnboardingVerifyMobileNumberScreen.routeName: (context) => const OnboardingVerifyMobileNumberScreen(),
+            OnboardingPublicStatusScreen.routeName: (context) => const OnboardingPublicStatusScreen(),
             // onboarding/identity_verification
             OnboardingIdentityVerificationMethodScreen.routeName: (context) =>
                 const OnboardingIdentityVerificationMethodScreen(),
