@@ -5,7 +5,7 @@ import 'package:solarisdemo/models/user.dart';
 class FakeOnboardingService extends OnboardingService {
   @override
   Future<OnboardingServiceResponse> getOnboardingProgress({User? user}) async {
-    return OnboardingProgressSuccessResponse(step: OnboardingStep.signedUp);
+    return OnboardingProgressSuccessResponse(step: OnboardingStep.signedUp, mobileNumber: '');
   }
 }
 
@@ -13,5 +13,12 @@ class FakeFailingOnboardingService extends OnboardingService {
   @override
   Future<OnboardingServiceResponse> getOnboardingProgress({User? user}) async {
     return OnboardingProgressErrorResponse();
+  }
+}
+
+class FakeOnboardingServiceWithMobileNumber extends OnboardingService {
+  @override
+  Future<OnboardingServiceResponse> getOnboardingProgress({User? user}) async {
+    return OnboardingProgressSuccessResponse(step: OnboardingStep.phoneNumberVerified, mobileNumber: '123456');
   }
 }
