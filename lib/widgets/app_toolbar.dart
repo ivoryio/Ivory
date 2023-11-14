@@ -110,7 +110,7 @@ class _AppToolbarState extends State<AppToolbar> {
             toolbarHeight: widget.toolbarHeight,
             elevation: 0,
             leadingWidth: 25,
-            leading: ((widget.backButtonEnabled && widget.onBackButtonPressed != null) || Navigator.canPop(context))
+            leading: (widget.backButtonEnabled && (widget.onBackButtonPressed != null || Navigator.canPop(context)))
                 ? InkWell(
                     onTap: widget.backButtonAppearanceDisabled
                         ? null

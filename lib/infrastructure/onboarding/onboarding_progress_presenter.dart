@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:solarisdemo/redux/onboarding/onboarding_progress_state.dart';
+import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_public_status_screen.dart';
 import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_remember_screen.dart';
 import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_date_and_place_of_birth_screen.dart';
 import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_mobile_number_screen.dart';
@@ -95,7 +96,7 @@ OnboardingProgress _onboardingProgressMapper(OnboardingStep step) {
     OnboardingStep.taxIdAdded: const OnboardingProgress(
       activeStep: StepperItemType.financialDetails,
       progressPercentage: 60,
-      routeName: OnboardingRememberScreen.routeName,
+      routeName: OnboardingPublicStatusScreen.routeName,
     ),
   };
 
