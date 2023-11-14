@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -7,7 +5,6 @@ import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/models/onboarding/onboarding_financial_details_attributes.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/onboarding/financial_details/onboarding_financial_details_action.dart';
-import 'package:solarisdemo/screens/onboarding/onboarding_stepper_screen.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
@@ -60,9 +57,11 @@ class _OnboardingPublicStatusScreenState extends State<OnboardingPublicStatusScr
           AppToolbar(
             padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
             richTextTitle: StepRichTextTitle(step: 3, totalSteps: 5),
-            actions: const [AppbarLogo()],
-            onBackButtonPressed: () =>
-                Navigator.popUntil(context, ModalRoute.withName(OnboardingStepperScreen.routeName)),
+            actions: const [
+              AppbarLogo(),
+            ],
+            onBackButtonPressed: () {},
+            backButtonEnabled: false,
           ),
           AnimatedLinearProgressIndicator.step(current: 3, totalSteps: 5),
           Expanded(
@@ -82,6 +81,7 @@ class _OnboardingPublicStatusScreenState extends State<OnboardingPublicStatusScr
                     bottomSheetTitle: 'Select your marital status',
                     controller: _selectMaritalController,
                     onBottomSheetOpened: () => FocusScope.of(context).unfocus(),
+                    placeholder: 'Select marital status',
                     options: [
                       SelectOption(textLabel: 'Not married', value: OnboardingMaritalStatus.notMarried.name),
                       SelectOption(textLabel: 'Married', value: OnboardingMaritalStatus.married.name),
@@ -95,6 +95,7 @@ class _OnboardingPublicStatusScreenState extends State<OnboardingPublicStatusScr
                     label: 'Living situation',
                     bottomSheetTitle: 'Select your living situation',
                     controller: _selectLivingController,
+                    placeholder: 'Select living situation',
                     options: [
                       SelectOption(textLabel: 'I live in my own home', value: OnboardingLivingSituation.own.name),
                       SelectOption(textLabel: 'I live in a rented home', value: OnboardingLivingSituation.rent.name),
@@ -139,6 +140,7 @@ class _OnboardingPublicStatusScreenState extends State<OnboardingPublicStatusScr
                     controller: _dependentsController,
                     keyboardType: TextInputType.number,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    placeholder: 'Type number of dependents',
                   ),
                   const Spacer(),
                   ListenableBuilder(
@@ -149,16 +151,6 @@ class _OnboardingPublicStatusScreenState extends State<OnboardingPublicStatusScr
                         isLoading: _continueButtonController.isLoading,
                         onPressed: _continueButtonController.isEnabled
                             ? () {
-                                log(OnboardingMaritalStatus.values
-                                    .firstWhere((element) =>
-                                        element.name == _selectMaritalController.selectedOptions.first.value)
-                                    .toString());
-                                log(OnboardingLivingSituation.values
-                                    .firstWhere((element) =>
-                                        element.name == _selectLivingController.selectedOptions.first.value)
-                                    .toString());
-                                log(int.parse(_dependentsController.text).toString());
-
                                 StoreProvider.of<AppState>(context).dispatch(CreatePublicStatusCommandAction(
                                   maritalAttributes: OnboardingMaritalStatus.values.firstWhere((element) =>
                                       element.name == _selectMaritalController.selectedOptions.first.value),
@@ -166,6 +158,7 @@ class _OnboardingPublicStatusScreenState extends State<OnboardingPublicStatusScr
                                       (element) => element.name == _selectLivingController.selectedOptions.first.value),
                                   numberOfDependents: int.parse(_dependentsController.text),
                                 ));
+
                                 // Navigator.pushNamed(context, OnboardingOccupationalStatusScreen.routeName);
                               }
                             : null,
