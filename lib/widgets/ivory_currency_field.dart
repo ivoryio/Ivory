@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:solarisdemo/config.dart';
 
@@ -27,7 +28,7 @@ class InputCurrencyField extends StatefulWidget {
 class _InputCurrencyFieldState extends State<InputCurrencyField> {
   TextEditingController _currencyController = TextEditingController();
   FocusNode _focusNode = FocusNode();
-  // final RegExp regExp = RegExp(r'^\d+\.?\d*$');
+  final RegExp _regExp = RegExp(r'^\d+\.?\d*$');
 
   @override
   void initState() {
@@ -81,7 +82,7 @@ class _InputCurrencyFieldState extends State<InputCurrencyField> {
                     border: Border(
                       top: BorderSide(
                         width: _focusNode.hasFocus ? 1 : 0,
-                        color: _focusNode.hasFocus ? ClientConfig.getColorScheme().primary : const Color(0x0FFFFFF),
+                        color: _focusNode.hasFocus ? ClientConfig.getColorScheme().primary : const Color(0x00FFFFFF),
                       ),
                       right: BorderSide(
                         width: _focusNode.hasFocus ? 0 : 1,
@@ -118,8 +119,11 @@ class _InputCurrencyFieldState extends State<InputCurrencyField> {
                 child: TextField(
                   style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
                   controller: _currencyController,
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
                   focusNode: _focusNode,
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(_regExp),
+                  ],
                   decoration: InputDecoration(
                     hintText: widget.placeHolder,
                     hintStyle: ClientConfig.getTextStyleScheme()
