@@ -106,8 +106,10 @@ class _HeroVideoState extends State<HeroVideo> with WidgetsBindingObserver, Rout
         VideoPlayerController.asset(videoPath, videoPlayerOptions: VideoPlayerOptions(allowBackgroundPlayback: false));
 
     _initializeVideoPlayerFuture = _controller.initialize().then((_) {
-      _controller.play();
-      log("Playing video", name: "initState");
+      if (IvoryApp.generalRouteObserver.routeStack.last == WelcomeScreen.routeName) {
+        _controller.play();
+        log("Playing video", name: "initState");
+      }
     });
 
     _controller.setLooping(true);
