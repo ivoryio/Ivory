@@ -28,6 +28,7 @@ class OnboardingVerifyMobileNumberScreen extends StatefulWidget {
 class _OnboardingVerifyMobileNumberScreenState extends State<OnboardingVerifyMobileNumberScreen> {
   late TextEditingController _tanInputController;
   late ContinueButtonController _continueButtonController;
+  final GlobalKey<TanInputState> _tanInputKey = GlobalKey<TanInputState>();
   final Duration _countdownDuration = const Duration(seconds: 60);
   Duration _currentDuration = const Duration();
   Timer? _countdownTimer;
@@ -104,6 +105,7 @@ class _OnboardingVerifyMobileNumberScreenState extends State<OnboardingVerifyMob
                         ),
                       );
                       _continueButtonController.setDisabled();
+                      _tanInputKey.currentState!.clear();
                       _tanInputController.clear();
                       startTimer();
                       Navigator.pop(context);
@@ -167,6 +169,7 @@ class _OnboardingVerifyMobileNumberScreenState extends State<OnboardingVerifyMob
                         height: 24,
                       ),
                       TanInput(
+                        key: _tanInputKey,
                         hintText: '#',
                         length: 6,
                         onCompleted: (String tan) {
@@ -192,6 +195,8 @@ class _OnboardingVerifyMobileNumberScreenState extends State<OnboardingVerifyMob
                                       mobileNumber: viewModel.attributes.mobileNumber!,
                                     ),
                                   );
+                                  _tanInputKey.currentState!.clear();
+                                  _tanInputController.clear();
                                   startTimer();
                                 },
                           child: Container(
