@@ -52,7 +52,6 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
         _selectCountryController.selectedOptions.isNotEmpty &&
         _selectCityController.selectedOptions.isNotEmpty &&
         _selectNationalityController.selectedOptions.isNotEmpty) {
-      print("change");
       _continueButtonController.setEnabled();
     } else {
       _continueButtonController.setDisabled();
