@@ -96,7 +96,7 @@ class Format {
 
   static DateTime? tryParseDate(String date, {String? pattern = "yyyy-MM-dd"}) {
     try {
-      return DateFormat(pattern).parse(date);
+      return DateFormat(pattern).parseStrict(date);
     } catch (_) {
       return null;
     }
