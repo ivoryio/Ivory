@@ -73,7 +73,7 @@ class OnboardingNationalityNotSupportedScreen extends StatelessWidget {
                     ),
                   ),
                   PrimaryButton(
-                    text: "Return to \"Welcome Screen\"",
+                    text: "Return to \"Login Screen\"",
                     onPressed: () =>
                         Navigator.pushNamedAndRemoveUntil(context, WelcomeScreen.routeName, (route) => false),
                   ),
