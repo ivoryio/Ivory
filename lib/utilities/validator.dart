@@ -28,6 +28,7 @@ class Validator {
     final currentDate = DateTime.now();
 
     final dateTime = Format.tryParseDate(date, pattern: pattern);
+
     if (dateTime == null) {
       return false;
     }
