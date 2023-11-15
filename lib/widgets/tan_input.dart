@@ -126,6 +126,12 @@ class TanInputState extends State<TanInput> {
     }
   }
 
+  void clear() {
+    for (var controller in controllers) {
+      controller.clear();
+    }
+  }
+
   void _updateFocusStatus() {
     setState(() {
       anyInputFocused = focusNodes.any((node) => node.hasFocus);
