@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:solarisdemo/models/documents/document.dart';
 
 abstract class DocumentsState extends Equatable {
   @override
@@ -10,8 +11,10 @@ class DocumentsInitialState extends DocumentsState {}
 class DocumentsLoadingState extends DocumentsState {}
 
 class DocumentsFetchedState extends DocumentsState {
-  DocumentsFetchedState();
+  final List<Document> documents;
+
+  DocumentsFetchedState({required this.documents});
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [documents];
 }

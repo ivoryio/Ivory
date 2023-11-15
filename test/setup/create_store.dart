@@ -483,4 +483,9 @@ class NotImplementedMobileNumberService extends MobileNumberService {
   }
 }
 
-class NotImplementedDocumentsService extends DocumentsService {}
+class NotImplementedDocumentsService extends DocumentsService {
+  @override
+  Future<DocumentsServiceResponse> getPostboxDocuments({required User user}) async {
+    throw UnimplementedError();
+  }
+}
