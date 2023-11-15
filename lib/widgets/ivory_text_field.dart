@@ -429,8 +429,11 @@ class _DatePickerContentState extends State<_DatePickerContent> {
   void initState() {
     super.initState();
 
-    _formattedDate = Format.date(widget.initialDate, pattern: textFieldDatePattern);
+    _formattedDate = Format.date(_initialDateTime, pattern: textFieldDatePattern);
   }
+
+  DateTime get _initialDateTime =>
+      widget.initialDate.isAfter(widget.maximumDate) ? widget.maximumDate : widget.initialDate;
 
   @override
   Widget build(BuildContext context) {
@@ -455,8 +458,7 @@ class _DatePickerContentState extends State<_DatePickerContent> {
                 maximumDate: widget.maximumDate,
                 minimumYear: widget.minimumYear,
                 maximumYear: widget.maximumYear,
-                initialDateTime:
-                    widget.initialDate.isAfter(widget.maximumDate) ? widget.maximumDate : widget.initialDate,
+                initialDateTime: _initialDateTime,
                 onDateTimeChanged: (DateTime newDate) {
                   setState(() {
                     _formattedDate = Format.date(newDate, pattern: textFieldDatePattern);
