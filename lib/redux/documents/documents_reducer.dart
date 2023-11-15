@@ -6,6 +6,8 @@ DocumentsState documentsReducer(DocumentsState state, dynamic action) {
     return DocumentsLoadingState();
   } else if (action is DocumentsFetchedEventAction) {
     return DocumentsFetchedState(documents: action.documents);
+  } else if (action is GetDocumentsFailedEventAction) {
+    return DocumentsErrorState(errorType: action.errorType);
   }
 
   return state;

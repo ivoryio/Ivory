@@ -48,4 +48,22 @@ void main() {
     // then
     expect((await appState).documentsState, isA<DocumentsFetchedState>());
   });
+
+  test("When documents are fetched with error then the state should change to error", () async {
+    // given
+    final store = createTestStore(
+      documentsService: FakeFailingDocumentsService(),
+      initialState: createAppState(
+        authState: authentionInitializedState,
+        documentsState: DocumentsInitialState(),
+      ),
+    );
+    final appState = store.onChange.firstWhere((element) => element.documentsState is DocumentsErrorState);
+
+    // when
+    store.dispatch(GetDocumentsCommandAction());
+
+    // then
+    expect((await appState).documentsState, isA<DocumentsErrorState>());
+  });
 }
