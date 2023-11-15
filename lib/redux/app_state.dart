@@ -4,6 +4,7 @@ import 'package:solarisdemo/redux/bank_card/bank_card_state.dart';
 import 'package:solarisdemo/redux/categories/category_state.dart';
 import 'package:solarisdemo/redux/credit_line/credit_line_state.dart';
 import 'package:solarisdemo/redux/device/device_state.dart';
+import 'package:solarisdemo/redux/documents/documents_state.dart';
 import 'package:solarisdemo/redux/notification/notification_state.dart';
 import 'package:solarisdemo/redux/onboarding/financial_details/onboarding_financial_details_state.dart';
 import 'package:solarisdemo/redux/onboarding/onboarding_progress_state.dart';
@@ -47,6 +48,7 @@ class AppState extends Equatable {
   final CitySuggestionsState citySuggestionsState;
   final AddressSuggestionsState addressSuggestionsState;
   final OnboardingFinancialDetailsState onboardingFinancialDetailsState;
+  final DocumentsState documentsState;
 
   const AppState({
     required this.transactionsState,
@@ -73,6 +75,7 @@ class AppState extends Equatable {
     required this.citySuggestionsState,
     required this.addressSuggestionsState,
     required this.onboardingFinancialDetailsState,
+    required this.documentsState,
   });
 
   factory AppState.initialState() {
@@ -101,6 +104,7 @@ class AppState extends Equatable {
       citySuggestionsState: CitySuggestionsInitialState(),
       addressSuggestionsState: AddressSuggestionsInitialState(),
       onboardingFinancialDetailsState: OnboardingFinancialDetailsState(),
+      documentsState: DocumentsInitialState(),
     );
   }
 
@@ -130,6 +134,7 @@ class AppState extends Equatable {
         citySuggestionsState,
         addressSuggestionsState,
         onboardingFinancialDetailsState,
+        documentsState,
       ];
 
   @override

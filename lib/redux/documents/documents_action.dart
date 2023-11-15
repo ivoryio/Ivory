@@ -1,0 +1,3 @@
+class GetDocumentsCommandAction {}
+
+class DocumentsLoadingEventAction {}
