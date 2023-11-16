@@ -14,6 +14,7 @@ import 'package:solarisdemo/infrastructure/device/device_binding_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_fingerprint_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/infrastructure/documents/documents_service.dart';
+import 'package:solarisdemo/infrastructure/file_saver_service.dart';
 import 'package:solarisdemo/infrastructure/mobile_number/mobile_number_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_storage_service.dart';
@@ -90,6 +91,7 @@ Store<AppState> _buildStore() {
     onboardingPersonalDetailsService: OnboardingPersonalDetailsService(),
     mobileNumberService: MobileNumberService(),
     documentsService: DocumentsService(),
+    fileSaverService: FileSaverService(),
   );
 
   return store;

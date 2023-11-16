@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:local_auth/local_auth.dart';
 import 'package:mockito/mockito.dart';
 import 'package:redux/redux.dart';
@@ -11,6 +13,7 @@ import 'package:solarisdemo/infrastructure/device/device_binding_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_fingerprint_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/infrastructure/documents/documents_service.dart';
+import 'package:solarisdemo/infrastructure/file_saver_service.dart';
 import 'package:solarisdemo/infrastructure/mobile_number/mobile_number_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/financial_details/onboarding_financial_details_service.dart';
@@ -69,6 +72,7 @@ Store<AppState> createTestStore({
   OnboardingPersonalDetailsService? onboardingPersonalDetailsService,
   MobileNumberService? mobileNumberService,
   DocumentsService? documentsService,
+  FileSaverService? fileSaverService,
 }) {
   return createStore(
     initialState: initialState,
@@ -101,6 +105,7 @@ Store<AppState> createTestStore({
         onboardingPersonalDetailsService ?? NotImplementedOnboardingPersonalDetailsService(),
     mobileNumberService: mobileNumberService ?? NotImplementedMobileNumberService(),
     documentsService: documentsService ?? NotImplementedDocumentsService(),
+    fileSaverService: fileSaverService ?? NotImplementedFileSaverService(),
   );
 }
 
@@ -486,6 +491,13 @@ class NotImplementedMobileNumberService extends MobileNumberService {
 class NotImplementedDocumentsService extends DocumentsService {
   @override
   Future<DocumentsServiceResponse> getPostboxDocuments({required User user}) async {
+    throw UnimplementedError();
+  }
+}
+
+class NotImplementedFileSaverService extends FileSaverService {
+  @override
+  Future<void> saveFile({required String name, String? ext, required Uint8List bytes, String? mimeType}) async {
     throw UnimplementedError();
   }
 }

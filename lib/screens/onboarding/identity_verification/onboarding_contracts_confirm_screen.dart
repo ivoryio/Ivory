@@ -174,7 +174,11 @@ class DocumentListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        if (!isDownloading) {
+          onTapDownload?.call();
+        }
+      },
       child: Padding(
         padding: EdgeInsets.symmetric(
           vertical: 16,
