@@ -142,7 +142,7 @@ class _OnboardingMobileNumberScreenState extends State<OnboardingMobileNumberScr
                               },
                               child: SizedBox(
                                 height: 48,
-                                width: 70,
+                                width: 60,
                                 child: Row(
                                   children: [
                                     Text(
@@ -154,12 +154,16 @@ class _OnboardingMobileNumberScreenState extends State<OnboardingMobileNumberScr
                                       Icons.expand_more,
                                       color: ClientConfig.getCustomColors().neutral700,
                                     ),
-                                    VerticalDivider(
-                                      color: _mobileNumberFocusNode.hasFocus
-                                          ? ClientConfig.getCustomColors().neutral900
-                                          : ClientConfig.getCustomColors().neutral400,
-                                      thickness: 1,
-                                      width: 20,
+                                    SizedBox(
+                                      width: 1,
+                                      child: VerticalDivider(
+                                        color: _mobileNumberFocusNode.hasFocus
+                                            ? ClientConfig.getCustomColors().neutral900
+                                            : ClientConfig.getCustomColors().neutral400,
+                                        thickness: 1,
+                                        width: 20,
+                                        
+                                      ),
                                     ),
                                   ],
                                 ),
