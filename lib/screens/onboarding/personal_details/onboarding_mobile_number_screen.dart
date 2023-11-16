@@ -142,12 +142,12 @@ class _OnboardingMobileNumberScreenState extends State<OnboardingMobileNumberScr
                               },
                               child: SizedBox(
                                 height: 48,
-                                width: 60,
+                                width: 65,
                                 child: Row(
                                   children: [
                                     Text(
                                       selectedCountry.flag,
-                                      style: const TextStyle(fontSize: 20, height: 24 / 20),
+                                      style: const TextStyle(fontSize: 24, height: 24 / 20),
                                     ),
                                     const SizedBox(width: 4),
                                     Icon(
