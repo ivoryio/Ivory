@@ -39,7 +39,7 @@ class _OnboardingMonthlyIncomeScreenState extends State<OnboardingMonthlyIncomeS
               AppbarLogo(),
             ],
             onBackButtonPressed: () {},
-            backButtonEnabled: false,
+            backButtonEnabled: true,
           ),
           AnimatedLinearProgressIndicator.step(
             current: 5,
