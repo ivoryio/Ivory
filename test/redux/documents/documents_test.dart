@@ -71,6 +71,7 @@ void main() {
     test("When a document has started downloading, the state should change to loading", () async {
       // given
       final store = createTestStore(
+        fileSaverService: FakeFileSaverService(),
         documentsService: FakeDocumentsService(),
         initialState: createAppState(
           authState: authentionInitializedState,
@@ -90,6 +91,7 @@ void main() {
     test("When a document has been downloaded, the state should change to downloaded", () async {
       // given
       final store = createTestStore(
+        fileSaverService: FakeFileSaverService(),
         documentsService: FakeDocumentsService(),
         initialState: createAppState(
           authState: authentionInitializedState,
@@ -108,6 +110,7 @@ void main() {
     test("When a document has failed downloading, the state should change to failed", () async {
       // given
       final store = createTestStore(
+        fileSaverService: FakeFileSaverService(),
         documentsService: FakeFailingDocumentsService(),
         initialState: createAppState(
           authState: authentionInitializedState,

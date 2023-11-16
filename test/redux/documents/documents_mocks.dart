@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:solarisdemo/infrastructure/documents/documents_service.dart';
+import 'package:solarisdemo/infrastructure/file_saver_service.dart';
 import 'package:solarisdemo/models/documents/document.dart';
 import 'package:solarisdemo/models/documents/documents_error_type.dart';
 import 'package:solarisdemo/models/user.dart';
@@ -34,4 +35,9 @@ class FakeFailingDocumentsService extends DocumentsService {
   Future<DocumentsServiceResponse> downloadPostboxDocument({required User user, required Document document}) async {
     return DocumentsServiceErrorResponse(errorType: DocumentsErrorType.unknown);
   }
+}
+
+class FakeFileSaverService extends FileSaverService {
+  @override
+  Future<void> saveFile({required String name, String? ext, required Uint8List bytes, String? mimeType}) async {}
 }
