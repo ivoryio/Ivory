@@ -6,6 +6,23 @@ OnboardingFinancialDetailsState onboardingFinancialDetailsReducer(
     OnboardingFinancialDetailsState state, dynamic action) {
   if (action is CreateTaxIdLoadingEventAction) {
     return const OnboardingFinancialDetailsState(isLoading: true);
+  } else if (action is CreatePublicStatusCommandAction) {
+    return OnboardingFinancialDetailsState(
+        isLoading: false,
+        financialDetailsAttributes: OnboardingFinancialDetailsAttributes(
+            maritalStatus: action.maritalAttributes,
+            livingSituation: action.livingAttributes,
+            numberOfDependents: action.numberOfDependents));
+  } else if (action is CreateEmployedOccupationalStatusCommandAction) {
+    return OnboardingFinancialDetailsState(
+        isLoading: false,
+        financialDetailsAttributes: OnboardingFinancialDetailsAttributes(
+            occupationalStatus: action.occupationalStatus, dateOfEmployment: action.dateOfEmployment));
+  } else if (action is CreateOthersOccupationalStatusCommandAction) {
+    return OnboardingFinancialDetailsState(
+        isLoading: false,
+        financialDetailsAttributes:
+            OnboardingFinancialDetailsAttributes(occupationalStatus: action.occupationalStatus, dateOfEmployment: ''));
   } else if (action is CreateTaxIdSuccessEventAction) {
     return OnboardingFinancialDetailsState(
         isLoading: false, financialDetailsAttributes: OnboardingFinancialDetailsAttributes(taxId: action.taxId));
