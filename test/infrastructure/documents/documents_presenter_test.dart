@@ -158,7 +158,7 @@ void main() {
       );
 
       // then
-      expect(viewModel, isA<ConfirmedDocumentsViewModel>());
+      expect(viewModel, isA<DocumentsConfirmedViewModel>());
     });
 
     test("When documents failed confirming, it should return confirm error view model", () {
@@ -175,7 +175,7 @@ void main() {
       );
 
       // then
-      expect(viewModel, isA<ConfirmDocumentsErrorViewModel>());
+      expect(viewModel, isA<DocumentsConfirmErrorViewModel>());
     });
   });
 }

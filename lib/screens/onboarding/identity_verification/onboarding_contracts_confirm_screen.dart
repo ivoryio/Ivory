@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
@@ -8,7 +10,6 @@ import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
-import 'package:solarisdemo/widgets/continue_button_controller.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 class OnboardingContractsConfirmScreen extends StatefulWidget {
@@ -21,8 +22,6 @@ class OnboardingContractsConfirmScreen extends StatefulWidget {
 }
 
 class _OnboardingContractsConfirmScreenState extends State<OnboardingContractsConfirmScreen> {
-  final _continueButtonController = ContinueButtonController();
-
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, DocumentsViewModel>(
@@ -32,14 +31,21 @@ class _OnboardingContractsConfirmScreenState extends State<OnboardingContractsCo
         downloadDocumentState: store.state.downloadDocumentState,
         confirmDocumentsState: store.state.confirmDocumentsState,
       ),
+      onWillChange: (previousViewModel, newViewModel) {
+        if (newViewModel is DocumentsConfirmedViewModel) {
+          log("Documents confirmed");
+        }
+      },
       distinct: true,
       builder: (context, viewModel) => ScreenScaffold(
+        shouldPop: viewModel is! DocumentsConfirmingViewModel,
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             AppToolbar(
-              richTextTitle: StepRichTextTitle(step: 1, totalSteps: 7),
+              richTextTitle: StepRichTextTitle(step: 2, totalSteps: 7),
               actions: const [AppbarLogo()],
+              backButtonAppearanceDisabled: viewModel is DocumentsConfirmingViewModel,
               padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
             ),
             AnimatedLinearProgressIndicator.step(current: 2, totalSteps: 7),
@@ -147,12 +153,14 @@ class _OnboardingContractsConfirmScreenState extends State<OnboardingContractsCo
           const Spacer(),
           Padding(
             padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-            child: ListenableBuilder(
-              listenable: _continueButtonController,
-              builder: (context, child) => PrimaryButton(
-                onPressed: _continueButtonController.isLoading ? null : () {},
-                text: "Confirm & continue",
-              ),
+            child: PrimaryButton(
+              isLoading: viewModel is DocumentsConfirmingViewModel,
+              onPressed: () {
+                StoreProvider.of<AppState>(context).dispatch(
+                  ConfirmDocumentsCommandAction(documents: viewModel.documents),
+                );
+              },
+              text: "Confirm & continue",
             ),
           ),
         ],

@@ -51,7 +51,9 @@ class DocumentsService extends ApiService {
     this.user = user;
 
     try {
-      final response = await post('/postbox_items/confirmations');
+      final response = await post('/postbox_items/confirmations', body: {
+        'documents': documents.map((document) => document.id).toList(),
+      });
 
       if (response['success'] != true) {
         return DocumentsServiceErrorResponse(errorType: DocumentsErrorType.unknown);
