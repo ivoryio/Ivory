@@ -113,7 +113,7 @@ Store<AppState> createStore({
       CitySuggestionsMiddleware(citySuggestionsService),
       AddressSuggestionsMiddleware(addressSuggestionsService),
       OnboardingFinancialDetailsMiddleware(onboardingFinancialDetailsService),
-      DocumentsMiddleware(documentsService),
+      DocumentsMiddleware(documentsService, fileSaverService),
     ],
   );
 }

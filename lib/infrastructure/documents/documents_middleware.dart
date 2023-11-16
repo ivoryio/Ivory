@@ -1,13 +1,15 @@
 import 'package:redux/redux.dart';
 import 'package:solarisdemo/infrastructure/documents/documents_service.dart';
+import 'package:solarisdemo/infrastructure/file_saver_service.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/documents/documents_action.dart';
 
 class DocumentsMiddleware extends MiddlewareClass<AppState> {
   final DocumentsService _documentsService;
+  final FileSaverService _fileSaverService;
 
-  DocumentsMiddleware(this._documentsService);
+  DocumentsMiddleware(this._documentsService, this._fileSaverService);
 
   @override
   call(Store<AppState> store, action, NextDispatcher next) async {
@@ -40,6 +42,13 @@ class DocumentsMiddleware extends MiddlewareClass<AppState> {
       );
 
       if (response is DownloadDocumentSuccessResponse) {
+        await _fileSaverService.saveFile(
+          name: action.document.fileName,
+          ext: 'pdf',
+          bytes: response.file,
+          mimeType: 'application/pdf',
+        );
+
         store.dispatch(DownloadDocumentSuccessEventAction());
       } else if (response is DocumentsServiceErrorResponse) {
         store.dispatch(DownloadDocumentFailedEventAction(errorType: response.errorType));

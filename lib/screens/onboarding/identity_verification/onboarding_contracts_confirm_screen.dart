@@ -130,8 +130,10 @@ class _OnboardingContractsConfirmScreenState extends State<OnboardingContractsCo
               return DocumentListItem(
                 title: document.title,
                 subtitle: "${document.fileSize}, ${document.fileType}",
-                isDownloading: viewModel is DocumentDownloadingViewModel &&
-                    viewModel.downloadingDocument.id == viewModel.documents[index].id,
+                isDownloading:
+                    viewModel is DocumentDownloadingViewModel && document.id == viewModel.downloadingDocument.id,
+                fileSize: document.fileSize,
+                fileType: document.fileType,
                 onTapDownload: () {
                   StoreProvider.of<AppState>(context).dispatch(
                     DownloadDocumentCommandAction(document: viewModel.documents[index]),
@@ -162,11 +164,15 @@ class DocumentListItem extends StatelessWidget {
   final String subtitle;
   final VoidCallback? onTapDownload;
   final bool isDownloading;
+  final String fileSize;
+  final String fileType;
 
   const DocumentListItem({
     super.key,
     required this.title,
     required this.subtitle,
+    required this.fileSize,
+    required this.fileType,
     this.onTapDownload,
     this.isDownloading = false,
   });
@@ -202,7 +208,7 @@ class DocumentListItem extends StatelessWidget {
                         .copyWith(color: ClientConfig.getCustomColors().neutral900),
                   ),
                   Text(
-                    "3.01 MB, PDF",
+                    "$fileSize, $fileType",
                     style: ClientConfig.getTextStyleScheme()
                         .bodySmallRegular
                         .copyWith(color: ClientConfig.getCustomColors().neutral700),
