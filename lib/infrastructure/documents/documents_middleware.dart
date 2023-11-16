@@ -54,5 +54,20 @@ class DocumentsMiddleware extends MiddlewareClass<AppState> {
         store.dispatch(DownloadDocumentFailedEventAction(errorType: response.errorType));
       }
     }
+
+    if (action is ConfirmDocumentsCommandAction) {
+      store.dispatch(ConfirmDocumentsLoadingEventAction());
+
+      final response = await _documentsService.confirmPostboxDocuments(
+        user: authState.cognitoUser,
+        documents: action.documents,
+      );
+
+      if (response is ConfirmDocumentsSuccessResponse) {
+        store.dispatch(ConfirmedDocumentsEventAction());
+      } else if (response is DocumentsServiceErrorResponse) {
+        store.dispatch(ConfirmDocumentsFailedEventAction(errorType: response.errorType));
+      }
+    }
   }
 }

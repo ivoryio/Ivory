@@ -23,6 +23,14 @@ class FakeDocumentsService extends DocumentsService {
   Future<DocumentsServiceResponse> downloadPostboxDocument({required User user, required Document document}) async {
     return DownloadDocumentSuccessResponse(document: document, file: Uint8List(0));
   }
+
+  @override
+  Future<DocumentsServiceResponse> confirmPostboxDocuments({
+    required User user,
+    required List<Document> documents,
+  }) async {
+    return ConfirmDocumentsSuccessResponse();
+  }
 }
 
 class FakeFailingDocumentsService extends DocumentsService {
@@ -33,6 +41,14 @@ class FakeFailingDocumentsService extends DocumentsService {
 
   @override
   Future<DocumentsServiceResponse> downloadPostboxDocument({required User user, required Document document}) async {
+    return DocumentsServiceErrorResponse(errorType: DocumentsErrorType.unknown);
+  }
+
+  @override
+  Future<DocumentsServiceResponse> confirmPostboxDocuments({
+    required User user,
+    required List<Document> documents,
+  }) async {
     return DocumentsServiceErrorResponse(errorType: DocumentsErrorType.unknown);
   }
 }

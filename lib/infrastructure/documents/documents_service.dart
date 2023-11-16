@@ -11,6 +11,7 @@ class DocumentsService extends ApiService {
 
   Future<DocumentsServiceResponse> getPostboxDocuments({required User user}) async {
     this.user = user;
+
     try {
       final response = await get('/postbox_items');
 
@@ -33,10 +34,30 @@ class DocumentsService extends ApiService {
 
   Future<DocumentsServiceResponse> downloadPostboxDocument({required User user, required Document document}) async {
     this.user = user;
+
     try {
       final response = await downloadFile('/postbox_items/${document.id}');
 
       return DownloadDocumentSuccessResponse(document: document, file: response);
+    } catch (error) {
+      return DocumentsServiceErrorResponse(errorType: DocumentsErrorType.unknown);
+    }
+  }
+
+  Future<DocumentsServiceResponse> confirmPostboxDocuments({
+    required User user,
+    required List<Document> documents,
+  }) async {
+    this.user = user;
+
+    try {
+      final response = await post('/postbox_items/confirmations');
+
+      if (response['success'] != true) {
+        return DocumentsServiceErrorResponse(errorType: DocumentsErrorType.unknown);
+      }
+
+      return ConfirmDocumentsSuccessResponse();
     } catch (error) {
       return DocumentsServiceErrorResponse(errorType: DocumentsErrorType.unknown);
     }
@@ -85,6 +106,8 @@ class DownloadDocumentSuccessResponse extends DocumentsServiceResponse {
   @override
   List<Object?> get props => [document, file];
 }
+
+class ConfirmDocumentsSuccessResponse extends DocumentsServiceResponse {}
 
 class DocumentsServiceErrorResponse extends DocumentsServiceResponse {
   final DocumentsErrorType errorType;

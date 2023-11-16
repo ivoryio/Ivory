@@ -3,6 +3,7 @@ import 'package:solarisdemo/redux/bank_card/bank_card_reducer.dart';
 import 'package:solarisdemo/redux/categories/category_reducer.dart';
 import 'package:solarisdemo/redux/credit_line/credit_line_reducer.dart';
 import 'package:solarisdemo/redux/device/device_reducer.dart';
+import 'package:solarisdemo/redux/documents/confirm/confirm_documents_reducer.dart';
 import 'package:solarisdemo/redux/documents/documents_reducer.dart';
 import 'package:solarisdemo/redux/documents/download/download_document_reducer.dart';
 import 'package:solarisdemo/redux/notification/notification_reducer.dart';
@@ -54,5 +55,6 @@ AppState appReducer(AppState currentState, dynamic action) {
         onboardingFinancialDetailsReducer(currentState.onboardingFinancialDetailsState, action),
     documentsState: documentsReducer(currentState.documentsState, action),
     downloadDocumentState: downloadDocumentReducer(currentState.downloadDocumentState, action),
+    confirmDocumentsState: confirmDocumentsReducer(currentState.confirmDocumentsState, action),
   );
 }

@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:solarisdemo/models/auth/auth_type.dart';
 import 'package:solarisdemo/models/documents/document.dart';
 import 'package:solarisdemo/redux/auth/auth_state.dart';
+import 'package:solarisdemo/redux/documents/confirm/confirm_documents_state.dart';
 import 'package:solarisdemo/redux/documents/documents_action.dart';
 import 'package:solarisdemo/redux/documents/documents_state.dart';
 import 'package:solarisdemo/redux/documents/download/download_document_state.dart';
@@ -125,6 +126,64 @@ void main() {
 
       // then
       expect((await appState).downloadDocumentState, isA<DocumentDownloadErrorState>());
+    });
+  });
+
+  group("Confirming documents", () {
+    test("When confirming documents, the state should change loading", () async {
+      // given
+      final store = createTestStore(
+        documentsService: FakeDocumentsService(),
+        initialState: createAppState(
+          authState: authentionInitializedState,
+          confirmDocumentsState: ConfirmDocumentsInitialState(),
+        ),
+      );
+      final appState =
+          store.onChange.firstWhere((element) => element.confirmDocumentsState is ConfirmDocumentsLoadingState);
+
+      // when
+      store.dispatch(ConfirmDocumentsCommandAction(documents: [document1, document2]));
+
+      // then
+      expect((await appState).confirmDocumentsState, isA<ConfirmDocumentsLoadingState>());
+    });
+
+    test("When documents are confirmed then the state should change to confirmed", () async {
+      // given
+      final store = createTestStore(
+        documentsService: FakeDocumentsService(),
+        initialState: createAppState(
+          authState: authentionInitializedState,
+          confirmDocumentsState: ConfirmDocumentsInitialState(),
+        ),
+      );
+      final appState = store.onChange.firstWhere((element) => element.confirmDocumentsState is ConfirmedDocumentsState);
+
+      // when
+      store.dispatch(ConfirmDocumentsCommandAction(documents: [document1, document2]));
+
+      // then
+      expect((await appState).confirmDocumentsState, isA<ConfirmedDocumentsState>());
+    });
+
+    test("When documents failed confirming then the state should change to error", () async {
+      // given
+      final store = createTestStore(
+        documentsService: FakeFailingDocumentsService(),
+        initialState: createAppState(
+          authState: authentionInitializedState,
+          confirmDocumentsState: ConfirmDocumentsInitialState(),
+        ),
+      );
+      final appState =
+          store.onChange.firstWhere((element) => element.confirmDocumentsState is ConfirmDocumentsErrorState);
+
+      // when
+      store.dispatch(ConfirmDocumentsCommandAction(documents: [document1, document2]));
+
+      // then
+      expect((await appState).confirmDocumentsState, isA<ConfirmDocumentsErrorState>());
     });
   });
 }

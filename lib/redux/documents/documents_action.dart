@@ -36,3 +36,19 @@ class DownloadDocumentFailedEventAction {
 
   DownloadDocumentFailedEventAction({required this.errorType});
 }
+
+class ConfirmDocumentsCommandAction {
+  final List<Document> documents;
+
+  ConfirmDocumentsCommandAction({required this.documents});
+}
+
+class ConfirmDocumentsLoadingEventAction {}
+
+class ConfirmedDocumentsEventAction {}
+
+class ConfirmDocumentsFailedEventAction {
+  final DocumentsErrorType errorType;
+
+  ConfirmDocumentsFailedEventAction({required this.errorType});
+}
