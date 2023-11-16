@@ -16,3 +16,23 @@ class GetDocumentsFailedEventAction {
 
   GetDocumentsFailedEventAction({required this.errorType});
 }
+
+class DownloadDocumentCommandAction {
+  final Document document;
+
+  DownloadDocumentCommandAction({required this.document});
+}
+
+class DownloadDocumentLoadingEventAction {
+  final Document document;
+
+  DownloadDocumentLoadingEventAction({required this.document});
+}
+
+class DownloadDocumentSuccessEventAction {}
+
+class DownloadDocumentFailedEventAction {
+  final DocumentsErrorType errorType;
+
+  DownloadDocumentFailedEventAction({required this.errorType});
+}

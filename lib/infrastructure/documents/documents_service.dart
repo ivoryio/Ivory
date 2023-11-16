@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:equatable/equatable.dart';
 import 'package:solarisdemo/models/documents/document.dart';
 import 'package:solarisdemo/models/documents/documents_error_type.dart';
@@ -25,6 +27,17 @@ class DocumentsService extends ApiService {
           .toList();
 
       return GetDocumentsSuccessResponse(documents: documents);
+    } catch (error) {
+      return DocumentsServiceErrorResponse(errorType: DocumentsErrorType.unknown);
+    }
+  }
+
+  Future<DocumentsServiceResponse> downloadPostboxDocument({required User user, required Document document}) async {
+    this.user = user;
+    try {
+      final response = await downloadFile('/postbox_items/${document.id}');
+
+      return DownloadDocumentSuccessResponse(document: document, file: response);
     } catch (error) {
       return DocumentsServiceErrorResponse(errorType: DocumentsErrorType.unknown);
     }
@@ -62,6 +75,16 @@ class GetDocumentsSuccessResponse extends DocumentsServiceResponse {
 
   @override
   List<Object?> get props => [documents];
+}
+
+class DownloadDocumentSuccessResponse extends DocumentsServiceResponse {
+  final Document document;
+  final Uint8List file;
+
+  DownloadDocumentSuccessResponse({required this.document, required this.file});
+
+  @override
+  List<Object?> get props => [document, file];
 }
 
 class DocumentsServiceErrorResponse extends DocumentsServiceResponse {

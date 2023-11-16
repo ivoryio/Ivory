@@ -23,10 +23,26 @@ class DocumentsMiddleware extends MiddlewareClass<AppState> {
       store.dispatch(DocumentsLoadingEventAction());
 
       final response = await _documentsService.getPostboxDocuments(user: authState.cognitoUser);
+
       if (response is GetDocumentsSuccessResponse) {
         store.dispatch(DocumentsFetchedEventAction(documents: response.documents));
       } else if (response is DocumentsServiceErrorResponse) {
         store.dispatch(GetDocumentsFailedEventAction(errorType: response.errorType));
+      }
+    }
+
+    if (action is DownloadDocumentCommandAction) {
+      store.dispatch(DownloadDocumentLoadingEventAction(document: action.document));
+
+      final response = await _documentsService.downloadPostboxDocument(
+        user: authState.cognitoUser,
+        document: action.document,
+      );
+
+      if (response is DownloadDocumentSuccessResponse) {
+        store.dispatch(DownloadDocumentSuccessEventAction());
+      } else if (response is DocumentsServiceErrorResponse) {
+        store.dispatch(DownloadDocumentFailedEventAction(errorType: response.errorType));
       }
     }
   }

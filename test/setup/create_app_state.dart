@@ -5,6 +5,7 @@ import 'package:solarisdemo/redux/categories/category_state.dart';
 import 'package:solarisdemo/redux/credit_line/credit_line_state.dart';
 import 'package:solarisdemo/redux/device/device_state.dart';
 import 'package:solarisdemo/redux/documents/documents_state.dart';
+import 'package:solarisdemo/redux/documents/download/download_document_state.dart';
 import 'package:solarisdemo/redux/notification/notification_state.dart';
 import 'package:solarisdemo/redux/onboarding/financial_details/onboarding_financial_details_state.dart';
 import 'package:solarisdemo/redux/onboarding/onboarding_progress_state.dart';
@@ -49,6 +50,7 @@ AppState createAppState({
   AddressSuggestionsState? addressSuggestionsState,
   OnboardingFinancialDetailsState? onboardingFinancialDetailsState,
   DocumentsState? documentsState,
+  DownloadDocumentState? downloadDocumentState,
 }) {
   return AppState(
     transactionsState: transactionsState ?? TransactionsInitialState(),
@@ -76,5 +78,6 @@ AppState createAppState({
     addressSuggestionsState: addressSuggestionsState ?? AddressSuggestionsInitialState(),
     onboardingFinancialDetailsState: onboardingFinancialDetailsState ?? const OnboardingFinancialDetailsState(),
     documentsState: documentsState ?? DocumentsInitialState(),
+    downloadDocumentState: downloadDocumentState ?? DownloadDocumentInitialState(),
   );
 }
