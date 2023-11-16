@@ -5,7 +5,6 @@ import 'package:solarisdemo/models/documents/document.dart';
 import 'package:solarisdemo/models/documents/documents_error_type.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/services/api_service.dart';
-import 'package:solarisdemo/utilities/format.dart';
 
 class DocumentsService extends ApiService {
   DocumentsService({super.user});
@@ -21,7 +20,7 @@ class DocumentsService extends ApiService {
               id: document['id'],
               documentType: _getDocumentType(document['document_type']),
               fileType: _getFileType(document['document_content_type']),
-              fileSize: Format.fileSize(document['document_size']),
+              fileSize: document['document_size'] ?? 0,
             ),
           )
           .toList();

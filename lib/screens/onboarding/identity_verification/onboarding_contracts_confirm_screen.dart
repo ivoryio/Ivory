@@ -4,6 +4,7 @@ import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/documents/documents_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/documents/documents_action.dart';
+import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
@@ -132,7 +133,7 @@ class _OnboardingContractsConfirmScreenState extends State<OnboardingContractsCo
                 subtitle: "${document.fileSize}, ${document.fileType}",
                 isDownloading:
                     viewModel is DocumentDownloadingViewModel && document.id == viewModel.downloadingDocument.id,
-                fileSize: document.fileSize,
+                fileSize: Format.fileSize(document.fileSize),
                 fileType: document.fileType,
                 onTapDownload: () {
                   StoreProvider.of<AppState>(context).dispatch(

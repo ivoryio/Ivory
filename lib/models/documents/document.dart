@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 class Document extends Equatable {
   final String id;
   final String fileType;
-  final String fileSize;
+  final int fileSize;
   final DocumentType documentType;
 
   const Document({

@@ -19,14 +19,14 @@ void main() {
     id: "documentId1",
     documentType: DocumentType.creditCardContract,
     fileType: "PDF",
-    fileSize: "1.2MB",
+    fileSize: 1024,
   );
 
   const document2 = Document(
     id: "documentId2",
     documentType: DocumentType.creditCardSecci,
     fileType: "PDF",
-    fileSize: "1.2MB",
+    fileSize: 2048,
   );
 
   group("Fetching documents", () {

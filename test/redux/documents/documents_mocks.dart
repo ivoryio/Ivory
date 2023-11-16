@@ -14,7 +14,7 @@ class FakeDocumentsService extends DocumentsService {
         id: "documentId",
         documentType: DocumentType.creditCardContract,
         fileType: "PDF",
-        fileSize: "1.2MB",
+        fileSize: 12345,
       )
     ]);
   }
