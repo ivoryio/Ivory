@@ -107,7 +107,7 @@ class AppState extends Equatable {
       citySuggestionsState: CitySuggestionsInitialState(),
       addressSuggestionsState: AddressSuggestionsInitialState(),
       onboardingFinancialDetailsState: OnboardingFinancialDetailsState(),
-      documentsState: DocumentsInitialState(),
+      documentsState: DocumentsInitialLoadingState(),
       downloadDocumentState: DownloadDocumentInitialState(),
     );
   }

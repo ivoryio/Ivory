@@ -30,31 +30,13 @@ void main() {
   );
 
   group("Fetching documents", () {
-    test("When fetching documents the state should change to loading", () async {
-      // given
-      final store = createTestStore(
-        documentsService: FakeDocumentsService(),
-        initialState: createAppState(
-          authState: authentionInitializedState,
-          documentsState: DocumentsInitialState(),
-        ),
-      );
-      final appState = store.onChange.firstWhere((element) => element.documentsState is DocumentsLoadingState);
-
-      // when
-      store.dispatch(GetDocumentsCommandAction());
-
-      // then
-      expect((await appState).documentsState, isA<DocumentsLoadingState>());
-    });
-
     test("When documents are fetched with succes then the state should change to fetched", () async {
       // given
       final store = createTestStore(
         documentsService: FakeDocumentsService(),
         initialState: createAppState(
           authState: authentionInitializedState,
-          documentsState: DocumentsInitialState(),
+          documentsState: DocumentsInitialLoadingState(),
         ),
       );
       final appState = store.onChange.firstWhere((element) => element.documentsState is DocumentsFetchedState);
@@ -72,7 +54,7 @@ void main() {
         documentsService: FakeFailingDocumentsService(),
         initialState: createAppState(
           authState: authentionInitializedState,
-          documentsState: DocumentsInitialState(),
+          documentsState: DocumentsInitialLoadingState(),
         ),
       );
       final appState = store.onChange.firstWhere((element) => element.documentsState is DocumentsErrorState);
@@ -117,7 +99,7 @@ void main() {
       final appState = store.onChange.firstWhere((element) => element.downloadDocumentState is DocumentDownloadedState);
 
       // when
-      store.dispatch(DownloadDocumentCommandAction(document: document1));
+      store.dispatch(DownloadDocumentCommandAction(document: document2));
 
       // then
       expect((await appState).downloadDocumentState, isA<DocumentDownloadedState>());

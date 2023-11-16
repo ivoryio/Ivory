@@ -77,7 +77,7 @@ AppState createAppState({
     citySuggestionsState: citySuggestionsState ?? CitySuggestionsInitialState(),
     addressSuggestionsState: addressSuggestionsState ?? AddressSuggestionsInitialState(),
     onboardingFinancialDetailsState: onboardingFinancialDetailsState ?? const OnboardingFinancialDetailsState(),
-    documentsState: documentsState ?? DocumentsInitialState(),
+    documentsState: documentsState ?? DocumentsInitialLoadingState(),
     downloadDocumentState: downloadDocumentState ?? DownloadDocumentInitialState(),
   );
 }

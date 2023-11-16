@@ -7,9 +7,7 @@ abstract class DocumentsState extends Equatable {
   List<Object> get props => [];
 }
 
-class DocumentsInitialState extends DocumentsState {}
-
-class DocumentsLoadingState extends DocumentsState {}
+class DocumentsInitialLoadingState extends DocumentsState {}
 
 class DocumentsFetchedState extends DocumentsState {
   final List<Document> documents;
