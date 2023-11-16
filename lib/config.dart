@@ -9,6 +9,7 @@ import 'themes/default_theme.dart';
 class Config {
   static String cognitoUserPoolId = dotenv.env['COGNITO_USER_POOL_ID'] ?? 'NO_COGNITO_USER_POOL_ID';
   static String cognitoClientId = dotenv.env['COGNITO_CLIENT_ID'] ?? 'NO_COGNITO_CLIENT_ID';
+  static String geonamesUsername = dotenv.env['GEONAMES_USERNAME'] ?? 'NO_GEONAMES_USERNAME';
 
   static String apiBaseUrl = dotenv.env['API_BASE_URL'] ?? 'NO_API_BASE_URL';
 }
@@ -22,6 +23,8 @@ class ClientConfig {
       switch (client) {
         case 'porsche':
           _clientConfigData = ClientConfigData(uiSettings: PorscheTheme.clientUiSettings);
+        case 'solaris':
+          _clientConfigData = ClientConfigData(uiSettings: SolarisTheme.clientUiSettings);
         default:
           _clientConfigData = ClientConfigData(uiSettings: DefaultTheme.clientUiSettings);
       }
@@ -36,6 +39,10 @@ class ClientConfig {
 
   static ColorScheme getColorScheme() {
     return getClientConfig().uiSettings.colorscheme;
+  }
+
+  static CustomColors getCustomColors() {
+    return getClientConfig().uiSettings.customColors;
   }
 
   static TextStyleScheme getTextStyleScheme() {

@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/infrastructure/transactions/transaction_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/transactions/transactions_action.dart';
-import 'package:solarisdemo/screens/home/home_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
+import 'package:solarisdemo/widgets/ivory_tab.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../config.dart';
-import '../../cubits/auth_cubit/auth_cubit.dart';
+import '../../models/amount_value.dart';
 import '../../models/transactions/transaction_model.dart';
-import '../../models/user.dart';
+import '../../models/transactions/upcoming_transaction_model.dart';
+import '../../utilities/format.dart';
 import '../../widgets/empty_list_message.dart';
 import '../../widgets/pill_button.dart';
 import '../../widgets/search_bar.dart';
-import '../../widgets/spaced_column.dart';
 import '../../widgets/transaction_listing_item.dart';
 import 'transactions_filtering_screen.dart';
 
@@ -29,127 +28,113 @@ class TransactionsScreen extends StatefulWidget {
 }
 
 class _TransactionsScreenState extends State<TransactionsScreen> {
+  ScrollController scrollController = ScrollController();
+  IvoryTabController tabController = IvoryTabController(tabsCount: 2);
+
   @override
   Widget build(BuildContext context) {
-    AuthenticatedUser user = context.read<AuthCubit>().state.user!;
-
     return StoreConnector<AppState, TransactionsViewModel>(
         onInit: (store) {
-          store.dispatch(
-              GetTransactionsCommandAction(filter: null, user: user.cognito));
+          store.dispatch(GetTransactionsCommandAction(filter: null, forceReloadTransactions: false));
         },
-        converter: (store) => TransactionPresenter.presentTransactions(
-            transactionsState: store.state.transactionsState),
+        converter: (store) =>
+            TransactionPresenter.presentTransactions(transactionsState: store.state.transactionsState),
         builder: (context, viewModel) {
-          bool isFilterActive =
-              viewModel.transactionListFilter?.bookingDateMax != null ||
-                  viewModel.transactionListFilter?.bookingDateMin != null;
+          bool isFilterActive = viewModel.transactionListFilter?.bookingDateMax != null ||
+              viewModel.transactionListFilter?.bookingDateMin != null;
 
           return ScreenScaffold(
             body: RefreshIndicator(
               onRefresh: () async {
                 StoreProvider.of<AppState>(context).dispatch(
-                  GetTransactionsCommandAction(
-                      filter: viewModel.transactionListFilter,
-                      user: user.cognito),
+                  GetTransactionsCommandAction(filter: viewModel.transactionListFilter, forceReloadTransactions: true),
                 );
               },
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: ClientConfig.getCustomClientUiSettings()
-                      .defaultScreenHorizontalPadding,
-                ),
-                child: Column(
-                  children: [
-                    const AppToolbar(title: "Transactions"),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: SpacedColumn(
-                          space: 36,
-                          children: [
-                            SpacedColumn(
-                              space: 16,
-                              children: [
-                                const TransactionListTitle(
-                                  displayShowAllButton: false,
-                                ),
-                                CustomSearchBar(
-                                  textLabel: viewModel
-                                      .transactionListFilter?.searchString,
-                                  showButtonIndicator: isFilterActive,
-                                  onPressedFilterButton: () {
-                                    Navigator.pushNamed(
-                                      context,
-                                      TransactionsFilteringScreen.routeName,
-                                      arguments:
-                                          viewModel.transactionListFilter,
-                                    );
-                                  },
-                                  onSubmitSearch: (value) {
-                                    TransactionListFilter filter;
-                                    if (value.isEmpty) {
-                                      filter = TransactionListFilter(
-                                        bookingDateMax: viewModel
-                                            .transactionListFilter
-                                            ?.bookingDateMax,
-                                        bookingDateMin: viewModel
-                                            .transactionListFilter
-                                            ?.bookingDateMin,
-                                        size: viewModel
-                                            .transactionListFilter?.size,
-                                        searchString: null,
-                                      );
-                                    } else {
-                                      filter = TransactionListFilter(
-                                        bookingDateMax: viewModel
-                                            .transactionListFilter
-                                            ?.bookingDateMax,
-                                        bookingDateMin: viewModel
-                                            .transactionListFilter
-                                            ?.bookingDateMin,
-                                        size: viewModel
-                                            .transactionListFilter?.size,
-                                        searchString: value,
-                                      );
-                                    }
-                                    StoreProvider.of<AppState>(context)
-                                        .dispatch(GetTransactionsCommandAction(
-                                            filter: filter,
-                                            user: user.cognito));
-                                  },
-                                  onChangedSearch: (String value) {
-                                    return;
-                                  },
-                                ),
-                                if (isFilterActive)
-                                  Row(
-                                    children: [
-                                      PillButton(
-                                        buttonText:
-                                            '${getFormattedDate(date: viewModel.transactionListFilter?.bookingDateMin, text: "Start date")} - ${getFormattedDate(date: viewModel.transactionListFilter?.bookingDateMax, text: "End date")}',
-                                        buttonCallback: () {
-                                          StoreProvider.of<AppState>(context)
-                                              .dispatch(
-                                                  GetTransactionsCommandAction(
-                                                      filter: null,
-                                                      user: user.cognito));
-                                        },
-                                        icon: const Icon(
-                                          Icons.close,
-                                          size: 16,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                              ],
+              child: Column(
+                children: [
+                  AppToolbar(
+                    title: "Transactions",
+                    scrollController: scrollController,
+                    includeBottomScreenTitle: true,
+                    padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+                    children: [
+                      CustomSearchBar(
+                        hintText: "Search by name, date",
+                        textLabel: viewModel.transactionListFilter?.searchString,
+                        showButtonIndicator: isFilterActive,
+                        onPressedFilterButton: () {
+                          Navigator.pushNamed(
+                            context,
+                            TransactionsFilteringScreen.routeName,
+                            arguments: viewModel.transactionListFilter,
+                          );
+                        },
+                        onSubmitSearch: (value) {
+                          TransactionListFilter filter;
+                          if (value.isEmpty) {
+                            filter = TransactionListFilter(
+                              bookingDateMax: viewModel.transactionListFilter?.bookingDateMax,
+                              bookingDateMin: viewModel.transactionListFilter?.bookingDateMin,
+                              size: viewModel.transactionListFilter?.size,
+                              categories: viewModel.transactionListFilter?.categories,
+                              searchString: null,
+                            );
+                          } else {
+                            filter = TransactionListFilter(
+                              bookingDateMax: viewModel.transactionListFilter?.bookingDateMax,
+                              bookingDateMin: viewModel.transactionListFilter?.bookingDateMin,
+                              size: viewModel.transactionListFilter?.size,
+                              categories: viewModel.transactionListFilter?.categories,
+                              searchString: value,
+                            );
+                          }
+                          StoreProvider.of<AppState>(context)
+                              .dispatch(GetTransactionsCommandAction(filter: filter, forceReloadTransactions: true));
+                        },
+                        onChangedSearch: (String value) {
+                          return;
+                        },
+                      ),
+                      _buildFilterListDisplay(viewModel),
+                      const SizedBox(height: 16),
+                      IvoryTabBar(
+                        controller: tabController,
+                        tabs: [
+                          IvoryTab(
+                            title: "Past",
+                            onPressed: () => StoreProvider.of<AppState>(context).dispatch(
+                              GetTransactionsCommandAction(
+                                filter: viewModel.transactionListFilter,
+                                forceReloadTransactions: true,
+                              ),
                             ),
-                            _buildTransactionsList(viewModel),
-                          ],
-                        ),
+                          ),
+                          IvoryTab(
+                            title: "Upcoming",
+                            onPressed: () => StoreProvider.of<AppState>(context).dispatch(
+                              GetUpcomingTransactionsCommandAction(
+                                filter: viewModel.transactionListFilter,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                    ],
+                  ),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      controller: scrollController,
+                      child: IvoryTabView(
+                        controller: tabController,
+                        children: [
+                          _buildTransactionsList(viewModel),
+                          _buildTransactionsList(viewModel),
+                        ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           );
@@ -159,8 +144,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   Widget _buildTransactionsList(TransactionsViewModel viewModel) {
     const emptyListWidget = TextMessageWithCircularImage(
       title: "No transactions yet",
-      message:
-          "There are no transactions yet. Your future transactions will be displayed here.",
+      message: "There are no transactions yet. Your future transactions will be displayed here.",
     );
 
     if (viewModel is TransactionsLoadingViewModel) {
@@ -172,9 +156,11 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     }
 
     if (viewModel is TransactionsFetchedViewModel) {
-      bool isFilteringActive =
-          (viewModel.transactionListFilter?.bookingDateMin != null ||
-              viewModel.transactionListFilter?.bookingDateMax != null);
+      bool isFilteringActive = (viewModel.transactionListFilter?.bookingDateMin != null ||
+          viewModel.transactionListFilter?.bookingDateMax != null);
+      if (viewModel.transactionListFilter?.searchString != null) {
+        isFilteringActive = isFilteringActive || (viewModel.transactionListFilter!.searchString!.isNotEmpty);
+      }
 
       List<Transaction> transactions = [];
 
@@ -185,79 +171,256 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       }
 
       if (transactions.isEmpty && isFilteringActive) {
-        return const Text(
-          "We couldn't find any results. Please try again by searching for other transactions.",
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w400,
-            color: Color(0xff667085),
-          ),
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "No results",
+              style: ClientConfig.getTextStyleScheme().heading3,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              "Please apply different filters or search terms.",
+              style: ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(color: ClientConfig.getCustomColors().neutral700),
+            ),
+          ],
         );
       }
 
       return Column(
-        children: [_buildGroupedByMonthsList(transactions)],
+        children: [_buildGroupedByDaysList(transactions)],
+      );
+    }
+
+    if (viewModel is UpcomingTransactionsFetchedViewModel) {
+      bool isFilteringActive = (viewModel.transactionListFilter?.bookingDateMin != null ||
+          viewModel.transactionListFilter?.bookingDateMax != null);
+
+      List<UpcomingTransaction> upcomingTransactions = [];
+
+      upcomingTransactions.addAll(viewModel.upcomingTransactions as Iterable<UpcomingTransaction>);
+
+      if (upcomingTransactions.isEmpty && !isFilteringActive) {
+        return emptyListWidget;
+      }
+
+      if (upcomingTransactions.isEmpty && isFilteringActive) {
+        return Text(
+          "Please apply different filters and search again.",
+          textAlign: TextAlign.center,
+          style: ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(color: ClientConfig.getCustomColors().neutral700),
+        );
+      }
+
+      return Column(
+        children: [_buildGroupedUpcomingByDaysList(upcomingTransactions)],
       );
     }
 
     return emptyListWidget;
   }
 
-  String _formatMonthYear(String monthAndYear) {
-    var parts = monthAndYear.split('/');
-    var year = DateTime.now().year == int.parse(parts[1]) ? '' : parts[1];
+  String _formatDayMonthYear(String dayMonthYear) {
+    var parts = dayMonthYear.split('/');
+    var year = DateTime.now().year == int.parse(parts[2]) ? '' : parts[2];
     String months = [
-      'January',
-      'February',
-      'March',
-      'April',
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
       'May',
       'June',
       'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
-    ][int.parse(parts[0]) - 1];
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ][int.parse(parts[1]) - 1];
 
-    return '$months $year';
+    return '$months ${parts[0]} $year';
   }
 
-  Widget _buildGroupedByMonthsList(List<Transaction> transactions) {
+  AmountValue _sumOfDay(List<dynamic> transactions) {
+    double sum = 0;
+
+    for (var transaction in transactions) {
+      sum += transaction.amount!.value!;
+    }
+
+    return AmountValue(value: sum, currency: transactions[0].amount!.currency, unit: 'cents');
+  }
+
+  String _formatAmountWithCurrency(AmountValue amount) {
+    final value = amount.value;
+    String currencySymbol = Format.getCurrencySymbol(amount.currency);
+
+    String absoluteAmountValue = value.abs().toStringAsFixed(2);
+    String sign = value == 0
+        ? ''
+        : value < 0
+            ? '-'
+            : '+';
+
+    return '$sign $currencySymbol$absoluteAmountValue';
+  }
+
+  Widget _buildGroupedByDaysList(List<Transaction> transactions) {
     var groupedTransactions = <String, List<Transaction>>{};
 
     for (var transaction in transactions) {
       var transactionDate = DateTime.parse(transaction.bookingDate!);
-      var monthAndYear = '${transactionDate.month}/${transactionDate.year}';
-      if (groupedTransactions.containsKey(monthAndYear)) {
-        groupedTransactions[monthAndYear]!.add(transaction);
+      var dayMonthYear = '${transactionDate.day}/${transactionDate.month}/${transactionDate.year}';
+      if (groupedTransactions.containsKey(dayMonthYear)) {
+        groupedTransactions[dayMonthYear]!.add(transaction);
       } else {
-        groupedTransactions[monthAndYear] = [transaction];
+        groupedTransactions[dayMonthYear] = [transaction];
       }
     }
 
-    var monthAndYearList = groupedTransactions.keys.toList();
-    monthAndYearList.sort((a, b) {
+    var dayMonthYearList = groupedTransactions.keys.toList();
+
+    dayMonthYearList.sort((a, b) {
       var partsA = a.split('/');
       var partsB = b.split('/');
-      var yearA = int.parse(partsA[1]);
-      var yearB = int.parse(partsB[1]);
-      var monthA = int.parse(partsA[0]);
-      var monthB = int.parse(partsB[0]);
+      var yearA = int.parse(partsA[2]);
+      var yearB = int.parse(partsB[2]);
+      var monthA = int.parse(partsA[1]);
+      var monthB = int.parse(partsB[1]);
+      var dayA = int.parse(partsA[0]);
+      var dayB = int.parse(partsB[0]);
 
       if (yearA > yearB) {
         return -1;
       } else if (yearA < yearB) {
         return 1;
       } else {
-        return monthB.compareTo(monthA);
+        if (monthA > monthB) {
+          return -1;
+        } else if (monthA < monthB) {
+          return 1;
+        } else {
+          return dayB.compareTo(dayA);
+        }
       }
     });
 
     return ListView.separated(
-      itemCount: monthAndYearList.length,
+      itemCount: dayMonthYearList.length,
+      separatorBuilder: (context, index) => const Divider(
+        height: 0,
+        color: Colors.transparent,
+      ),
+      shrinkWrap: true,
+      physics: const ClampingScrollPhysics(),
+      padding: EdgeInsets.zero,
+      itemBuilder: (context, index) {
+        var dayMonthYear = dayMonthYearList[index];
+        var transactions = groupedTransactions[dayMonthYear]!;
+        var formattedDayMonthYear = _formatDayMonthYear(dayMonthYear);
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    formattedDayMonthYear,
+                    style: ClientConfig.getTextStyleScheme().labelLarge,
+                  ),
+                  Text(_formatAmountWithCurrency(_sumOfDay(transactions)),
+                      style: ClientConfig.getTextStyleScheme().labelSmall),
+                ],
+              ),
+            ),
+            ListView.separated(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: transactions.length,
+              separatorBuilder: (_, __) => const Divider(
+                height: 0,
+                color: Colors.transparent,
+              ),
+              itemBuilder: (context, index) => TransactionListItem(
+                transaction: transactions[index],
+              ),
+            ),
+            const SizedBox(height: 24)
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildGroupedUpcomingByDaysList(List<UpcomingTransaction> transactions) {
+    var groupedTransactions = <String, List<UpcomingTransaction>>{};
+
+    for (var transaction in transactions) {
+      var transactionDate = DateTime.parse(transaction.dueDate.toString());
+      var dayMonthYear = '${transactionDate.day}/${transactionDate.month}/${transactionDate.year}';
+      if (groupedTransactions.containsKey(dayMonthYear)) {
+        groupedTransactions[dayMonthYear]!.add(transaction);
+      } else {
+        groupedTransactions[dayMonthYear] = [transaction];
+      }
+    }
+
+    var dayMonthYearList = groupedTransactions.keys.toList();
+
+    dayMonthYearList.sort((a, b) {
+      var partsA = a.split('/');
+      var partsB = b.split('/');
+      var yearA = int.parse(partsA[2]);
+      var yearB = int.parse(partsB[2]);
+      var monthA = int.parse(partsA[1]);
+      var monthB = int.parse(partsB[1]);
+      var dayA = int.parse(partsA[0]);
+      var dayB = int.parse(partsB[0]);
+
+      if (yearA > yearB) {
+        return -1;
+      } else if (yearA < yearB) {
+        return 1;
+      } else {
+        if (monthA > monthB) {
+          return -1;
+        } else if (monthA < monthB) {
+          return 1;
+        } else {
+          return dayB.compareTo(dayA);
+        }
+      }
+    });
+
+    AmountValue sumOfDay(List<UpcomingTransaction> transactions) {
+      double sum = 0;
+
+      for (var transaction in transactions) {
+        sum += transaction.outstandingAmount!.value;
+      }
+
+      return AmountValue(value: sum, currency: transactions[0].outstandingAmount!.currency, unit: 'cents');
+    }
+
+    String formatAmountWithCurrency(AmountValue amount) {
+      final value = amount.value;
+      String currencySymbol = Format.getCurrencySymbol(amount.currency);
+
+      String absoluteAmountValue = value.abs().toStringAsFixed(2);
+      String sign = value == 0
+          ? ''
+          : value < 0
+              ? '-'
+              : '+';
+
+      return '$sign $currencySymbol$absoluteAmountValue';
+    }
+
+    return ListView.separated(
+      itemCount: dayMonthYearList.length,
       separatorBuilder: (context, index) => const Divider(
         height: 10,
         color: Colors.transparent,
@@ -266,21 +429,27 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       physics: const ClampingScrollPhysics(),
       padding: EdgeInsets.zero,
       itemBuilder: (context, index) {
-        var monthAndYear = monthAndYearList[index];
-        var transactions = groupedTransactions[monthAndYear]!;
-        var formattedMonthAndYear = _formatMonthYear(monthAndYear);
+        var dayMonthYear = dayMonthYearList[index];
+        var transactions = groupedTransactions[dayMonthYear]!;
+        var formattedDayMonthYear = _formatDayMonthYear(dayMonthYear);
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
               padding: const EdgeInsets.only(bottom: 10.0),
-              child: Text(
-                formattedMonthAndYear,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                  color: Color(0xff414D63),
+              child: Padding(
+                padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      formattedDayMonthYear,
+                      style: ClientConfig.getTextStyleScheme().labelLarge,
+                    ),
+                    Text(formatAmountWithCurrency(sumOfDay(transactions)),
+                        style: ClientConfig.getTextStyleScheme().labelSmall),
+                  ],
                 ),
               ),
             ),
@@ -292,13 +461,87 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 height: 10,
                 color: Colors.transparent,
               ),
-              itemBuilder: (context, index) => TransactionListItem(
-                transaction: transactions[index],
+              itemBuilder: (context, index) => UpcomingTransactionListItem(
+                upcomingTransaction: transactions[index],
               ),
             ),
           ],
         );
       },
+    );
+  }
+
+  Widget _buildFilterListDisplay(TransactionsViewModel viewModel) {
+    List<Widget> widgetList = [];
+
+    if (viewModel.transactionListFilter?.bookingDateMax != null ||
+        viewModel.transactionListFilter?.bookingDateMin != null) {
+      widgetList.add(
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            PillButton(
+              buttonText:
+                  '${getFormattedDate(date: viewModel.transactionListFilter?.bookingDateMin, text: "Start date")} - ${getFormattedDate(date: viewModel.transactionListFilter?.bookingDateMax, text: "End date")}',
+              buttonCallback: () {
+                StoreProvider.of<AppState>(context).dispatch(GetTransactionsCommandAction(
+                    filter: TransactionListFilter(
+                      bookingDateMax: null,
+                      bookingDateMin: null,
+                      searchString: viewModel.transactionListFilter!.searchString,
+                      categories: viewModel.transactionListFilter!.categories,
+                    ),
+                    forceReloadTransactions: true));
+              },
+              icon: const Icon(
+                Icons.close,
+                size: 16,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (viewModel.transactionListFilter?.categories?.isNotEmpty == true) {
+      for (var index = 0; index < viewModel.transactionListFilter!.categories!.length; index++) {
+        widgetList.add(
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              PillButton(
+                buttonText: viewModel.transactionListFilter!.categories![index].name,
+                buttonCallback: () {
+                  var newCategories = viewModel.transactionListFilter!.categories!;
+                  newCategories.remove(viewModel.transactionListFilter!.categories![index]);
+                  StoreProvider.of<AppState>(context).dispatch(GetTransactionsCommandAction(
+                      filter: TransactionListFilter(
+                        bookingDateMax: viewModel.transactionListFilter!.bookingDateMax,
+                        bookingDateMin: viewModel.transactionListFilter!.bookingDateMax,
+                        searchString: viewModel.transactionListFilter!.searchString,
+                        categories: newCategories,
+                      ),
+                      forceReloadTransactions: true));
+                },
+                icon: const Icon(
+                  Icons.close,
+                  size: 16,
+                ),
+              ),
+            ],
+          ),
+        );
+      }
+    }
+
+    return Padding(
+      padding: EdgeInsets.only(top: widgetList.isNotEmpty ? 16 : 0),
+      child: Wrap(
+        spacing: 8,
+        runSpacing: 4,
+        children: widgetList,
+      ),
     );
   }
 }

@@ -1,9 +1,12 @@
 import 'package:solarisdemo/utilities/format.dart';
 
+import '../amount_value.dart';
+import '../categories/category.dart';
+
 class Transaction {
   String? id;
   String? bookingType;
-  Amount? amount;
+  AmountValue? amount;
   String? description;
   String? endToEndId;
   String? recipientBic;
@@ -16,44 +19,49 @@ class Transaction {
   DateTime? recordedAt;
   String? senderIban;
   String? senderName;
+  Category? category;
 
-  Transaction(
-      {this.id,
-      this.bookingType,
-      this.amount,
-      this.description,
-      this.endToEndId,
-      this.recipientBic,
-      this.recipientIban,
-      this.recipientName,
-      this.reference,
-      this.bookingDate,
-      this.valutaDate,
-      this.metaInfo,
-      this.recordedAt,
-      this.senderIban,
-      this.senderName});
+  Transaction({
+    this.id,
+    this.bookingType,
+    this.amount,
+    this.description,
+    this.endToEndId,
+    this.recipientBic,
+    this.recipientIban,
+    this.recipientName,
+    this.reference,
+    this.bookingDate,
+    this.valutaDate,
+    this.metaInfo,
+    this.recordedAt,
+    this.senderIban,
+    this.senderName,
+    this.category,
+  });
 
   Transaction.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     bookingType = json['booking_type'];
-    amount = json['amount'] != null ? Amount.fromJson(json['amount']) : null;
+    amount = json['amount'] != null ? AmountValue.fromJson(json['amount']) : null;
     description = json['description'];
     endToEndId = json['end_to_end_id'] ?? "ID";
     recipientBic = json['recipient_bic'];
     recipientIban = json['recipient_iban'];
-    recipientName = json['recipient_name'] ?? "SOLARIS";
+    recipientName = processRecipient(json['recipient_name']);
     reference = json['reference'];
     bookingDate = json['booking_date'];
     valutaDate = json['valuta_date'];
     metaInfo = json['meta_info'];
-    recordedAt = DateTime.parse(json['recorded_at']);
+    recordedAt = DateTime.parse(json['recorded_at']).toLocal();
     senderIban = json['sender_iban'];
-    senderName = json['sender_name'] ?? "SOLARIS";
+    senderName = json['sender_name'] ?? "Bank account";
+    category = json['category'] != null ? Category.fromJson(json['category']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
+
     data['id'] = id;
     data['booking_type'] = bookingType;
     if (amount != null) {
@@ -71,29 +79,21 @@ class Transaction {
     data['recorded_at'] = recordedAt!.toIso8601String();
     data['sender_iban'] = senderIban;
     data['sender_name'] = senderName;
+    data['category'] = category;
+
     return data;
   }
-}
 
-class Amount {
-  double? value;
-  String? unit;
-  String? currency;
+  String processRecipient(String? recipientName) {
+    if (recipientName == null) {
+      return "E-car";
+    }
 
-  Amount({this.value, this.unit, this.currency});
+    if (recipientName.toLowerCase().contains("solaris")) {
+      return "E-car";
+    }
 
-  Amount.fromJson(Map<String, dynamic> json) {
-    value = json['value'] != null ? json['value'].toDouble() : 0;
-    unit = json['unit'];
-    currency = json['currency'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['value'] = value;
-    data['unit'] = unit;
-    data['currency'] = currency;
-    return data;
+    return recipientName;
   }
 }
 
@@ -104,7 +104,7 @@ class TransactionListFilter {
   final int? page;
   final int? size;
   final String? sort;
-  final List<String>? categoryIds;
+  final List<Category>? categories;
 
   const TransactionListFilter({
     this.bookingDateMin,
@@ -113,7 +113,7 @@ class TransactionListFilter {
     this.page,
     this.size,
     this.sort,
-    this.categoryIds,
+    this.categories,
   });
 
   Map<String, String> toMap() {
@@ -139,13 +139,14 @@ class TransactionListFilter {
       map["sort"] = sort!;
     }
 
-    if(searchString != null) {
+    if (searchString != null) {
       map["filter[description]"] = searchString!;
     }
 
-    if(categoryIds != null) {
-      for (int index = 0; index < categoryIds!.length; index++) {
-        map["filter[category_id]"] = categoryIds![index];
+    if (categories != null) {
+      if (categories!.isNotEmpty) {
+        List<String> categoryIds = categories!.map((category) => category.id).toList();
+        map["filter[category_id]"] = '[${categoryIds.join(",")}]';
       }
     }
 

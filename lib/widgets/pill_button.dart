@@ -7,12 +7,15 @@ class PillButton extends StatelessWidget {
   final void Function() buttonCallback;
   final Icon? icon;
   final bool active;
+  final void Function()? closeButton;
+
   const PillButton({
     super.key,
     required this.buttonText,
     required this.buttonCallback,
     this.icon,
     this.active = true,
+    this.closeButton,
   });
 
   @override
@@ -23,29 +26,37 @@ class PillButton extends StatelessWidget {
         // height: 25,
         child: Container(
           padding: const EdgeInsets.symmetric(
-            vertical: 2,
+            vertical: 4,
             horizontal: 8,
           ),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            color: active ? const Color(0xFFE6E6E6) : Colors.white,
+            borderRadius: BorderRadius.circular(8),
+            color: active ? ClientConfig.getCustomColors().neutral100 : Colors.white,
+            border: active
+                ? Border.all(
+                    width: 1,
+                    color: ClientConfig.getCustomColors().neutral300,
+                  )
+                : null,
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
                 buttonText,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontFamily: "Proxima Nova",
-                  fontWeight: FontWeight.w600,
-                  color: ClientConfig.getColorScheme().secondary,
-                ),
+                style: active
+                    ? ClientConfig.getTextStyleScheme().labelSmall
+                    : ClientConfig.getTextStyleScheme()
+                        .labelSmall
+                        .copyWith(color: ClientConfig.getColorScheme().tertiary),
               ),
               if (icon != null)
-                Padding(
-                  padding: const EdgeInsets.only(left: 3),
-                  child: icon!,
+                GestureDetector(
+                  onTap: closeButton,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 3),
+                    child: icon!,
+                  ),
                 ),
             ],
           ),

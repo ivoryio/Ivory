@@ -1,13 +1,12 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
-import 'package:solarisdemo/cubits/auth_cubit/auth_cubit.dart';
 import 'package:solarisdemo/infrastructure/repayments/reminder/repayment_reminder_presenter.dart';
 import 'package:solarisdemo/models/repayments/reminder/repayment_reminder.dart';
-import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/repayments/reminder/repayment_reminder_action.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -34,12 +33,9 @@ class _RepaymentReminderScreenState extends State<RepaymentReminderScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final user = context.read<AuthCubit>().state.user!;
-
     return ScreenScaffold(
       body: Padding(
-        padding:
-            EdgeInsets.symmetric(horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding),
+        padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
         child: Column(
           children: [
             const AppToolbar(),
@@ -58,7 +54,7 @@ class _RepaymentReminderScreenState extends State<RepaymentReminderScreen> {
             const SizedBox(height: 24),
             Expanded(
               child: StoreConnector<AppState, RepaymentReminderViewModel>(
-                onInit: (store) => store.dispatch(GetRepaymentRemindersCommandAction(user: user.cognito)),
+                onInit: (store) => store.dispatch(GetRepaymentRemindersCommandAction()),
                 converter: (store) => RepaymentReminderPresenter.presentRepaymentReminder(
                   repaymentReminderState: store.state.repaymentReminderState,
                   creditLineState: store.state.creditLineState,
@@ -95,7 +91,8 @@ class _RepaymentReminderScreenState extends State<RepaymentReminderScreen> {
                               .map(
                                 (reminder) => ListTile(
                                   minLeadingWidth: 0,
-                                  leading: const Icon(Icons.notifications_none_rounded, color: Color(0xFFCC0000)),
+                                  leading: Icon(Icons.notifications_none_rounded,
+                                      color: ClientConfig.getColorScheme().secondary),
                                   title: Text(
                                     reminder.description,
                                     style: ClientConfig.getTextStyleScheme().heading4,
@@ -109,10 +106,6 @@ class _RepaymentReminderScreenState extends State<RepaymentReminderScreen> {
                                         content: const _RemoveReminderPopUp(),
                                       );
                                       if (value == true) {
-                                        setState(() {
-                                          _reminders.remove(reminder);
-                                        });
-
                                         _onDeleteReminder(reminder);
                                       }
                                     },
@@ -126,22 +119,29 @@ class _RepaymentReminderScreenState extends State<RepaymentReminderScreen> {
                         DottedBorder(
                           borderType: BorderType.RRect,
                           radius: const Radius.circular(6),
-                          color: const Color(0xFFADADB4),
+                          color: ClientConfig.getCustomColors().neutral500,
                           strokeWidth: 1.5,
                           strokeCap: StrokeCap.round,
                           dashPattern: const [5, 5],
                           child: TextButton.icon(
                             style: TextButton.styleFrom(
-                              foregroundColor: const Color(0xFFCC0000),
+                              foregroundColor: ClientConfig.getColorScheme().secondary,
                               minimumSize: const Size(double.infinity, 0),
                               padding: const EdgeInsets.symmetric(
                                 vertical: 22,
                                 horizontal: 24,
                               ),
-                              textStyle: const TextStyle(fontWeight: FontWeight.w600),
                             ),
-                            icon: const Icon(Icons.notifications_active_outlined),
-                            label: const Text('Add reminder'),
+                            icon: Icon(
+                              Icons.notifications_active_outlined,
+                              color: ClientConfig.getColorScheme().secondary,
+                            ),
+                            label: Text(
+                              'Add reminder',
+                              style: ClientConfig.getTextStyleScheme()
+                                  .bodyLargeRegularBold
+                                  .copyWith(color: ClientConfig.getColorScheme().secondary),
+                            ),
                             onPressed: () async {
                               final value = await showBottomModal(
                                 context: context,
@@ -173,12 +173,14 @@ class _RepaymentReminderScreenState extends State<RepaymentReminderScreen> {
             const SizedBox(height: 16),
             SizedBox(
               width: double.infinity,
-              child: PrimaryButton(
-                text: 'Save',
-                onPressed: _reminders.isNotEmpty ? () => _onSaveTap(user.cognito) : null,
+              height: 48,
+              child: Button(
+                text: "Save",
+                onPressed: _reminders.isNotEmpty ? () => _onSaveTap() : null,
+                color: ClientConfig.getColorScheme().tertiary,
+                textColor: ClientConfig.getColorScheme().surface,
               ),
             ),
-            const SizedBox(height: 16),
           ],
         ),
       ),
@@ -191,16 +193,18 @@ class _RepaymentReminderScreenState extends State<RepaymentReminderScreen> {
     }
   }
 
-  void _onSaveTap(User user) {
+  void _onSaveTap() {
     final remindersToAdd = _reminders.where((reminder) => !_initialReminders.contains(reminder)).toList();
 
     if (remindersToAdd.isNotEmpty) {
       StoreProvider.of<AppState>(context).dispatch(
-        UpdateRepaymentRemindersCommandAction(user: user, reminders: remindersToAdd),
+        UpdateRepaymentRemindersCommandAction(reminders: remindersToAdd),
       );
     }
 
-    Navigator.pop(context);
+    Timer(const Duration(seconds: 1), () {
+      Navigator.pop(context);
+    });
   }
 }
 
@@ -273,7 +277,7 @@ class _CustomReminderPopUpContent extends StatefulWidget {
 }
 
 class _CustomReminderPopUpContentState extends State<_CustomReminderPopUpContent> {
-  final _textController = TextEditingController(text: '1');
+  final _textController = IvoryTextFieldController(text: '1');
   TimePeriod _timePeriod = TimePeriod.hours;
 
   void onChangedTimePeriod(TimePeriod? value) {
@@ -304,26 +308,13 @@ class _CustomReminderPopUpContentState extends State<_CustomReminderPopUpContent
           groupValue: _timePeriod,
           onChanged: onChangedTimePeriod,
         ),
-        // const Divider(height: 16),
-        // _ReminderListTile(
-        //   title: 'As push notification',
-        //   value: NotificationType.push,
-        //   groupValue: _notificationType,
-        //   onChanged: onChangedNotificationType,
-        // ),
-        // _ReminderListTile(
-        //   title: 'As email',
-        //   value: NotificationType.email,
-        //   groupValue: _notificationType,
-        //   onChanged: onChangedNotificationType,
-        // ),
         const Divider(height: 24),
         SizedBox(
           width: double.infinity,
           child: Button(
             text: 'Done',
-            color: const Color(0xFFCC0000),
-            textColor: Colors.white,
+            color: ClientConfig.getColorScheme().tertiary,
+            textColor: ClientConfig.getColorScheme().surface,
             onPressed: () {
               Navigator.of(context).pop((int.parse(_textController.text), _timePeriod));
             },
@@ -395,7 +386,7 @@ class _ReminderListTile<T> extends StatelessWidget {
                   onChanged!(value as T);
                 }
               },
-              activeColor: const Color(0xFFCC0000),
+              activeColor: ClientConfig.getColorScheme().secondary,
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               visualDensity: VisualDensity.compact,
             ),

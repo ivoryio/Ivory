@@ -1,0 +1,4 @@
+enum DeviceFingerprintErrorType {
+  unableToCreateConsent,
+  unableToCreateActivity,
+}

@@ -2,6 +2,8 @@
 
 import 'dart:convert';
 
+import 'package:solarisdemo/models/crypto/jwe.dart';
+import 'package:solarisdemo/models/crypto/jwk.dart';
 import 'package:uuid/uuid.dart';
 
 enum BankCardStatus {
@@ -68,7 +70,7 @@ class BankCard {
 
   factory BankCard.fromJson(Map<String, dynamic> json) => BankCard(
         id: json["id"],
-        accountId: json["account_id"],
+        accountId: json["account_id"] ?? '',
         status: getCardStatus(json["status"] ?? BankCardStatus.INACTIVE.name),
         type:
             getCardType(json["type"] ?? BankCardType.VIRTUAL_VISA_CREDIT.name),
@@ -106,6 +108,8 @@ BankCardType getCardType(String type) {
       return BankCardType.VISA_CREDIT;
     case 'VISA_DEBIT':
       return BankCardType.VISA_DEBIT;
+    case 'VISA_CREDIT01':
+      return BankCardType.VIRTUAL_VISA_CREDIT;
     default:
       throw Exception('Unknown CardType: $type');
   }
@@ -178,16 +182,30 @@ class BankCardRepresentation {
       };
 }
 
-String createCardToJson(CreateBankCard data) => json.encode(data.toJson());
+class BankCardFetchedDetails {
+  final String cardNumber;
+  final String cardExpiry;
+  final String cvv;
+  final String cardHolder;
 
-class CreateBankCard {
+  BankCardFetchedDetails({
+    required this.cardNumber,
+    required this.cardExpiry,
+    required this.cvv,
+    required this.cardHolder,
+  });
+}
+
+String createCardToJson(CreateBankCardReqBody data) => json.encode(data.toJson());
+
+class CreateBankCardReqBody {
   late String line1;
   late String line2;
   BankCardType type;
   String businessId;
   late String reference;
 
-  CreateBankCard(
+  CreateBankCardReqBody(
     String firstName,
     String lastName,
     this.type,
@@ -208,4 +226,73 @@ class CreateBankCard {
         "business_id": businessId,
         "reference": reference,
       };
+}
+
+String getCardDetailsRequestToJson(GetCardDetailsRequestBody data) =>
+    json.encode(data.toJson());
+
+class GetCardDetailsRequestBody {
+  String deviceId;
+  String deviceData;
+  String signature;
+  Jwk jwk;
+  Jwe jwe;
+
+  GetCardDetailsRequestBody({
+    required this.deviceId,
+    required this.deviceData,
+    required this.signature,
+    required this.jwk,
+    required this.jwe,
+  });
+
+  Map<String, dynamic> toJson() => {
+        "device_id": deviceId,
+        "device_data": deviceData,
+        "signature": signature,
+        "jwk": jwk.toJson(),
+        "jwe": jwe.toJson(),
+      };
+}
+
+GetCardDetailsResponse getCardDetailsResponseFromJson(String str) =>
+    GetCardDetailsResponse.fromJson(json.decode(str));
+
+class GetCardDetailsResponse {
+  String data;
+
+  GetCardDetailsResponse({
+    required this.data,
+  });
+
+  factory GetCardDetailsResponse.fromJson(Map<String, dynamic> json) =>
+      GetCardDetailsResponse(
+        data: json["data"],
+      );
+}
+
+String changePinRequestBodyToJson(ChangePinRequestBody data) => json.encode(data.toJson());
+
+class ChangePinRequestBody {
+    String encryptedPin;
+    String keyId;
+    String deviceId;
+    String deviceData;
+    String signature;
+
+    ChangePinRequestBody({
+        required this.encryptedPin,
+        required this.keyId,
+        required this.deviceId,
+        required this.deviceData,
+        required this.signature,
+    });
+
+    Map<String, dynamic> toJson() => {
+        "encrypted_pin": encryptedPin,
+        "key_id": keyId,
+        "device_id": deviceId,
+        "device_data": deviceData,
+        "signature": signature,
+    };
 }

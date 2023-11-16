@@ -1,17 +1,11 @@
 import 'package:solarisdemo/models/repayments/reminder/repayment_reminder.dart';
-import 'package:solarisdemo/models/user.dart';
 
-class GetRepaymentRemindersCommandAction {
-  final User user;
-
-  GetRepaymentRemindersCommandAction({required this.user});
-}
+class GetRepaymentRemindersCommandAction {}
 
 class UpdateRepaymentRemindersCommandAction {
-  final User user;
   final List<RepaymentReminder> reminders;
 
-  UpdateRepaymentRemindersCommandAction({required this.user, required this.reminders});
+  UpdateRepaymentRemindersCommandAction({required this.reminders});
 }
 
 class DeleteRepaymentReminderCommandAction {

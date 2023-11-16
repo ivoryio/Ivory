@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:solarisdemo/config.dart';
 
-const double _defaultFontSize = 15;
-const double _defaultBorderRadius = 4.0;
+const double _defaultFontSize = 16;
+const BorderRadiusGeometry _defaultBorderRadius = BorderRadius.all(Radius.circular(4));
 
 class Button extends StatelessWidget {
   final String text;
@@ -11,12 +12,12 @@ class Button extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final double? fontSize;
   final String? fontFamily;
-  final double? borderRadius;
+  final BorderRadiusGeometry borderRadius;
   final BoxBorder? border;
   final Color? disabledColor;
   final Color? disabledTextColor;
-
   final Function? onPressed;
+  final bool isLoading;
 
   const Button({
     super.key,
@@ -32,11 +33,12 @@ class Button extends StatelessWidget {
     this.fontSize = _defaultFontSize,
     this.fontFamily = "Proxima Nova",
     this.padding = const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+    this.isLoading = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    bool isDisabled = onPressed == null;
+    bool isDisabled = onPressed == null || isLoading;
     TextStyle defaultTextStyle = TextStyle(
       color: isDisabled ? disabledTextColor : textColor,
       fontSize: fontSize,
@@ -44,28 +46,51 @@ class Button extends StatelessWidget {
       fontFamily: fontFamily,
     );
 
-    Widget widget = ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          elevation: 0,
-          padding: padding,
-          backgroundColor: color,
-          foregroundColor: textColor,
-          minimumSize: const Size(0, 0),
-          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(borderRadius!)),
+    Widget buttonChild = Stack(
+      alignment: Alignment.centerRight,
+      children: [
+        SizedBox(
+          width: double.infinity,
+          child: Text(
+            text,
+            textAlign: TextAlign.center,
+            style: textStyle != null ? defaultTextStyle.merge(textStyle) : defaultTextStyle,
           ),
         ),
-        onPressed: onPressed as void Function()?,
-        child: Text(
-          text,
-          style: textStyle != null ? defaultTextStyle.merge(textStyle) : defaultTextStyle,
-        ));
+        if (isLoading)
+          Positioned(
+            right: 100,
+            child: SizedBox(
+              width: 16,
+              height: 16,
+              child: CircularProgressIndicator(
+                color: ClientConfig.getCustomColors().neutral500,
+              ),
+            ),
+          )
+      ],
+    );
+
+    Widget widget = ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        elevation: 0,
+        padding: padding,
+        backgroundColor: color,
+        foregroundColor: textColor,
+        minimumSize: const Size(0, 0),
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+        shape: RoundedRectangleBorder(
+          borderRadius: borderRadius,
+        ),
+      ),
+      onPressed: isDisabled ? null : (onPressed as void Function()?),
+      child: buttonChild,
+    );
 
     if (border != null) {
       return Container(
-        decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(borderRadius!)), border: border),
+        decoration: BoxDecoration(borderRadius: borderRadius, border: border),
         child: widget,
       );
     }
@@ -74,46 +99,51 @@ class Button extends StatelessWidget {
   }
 }
 
-class PrimaryButton extends Button {
+class PrimaryButton extends StatelessWidget {
+  final String text;
+  final Function? onPressed;
+  final bool isLoading;
+
   const PrimaryButton({
     super.key,
-    super.border,
-    super.padding,
-    super.fontSize,
-    super.fontFamily,
-    super.borderRadius,
-    required String text,
-    super.onPressed,
-    super.disabledColor = Colors.black12,
-    super.disabledTextColor = Colors.black26,
-    TextStyle? textStyle,
-  }) : super(
-          text: text,
-          textStyle: textStyle,
-          color: Colors.black,
-          textColor: Colors.white,
-        );
+    required this.text,
+    this.isLoading = false,
+    this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Button(
+      text: text,
+      onPressed: onPressed,
+      isLoading: isLoading,
+      color: ClientConfig.getColorScheme().tertiary,
+    );
+  }
 }
 
-class SecondaryButton extends Button {
-  SecondaryButton({
+class SecondaryButton extends StatelessWidget {
+  final String text;
+  final Function? onPressed;
+  final double borderWidth;
+
+  const SecondaryButton({
     super.key,
-    super.padding,
-    super.fontSize,
-    super.fontFamily,
-    super.borderRadius,
-    required String text,
-    super.onPressed,
-    super.disabledColor = Colors.black12,
-    super.disabledTextColor = Colors.black26,
-    TextStyle? textStyle,
-  }) : super(
-          text: text,
-          textStyle: textStyle,
-          color: Colors.transparent,
-          textColor: Colors.black,
-          border: Border.all(color: Colors.black),
-        );
+    required this.text,
+    this.onPressed,
+    this.borderWidth = 1,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Button(
+      text: text,
+      onPressed: onPressed,
+      color: Colors.transparent,
+      textColor: Colors.black,
+      border: Border.all(color: Colors.black, width: borderWidth),
+    );
+  }
 }
 
 class TabExpandedButton extends StatelessWidget {
@@ -121,6 +151,7 @@ class TabExpandedButton extends StatelessWidget {
   final bool active;
   final Function onPressed;
   final TextStyle? textStyle;
+  final BorderRadiusGeometry? borderRadius;
 
   const TabExpandedButton({
     super.key,
@@ -128,6 +159,7 @@ class TabExpandedButton extends StatelessWidget {
     required this.active,
     required this.text,
     required this.onPressed,
+    this.borderRadius,
   });
 
   @override
@@ -138,7 +170,13 @@ class TabExpandedButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 6),
         color: active ? Colors.white : Colors.transparent,
         textColor: const Color(0xff020202),
-        border: active ? Border.all(width: 1, color: const Color(0xffB9B9B9)) : null,
+        border: active
+            ? Border.all(
+                width: 1,
+                color: ClientConfig.getCustomColors().neutral300,
+              )
+            : null,
+        borderRadius: borderRadius ?? BorderRadius.zero,
         onPressed: () {
           onPressed();
         },

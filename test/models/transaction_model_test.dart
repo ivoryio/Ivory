@@ -1,3 +1,4 @@
+import 'package:solarisdemo/models/amount_value.dart';
 import 'package:solarisdemo/models/transactions/transaction_model.dart';
 import 'package:test/test.dart';
 
@@ -7,7 +8,7 @@ void main() {
       var transaction = Transaction(
         id: '1',
         bookingType: 'type1',
-        amount: Amount(value: 100.0, unit: 'Dollars', currency: 'USD'),
+        amount: AmountValue(value: 100.0, unit: 'Dollars', currency: 'USD'),
         description: 'desc1',
         endToEndId: 'end1',
         recipientBic: 'bic1',
@@ -55,7 +56,7 @@ void main() {
       expect(fromJson.endToEndId, 'ID');
       expect(fromJson.recipientBic, isNull);
       expect(fromJson.recipientIban, isNull);
-      expect(fromJson.recipientName, 'SOLARIS');
+      expect(fromJson.recipientName, 'E-car');
       expect(fromJson.reference, isNull);
       expect(fromJson.bookingDate, isNull);
       expect(fromJson.valutaDate, isNull);

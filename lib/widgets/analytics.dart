@@ -1,17 +1,21 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:solarisdemo/cubits/transaction_list_cubit/transaction_list_cubit.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:solarisdemo/infrastructure/transactions/transaction_presenter.dart';
 import 'package:solarisdemo/widgets/account_balance_text.dart';
 
+import '../config.dart';
+import '../models/transactions/transaction_model.dart';
+import '../redux/app_state.dart';
+
 class Analytics extends StatefulWidget {
+  final List<Transaction> transactions;
+
   const Analytics({
     Key? key,
-    required this.transactionListCubit,
+    required this.transactions,
   }) : super(key: key);
-
-  final TransactionListCubit transactionListCubit;
 
   @override
   State<StatefulWidget> createState() => AnalyticsState();
@@ -23,142 +27,124 @@ class AnalyticsState extends State<Analytics> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<TransactionListCubit>.value(
-      value: widget.transactionListCubit,
-      child: BlocBuilder<TransactionListCubit, TransactionListState>(
-        builder: (context, state) {
-          Widget emptyListWidget = Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    "Spending analytics",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  PlatformTextButton(
-                    padding: EdgeInsets.zero,
-                    child: const Text(
-                      "See all expenses",
-                      textAlign: TextAlign.right,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFFCC0000),
-                      ),
-                    ),
-                    onPressed: () {},
-                  )
-                ],
-              ),
-              const Text(
-                "No analytics available. Start spending and you will see your analytics displayed here.",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
+    return StoreConnector<AppState, TransactionsViewModel>(
+      converter: (store) => TransactionPresenter.presentTransactions(
+          transactionsState: store.state.homePageTransactionsState),
+      builder: (context, viewModel) {
+        Widget emptyListWidget = Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Spending analytics",
+                  style: ClientConfig.getTextStyleScheme().labelLarge,
                 ),
-              ),
-            ],
-          );
-
-          switch (state.runtimeType) {
-            case TransactionListInitial:
-              return emptyListWidget;
-            case TransactionListLoading:
-              return const Center(child: CircularProgressIndicator());
-            case TransactionListError:
-              return const Text("Transactions could not be loaded");
-            case TransactionListLoaded:
-              return Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        "Spending analytics",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      PlatformTextButton(
-                        padding: EdgeInsets.zero,
-                        child: const Text(
-                          "See all expenses",
-                          textAlign: TextAlign.right,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xFFCC0000),
-                          ),
-                        ),
-                        onPressed: () {},
-                      )
-                    ],
+                PlatformTextButton(
+                  padding: EdgeInsets.zero,
+                  child: Text(
+                    "See all expenses",
+                    textAlign: TextAlign.right,
+                    style:ClientConfig.getTextStyleScheme().labelMedium.copyWith(color:ClientConfig.getColorScheme().secondary,),
                   ),
-                  widget.transactionListCubit.state.transactions.isNotEmpty
-                      ? Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.all(_analyticsPadding),
-                              child: AspectRatio(
-                                aspectRatio: 1,
-                                child: Row(
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: AspectRatio(
-                                        aspectRatio: 1,
-                                        child: PieChart(
-                                          PieChartData(
-                                            borderData: FlBorderData(
-                                              show: false,
-                                            ),
-                                            sectionsSpace: 0,
-                                            centerSpaceRadius: double.infinity,
-                                            sections: showingSections(),
-                                            startDegreeOffset: -30,
+                  onPressed: () {},
+                )
+              ],
+            ),
+            Text(
+              "No analytics available. Start spending and you will see your analytics displayed here.",
+              style: ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(color: ClientConfig.getCustomColors().neutral700),
+            ),
+          ],
+        );
+
+        switch (viewModel.runtimeType) {
+          case TransactionsInitialViewModel:
+            return emptyListWidget;
+          case TransactionsLoadingViewModel:
+            return const Center(child: CircularProgressIndicator());
+          case TransactionsErrorViewModel:
+            return const Text("Transactions could not be loaded");
+          case TransactionsFetchedViewModel:
+            return Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Spending analytics",
+                      style: ClientConfig.getTextStyleScheme().labelLarge,
+                    ),
+                    PlatformTextButton(
+                      padding: EdgeInsets.zero,
+                      child: Text(
+                        "See all expenses",
+                        textAlign: TextAlign.right,
+                        style: ClientConfig.getTextStyleScheme().labelMedium.copyWith(color:ClientConfig.getColorScheme().secondary,),
+                      ),
+                      onPressed: () {},
+                    )
+                  ],
+                ),
+                widget.transactions.isNotEmpty
+                    ? Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(_analyticsPadding),
+                            child: AspectRatio(
+                              aspectRatio: 1,
+                              child: Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: AspectRatio(
+                                      aspectRatio: 1,
+                                      child: PieChart(
+                                        PieChartData(
+                                          borderData: FlBorderData(
+                                            show: false,
                                           ),
-                                          swapAnimationDuration: const Duration(milliseconds: 150), // Optional
-                                          swapAnimationCurve: Curves.linear, // Optional
+                                          sectionsSpace: 0,
+                                          centerSpaceRadius: double.infinity,
+                                          sections: showingSections(),
+                                          startDegreeOffset: -30,
                                         ),
+                                        swapAnimationDuration: const Duration(
+                                            milliseconds: 150), // Optional
+                                        swapAnimationCurve:
+                                            Curves.linear, // Optional
                                       ),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ),
-                            const Center(
-                              child: AccountBalanceText(
-                                value: 1234.56,
-                              ),
-                            )
-                          ],
-                        )
-                      : const Text(
-                          "No analytics available. Start spending and you will see your analytics displayed here.",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
                           ),
-                        ),
-                ],
-              );
+                          Center(
+                            child: AccountBalanceText(
+                              value: 2481.13,
+                            ),
+                          )
+                        ],
+                      )
+                    : Text(
+                        "No analytics available. Start spending and you will see your analytics displayed here.",
+                        style: ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(color: ClientConfig.getCustomColors().neutral700),
+                      ),
+              ],
+            );
 
-            default:
-              return const Text("Transactions could not be loaded");
-          }
-        },
-      ),
+          default:
+            return const Text("Transactions could not be loaded");
+        }
+      },
     );
   }
 
   List<PieChartSectionData> showingSections() {
     return List.generate(6, (i) {
-      final pieChartItemRadius = (MediaQuery.of(context).size.width / 4.2) - _analyticsPadding;
+      final pieChartItemRadius =
+          (MediaQuery.of(context).size.width / 4.2) - _analyticsPadding;
 
       switch (i) {
         case 0:

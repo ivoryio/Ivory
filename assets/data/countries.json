@@ -1,0 +1,1750 @@
+[
+  {
+    "isoCode": "DE",
+    "name": "Germany",
+    "phoneCode": "+49",
+    "flag": "🇩🇪",
+    "phoneNumberFormat": "+49(##) #######"
+  },
+  {
+    "isoCode": "DEMO",
+    "name": "Demo country",
+    "phoneCode": "+15550101",
+    "flag": "🇪🇺",
+    "phoneNumberFormat": "+15550101"
+  },
+  {
+    "isoCode": "AF",
+    "name": "Afghanistan",
+    "phoneCode": "+93",
+    "flag": "🇦🇫",
+    "phoneNumberFormat": "+93 ## ### ####"
+  },
+  {
+    "isoCode": "AX",
+    "name": "Aland Islands",
+    "phoneCode": "+358-18",
+    "flag": "🇦🇽",
+    "phoneNumberFormat": "+358-18 ### ####"
+  },
+  {
+    "isoCode": "AL",
+    "name": "Albania",
+    "phoneCode": "+355",
+    "flag": "🇦🇱",
+    "phoneNumberFormat": "+355 (##) ### ###"
+  },
+  {
+    "isoCode": "DZ",
+    "name": "Algeria",
+    "phoneCode": "+213",
+    "flag": "🇩🇿",
+    "phoneNumberFormat": "+213 (##) ### ####"
+  },
+  {
+    "isoCode": "AS",
+    "name": "American Samoa",
+    "phoneCode": "+1-684",
+    "flag": "🇦🇸",
+    "phoneNumberFormat": "+1-684 ###-####"
+  },
+  {
+    "isoCode": "AD",
+    "name": "Andorra",
+    "phoneCode": "+376",
+    "flag": "🇦🇩",
+    "phoneNumberFormat": "+376 ### ###"
+  },
+  {
+    "isoCode": "AO",
+    "name": "Angola",
+    "phoneCode": "+244",
+    "flag": "🇦🇴",
+    "phoneNumberFormat": "+244 (###) ### ###"
+  },
+  {
+    "isoCode": "AI",
+    "name": "Anguilla",
+    "phoneCode": "+1-264",
+    "flag": "🇦🇮",
+    "phoneNumberFormat": "+1-264 ###-####"
+  },
+  {
+    "isoCode": "AG",
+    "name": "Antigua And Barbuda",
+    "phoneCode": "+1-268",
+    "flag": "🇦🇬",
+    "phoneNumberFormat": "+1-268 ###-####"
+  },
+  {
+    "isoCode": "AR",
+    "name": "Argentina",
+    "phoneCode": "+54",
+    "flag": "🇦🇷",
+    "phoneNumberFormat": "+54 (###) ###-####"
+  },
+  {
+    "isoCode": "AM",
+    "name": "Armenia",
+    "phoneCode": "+374",
+    "flag": "🇦🇲",
+    "phoneNumberFormat": "+374-##-###-###"
+  },
+  {
+    "isoCode": "AW",
+    "name": "Aruba",
+    "phoneCode": "+297",
+    "flag": "🇦🇼",
+    "phoneNumberFormat": "+297 ### ####"
+  },
+  {
+    "isoCode": "AU",
+    "name": "Australia",
+    "phoneCode": "+61",
+    "flag": "🇦🇺",
+    "phoneNumberFormat": "+61 # #### ####"
+  },
+  {
+    "isoCode": "AT",
+    "name": "Austria",
+    "phoneCode": "+43",
+    "flag": "🇦🇹",
+    "phoneNumberFormat": "+43 (###) ###-####"
+  },
+  {
+    "isoCode": "AZ",
+    "name": "Azerbaijan",
+    "phoneCode": "+994",
+    "flag": "🇦🇿",
+    "phoneNumberFormat": "+994 (##) ### ## ##"
+  },
+  {
+    "isoCode": "BS",
+    "name": "Bahamas The",
+    "phoneCode": "+1-242",
+    "flag": "🇧🇸",
+    "phoneNumberFormat": "+1-242 ###-####"
+  },
+  {
+    "isoCode": "BH",
+    "name": "Bahrain",
+    "phoneCode": "+973",
+    "flag": "🇧🇭",
+    "phoneNumberFormat": "+973 #### ####"
+  },
+  {
+    "isoCode": "BD",
+    "name": "Bangladesh",
+    "phoneCode": "+880",
+    "flag": "🇧🇩",
+    "phoneNumberFormat": "+880 # ###-###"
+  },
+  {
+    "isoCode": "BB",
+    "name": "Barbados",
+    "phoneCode": "+1-246",
+    "flag": "🇧🇧",
+    "phoneNumberFormat": "+1-246 ###-####"
+  },
+  {
+    "isoCode": "BY",
+    "name": "Belarus",
+    "phoneCode": "+375",
+    "flag": "🇧🇾",
+    "phoneNumberFormat": "+375 (##) ###-##-##"
+  },
+  {
+    "isoCode": "BE",
+    "name": "Belgium",
+    "phoneCode": "+32",
+    "flag": "🇧🇪",
+    "phoneNumberFormat": "+32 ### ## ## ##"
+  },
+  {
+    "isoCode": "BZ",
+    "name": "Belize",
+    "phoneCode": "+501",
+    "flag": "🇧🇿",
+    "phoneNumberFormat": "+501 ###-####"
+  },
+  {
+    "isoCode": "BJ",
+    "name": "Benin",
+    "phoneCode": "+229",
+    "flag": "🇧🇯",
+    "phoneNumberFormat": "+229 ## ## ####"
+  },
+  {
+    "isoCode": "BM",
+    "name": "Bermuda",
+    "phoneCode": "+1-441",
+    "flag": "🇧🇲",
+    "phoneNumberFormat": "+1-441 ###-####"
+  },
+  {
+    "isoCode": "BT",
+    "name": "Bhutan",
+    "phoneCode": "+975",
+    "flag": "🇧🇹",
+    "phoneNumberFormat": "+975 #-###-###"
+  },
+  {
+    "isoCode": "BO",
+    "name": "Bolivia",
+    "phoneCode": "+591",
+    "flag": "🇧🇴",
+    "phoneNumberFormat": "+591 #-###-####"
+  },
+  {
+    "isoCode": "BA",
+    "name": "Bosnia and Herzegovina",
+    "phoneCode": "+387",
+    "flag": "🇧🇦",
+    "phoneNumberFormat": "+387 ##-#####"
+  },
+  {
+    "isoCode": "BW",
+    "name": "Botswana",
+    "phoneCode": "+267",
+    "flag": "🇧🇼",
+    "phoneNumberFormat": "+267 ## ### ###"
+  },
+  {
+    "isoCode": "BV",
+    "name": "Bouvet Island",
+    "phoneCode": "+47",
+    "flag": "🇧🇻",
+    "phoneNumberFormat": "+47 ### ## ###"
+  },
+  {
+    "isoCode": "BR",
+    "name": "Brazil",
+    "phoneCode": "+55",
+    "flag": "🇧🇷",
+    "phoneNumberFormat": "+55 (##) ####-####"
+  },
+  {
+    "isoCode": "IO",
+    "name": "British Indian Ocean Territory",
+    "phoneCode": "+246",
+    "flag": "🇮🇴",
+    "phoneNumberFormat": "+246 ###-####"
+  },
+  {
+    "isoCode": "BN",
+    "name": "Brunei",
+    "phoneCode": "+673",
+    "flag": "🇧🇳",
+    "phoneNumberFormat": "+673 ### ####"
+  },
+  {
+    "isoCode": "BG",
+    "name": "Bulgaria",
+    "phoneCode": "+359",
+    "flag": "🇧🇬",
+    "phoneNumberFormat": "+359 (##) ### ###"
+  },
+  {
+    "isoCode": "BF",
+    "name": "Burkina Faso",
+    "phoneCode": "+226",
+    "flag": "🇧🇫",
+    "phoneNumberFormat": "+226 ## ## ####"
+  },
+  {
+    "isoCode": "BI",
+    "name": "Burundi",
+    "phoneCode": "+257",
+    "flag": "🇧🇮",
+    "phoneNumberFormat": "+257 ## ## ####"
+  },
+  {
+    "isoCode": "KH",
+    "name": "Cambodia",
+    "phoneCode": "+855",
+    "flag": "🇰🇭",
+    "phoneNumberFormat": "+855 ## ### ###"
+  },
+  {
+    "isoCode": "CM",
+    "name": "Cameroon",
+    "phoneCode": "+237",
+    "flag": "🇨🇲",
+    "phoneNumberFormat": "+237 #### ####"
+  },
+  {
+    "isoCode": "CA",
+    "name": "Canada",
+    "phoneCode": "+1",
+    "flag": "🇨🇦",
+    "phoneNumberFormat": "+1 (###) ###-####"
+  },
+  {
+    "isoCode": "CV",
+    "name": "Cape Verde",
+    "phoneCode": "+238",
+    "flag": "🇨🇻",
+    "phoneNumberFormat": "+238 (###) ## ##"
+  },
+  {
+    "isoCode": "KY",
+    "name": "Cayman Islands",
+    "phoneCode": "+1-345",
+    "flag": "🇰🇾",
+    "phoneNumberFormat": "+1-345 ###-####"
+  },
+  {
+    "isoCode": "CF",
+    "name": "Central African Republic",
+    "phoneCode": "+236",
+    "flag": "🇨🇫",
+    "phoneNumberFormat": "+236 ## ## ####"
+  },
+  {
+    "isoCode": "TD",
+    "name": "Chad",
+    "phoneCode": "+235",
+    "flag": "🇹🇩",
+    "phoneNumberFormat": "+235 ## ## ## ##"
+  },
+  {
+    "isoCode": "CL",
+    "name": "Chile",
+    "phoneCode": "+56",
+    "flag": "🇨🇱",
+    "phoneNumberFormat": "+56 # #### ####"
+  },
+  {
+    "isoCode": "CN",
+    "name": "China",
+    "phoneCode": "+86",
+    "flag": "🇨🇳",
+    "phoneNumberFormat": "+86 ### #### ####"
+  },
+  {
+    "isoCode": "CX",
+    "name": "Christmas Island",
+    "phoneCode": "+61",
+    "flag": "🇨🇽",
+    "phoneNumberFormat": "+61 # ### ####"
+  },
+  {
+    "isoCode": "CC",
+    "name": "Cocos (Keeling) Islands",
+    "phoneCode": "+61",
+    "flag": "🇨🇨",
+    "phoneNumberFormat": "+61 # ### ####"
+  },
+  {
+    "isoCode": "CO",
+    "name": "Colombia",
+    "phoneCode": "+57",
+    "flag": "🇨🇴",
+    "phoneNumberFormat": "+57 ### ### ####"
+  },
+  {
+    "isoCode": "KM",
+    "name": "Comoros",
+    "phoneCode": "+269",
+    "flag": "🇰🇲",
+    "phoneNumberFormat": "+269 ######"
+  },
+  {
+    "isoCode": "CG",
+    "name": "Congo",
+    "phoneCode": "+242",
+    "flag": "🇨🇬",
+    "phoneNumberFormat": "+242 ## ### ####"
+  },
+  {
+    "isoCode": "CD",
+    "name": "Congo The Democratic Republic Of The",
+    "phoneCode": "+243",
+    "flag": "🇨🇩",
+    "phoneNumberFormat": "+243 ## ### ####"
+  },
+  {
+    "isoCode": "CK",
+    "name": "Cook Islands",
+    "phoneCode": "+682",
+    "flag": "🇨🇰",
+    "phoneNumberFormat": "+682 ## ###"
+  },
+  {
+    "isoCode": "CR",
+    "name": "Costa Rica",
+    "phoneCode": "+506",
+    "flag": "🇨🇷",
+    "phoneNumberFormat": "+506 #### ####"
+  },
+  {
+    "isoCode": "CI",
+    "name": "Cote D'Ivoire (Ivory Coast)",
+    "phoneCode": "+225",
+    "flag": "🇨🇮",
+    "phoneNumberFormat": "+225 ## #######"
+  },
+  {
+    "isoCode": "HR",
+    "name": "Croatia (Hrvatska)",
+    "phoneCode": "+385",
+    "flag": "🇭🇷",
+    "phoneNumberFormat": "+385 # #### ###"
+  },
+  {
+    "isoCode": "CU",
+    "name": "Cuba",
+    "phoneCode": "+53",
+    "flag": "🇨🇺",
+    "phoneNumberFormat": "+53 # #### ####"
+  },
+  {
+    "isoCode": "CY",
+    "name": "Cyprus",
+    "phoneCode": "+357",
+    "flag": "🇨🇾",
+    "phoneNumberFormat": "+357 #### ####"
+  },
+  {
+    "isoCode": "CZ",
+    "name": "Czech Republic",
+    "phoneCode": "+420",
+    "flag": "🇨🇿",
+    "phoneNumberFormat": "+420 ### ### ###"
+  },
+  {
+    "isoCode": "DK",
+    "name": "Denmark",
+    "phoneCode": "+45",
+    "flag": "🇩🇰",
+    "phoneNumberFormat": "+45 ## ## ## ##"
+  },
+  {
+    "isoCode": "DJ",
+    "name": "Djibouti",
+    "phoneCode": "+253",
+    "flag": "🇩🇯",
+    "phoneNumberFormat": "+253 ## ## ## ##"
+  },
+  {
+    "isoCode": "DM",
+    "name": "Dominica",
+    "phoneCode": "+1-767",
+    "flag": "🇩🇲",
+    "phoneNumberFormat": "+1 (767) ###-####"
+  },
+  {
+    "isoCode": "DO",
+    "name": "Dominican Republic",
+    "phoneCode": "+1-809",
+    "flag": "🇩🇴",
+    "phoneNumberFormat": "+1-809 ###-####"
+  },
+  {
+    "isoCode": "TL",
+    "name": "East Timor",
+    "phoneCode": "+670",
+    "flag": "🇹🇱",
+    "phoneNumberFormat": "+670 #### ####"
+  },
+  {
+    "isoCode": "EC",
+    "name": "Ecuador",
+    "phoneCode": "+593",
+    "flag": "🇪🇨",
+    "phoneNumberFormat": "+593 ## ### ####"
+  },
+  {
+    "isoCode": "EG",
+    "name": "Egypt",
+    "phoneCode": "+20",
+    "flag": "🇪🇬",
+    "phoneNumberFormat": "+20 # #### ####"
+  },
+  {
+    "isoCode": "SV",
+    "name": "El Salvador",
+    "phoneCode": "+503",
+    "flag": "🇸🇻",
+    "phoneNumberFormat": "+503 #### ####"
+  },
+  {
+    "isoCode": "GQ",
+    "name": "Equatorial Guinea",
+    "phoneCode": "+240",
+    "flag": "🇬🇶",
+    "phoneNumberFormat": "+240 ## ####"
+  },
+  {
+    "isoCode": "ER",
+    "name": "Eritrea",
+    "phoneCode": "+291",
+    "flag": "🇪🇷",
+    "phoneNumberFormat": "+291 # ### ###"
+  },
+  {
+    "isoCode": "EE",
+    "name": "Estonia",
+    "phoneCode": "+372",
+    "flag": "🇪🇪",
+    "phoneNumberFormat": "+372 #### ####"
+  },
+  {
+    "isoCode": "ET",
+    "name": "Ethiopia",
+    "phoneCode": "+251",
+    "flag": "🇪🇹",
+    "phoneNumberFormat": "+251 ## ### ####"
+  },
+  {
+    "isoCode": "FK",
+    "name": "Falkland Islands",
+    "phoneCode": "+500",
+    "flag": "🇫🇰",
+    "phoneNumberFormat": "+500 ### ####"
+  },
+  {
+    "isoCode": "FO",
+    "name": "Faroe Islands",
+    "phoneCode": "+298",
+    "flag": "🇫🇴",
+    "phoneNumberFormat": "+298 ### ###"
+  },
+  {
+    "isoCode": "FJ",
+    "name": "Fiji Islands",
+    "phoneCode": "+679",
+    "flag": "🇫🇯",
+    "phoneNumberFormat": "+679 ### ####"
+  },
+  {
+    "isoCode": "FI",
+    "name": "Finland",
+    "phoneCode": "+358",
+    "flag": "🇫🇮",
+    "phoneNumberFormat": "+358 ### #### ###"
+  },
+  {
+    "isoCode": "FR",
+    "name": "France",
+    "phoneCode": "+33",
+    "flag": "🇫🇷",
+    "phoneNumberFormat": "+33 ## ## ## ## ##"
+  },
+  {
+    "isoCode": "GF",
+    "name": "French Guiana",
+    "phoneCode": "+594",
+    "flag": "🇬🇫",
+    "phoneNumberFormat": "+594 #### ## ## ##"
+  },
+  {
+    "isoCode": "PF",
+    "name": "French Polynesia",
+    "phoneCode": "+689",
+    "flag": "🇵🇫",
+    "phoneNumberFormat": "+689 ## ## ##"
+  },
+  {
+    "isoCode": "TF",
+    "name": "French Southern Territories",
+    "phoneCode": "+",
+    "flag": "🇹🇫"
+  },
+  {
+    "isoCode": "GA",
+    "name": "Gabon",
+    "phoneCode": "+241",
+    "flag": "🇬🇦",
+    "phoneNumberFormat": "+241 ## ## ## ##"
+  },
+  {
+    "isoCode": "GM",
+    "name": "Gambia The",
+    "phoneCode": "+220",
+    "flag": "🇬🇲",
+    "phoneNumberFormat": "+220 ## ## ##"
+  },
+  {
+    "isoCode": "GE",
+    "name": "Georgia",
+    "phoneCode": "+995",
+    "flag": "🇬🇪",
+    "phoneNumberFormat": "+995 ### ## ## ##"
+  },
+  {
+    "isoCode": "GH",
+    "name": "Ghana",
+    "phoneCode": "+233",
+    "flag": "🇬🇭",
+    "phoneNumberFormat": "+233 ## ### ####"
+  },
+  {
+    "isoCode": "GI",
+    "name": "Gibraltar",
+    "phoneCode": "+350",
+    "flag": "🇬🇮",
+    "phoneNumberFormat": "+350 ### ### ##"
+  },
+  {
+    "isoCode": "GR",
+    "name": "Greece",
+    "phoneCode": "+30",
+    "flag": "🇬🇷",
+    "phoneNumberFormat": "+30 ### ### ####"
+  },
+  {
+    "isoCode": "GL",
+    "name": "Greenland",
+    "phoneCode": "+299",
+    "flag": "🇬🇱",
+    "phoneNumberFormat": "+299 ## ## ##"
+  },
+  {
+    "isoCode": "GD",
+    "name": "Grenada",
+    "phoneCode": "+1-473",
+    "flag": "🇬🇩",
+    "phoneNumberFormat": "+1-473 ### ####"
+  },
+  {
+    "isoCode": "GP",
+    "name": "Guadeloupe",
+    "phoneCode": "+590",
+    "flag": "🇬🇵",
+    "phoneNumberFormat": "+590 ## ## ## ##"
+  },
+  {
+    "isoCode": "GU",
+    "name": "Guam",
+    "phoneCode": "+1-671",
+    "flag": "🇬🇺",
+    "phoneNumberFormat": "+1-671 ### ####"
+  },
+  {
+    "isoCode": "GT",
+    "name": "Guatemala",
+    "phoneCode": "+502",
+    "flag": "🇬🇹",
+    "phoneNumberFormat": "+502 ### ### ####"
+  },
+  {
+    "isoCode": "GG",
+    "name": "Guernsey and Alderney",
+    "phoneCode": "+44-1481",
+    "flag": "🇬🇬",
+    "phoneNumberFormat": "+44-1481 #### ####"
+  },
+  {
+    "isoCode": "GN",
+    "name": "Guinea",
+    "phoneCode": "+224",
+    "flag": "🇬🇳",
+    "phoneNumberFormat": "+224 ### ## ## ##"
+  },
+  {
+    "isoCode": "GW",
+    "name": "Guinea-Bissau",
+    "phoneCode": "+245",
+    "flag": "🇬🇼",
+    "phoneNumberFormat": "+245 ### ## ## ##"
+  },
+  {
+    "isoCode": "GY",
+    "name": "Guyana",
+    "phoneCode": "+592",
+    "flag": "🇬🇾",
+    "phoneNumberFormat": "+592 ### ####"
+  },
+  {
+    "isoCode": "HT",
+    "name": "Haiti",
+    "phoneCode": "+509",
+    "flag": "🇭🇹",
+    "phoneNumberFormat": "+509 ## ## ## ##"
+  },
+  {
+    "isoCode": "HM",
+    "name": "Heard Island and McDonald Islands",
+    "phoneCode": "+",
+    "flag": "🇭🇲"
+  },
+  {
+    "isoCode": "HN",
+    "name": "Honduras",
+    "phoneCode": "+504",
+    "flag": "🇭🇳",
+    "phoneNumberFormat": "+504 #### ####"
+  },
+  {
+    "isoCode": "HK",
+    "name": "Hong Kong S.A.R.",
+    "phoneCode": "+852",
+    "flag": "🇭🇰",
+    "phoneNumberFormat": "+852 #### ####"
+  },
+  {
+    "isoCode": "HU",
+    "name": "Hungary",
+    "phoneCode": "+36",
+    "flag": "🇭🇺",
+    "phoneNumberFormat": "+36 ## ### ####"
+  },
+  {
+    "isoCode": "IS",
+    "name": "Iceland",
+    "phoneCode": "+354",
+    "flag": "🇮🇸",
+    "phoneNumberFormat": "+354 ### ####"
+  },
+  {
+    "isoCode": "IN",
+    "name": "India",
+    "phoneCode": "+91",
+    "flag": "🇮🇳",
+    "phoneNumberFormat": "+91 ## #### ####"
+  },
+  {
+    "isoCode": "ID",
+    "name": "Indonesia",
+    "phoneCode": "+62",
+    "flag": "🇮🇩",
+    "phoneNumberFormat": "+62 ## #### ####"
+  },
+  {
+    "isoCode": "IR",
+    "name": "Iran",
+    "phoneCode": "+98",
+    "flag": "🇮🇷",
+    "phoneNumberFormat": "+98 ### ### ####"
+  },
+  {
+    "isoCode": "IQ",
+    "name": "Iraq",
+    "phoneCode": "+964",
+    "flag": "🇮🇶",
+    "phoneNumberFormat": "+964 ### ### ####"
+  },
+  {
+    "isoCode": "IE",
+    "name": "Ireland",
+    "phoneCode": "+353",
+    "flag": "🇮🇪",
+    "phoneNumberFormat": "+353 ## ### ####"
+  },
+  {
+    "isoCode": "IL",
+    "name": "Israel",
+    "phoneCode": "+972",
+    "flag": "🇮🇱",
+    "phoneNumberFormat": "+972 ## ### ####"
+  },
+  {
+    "isoCode": "IT",
+    "name": "Italy",
+    "phoneCode": "+39",
+    "flag": "🇮🇹",
+    "phoneNumberFormat": "+39 ## #### ####"
+  },
+  {
+    "isoCode": "JM",
+    "name": "Jamaica",
+    "phoneCode": "+1-876",
+    "flag": "🇯🇲",
+    "phoneNumberFormat": "+1-876 ### ####"
+  },
+  {
+    "isoCode": "JP",
+    "name": "Japan",
+    "phoneCode": "+81",
+    "flag": "🇯🇵",
+    "phoneNumberFormat": "+81 # #### ####"
+  },
+  {
+    "isoCode": "JE",
+    "name": "Jersey",
+    "phoneCode": "+44-1534",
+    "flag": "🇯🇪",
+    "phoneNumberFormat": "+44-1534 #### ####"
+  },
+  {
+    "isoCode": "JO",
+    "name": "Jordan",
+    "phoneCode": "+962",
+    "flag": "🇯🇴",
+    "phoneNumberFormat": "+962 ## ### ####"
+  },
+  {
+    "isoCode": "KZ",
+    "name": "Kazakhstan",
+    "phoneCode": "+7",
+    "flag": "🇰🇿",
+    "phoneNumberFormat": "+7 ### ### ####"
+  },
+  {
+    "isoCode": "KE",
+    "name": "Kenya",
+    "phoneCode": "+254",
+    "flag": "🇰🇪",
+    "phoneNumberFormat": "+254 ### #######"
+  },
+  {
+    "isoCode": "KI",
+    "name": "Kiribati",
+    "phoneCode": "+686",
+    "flag": "🇰🇮",
+    "phoneNumberFormat": "+686 #### ####"
+  },
+  {
+    "isoCode": "KP",
+    "name": "Korea North",
+    "phoneCode": "+850",
+    "flag": "🇰🇵",
+    "phoneNumberFormat": "+850 ### ####"
+  },
+  {
+    "isoCode": "KR",
+    "name": "Korea South",
+    "phoneCode": "+82",
+    "flag": "🇰🇷",
+    "phoneNumberFormat": "+82 # #### ####"
+  },
+  {
+    "isoCode": "KW",
+    "name": "Kuwait",
+    "phoneCode": "+965",
+    "flag": "🇰🇼",
+    "phoneNumberFormat": "+965 #### ####"
+  },
+  {
+    "isoCode": "KG",
+    "name": "Kyrgyzstan",
+    "phoneCode": "+996",
+    "flag": "🇰🇬",
+    "phoneNumberFormat": "+996 ### ######"
+  },
+  {
+    "isoCode": "LA",
+    "name": "Laos",
+    "phoneCode": "+856",
+    "flag": "🇱🇦",
+    "phoneNumberFormat": "+856 ## ### ####"
+  },
+  {
+    "isoCode": "LV",
+    "name": "Latvia",
+    "phoneCode": "+371",
+    "flag": "🇱🇻",
+    "phoneNumberFormat": "+371 ## #### ####"
+  },
+  {
+    "isoCode": "LB",
+    "name": "Lebanon",
+    "phoneCode": "+961",
+    "flag": "🇱🇧",
+    "phoneNumberFormat": "+961 ## ### ###"
+  },
+  {
+    "isoCode": "LS",
+    "name": "Lesotho",
+    "phoneCode": "+266",
+    "flag": "🇱🇸",
+    "phoneNumberFormat": "+266 ## ## ####"
+  },
+  {
+    "isoCode": "LR",
+    "name": "Liberia",
+    "phoneCode": "+231",
+    "flag": "🇱🇷",
+    "phoneNumberFormat": "+231 ## ### ####"
+  },
+  {
+    "isoCode": "LY",
+    "name": "Libya",
+    "phoneCode": "+218",
+    "flag": "🇱🇾",
+    "phoneNumberFormat": "+218 ### ### ####"
+  },
+  {
+    "isoCode": "LI",
+    "name": "Liechtenstein",
+    "phoneCode": "+423",
+    "flag": "🇱🇮",
+    "phoneNumberFormat": "+423 ### ####"
+  },
+  {
+    "isoCode": "LT",
+    "name": "Lithuania",
+    "phoneCode": "+370",
+    "flag": "🇱🇹",
+    "phoneNumberFormat": "+370 ## ######"
+  },
+  {
+    "isoCode": "LU",
+    "name": "Luxembourg",
+    "phoneCode": "+352",
+    "flag": "🇱🇺",
+    "phoneNumberFormat": "+352 ## ## ##"
+  },
+  {
+    "isoCode": "MO",
+    "name": "Macau S.A.R.",
+    "phoneCode": "+853",
+    "flag": "🇲🇴",
+    "phoneNumberFormat": "+853 #### ####"
+  },
+  {
+    "isoCode": "MK",
+    "name": "Macedonia",
+    "phoneCode": "+389",
+    "flag": "🇲🇰",
+    "phoneNumberFormat": "+389 ## ### ###"
+  },
+  {
+    "isoCode": "MG",
+    "name": "Madagascar",
+    "phoneCode": "+261",
+    "flag": "🇲🇬",
+    "phoneNumberFormat": "+261 ## ## ## ##"
+  },
+  {
+    "isoCode": "MW",
+    "name": "Malawi",
+    "phoneCode": "+265",
+    "flag": "🇲🇼",
+    "phoneNumberFormat": "+265 ## ## ####"
+  },
+  {
+    "isoCode": "MY",
+    "name": "Malaysia",
+    "phoneCode": "+60",
+    "flag": "🇲🇾",
+    "phoneNumberFormat": "+60 ## #### ####"
+  },
+  {
+    "isoCode": "MV",
+    "name": "Maldives",
+    "phoneCode": "+960",
+    "flag": "🇲🇻",
+    "phoneNumberFormat": "+960 ### ####"
+  },
+  {
+    "isoCode": "ML",
+    "name": "Mali",
+    "phoneCode": "+223",
+    "flag": "🇲🇱",
+    "phoneNumberFormat": "+223 ## ## ## ##"
+  },
+  {
+    "isoCode": "MT",
+    "name": "Malta",
+    "phoneCode": "+356",
+    "flag": "🇲🇹",
+    "phoneNumberFormat": "+356 ### ####"
+  },
+  {
+    "isoCode": "IM",
+    "name": "Man (Isle of)",
+    "phoneCode": "+44-1624",
+    "flag": "🇮🇲",
+    "phoneNumberFormat": "+44-1624 #### ####"
+  },
+  {
+    "isoCode": "MH",
+    "name": "Marshall Islands",
+    "phoneCode": "+692",
+    "flag": "🇲🇭",
+    "phoneNumberFormat": "+692 ### ####"
+  },
+  {
+    "isoCode": "MQ",
+    "name": "Martinique",
+    "phoneCode": "+596",
+    "flag": "🇲🇶",
+    "phoneNumberFormat": "+596 ## ## ## ##"
+  },
+  {
+    "isoCode": "MR",
+    "name": "Mauritania",
+    "phoneCode": "+222",
+    "flag": "🇲🇷",
+    "phoneNumberFormat": "+222 ## ## ## ##"
+  },
+  {
+    "isoCode": "MU",
+    "name": "Mauritius",
+    "phoneCode": "+230",
+    "flag": "🇲🇺",
+    "phoneNumberFormat": "+230 ### ####"
+  },
+  {
+    "isoCode": "YT",
+    "name": "Mayotte",
+    "phoneCode": "+262",
+    "flag": "🇾🇹",
+    "phoneNumberFormat": "+262 ##### ####"
+  },
+  {
+    "isoCode": "MX",
+    "name": "Mexico",
+    "phoneCode": "+52",
+    "flag": "🇲🇽",
+    "phoneNumberFormat": "+52 ## #### ####"
+  },
+  {
+    "isoCode": "FM",
+    "name": "Micronesia",
+    "phoneCode": "+691",
+    "flag": "🇫🇲",
+    "phoneNumberFormat": "+691 ### ####"
+  },
+  {
+    "isoCode": "MD",
+    "name": "Moldova",
+    "phoneCode": "+373",
+    "flag": "🇲🇩",
+    "phoneNumberFormat": "+373 ## ### ###"
+  },
+  {
+    "isoCode": "MC",
+    "name": "Monaco",
+    "phoneCode": "+377",
+    "flag": "🇲🇨",
+    "phoneNumberFormat": "+377 ## ## ## ##"
+  },
+  {
+    "isoCode": "MN",
+    "name": "Mongolia",
+    "phoneCode": "+976",
+    "flag": "🇲🇳",
+    "phoneNumberFormat": "+976 ### ####"
+  },
+  {
+    "isoCode": "ME",
+    "name": "Montenegro",
+    "phoneCode": "+382",
+    "flag": "🇲🇪",
+    "phoneNumberFormat": "+382 ## ### ###"
+  },
+  {
+    "isoCode": "MS",
+    "name": "Montserrat",
+    "phoneCode": "+1-664",
+    "flag": "🇲🇸",
+    "phoneNumberFormat": "+1-664 ### ####"
+  },
+  {
+    "isoCode": "MA",
+    "name": "Morocco",
+    "phoneCode": "+212",
+    "flag": "🇲🇦",
+    "phoneNumberFormat": "+212 ## ## ## ##"
+  },
+  {
+    "isoCode": "MZ",
+    "name": "Mozambique",
+    "phoneCode": "+258",
+    "flag": "🇲🇿",
+    "phoneNumberFormat": "+258 ## #######"
+  },
+  {
+    "isoCode": "MM",
+    "name": "Myanmar",
+    "phoneCode": "+95",
+    "flag": "🇲🇲",
+    "phoneNumberFormat": "+95 ## #######"
+  },
+  {
+    "isoCode": "NA",
+    "name": "Namibia",
+    "phoneCode": "+264",
+    "flag": "🇳🇦",
+    "phoneNumberFormat": "+264 ## #######"
+  },
+  {
+    "isoCode": "NR",
+    "name": "Nauru",
+    "phoneCode": "+674",
+    "flag": "🇳🇷",
+    "phoneNumberFormat": "+674 #### ####"
+  },
+  {
+    "isoCode": "NP",
+    "name": "Nepal",
+    "phoneCode": "+977",
+    "flag": "🇳🇵",
+    "phoneNumberFormat": "+977 ## #### ####"
+  },
+  {
+    "isoCode": "BQ",
+    "name": "Bonaire, Sint Eustatius and Saba",
+    "phoneCode": "+599",
+    "flag": "🇧🇶",
+    "phoneNumberFormat": "+599 ### ####"
+  },
+  {
+    "isoCode": "NL",
+    "name": "Netherlands The",
+    "phoneCode": "+31",
+    "flag": "🇳🇱",
+    "phoneNumberFormat": "+31 ## ## ## ##"
+  },
+  {
+    "isoCode": "NC",
+    "name": "New Caledonia",
+    "phoneCode": "+687",
+    "flag": "🇳🇨",
+    "phoneNumberFormat": "+687 ## ## ##"
+  },
+  {
+    "isoCode": "NZ",
+    "name": "New Zealand",
+    "phoneCode": "+64",
+    "flag": "🇳🇿",
+    "phoneNumberFormat": "+64 ## #### ####"
+  },
+  {
+    "isoCode": "NI",
+    "name": "Nicaragua",
+    "phoneCode": "+505",
+    "flag": "🇳🇮",
+    "phoneNumberFormat": "+505 #### ####"
+  },
+  {
+    "isoCode": "NE",
+    "name": "Niger",
+    "phoneCode": "+227",
+    "flag": "🇳🇪",
+    "phoneNumberFormat": "+227 ## ## ## ##"
+  },
+  {
+    "isoCode": "NG",
+    "name": "Nigeria",
+    "phoneCode": "+234",
+    "flag": "🇳🇬",
+    "phoneNumberFormat": "+234 ### #### ####"
+  },
+  {
+    "isoCode": "NU",
+    "name": "Niue",
+    "phoneCode": "+683",
+    "flag": "🇳🇺",
+    "phoneNumberFormat": "+683 #### ####"
+  },
+  {
+    "isoCode": "NF",
+    "name": "Norfolk Island",
+    "phoneCode": "+672",
+    "flag": "🇳🇫",
+    "phoneNumberFormat": "+672 #### ####"
+  },
+  {
+    "isoCode": "MP",
+    "name": "Northern Mariana Islands",
+    "phoneCode": "+1-670",
+    "flag": "🇲🇵",
+    "phoneNumberFormat": "+1-670 ### ####"
+  },
+  {
+    "isoCode": "NO",
+    "name": "Norway",
+    "phoneCode": "+47",
+    "flag": "🇳🇴",
+    "phoneNumberFormat": "+47 ### ####"
+  },
+  {
+    "isoCode": "OM",
+    "name": "Oman",
+    "phoneCode": "+968",
+    "flag": "🇴🇲",
+    "phoneNumberFormat": "+968 ### ####"
+  },
+  {
+    "isoCode": "PK",
+    "name": "Pakistan",
+    "phoneCode": "+92",
+    "flag": "🇵🇰",
+    "phoneNumberFormat": "+92 ### #######"
+  },
+  {
+    "isoCode": "PW",
+    "name": "Palau",
+    "phoneCode": "+680",
+    "flag": "🇵🇼",
+    "phoneNumberFormat": "+680 ### ####"
+  },
+  {
+    "isoCode": "PS",
+    "name": "Palestinian Territory Occupied",
+    "phoneCode": "+970",
+    "flag": "🇵🇸",
+    "phoneNumberFormat": "+970 ## ### ####"
+  },
+  {
+    "isoCode": "PA",
+    "name": "Panama",
+    "phoneCode": "+507",
+    "flag": "🇵🇦",
+    "phoneNumberFormat": "+507 ### ####"
+  },
+  {
+    "isoCode": "PG",
+    "name": "Papua new Guinea",
+    "phoneCode": "+675",
+    "flag": "🇵🇬",
+    "phoneNumberFormat": "+675 ### ####"
+  },
+  {
+    "isoCode": "PY",
+    "name": "Paraguay",
+    "phoneCode": "+595",
+    "flag": "🇵🇾",
+    "phoneNumberFormat": "+595 ## ### ####"
+  },
+  {
+    "isoCode": "PE",
+    "name": "Peru",
+    "phoneCode": "+51",
+    "flag": "🇵🇪",
+    "phoneNumberFormat": "+51 ### ####"
+  },
+  {
+    "isoCode": "PH",
+    "name": "Philippines",
+    "phoneCode": "+63",
+    "flag": "🇵🇭",
+    "phoneNumberFormat": "+63 ## ### ####"
+  },
+  {
+    "isoCode": "PN",
+    "name": "Pitcairn Island",
+    "phoneCode": "+870",
+    "flag": "🇵🇳",
+    "phoneNumberFormat": "+870 ### ####"
+  },
+  {
+    "isoCode": "PL",
+    "name": "Poland",
+    "phoneCode": "+48",
+    "flag": "🇵🇱",
+    "phoneNumberFormat": "+48 ### ### ###"
+  },
+  {
+    "isoCode": "PT",
+    "name": "Portugal",
+    "phoneCode": "+351",
+    "flag": "🇵🇹",
+    "phoneNumberFormat": "+351 ### ### ###"
+  },
+  {
+    "isoCode": "PR",
+    "name": "Puerto Rico",
+    "phoneCode": "+1-787",
+    "flag": "🇵🇷",
+    "phoneNumberFormat": "+1-787 ### ####"
+  },
+  {
+    "isoCode": "QA",
+    "name": "Qatar",
+    "phoneCode": "+974",
+    "flag": "🇶🇦",
+    "phoneNumberFormat": "+974 ### #### ####"
+  },
+  {
+    "isoCode": "RE",
+    "name": "Reunion",
+    "phoneCode": "+262",
+    "flag": "🇷🇪",
+    "phoneNumberFormat": "+262 ### ######"
+  },
+  {
+    "isoCode": "RO",
+    "name": "Romania",
+    "phoneCode": "+40",
+    "flag": "🇷🇴",
+    "phoneNumberFormat": "+40 ## ### ####"
+  },
+  {
+    "isoCode": "RU",
+    "name": "Russia",
+    "phoneCode": "+7",
+    "flag": "🇷🇺",
+    "phoneNumberFormat": "+7 ### ### ####"
+  },
+  {
+    "isoCode": "RW",
+    "name": "Rwanda",
+    "phoneCode": "+250",
+    "flag": "🇷🇼",
+    "phoneNumberFormat": "+250 ### ######"
+  },
+  {
+    "isoCode": "SH",
+    "name": "Saint Helena",
+    "phoneCode": "+290",
+    "flag": "🇸🇭",
+    "phoneNumberFormat": "+290 ### ####"
+  },
+  {
+    "isoCode": "KN",
+    "name": "Saint Kitts And Nevis",
+    "phoneCode": "+1-869",
+    "flag": "🇰🇳",
+    "phoneNumberFormat": "+1-869 ### ####"
+  },
+  {
+    "isoCode": "LC",
+    "name": "Saint Lucia",
+    "phoneCode": "+1-758",
+    "flag": "🇱🇨",
+    "phoneNumberFormat": "+1-758 ### ####"
+  },
+  {
+    "isoCode": "PM",
+    "name": "Saint Pierre and Miquelon",
+    "phoneCode": "+508",
+    "flag": "🇵🇲",
+    "phoneNumberFormat": "+508 ### ####"
+  },
+  {
+    "isoCode": "VC",
+    "name": "Saint Vincent And The Grenadines",
+    "phoneCode": "+1-784",
+    "flag": "🇻🇨",
+    "phoneNumberFormat": "+1-784 ### ####"
+  },
+  {
+    "isoCode": "BL",
+    "name": "Saint-Barthelemy",
+    "phoneCode": "+590",
+    "flag": "🇧🇱",
+    "phoneNumberFormat": "+590 ### ######"
+  },
+  {
+    "isoCode": "MF",
+    "name": "Saint-Martin (French part)",
+    "phoneCode": "+590",
+    "flag": "🇲🇫",
+    "phoneNumberFormat": "+590 ### ######"
+  },
+  {
+    "isoCode": "WS",
+    "name": "Samoa",
+    "phoneCode": "+685",
+    "flag": "🇼🇸",
+    "phoneNumberFormat": "+685 ## ####"
+  },
+  {
+    "isoCode": "SM",
+    "name": "San Marino",
+    "phoneCode": "+378",
+    "flag": "🇸🇲",
+    "phoneNumberFormat": "+378 ### ######"
+  },
+  {
+    "isoCode": "ST",
+    "name": "Sao Tome and Principe",
+    "phoneCode": "+239",
+    "flag": "🇸🇹",
+    "phoneNumberFormat": "+239 ### ####"
+  },
+  {
+    "isoCode": "SA",
+    "name": "Saudi Arabia",
+    "phoneCode": "+966",
+    "flag": "🇸🇦",
+    "phoneNumberFormat": "+966 ### ### ####"
+  },
+  {
+    "isoCode": "SN",
+    "name": "Senegal",
+    "phoneCode": "+221",
+    "flag": "🇸🇳",
+    "phoneNumberFormat": "+221 ### ### ###"
+  },
+  {
+    "isoCode": "RS",
+    "name": "Serbia",
+    "phoneCode": "+381",
+    "flag": "🇷🇸",
+    "phoneNumberFormat": "+381 ### ### ####"
+  },
+  {
+    "isoCode": "SC",
+    "name": "Seychelles",
+    "phoneCode": "+248",
+    "flag": "🇸🇨",
+    "phoneNumberFormat": "+248 ### ####"
+  },
+  {
+    "isoCode": "SL",
+    "name": "Sierra Leone",
+    "phoneCode": "+232",
+    "flag": "🇸🇱",
+    "phoneNumberFormat": "+232 ### ######"
+  },
+  {
+    "isoCode": "SG",
+    "name": "Singapore",
+    "phoneCode": "+65",
+    "flag": "🇸🇬",
+    "phoneNumberFormat": "+65 #### ####"
+  },
+  {
+    "isoCode": "SK",
+    "name": "Slovakia",
+    "phoneCode": "+421",
+    "flag": "🇸🇰",
+    "phoneNumberFormat": "+421 ### ### ###"
+  },
+  {
+    "isoCode": "SI",
+    "name": "Slovenia",
+    "phoneCode": "+386",
+    "flag": "🇸🇮",
+    "phoneNumberFormat": "+386 ## ### ###"
+  },
+  {
+    "isoCode": "SB",
+    "name": "Solomon Islands",
+    "phoneCode": "+677",
+    "flag": "🇸🇧",
+    "phoneNumberFormat": "+677 #### ####"
+  },
+  {
+    "isoCode": "SO",
+    "name": "Somalia",
+    "phoneCode": "+252",
+    "flag": "🇸🇴",
+    "phoneNumberFormat": "+252 ## ### ####"
+  },
+  {
+    "isoCode": "ZA",
+    "name": "South Africa",
+    "phoneCode": "+27",
+    "flag": "🇿🇦",
+    "phoneNumberFormat": "+27 ## ### ####"
+  },
+  {
+    "isoCode": "GS",
+    "name": "South Georgia",
+    "phoneCode": "+",
+    "flag": "🇬🇸",
+    "phoneNumberFormat": ""
+  },
+  {
+    "isoCode": "SS",
+    "name": "South Sudan",
+    "phoneCode": "+211",
+    "flag": "🇸🇸",
+    "phoneNumberFormat": "+211 ## ### ####"
+  },
+  {
+    "isoCode": "ES",
+    "name": "Spain",
+    "phoneCode": "+34",
+    "flag": "🇪🇸",
+    "phoneNumberFormat": "+34 ### ### ###"
+  },
+  {
+    "isoCode": "LK",
+    "name": "Sri Lanka",
+    "phoneCode": "+94",
+    "flag": "🇱🇰",
+    "phoneNumberFormat": "+94 ## ### ####"
+  },
+  {
+    "isoCode": "SD",
+    "name": "Sudan",
+    "phoneCode": "+249",
+    "flag": "🇸🇩",
+    "phoneNumberFormat": "+249 ### #######"
+  },
+  {
+    "isoCode": "SR",
+    "name": "Suriname",
+    "phoneCode": "+597",
+    "flag": "🇸🇷",
+    "phoneNumberFormat": "+597 ### ####"
+  },
+  {
+    "isoCode": "SJ",
+    "name": "Svalbard And Jan Mayen Islands",
+    "phoneCode": "+47",
+    "flag": "🇸🇯",
+    "phoneNumberFormat": "+47 ## ## ## ##"
+  },
+  {
+    "isoCode": "SZ",
+    "name": "Swaziland",
+    "phoneCode": "+268",
+    "flag": "🇸🇿",
+    "phoneNumberFormat": "+268 ## ## ####"
+  },
+  {
+    "isoCode": "SE",
+    "name": "Sweden",
+    "phoneCode": "+46",
+    "flag": "🇸🇪",
+    "phoneNumberFormat": "+46 ## ### ## ##"
+  },
+  {
+    "isoCode": "CH",
+    "name": "Switzerland",
+    "phoneCode": "+41",
+    "flag": "🇨🇭",
+    "phoneNumberFormat": "+41 ## ### ## ##"
+  },
+  {
+    "isoCode": "SY",
+    "name": "Syria",
+    "phoneCode": "+963",
+    "flag": "🇸🇾",
+    "phoneNumberFormat": "+963 ## ### ####"
+  },
+  {
+    "isoCode": "TW",
+    "name": "Taiwan",
+    "phoneCode": "+886",
+    "flag": "🇹🇼",
+    "phoneNumberFormat": "+886 # #### ####"
+  },
+  {
+    "isoCode": "TJ",
+    "name": "Tajikistan",
+    "phoneCode": "+992",
+    "flag": "🇹🇯",
+    "phoneNumberFormat": "+992 ### ## ####"
+  },
+  {
+    "isoCode": "TZ",
+    "name": "Tanzania",
+    "phoneCode": "+255",
+    "flag": "🇹🇿",
+    "phoneNumberFormat": "+255 ## ### ####"
+  },
+  {
+    "isoCode": "TH",
+    "name": "Thailand",
+    "phoneCode": "+66",
+    "flag": "🇹🇭",
+    "phoneNumberFormat": "+66 ## ### ####"
+  },
+  {
+    "isoCode": "TG",
+    "name": "Togo",
+    "phoneCode": "+228",
+    "flag": "🇹🇬",
+    "phoneNumberFormat": "+228 ## ### ####"
+  },
+  {
+    "isoCode": "TK",
+    "name": "Tokelau",
+    "phoneCode": "+690",
+    "flag": "🇹🇰",
+    "phoneNumberFormat": "+690 #### ####"
+  },
+  {
+    "isoCode": "TO",
+    "name": "Tonga",
+    "phoneCode": "+676",
+    "flag": "🇹🇴",
+    "phoneNumberFormat": "+676 #### ####"
+  },
+  {
+    "isoCode": "TT",
+    "name": "Trinidad And Tobago",
+    "phoneCode": "+1-868",
+    "flag": "🇹🇹",
+    "phoneNumberFormat": "+1-868 ### ####"
+  },
+  {
+    "isoCode": "TN",
+    "name": "Tunisia",
+    "phoneCode": "+216",
+    "flag": "🇹🇳",
+    "phoneNumberFormat": "+216 ## ### ###"
+  },
+  {
+    "isoCode": "TR",
+    "name": "Turkey",
+    "phoneCode": "+90",
+    "flag": "🇹🇷",
+    "phoneNumberFormat": "+90 ### ### ####"
+  },
+  {
+    "isoCode": "TM",
+    "name": "Turkmenistan",
+    "phoneCode": "+993",
+    "flag": "🇹🇲",
+    "phoneNumberFormat": "+993 ## ### ###"
+  },
+  {
+    "isoCode": "TC",
+    "name": "Turks And Caicos Islands",
+    "phoneCode": "+1-649",
+    "flag": "🇹🇨",
+    "phoneNumberFormat": "+1-649 ### ####"
+  },
+  {
+    "isoCode": "TV",
+    "name": "Tuvalu",
+    "phoneCode": "+688",
+    "flag": "🇹🇻",
+    "phoneNumberFormat": "+688 #### ####"
+  },
+  {
+    "isoCode": "UG",
+    "name": "Uganda",
+    "phoneCode": "+256",
+    "flag": "🇺🇬",
+    "phoneNumberFormat": "+256 ### ######"
+  },
+  {
+    "isoCode": "UA",
+    "name": "Ukraine",
+    "phoneCode": "+380",
+    "flag": "🇺🇦",
+    "phoneNumberFormat": "+380 ## ### ####"
+  },
+  {
+    "isoCode": "AE",
+    "name": "United Arab Emirates",
+    "phoneCode": "+971",
+    "flag": "🇦🇪",
+    "phoneNumberFormat": "+971 ## ### ####"
+  },
+  {
+    "isoCode": "GB",
+    "name": "United Kingdom",
+    "phoneCode": "+44",
+    "flag": "🇬🇧",
+    "phoneNumberFormat": "+44 #### ######"
+  },
+  {
+    "isoCode": "US",
+    "name": "United States",
+    "phoneCode": "+1",
+    "flag": "🇺🇸",
+    "phoneNumberFormat": "+1 ### ### ####"
+  },
+  {
+    "isoCode": "UM",
+    "name": "United States Minor Outlying Islands",
+    "phoneCode": "+1",
+    "flag": "🇺🇲",
+    "phoneNumberFormat": "+1 ### ### ####"
+  },
+  {
+    "isoCode": "UY",
+    "name": "Uruguay",
+    "phoneCode": "+598",
+    "flag": "🇺🇾",
+    "phoneNumberFormat": "+598 ## ### ###"
+  },
+  {
+    "isoCode": "UZ",
+    "name": "Uzbekistan",
+    "phoneCode": "+998",
+    "flag": "🇺🇿",
+    "phoneNumberFormat": "+998 ## ### ####"
+  },
+  {
+    "isoCode": "VU",
+    "name": "Vanuatu",
+    "phoneCode": "+678",
+    "flag": "🇻🇺",
+    "phoneNumberFormat": "+678 #### ####"
+  },
+  {
+    "isoCode": "VA",
+    "name": "Vatican City State (Holy See)",
+    "phoneCode": "+379",
+    "flag": "🇻🇦",
+    "phoneNumberFormat": "+379 ### #######"
+  },
+  {
+    "isoCode": "VE",
+    "name": "Venezuela",
+    "phoneCode": "+58",
+    "flag": "🇻🇪",
+    "phoneNumberFormat": "+58 ### ### ####"
+  },
+  {
+    "isoCode": "VN",
+    "name": "Vietnam",
+    "phoneCode": "+84",
+    "flag": "🇻🇳",
+    "phoneNumberFormat": "+84 ## #### ####"
+  },
+  {
+    "isoCode": "VG",
+    "name": "Virgin Islands (British)",
+    "phoneCode": "+1-284",
+    "flag": "🇻🇬",
+    "phoneNumberFormat": "+1-284 ### ####"
+  },
+  {
+    "isoCode": "VI",
+    "name": "Virgin Islands (US)",
+    "phoneCode": "+1-340",
+    "flag": "🇻🇮",
+    "phoneNumberFormat": "+1-340 ### ####"
+  },
+  {
+    "isoCode": "WF",
+    "name": "Wallis And Futuna Islands",
+    "phoneCode": "+681",
+    "flag": "🇼🇫",
+    "phoneNumberFormat": "+681 #### ####"
+  },
+  {
+    "isoCode": "EH",
+    "name": "Western Sahara",
+    "phoneCode": "+212",
+    "flag": "🇪🇭",
+    "phoneNumberFormat": "+212 ### #######"
+  },
+  {
+    "isoCode": "YE",
+    "name": "Yemen",
+    "phoneCode": "+967",
+    "flag": "🇾🇪",
+    "phoneNumberFormat": "+967 ## ### ####"
+  },
+  {
+    "isoCode": "ZM",
+    "name": "Zambia",
+    "phoneCode": "+260",
+    "flag": "🇿🇲",
+    "phoneNumberFormat": "+260 ## ### ####"
+  },
+  {
+    "isoCode": "ZW",
+    "name": "Zimbabwe",
+    "phoneCode": "+263",
+    "flag": "🇿🇼",
+    "phoneNumberFormat": "+263 # #### ####"
+  },
+  {
+    "isoCode": "XK",
+    "name": "Kosovo",
+    "phoneCode": "+383",
+    "flag": "🇽🇰",
+    "phoneNumberFormat": "+383 ## ### ####"
+  },
+  {
+    "isoCode": "CW",
+    "name": "Curaçao",
+    "phoneCode": "+599",
+    "flag": "🇨🇼",
+    "phoneNumberFormat": "+599 ### ####"
+  },
+  {
+    "isoCode": "SX",
+    "name": "Sint Maarten (Dutch part)",
+    "phoneCode": "+1721",
+    "flag": "🇸🇽",
+    "phoneNumberFormat": "+1721 ### ####"
+  }
+]

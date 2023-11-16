@@ -16,7 +16,6 @@ class Screen extends StatelessWidget {
   final Future<void> Function()? onRefresh;
   final Function? customBackButtonCallback;
   final BottomStickyWidget? bottomStickyWidget;
-  final ScrollPhysics? scrollPhysics;
 
   const Screen(
       {super.key,
@@ -32,8 +31,8 @@ class Screen extends StatelessWidget {
       this.bottomStickyWidget,
       this.hideBackButton = false,
       this.hideBottomNavbar = false,
-      this.customBackButtonCallback,
-      this.scrollPhysics});
+    this.customBackButtonCallback,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -51,10 +50,6 @@ class Screen extends StatelessWidget {
             customBackButtonCallback: customBackButtonCallback,
           );
 
-    ScrollPhysics? physics = onRefresh != null
-        ? scrollPhysics ?? const AlwaysScrollableScrollPhysics()
-        : null;
-
     return Scaffold(
       appBar: appBar,
       body: LayoutBuilder(
@@ -62,7 +57,7 @@ class Screen extends StatelessWidget {
         num bottomStickyWidgetHeight = bottomStickyWidget?.height ?? 0;
 
         Widget body = SingleChildScrollView(
-          physics: physics,
+          physics: const ClampingScrollPhysics(),
           child: Column(
             children: [
               ConstrainedBox(
@@ -160,7 +155,7 @@ AppBar createAppBar(
     icon: backButtonIcon ?? defaultBackButtonIcon,
     padding: EdgeInsets.only(
       left: ClientConfig.getCustomClientUiSettings()
-          .defaultScreenHorizontalPadding,
+          .defaultScreenLeftPadding,
     ),
     alignment: Alignment.centerLeft,
     onPressed: () {
@@ -183,7 +178,7 @@ AppBar createAppBar(
       if (trailingActions != null) ...trailingActions,
       SizedBox(
         width: ClientConfig.getCustomClientUiSettings()
-            .defaultScreenHorizontalPadding,
+            .defaultScreenLeftPadding,
       )
     ],
     automaticallyImplyLeading: hideBackButton == true ? false : true,

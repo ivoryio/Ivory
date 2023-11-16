@@ -1,19 +1,22 @@
 package com.thinslices.solarisdemo
 
-import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import io.seon.androidsdk.exception.SeonException
 import io.seon.androidsdk.service.SeonBuilder
-import java.security.KeyPairGenerator
-import java.security.spec.ECGenParameterSpec
-import java.util.Base64
-import java.security.Signature
-import java.security.spec.PKCS8EncodedKeySpec
-import java.security.KeyFactory
 import android.util.Log
+import com.nimbusds.jose.EncryptionMethod
+import com.nimbusds.jose.JWEAlgorithm
+import com.nimbusds.jose.JWEHeader
+import com.nimbusds.jose.JWEObject
+import com.nimbusds.jose.Payload
+import com.nimbusds.jose.crypto.RSAEncrypter
+import com.nimbusds.jose.jwk.JWK
+import com.nimbusds.jose.jwk.RSAKey
 
-class MainActivity: FlutterActivity() {
+
+class MainActivity: FlutterFragmentActivity() {
     private val CHANNEL = "com.thinslices.solarisdemo/native"
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
@@ -39,46 +42,38 @@ class MainActivity: FlutterActivity() {
                     e.printStackTrace()
                     result.error("500", "Fingeprint error", e.toString())
                 }
-            } else if (call.method == "generateECDSAP256KeyPair") {
-                val keyPair = generateECDSAP256KeyPair()
-                result.success(keyPair)
-            } else if(call.method == "signMessage") {
-                val message = call.argument<String>("message")!!
-                val privateKey = call.argument<String>("privateKey")!!
-                val signature = signMessage(message, privateKey)
-                result.success(signature)
+            } else if (call.method == "encryptPin") {
+                val pinKeyMap = call.argument("pinKey") as Map<String, *>?
+                val pinToEncrypt = call.argument<String>("pinToEncrypt") ?: ""
+
+                try {
+                val solarisPublicKey = JWK.parse(pinKeyMap)
+                    .toRSAKey()
+                    .toRSAPublicKey()
+
+                val jweHeader: JWEHeader = JWEHeader
+                    .Builder(JWEAlgorithm.RSA_OAEP_256, EncryptionMethod.A256CBC_HS512)
+                    .build()
+
+                val jweObject = JWEObject(
+                    jweHeader,
+                    Payload(pinToEncrypt)
+                )
+
+                jweObject.encrypt(RSAEncrypter(solarisPublicKey))
+
+                val encryptedData = jweObject.serialize()
+
+                result.success(encryptedData)
+
+                } catch (e : Exception) {
+                    e.printStackTrace()
+                    result.error("500", "jwk error", e.toString())
+                }
+
             } else {
                 result.notImplemented()
             }
         }
-    }
-
-    private fun generateECDSAP256KeyPair(): Map<String, String> {
-        val keyGen = KeyPairGenerator.getInstance("EC")
-        keyGen.initialize(ECGenParameterSpec("secp256r1"))
-
-        val keyPair = keyGen.generateKeyPair()
-        val publicKey = keyPair.public.encoded
-        val privateKey = keyPair.private.encoded
-
-        return mapOf(
-            "publicKey" to Base64.getEncoder().encodeToString(publicKey),
-            "privateKey" to Base64.getEncoder().encodeToString(privateKey)
-        )
-    }
-
-    private fun signMessage(message: String, privateKey: String): String? {
-        val privateKeyData = Base64.getDecoder().decode(privateKey)
-        val keySpec = PKCS8EncodedKeySpec(privateKeyData)
-
-        val keyFactory = KeyFactory.getInstance("EC")
-        val privateKey = keyFactory.generatePrivate(keySpec)
-
-        val signature = Signature.getInstance("SHA256withECDSA")
-        signature.initSign(privateKey)
-        signature.update(message.toByteArray())
-
-        val signatureBytes = signature.sign()
-        return Base64.getEncoder().encodeToString(signatureBytes)
     }
 }

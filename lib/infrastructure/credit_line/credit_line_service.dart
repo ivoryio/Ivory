@@ -8,13 +8,12 @@ class CreditLineService extends ApiService {
   CreditLineService({super.user});
 
   Future<CreditLineServiceResponse> getCreditLine({
-    User? user,
+    required User user,
   }) async {
-    if (user != null) {
-      this.user = user;
-    }
+    this.user = user;
+
     try {
-      final data = await get('credit_card/repayment_details');
+      final data = await get('credit_card/repayment');
 
       return GetCreditLineSuccessResponse(creditLine: CreditLine.fromJson(data));
     } catch (e) {

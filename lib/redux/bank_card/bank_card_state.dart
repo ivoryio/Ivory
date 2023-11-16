@@ -16,6 +16,15 @@ class BankCardLoadingState extends BankCardState {
 
 class BankCardErrorState extends BankCardState {}
 
+class BankCardNoBoundedDevicesState extends BankCardState {
+  final BankCard bankCard;
+
+  BankCardNoBoundedDevicesState(this.bankCard);
+
+  @override
+  List<Object?> get props => [bankCard];
+}
+
 class BankCardFetchedState extends BankCardState {
   final AuthenticatedUser user;
   final BankCard bankCard;
@@ -37,6 +46,16 @@ class BankCardPinChoosenState extends BankCardState {
   List<Object?> get props => [pin];
 }
 
+class BankCardPinConfirmedState extends BankCardState {
+  final AuthenticatedUser user;
+  final BankCard bankCard;
+
+  BankCardPinConfirmedState(this.user, this.bankCard);
+
+  @override
+  List<Object?> get props => [user, bankCard];
+}
+
 class BankCardActivatedState extends BankCardState {
   final BankCard card;
   final AuthenticatedUser user;
@@ -45,4 +64,38 @@ class BankCardActivatedState extends BankCardState {
 
   @override
   List<Object?> get props => [user, card];
+}
+
+class BankCardDetailsFetchedState extends BankCardState {
+  final BankCardFetchedDetails cardDetails;
+  final BankCard bankCard;
+
+  BankCardDetailsFetchedState(this.cardDetails, this.bankCard);
+
+  @override
+  List<Object?> get props => [cardDetails, bankCard];
+}
+
+class BankCardPinChangedState extends BankCardState {}
+
+
+
+abstract class BankCardsState extends Equatable {
+  @override
+  List<Object?> get props => [];
+}
+
+class BankCardsInitialState extends BankCardsState {}
+
+class BankCardsLoadingState extends BankCardsState {}
+
+class BankCardsErrorState extends BankCardsState {}
+
+class BankCardsFetchedState extends BankCardsState {
+  final List<BankCard> bankCards;
+
+  BankCardsFetchedState(this.bankCards);
+
+  @override
+  List<Object?> get props => [bankCards];
 }

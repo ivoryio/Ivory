@@ -1,63 +1,77 @@
 import 'package:flutter/material.dart';
-import 'package:solarisdemo/config.dart';
+
+import '../config.dart';
 
 class IvoryListTile extends StatelessWidget {
-  final VoidCallback? onTap;
-  final String? title;
+  final String title;
   final String? subtitle;
-  final IconData? startIcon;
-  final EdgeInsets? padding;
-  final bool rounded;
+  final IconData leftIcon;
+  final IconData rightIcon;
+  final VoidCallback? onTap;
+  final Color? leftIconColor;
+  final Color? rightIconColor;
+  final Widget? actionItem;
+  final EdgeInsetsGeometry? padding;
 
   const IvoryListTile({
-    Key? key,
+    super.key,
     this.onTap,
-    this.title,
-    this.subtitle,
-    this.startIcon,
     this.padding,
-    this.rounded = false,
-  }) : super(key: key);
+    this.subtitle,
+    this.actionItem,
+    this.leftIconColor,
+    required this.title,
+    this.rightIconColor,
+    required this.leftIcon,
+    this.rightIcon = Icons.arrow_forward_ios,
+  });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTap,
-      borderRadius: rounded ? BorderRadius.circular(16) : null,
+      onTap: () {
+        if (onTap != null) {
+          onTap!();
+        }
+      },
       child: Padding(
-        padding: padding ?? const EdgeInsets.symmetric(vertical: 16),
+        padding: padding ??
+            EdgeInsets.symmetric(
+              vertical: 16,
+              horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding.left,
+            ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(
-              startIcon,
-              color: ClientConfig.getColorScheme().secondary,
-            ),
+            Icon(leftIcon, color: leftIconColor ?? ClientConfig.getColorScheme().secondary, size: 24),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (title != null)
-                    Text(
-                      title!,
-                      style: ClientConfig.getTextStyleScheme().heading4,
-                    ),
+                  Text(
+                    title,
+                    style: ClientConfig.getTextStyleScheme().heading4,
+                  ),
                   if (subtitle != null)
                     Text(
                       subtitle!,
                       style: ClientConfig.getTextStyleScheme().bodySmallRegular,
-                    )
+                    ),
                 ],
               ),
             ),
-            const SizedBox(width: 16),
-            const Icon(
-              Icons.arrow_forward_ios,
-              color: Color(0xFF000000),
-            )
+            Container(
+              padding: const EdgeInsets.only(right: 0),
+              child: actionItem ??
+                  Icon(
+                    rightIcon,
+                    color: rightIconColor ?? ClientConfig.getColorScheme().secondary,
+                    size: 24,
+                  ),
+            ),
           ],
         ),
       ),

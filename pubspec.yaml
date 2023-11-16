@@ -2,7 +2,7 @@ name: solarisdemo
 description: Flutter project for Solaris Demo App.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: "none" # Remove this line if you wish to publish to pub.dev
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -16,10 +16,10 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 2.0.2+25
+version: 2.0.13+36
 
 environment:
-  sdk: ">=3.0.0 <3.15.0"
+  sdk: '>=3.0.0 <3.15.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -41,7 +41,7 @@ dependencies:
   firebase_messaging: ^14.6.5
   flutter_local_notifications: ^15.1.0+1
   equatable: ^2.0.5
-  http: ^0.13.5
+  http: ^1.1.0
   bloc: ^8.1.1
   flutter_platform_widgets: ^3.0.0
   intl: ^0.18.0
@@ -59,7 +59,21 @@ dependencies:
   flutter_switch: ^0.3.2
   uuid: ^3.0.7
   path: ^1.8.3
+  asn1lib: ^1.5.0
+  pointycastle: ^3.7.3
+  local_auth: ^2.1.6
   percent_indicator: ^4.2.2
+  convert: ^3.1.1
+  jose: ^0.3.4
+  share_plus: ^7.1.0
+  permission_handler: ^10.4.3
+  device_info_plus: ^9.0.3
+  url_launcher: ^6.1.12
+  smooth_page_indicator: ^1.1.0
+  badges: ^3.1.2
+  app_settings: ^5.1.1
+  video_player: ^2.7.2
+  jwt_decoder: ^2.0.1
 
 dev_dependencies:
   integration_test:
@@ -74,6 +88,7 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
   test: ^1.22.0
+  flutter_native_splash: ^2.3.3
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -92,12 +107,15 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/
+    - assets/data/
     - assets/icons/
     - assets/images/
+    - assets/images/country_flags/
     - assets/icons/default/
     - assets/images/default/
     - assets/icons/porsche/
     - assets/images/porsche/
+    - assets/videos/
     - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see

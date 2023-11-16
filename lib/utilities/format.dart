@@ -1,22 +1,24 @@
 import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:solarisdemo/models/amount_value.dart';
 
 class Format {
   static String currency(
     num number, {
     int digits = 2,
     String symbol = "€ ",
-    String locale = "en_US",
   }) {
     NumberFormat formatter = NumberFormat.currency(
-      locale: locale,
       symbol: symbol,
       decimalDigits: digits,
     );
 
-    if (number % 1 != 0 && digits == 0) {
-      return formatter
-          .format(number.isNegative ? number.ceil() : number.floor());
+    if (digits == 0 && number.toInt() == 0 && number < 0) {
+      return "-${formatter.format(number.abs())}";
+    }
+
+    if (digits == 0 && number > 0) {
+      return formatter.format(number.toInt());
     }
 
     return formatter.format(number);
@@ -34,8 +36,32 @@ class Format {
     return Format.currency(value, digits: digits);
   }
 
+  static String amountWithSign(AmountValue amount) {
+    double value = amount.value;
+    String currencySymbol = getCurrencySymbol(amount.currency);
+
+    String formattedAmount = value.abs().toStringAsFixed(2);
+    String sign = value < 0 ? '-' : '+';
+
+    return '$sign $currencySymbol$formattedAmount';
+  }
+
   static String cents(num value) {
-    return (value.toDouble() % 1).toStringAsFixed(2).substring(2);
+    String valueString = value.toString();
+
+    if (valueString.contains('.')) {
+      List<String> parts = valueString.split('.');
+      if (parts.length == 2) {
+        String fractionalPart = parts[1];
+        if (fractionalPart.length >= 2) {
+          return fractionalPart.substring(0, 2);
+        } else {
+          return fractionalPart.padRight(2, '0');
+        }
+      }
+    }
+
+    return '0';
   }
 
   static String iban(String iban) {
@@ -67,6 +93,14 @@ class Format {
   static String date(DateTime date, {String? pattern = "yyyy-MM-dd"}) {
     return DateFormat(pattern).format(date);
   }
+
+  static DateTime? tryParseDate(String date, {String? pattern = "yyyy-MM-dd"}) {
+    try {
+      return DateFormat(pattern).parseStrict(date);
+    } catch (_) {
+      return null;
+    }
+  }
 }
 
 class InputFormatter {
@@ -78,4 +112,31 @@ class InputFormatter {
       "0": RegExp(r"[0-9]"),
     },
   );
+
+  static MaskTextInputFormatter taxId(String initialText) => MaskTextInputFormatter(
+        initialText: initialText,
+        mask: "000 000 000 000 000 000",
+        filter: {
+          "0": RegExp(r"[0-9]"),
+        },
+      );
+
+  static MaskTextInputFormatter createPhoneNumberFormatter(String phoneNumberFormat) {
+    return MaskTextInputFormatter(
+      type: MaskAutoCompletionType.eager,
+      mask: phoneNumberFormat,
+      filter: {
+        "#": RegExp(r"[0-9]"),
+      },
+    );
+  }
+
+  static MaskTextInputFormatter date({String? initialText}) => MaskTextInputFormatter(
+        mask: "##/##/####",
+        initialText: initialText,
+        type: MaskAutoCompletionType.eager,
+        filter: {
+          "#": RegExp(r"[0-9]"),
+        },
+      );
 }
