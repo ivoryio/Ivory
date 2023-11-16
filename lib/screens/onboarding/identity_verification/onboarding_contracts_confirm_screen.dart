@@ -202,7 +202,7 @@ class DocumentListItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Credit Card Application ",
+                    title,
                     style: ClientConfig.getTextStyleScheme()
                         .heading4
                         .copyWith(color: ClientConfig.getCustomColors().neutral900),
