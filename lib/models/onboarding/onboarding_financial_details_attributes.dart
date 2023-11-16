@@ -39,4 +39,4 @@ enum OnboardingMaritalStatus { notMarried, married, divorced, widowed, preferNot
 
 enum OnboardingLivingSituation { own, rent, parents }
 
-enum OnboardingOccupationalStatus { employed, unemployed, freelancer, apprentice, retired, student }
+enum OnboardingOccupationalStatus { employed, unemployed, apprentice, retired, student }
