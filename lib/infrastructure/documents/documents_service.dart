@@ -15,7 +15,7 @@ class DocumentsService extends ApiService {
     try {
       final response = await get('/postbox_items');
 
-      final documents = (response.data as List)
+      final documents = (response as List)
           .map(
             (document) => Document(
               id: document['id'],

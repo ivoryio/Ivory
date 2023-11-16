@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/infrastructure/documents/documents_presenter.dart';
+import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/documents/documents_action.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
@@ -20,78 +24,32 @@ class _OnboardingContractsConfirmScreenState extends State<OnboardingContractsCo
 
   @override
   Widget build(BuildContext context) {
-    return ScreenScaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          AppToolbar(
-            richTextTitle: StepRichTextTitle(step: 1, totalSteps: 7),
-            actions: const [AppbarLogo()],
-            padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-          ),
-          AnimatedLinearProgressIndicator.step(current: 2, totalSteps: 7),
-          const SizedBox(height: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                  child: Text("Read & confirm contracts", style: ClientConfig.getTextStyleScheme().heading2),
-                ),
-                const SizedBox(height: 24),
-                Padding(
-                  padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                  child: Text.rich(
-                    TextSpan(
-                      style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                      children: [
-                        const TextSpan(text: "Before opening your bank account, "),
-                        TextSpan(
-                          text: "review and confirm ",
-                          style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
-                        ),
-                        const TextSpan(text: "our contract terms and conditions. \n"),
-                        TextSpan(
-                          text: "Download and read ",
-                          style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
-                        ),
-                        const TextSpan(
-                          text:
-                              "each contract by tapping the 'Download' button next to it. You'll sign your “Credit Card Application” in a later step.",
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 24),
-                ListView.builder(
-                  itemCount: 2,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return DocumentListItem(
-                      title: "Credit Card Application",
-                      subtitle: "3.01 MB, PDF",
-                      onTapDownload: () {},
-                    );
-                  },
-                ),
-                const Spacer(),
-                Padding(
-                  padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                  child: ListenableBuilder(
-                    listenable: _continueButtonController,
-                    builder: (context, child) => PrimaryButton(
-                      onPressed: _continueButtonController.isLoading ? null : () {},
-                      text: "Confirm & continue",
-                    ),
-                  ),
-                ),
-              ],
+    return StoreConnector<AppState, DocumentsViewModel>(
+      onInit: (store) => store.dispatch(GetDocumentsCommandAction()),
+      converter: (store) => DocumentsPresenter.present(
+        documentsState: store.state.documentsState,
+        downloadDocumentState: store.state.downloadDocumentState,
+      ),
+      distinct: true,
+      builder: (context, viewModel) => ScreenScaffold(
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AppToolbar(
+              richTextTitle: StepRichTextTitle(step: 1, totalSteps: 7),
+              actions: const [AppbarLogo()],
+              padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
             ),
-          ),
-          const SizedBox(height: 16),
-        ],
+            AnimatedLinearProgressIndicator.step(current: 2, totalSteps: 7),
+            const SizedBox(height: 16),
+            viewModel is DocumentsLoadingViewModel
+                ? _buildLoadingContent()
+                : viewModel is DocumentsFetchedViewModel
+                    ? _buildFetchedDocumentsContent(viewModel)
+                    : const SizedBox(),
+            const SizedBox(height: 16),
+          ],
+        ),
       ),
     );
   }
@@ -124,6 +82,76 @@ class _OnboardingContractsConfirmScreenState extends State<OnboardingContractsCo
             )
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildFetchedDocumentsContent(DocumentsFetchedViewModel viewModel) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+            child: Text("Read & confirm contracts", style: ClientConfig.getTextStyleScheme().heading2),
+          ),
+          const SizedBox(height: 24),
+          Padding(
+            padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+            child: Text.rich(
+              TextSpan(
+                style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                children: [
+                  const TextSpan(text: "Before opening your bank account, "),
+                  TextSpan(
+                    text: "review and confirm ",
+                    style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
+                  ),
+                  const TextSpan(text: "our contract terms and conditions. \n"),
+                  TextSpan(
+                    text: "Download and read ",
+                    style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
+                  ),
+                  const TextSpan(
+                    text:
+                        "each contract by tapping the 'Download' button next to it. You'll sign your “Credit Card Application” in a later step.",
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 24),
+          ListView.builder(
+            itemCount: viewModel.documents.length,
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              final document = viewModel.documents[index];
+
+              return DocumentListItem(
+                title: document.title,
+                subtitle: "${document.fileSize}, ${document.fileType}",
+                isDownloading: viewModel is DocumentDownloadingViewModel &&
+                    viewModel.downloadingDocument.id == viewModel.documents[index].id,
+                onTapDownload: () {
+                  StoreProvider.of<AppState>(context).dispatch(
+                    DownloadDocumentCommandAction(document: viewModel.documents[index]),
+                  );
+                },
+              );
+            },
+          ),
+          const Spacer(),
+          Padding(
+            padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+            child: ListenableBuilder(
+              listenable: _continueButtonController,
+              builder: (context, child) => PrimaryButton(
+                onPressed: _continueButtonController.isLoading ? null : () {},
+                text: "Confirm & continue",
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

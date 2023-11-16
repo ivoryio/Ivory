@@ -13,6 +13,17 @@ class Document extends Equatable {
     required this.documentType,
   });
 
+  String get title {
+    switch (documentType) {
+      case DocumentType.creditCardContract:
+        return "Credit Card Contract";
+      case DocumentType.creditCardSecci:
+        return "Credit Card SECCI";
+      case DocumentType.unknown:
+        return "Unknown";
+    }
+  }
+
   @override
   List<Object> get props => [id, fileType, fileSize, documentType];
 }
