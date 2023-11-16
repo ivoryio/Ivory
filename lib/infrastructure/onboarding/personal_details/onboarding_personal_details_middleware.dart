@@ -25,13 +25,16 @@ class OnboardingPersonalDetailsMiddleware extends MiddlewareClass<AppState> {
         final user = (store.state.authState as AuthenticationInitializedState).cognitoUser;
         final personalDetailsAttributes = store.state.onboardingPersonalDetailsState.attributes;
 
+        final birthCountry = personalDetailsAttributes.country;
+        final nationality = personalDetailsAttributes.nationality;
+
         final response = await _onboardingPersonalDetailsService.createPerson(
           user: user,
           address: personalDetailsAttributes.selectedAddress!,
           birthCity: personalDetailsAttributes.city ?? "",
-          birthCountry: personalDetailsAttributes.country ?? "",
+          birthCountry: birthCountry == "DEMO" ? "DE" : birthCountry ?? "",
           birthDate: personalDetailsAttributes.birthDate ?? "",
-          nationality: personalDetailsAttributes.nationality ?? "",
+          nationality: nationality == "DEMO" ? "DE" : nationality ?? "",
           addressLine: action.addressLine,
         );
 

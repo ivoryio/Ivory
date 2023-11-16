@@ -5,6 +5,7 @@ import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/models/onboarding/onboarding_financial_details_attributes.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/onboarding/financial_details/onboarding_financial_details_action.dart';
+import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_occupational_status_screen.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
@@ -159,7 +160,7 @@ class _OnboardingPublicStatusScreenState extends State<OnboardingPublicStatusScr
                                   numberOfDependents: int.parse(_dependentsController.text),
                                 ));
 
-                                // Navigator.pushNamed(context, OnboardingOccupationalStatusScreen.routeName);
+                                Navigator.pushNamed(context, OnboardingOccupationalStatusScreen.routeName);
                               }
                             : null,
                       );

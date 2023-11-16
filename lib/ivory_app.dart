@@ -12,6 +12,7 @@ import 'package:solarisdemo/screens/account/account_details_screen.dart';
 import 'package:solarisdemo/screens/available_balance/available_balance_screen.dart';
 import 'package:solarisdemo/screens/login/login_with_biometrics_screen.dart';
 import 'package:solarisdemo/screens/login/login_with_tan_screen.dart';
+import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_occupational_status_screen.dart';
 import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_public_status_screen.dart';
 import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_remember_screen.dart';
 import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_taxId_screen.dart';
@@ -260,6 +261,7 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
             OnboardingRememberScreen.routeName: (context) => const OnboardingRememberScreen(),
             OnboardingTaxIdScreen.routeName: (context) => const OnboardingTaxIdScreen(),
             OnboardingPublicStatusScreen.routeName: (context) => const OnboardingPublicStatusScreen(),
+            OnboardingOccupationalStatusScreen.routeName: (context) => const OnboardingOccupationalStatusScreen(),
             // onboarding/identity_verification
             OnboardingIdentityVerificationMethodScreen.routeName: (context) =>
                 const OnboardingIdentityVerificationMethodScreen(),

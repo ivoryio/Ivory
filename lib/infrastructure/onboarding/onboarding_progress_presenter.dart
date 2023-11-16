@@ -91,12 +91,12 @@ OnboardingProgress _onboardingProgressMapper(OnboardingStep step) {
     ),
     OnboardingStep.phoneNumberConfirmed: const OnboardingProgress(
       activeStep: StepperItemType.financialDetails,
-      progressPercentage: 60,
+      progressPercentage: 40,
       routeName: OnboardingRememberScreen.routeName,
     ),
     OnboardingStep.taxIdAdded: const OnboardingProgress(
       activeStep: StepperItemType.financialDetails,
-      progressPercentage: 60,
+      progressPercentage: 40,
       routeName: OnboardingPublicStatusScreen.routeName,
     ),
     OnboardingStep.creditCardApplicationCreated: const OnboardingProgress(

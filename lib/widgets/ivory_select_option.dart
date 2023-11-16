@@ -365,6 +365,7 @@ class _BottomSheetOptionState extends State<_BottomSheetOption> {
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        color: _isSelected ? ClientConfig.getCustomColors().neutral100 : null,
         child: Row(
           children: [
             if (widget.prefix != null) widget.prefix!,
