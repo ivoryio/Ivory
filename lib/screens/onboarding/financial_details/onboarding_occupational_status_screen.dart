@@ -1,8 +1,5 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:redux/redux.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/models/onboarding/onboarding_financial_details_attributes.dart';
 import 'package:solarisdemo/redux/app_state.dart';
@@ -122,13 +119,9 @@ class _OnboardingOccupationalStatusScreenState extends State<OnboardingOccupatio
                         isLoading: _continueButtonController.isLoading,
                         onPressed: _continueButtonController.isEnabled
                             ? () {
-                                log('_dateOfEmploymentController.text ===> ${_dateOfEmploymentController.text}');
-                                log('OnboardingOccupationalStatus.employed ===> ${OnboardingOccupationalStatus.employed}');
-                                log('_occupationController.selectedOptions.first.value ===> ${OnboardingOccupationalStatus.values.firstWhere((element) => element.name == _occupationController.selectedOptions.first.value)}');
-
                                 if (!Validator.isValidDate(_dateOfEmploymentController.text,
                                     pattern: textFieldDatePattern)) {
-                                  _dateOfEmploymentController.setErrorText("Invalid date of birth");
+                                  _dateOfEmploymentController.setErrorText("Invalid date of employment");
                                   _continueButtonController.setDisabled();
                                   return;
                                 }
