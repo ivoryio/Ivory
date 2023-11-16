@@ -161,7 +161,6 @@ class _OnboardingMobileNumberScreenState extends State<OnboardingMobileNumberScr
                                             ? ClientConfig.getCustomColors().neutral900
                                             : ClientConfig.getCustomColors().neutral400,
                                         thickness: 1,
-                                        width: 20,
                                         
                                       ),
                                     ),
