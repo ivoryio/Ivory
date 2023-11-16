@@ -32,3 +32,21 @@ class CreatePublicStatusCommandAction {
     required this.numberOfDependents,
   });
 }
+
+class CreateEmployedOccupationalStatusCommandAction {
+  final OnboardingOccupationalStatus occupationalStatus;
+  final String dateOfEmployment;
+
+  CreateEmployedOccupationalStatusCommandAction({
+    required this.occupationalStatus,
+    required this.dateOfEmployment,
+  });
+}
+
+class CreateOthersOccupationalStatusCommandAction {
+  final OnboardingOccupationalStatus occupationalStatus;
+
+  CreateOthersOccupationalStatusCommandAction({
+    required this.occupationalStatus,
+  });
+}
