@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:solarisdemo/models/documents/document.dart';
 import 'package:solarisdemo/models/documents/documents_error_type.dart';
+import 'package:solarisdemo/redux/documents/confirm/confirm_documents_state.dart';
 import 'package:solarisdemo/redux/documents/documents_state.dart';
 import 'package:solarisdemo/redux/documents/download/download_document_state.dart';
 
@@ -8,11 +9,21 @@ class DocumentsPresenter {
   static DocumentsViewModel present({
     required DocumentsState documentsState,
     required DownloadDocumentState downloadDocumentState,
+    required ConfirmDocumentsState confirmDocumentsState,
   }) {
     if (documentsState is DocumentsFetchedState) {
       if (downloadDocumentState is DocumentDownloadingState) {
         return DocumentDownloadingViewModel(
           downloadingDocument: downloadDocumentState.document,
+          documents: documentsState.documents,
+        );
+      } else if (confirmDocumentsState is ConfirmDocumentsLoadingState) {
+        return DocumentsConfirmingViewModel(documents: documentsState.documents);
+      } else if (confirmDocumentsState is ConfirmedDocumentsState) {
+        return ConfirmedDocumentsViewModel(documents: documentsState.documents);
+      } else if (confirmDocumentsState is ConfirmDocumentsErrorState) {
+        return ConfirmDocumentsErrorViewModel(
+          errorType: confirmDocumentsState.errorType,
           documents: documentsState.documents,
         );
       }
@@ -52,6 +63,29 @@ class DocumentDownloadingViewModel extends DocumentsFetchedViewModel {
 
   @override
   List<Object?> get props => [downloadingDocument, documents];
+}
+
+class DocumentsConfirmingViewModel extends DocumentsFetchedViewModel {
+  DocumentsConfirmingViewModel({required super.documents});
+
+  @override
+  List<Object?> get props => [documents];
+}
+
+class ConfirmedDocumentsViewModel extends DocumentsFetchedViewModel {
+  ConfirmedDocumentsViewModel({required super.documents});
+
+  @override
+  List<Object?> get props => [documents];
+}
+
+class ConfirmDocumentsErrorViewModel extends DocumentsFetchedViewModel {
+  final DocumentsErrorType errorType;
+
+  ConfirmDocumentsErrorViewModel({required this.errorType, required super.documents});
+
+  @override
+  List<Object?> get props => [errorType, documents];
 }
 
 class DocumentsErrorViewModel extends DocumentsViewModel {

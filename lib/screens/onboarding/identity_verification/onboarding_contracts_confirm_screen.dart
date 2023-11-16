@@ -30,6 +30,7 @@ class _OnboardingContractsConfirmScreenState extends State<OnboardingContractsCo
       converter: (store) => DocumentsPresenter.present(
         documentsState: store.state.documentsState,
         downloadDocumentState: store.state.downloadDocumentState,
+        confirmDocumentsState: store.state.confirmDocumentsState,
       ),
       distinct: true,
       builder: (context, viewModel) => ScreenScaffold(
