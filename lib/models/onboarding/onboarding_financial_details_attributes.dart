@@ -36,7 +36,8 @@ class OnboardingFinancialDetailsAttributes extends Equatable {
   }
 
   @override
-  List<Object?> get props => [taxId, maritalStatus, livingSituation, numberOfDependents, occupationalStatus];
+  List<Object?> get props =>
+      [taxId, maritalStatus, livingSituation, numberOfDependents, occupationalStatus, dateOfEmployment];
 }
 
 enum OnboardingMaritalStatus { notMarried, married, divorced, widowed, preferNotToSay }
