@@ -10,6 +10,13 @@ class DocumentsPresenter {
     required DownloadDocumentState downloadDocumentState,
   }) {
     if (documentsState is DocumentsFetchedState) {
+      if (downloadDocumentState is DocumentDownloadingState) {
+        return DocumentDownloadingViewModel(
+          downloadingDocument: downloadDocumentState.document,
+          documents: documentsState.documents,
+        );
+      }
+
       return DocumentsFetchedViewModel(documents: documentsState.documents);
     } else if (documentsState is DocumentsErrorState) {
       return DocumentsErrorViewModel(errorType: documentsState.errorType);
@@ -33,6 +40,18 @@ class DocumentsFetchedViewModel extends DocumentsViewModel {
 
   @override
   List<Object?> get props => [documents];
+}
+
+class DocumentDownloadingViewModel extends DocumentsFetchedViewModel {
+  final Document downloadingDocument;
+
+  DocumentDownloadingViewModel({
+    required this.downloadingDocument,
+    required super.documents,
+  });
+
+  @override
+  List<Object?> get props => [downloadingDocument, documents];
 }
 
 class DocumentsErrorViewModel extends DocumentsViewModel {

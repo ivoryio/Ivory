@@ -65,4 +65,49 @@ void main() {
     // then
     expect(viewModel, isA<DocumentsErrorViewModel>());
   });
+
+  test("When a document is downloading, it should return downloading view model", () {
+    // given
+    final documentsState = DocumentsFetchedState(documents: const [document1, document2]);
+    final downloadDocumentState = DocumentDownloadingState(document: document1);
+
+    // when
+    final viewModel = DocumentsPresenter.present(
+      documentsState: documentsState,
+      downloadDocumentState: downloadDocumentState,
+    );
+
+    // then
+    expect(viewModel, isA<DocumentDownloadingViewModel>());
+  });
+
+  test("When a document has finished downloading, it should return documents fetched view model", () {
+    // given
+    final documentsState = DocumentsFetchedState(documents: const [document1, document2]);
+    final downloadDocumentState = DocumentDownloadedState();
+
+    // when
+    final viewModel = DocumentsPresenter.present(
+      documentsState: documentsState,
+      downloadDocumentState: downloadDocumentState,
+    );
+
+    // then
+    expect(viewModel, isA<DocumentsFetchedViewModel>());
+  });
+
+  test("When a document has failed to download, it should return documents fetched view model", () {
+    // given
+    final documentsState = DocumentsFetchedState(documents: const [document1, document2]);
+    final downloadDocumentState = DocumentDownloadErrorState(errorType: DocumentsErrorType.unknown);
+
+    // when
+    final viewModel = DocumentsPresenter.present(
+      documentsState: documentsState,
+      downloadDocumentState: downloadDocumentState,
+    );
+
+    // then
+    expect(viewModel, isA<DocumentsFetchedViewModel>());
+  });
 }
