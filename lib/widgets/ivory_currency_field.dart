@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import 'package:solarisdemo/config.dart';
 
 class InputCurrencyField extends StatefulWidget {
@@ -28,7 +29,6 @@ class InputCurrencyField extends StatefulWidget {
 class _InputCurrencyFieldState extends State<InputCurrencyField> {
   TextEditingController _currencyController = TextEditingController();
   FocusNode _focusNode = FocusNode();
-  final RegExp _regExp = RegExp(r'^\d+\.?\d*$');
 
   @override
   void initState() {
@@ -36,10 +36,6 @@ class _InputCurrencyFieldState extends State<InputCurrencyField> {
 
     _currencyController = widget.controller ?? TextEditingController();
     _focusNode = widget.focusNode ?? FocusNode();
-
-    _focusNode.addListener(() {
-      setState(() {});
-    });
   }
 
   @override
@@ -122,7 +118,7 @@ class _InputCurrencyFieldState extends State<InputCurrencyField> {
                   focusNode: _focusNode,
                   keyboardType: const TextInputType.numberWithOptions(decimal: true),
                   inputFormatters: [
-                    FilteringTextInputFormatter.allow(_regExp),
+                    ThousandsSeparatorInputFormatter(),
                   ],
                   decoration: InputDecoration(
                     hintText: widget.placeHolder,
@@ -147,5 +143,41 @@ class _InputCurrencyFieldState extends State<InputCurrencyField> {
         ),
       ],
     );
+  }
+}
+
+class ThousandsSeparatorInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    if (newValue.text.isEmpty) {
+      return newValue.copyWith(text: '');
+    } else if (newValue.text.compareTo(oldValue.text) != 0) {
+      final int selectionIndexFromTheRight = newValue.text.length - newValue.selection.end;
+
+      final formattedValue = _formatInput(newValue.text);
+
+      return TextEditingValue(
+        text: formattedValue,
+        selection: TextSelection.collapsed(offset: formattedValue.length - selectionIndexFromTheRight),
+      );
+    } else {
+      return newValue;
+    }
+  }
+
+  String _formatInput(String input) {
+    final onlyNumbers = input.replaceAll(RegExp(r'[^0-9.]'), '');
+    final integerAndDecimalValues = onlyNumbers.split('.');
+    final integerValueFormatted = _formatIntegerPart(integerAndDecimalValues[0]);
+
+    final wholeNumberFormatted = integerAndDecimalValues.length == 1
+        ? integerValueFormatted
+        : '$integerValueFormatted.${integerAndDecimalValues[1]}';
+
+    return wholeNumberFormatted;
+  }
+
+  String _formatIntegerPart(String integerValueOfNumber) {
+    return integerValueOfNumber.isNotEmpty ? NumberFormat('#,###').format(int.parse(integerValueOfNumber)) : '';
   }
 }

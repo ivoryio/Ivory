@@ -59,7 +59,8 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
   }
 
   bool _notValidNationality() {
-    return _selectNationalityController.selectedOptions.first.value != "DE";
+    final supportedNationalities = ["DE", "DEMO"];
+    return !supportedNationalities.contains(_selectNationalityController.selectedOptions.first.value);
   }
 
   @override
@@ -130,6 +131,14 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
                       }
 
                       final countryCode = option.value;
+                      if (countryCode == "DEMO") {
+                        _selectCityController.setOptions(const [
+                          SelectOption(value: "Demo city", textLabel: "Demo city"),
+                        ]);
+
+                        return;
+                      }
+
                       StoreProvider.of<AppState>(context).dispatch(
                         FetchCitySuggestionsCommandAction(countryCode: countryCode),
                       );
