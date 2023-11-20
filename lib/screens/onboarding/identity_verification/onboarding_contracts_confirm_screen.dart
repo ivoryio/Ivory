@@ -10,6 +10,7 @@ import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
+import 'package:solarisdemo/widgets/circular_loading_indicator.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 class OnboardingContractsConfirmScreen extends StatefulWidget {
@@ -75,17 +76,9 @@ class _OnboardingContractsConfirmScreenState extends State<OnboardingContractsCo
               "Please bear with us a couple of seconds while we create your contracts...",
               style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
             ),
-            Expanded(
+            const Expanded(
               child: Center(
-                child: SizedBox(
-                  height: 128,
-                  width: 128,
-                  child: CircularProgressIndicator(
-                    strokeCap: StrokeCap.round,
-                    strokeWidth: 12,
-                    color: ClientConfig.getColorScheme().secondary,
-                  ),
-                ),
+                child: CircularLoadingIndicator(),
               ),
             )
           ],
