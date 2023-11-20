@@ -144,7 +144,7 @@ void main() {
       expect(viewModel, isA<DocumentsConfirmingViewModel>());
     });
 
-    test("When documents are confirmed, it should return documents fetched view model", () {
+    test("When documents are confirmed, it should return documents confirmed view model", () {
       // given
       final documentsState = DocumentsFetchedState(documents: const [document1, document2]);
       final downloadDocumentState = DownloadDocumentInitialState();

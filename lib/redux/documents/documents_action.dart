@@ -45,7 +45,7 @@ class ConfirmDocumentsCommandAction {
 
 class ConfirmDocumentsLoadingEventAction {}
 
-class ConfirmedDocumentsEventAction {}
+class ConfirmDocumentsSuccessEventAction {}
 
 class ConfirmDocumentsFailedEventAction {
   final DocumentsErrorType errorType;

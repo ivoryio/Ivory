@@ -64,7 +64,7 @@ class DocumentsMiddleware extends MiddlewareClass<AppState> {
       );
 
       if (response is ConfirmDocumentsSuccessResponse) {
-        store.dispatch(ConfirmedDocumentsEventAction());
+        store.dispatch(ConfirmDocumentsSuccessEventAction());
       } else if (response is DocumentsServiceErrorResponse) {
         store.dispatch(ConfirmDocumentsFailedEventAction(errorType: response.errorType));
       }

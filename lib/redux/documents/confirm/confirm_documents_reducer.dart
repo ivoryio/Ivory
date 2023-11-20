@@ -4,7 +4,7 @@ import 'package:solarisdemo/redux/documents/documents_action.dart';
 ConfirmDocumentsState confirmDocumentsReducer(ConfirmDocumentsState state, dynamic action) {
   if (action is ConfirmDocumentsLoadingEventAction) {
     return ConfirmDocumentsLoadingState();
-  } else if (action is ConfirmedDocumentsEventAction) {
+  } else if (action is ConfirmDocumentsSuccessEventAction) {
     return ConfirmedDocumentsState();
   } else if (action is ConfirmDocumentsFailedEventAction) {
     return ConfirmDocumentsErrorState(errorType: action.errorType);
