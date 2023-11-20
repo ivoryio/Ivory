@@ -113,6 +113,8 @@ flutter:
     - assets/images/default/
     - assets/icons/porsche/
     - assets/images/porsche/
+    - assets/icons/mercedes/
+    - assets/images/mercedes/
     - assets/videos/
     - .env
 
