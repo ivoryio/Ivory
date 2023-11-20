@@ -87,104 +87,10 @@ class _OnboardingReferenceAccountIbanScreenState extends State<OnboardingReferen
                                   title: 'What is a reference account?',
                                   textWidget: Column(
                                     children: [
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          SizedBox(
-                                            width: 40,
-                                            height: 24,
-                                            child: SvgPicture.asset(
-                                              'assets/icons/check_icon.svg',
-                                              alignment: Alignment.topLeft,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 16),
-                                          Flexible(
-                                            child: Text.rich(
-                                              style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                                              TextSpan(
-                                                children: [
-                                                  const TextSpan(text: 'Your reference account is the '),
-                                                  TextSpan(
-                                                    text:
-                                                        'designated bank account from which we will deduct repayments',
-                                                    style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
-                                                  ),
-                                                  const TextSpan(text: ' during each credit cycle.'),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 24),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          SizedBox(
-                                            width: 40,
-                                            height: 24,
-                                            child: SvgPicture.asset(
-                                              'assets/icons/check_icon.svg',
-                                              alignment: Alignment.topLeft,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 16),
-                                          Expanded(
-                                            child: Text.rich(
-                                              style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                                              TextSpan(
-                                                children: [
-                                                  const TextSpan(
-                                                      text:
-                                                          'It\'s essential to ensure that your reference account has '),
-                                                  TextSpan(
-                                                    text: 'sufficient funds available',
-                                                    style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
-                                                  ),
-                                                  const TextSpan(text: '.'),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 24),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          SizedBox(
-                                            width: 40,
-                                            height: 24,
-                                            child: SvgPicture.asset(
-                                              'assets/icons/check_icon.svg',
-                                              alignment: Alignment.topLeft,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 16),
-                                          Expanded(
-                                            child: Text.rich(
-                                              style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                                              TextSpan(
-                                                children: [
-                                                  const TextSpan(
-                                                      text:
-                                                          'Please note that changing your default account for automatic deductions '),
-                                                  TextSpan(
-                                                    text: 'will require a call to our support team',
-                                                    style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
-                                                  ),
-                                                  const TextSpan(text: '.'),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 24),
+                                      for (final referenceAccountCheck in referenceAccountChecks) ...[
+                                        _buildReferenceBankAccount(referenceAccountCheck),
+                                        const SizedBox(height: 24),
+                                      ]
                                     ],
                                   ),
                                 ),
@@ -272,6 +178,28 @@ class _OnboardingReferenceAccountIbanScreenState extends State<OnboardingReferen
       ),
     );
   }
+
+  Widget _buildReferenceBankAccount(InlineSpan referenceAccountCheck) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 24,
+          height: 24,
+          child: SvgPicture.asset(
+            'assets/icons/check_icon.svg',
+          ),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Text.rich(
+            style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+            referenceAccountCheck,
+          ),
+        ),
+      ],
+    );
+  }
 }
 
 class ApprovePolicy extends StatelessWidget {
@@ -318,3 +246,36 @@ class ApprovePolicy extends StatelessWidget {
     );
   }
 }
+
+List<InlineSpan> referenceAccountChecks = [
+  TextSpan(
+    children: [
+      const TextSpan(text: 'Your reference account is the '),
+      TextSpan(
+        text: 'designated bank account from which we will deduct repayments',
+        style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
+      ),
+      const TextSpan(text: ' during each credit cycle.'),
+    ],
+  ),
+  TextSpan(
+    children: [
+      const TextSpan(text: 'It\'s essential to ensure that your reference account has '),
+      TextSpan(
+        text: 'sufficient funds available',
+        style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
+      ),
+      const TextSpan(text: '.'),
+    ],
+  ),
+  TextSpan(
+    children: [
+      const TextSpan(text: 'Please note that changing your default account for automatic deductions '),
+      TextSpan(
+        text: 'will require a call to our support team',
+        style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
+      ),
+      const TextSpan(text: '.'),
+    ],
+  ),
+];
