@@ -1,9 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:path/path.dart';
 import 'package:solarisdemo/config.dart';
-import 'package:solarisdemo/screens/onboarding/signup/onboarding_term_conditions_screen.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
@@ -24,9 +23,30 @@ class OnboardingReferenceAccountIbanScreen extends StatefulWidget {
 }
 
 class _OnboardingReferenceAccountIbanScreenState extends State<OnboardingReferenceAccountIbanScreen> {
-  final IvoryTextFieldController _accountNameController = IvoryTextFieldController();
-  final IvoryTextFieldController _accountIbanController = IvoryTextFieldController();
+  final IvoryTextFieldController _accountNameController = IvoryTextFieldController(text: 'Reference account');
+  final IvoryTextFieldController _accountIbanController = IvoryTextFieldController(text: 'DE11110101010100000020');
   final ContinueButtonController _continueButtonController = ContinueButtonController();
+  bool _isChecked = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _continueButtonController.setDisabled();
+
+    _accountNameController.addListener(_isValidated);
+    _accountIbanController.addListener(_isValidated);
+  }
+
+  void _isValidated() {
+    if (_accountNameController.text.isNotEmpty &&
+        _accountIbanController.text == 'DE11110101010100000020' &&
+        _isChecked == true) {
+      _continueButtonController.setEnabled();
+    } else {
+      _continueButtonController.setDisabled();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -183,25 +203,46 @@ class _OnboardingReferenceAccountIbanScreenState extends State<OnboardingReferen
                     controller: _accountNameController,
                     label: 'Reference account name',
                     placeholder: 'Type reference account name',
+                    inputFormatters: [
+                      TextInputFormatter.withFunction((oldValue, newValue) {
+                        if (newValue.text.isEmpty || newValue.text.contains(RegExp(r'^[a-zA-Z0-9]+'))) {
+                          return newValue;
+                        }
+                        return oldValue;
+                      }),
+                    ],
                   ),
                   const SizedBox(height: 24),
                   IvoryTextField(
                     controller: _accountIbanController,
                     label: 'Reference account IBAN',
-                    placeholder: 'E.g. DE12345678901234567890',
+                    placeholder: 'E.g. DE11110101010100000020',
+                    onChanged: (value) {
+                      if (value != 'DE11110101010100000020') {
+                        _accountIbanController.setErrorText('IBAN not found. Please try again with a different one.');
+                      } else {
+                        _accountIbanController.setErrorText(null);
+                      }
+                    },
                   ),
+                  const SizedBox(height: 24),
                   const Spacer(),
                   ApprovePolicy(
-                    isChecked: false,
+                    isChecked: _isChecked,
                     isDisabled: _continueButtonController.isLoading,
-                    onChanged: (checked) {},
+                    onChanged: (checked) {
+                      setState(() {
+                        _isChecked = checked;
+                        _isValidated();
+                      });
+                    },
                     message: Text.rich(
                       style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
                       TextSpan(
                         children: [
                           const TextSpan(text: 'I agree to the '),
                           TextSpan(
-                              text: 'Swisscom\’s Terms & Conditions',
+                              text: 'Swisscom\'s Terms & Conditions',
                               style: ClientConfig.getTextStyleScheme()
                                   .bodyLargeRegularBold
                                   .copyWith(color: ClientConfig.getColorScheme().secondary)),
