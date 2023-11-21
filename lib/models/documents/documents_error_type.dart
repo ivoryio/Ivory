@@ -1,0 +1,1 @@
+enum DocumentsErrorType { unknown }

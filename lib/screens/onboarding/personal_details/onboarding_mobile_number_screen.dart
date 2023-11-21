@@ -142,24 +142,27 @@ class _OnboardingMobileNumberScreenState extends State<OnboardingMobileNumberScr
                               },
                               child: SizedBox(
                                 height: 48,
-                                width: 70,
+                                width: 65,
                                 child: Row(
                                   children: [
                                     Text(
                                       selectedCountry.flag,
-                                      style: const TextStyle(fontSize: 20, height: 24 / 20),
+                                      style: const TextStyle(fontSize: 24, height: 24 / 20),
                                     ),
                                     const SizedBox(width: 4),
                                     Icon(
                                       Icons.expand_more,
                                       color: ClientConfig.getCustomColors().neutral700,
                                     ),
-                                    VerticalDivider(
-                                      color: _mobileNumberFocusNode.hasFocus
-                                          ? ClientConfig.getCustomColors().neutral900
-                                          : ClientConfig.getCustomColors().neutral400,
-                                      thickness: 1,
-                                      width: 20,
+                                    SizedBox(
+                                      width: 1,
+                                      child: VerticalDivider(
+                                        color: _mobileNumberFocusNode.hasFocus
+                                            ? ClientConfig.getCustomColors().neutral900
+                                            : ClientConfig.getCustomColors().neutral400,
+                                        thickness: 1,
+                                        
+                                      ),
                                     ),
                                   ],
                                 ),

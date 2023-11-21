@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:local_auth/local_auth.dart';
 import 'package:mockito/mockito.dart';
 import 'package:redux/redux.dart';
@@ -10,6 +12,8 @@ import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_binding_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_fingerprint_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
+import 'package:solarisdemo/infrastructure/documents/documents_service.dart';
+import 'package:solarisdemo/infrastructure/file_saver_service.dart';
 import 'package:solarisdemo/infrastructure/mobile_number/mobile_number_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/financial_details/onboarding_financial_details_service.dart';
@@ -29,6 +33,7 @@ import 'package:solarisdemo/infrastructure/transfer/transfer_service.dart';
 import 'package:solarisdemo/models/bank_card.dart';
 import 'package:solarisdemo/models/device.dart';
 import 'package:solarisdemo/models/device_activity.dart';
+import 'package:solarisdemo/models/documents/document.dart';
 import 'package:solarisdemo/models/onboarding/onboarding_signup_attributes.dart';
 import 'package:solarisdemo/models/suggestions/address_suggestion.dart';
 import 'package:solarisdemo/models/transactions/transaction_model.dart';
@@ -67,6 +72,8 @@ Store<AppState> createTestStore({
   OnboardingFinancialDetailsService? onboardingFinancialDetailsService,
   OnboardingPersonalDetailsService? onboardingPersonalDetailsService,
   MobileNumberService? mobileNumberService,
+  DocumentsService? documentsService,
+  FileSaverService? fileSaverService,
 }) {
   return createStore(
     initialState: initialState,
@@ -98,6 +105,8 @@ Store<AppState> createTestStore({
     onboardingPersonalDetailsService:
         onboardingPersonalDetailsService ?? NotImplementedOnboardingPersonalDetailsService(),
     mobileNumberService: mobileNumberService ?? NotImplementedMobileNumberService(),
+    documentsService: documentsService ?? NotImplementedDocumentsService(),
+    fileSaverService: fileSaverService ?? NotImplementedFileSaverService(),
   );
 }
 
@@ -476,6 +485,33 @@ class NotImplementedMobileNumberService extends MobileNumberService {
     required String mobileNumber,
     String deviceData = '',
   }) async {
+    throw UnimplementedError();
+  }
+}
+
+class NotImplementedDocumentsService extends DocumentsService {
+  @override
+  Future<DocumentsServiceResponse> getPostboxDocuments({required User user}) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<DocumentsServiceResponse> downloadPostboxDocument({required User user, required Document document}) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<DocumentsServiceResponse> confirmPostboxDocuments({
+    required User user,
+    required List<Document> documents,
+  }) async {
+    throw UnimplementedError();
+  }
+}
+
+class NotImplementedFileSaverService extends FileSaverService {
+  @override
+  Future<void> saveFile({required String name, String? ext, required Uint8List bytes, String? mimeType}) async {
     throw UnimplementedError();
   }
 }
