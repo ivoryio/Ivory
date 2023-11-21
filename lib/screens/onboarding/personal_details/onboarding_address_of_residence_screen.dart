@@ -63,6 +63,9 @@ class _OnboardingAddressOfResidenceScreenState extends State<OnboardingAddressOf
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, OnboardingPersonalDetailsViewModel>(
+      onInit: (store) {
+        store.dispatch(ResetOnboardingSelectedAddressCommandAction());
+      },
       converter: (store) => OnboardingPersonalDetailsPresenter.presentOnboardingPersonalDetails(
         onboardingPersonalDetailsState: store.state.onboardingPersonalDetailsState,
       ),
