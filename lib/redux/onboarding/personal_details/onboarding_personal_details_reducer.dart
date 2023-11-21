@@ -1,3 +1,4 @@
+import 'package:solarisdemo/models/onboarding/onboarding_personal_details_attributes.dart';
 import 'package:solarisdemo/models/onboarding/onboarding_personal_details_error_type.dart';
 import 'package:solarisdemo/redux/onboarding/personal_details/onboarding_personal_details_action.dart';
 import 'package:solarisdemo/redux/onboarding/personal_details/onboarding_personal_details_state.dart';
@@ -18,7 +19,13 @@ OnboardingPersonalDetailsState onboardingPersonDetailsReducer(OnboardingPersonal
     );
   } else if (action is ResetOnboardingSelectedAddressCommandAction) {
     return OnboardingPersonalDetailsState(
-      attributes: state.attributes.copyWith(useNull: true, selectedAddress: null),
+      attributes: OnboardingPersonalDetailsAttributes(
+        birthDate: state.attributes.birthDate,
+        country: state.attributes.country,
+        city: state.attributes.city,
+        mobileNumber: state.attributes.mobileNumber,
+        nationality: state.attributes.nationality,
+      ),
     );
   } else if (action is OnboardingPersonalDetailsLoadingEventAction) {
     return OnboardingPersonalDetailsState(

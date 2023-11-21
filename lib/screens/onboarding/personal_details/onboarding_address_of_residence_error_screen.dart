@@ -27,8 +27,6 @@ class OnboardingAddressOfResidenceErrorScreen extends StatelessWidget {
           AppToolbar(
             padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
             actions: const [AppbarLogo()],
-            backButtonEnabled: true,
-            onBackButtonPressed: () => Navigator.popUntil(context, ModalRoute.withName(LoginScreen.routeName)),
           ),
           Expanded(
             child: ScrollableScreenContainer(

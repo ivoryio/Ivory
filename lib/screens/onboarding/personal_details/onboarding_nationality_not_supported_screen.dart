@@ -5,7 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:solarisdemo/config.dart';
-import 'package:solarisdemo/screens/welcome/welcome_screen.dart';
+import 'package:solarisdemo/screens/login/login_screen.dart';
 import 'package:solarisdemo/utilities/ivory_color_mapper.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
@@ -75,7 +75,7 @@ class OnboardingNationalityNotSupportedScreen extends StatelessWidget {
                   PrimaryButton(
                     text: "Return to \"Login Screen\"",
                     onPressed: () =>
-                        Navigator.pushNamedAndRemoveUntil(context, WelcomeScreen.routeName, (route) => false),
+                        Navigator.pushNamedAndRemoveUntil(context, LoginScreen.routeName, (route) => false),
                   ),
                   const SizedBox(height: 16),
                 ],
