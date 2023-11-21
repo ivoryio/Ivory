@@ -29,7 +29,7 @@ class OnboardingPersonalDetailsAttributes extends Equatable {
     String? city,
     String? nationality,
     AddressSuggestion? selectedAddress,
-     String? mobileNumber,
+    String? mobileNumber,
   }) {
     return OnboardingPersonalDetailsAttributes(
       birthDate: birthDate ?? this.birthDate,

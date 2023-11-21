@@ -9,15 +9,16 @@ import '../../../redux/auth/auth_state.dart';
 
 class GetBillsMiddleware extends MiddlewareClass<AppState> {
   final BillService _billService;
+  final FileSaverService _fileSaverService;
 
-  GetBillsMiddleware(this._billService);
+  GetBillsMiddleware(this._billService, this._fileSaverService);
 
   @override
   call(Store<AppState> store, action, NextDispatcher next) async {
     next(action);
 
     final authState = store.state.authState;
-    if(authState is! AuthenticatedState) {
+    if (authState is! AuthenticatedState) {
       return;
     }
 
@@ -52,8 +53,12 @@ class GetBillsMiddleware extends MiddlewareClass<AppState> {
       final response = await _billService.downloadBillAsPdf(postboxItemId: action.bill.postboxItemId);
 
       if (response != null) {
-        await FileSaverService.saveFile(
-            name: action.bill.postboxItemId, ext: '.pdf', bytes: response, mimeType: 'application/pdf');
+        await _fileSaverService.saveFile(
+          name: action.bill.postboxItemId,
+          ext: '.pdf',
+          bytes: response,
+          mimeType: 'application/pdf',
+        );
 
         action.onDownloaded?.call();
       } else {

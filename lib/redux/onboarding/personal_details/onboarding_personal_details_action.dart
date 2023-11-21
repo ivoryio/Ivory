@@ -22,6 +22,8 @@ class SelectOnboardingAddressSuggestionCommandAction {
   SelectOnboardingAddressSuggestionCommandAction({required this.suggestion});
 }
 
+class ResetOnboardingSelectedAddressCommandAction {}
+
 class CreatePersonAccountCommandAction {
   final String houseNumber;
   final String addressLine;
@@ -45,7 +47,6 @@ class CreatePersonAccountFailedEventAction {
 
   CreatePersonAccountFailedEventAction({required this.errorType});
 }
-
 
 class CreateMobileNumberCommandAction {
   final String mobileNumber;

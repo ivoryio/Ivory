@@ -14,6 +14,9 @@ import 'package:solarisdemo/infrastructure/device/device_fingerprint_service.dar
 import 'package:solarisdemo/infrastructure/device/device_middleware.dart';
 import 'package:solarisdemo/infrastructure/device/device_binding_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
+import 'package:solarisdemo/infrastructure/documents/documents_middleware.dart';
+import 'package:solarisdemo/infrastructure/documents/documents_service.dart';
+import 'package:solarisdemo/infrastructure/file_saver_service.dart';
 import 'package:solarisdemo/infrastructure/mobile_number/mobile_number_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/notifications_middleware.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
@@ -80,6 +83,8 @@ Store<AppState> createStore({
   required OnboardingFinancialDetailsService onboardingFinancialDetailsService,
   required OnboardingPersonalDetailsService onboardingPersonalDetailsService,
   required MobileNumberService mobileNumberService,
+  required DocumentsService documentsService,
+  required FileSaverService fileSaverService,
 }) {
   return Store<AppState>(
     appReducer,
@@ -90,7 +95,7 @@ Store<AppState> createStore({
       GetCreditLineMiddleware(creditLineService),
       RepaymentRemindersMiddleware(repaymentReminderService),
       CardApplicationMiddleware(cardApplicationService),
-      GetBillsMiddleware(billService),
+      GetBillsMiddleware(billService, fileSaverService),
       GetMoreCreditMiddleware(moreCreditService),
       BankCardMiddleware(bankCardService, deviceService, biometricsService, deviceFingerprintService),
       GetCategoriesMiddleware(categoriesService),
@@ -108,6 +113,7 @@ Store<AppState> createStore({
       CitySuggestionsMiddleware(citySuggestionsService),
       AddressSuggestionsMiddleware(addressSuggestionsService),
       OnboardingFinancialDetailsMiddleware(onboardingFinancialDetailsService),
+      DocumentsMiddleware(documentsService, fileSaverService),
     ],
   );
 }
