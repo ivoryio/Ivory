@@ -14,6 +14,12 @@
       "name": "SolarisDemoApp (default)",
       "request": "launch",
       "type": "dart"
+    },
+    {
+      "name": "SolarisDemoApp (mercedes)",
+      "request": "launch",
+      "type": "dart",
+      "args": ["--dart-define=CLIENT=mercedes"]
     }
   ]
 }

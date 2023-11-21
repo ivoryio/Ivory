@@ -35,4 +35,4 @@ update-splashscreen:
 # Release application
 
 ## Use 'make release' command to release default application, use 'make release CLIENT=client_name' to release specific application
-release: clean install unit-test github-release build-android build-ios
+release: clean install update-splashscreen unit-test github-release build-android build-ios
