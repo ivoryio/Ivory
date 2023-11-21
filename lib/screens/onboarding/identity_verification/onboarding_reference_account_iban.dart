@@ -23,7 +23,7 @@ class OnboardingReferenceAccountIbanScreen extends StatefulWidget {
 }
 
 class _OnboardingReferenceAccountIbanScreenState extends State<OnboardingReferenceAccountIbanScreen> {
-  final IvoryTextFieldController _accountNameController = IvoryTextFieldController(text: 'Reference account');
+  final IvoryTextFieldController _accountNameController = IvoryTextFieldController();
   final IvoryTextFieldController _accountIbanController = IvoryTextFieldController(text: 'DE11110101010100000020');
   final ContinueButtonController _continueButtonController = ContinueButtonController();
   bool _isChecked = false;
