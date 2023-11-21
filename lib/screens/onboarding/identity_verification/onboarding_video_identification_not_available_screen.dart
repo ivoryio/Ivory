@@ -38,18 +38,21 @@ class OnboardingVideoIdentificationNotAvailableScreen extends StatelessWidget {
                       style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
                       children: [
                         TextSpan(
-                          text: 'Video identification is supported by Solaris',
+                          text: 'Video identification is supported ',
                           style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
                         ),
                         const TextSpan(
                           text:
-                              ', but it\'s not currently our top priority for implementation. Please go back and proceed by selecting ',
+                              'by our third party provider, but it\'s not currently our top priority for implementation.\n\n',
+                        ),
+                        const TextSpan(
+                          text: 'Please go back and proceed by selecting ',
                         ),
                         TextSpan(
                           text: '“Bank identification”',
                           style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
                         ),
-                        TextSpan(text: '. Thank you for your understanding!'),
+                        const TextSpan(text: '. Thank you for your understanding!'),
                       ],
                     ),
                   ),

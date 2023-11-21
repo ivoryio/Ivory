@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_contracts_confirm_screen.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_video_identification_not_available_screen.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -72,6 +73,10 @@ class _OnboardingIdentityVerificationMethodScreenState extends State<OnboardingI
                       onPressed: _selectedIdentificationMethod.value != null
                           ? () {
                               final identificationMethod = _selectedIdentificationMethod.value?.value;
+
+                              if (identificationMethod == "bankIdentification") {
+                                Navigator.pushNamed(context, OnboardingContractsConfirmScreen.routeName);
+                              }
 
                               if (identificationMethod == "videoIdentification") {
                                 Navigator.pushNamed(context, OnboardingVideoIdentificationNotAvailableScreen.routeName);

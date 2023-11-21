@@ -101,6 +101,21 @@ class Format {
       return null;
     }
   }
+
+  static String fileSize(int value) {
+    const int kb = 1024;
+    const int mb = 1024 * kb;
+
+    if (value < kb) {
+      return '$value B';
+    } else if (value < mb) {
+      double sizeInKB = value / kb;
+      return '${sizeInKB.toStringAsFixed(2)} KB';
+    } else {
+      double sizeInMB = value / mb;
+      return '${sizeInMB.toStringAsFixed(2)} MB';
+    }
+  }
 }
 
 class InputFormatter {
