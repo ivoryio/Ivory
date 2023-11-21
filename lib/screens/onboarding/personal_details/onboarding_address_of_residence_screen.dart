@@ -63,6 +63,9 @@ class _OnboardingAddressOfResidenceScreenState extends State<OnboardingAddressOf
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, OnboardingPersonalDetailsViewModel>(
+      onInit: (store) {
+        store.dispatch(ResetOnboardingSelectedAddressCommandAction());
+      },
       converter: (store) => OnboardingPersonalDetailsPresenter.presentOnboardingPersonalDetails(
         onboardingPersonalDetailsState: store.state.onboardingPersonalDetailsState,
       ),
@@ -163,7 +166,12 @@ class _OnboardingAddressOfResidenceScreenState extends State<OnboardingAddressOf
                                 inputType: TextFieldInputType.text,
                                 textCapitalization: TextCapitalization.words,
                                 onChanged: (value) {
+                                  _continueButtonController.setDisabled();
+
                                   _debouncer.run(() {
+                                    StoreProvider.of<AppState>(context)
+                                        .dispatch(ResetOnboardingSelectedAddressCommandAction());
+
                                     if (value.isNotEmpty) {
                                       StoreProvider.of<AppState>(context).dispatch(
                                         FetchAddressSuggestionsCommandAction(
@@ -175,14 +183,13 @@ class _OnboardingAddressOfResidenceScreenState extends State<OnboardingAddressOf
                                 },
                               ),
                               if (_addressController.text.isNotEmpty &&
-                                  addressSuggestionsViewModel is AddressSuggestionsFetchedViewModel &&
-                                  _addressController.text !=
-                                      onboardingViewModel.attributes.selectedAddress?.address) ...[
+                                  onboardingViewModel.attributes.selectedAddress == null &&
+                                  addressSuggestionsViewModel is AddressSuggestionsFetchedViewModel) ...[
                                 const SizedBox(height: 16),
                                 ..._buildAddressSuggestions(addressSuggestionsViewModel.suggestions),
                               ],
-                              if (onboardingViewModel.attributes.selectedAddress?.address == _addressController.text &&
-                                  addressSuggestionsViewModel is AddressSuggestionsFetchedViewModel) ...[
+                              if (onboardingViewModel.attributes.selectedAddress != null &&
+                                  _addressController.text.isNotEmpty) ...[
                                 const SizedBox(height: 16),
                                 IvoryTextField(
                                   placeholder: 'Please type',
