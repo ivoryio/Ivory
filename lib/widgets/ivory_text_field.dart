@@ -282,6 +282,7 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
       return GestureDetector(
         onTap: () {
           final currentDate = DateTime.now();
+          final adultBirthday = DateTime(currentDate.year - 18, currentDate.month, currentDate.day);
           final initialDate = _controller.text.isNotEmpty
               ? Format.tryParseDate(_controller.text, pattern: textFieldDatePattern) ?? currentDate
               : currentDate;
@@ -292,7 +293,7 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
             content: _DatePickerContent(
               currentDate: currentDate,
               initialDate: initialDate,
-              maximumDate: currentDate,
+              maximumDate: adultBirthday,
               maximumYear: currentDate.year,
               onConfirm: (value) {
                 _controller.text = value;
