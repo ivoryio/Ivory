@@ -169,10 +169,10 @@ class _OnboardingAddressOfResidenceScreenState extends State<OnboardingAddressOf
                                   _continueButtonController.setDisabled();
 
                                   _debouncer.run(() {
-                                    if (value.isNotEmpty) {
-                                      StoreProvider.of<AppState>(context)
-                                          .dispatch(ResetOnboardingSelectedAddressCommandAction());
+                                    StoreProvider.of<AppState>(context)
+                                        .dispatch(ResetOnboardingSelectedAddressCommandAction());
 
+                                    if (value.isNotEmpty) {
                                       StoreProvider.of<AppState>(context).dispatch(
                                         FetchAddressSuggestionsCommandAction(
                                           query: value,
@@ -188,7 +188,8 @@ class _OnboardingAddressOfResidenceScreenState extends State<OnboardingAddressOf
                                 const SizedBox(height: 16),
                                 ..._buildAddressSuggestions(addressSuggestionsViewModel.suggestions),
                               ],
-                              if (onboardingViewModel.attributes.selectedAddress != null) ...[
+                              if (onboardingViewModel.attributes.selectedAddress != null &&
+                                  _addressController.text.isNotEmpty) ...[
                                 const SizedBox(height: 16),
                                 IvoryTextField(
                                   placeholder: 'Please type',
