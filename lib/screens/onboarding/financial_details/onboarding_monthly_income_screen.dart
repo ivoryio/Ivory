@@ -70,7 +70,7 @@ class _OnboardingMonthlyIncomeScreenState extends State<OnboardingMonthlyIncomeS
         if (newViewModel.isLoading) {
           _continueButtonController.setLoading();
         }
-        if (newViewModel.isCreditCardApplicationCreated == true) {
+        if (!previousViewModel!.isCreditCardApplicationCreated && newViewModel.isCreditCardApplicationCreated) {
           Navigator.pushNamedAndRemoveUntil(context, OnboardingStepperScreen.routeName, (route) => false);
         }
       },
@@ -156,16 +156,25 @@ class _OnboardingMonthlyIncomeScreenState extends State<OnboardingMonthlyIncomeS
                                 ? () {
                                     StoreProvider.of<AppState>(context).dispatch(
                                       CreateCreditCardApplicationCommandAction(
-                                        monthlyExpense: num.parse(_monthlyExpenseController.text.replaceAll(',', '')),
-                                        monthlyIncome: num.parse(_monthlyIncomeController.text.replaceAll(',', '')),
+                                      monthlyExpense: num.parse(
+                                        _monthlyExpenseController.text.replaceAll(',', ''),
+                                      ),
+                                      monthlyIncome: num.parse(
+                                        _monthlyIncomeController.text.replaceAll(',', ''),
+                                      ),
                                         totalCreditLimit:
-                                            num.parse(_totalCreditLimitController.text.replaceAll(',', '')),
+                                            num.parse(
+                                        _totalCreditLimitController.text.replaceAll(',', ''),
+                                      ),
                                         totalCurrentDebt:
-                                            num.parse(_totalCurrentDebtController.text.replaceAll(',', '')),
+                                            num.parse(
+                                        _totalCurrentDebtController.text.replaceAll(',', ''),
+                                      ),
                                       ),
                                     );
                                   }
-                                : null),
+                              : null,
+                        ),
                       ),
                       const SizedBox(height: 16),
                     ],

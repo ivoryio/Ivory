@@ -6,11 +6,16 @@ OnboardingFinancialDetailsState onboardingFinancialDetailsReducer(
   if (action is CreateTaxIdLoadingEventAction || action is CreateCreditCardApplicationLoadingEventAction) {
     return OnboardingFinancialDetailsState(
       isLoading: true,
+      isMaritalStatusSelected: state.isMaritalStatusSelected,
+      isOccupationalStatusSelected: state.isOccupationalStatusSelected,
+      isCreditCardApplicationCreated: state.isCreditCardApplicationCreated,
       financialDetailsAttributes: state.financialDetailsAttributes,
     );
   } else if (action is CreatePublicStatusCommandAction) {
     return OnboardingFinancialDetailsState(
       isLoading: false,
+      isMaritalStatusSelected: true,
+      isOccupationalStatusSelected: state.isOccupationalStatusSelected,
       financialDetailsAttributes: state.financialDetailsAttributes.copyWith(
         maritalStatus: action.maritalAttributes,
         livingSituation: action.livingAttributes,
@@ -20,6 +25,8 @@ OnboardingFinancialDetailsState onboardingFinancialDetailsReducer(
   } else if (action is CreateEmployedOccupationalStatusCommandAction) {
     return OnboardingFinancialDetailsState(
       isLoading: false,
+      isMaritalStatusSelected: state.isMaritalStatusSelected,
+      isOccupationalStatusSelected: true,
       financialDetailsAttributes: state.financialDetailsAttributes.copyWith(
         occupationalStatus: action.occupationalStatus,
         dateOfEmployment: action.dateOfEmployment,
@@ -28,6 +35,8 @@ OnboardingFinancialDetailsState onboardingFinancialDetailsReducer(
   } else if (action is CreateOthersOccupationalStatusCommandAction) {
     return OnboardingFinancialDetailsState(
       isLoading: false,
+      isMaritalStatusSelected: state.isMaritalStatusSelected,
+      isOccupationalStatusSelected: true,
       financialDetailsAttributes: state.financialDetailsAttributes.copyWith(
         occupationalStatus: action.occupationalStatus,
         dateOfEmployment: '',

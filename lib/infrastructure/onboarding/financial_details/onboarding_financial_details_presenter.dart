@@ -9,6 +9,8 @@ class OnboardingFinancialDetailsPresenter {
       financialDetailsAttributes: financialState.financialDetailsAttributes,
       isLoading: financialState.isLoading,
       errorType: financialState.errorType,
+      isMaritalStatusSelected: financialState.isMaritalStatusSelected,
+      isOccupationalStatusSelected: financialState.isOccupationalStatusSelected,
       isCreditCardApplicationCreated: financialState.isCreditCardApplicationCreated,
     );
   }
@@ -18,11 +20,27 @@ class OnboardingFinancialDetailsViewModel extends Equatable {
   final OnboardingFinancialDetailsAttributes financialDetailsAttributes;
   final bool isLoading;
   final FinancialDetailsErrorType? errorType;
+  final bool isMaritalStatusSelected;
+  final bool isOccupationalStatusSelected;
   final bool isCreditCardApplicationCreated;
 
   const OnboardingFinancialDetailsViewModel(
-      {required this.financialDetailsAttributes, required this.isLoading, this.errorType, this.isCreditCardApplicationCreated = false});
+    {
+    required this.financialDetailsAttributes,
+    required this.isLoading,
+    this.errorType,
+    this.isMaritalStatusSelected = false,
+    this.isOccupationalStatusSelected = false,
+    this.isCreditCardApplicationCreated = false,
+  });
 
   @override
-  List<Object?> get props => [financialDetailsAttributes, isLoading, errorType, isCreditCardApplicationCreated];
+  List<Object?> get props => [
+        financialDetailsAttributes,
+        isLoading,
+        errorType,
+        isMaritalStatusSelected,
+        isOccupationalStatusSelected,
+        isCreditCardApplicationCreated
+      ];
 }
