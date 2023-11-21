@@ -6,13 +6,15 @@ class OnboardingFinancialDetailsState extends Equatable {
   final OnboardingFinancialDetailsAttributes financialDetailsAttributes;
   final bool isLoading;
   final FinancialDetailsErrorType? errorType;
+  final bool isCreditCardApplicationCreated;
 
   const OnboardingFinancialDetailsState({
     this.financialDetailsAttributes = const OnboardingFinancialDetailsAttributes(),
     this.isLoading = false,
     this.errorType,
+    this.isCreditCardApplicationCreated = false,
   });
 
   @override
-  List<Object?> get props => [financialDetailsAttributes, isLoading, errorType];
+  List<Object?> get props => [financialDetailsAttributes, isLoading, errorType, isCreditCardApplicationCreated];
 }

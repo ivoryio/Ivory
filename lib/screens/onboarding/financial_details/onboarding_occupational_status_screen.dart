@@ -4,6 +4,7 @@ import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/models/onboarding/onboarding_financial_details_attributes.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/onboarding/financial_details/onboarding_financial_details_action.dart';
+import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_monthly_income_screen.dart';
 import 'package:solarisdemo/utilities/validator.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -143,7 +144,7 @@ class _OnboardingOccupationalStatusScreenState extends State<OnboardingOccupatio
                                   );
                                 }
 
-                                // Navigator.of(context).pushNamed(MonthlyIncomeScreen.routeName);
+                                Navigator.of(context).pushNamed(OnboardingMonthlyIncomeScreen.routeName);
                               }
                             : null),
                   ),

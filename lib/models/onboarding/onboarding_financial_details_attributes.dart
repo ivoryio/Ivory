@@ -45,3 +45,44 @@ enum OnboardingMaritalStatus { notMarried, married, divorced, widowed, preferNot
 enum OnboardingLivingSituation { own, rent, parents }
 
 enum OnboardingOccupationalStatus { employed, unemployed, apprentice, retired, student }
+
+String getOnboardingMaritalStatusValue(OnboardingMaritalStatus maritalStatus) {
+  switch (maritalStatus) {
+    case OnboardingMaritalStatus.notMarried:
+      return 'SINGLE';
+    case OnboardingMaritalStatus.married:
+      return 'MARRIED';
+    case OnboardingMaritalStatus.divorced:
+      return 'DIVORCED';
+    case OnboardingMaritalStatus.widowed:
+      return 'WIDOWED';
+    case OnboardingMaritalStatus.preferNotToSay:
+      return 'UNKNOWN';
+  }
+}
+
+String getOnboardingLivingSituationValue(OnboardingLivingSituation livingSituation) {
+  switch (livingSituation) {
+    case OnboardingLivingSituation.own:
+      return 'LIVING_IN_OWN_HOUSE';
+    case OnboardingLivingSituation.rent:
+      return 'LIVING_IN_RENTED_HOUSE';
+    case OnboardingLivingSituation.parents:
+      return 'LIVING_WITH_PARENTS';
+  }
+}
+
+String getOnboardingOccupationalStatusValue(OnboardingOccupationalStatus occupationalStatus) {
+  switch (occupationalStatus) {
+    case OnboardingOccupationalStatus.employed:
+      return 'EMPLOYED';
+    case OnboardingOccupationalStatus.unemployed:
+      return 'UNEMPLOYED';
+    case OnboardingOccupationalStatus.apprentice:
+      return 'APPRENTICE';
+    case OnboardingOccupationalStatus.retired:
+      return 'RETIRED';
+    case OnboardingOccupationalStatus.student:
+      return 'STUDENT';
+  }
+}
