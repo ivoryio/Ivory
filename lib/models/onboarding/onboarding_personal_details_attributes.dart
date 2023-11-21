@@ -24,20 +24,21 @@ class OnboardingPersonalDetailsAttributes extends Equatable {
   List<Object?> get props => [birthDate, country, city, nationality, selectedAddress, mobileNumber];
 
   OnboardingPersonalDetailsAttributes copyWith({
+    bool useNull = false,
     String? birthDate,
     String? country,
     String? city,
     String? nationality,
     AddressSuggestion? selectedAddress,
-     String? mobileNumber,
+    String? mobileNumber,
   }) {
     return OnboardingPersonalDetailsAttributes(
-      birthDate: birthDate ?? this.birthDate,
-      country: country ?? this.country,
-      city: city ?? this.city,
-      nationality: nationality ?? this.nationality,
-      selectedAddress: selectedAddress ?? this.selectedAddress,
-      mobileNumber: mobileNumber ?? this.mobileNumber,
+      birthDate: useNull ? birthDate : birthDate ?? this.birthDate,
+      country: useNull ? country : country ?? this.country,
+      city: useNull ? city : city ?? this.city,
+      nationality: useNull ? nationality : nationality ?? this.nationality,
+      selectedAddress: useNull ? selectedAddress : selectedAddress ?? this.selectedAddress,
+      mobileNumber: useNull ? mobileNumber : mobileNumber ?? this.mobileNumber,
     );
   }
 }
