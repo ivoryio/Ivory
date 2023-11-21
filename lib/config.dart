@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:path/path.dart';
+import 'package:solarisdemo/themes/mercedes_theme.dart';
 
 import 'themes/default_theme.dart';
 
@@ -25,6 +26,8 @@ class ClientConfig {
           _clientConfigData = ClientConfigData(uiSettings: PorscheTheme.clientUiSettings);
         case 'solaris':
           _clientConfigData = ClientConfigData(uiSettings: SolarisTheme.clientUiSettings);
+        case 'mercedes':
+          _clientConfigData = ClientConfigData(uiSettings: MercedesTheme.clientUiSettings);
         default:
           _clientConfigData = ClientConfigData(uiSettings: DefaultTheme.clientUiSettings);
       }
@@ -54,6 +57,8 @@ class ClientConfig {
     switch (client) {
       case 'porsche':
         return 'assets/images/porsche';
+      case 'mercedes':
+        return 'assets/images/mercedes';
       default:
         return 'assets/images/default';
     }
@@ -64,6 +69,8 @@ class ClientConfig {
     switch (client) {
       case 'porsche':
         return 'assets/icons/porsche';
+      case 'mercedes':
+        return 'assets/icons/mercedes';
       default:
         return 'assets/icons/default';
     }
