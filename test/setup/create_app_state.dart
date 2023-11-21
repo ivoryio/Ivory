@@ -4,6 +4,9 @@ import 'package:solarisdemo/redux/bank_card/bank_card_state.dart';
 import 'package:solarisdemo/redux/categories/category_state.dart';
 import 'package:solarisdemo/redux/credit_line/credit_line_state.dart';
 import 'package:solarisdemo/redux/device/device_state.dart';
+import 'package:solarisdemo/redux/documents/confirm/confirm_documents_state.dart';
+import 'package:solarisdemo/redux/documents/documents_state.dart';
+import 'package:solarisdemo/redux/documents/download/download_document_state.dart';
 import 'package:solarisdemo/redux/notification/notification_state.dart';
 import 'package:solarisdemo/redux/onboarding/financial_details/onboarding_financial_details_state.dart';
 import 'package:solarisdemo/redux/onboarding/onboarding_progress_state.dart';
@@ -47,6 +50,9 @@ AppState createAppState({
   CitySuggestionsState? citySuggestionsState,
   AddressSuggestionsState? addressSuggestionsState,
   OnboardingFinancialDetailsState? onboardingFinancialDetailsState,
+  DocumentsState? documentsState,
+  DownloadDocumentState? downloadDocumentState,
+  ConfirmDocumentsState? confirmDocumentsState,
 }) {
   return AppState(
     transactionsState: transactionsState ?? TransactionsInitialState(),
@@ -73,5 +79,8 @@ AppState createAppState({
     citySuggestionsState: citySuggestionsState ?? CitySuggestionsInitialState(),
     addressSuggestionsState: addressSuggestionsState ?? AddressSuggestionsInitialState(),
     onboardingFinancialDetailsState: onboardingFinancialDetailsState ?? const OnboardingFinancialDetailsState(),
+    documentsState: documentsState ?? DocumentsInitialLoadingState(),
+    downloadDocumentState: downloadDocumentState ?? DownloadDocumentInitialState(),
+    confirmDocumentsState: confirmDocumentsState ?? ConfirmDocumentsInitialState(),
   );
 }

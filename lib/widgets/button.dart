@@ -46,28 +46,27 @@ class Button extends StatelessWidget {
       fontFamily: fontFamily,
     );
 
-    Widget buttonChild = Stack(
-      alignment: Alignment.centerRight,
+    Widget buttonChild = Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SizedBox(
-          width: double.infinity,
-          child: Text(
-            text,
-            textAlign: TextAlign.center,
-            style: textStyle != null ? defaultTextStyle.merge(textStyle) : defaultTextStyle,
-          ),
+        const SizedBox(width: 24),
+        Text(
+          text,
+          textAlign: TextAlign.center,
+          style: textStyle != null ? defaultTextStyle.merge(textStyle) : defaultTextStyle,
         ),
-        if (isLoading)
-          Positioned(
-            right: 100,
-            child: SizedBox(
-              width: 16,
-              height: 16,
-              child: CircularProgressIndicator(
-                color: ClientConfig.getCustomColors().neutral500,
-              ),
-            ),
-          )
+        ...(isLoading
+            ? [
+                const SizedBox(width: 8),
+                SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(
+                    color: ClientConfig.getCustomColors().neutral500,
+                  ),
+                )
+              ]
+            : [const SizedBox(width: 24)])
       ],
     );
 

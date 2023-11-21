@@ -141,6 +141,36 @@ class ApiService<T> {
     }
   }
 
+  Future<Uint8List> downloadFile(
+    String path, {
+    Map<String, String> queryParameters = const {},
+    bool authNeeded = true,
+  }) async {
+    try {
+      String? accessToken;
+
+      if (authNeeded) {
+        accessToken = await this.getAccessToken();
+      }
+
+      final response = await http.get(
+        ApiService.url(path, queryParameters: queryParameters),
+        headers: authNeeded && accessToken != null ? {"Authorization": "Bearer $accessToken"} : {},
+      );
+
+      log("BODY BYTES", name: "GET $path $queryParameters RESPONSE");
+
+      if (response.statusCode != 200) {
+        throw Exception("GET request response code: ${response.statusCode}");
+      }
+
+      return response.bodyBytes;
+    } catch (e, s) {
+      debugPrintStack(stackTrace: s);
+      rethrow;
+    }
+  }
+
   static url(String path, {Map<String, String> queryParameters = const {}}) {
     return Uri.https(
       Config.apiBaseUrl,
