@@ -31,6 +31,7 @@ class IvoryTextField extends StatefulWidget {
   final int? maxLines;
   final int? minLines;
   final String initialText;
+  final DateTime? currentDate;
 
   const IvoryTextField({
     super.key,
@@ -54,6 +55,7 @@ class IvoryTextField extends StatefulWidget {
     this.textCapitalization,
     this.bottomSheetTitle,
     this.initialText = "",
+    this.currentDate,
   });
 
   @override
@@ -281,8 +283,7 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
     if (widget.inputType == TextFieldInputType.date) {
       return GestureDetector(
         onTap: () {
-          final currentDate = DateTime.now();
-          final adultBirthday = DateTime(currentDate.year - 18, currentDate.month, currentDate.day);
+          final currentDate = widget.currentDate ?? DateTime.now();
           final initialDate = _controller.text.isNotEmpty
               ? Format.tryParseDate(_controller.text, pattern: textFieldDatePattern) ?? currentDate
               : currentDate;
@@ -293,7 +294,7 @@ class _IvoryTextFieldState extends State<IvoryTextField> {
             content: _DatePickerContent(
               currentDate: currentDate,
               initialDate: initialDate,
-              maximumDate: adultBirthday,
+              maximumDate: currentDate,
               maximumYear: currentDate.year,
               onConfirm: (value) {
                 _controller.text = value;
