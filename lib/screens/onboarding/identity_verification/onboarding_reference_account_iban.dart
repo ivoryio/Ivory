@@ -1,8 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/infrastructure/onboarding/identity_verification/onboarding_identity_verification_presenter.dart';
+import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
@@ -50,132 +53,142 @@ class _OnboardingReferenceAccountIbanScreenState extends State<OnboardingReferen
 
   @override
   Widget build(BuildContext context) {
-    return ScreenScaffold(
-      body: Column(
-        children: [
-          AppToolbar(
-            padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-            richTextTitle: StepRichTextTitle(step: 3, totalSteps: 7),
-            actions: const [AppbarLogo()],
-          ),
-          AnimatedLinearProgressIndicator.step(current: 3, totalSteps: 7),
-          Expanded(
-            child: ScrollableScreenContainer(
-              padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-              child: Column(
-                children: [
-                  const SizedBox(height: 16),
-                  Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text('Reference account IBAN', style: ClientConfig.getTextStyleScheme().heading2)),
-                  const SizedBox(height: 24),
-                  Text.rich(
-                    style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                    TextSpan(
-                      children: [
-                        const TextSpan(text: 'Please provide the '),
-                        TextSpan(text: 'IBAN', style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold),
-                        const TextSpan(text: ' for your '),
+    return StoreConnector<AppState, OnboardingIdentityVerificationViewModel>(
+      converter: (store) => OnboardingIdentityVerificationPresenter.present(
+        identityVerificationState: store.state.onboardingIdentityVerificationState,
+      ),
+      distinct: true,
+      builder: (context, viewModel) {
+        return ScreenScaffold(
+          body: Column(
+            children: [
+              AppToolbar(
+                padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+                richTextTitle: StepRichTextTitle(step: 3, totalSteps: 7),
+                actions: const [AppbarLogo()],
+              ),
+              AnimatedLinearProgressIndicator.step(current: 3, totalSteps: 7),
+              Expanded(
+                child: ScrollableScreenContainer(
+                  padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 16),
+                      Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text('Reference account IBAN', style: ClientConfig.getTextStyleScheme().heading2)),
+                      const SizedBox(height: 24),
+                      Text.rich(
+                        style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
                         TextSpan(
-                          text: 'reference bank account',
-                          style: ClientConfig.getTextStyleScheme()
-                              .bodyLargeRegularBold
-                              .copyWith(color: ClientConfig.getColorScheme().secondary),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () => showBottomModal(
-                                  context: context,
-                                  title: 'What is a reference account?',
-                                  textWidget: Column(
-                                    children: [
-                                      for (final referenceAccountCheck in referenceAccountChecks) ...[
-                                        _buildReferenceBankAccount(referenceAccountCheck),
-                                        const SizedBox(height: 24),
-                                      ]
-                                    ],
-                                  ),
-                                ),
-                        ),
-                        const TextSpan(text: '. In the following steps, you will need to enter your '),
-                        TextSpan(
-                            text: 'bank credentials', style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold),
-                        const TextSpan(text: ', after which we will initiate a transfer of '),
-                        TextSpan(text: '0.01€', style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold),
-                        const TextSpan(text: ' from this account.'),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  IvoryTextField(
-                    controller: _accountNameController,
-                    label: 'Reference account name',
-                    placeholder: 'Type reference account name',
-                    inputFormatters: [
-                      TextInputFormatter.withFunction((oldValue, newValue) {
-                        if (newValue.text.isEmpty || newValue.text.contains(RegExp(r'^[a-zA-Z0-9]+'))) {
-                          return newValue;
-                        }
-                        return oldValue;
-                      }),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-                  IvoryTextField(
-                    controller: _accountIbanController,
-                    label: 'Reference account IBAN',
-                    placeholder: 'E.g. DE11110101010100000020',
-                    onChanged: (value) {
-                      if (value != 'DE11110101010100000020') {
-                        _accountIbanController.setErrorText('IBAN not found. Please try again with a different one.');
-                      } else {
-                        _accountIbanController.setErrorText(null);
-                      }
-                    },
-                  ),
-                  const SizedBox(height: 24),
-                  const Spacer(),
-                  ApprovePolicy(
-                    isChecked: _isChecked,
-                    isDisabled: _continueButtonController.isLoading,
-                    onChanged: (checked) {
-                      setState(() {
-                        _isChecked = checked;
-                        _isValidated();
-                      });
-                    },
-                    message: Text.rich(
-                      style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                      TextSpan(
-                        children: [
-                          const TextSpan(text: 'I agree to the '),
-                          TextSpan(
-                              text: 'Swisscom\'s Terms & Conditions',
+                          children: [
+                            const TextSpan(text: 'Please provide the '),
+                            TextSpan(text: 'IBAN', style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold),
+                            const TextSpan(text: ' for your '),
+                            TextSpan(
+                              text: 'reference bank account',
                               style: ClientConfig.getTextStyleScheme()
                                   .bodyLargeRegularBold
-                                  .copyWith(color: ClientConfig.getColorScheme().secondary)),
-                          const TextSpan(text: '.'),
+                                  .copyWith(color: ClientConfig.getColorScheme().secondary),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () => showBottomModal(
+                                      context: context,
+                                      title: 'What is a reference account?',
+                                      textWidget: Column(
+                                        children: [
+                                          for (final referenceAccountCheck in referenceAccountChecks) ...[
+                                            _buildReferenceBankAccount(referenceAccountCheck),
+                                            const SizedBox(height: 24),
+                                          ]
+                                        ],
+                                      ),
+                                    ),
+                            ),
+                            const TextSpan(text: '. In the following steps, you will need to enter your '),
+                            TextSpan(
+                                text: 'bank credentials',
+                                style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold),
+                            const TextSpan(text: ', after which we will initiate a transfer of '),
+                            TextSpan(text: '0.01€', style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold),
+                            const TextSpan(text: ' from this account.'),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      IvoryTextField(
+                        controller: _accountNameController,
+                        label: 'Reference account name',
+                        placeholder: 'Type reference account name',
+                        inputFormatters: [
+                          TextInputFormatter.withFunction((oldValue, newValue) {
+                            if (newValue.text.isEmpty || newValue.text.contains(RegExp(r'^[a-zA-Z0-9]+'))) {
+                              return newValue;
+                            }
+                            return oldValue;
+                          }),
                         ],
                       ),
-                    ),
+                      const SizedBox(height: 24),
+                      IvoryTextField(
+                        controller: _accountIbanController,
+                        label: 'Reference account IBAN',
+                        placeholder: 'E.g. DE11110101010100000020',
+                        onChanged: (value) {
+                          if (value != 'DE11110101010100000020') {
+                            _accountIbanController
+                                .setErrorText('IBAN not found. Please try again with a different one.');
+                          } else {
+                            _accountIbanController.setErrorText(null);
+                          }
+                        },
+                      ),
+                      const SizedBox(height: 24),
+                      const Spacer(),
+                      ApprovePolicy(
+                        isChecked: _isChecked,
+                        isDisabled: _continueButtonController.isLoading,
+                        onChanged: (checked) {
+                          setState(() {
+                            _isChecked = checked;
+                            _isValidated();
+                          });
+                        },
+                        message: Text.rich(
+                          style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                          TextSpan(
+                            children: [
+                              const TextSpan(text: 'I agree to the '),
+                              TextSpan(
+                                  text: 'Swisscom\'s Terms & Conditions',
+                                  style: ClientConfig.getTextStyleScheme()
+                                      .bodyLargeRegularBold
+                                      .copyWith(color: ClientConfig.getColorScheme().secondary)),
+                              const TextSpan(text: '.'),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      ListenableBuilder(
+                        listenable: _continueButtonController,
+                        builder: (context, child) => PrimaryButton(
+                            text: "Continue to verification",
+                            isLoading: _continueButtonController.isLoading,
+                            onPressed: _continueButtonController.isEnabled
+                                ? () {
+                                    // Navigator.of(context).pushNamed(NextScreen.routeName);
+                                  }
+                                : null),
+                      ),
+                      const SizedBox(height: 16),
+                    ],
                   ),
-                  const SizedBox(height: 16),
-                  ListenableBuilder(
-                    listenable: _continueButtonController,
-                    builder: (context, child) => PrimaryButton(
-                        text: "Continue to verification",
-                        isLoading: _continueButtonController.isLoading,
-                        onPressed: _continueButtonController.isEnabled
-                            ? () {
-                                // Navigator.of(context).pushNamed(NextScreen.routeName);
-                              }
-                            : null),
-                  ),
-                  const SizedBox(height: 16),
-                ],
+                ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
