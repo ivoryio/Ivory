@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/onboarding/identity_verification/onboarding_identity_verification_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/onboarding/identity_verification/onboarding_identity_verification_action.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
@@ -58,6 +59,11 @@ class _OnboardingReferenceAccountIbanScreenState extends State<OnboardingReferen
         identityVerificationState: store.state.onboardingIdentityVerificationState,
       ),
       distinct: true,
+      onWillChange: (previousViewModel, newViewModel) {
+        if (newViewModel.isLoading) {
+          _continueButtonController.setLoading();
+        }
+      },
       builder: (context, viewModel) {
         return ScreenScaffold(
           body: Column(
@@ -176,6 +182,12 @@ class _OnboardingReferenceAccountIbanScreenState extends State<OnboardingReferen
                             isLoading: _continueButtonController.isLoading,
                             onPressed: _continueButtonController.isEnabled
                                 ? () {
+                                    StoreProvider.of<AppState>(context)
+                                        .dispatch(CreateReferenceAccountIbanCommandAction(
+                                      accountName: _accountNameController.text,
+                                      iban: _accountIbanController.text,
+                                    ));
+
                                     // Navigator.of(context).pushNamed(NextScreen.routeName);
                                   }
                                 : null),

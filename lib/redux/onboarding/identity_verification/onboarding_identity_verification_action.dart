@@ -1,11 +1,11 @@
 import 'package:solarisdemo/models/onboarding/onboarding_identity_verification_error_type.dart';
 
 class CreateReferenceAccountIbanCommandAction {
-  final String referenceAccount;
+  final String accountName;
   final String iban;
 
   CreateReferenceAccountIbanCommandAction({
-    required this.referenceAccount,
+    required this.accountName,
     required this.iban,
   });
 }
