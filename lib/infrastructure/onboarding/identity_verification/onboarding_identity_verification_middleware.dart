@@ -19,7 +19,7 @@ class OnboardingIdentityVerificationMiddleware extends MiddlewareClass<AppState>
     }
 
     if (action is CreateReferenceAccountIbanCommandAction) {
-      store.dispatch(CreateReferenceAccountIbanLoadingEventAction());
+      store.dispatch(OnboardingIdentityVerificationLoadingEventAction());
 
       final response = await _onboardingIdentityVerificationService.createIdentification(
         user: authState.cognitoUser,

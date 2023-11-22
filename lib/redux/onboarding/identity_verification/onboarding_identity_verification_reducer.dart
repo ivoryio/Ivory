@@ -3,7 +3,7 @@ import 'package:solarisdemo/redux/onboarding/identity_verification/onboarding_id
 
 OnboardingIdentityVerificationState identityVerificationReducer(
     OnboardingIdentityVerificationState state, dynamic action) {
-  if (action is CreateReferenceAccountIbanLoadingEventAction) {
+  if (action is OnboardingIdentityVerificationLoadingEventAction) {
     return const OnboardingIdentityVerificationState(
       isLoading: true,
     );

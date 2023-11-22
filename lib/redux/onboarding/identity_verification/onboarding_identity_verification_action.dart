@@ -10,7 +10,7 @@ class CreateReferenceAccountIbanCommandAction {
   });
 }
 
-class CreateReferenceAccountIbanLoadingEventAction {}
+class OnboardingIdentityVerificationLoadingEventAction {}
 
 class CreateReferenceAccountIbanSuccessEventAction {
   final String urlForIntegration;
