@@ -32,7 +32,7 @@ void main() {
 
     final appState = store.onChange.firstWhere((state) => state.onboardingIdentityVerificationState.isLoading == true);
     //when
-    store.dispatch(CreateUrlForIntegrationCommandAction(accountName: accountName, iban: iban));
+    store.dispatch(CreateIdentificationCommandAction(accountName: accountName, iban: iban));
     //then
     final identityVerificationState = (await appState).onboardingIdentityVerificationState;
 
@@ -54,7 +54,7 @@ void main() {
     final appState = store.onChange
         .firstWhere((state) => state.onboardingIdentityVerificationState.urlForIntegration == urlForIntegration);
     //when
-    store.dispatch(CreateUrlForIntegrationCommandAction(accountName: accountName, iban: iban));
+    store.dispatch(CreateIdentificationCommandAction(accountName: accountName, iban: iban));
     //then
     final identityVerificationState = (await appState).onboardingIdentityVerificationState;
 
@@ -77,7 +77,7 @@ void main() {
 
     final appState = store.onChange.firstWhere((state) => state.onboardingIdentityVerificationState.errorType != null);
     //when
-    store.dispatch(CreateUrlForIntegrationCommandAction(accountName: accountName, iban: iban));
+    store.dispatch(CreateIdentificationCommandAction(accountName: accountName, iban: iban));
     //then
     final identityVerificationState = (await appState).onboardingIdentityVerificationState;
 

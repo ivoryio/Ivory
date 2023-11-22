@@ -183,13 +183,11 @@ class _OnboardingReferenceAccountIbanScreenState extends State<OnboardingReferen
                             onPressed: _continueButtonController.isEnabled
                                 ? () {
                                     StoreProvider.of<AppState>(context).dispatch(
-                                      CreateUrlForIntegrationCommandAction(
+                                      CreateIdentificationCommandAction(
                                         accountName: _accountNameController.text,
                                         iban: _accountIbanController.text,
                                       ),
                                     );
-
-                                    // Navigator.of(context).pushNamed(NextScreen.routeName);
                                   }
                                 : null),
                       ),

@@ -6,7 +6,7 @@ import 'package:solarisdemo/services/api_service.dart';
 class OnbordingIdentityVerificationService extends ApiService {
   OnbordingIdentityVerificationService({super.user});
 
-  Future<CreateUrlForIntegrationResponse> createIdentification({
+  Future<CreateIdentificationResponse> createIdentification({
     required User user,
     required String accountName,
     required String iban,
@@ -24,33 +24,33 @@ class OnbordingIdentityVerificationService extends ApiService {
     try {
       final response = await post(path, body: body);
 
-      return CreateUrlForIntegrationSuccesResponse(urlForIntegration: response['url']);
+      return CreateIdentificationSuccessResponse(urlForIntegration: response['url']);
     } catch (err) {
-      return const CreateUrlForIntegrationErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
+      return const CreateIdentificationErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
     }
   }
 }
 
-abstract class CreateUrlForIntegrationResponse extends Equatable {
-  const CreateUrlForIntegrationResponse();
+abstract class CreateIdentificationResponse extends Equatable {
+  const CreateIdentificationResponse();
 
   @override
   List<Object?> get props => [];
 }
 
-class CreateUrlForIntegrationSuccesResponse extends CreateUrlForIntegrationResponse {
+class CreateIdentificationSuccessResponse extends CreateIdentificationResponse {
   final String urlForIntegration;
 
-  const CreateUrlForIntegrationSuccesResponse({required this.urlForIntegration});
+  const CreateIdentificationSuccessResponse({required this.urlForIntegration});
 
   @override
   List<Object?> get props => [urlForIntegration];
 }
 
-class CreateUrlForIntegrationErrorResponse extends CreateUrlForIntegrationResponse {
+class CreateIdentificationErrorResponse extends CreateIdentificationResponse {
   final OnboardingIdentityVerificationErrorType errorType;
 
-  const CreateUrlForIntegrationErrorResponse({required this.errorType});
+  const CreateIdentificationErrorResponse({required this.errorType});
 
   @override
   List<Object?> get props => [errorType];

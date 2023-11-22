@@ -7,12 +7,12 @@ OnboardingIdentityVerificationState identityVerificationReducer(
     return const OnboardingIdentityVerificationState(
       isLoading: true,
     );
-  } else if (action is CreateUrlForIntegrationSuccessEventAction) {
+  } else if (action is CreateIdentificationSuccessEventAction) {
     return OnboardingIdentityVerificationState(
       isLoading: false,
       urlForIntegration: action.urlForIntegration,
     );
-  } else if (action is CreateUrlForIntegrationFailedEventAction) {
+  } else if (action is CreateIdentificationFailedEventAction) {
     return OnboardingIdentityVerificationState(
       isLoading: false,
       errorType: action.errorType,

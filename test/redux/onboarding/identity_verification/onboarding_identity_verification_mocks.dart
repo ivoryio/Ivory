@@ -4,22 +4,22 @@ import 'package:solarisdemo/models/user.dart';
 
 class FakeOnbordingIdentityVerificationService extends OnbordingIdentityVerificationService {
   @override
-  Future<CreateUrlForIntegrationResponse> createIdentification(
+  Future<CreateIdentificationResponse> createIdentification(
       {required User user,
       required String accountName,
       required String iban,
       required String termsAndCondsSignedAt}) async {
-    return const CreateUrlForIntegrationSuccesResponse(urlForIntegration: 'https://url.com');
+    return const CreateIdentificationSuccessResponse(urlForIntegration: 'https://url.com');
   }
 }
 
 class FakeFailingOnbordingIdentityVerificationService extends OnbordingIdentityVerificationService {
   @override
-  Future<CreateUrlForIntegrationResponse> createIdentification(
+  Future<CreateIdentificationResponse> createIdentification(
       {required User user,
       required String accountName,
       required String iban,
       required String termsAndCondsSignedAt}) async {
-    return const CreateUrlForIntegrationErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
+    return const CreateIdentificationErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
   }
 }

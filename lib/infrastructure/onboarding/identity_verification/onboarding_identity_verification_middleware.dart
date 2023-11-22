@@ -18,7 +18,7 @@ class OnboardingIdentityVerificationMiddleware extends MiddlewareClass<AppState>
       return;
     }
 
-    if (action is CreateUrlForIntegrationCommandAction) {
+    if (action is CreateIdentificationCommandAction) {
       store.dispatch(OnboardingIdentityVerificationLoadingEventAction());
 
       final response = await _onboardingIdentityVerificationService.createIdentification(
@@ -28,10 +28,10 @@ class OnboardingIdentityVerificationMiddleware extends MiddlewareClass<AppState>
         termsAndCondsSignedAt: DateTime.now().toUtc().toIso8601String(),
       );
 
-      if (response is CreateUrlForIntegrationSuccesResponse) {
-        store.dispatch(CreateUrlForIntegrationSuccessEventAction(urlForIntegration: response.urlForIntegration));
-      } else if (response is CreateUrlForIntegrationErrorResponse) {
-        store.dispatch(CreateUrlForIntegrationFailedEventAction(errorType: response.errorType));
+      if (response is CreateIdentificationSuccessResponse) {
+        store.dispatch(CreateIdentificationSuccessEventAction(urlForIntegration: response.urlForIntegration));
+      } else if (response is CreateIdentificationErrorResponse) {
+        store.dispatch(CreateIdentificationFailedEventAction(errorType: response.errorType));
       }
     }
   }

@@ -522,7 +522,7 @@ class NotImplementedFileSaverService extends FileSaverService {
 
 class NotImplementedOnbordingIdentityVerificationService extends OnbordingIdentityVerificationService {
   @override
-  Future<CreateUrlForIntegrationResponse> createIdentification({
+  Future<CreateIdentificationResponse> createIdentification({
     required User user,
     required String accountName,
     required String iban,
