@@ -7,12 +7,12 @@ OnboardingIdentityVerificationState identityVerificationReducer(
     return const OnboardingIdentityVerificationState(
       isLoading: true,
     );
-  } else if (action is CreateReferenceAccountIbanSuccessEventAction) {
+  } else if (action is CreateUrlForIntegrationSuccessEventAction) {
     return OnboardingIdentityVerificationState(
       isLoading: false,
       urlForIntegration: action.urlForIntegration,
     );
-  } else if (action is CreateReferenceAccountIbanFailedEventAction) {
+  } else if (action is CreateUrlForIntegrationFailedEventAction) {
     return OnboardingIdentityVerificationState(
       isLoading: false,
       errorType: action.errorType,

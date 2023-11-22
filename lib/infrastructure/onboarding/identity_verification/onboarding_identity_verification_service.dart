@@ -6,8 +6,9 @@ import 'package:solarisdemo/services/api_service.dart';
 class OnbordingIdentityVerificationService extends ApiService {
   OnbordingIdentityVerificationService({super.user});
 
-  Future<CreateReferenceAccountIbanResponse> createIdentification({
+  Future<CreateUrlForIntegrationResponse> createIdentification({
     required User user,
+    required String accountName,
     required String iban,
     required String termsAndCondsSignedAt,
   }) async {
@@ -15,6 +16,7 @@ class OnbordingIdentityVerificationService extends ApiService {
 
     const path = '/signup/identification';
     Map<String, dynamic> body = {
+      'accountName': accountName,
       'iban': iban,
       'terms_and_conditions_signed_at': termsAndCondsSignedAt,
     };
@@ -22,34 +24,33 @@ class OnbordingIdentityVerificationService extends ApiService {
     try {
       final response = await post(path, body: body);
 
-      return CreateReferenceAccountIbanSuccesResponse(urlForIntegration: response['url']);
+      return CreateUrlForIntegrationSuccesResponse(urlForIntegration: response['url']);
     } catch (err) {
-      return const CreateReferenceAccountIbanErrorResponse(
-          errorType: OnboardingIdentityVerificationErrorType.invalidIban);
+      return const CreateUrlForIntegrationErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
     }
   }
 }
 
-abstract class CreateReferenceAccountIbanResponse extends Equatable {
-  const CreateReferenceAccountIbanResponse();
+abstract class CreateUrlForIntegrationResponse extends Equatable {
+  const CreateUrlForIntegrationResponse();
 
   @override
   List<Object?> get props => [];
 }
 
-class CreateReferenceAccountIbanSuccesResponse extends CreateReferenceAccountIbanResponse {
+class CreateUrlForIntegrationSuccesResponse extends CreateUrlForIntegrationResponse {
   final String urlForIntegration;
 
-  const CreateReferenceAccountIbanSuccesResponse({required this.urlForIntegration});
+  const CreateUrlForIntegrationSuccesResponse({required this.urlForIntegration});
 
   @override
   List<Object?> get props => [urlForIntegration];
 }
 
-class CreateReferenceAccountIbanErrorResponse extends CreateReferenceAccountIbanResponse {
+class CreateUrlForIntegrationErrorResponse extends CreateUrlForIntegrationResponse {
   final OnboardingIdentityVerificationErrorType errorType;
 
-  const CreateReferenceAccountIbanErrorResponse({required this.errorType});
+  const CreateUrlForIntegrationErrorResponse({required this.errorType});
 
   @override
   List<Object?> get props => [errorType];

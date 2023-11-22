@@ -18,19 +18,20 @@ class OnboardingIdentityVerificationMiddleware extends MiddlewareClass<AppState>
       return;
     }
 
-    if (action is CreateReferenceAccountIbanCommandAction) {
+    if (action is CreateUrlForIntegrationCommandAction) {
       store.dispatch(OnboardingIdentityVerificationLoadingEventAction());
 
       final response = await _onboardingIdentityVerificationService.createIdentification(
         user: authState.cognitoUser,
+        accountName: action.accountName,
         iban: action.iban,
         termsAndCondsSignedAt: DateTime.now().toUtc().toIso8601String(),
       );
 
-      if (response is CreateReferenceAccountIbanSuccesResponse) {
-        store.dispatch(CreateReferenceAccountIbanSuccessEventAction(urlForIntegration: response.urlForIntegration));
-      } else if (response is CreateReferenceAccountIbanErrorResponse) {
-        store.dispatch(CreateReferenceAccountIbanFailedEventAction(errorType: response.errorType));
+      if (response is CreateUrlForIntegrationSuccesResponse) {
+        store.dispatch(CreateUrlForIntegrationSuccessEventAction(urlForIntegration: response.urlForIntegration));
+      } else if (response is CreateUrlForIntegrationErrorResponse) {
+        store.dispatch(CreateUrlForIntegrationFailedEventAction(errorType: response.errorType));
       }
     }
   }

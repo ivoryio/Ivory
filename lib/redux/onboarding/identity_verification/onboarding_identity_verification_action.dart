@@ -1,10 +1,10 @@
 import 'package:solarisdemo/models/onboarding/onboarding_identity_verification_error_type.dart';
 
-class CreateReferenceAccountIbanCommandAction {
+class CreateUrlForIntegrationCommandAction {
   final String accountName;
   final String iban;
 
-  CreateReferenceAccountIbanCommandAction({
+  CreateUrlForIntegrationCommandAction({
     required this.accountName,
     required this.iban,
   });
@@ -12,14 +12,14 @@ class CreateReferenceAccountIbanCommandAction {
 
 class OnboardingIdentityVerificationLoadingEventAction {}
 
-class CreateReferenceAccountIbanSuccessEventAction {
+class CreateUrlForIntegrationSuccessEventAction {
   final String urlForIntegration;
 
-  CreateReferenceAccountIbanSuccessEventAction({required this.urlForIntegration});
+  CreateUrlForIntegrationSuccessEventAction({required this.urlForIntegration});
 }
 
-class CreateReferenceAccountIbanFailedEventAction {
+class CreateUrlForIntegrationFailedEventAction {
   final OnboardingIdentityVerificationErrorType errorType;
 
-  CreateReferenceAccountIbanFailedEventAction({required this.errorType});
+  CreateUrlForIntegrationFailedEventAction({required this.errorType});
 }
