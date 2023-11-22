@@ -17,6 +17,7 @@ import 'package:solarisdemo/infrastructure/file_saver_service.dart';
 import 'package:solarisdemo/infrastructure/mobile_number/mobile_number_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/financial_details/onboarding_financial_details_service.dart';
+import 'package:solarisdemo/infrastructure/onboarding/identity_verification/onboarding_identity_verification_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/onboarding_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/personal_details/onboarding_personal_details_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/signup/onboarding_signup_service.dart';
@@ -74,6 +75,7 @@ Store<AppState> createTestStore({
   MobileNumberService? mobileNumberService,
   DocumentsService? documentsService,
   FileSaverService? fileSaverService,
+  OnbordingIdentityVerificationService? onboardingIdentityVerificationService,
 }) {
   return createStore(
     initialState: initialState,
@@ -107,6 +109,8 @@ Store<AppState> createTestStore({
     mobileNumberService: mobileNumberService ?? NotImplementedMobileNumberService(),
     documentsService: documentsService ?? NotImplementedDocumentsService(),
     fileSaverService: fileSaverService ?? NotImplementedFileSaverService(),
+    onboardingIdentityVerificationService:
+        onboardingIdentityVerificationService ?? NotImplementedOnbordingIdentityVerificationService(),
   );
 }
 
@@ -512,6 +516,18 @@ class NotImplementedDocumentsService extends DocumentsService {
 class NotImplementedFileSaverService extends FileSaverService {
   @override
   Future<void> saveFile({required String name, String? ext, required Uint8List bytes, String? mimeType}) async {
+    throw UnimplementedError();
+  }
+}
+
+class NotImplementedOnbordingIdentityVerificationService extends OnbordingIdentityVerificationService {
+  @override
+  Future<CreateUrlForIntegrationResponse> createIdentification({
+    required User user,
+    required String accountName,
+    required String iban,
+    required String termsAndCondsSignedAt,
+  }) async {
     throw UnimplementedError();
   }
 }
