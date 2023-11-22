@@ -7,6 +7,7 @@ import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/onboarding/identity_verification/onboarding_identity_verification_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/onboarding/identity_verification/onboarding_identity_verification_action.dart';
+import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_bank_verification_screen.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
@@ -62,6 +63,12 @@ class _OnboardingReferenceAccountIbanScreenState extends State<OnboardingReferen
       onWillChange: (previousViewModel, newViewModel) {
         if (newViewModel.isLoading) {
           _continueButtonController.setLoading();
+        } else if (newViewModel.urlForIntegration != null) {
+          Navigator.pushReplacementNamed(
+            context,
+            OnboardingBankVerificationScreen.routeName,
+            arguments: OnboardingBankVerificationScreenParams(url: newViewModel.urlForIntegration!),
+          );
         }
       },
       builder: (context, viewModel) {
