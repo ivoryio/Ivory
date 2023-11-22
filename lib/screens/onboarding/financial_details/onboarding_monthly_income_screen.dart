@@ -87,7 +87,7 @@ class _OnboardingMonthlyIncomeScreenState extends State<OnboardingMonthlyIncomeS
                 actions: const [
                   AppbarLogo(),
                 ],
-                onBackButtonPressed: () {},
+                onBackButtonPressed: () => Navigator.pop(context),
                 backButtonEnabled: true,
               ),
               AnimatedLinearProgressIndicator.step(

@@ -6,16 +6,12 @@ class OnboardingFinancialDetailsState extends Equatable {
   final OnboardingFinancialDetailsAttributes financialDetailsAttributes;
   final bool isLoading;
   final FinancialDetailsErrorType? errorType;
-  final bool isMaritalStatusSelected;
-  final bool isOccupationalStatusSelected;
   final bool isCreditCardApplicationCreated;
 
   const OnboardingFinancialDetailsState({
     this.financialDetailsAttributes = const OnboardingFinancialDetailsAttributes(),
     this.isLoading = false,
     this.errorType,
-    this.isMaritalStatusSelected = false,
-    this.isOccupationalStatusSelected = false, 
     this.isCreditCardApplicationCreated = false,
   });
 
@@ -24,8 +20,6 @@ class OnboardingFinancialDetailsState extends Equatable {
         financialDetailsAttributes,
         isLoading,
         errorType,
-        isMaritalStatusSelected,
-        isOccupationalStatusSelected,
         isCreditCardApplicationCreated
       ];
 }
