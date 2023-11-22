@@ -8,6 +8,7 @@ import 'package:solarisdemo/redux/documents/documents_reducer.dart';
 import 'package:solarisdemo/redux/documents/download/download_document_reducer.dart';
 import 'package:solarisdemo/redux/notification/notification_reducer.dart';
 import 'package:solarisdemo/redux/onboarding/financial_details/onboarding_financial_details_reducer.dart';
+import 'package:solarisdemo/redux/onboarding/identity_verification/onboarding_identity_verification_reducer.dart';
 import 'package:solarisdemo/redux/onboarding/onboarding_progress_reducer.dart';
 import 'package:solarisdemo/redux/onboarding/personal_details/onboarding_personal_details_reducer.dart';
 import 'package:solarisdemo/redux/onboarding/signup/onboarding_signup_reducer.dart';
@@ -56,5 +57,7 @@ AppState appReducer(AppState currentState, dynamic action) {
     documentsState: documentsReducer(currentState.documentsState, action),
     downloadDocumentState: downloadDocumentReducer(currentState.downloadDocumentState, action),
     confirmDocumentsState: confirmDocumentsReducer(currentState.confirmDocumentsState, action),
+    onboardingIdentityVerificationState:
+        identityVerificationReducer(currentState.onboardingIdentityVerificationState, action),
   );
 }
