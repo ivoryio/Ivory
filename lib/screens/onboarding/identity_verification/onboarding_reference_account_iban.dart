@@ -67,7 +67,6 @@ class _OnboardingReferenceAccountIbanScreenState extends State<OnboardingReferen
           Navigator.pushReplacementNamed(
             context,
             OnboardingBankVerificationScreen.routeName,
-            arguments: OnboardingBankVerificationScreenParams(url: newViewModel.urlForIntegration!),
           );
         }
       },

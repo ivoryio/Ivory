@@ -274,11 +274,7 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
                 const OnboardingVideoIdentificationNotAvailableScreen(),
             OnboardingReferenceAccountIbanScreen.routeName: (context) => const OnboardingReferenceAccountIbanScreen(),
             OnboardingContractsConfirmScreen.routeName: (context) => const OnboardingContractsConfirmScreen(),
-            OnboardingBankVerificationScreen.routeName: (context) {
-              final params = ModalRoute.of(context)?.settings.arguments as OnboardingBankVerificationScreenParams;
-
-              return OnboardingBankVerificationScreen(params: params);
-            },
+            OnboardingBankVerificationScreen.routeName: (context) => const OnboardingBankVerificationScreen(),
           },
         );
       }),
