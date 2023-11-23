@@ -7,12 +7,11 @@ import 'package:solarisdemo/infrastructure/onboarding/identity_verification/onbo
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/documents/documents_action.dart';
 import 'package:solarisdemo/redux/onboarding/identity_verification/onboarding_identity_verification_action.dart';
-import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_contracts_confirm_screen.dart';
-import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/circular_loading_indicator.dart';
+import 'package:solarisdemo/widgets/documents_list_view.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 class OnboardingReviewUpdatedContractsScreen extends StatelessWidget {
@@ -114,27 +113,15 @@ class OnboardingReviewUpdatedContractsScreen extends StatelessWidget {
             ),
             builder: (context, viewModel) {
               if (viewModel is DocumentsFetchedViewModel) {
-                return ListView.builder(
-                  itemCount: viewModel.documents.length,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    final document = viewModel.documents[index];
-
-                    return DocumentListItem(
-                      title: document.title,
-                      subtitle: "${document.fileSize}, ${document.fileType}",
-                      isDownloading:
-                          viewModel is DocumentDownloadingViewModel && document.id == viewModel.downloadingDocument.id,
-                      fileSize: Format.fileSize(document.fileSize),
-                      fileType: Format.fileType(document.fileType),
-                      onTapDownload: () {
-                        StoreProvider.of<AppState>(context).dispatch(
-                          DownloadDocumentCommandAction(
-                            document: viewModel.documents[index],
-                            downloadLocation: DocumentDownloadLocation.person,
-                          ),
-                        );
-                      },
+                return DocumentsListView(
+                  documents: viewModel.documents,
+                  downloadingDocument: viewModel is DocumentDownloadingViewModel ? viewModel.downloadingDocument : null,
+                  onTapDownload: (document) {
+                    StoreProvider.of<AppState>(context).dispatch(
+                      DownloadDocumentCommandAction(
+                        document: document,
+                        downloadLocation: DocumentDownloadLocation.person,
+                      ),
                     );
                   },
                 );
