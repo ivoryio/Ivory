@@ -113,4 +113,108 @@ void main() {
     expect(financialDetailsState.isLoading, true);
     expect(financialDetailsState.financialDetailsAttributes.taxId, null);
   });
+
+  test('when creating credit card application it should display loaded state', () async {
+    // given
+    final store = createTestStore(
+      onboardingFinancialDetailsService: FakeOnbordingFinancialDetailsService(),
+      initialState: createAppState(
+          authState: AuthenticationInitializedState(MockUser(), AuthType.onboarding),
+          onboardingFinancialDetailsState: const OnboardingFinancialDetailsState(
+            financialDetailsAttributes: OnboardingFinancialDetailsAttributes(
+              dateOfEmployment: '2020-01-01',
+              maritalStatus: OnboardingMaritalStatus.married,
+              livingSituation: OnboardingLivingSituation.own,
+              numberOfDependents: 0,
+              occupationalStatus: OnboardingOccupationalStatus.employed,
+            ),
+            isLoading: false,
+          )),
+    );
+
+    final appState = store.onChange.firstWhere((state) => state.onboardingFinancialDetailsState.isLoading == true);
+
+    // when
+    store.dispatch(CreateCreditCardApplicationCommandAction(
+      monthlyIncome: 0,
+      monthlyExpense: 0,
+      totalCurrentDebt: 0,
+      totalCreditLimit: 0,
+    ));
+
+    // then
+    final financialDetailsState = (await appState).onboardingFinancialDetailsState;
+
+    expect(financialDetailsState.isLoading, true);
+  });
+
+  test('when creating credit card application it should update with success', () async {
+    // given
+    final store = createTestStore(
+      onboardingFinancialDetailsService: FakeOnbordingFinancialDetailsService(),
+      initialState: createAppState(
+          authState: AuthenticationInitializedState(MockUser(), AuthType.onboarding),
+          onboardingFinancialDetailsState: const OnboardingFinancialDetailsState(
+            financialDetailsAttributes: OnboardingFinancialDetailsAttributes(
+              dateOfEmployment: '2020-01-01',
+              maritalStatus: OnboardingMaritalStatus.married,
+              livingSituation: OnboardingLivingSituation.own,
+              numberOfDependents: 0,
+              occupationalStatus: OnboardingOccupationalStatus.employed,
+            ),
+            isLoading: false,
+          )),
+    );
+
+    final appState = store.onChange
+        .firstWhere((state) => state.onboardingFinancialDetailsState.isCreditCardApplicationCreated == true);
+
+    // when
+    store.dispatch(CreateCreditCardApplicationCommandAction(
+      monthlyIncome: 0,
+      monthlyExpense: 0,
+      totalCurrentDebt: 0,
+      totalCreditLimit: 0,
+    ));
+
+    // then
+    final financialDetailsState = (await appState).onboardingFinancialDetailsState;
+
+    expect(financialDetailsState.isCreditCardApplicationCreated, true);
+  });
+
+  test('when creating credit card application it should update with failure message', () async {
+    // given
+    final store = createTestStore(
+      onboardingFinancialDetailsService: FakeFailingOnbordingFinancialDetailsService(),
+      initialState: createAppState(
+          authState: AuthenticationInitializedState(MockUser(), AuthType.onboarding),
+          onboardingFinancialDetailsState: const OnboardingFinancialDetailsState(
+            financialDetailsAttributes: OnboardingFinancialDetailsAttributes(
+              dateOfEmployment: '2020-01-01',
+              maritalStatus: OnboardingMaritalStatus.married,
+              livingSituation: OnboardingLivingSituation.own,
+              numberOfDependents: 0,
+              occupationalStatus: OnboardingOccupationalStatus.employed,
+            ),
+            isLoading: false,
+          )),
+    );
+
+    final appState = store.onChange.firstWhere(
+        (state) => state.onboardingFinancialDetailsState.errorType == FinancialDetailsErrorType.cantCreateCreditCardApplication);
+
+    // when
+    store.dispatch(CreateCreditCardApplicationCommandAction(
+      monthlyIncome: 0,
+      monthlyExpense: 0,
+      totalCurrentDebt: 0,
+      totalCreditLimit: 0,
+    ));
+
+    // then
+    final financialDetailsState = (await appState).onboardingFinancialDetailsState;
+
+    expect(financialDetailsState.errorType, FinancialDetailsErrorType.cantCreateCreditCardApplication);
+  });
 }
