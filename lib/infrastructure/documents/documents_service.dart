@@ -20,7 +20,7 @@ class DocumentsService extends ApiService {
             (document) => Document(
               id: document['id'],
               documentType: DocumentTypeParser.parse(document['document_type']),
-              fileType: _getFileType(document['document_content_type']),
+              fileType: document['document_content_type'] ?? '',
               fileSize: document['document_size'] ?? 0,
             ),
           )
@@ -64,14 +64,6 @@ class DocumentsService extends ApiService {
       return DocumentsServiceErrorResponse(errorType: DocumentsErrorType.unknown);
     }
   }
-}
-
-String _getFileType(String fileType) {
-  if (fileType == 'application/pdf') {
-    return "PDF";
-  }
-
-  return "";
 }
 
 abstract class DocumentsServiceResponse extends Equatable {

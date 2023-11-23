@@ -134,7 +134,7 @@ class _OnboardingContractsConfirmScreenState extends State<OnboardingContractsCo
                 isDownloading:
                     viewModel is DocumentDownloadingViewModel && document.id == viewModel.downloadingDocument.id,
                 fileSize: Format.fileSize(document.fileSize),
-                fileType: document.fileType,
+                fileType: Format.fileType(document.fileType),
                 onTapDownload: () {
                   StoreProvider.of<AppState>(context).dispatch(
                     DownloadDocumentCommandAction(document: viewModel.documents[index]),
