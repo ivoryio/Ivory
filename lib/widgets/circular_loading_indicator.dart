@@ -46,7 +46,7 @@ class _CircularLoadingIndicatorState extends State<CircularLoadingIndicator> wit
         size: Size.fromRadius(widget.width / 2),
         painter: CircularLoadingIndicatorPainter(
           radius: widget.width / 2,
-          gradientColors: widget.gradientColors ?? [ClientConfig.getColorScheme().secondary, Colors.transparent],
+          gradientColors: widget.gradientColors ?? [ClientConfig.getColorScheme().secondary, Colors.white],
           strokeWidth: widget.strokeWidth,
         ),
       ),

@@ -47,8 +47,8 @@ class OnbordingIdentityVerificationService extends ApiService {
               (document) => Document(
                 id: document['id'],
                 documentType: DocumentTypeParser.parse(document['document_type']),
-                fileType: document['document_content_type'],
-                fileSize: document['document_size'] ?? 0,
+                fileType: document['content_type'],
+                fileSize: document['size'] ?? 0,
               ),
             )
             .toList(),
