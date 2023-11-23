@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/documents/documents_presenter.dart';
+import 'package:solarisdemo/infrastructure/documents/documents_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/identity_verification/onboarding_identity_verification_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/documents/documents_action.dart';
 import 'package:solarisdemo/redux/onboarding/identity_verification/onboarding_identity_verification_action.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_contracts_confirm_screen.dart';
 import 'package:solarisdemo/utilities/format.dart';
@@ -125,7 +127,14 @@ class OnboardingReviewUpdatedContractsScreen extends StatelessWidget {
                           viewModel is DocumentDownloadingViewModel && document.id == viewModel.downloadingDocument.id,
                       fileSize: Format.fileSize(document.fileSize),
                       fileType: Format.fileType(document.fileType),
-                      onTapDownload: () {},
+                      onTapDownload: () {
+                        StoreProvider.of<AppState>(context).dispatch(
+                          DownloadDocumentCommandAction(
+                            document: viewModel.documents[index],
+                            downloadLocation: DocumentDownloadLocation.person,
+                          ),
+                        );
+                      },
                     );
                   },
                 );

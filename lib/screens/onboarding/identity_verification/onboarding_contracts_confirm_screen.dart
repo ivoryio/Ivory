@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/documents/documents_presenter.dart';
+import 'package:solarisdemo/infrastructure/documents/documents_service.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/documents/documents_action.dart';
 import 'package:solarisdemo/utilities/format.dart';
@@ -137,7 +138,10 @@ class _OnboardingContractsConfirmScreenState extends State<OnboardingContractsCo
                 fileType: Format.fileType(document.fileType),
                 onTapDownload: () {
                   StoreProvider.of<AppState>(context).dispatch(
-                    DownloadDocumentCommandAction(document: viewModel.documents[index]),
+                    DownloadDocumentCommandAction(
+                      document: viewModel.documents[index],
+                      downloadLocation: DocumentDownloadLocation.postbox,
+                    ),
                   );
                 },
               );

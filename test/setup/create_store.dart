@@ -517,7 +517,11 @@ class NotImplementedDocumentsService extends DocumentsService {
   }
 
   @override
-  Future<DocumentsServiceResponse> downloadPostboxDocument({required User user, required Document document}) async {
+  Future<DocumentsServiceResponse> downloadPostboxDocument({
+    required User user,
+    required Document document,
+    required DocumentDownloadLocation downloadLocation,
+  }) async {
     throw UnimplementedError();
   }
 

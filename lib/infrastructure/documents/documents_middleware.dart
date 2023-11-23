@@ -39,6 +39,7 @@ class DocumentsMiddleware extends MiddlewareClass<AppState> {
       final response = await _documentsService.downloadPostboxDocument(
         user: authState.cognitoUser,
         document: action.document,
+        downloadLocation: action.downloadLocation,
       );
 
       if (response is DownloadDocumentSuccessResponse) {

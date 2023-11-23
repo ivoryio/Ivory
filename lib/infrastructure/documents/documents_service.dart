@@ -32,11 +32,20 @@ class DocumentsService extends ApiService {
     }
   }
 
-  Future<DocumentsServiceResponse> downloadPostboxDocument({required User user, required Document document}) async {
+  Future<DocumentsServiceResponse> downloadPostboxDocument({
+    required User user,
+    required Document document,
+    required DocumentDownloadLocation downloadLocation,
+  }) async {
     this.user = user;
 
     try {
-      final response = await downloadFile('/postbox_items/${document.id}');
+      final Map<DocumentDownloadLocation, String> downloadLocations = {
+        DocumentDownloadLocation.postbox: '/postbox_items/${document.id}',
+        DocumentDownloadLocation.person: '/person/documents/${document.id}',
+      };
+
+      final response = await downloadFile(downloadLocations[downloadLocation]!);
 
       return DownloadDocumentSuccessResponse(document: document, file: response);
     } catch (error) {
@@ -65,6 +74,8 @@ class DocumentsService extends ApiService {
     }
   }
 }
+
+enum DocumentDownloadLocation { postbox, person }
 
 abstract class DocumentsServiceResponse extends Equatable {
   @override
