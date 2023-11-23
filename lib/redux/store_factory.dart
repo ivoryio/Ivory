@@ -20,6 +20,8 @@ import 'package:solarisdemo/infrastructure/file_saver_service.dart';
 import 'package:solarisdemo/infrastructure/mobile_number/mobile_number_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/notifications_middleware.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
+import 'package:solarisdemo/infrastructure/onboarding/card_configuration/onboarding_card_configuration_middleware.dart';
+import 'package:solarisdemo/infrastructure/onboarding/card_configuration/onboarding_card_configuration_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/financial_details/onboarding_financial_details_middleware.dart';
 import 'package:solarisdemo/infrastructure/onboarding/financial_details/onboarding_financial_details_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/personal_details/onboarding_personal_details_service.dart';
@@ -85,6 +87,7 @@ Store<AppState> createStore({
   required MobileNumberService mobileNumberService,
   required DocumentsService documentsService,
   required FileSaverService fileSaverService,
+  required OnboardingCardConfigurationService onboardingCardConfigurationService,
 }) {
   return Store<AppState>(
     appReducer,
@@ -114,6 +117,7 @@ Store<AppState> createStore({
       AddressSuggestionsMiddleware(addressSuggestionsService),
       OnboardingFinancialDetailsMiddleware(onboardingFinancialDetailsService),
       DocumentsMiddleware(documentsService, fileSaverService),
+      OnboardingCardConfigurationMiddleware(onboardingCardConfigurationService),
     ],
   );
 }
