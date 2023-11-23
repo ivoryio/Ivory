@@ -37,6 +37,7 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
   final IvorySelectOptionController _selectCityController = IvorySelectOptionController(enabled: false);
   final IvorySelectOptionController _selectNationalityController = IvorySelectOptionController(loading: true);
   final ContinueButtonController _continueButtonController = ContinueButtonController();
+  final DateTime _maxDate = DateTime.now().subtract(const Duration(days: 365 * 18));
 
   final _debouncer = Debouncer(seconds: 1);
 
@@ -51,7 +52,8 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
     if (_dateOfBirthController.text.isNotEmpty &&
         _selectCountryController.selectedOptions.isNotEmpty &&
         _selectCityController.selectedOptions.isNotEmpty &&
-        _selectNationalityController.selectedOptions.isNotEmpty) {
+        _selectNationalityController.selectedOptions.isNotEmpty &&
+        _isValidInputDate()) {
       _continueButtonController.setEnabled();
     } else {
       _continueButtonController.setDisabled();
@@ -61,6 +63,11 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
   bool _notValidNationality() {
     final supportedNationalities = ["DE", "DEMO"];
     return !supportedNationalities.contains(_selectNationalityController.selectedOptions.first.value);
+  }
+
+  bool _isValidInputDate() {
+    return Validator.isValidDate(_dateOfBirthController.text,
+        pattern: textFieldDatePattern, maxYear: _maxDate.year, maxMonth: _maxDate.month, maxDay: _maxDate.day);
   }
 
   @override
@@ -106,6 +113,7 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
                     bottomSheetTitle: "Select your date of birth",
                     controller: _dateOfBirthController,
                     inputType: TextFieldInputType.date,
+                    currentDate: _maxDate,
                     onChanged: (input) => onChanged(),
                   ),
                   const SizedBox(height: 24),

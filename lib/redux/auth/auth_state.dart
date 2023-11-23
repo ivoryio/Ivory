@@ -45,10 +45,11 @@ class AuthenticationInitializedState extends AuthState {
   List<Object?> get props => [cognitoUser, authType];
 }
 
-class AuthenticatedState extends AuthenticationInitializedState {
+class AuthenticatedState extends AuthState {
+  final AuthType authType;
   final AuthenticatedUser authenticatedUser;
 
-  AuthenticatedState(this.authenticatedUser, AuthType authType) : super(authenticatedUser.cognito, authType);
+  AuthenticatedState(this.authenticatedUser, this.authType);
 
   @override
   List<Object?> get props => [authenticatedUser];

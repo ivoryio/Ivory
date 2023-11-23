@@ -167,7 +167,7 @@ class OnboardingStepper extends StatelessWidget {
       type: StepperItemType.identityVerification,
       title: 'Identity verification',
       description: 'Verify your identity quickly and easily with your preferred method.',
-      timeEstimation: 15,
+      timeEstimation: 3,
     ),
     OnboardingStepperItem(
       type: StepperItemType.cardConfiguration,
