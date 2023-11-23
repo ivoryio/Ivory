@@ -336,6 +336,11 @@ class NotImplementedDeviceBindingService extends DeviceBindingService {
   }) {
     throw UnimplementedError();
   }
+
+  @override
+  Future<DeviceBindingServiceResponse> getDeviceBinding({required User user}) {
+    throw UnimplementedError();
+  }
 }
 
 class NotImplementedDeviceService extends DeviceService {

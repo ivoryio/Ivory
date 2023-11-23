@@ -30,6 +30,18 @@ class FakeDeviceBindingService extends DeviceBindingService {
   }
 
   @override
+  Future<DeviceBindingServiceResponse> getDeviceBinding({
+    required User user,
+  }) async {
+    return GetDeviceBindingSuccessResponse(
+      devices: [
+        Device(deviceId: 'deviceId', deviceName: 'deviceName'),
+        Device(deviceId: 'deviceId2', deviceName: 'deviceName2'),
+      ],
+    );
+  }
+
+  @override
   Future<DeviceBindingServiceResponse> verifyDeviceBindingSignature({
     required User user,
     required String deviceId,
@@ -63,6 +75,13 @@ class FakeFailingDeviceBindingService extends DeviceBindingService {
     required CreateDeviceBindingRequest reqBody,
   }) async {
     return const DeviceBindingServiceErrorResponse(errorType: DeviceBindingServiceErrorType.deviceBindingFailed);
+  }
+
+  @override
+  Future<DeviceBindingServiceResponse> getDeviceBinding({
+    required User user,
+  }) async {
+    return const DeviceBindingServiceErrorResponse(errorType: DeviceBindingServiceErrorType.getDeviceBindingFailed);
   }
 
   @override
