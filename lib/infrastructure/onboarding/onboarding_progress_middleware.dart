@@ -24,7 +24,7 @@ class OnboardingProgressMiddleware extends MiddlewareClass<AppState> {
 
         if (response is OnboardingProgressSuccessResponse) {
           store.dispatch(OnboardingProgressFetchedEvendAction(step: response.step));
-          if (response.mobileNumber.isNotEmpty) {
+          if (response.mobileNumber.isNotEmpty && response.creditCardApplicationId.isEmpty) {
             store.dispatch(MobileNumberCreatedEventAction(mobileNumber: response.mobileNumber));
           }
         } else {

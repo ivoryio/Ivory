@@ -61,7 +61,6 @@ class _OnboardingPublicStatusScreenState extends State<OnboardingPublicStatusScr
             actions: const [
               AppbarLogo(),
             ],
-            onBackButtonPressed: () {},
             backButtonEnabled: false,
           ),
           AnimatedLinearProgressIndicator.step(current: 3, totalSteps: 5),
@@ -159,8 +158,7 @@ class _OnboardingPublicStatusScreenState extends State<OnboardingPublicStatusScr
                                       (element) => element.name == _selectLivingController.selectedOptions.first.value),
                                   numberOfDependents: int.parse(_dependentsController.text),
                                 ));
-
-                                Navigator.pushNamed(context, OnboardingOccupationalStatusScreen.routeName);
+                                Navigator.of(context).pushNamed(OnboardingOccupationalStatusScreen.routeName);
                               }
                             : null,
                       );

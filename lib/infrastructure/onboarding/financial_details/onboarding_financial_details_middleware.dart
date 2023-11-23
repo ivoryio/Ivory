@@ -32,5 +32,30 @@ class OnboardingFinancialDetailsMiddleware extends MiddlewareClass<AppState> {
         store.dispatch(CreateTaxIdFailedEventAction(errorType: response.errorType));
       }
     }
+
+    if (action is CreateCreditCardApplicationCommandAction) {
+      store.dispatch(CreateCreditCardApplicationLoadingEventAction());
+
+      final financialDetails = store.state.onboardingFinancialDetailsState.financialDetailsAttributes;
+
+      final response = await _onboardingFinancialDetailsService.createCreditCardApplication(
+        user: authState.cognitoUser,
+        maritalStatus: financialDetails.maritalStatus!,
+        livingSituation: financialDetails.livingSituation!,
+        numberOfDependents: financialDetails.numberOfDependents!,
+        occupationalStatus: financialDetails.occupationalStatus!,
+        dateOfEmployment: financialDetails.dateOfEmployment,
+        monthlyIncome: action.monthlyIncome,
+        monthlyExpense: action.monthlyExpense,
+        totalCurrentDebt: action.totalCurrentDebt,
+        totalCreditLimit: action.totalCreditLimit,
+      );
+
+      if (response is CreateCreditCardApplicationSuccesResponse) {
+        store.dispatch(CreateCreditCardApplicationSuccessEventAction());
+      } else if (response is CreateCreditCardApplicationErrorResponse) {
+        store.dispatch(CreateCreditCardApplicationFailedEventAction(errorType: response.errorType));
+      }
+    }
   }
 }
