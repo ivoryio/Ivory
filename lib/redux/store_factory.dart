@@ -24,6 +24,8 @@ import 'package:solarisdemo/infrastructure/onboarding/card_configuration/onboard
 import 'package:solarisdemo/infrastructure/onboarding/card_configuration/onboarding_card_configuration_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/financial_details/onboarding_financial_details_middleware.dart';
 import 'package:solarisdemo/infrastructure/onboarding/financial_details/onboarding_financial_details_service.dart';
+import 'package:solarisdemo/infrastructure/onboarding/identity_verification/onboarding_identity_verification_middleware.dart';
+import 'package:solarisdemo/infrastructure/onboarding/identity_verification/onboarding_identity_verification_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/personal_details/onboarding_personal_details_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/signup/onboarding_signup_middleware.dart';
 import 'package:solarisdemo/infrastructure/onboarding/onboarding_progress_middleware.dart';
@@ -87,6 +89,7 @@ Store<AppState> createStore({
   required MobileNumberService mobileNumberService,
   required DocumentsService documentsService,
   required FileSaverService fileSaverService,
+  required OnbordingIdentityVerificationService onboardingIdentityVerificationService,
   required OnboardingCardConfigurationService onboardingCardConfigurationService,
 }) {
   return Store<AppState>(
@@ -117,6 +120,7 @@ Store<AppState> createStore({
       AddressSuggestionsMiddleware(addressSuggestionsService),
       OnboardingFinancialDetailsMiddleware(onboardingFinancialDetailsService),
       DocumentsMiddleware(documentsService, fileSaverService),
+      OnboardingIdentityVerificationMiddleware(onboardingIdentityVerificationService),
       OnboardingCardConfigurationMiddleware(onboardingCardConfigurationService),
     ],
   );
