@@ -17,6 +17,16 @@ OnboardingIdentityVerificationState identityVerificationReducer(
       isLoading: false,
       errorType: action.errorType,
     );
+  } else if (action is SignupIdentificationInfoFetchedEventAction) {
+    return OnboardingIdentityVerificationState(
+      isLoading: false,
+      status: action.identificationStatus,
+    );
+  } else if (action is GetSignupIdentificationInfoFailedEventAction) {
+    return OnboardingIdentityVerificationState(
+      isLoading: false,
+      errorType: action.errorType,
+    );
   }
 
   return state;

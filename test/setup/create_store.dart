@@ -539,11 +539,18 @@ class NotImplementedFileSaverService extends FileSaverService {
 
 class NotImplementedOnbordingIdentityVerificationService extends OnbordingIdentityVerificationService {
   @override
-  Future<CreateIdentificationResponse> createIdentification({
+  Future<IdentityVerificationServiceResponse> createIdentification({
     required User user,
     required String accountName,
     required String iban,
     required String termsAndCondsSignedAt,
+  }) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<IdentityVerificationServiceResponse> getSignupIdentificationInfo({
+    required User user,
   }) async {
     throw UnimplementedError();
   }

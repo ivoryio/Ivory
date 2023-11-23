@@ -19,7 +19,7 @@ class DocumentsService extends ApiService {
           .map(
             (document) => Document(
               id: document['id'],
-              documentType: _getDocumentType(document['document_type']),
+              documentType: DocumentTypeParser.parse(document['document_type']),
               fileType: _getFileType(document['document_content_type']),
               fileSize: document['document_size'] ?? 0,
             ),
@@ -72,17 +72,6 @@ String _getFileType(String fileType) {
   }
 
   return "";
-}
-
-DocumentType _getDocumentType(String documentType) {
-  switch (documentType) {
-    case 'CREDIT_CARD_CONTRACT':
-      return DocumentType.creditCardContract;
-    case 'CREDIT_CARD_SECCI':
-      return DocumentType.creditCardSecci;
-    default:
-      return DocumentType.unknown;
-  }
 }
 
 abstract class DocumentsServiceResponse extends Equatable {

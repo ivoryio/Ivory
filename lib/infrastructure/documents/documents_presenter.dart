@@ -9,7 +9,7 @@ class DocumentsPresenter {
   static DocumentsViewModel present({
     required DocumentsState documentsState,
     required DownloadDocumentState downloadDocumentState,
-    required ConfirmDocumentsState confirmDocumentsState,
+    required ConfirmDocumentsState? confirmDocumentsState,
   }) {
     if (documentsState is DocumentsFetchedState) {
       if (downloadDocumentState is DocumentDownloadingState) {

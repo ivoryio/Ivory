@@ -44,3 +44,16 @@ enum DocumentType {
   creditCardSecci,
   unknown,
 }
+
+extension DocumentTypeParser on DocumentType {
+  static DocumentType parse(String documentType) {
+    switch (documentType) {
+      case 'CREDIT_CARD_CONTRACT':
+        return DocumentType.creditCardContract;
+      case 'CREDIT_CARD_SECCI':
+        return DocumentType.creditCardSecci;
+      default:
+        return DocumentType.unknown;
+    }
+  }
+}
