@@ -21,6 +21,7 @@ import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_contracts_confirm_screen.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_identity_verification_method_screen.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_reference_account_iban.dart';
+import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_sign_tan_screen.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_video_identification_not_available_screen.dart';
 import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_address_of_residence_error_screen.dart';
 import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_address_of_residence_screen.dart';
@@ -139,7 +140,7 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
           ],
           debugShowCheckedModeBanner: false,
           navigatorKey: navigatorKey,
-          initialRoute: WelcomeScreen.routeName,
+          initialRoute: OnboardingSignWithTanScreen.routeName,
           routes: {
             // landing
             WelcomeScreen.routeName: (context) => const WelcomeScreen(),
@@ -277,6 +278,7 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
             OnboardingReferenceAccountIbanScreen.routeName: (context) => const OnboardingReferenceAccountIbanScreen(),
             OnboardingContractsConfirmScreen.routeName: (context) => const OnboardingContractsConfirmScreen(),
             OnboardingBankVerificationScreen.routeName: (context) => const OnboardingBankVerificationScreen(),
+            OnboardingSignWithTanScreen.routeName: (context) => const OnboardingSignWithTanScreen(),
           },
         );
       }),
