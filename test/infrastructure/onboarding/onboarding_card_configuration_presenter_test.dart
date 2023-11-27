@@ -11,7 +11,7 @@ void main(){
     //when
     final viewModel = OnboardingCardConfigurationPresenter.presentCardConfiguration(cardConfigurationState: onboardingCardConfigurationState);
     //then
-    expect(viewModel, WithCardholderNameViewModel(cardholderName: cardholderName));
+    expect(viewModel, WithCardholderNameViewModel(cardholderName: cardholderName, isLoading: false));
   });
 
   test("When fetching cardholder name fails should return an error", () {
@@ -25,10 +25,19 @@ void main(){
 
   test("When ordering card is in progress should return loading", () {
     //given
-    final onboardingCardConfigurationState = OnboardingCardConfigurationLoadingState();
+    final onboardingCardConfigurationState = WithCardholderNameState(cardholderName: cardholderName, isLoading: true);
     //when
     final viewModel = OnboardingCardConfigurationPresenter.presentCardConfiguration(cardConfigurationState: onboardingCardConfigurationState);
     //then
-    expect(viewModel, OnboardingCardConfigurationLoadingViewModel());
+    expect(viewModel, WithCardholderNameViewModel(cardholderName: cardholderName, isLoading: true));
+  });
+
+  test("When ordering card is successful should return success", () {
+    //given
+    final onboardingCardConfigurationState = OnboardingCardConfigurationGenericSuccessState();
+    //when
+    final viewModel = OnboardingCardConfigurationPresenter.presentCardConfiguration(cardConfigurationState: onboardingCardConfigurationState);
+    //then
+    expect(viewModel, OnboardingCardConfigurationGenericSuccessViewModel());
   });
 }

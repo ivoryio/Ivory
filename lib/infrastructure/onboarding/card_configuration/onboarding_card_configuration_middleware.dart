@@ -27,5 +27,15 @@ class OnboardingCardConfigurationMiddleware extends  MiddlewareClass<AppState> {
         store.dispatch(OnboardingCardConfigurationFailedEventAction());
       }
     }
+
+    if(action is OnboardingCreateCardCommandAction) {
+      store.dispatch(OnboardingCreateCardLoadingEventAction());
+      final response = await _cardConfigurationService.onboardingCreateCard(user: authState.cognitoUser);
+      if(response is OnboardingCardConfigurationSuccessResponse) {
+        store.dispatch(OnboardingCardConfigurationGenericSuccessEventAction());
+      } else {
+        store.dispatch(OnboardingCardConfigurationFailedEventAction());
+      }
+    }
   }
 }

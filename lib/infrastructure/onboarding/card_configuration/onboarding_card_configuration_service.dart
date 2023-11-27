@@ -15,6 +15,16 @@ class OnboardingCardConfigurationService extends ApiService {
       return OnboardingCardConfigurationErrorResponse();
     }
   }
+
+  Future<OnboardingCardConfigurationResponse> onboardingCreateCard({required User user}) async {
+    this.user = user;
+    try {
+      await post("/account/cards");
+      return OnboardingCardConfigurationSuccessResponse();
+    } catch (e) {
+      return OnboardingCardConfigurationErrorResponse();
+    }
+  }
 }
 
 abstract class OnboardingCardConfigurationResponse extends Equatable {
@@ -30,4 +40,6 @@ class GetCardholderNameSuccessResponse extends OnboardingCardConfigurationRespon
   @override
   List<Object?> get props => [cardholderName];
 }
+
+class OnboardingCardConfigurationSuccessResponse extends OnboardingCardConfigurationResponse {}
 class OnboardingCardConfigurationErrorResponse extends OnboardingCardConfigurationResponse {}

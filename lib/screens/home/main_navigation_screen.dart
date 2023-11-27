@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:solarisdemo/models/home/main_navigation_screens.dart';
 import 'package:solarisdemo/screens/home/home_screen.dart';
-import 'package:solarisdemo/screens/onboarding/card_configuration/onboarding_order_card.dart';
 import 'package:solarisdemo/screens/settings/settings_screen.dart';
 import 'package:solarisdemo/screens/transactions/transactions_screen.dart';
 import 'package:solarisdemo/screens/wallet/cards_screen.dart';
@@ -55,7 +54,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       case MainNavigationScreens.homeScreen:
         return const HomeScreen();
       case MainNavigationScreens.cardsScreen:
-        return const OnboardingOrderCardScreen();
+        return const BankCardsScreen();
       case MainNavigationScreens.transactionsScreen:
         return const TransactionsScreen();
       case MainNavigationScreens.settingsScreen:

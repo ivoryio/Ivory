@@ -2,8 +2,10 @@ class GetCardPersonNameCommandAction {}
 
 class OnboardingCreateCardCommandAction {}
 
-class OnboardingCardLoadingEventAction {}
+class OnboardingCreateCardLoadingEventAction {}
 class OnboardingCardConfigurationFailedEventAction {}
+class OnboardingCardConfigurationGenericSuccessEventAction {}
+
 class WithCardholderNameEventAction {
   final String cardholderName;
 

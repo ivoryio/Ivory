@@ -6,12 +6,15 @@ class OnboardingCardConfigurationPresenter {
   static OnboardingCardConfigurationViewModel presentCardConfiguration({
     required OnboardingCardConfigurationState cardConfigurationState
   }) {
-    if(cardConfigurationState is OnboardingCardConfigurationLoadingState) {
-      return OnboardingCardConfigurationLoadingViewModel();
-    } else if (cardConfigurationState is OnboardingCardConfigurationGenericErrorState) {
+   if (cardConfigurationState is OnboardingCardConfigurationGenericErrorState) {
       return OnboardingCardConfigurationGenericErrorViewModel();
+    } else if (cardConfigurationState is OnboardingCardConfigurationGenericSuccessState) {
+      return OnboardingCardConfigurationGenericSuccessViewModel();
     } else if (cardConfigurationState is WithCardholderNameState) {
-      return WithCardholderNameViewModel(cardholderName: cardConfigurationState.cardholderName);
+      return WithCardholderNameViewModel(
+          cardholderName: cardConfigurationState.cardholderName,
+          isLoading: cardConfigurationState.isLoading,
+      );
     }
 
     return OnboardingCardConfigurationInitialViewModel();
@@ -24,13 +27,18 @@ abstract class OnboardingCardConfigurationViewModel extends Equatable {
 }
 
 class OnboardingCardConfigurationInitialViewModel extends OnboardingCardConfigurationViewModel {}
-class OnboardingCardConfigurationLoadingViewModel extends OnboardingCardConfigurationViewModel {}
 class OnboardingCardConfigurationGenericErrorViewModel extends OnboardingCardConfigurationViewModel {}
+class OnboardingCardConfigurationGenericSuccessViewModel extends OnboardingCardConfigurationViewModel {}
+
 class WithCardholderNameViewModel extends OnboardingCardConfigurationViewModel {
   final String cardholderName;
+  final bool isLoading;
 
-  WithCardholderNameViewModel({required this.cardholderName}) : super();
+  WithCardholderNameViewModel({
+    required this.cardholderName,
+    this.isLoading = false,
+  });
 
   @override
-  List<Object?> get props => [cardholderName];
+  List<Object?> get props => [cardholderName, isLoading];
 }
