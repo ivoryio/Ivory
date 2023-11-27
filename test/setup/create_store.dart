@@ -35,6 +35,7 @@ import 'package:solarisdemo/infrastructure/transfer/transfer_service.dart';
 import 'package:solarisdemo/models/bank_card.dart';
 import 'package:solarisdemo/models/device.dart';
 import 'package:solarisdemo/models/device_activity.dart';
+import 'package:solarisdemo/models/onboarding/onboarding_financial_details_attributes.dart';
 import 'package:solarisdemo/models/documents/document.dart';
 import 'package:solarisdemo/models/onboarding/onboarding_signup_attributes.dart';
 import 'package:solarisdemo/models/suggestions/address_suggestion.dart';
@@ -448,9 +449,25 @@ class NotImplementedOnboardingSignupService extends OnboardingSignupService {
 
 class NotImplementedOnboardingFinancialDetailsService extends OnboardingFinancialDetailsService {
   @override
-  Future<CreateTaxIdResponse> createTaxIdentification({
+  Future<FinancialDetailsServiceResponse> createTaxIdentification({
     required User user,
     required String taxId,
+  }) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<FinancialDetailsServiceResponse> createCreditCardApplication({
+    required User user,
+    required OnboardingMaritalStatus maritalStatus,
+    required OnboardingLivingSituation livingSituation,
+    required int numberOfDependents,
+    required OnboardingOccupationalStatus occupationalStatus,
+    required String dateOfEmployment,
+    required num monthlyIncome,
+    required num monthlyExpense,
+    required num totalCurrentDebt,
+    required num totalCreditLimit,
   }) {
     throw UnimplementedError();
   }

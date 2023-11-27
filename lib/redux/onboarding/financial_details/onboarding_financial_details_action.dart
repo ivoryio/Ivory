@@ -50,3 +50,29 @@ class CreateOthersOccupationalStatusCommandAction {
     required this.occupationalStatus,
   });
 }
+
+class CreateCreditCardApplicationCommandAction {
+  final num monthlyIncome;
+  final num monthlyExpense;
+  final num totalCurrentDebt;
+  final num totalCreditLimit;
+
+  CreateCreditCardApplicationCommandAction({
+    required this.monthlyIncome,
+    required this.monthlyExpense,
+    required this.totalCurrentDebt,
+    required this.totalCreditLimit,
+  });
+}
+
+class CreateCreditCardApplicationLoadingEventAction {}
+
+class CreateCreditCardApplicationSuccessEventAction {}
+
+class CreateCreditCardApplicationFailedEventAction {
+  final FinancialDetailsErrorType errorType;
+
+  CreateCreditCardApplicationFailedEventAction({
+    required this.errorType,
+  });
+}

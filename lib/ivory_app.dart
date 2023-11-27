@@ -12,12 +12,14 @@ import 'package:solarisdemo/screens/account/account_details_screen.dart';
 import 'package:solarisdemo/screens/available_balance/available_balance_screen.dart';
 import 'package:solarisdemo/screens/login/login_with_biometrics_screen.dart';
 import 'package:solarisdemo/screens/login/login_with_tan_screen.dart';
+import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_monthly_income_screen.dart';
 import 'package:solarisdemo/screens/onboarding/card_configuration/onboarding_configure_card.dart';
 import 'package:solarisdemo/screens/onboarding/card_configuration/onboarding_order_card.dart';
 import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_occupational_status_screen.dart';
 import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_public_status_screen.dart';
 import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_remember_screen.dart';
 import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_taxId_screen.dart';
+import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_bank_verification_screen.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_contracts_confirm_screen.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_identity_verification_method_screen.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_reference_account_iban.dart';
@@ -268,6 +270,7 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
             OnboardingTaxIdScreen.routeName: (context) => const OnboardingTaxIdScreen(),
             OnboardingPublicStatusScreen.routeName: (context) => const OnboardingPublicStatusScreen(),
             OnboardingOccupationalStatusScreen.routeName: (context) => const OnboardingOccupationalStatusScreen(),
+            OnboardingMonthlyIncomeScreen.routeName: (context) => const OnboardingMonthlyIncomeScreen(),
             // onboarding/identity_verification
             OnboardingIdentityVerificationMethodScreen.routeName: (context) =>
                 const OnboardingIdentityVerificationMethodScreen(),
@@ -275,6 +278,7 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
                 const OnboardingVideoIdentificationNotAvailableScreen(),
             OnboardingReferenceAccountIbanScreen.routeName: (context) => const OnboardingReferenceAccountIbanScreen(),
             OnboardingContractsConfirmScreen.routeName: (context) => const OnboardingContractsConfirmScreen(),
+            OnboardingBankVerificationScreen.routeName: (context) => const OnboardingBankVerificationScreen(),
             //onboarding/card_configuration
             OnboardingOrderCardScreen.routeName:(context) => const OnboardingOrderCardScreen(),
             OnboardingConfigureCardScreen.routeName:(context) => const OnboardingConfigureCardScreen(),
