@@ -547,4 +547,9 @@ class NotImplementedOnbordingIdentityVerificationService extends OnbordingIdenti
   }) async {
     throw UnimplementedError();
   }
+
+  @override
+  Future<CreateIdentificationResponse> signWithTan({required String tan}) async {
+    throw UnimplementedError();
+  }
 }

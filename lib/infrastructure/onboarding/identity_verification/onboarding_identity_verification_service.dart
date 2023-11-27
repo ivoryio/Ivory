@@ -29,6 +29,23 @@ class OnbordingIdentityVerificationService extends ApiService {
       return const CreateIdentificationErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
     }
   }
+
+  Future<CreateIdentificationResponse> signWithTan({required String tan}) async {
+    this.user = user;
+
+    const path = '/signup/identification/confirm';
+    Map<String, dynamic> body = {
+      'tan': tan,
+    };
+
+    try {
+      await patch(path, body: body);
+
+      return SignWithTanSuccessResponse();
+    } catch (err) {
+      return const CreateIdentificationErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
+    }
+  }
 }
 
 abstract class CreateIdentificationResponse extends Equatable {
@@ -55,3 +72,5 @@ class CreateIdentificationErrorResponse extends CreateIdentificationResponse {
   @override
   List<Object?> get props => [errorType];
 }
+
+class SignWithTanSuccessResponse extends CreateIdentificationResponse {}

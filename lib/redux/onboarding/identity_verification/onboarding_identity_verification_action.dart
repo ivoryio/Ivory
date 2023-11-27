@@ -23,3 +23,13 @@ class CreateIdentificationFailedEventAction {
 
   CreateIdentificationFailedEventAction({required this.errorType});
 }
+
+class AuthorizeIdentificationSigningCommandAction {}
+
+class SignWithTanCommandAction {
+  final String tan;
+
+  SignWithTanCommandAction({required this.tan});
+}
+
+class SignWithTanSuccessEventAction {}

@@ -36,3 +36,31 @@ class OnboardingIdentityVerificationMiddleware extends MiddlewareClass<AppState>
     }
   }
 }
+
+class OnboardingSignWithTanMiddleware extends MiddlewareClass<AppState> {
+  final OnbordingIdentityVerificationService _onboardingSignWithTanService;
+
+  OnboardingSignWithTanMiddleware(this._onboardingSignWithTanService);
+
+  @override
+  call(Store<AppState> store, dynamic action, NextDispatcher next) async {
+    next(action);
+
+    final authState = store.state.authState;
+    if (authState is! AuthenticationInitializedState) {
+      return;
+    }
+
+    if (action is SignWithTanCommandAction) {
+      store.dispatch(OnboardingIdentityVerificationLoadingEventAction());
+
+      final response = await _onboardingSignWithTanService.signWithTan(tan: action.tan);
+
+      if (response is SignWithTanSuccessResponse) {
+        store.dispatch(SignWithTanSuccessEventAction());
+      } else if (response is CreateIdentificationErrorResponse) {
+        store.dispatch(CreateIdentificationFailedEventAction(errorType: response.errorType));
+      }
+    }
+  }
+}
