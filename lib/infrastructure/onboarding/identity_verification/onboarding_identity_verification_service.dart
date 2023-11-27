@@ -40,8 +40,16 @@ class OnbordingIdentityVerificationService extends ApiService {
     try {
       final response = await get('/signup/identification');
 
+      final identificationStatus = _parseIdentificationStatus(response['status'] ?? "");
+
+      if (identificationStatus == OnboardingIdentificationStatus.pending) {
+        return const IdentityVerificationServiceErrorResponse(
+          errorType: OnboardingIdentityVerificationErrorType.pendingIdentification,
+        );
+      }
+
       return GetSignupIdentificationInfoSuccessResponse(
-        identificationStatus: _parseIdentificationStatus(response['status'] ?? ""),
+        identificationStatus: identificationStatus,
         documents: (response['documents'] as List)
             .map(
               (document) => Document(
@@ -77,6 +85,8 @@ class OnbordingIdentityVerificationService extends ApiService {
 
 OnboardingIdentificationStatus _parseIdentificationStatus(String status) {
   switch (status) {
+    case 'pending':
+      return OnboardingIdentificationStatus.pending;
     case 'authorization_required':
       return OnboardingIdentificationStatus.authorizationRequired;
     case 'failed':

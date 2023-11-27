@@ -33,6 +33,11 @@ class OnboardingReviewUpdatedContractsScreen extends StatelessWidget {
       converter: (store) => OnboardingIdentityVerificationPresenter.present(
         identityVerificationState: store.state.onboardingIdentityVerificationState,
       ),
+      onWillChange: (previousViewModel, newViewModel) {
+        if (newViewModel.isAuthorized == true) {
+          print("OnboardingReviewUpdatedContractsScreen: isAuthorized");
+        }
+      },
       builder: (context, viewModel) {
         final isAuthorizationStatusValid = viewModel.identificationStatus == null ||
             viewModel.identificationStatus == OnboardingIdentificationStatus.authorizationRequired;

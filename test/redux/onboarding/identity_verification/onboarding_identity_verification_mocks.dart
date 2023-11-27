@@ -1,10 +1,11 @@
+import 'package:mockito/mockito.dart';
 import 'package:solarisdemo/infrastructure/onboarding/identity_verification/onboarding_identity_verification_service.dart';
 import 'package:solarisdemo/models/documents/document.dart';
 import 'package:solarisdemo/models/onboarding/onboarding_identification_status.dart';
 import 'package:solarisdemo/models/onboarding/onboarding_identity_verification_error_type.dart';
 import 'package:solarisdemo/models/user.dart';
 
-class FakeOnbordingIdentityVerificationService extends OnbordingIdentityVerificationService {
+class FakeOnbordingIdentityVerificationService extends Mock implements OnbordingIdentityVerificationService {
   @override
   Future<IdentityVerificationServiceResponse> createIdentification({
     required User user,
@@ -44,7 +45,7 @@ class FakeOnbordingIdentityVerificationService extends OnbordingIdentityVerifica
   }
 }
 
-class FakeFailingOnbordingIdentityVerificationService extends OnbordingIdentityVerificationService {
+class FakeFailingOnbordingIdentityVerificationService extends Mock implements OnbordingIdentityVerificationService {
   @override
   Future<IdentityVerificationServiceResponse> createIdentification({
     required User user,
