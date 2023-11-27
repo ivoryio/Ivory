@@ -71,6 +71,7 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
             padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
             richTextTitle: StepRichTextTitle(step: 5, totalSteps: 7),
             actions: const [AppbarLogo()],
+            backButtonEnabled: false,
           ),
           AnimatedLinearProgressIndicator.step(current: 5, totalSteps: 7),
           Expanded(
