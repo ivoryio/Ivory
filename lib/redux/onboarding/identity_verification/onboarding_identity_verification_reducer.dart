@@ -12,20 +12,10 @@ OnboardingIdentityVerificationState identityVerificationReducer(
       isLoading: false,
       urlForIntegration: action.urlForIntegration,
     );
-  } else if (action is CreateIdentificationFailedEventAction) {
-    return OnboardingIdentityVerificationState(
-      isLoading: false,
-      errorType: action.errorType,
-    );
   } else if (action is SignupIdentificationInfoFetchedEventAction) {
     return OnboardingIdentityVerificationState(
       isLoading: false,
       status: action.identificationStatus,
-    );
-  } else if (action is GetSignupIdentificationInfoFailedEventAction) {
-    return OnboardingIdentityVerificationState(
-      isLoading: false,
-      errorType: action.errorType,
     );
   } else if (action is AuthorizeIdentificationSigningSuccessEventAction) {
     return const OnboardingIdentityVerificationState(

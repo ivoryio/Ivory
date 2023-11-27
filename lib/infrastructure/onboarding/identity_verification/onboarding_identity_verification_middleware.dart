@@ -31,8 +31,8 @@ class OnboardingIdentityVerificationMiddleware extends MiddlewareClass<AppState>
 
       if (response is CreateIdentificationSuccessResponse) {
         store.dispatch(CreateIdentificationSuccessEventAction(urlForIntegration: response.urlForIntegration));
-      } else if (response is CreateIdentificationErrorResponse) {
-        store.dispatch(CreateIdentificationFailedEventAction(errorType: response.errorType));
+      } else if (response is IdentityVerificationServiceErrorResponse) {
+        store.dispatch(OnboardingIdentityVerificationErrorEventAction(errorType: response.errorType));
       }
     }
 
@@ -46,8 +46,8 @@ class OnboardingIdentityVerificationMiddleware extends MiddlewareClass<AppState>
       if (response is GetSignupIdentificationInfoSuccessResponse) {
         store.dispatch(SignupIdentificationInfoFetchedEventAction(identificationStatus: response.identificationStatus));
         store.dispatch(DocumentsFetchedEventAction(documents: response.documents));
-      } else if (response is GetSignupIdentificationInfoErrorResponse) {
-        store.dispatch(GetSignupIdentificationInfoFailedEventAction(errorType: response.errorType));
+      } else if (response is IdentityVerificationServiceErrorResponse) {
+        store.dispatch(OnboardingIdentityVerificationErrorEventAction(errorType: response.errorType));
       }
     }
 
@@ -60,7 +60,7 @@ class OnboardingIdentityVerificationMiddleware extends MiddlewareClass<AppState>
 
       if (response is AuthorizeIdentificationSuccessResponse) {
         store.dispatch(AuthorizeIdentificationSigningSuccessEventAction());
-      } else if (response is AuthorizeIdentificationErrorResponse) {
+      } else if (response is IdentityVerificationServiceErrorResponse) {
         store.dispatch(OnboardingIdentityVerificationErrorEventAction(errorType: response.errorType));
       }
     }

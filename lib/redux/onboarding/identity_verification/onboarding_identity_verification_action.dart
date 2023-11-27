@@ -19,24 +19,12 @@ class CreateIdentificationSuccessEventAction {
   CreateIdentificationSuccessEventAction({required this.urlForIntegration});
 }
 
-class CreateIdentificationFailedEventAction {
-  final OnboardingIdentityVerificationErrorType errorType;
-
-  CreateIdentificationFailedEventAction({required this.errorType});
-}
-
 class GetSignupIdentificationInfoCommandAction {}
 
 class SignupIdentificationInfoFetchedEventAction {
   final OnboardingIdentificationStatus identificationStatus;
 
   SignupIdentificationInfoFetchedEventAction({required this.identificationStatus});
-}
-
-class GetSignupIdentificationInfoFailedEventAction {
-  final OnboardingIdentityVerificationErrorType errorType;
-
-  GetSignupIdentificationInfoFailedEventAction({required this.errorType});
 }
 
 class AuthorizeIdentificationSigningCommandAction {}

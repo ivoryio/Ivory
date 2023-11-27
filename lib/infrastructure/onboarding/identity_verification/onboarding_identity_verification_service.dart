@@ -28,7 +28,7 @@ class OnbordingIdentityVerificationService extends ApiService {
 
       return CreateIdentificationSuccessResponse(urlForIntegration: response['url']);
     } catch (err) {
-      return const CreateIdentificationErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
+      return const IdentityVerificationServiceErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
     }
   }
 
@@ -54,7 +54,7 @@ class OnbordingIdentityVerificationService extends ApiService {
             .toList(),
       );
     } catch (err) {
-      return const GetSignupIdentificationInfoErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
+      return const IdentityVerificationServiceErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
     }
   }
 
@@ -68,9 +68,9 @@ class OnbordingIdentityVerificationService extends ApiService {
         return AuthorizeIdentificationSuccessResponse();
       }
 
-      return const AuthorizeIdentificationErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
+      return const IdentityVerificationServiceErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
     } catch (error) {
-      return const AuthorizeIdentificationErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
+      return const IdentityVerificationServiceErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
     }
   }
 }
@@ -102,15 +102,6 @@ class CreateIdentificationSuccessResponse extends IdentityVerificationServiceRes
   List<Object?> get props => [urlForIntegration];
 }
 
-class CreateIdentificationErrorResponse extends IdentityVerificationServiceResponse {
-  final OnboardingIdentityVerificationErrorType errorType;
-
-  const CreateIdentificationErrorResponse({required this.errorType});
-
-  @override
-  List<Object?> get props => [errorType];
-}
-
 class GetSignupIdentificationInfoSuccessResponse extends IdentityVerificationServiceResponse {
   final OnboardingIdentificationStatus identificationStatus;
   final List<Document> documents;
@@ -121,21 +112,12 @@ class GetSignupIdentificationInfoSuccessResponse extends IdentityVerificationSer
   List<Object?> get props => [identificationStatus, documents];
 }
 
-class GetSignupIdentificationInfoErrorResponse extends IdentityVerificationServiceResponse {
-  final OnboardingIdentityVerificationErrorType errorType;
-
-  const GetSignupIdentificationInfoErrorResponse({required this.errorType});
-
-  @override
-  List<Object?> get props => [errorType];
-}
-
 class AuthorizeIdentificationSuccessResponse extends IdentityVerificationServiceResponse {}
 
-class AuthorizeIdentificationErrorResponse extends IdentityVerificationServiceResponse {
+class IdentityVerificationServiceErrorResponse extends IdentityVerificationServiceResponse {
   final OnboardingIdentityVerificationErrorType errorType;
 
-  const AuthorizeIdentificationErrorResponse({required this.errorType});
+  const IdentityVerificationServiceErrorResponse({required this.errorType});
 
   @override
   List<Object?> get props => [errorType];

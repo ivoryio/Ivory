@@ -52,20 +52,18 @@ class FakeFailingOnbordingIdentityVerificationService extends OnbordingIdentityV
     required String iban,
     required String termsAndCondsSignedAt,
   }) async {
-    return const CreateIdentificationErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
+    return const IdentityVerificationServiceErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
   }
 
   @override
   Future<IdentityVerificationServiceResponse> getSignupIdentificationInfo({
     required User user,
   }) async {
-    return const GetSignupIdentificationInfoErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
+    return const IdentityVerificationServiceErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
   }
 
   @override
   Future<IdentityVerificationServiceResponse> authorizeIdentification({required User user}) async {
-    return const AuthorizeIdentificationErrorResponse(
-      errorType: OnboardingIdentityVerificationErrorType.unknown,
-    );
+    return const IdentityVerificationServiceErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
   }
 }
