@@ -181,7 +181,8 @@ void main() {
   });
 
   group("Bank identification authorization", () {
-    test("When authorizing the bank identification, the state should change to loading", () async {
+    test("When authorizing the bank identification, the state isLoading should be true and status should exist",
+        () async {
       // given
       final store = createTestStore(
         onboardingIdentityVerificationService: FakeOnbordingIdentityVerificationService(),
@@ -205,9 +206,12 @@ void main() {
       final identityVerificationState = (await appState).onboardingIdentityVerificationState;
 
       expect(identityVerificationState.isLoading, true);
+      expect(identityVerificationState.status, OnboardingIdentificationStatus.authorizationRequired);
     });
 
-    test("When authorizing the bank identification is successful, the state should change to authorized", () async {
+    test(
+        "When authorizing the bank identification is successful, the state isAuthorized should change and identificationStatus should not change",
+        () async {
       // given
       final store = createTestStore(
         onboardingIdentityVerificationService: FakeOnbordingIdentityVerificationService(),
@@ -236,6 +240,7 @@ void main() {
       expect(loadingState.isLoading, true);
       expect(identityVerificationState.isLoading, false);
       expect(identityVerificationState.isAuthorized, true);
+      expect(identityVerificationState.status, OnboardingIdentificationStatus.authorizationRequired);
     });
 
     test("When authorizing the bank identification has failed, the state errorType should change", () async {

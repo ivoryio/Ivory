@@ -29,6 +29,8 @@ class SignupIdentificationInfoFetchedEventAction {
 
 class AuthorizeIdentificationSigningCommandAction {}
 
+class OnboardingIdentityAuthorizationLoadingEventAction {}
+
 class AuthorizeIdentificationSigningSuccessEventAction {}
 
 class OnboardingIdentityVerificationErrorEventAction {

@@ -52,7 +52,7 @@ class OnboardingIdentityVerificationMiddleware extends MiddlewareClass<AppState>
     }
 
     if (action is AuthorizeIdentificationSigningCommandAction) {
-      store.dispatch(OnboardingIdentityVerificationLoadingEventAction());
+      store.dispatch(OnboardingIdentityAuthorizationLoadingEventAction());
 
       final response = await _onboardingIdentityVerificationService.authorizeIdentification(
         user: authState.cognitoUser,

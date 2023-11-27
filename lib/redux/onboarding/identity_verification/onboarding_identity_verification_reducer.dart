@@ -7,6 +7,11 @@ OnboardingIdentityVerificationState identityVerificationReducer(
     return const OnboardingIdentityVerificationState(
       isLoading: true,
     );
+  } else if (action is OnboardingIdentityAuthorizationLoadingEventAction) {
+    return OnboardingIdentityVerificationState(
+      isLoading: true,
+      status: state.status,
+    );
   } else if (action is CreateIdentificationSuccessEventAction) {
     return OnboardingIdentityVerificationState(
       isLoading: false,
@@ -18,9 +23,10 @@ OnboardingIdentityVerificationState identityVerificationReducer(
       status: action.identificationStatus,
     );
   } else if (action is AuthorizeIdentificationSigningSuccessEventAction) {
-    return const OnboardingIdentityVerificationState(
+    return OnboardingIdentityVerificationState(
       isLoading: false,
       isAuthorized: true,
+      status: state.status,
     );
   } else if (action is OnboardingIdentityVerificationErrorEventAction) {
     return OnboardingIdentityVerificationState(
