@@ -7,14 +7,16 @@ class OnboardingIdentityVerificationState extends Equatable {
   final bool isLoading;
   final OnboardingIdentificationStatus? status;
   final OnboardingIdentityVerificationErrorType? errorType;
+  final bool? isAuthorized;
 
   const OnboardingIdentityVerificationState({
     this.urlForIntegration,
     this.isLoading = false,
     this.status,
+    this.isAuthorized,
     this.errorType,
   });
 
   @override
-  List<Object?> get props => [urlForIntegration, isLoading, errorType, status];
+  List<Object?> get props => [urlForIntegration, isLoading, errorType, status, isAuthorized];
 }

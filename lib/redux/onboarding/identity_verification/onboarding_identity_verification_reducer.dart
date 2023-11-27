@@ -27,6 +27,16 @@ OnboardingIdentityVerificationState identityVerificationReducer(
       isLoading: false,
       errorType: action.errorType,
     );
+  } else if (action is AuthorizeIdentificationSigningSuccessEventAction) {
+    return const OnboardingIdentityVerificationState(
+      isLoading: false,
+      isAuthorized: true,
+    );
+  } else if (action is OnboardingIdentityVerificationErrorEventAction) {
+    return OnboardingIdentityVerificationState(
+      isLoading: false,
+      errorType: action.errorType,
+    );
   }
 
   return state;

@@ -57,6 +57,22 @@ class OnbordingIdentityVerificationService extends ApiService {
       return const GetSignupIdentificationInfoErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
     }
   }
+
+  Future<IdentityVerificationServiceResponse> authorizeIdentification({required User user}) async {
+    this.user = user;
+
+    try {
+      final response = await patch('/signup/identification/authorize');
+
+      if (response['success'] == true) {
+        return AuthorizeIdentificationSuccessResponse();
+      }
+
+      return const AuthorizeIdentificationErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
+    } catch (error) {
+      return const AuthorizeIdentificationErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
+    }
+  }
 }
 
 OnboardingIdentificationStatus _parseIdentificationStatus(String status) {
@@ -109,6 +125,17 @@ class GetSignupIdentificationInfoErrorResponse extends IdentityVerificationServi
   final OnboardingIdentityVerificationErrorType errorType;
 
   const GetSignupIdentificationInfoErrorResponse({required this.errorType});
+
+  @override
+  List<Object?> get props => [errorType];
+}
+
+class AuthorizeIdentificationSuccessResponse extends IdentityVerificationServiceResponse {}
+
+class AuthorizeIdentificationErrorResponse extends IdentityVerificationServiceResponse {
+  final OnboardingIdentityVerificationErrorType errorType;
+
+  const AuthorizeIdentificationErrorResponse({required this.errorType});
 
   @override
   List<Object?> get props => [errorType];

@@ -38,3 +38,13 @@ class GetSignupIdentificationInfoFailedEventAction {
 
   GetSignupIdentificationInfoFailedEventAction({required this.errorType});
 }
+
+class AuthorizeIdentificationSigningCommandAction {}
+
+class AuthorizeIdentificationSigningSuccessEventAction {}
+
+class OnboardingIdentityVerificationErrorEventAction {
+  final OnboardingIdentityVerificationErrorType errorType;
+
+  OnboardingIdentityVerificationErrorEventAction({required this.errorType});
+}

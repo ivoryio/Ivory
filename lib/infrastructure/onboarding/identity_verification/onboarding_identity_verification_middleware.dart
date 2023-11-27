@@ -50,5 +50,19 @@ class OnboardingIdentityVerificationMiddleware extends MiddlewareClass<AppState>
         store.dispatch(GetSignupIdentificationInfoFailedEventAction(errorType: response.errorType));
       }
     }
+
+    if (action is AuthorizeIdentificationSigningCommandAction) {
+      store.dispatch(OnboardingIdentityVerificationLoadingEventAction());
+
+      final response = await _onboardingIdentityVerificationService.authorizeIdentification(
+        user: authState.cognitoUser,
+      );
+
+      if (response is AuthorizeIdentificationSuccessResponse) {
+        store.dispatch(AuthorizeIdentificationSigningSuccessEventAction());
+      } else if (response is AuthorizeIdentificationErrorResponse) {
+        store.dispatch(OnboardingIdentityVerificationErrorEventAction(errorType: response.errorType));
+      }
+    }
   }
 }

@@ -179,4 +179,89 @@ void main() {
       expect(identityVerificationState.errorType, OnboardingIdentityVerificationErrorType.unknown);
     });
   });
+
+  group("Bank identification authorization", () {
+    test("When authorizing the bank identification, the state should change to loading", () async {
+      // given
+      final store = createTestStore(
+        onboardingIdentityVerificationService: FakeOnbordingIdentityVerificationService(),
+        initialState: createAppState(
+          authState: authInitializedState,
+          onboardingIdentityVerificationState: const OnboardingIdentityVerificationState(
+            urlForIntegration: "https://example.com",
+            isLoading: false,
+            status: OnboardingIdentificationStatus.authorizationRequired,
+          ),
+        ),
+      );
+
+      final appState =
+          store.onChange.firstWhere((state) => state.onboardingIdentityVerificationState.isLoading == true);
+
+      // when
+      store.dispatch(AuthorizeIdentificationSigningCommandAction());
+
+      // then
+      final identityVerificationState = (await appState).onboardingIdentityVerificationState;
+
+      expect(identityVerificationState.isLoading, true);
+    });
+
+    test("When authorizing the bank identification is successful, the state should change to authorized", () async {
+      // given
+      final store = createTestStore(
+        onboardingIdentityVerificationService: FakeOnbordingIdentityVerificationService(),
+        initialState: createAppState(
+          authState: authInitializedState,
+          onboardingIdentityVerificationState: const OnboardingIdentityVerificationState(
+            urlForIntegration: "https://example.com",
+            isLoading: false,
+            status: OnboardingIdentificationStatus.authorizationRequired,
+          ),
+        ),
+      );
+
+      final appState =
+          store.onChange.firstWhere((state) => state.onboardingIdentityVerificationState.isAuthorized == true);
+      final identityVerificationLoadingState =
+          store.onChange.firstWhere((state) => state.onboardingIdentityVerificationState.isLoading);
+
+      // when
+      store.dispatch(AuthorizeIdentificationSigningCommandAction());
+
+      // then
+      final identityVerificationState = (await appState).onboardingIdentityVerificationState;
+      final loadingState = (await identityVerificationLoadingState).onboardingIdentityVerificationState;
+
+      expect(loadingState.isLoading, true);
+      expect(identityVerificationState.isLoading, false);
+      expect(identityVerificationState.isAuthorized, true);
+    });
+
+    test("When authorizing the bank identification has failed, the state errorType should change", () async {
+      // given
+      final store = createTestStore(
+        onboardingIdentityVerificationService: FakeFailingOnbordingIdentityVerificationService(),
+        initialState: createAppState(
+          authState: authInitializedState,
+          onboardingIdentityVerificationState: const OnboardingIdentityVerificationState(
+            urlForIntegration: "https://example.com",
+            isLoading: false,
+            status: OnboardingIdentificationStatus.authorizationRequired,
+          ),
+        ),
+      );
+      final appState =
+          store.onChange.firstWhere((state) => state.onboardingIdentityVerificationState.errorType != null);
+
+      // when
+      store.dispatch(AuthorizeIdentificationSigningCommandAction());
+
+      // then
+      final identityVerificationState = (await appState).onboardingIdentityVerificationState;
+
+      expect(identityVerificationState.isLoading, false);
+      expect(identityVerificationState.errorType, OnboardingIdentityVerificationErrorType.unknown);
+    });
+  });
 }

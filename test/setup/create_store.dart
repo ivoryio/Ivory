@@ -558,4 +558,9 @@ class NotImplementedOnbordingIdentityVerificationService extends OnbordingIdenti
   }) async {
     throw UnimplementedError();
   }
+
+  @override
+  Future<IdentityVerificationServiceResponse> authorizeIdentification({required User user}) async {
+    throw UnimplementedError();
+  }
 }

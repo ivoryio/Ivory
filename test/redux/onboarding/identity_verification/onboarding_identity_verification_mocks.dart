@@ -37,6 +37,11 @@ class FakeOnbordingIdentityVerificationService extends OnbordingIdentityVerifica
       ],
     );
   }
+
+  @override
+  Future<IdentityVerificationServiceResponse> authorizeIdentification({required User user}) async {
+    return AuthorizeIdentificationSuccessResponse();
+  }
 }
 
 class FakeFailingOnbordingIdentityVerificationService extends OnbordingIdentityVerificationService {
@@ -55,5 +60,12 @@ class FakeFailingOnbordingIdentityVerificationService extends OnbordingIdentityV
     required User user,
   }) async {
     return const GetSignupIdentificationInfoErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
+  }
+
+  @override
+  Future<IdentityVerificationServiceResponse> authorizeIdentification({required User user}) async {
+    return const AuthorizeIdentificationErrorResponse(
+      errorType: OnboardingIdentityVerificationErrorType.unknown,
+    );
   }
 }
