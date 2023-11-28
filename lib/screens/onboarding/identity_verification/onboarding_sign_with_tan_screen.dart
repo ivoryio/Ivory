@@ -28,6 +28,7 @@ class OnboardingSignWithTanScreen extends StatefulWidget {
 }
 
 class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScreen> {
+  final GlobalKey<TanInputState> _tanInputKey = GlobalKey<TanInputState>();
   final TextEditingController _tanController = TextEditingController();
   final ContinueButtonController _continueButtonController = ContinueButtonController();
   final Duration _stepTime = const Duration(minutes: 4, seconds: 59);
@@ -162,10 +163,11 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
                       ),
                       const SizedBox(height: 24),
                       TanInput(
+                        key: _tanInputKey,
                         length: 6,
                         hintText: '#',
                         onCompleted: (String tan) {
-                          log('signWithTan ===> $tan');
+                          log('signWithTan ===> ${_tanController.text}');
                         },
                         controller: _tanController,
                       ),
@@ -186,11 +188,14 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
                                     .copyWith(color: ClientConfig.getColorScheme().secondary),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    setState(() {
-                                      _countdownTimer = const Duration(seconds: 59);
+                                    _tanInputKey.currentState?.controllers.forEach((element) {
+                                      element.clear();
                                     });
-
+                                    _countdownTimer = const Duration(seconds: 59);
                                     _startTimer();
+
+                                    StoreProvider.of<AppState>(context)
+                                        .dispatch(AuthorizeIdentificationSigningCommandAction());
                                   })),
                       ),
                       const SizedBox(height: 16),
