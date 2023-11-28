@@ -11,6 +11,7 @@ class InputCurrencyField extends StatefulWidget {
   final Widget? labelSuffix;
   final String? placeHolder;
   final FocusNode? focusNode;
+  final int? maxLength;
 
   const InputCurrencyField({
     super.key,
@@ -20,6 +21,7 @@ class InputCurrencyField extends StatefulWidget {
     this.labelSuffix,
     this.placeHolder = '0.00',
     this.focusNode,
+    this.maxLength,
   });
 
   @override
@@ -113,6 +115,7 @@ class _InputCurrencyFieldState extends State<InputCurrencyField> {
               ],
               Expanded(
                 child: TextField(
+                  maxLength: widget.maxLength,                 
                   style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
                   controller: _currencyController,
                   focusNode: _focusNode,
@@ -121,6 +124,7 @@ class _InputCurrencyFieldState extends State<InputCurrencyField> {
                     ThousandsSeparatorInputFormatter(),
                   ],
                   decoration: InputDecoration(
+                    counterText: '',
                     hintText: widget.placeHolder,
                     hintStyle: ClientConfig.getTextStyleScheme()
                         .bodyLargeRegular
@@ -178,6 +182,6 @@ class ThousandsSeparatorInputFormatter extends TextInputFormatter {
   }
 
   String _formatIntegerPart(String integerValueOfNumber) {
-    return integerValueOfNumber.isNotEmpty ? NumberFormat('#,###').format(int.parse(integerValueOfNumber)) : '';
+    return integerValueOfNumber.isNotEmpty ? NumberFormat('#,###').format(double.parse(integerValueOfNumber)) : '';
   }
 }
