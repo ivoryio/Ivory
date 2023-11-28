@@ -118,7 +118,6 @@ Store<AppState> createStore({
       OnboardingFinancialDetailsMiddleware(onboardingFinancialDetailsService),
       DocumentsMiddleware(documentsService, fileSaverService),
       OnboardingIdentityVerificationMiddleware(onboardingIdentityVerificationService),
-      OnboardingSignWithTanMiddleware(onboardingIdentityVerificationService),
     ],
   );
 }
