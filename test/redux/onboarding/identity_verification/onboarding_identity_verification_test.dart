@@ -87,30 +87,30 @@ void main() {
   });
 
   group('sign with tan', () {
-    // test('when tan was sent it should display loading state', () async {
-    //   //given
-    //   final store = createTestStore(
-    //     onboardingIdentityVerificationService: FakeOnbordingSignWithTanService(),
-    //     initialState: createAppState(
-    //       authState: authInitializedState,
-    //       onboardingIdentityVerificationState: const OnboardingIdentityVerificationState(
-    //         isLoading: false,
-    //         isTanSent: true,
-    //       ),
-    //     ),
-    //   );
+    test('when tan was sent it should display loading state', () async {
+      //given
+      final store = createTestStore(
+        onboardingIdentityVerificationService: FakeOnbordingSignWithTanService(),
+        initialState: createAppState(
+          authState: authInitializedState,
+          onboardingIdentityVerificationState: const OnboardingIdentityVerificationState(
+            isLoading: false,
+            isTanSent: true,
+          ),
+        ),
+      );
 
-    //   final appState =
-    //       store.onChange.firstWhere((state) => state.onboardingIdentityVerificationState.isLoading == true);
-    //   //when
-    //   store.dispatch(SignWithTanCommandAction(tan: '212212'));
-    //   //then
-    //   final signWithTanState = (await appState).onboardingIdentityVerificationState;
+      final appState =
+          store.onChange.firstWhere((state) => state.onboardingIdentityVerificationState.isLoading == true);
+      //when
+      store.dispatch(SignWithTanCommandAction(tan: '212212'));
+      //then
+      final signWithTanState = (await appState).onboardingIdentityVerificationState;
 
-    //   expect(signWithTanState.isLoading, true);
-    //   expect(signWithTanState.errorType, null);
-    //   expect(signWithTanState.isTanSent, true);
-    // });
+      expect(signWithTanState.isLoading, true);
+      expect(signWithTanState.errorType, null);
+      expect(signWithTanState.isTanSent, null);
+    });
 
     test('when tan successful sent it should update with success', () async {
       //given
