@@ -10,7 +10,7 @@ class CircularLoadingIndicator extends StatefulWidget {
 
   const CircularLoadingIndicator({
     super.key,
-    this.width = 50,
+    this.width = 128,
     this.gradientColors,
     this.strokeWidth = 15.0,
   });

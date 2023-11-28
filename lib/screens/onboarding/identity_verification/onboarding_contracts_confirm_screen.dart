@@ -78,7 +78,7 @@ class _OnboardingContractsConfirmScreenState extends State<OnboardingContractsCo
             ),
             const Expanded(
               child: Center(
-                child: CircularLoadingIndicator(width: 128),
+                child: CircularLoadingIndicator(),
               ),
             )
           ],
