@@ -17,16 +17,3 @@ class OnboardingIdentityVerificationState extends Equatable {
   @override
   List<Object?> get props => [urlForIntegration, isLoading, errorType, isTanSent];
 }
-
-// abstract class OnboardingSignWithTanState extends Equatable {
-//   @override
-//   List<Object?> get props => [];
-// }
-
-// class OnboardingSignWithTanInitialState extends OnboardingSignWithTanState {}
-
-// class OnboardingSignWithTanLoadingState extends OnboardingSignWithTanState {}
-
-// class OnboardingSignWithTanErrorState extends OnboardingSignWithTanState {}
-
-// class OnboardingSignWithTanFetchedState extends OnboardingSignWithTanState {}
