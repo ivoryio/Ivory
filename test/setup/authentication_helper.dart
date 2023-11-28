@@ -20,4 +20,15 @@ class AuthStatePlaceholder {
 
     return AuthenticatedState(authUser, AuthType.withTan);
   }
+
+  static AuthState inOnboardingState() {
+    final user = User(
+      session: MockUserSession(),
+      attributes: [],
+      cognitoUser: MockCognitoUser(),
+      personId: "personID",
+    );
+
+    return AuthenticationInitializedState(user, AuthType.onboarding);
+  }
 }

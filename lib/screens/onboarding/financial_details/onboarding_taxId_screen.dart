@@ -38,7 +38,6 @@ class _OnboardingTaxIdScreenState extends State<OnboardingTaxIdScreen> {
         isValidTaxId(_taxIdController.text);
       });
     });
-    ;
   }
 
   isValidTaxId(String text) {
