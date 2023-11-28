@@ -107,7 +107,7 @@ class OnboardingReviewUpdatedContractsScreen extends StatelessWidget {
                   text: 'identity verification ',
                   style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
                 ),
-                const TextSpan(text: 'has not been successful due to either a '),
+                const TextSpan(text: 'has not been successful due to a '),
                 TextSpan(
                   text: 'technical issue',
                   style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
