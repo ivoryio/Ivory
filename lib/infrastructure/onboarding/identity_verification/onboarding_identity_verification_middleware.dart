@@ -1,11 +1,9 @@
 import 'package:redux/redux.dart';
 import 'package:solarisdemo/infrastructure/onboarding/identity_verification/onboarding_identity_verification_service.dart';
-import 'package:solarisdemo/models/onboarding/onboarding_identity_verification_error_type.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/documents/documents_action.dart';
 import 'package:solarisdemo/redux/onboarding/identity_verification/onboarding_identity_verification_action.dart';
-import 'package:solarisdemo/utilities/retry.dart';
 
 class OnboardingIdentityVerificationMiddleware extends MiddlewareClass<AppState> {
   final OnbordingIdentityVerificationService _onboardingIdentityVerificationService;
@@ -41,13 +39,11 @@ class OnboardingIdentityVerificationMiddleware extends MiddlewareClass<AppState>
     if (action is GetSignupIdentificationInfoCommandAction) {
       store.dispatch(OnboardingIdentityVerificationLoadingEventAction());
 
-      await Future.delayed(const Duration(milliseconds: 500));
+      // needed because the bank ident status is not updated immediately after the bank ident is successful
+      await Future.delayed(const Duration(seconds: 1));
 
-      final response = await retry(
-        () => _onboardingIdentityVerificationService.getSignupIdentificationInfo(user: authState.cognitoUser),
-        retryIf: (response) =>
-            response is IdentityVerificationServiceErrorResponse &&
-            response.errorType == OnboardingIdentityVerificationErrorType.pendingIdentification,
+      final response = await _onboardingIdentityVerificationService.getSignupIdentificationInfo(
+        user: authState.cognitoUser,
       );
 
       if (response is GetSignupIdentificationInfoSuccessResponse) {

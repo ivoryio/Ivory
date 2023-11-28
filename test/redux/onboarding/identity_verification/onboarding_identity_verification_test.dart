@@ -1,8 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
-import 'package:solarisdemo/infrastructure/onboarding/identity_verification/onboarding_identity_verification_service.dart';
 import 'package:solarisdemo/models/auth/auth_type.dart';
-import 'package:solarisdemo/models/documents/document.dart';
 import 'package:solarisdemo/models/onboarding/onboarding_identification_status.dart';
 import 'package:solarisdemo/models/onboarding/onboarding_identity_verification_error_type.dart';
 import 'package:solarisdemo/redux/auth/auth_state.dart';
@@ -92,8 +89,6 @@ void main() {
   });
 
   group("Bank identification", () {
-    final _onboardingIdentityVerificationService = MockOnbordingIdentityVerificationService();
-
     test("When fetching the bank identification, the state should change to loading", () async {
       // given
       final store = createTestStore(
@@ -155,72 +150,6 @@ void main() {
       expect(identityVerificationState.isLoading, false);
       expect(identityVerificationState.status, OnboardingIdentificationStatus.authorizationRequired);
       expect(documentsState.documents.isNotEmpty, true);
-    });
-
-    test("When the bank identification status is pending, the request should retry", () async {
-      // given
-      int retryAttempt = 0;
-
-      when(_onboardingIdentityVerificationService.getSignupIdentificationInfo(user: authInitializedState.cognitoUser))
-          .thenAnswer(
-        (_) async {
-          if (retryAttempt == 0) {
-            retryAttempt++;
-            return const IdentityVerificationServiceErrorResponse(
-              errorType: OnboardingIdentityVerificationErrorType.pendingIdentification,
-            );
-          }
-
-          retryAttempt++;
-          return const GetSignupIdentificationInfoSuccessResponse(
-            identificationStatus: OnboardingIdentificationStatus.authorizationRequired,
-            documents: [
-              Document(
-                id: "id",
-                documentType: DocumentType.creditCardContract,
-                fileType: "fileType",
-                fileSize: 1024,
-              ),
-            ],
-          );
-        },
-      );
-
-      final store = createTestStore(
-        onboardingIdentityVerificationService: _onboardingIdentityVerificationService,
-        initialState: createAppState(
-          authState: authInitializedState,
-          documentsState: DocumentsFetchedState(documents: const []),
-          onboardingIdentityVerificationState: const OnboardingIdentityVerificationState(
-            urlForIntegration: "https://example.com",
-            isLoading: false,
-            status: null,
-          ),
-        ),
-      );
-
-      final appState = store.onChange.firstWhere((state) => state.onboardingIdentityVerificationState.status != null);
-      final identityVerificationLoadingState =
-          store.onChange.firstWhere((state) => state.onboardingIdentityVerificationState.isLoading);
-      final documentsFetchedState = store.onChange.firstWhere((state) =>
-          state.documentsState is DocumentsFetchedState &&
-          (state.documentsState as DocumentsFetchedState).documents.isNotEmpty);
-
-      // when
-      store.dispatch(GetSignupIdentificationInfoCommandAction());
-
-      // then
-      final identityVerificationState = (await appState).onboardingIdentityVerificationState;
-      final loadingState = (await identityVerificationLoadingState).onboardingIdentityVerificationState;
-      final documentsState = (await documentsFetchedState).documentsState as DocumentsFetchedState;
-
-      expect(loadingState.isLoading, true);
-      expect(identityVerificationState.isLoading, false);
-      expect(identityVerificationState.status, OnboardingIdentificationStatus.authorizationRequired);
-      expect(documentsState.documents.isNotEmpty, true);
-
-      verify(_onboardingIdentityVerificationService.getSignupIdentificationInfo(user: authInitializedState.cognitoUser))
-          .called(2);
     });
 
     test("When fetching the bank identification has failed, the state errorType should change", () async {

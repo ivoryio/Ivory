@@ -1,24 +1,8 @@
-import 'package:mockito/mockito.dart';
 import 'package:solarisdemo/infrastructure/onboarding/identity_verification/onboarding_identity_verification_service.dart';
 import 'package:solarisdemo/models/documents/document.dart';
 import 'package:solarisdemo/models/onboarding/onboarding_identification_status.dart';
 import 'package:solarisdemo/models/onboarding/onboarding_identity_verification_error_type.dart';
 import 'package:solarisdemo/models/user.dart';
-
-class MockOnbordingIdentityVerificationService extends Mock implements OnbordingIdentityVerificationService {
-  @override
-  Future<IdentityVerificationServiceResponse> getSignupIdentificationInfo({
-    required User user,
-  }) async {
-    return super.noSuchMethod(
-      Invocation.method(#getSignupIdentificationInfo, [user]),
-      returnValue: const GetSignupIdentificationInfoSuccessResponse(
-        identificationStatus: OnboardingIdentificationStatus.pending,
-        documents: [],
-      ),
-    );
-  }
-}
 
 class FakeOnbordingIdentityVerificationService extends OnbordingIdentityVerificationService {
   @override
