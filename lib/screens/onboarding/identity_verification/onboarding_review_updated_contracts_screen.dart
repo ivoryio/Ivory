@@ -109,7 +109,7 @@ class OnboardingReviewUpdatedContractsScreen extends StatelessWidget {
                 ),
                 const TextSpan(text: 'has not been successful due to either a '),
                 TextSpan(
-                  text: 'technical or issue',
+                  text: 'technical issue',
                   style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
                 ),
                 const TextSpan(text: '.\n\n'),
