@@ -124,6 +124,8 @@ class _OnboardingContractsConfirmScreenState extends State<OnboardingContractsCo
           const SizedBox(height: 24),
           DocumentsListView(
             documents: viewModel.documents,
+            downloadingDocument: viewModel is DocumentDownloadingViewModel ? viewModel.downloadingDocument : null,
+            enabled: viewModel is! DocumentsConfirmingViewModel,
             onTapDownload: (document) {
               StoreProvider.of<AppState>(context).dispatch(
                 DownloadDocumentCommandAction(
