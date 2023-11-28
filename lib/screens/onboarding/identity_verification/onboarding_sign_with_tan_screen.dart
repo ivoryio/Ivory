@@ -30,7 +30,7 @@ class OnboardingSignWithTanScreen extends StatefulWidget {
 class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScreen> {
   final TextEditingController _tanController = TextEditingController();
   final ContinueButtonController _continueButtonController = ContinueButtonController();
-  final Duration _stepTime = const Duration(seconds: 299);
+  final Duration _stepTime = const Duration(minutes: 4, seconds: 59);
   Duration _countdownTimer = const Duration(seconds: 59);
 
   @override
