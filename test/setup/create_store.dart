@@ -114,7 +114,8 @@ Store<AppState> createTestStore({
     fileSaverService: fileSaverService ?? NotImplementedFileSaverService(),
     onboardingIdentityVerificationService:
         onboardingIdentityVerificationService ?? NotImplementedOnbordingIdentityVerificationService(),
-    onboardingCardConfigurationService: onboardingCardConfigurationService ?? NotImplementedOnboardingCardConfigurationService(),
+    onboardingCardConfigurationService:
+        onboardingCardConfigurationService ?? NotImplementedOnboardingCardConfigurationService(),
   );
 }
 
@@ -520,7 +521,7 @@ class NotImplementedDocumentsService extends DocumentsService {
   }
 
   @override
-  Future<DocumentsServiceResponse> downloadPostboxDocument({
+  Future<DocumentsServiceResponse> downloadDocument({
     required User user,
     required Document document,
     required DocumentDownloadLocation downloadLocation,

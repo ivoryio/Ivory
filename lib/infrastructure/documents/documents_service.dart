@@ -32,7 +32,7 @@ class DocumentsService extends ApiService {
     }
   }
 
-  Future<DocumentsServiceResponse> downloadPostboxDocument({
+  Future<DocumentsServiceResponse> downloadDocument({
     required User user,
     required Document document,
     required DocumentDownloadLocation downloadLocation,

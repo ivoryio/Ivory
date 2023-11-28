@@ -20,7 +20,7 @@ class FakeDocumentsService extends DocumentsService {
   }
 
   @override
-  Future<DocumentsServiceResponse> downloadPostboxDocument({
+  Future<DocumentsServiceResponse> downloadDocument({
     required User user,
     required Document document,
     required DocumentDownloadLocation downloadLocation,
@@ -44,7 +44,7 @@ class FakeFailingDocumentsService extends DocumentsService {
   }
 
   @override
-  Future<DocumentsServiceResponse> downloadPostboxDocument({
+  Future<DocumentsServiceResponse> downloadDocument({
     required User user,
     required Document document,
     required DocumentDownloadLocation downloadLocation,

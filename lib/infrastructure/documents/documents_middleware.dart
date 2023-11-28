@@ -36,7 +36,7 @@ class DocumentsMiddleware extends MiddlewareClass<AppState> {
     if (action is DownloadDocumentCommandAction) {
       store.dispatch(DownloadDocumentLoadingEventAction(document: action.document));
 
-      final response = await _documentsService.downloadPostboxDocument(
+      final response = await _documentsService.downloadDocument(
         user: authState.cognitoUser,
         document: action.document,
         downloadLocation: action.downloadLocation,
