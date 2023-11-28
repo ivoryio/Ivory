@@ -114,12 +114,14 @@ class _OnboardingMonthlyIncomeScreenState extends State<OnboardingMonthlyIncomeS
                       ),
                       const SizedBox(height: 24),
                       InputCurrencyField(
+                        maxLength: 17,
                         controller: _monthlyExpenseController,
                         currencyPathIcon: 'assets/icons/euro_icon.svg',
                         label: 'Monthly expenses',
                       ),
                       const SizedBox(height: 24),
                       InputCurrencyField(
+                        maxLength: 17,
                         controller: _totalCurrentDebtController,
                         currencyPathIcon: 'assets/icons/euro_icon.svg',
                         label: 'Total current debt',
@@ -134,6 +136,7 @@ class _OnboardingMonthlyIncomeScreenState extends State<OnboardingMonthlyIncomeS
                       ),
                       const SizedBox(height: 24),
                       InputCurrencyField(
+                        maxLength: 17,
                         controller: _totalCreditLimitController,
                         currencyPathIcon: 'assets/icons/euro_icon.svg',
                         label: 'Total credit limit',
