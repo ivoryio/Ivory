@@ -5,7 +5,6 @@ import 'package:solarisdemo/models/auth/auth_type.dart';
 import 'package:solarisdemo/models/documents/document.dart';
 import 'package:solarisdemo/models/onboarding/onboarding_identification_status.dart';
 import 'package:solarisdemo/models/onboarding/onboarding_identity_verification_error_type.dart';
-import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/documents/documents_state.dart';
 import 'package:solarisdemo/redux/onboarding/identity_verification/onboarding_identity_verification_action.dart';
@@ -15,21 +14,6 @@ import '../../../setup/create_app_state.dart';
 import '../../../setup/create_store.dart';
 import '../../auth/auth_mocks.dart';
 import 'onboarding_identity_verification_mocks.dart';
-
-class MockOnbordingIdentityVerificationService extends Mock implements OnbordingIdentityVerificationService {
-  @override
-  Future<IdentityVerificationServiceResponse> getSignupIdentificationInfo({
-    required User user,
-  }) async {
-    return super.noSuchMethod(
-      Invocation.method(#getSignupIdentificationInfo, [user]),
-      returnValue: const GetSignupIdentificationInfoSuccessResponse(
-        identificationStatus: OnboardingIdentificationStatus.pending,
-        documents: [],
-      ),
-    );
-  }
-}
 
 void main() {
   final mockUser = MockUser();

@@ -31,12 +31,8 @@ class DocumentsListView extends StatelessWidget {
           isDownloading: document.id == downloadingDocument?.id,
           fileSize: Format.fileSize(document.fileSize),
           fileType: Format.fileType(document.fileType),
-          onTap: enabled
+          onTap: enabled && downloadingDocument == null
               ? () {
-                  if (downloadingDocument != null) {
-                    return;
-                  }
-
                   onTapDownload?.call(document);
                 }
               : null,

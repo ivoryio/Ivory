@@ -41,6 +41,8 @@ class OnboardingIdentityVerificationMiddleware extends MiddlewareClass<AppState>
     if (action is GetSignupIdentificationInfoCommandAction) {
       store.dispatch(OnboardingIdentityVerificationLoadingEventAction());
 
+      await Future.delayed(const Duration(milliseconds: 500));
+
       final response = await retry(
         () => _onboardingIdentityVerificationService.getSignupIdentificationInfo(user: authState.cognitoUser),
         retryIf: (response) =>

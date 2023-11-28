@@ -5,7 +5,22 @@ import 'package:solarisdemo/models/onboarding/onboarding_identification_status.d
 import 'package:solarisdemo/models/onboarding/onboarding_identity_verification_error_type.dart';
 import 'package:solarisdemo/models/user.dart';
 
-class FakeOnbordingIdentityVerificationService extends Mock implements OnbordingIdentityVerificationService {
+class MockOnbordingIdentityVerificationService extends Mock implements OnbordingIdentityVerificationService {
+  @override
+  Future<IdentityVerificationServiceResponse> getSignupIdentificationInfo({
+    required User user,
+  }) async {
+    return super.noSuchMethod(
+      Invocation.method(#getSignupIdentificationInfo, [user]),
+      returnValue: const GetSignupIdentificationInfoSuccessResponse(
+        identificationStatus: OnboardingIdentificationStatus.pending,
+        documents: [],
+      ),
+    );
+  }
+}
+
+class FakeOnbordingIdentityVerificationService extends OnbordingIdentityVerificationService {
   @override
   Future<IdentityVerificationServiceResponse> createIdentification({
     required User user,
@@ -45,7 +60,7 @@ class FakeOnbordingIdentityVerificationService extends Mock implements Onbording
   }
 }
 
-class FakeFailingOnbordingIdentityVerificationService extends Mock implements OnbordingIdentityVerificationService {
+class FakeFailingOnbordingIdentityVerificationService extends OnbordingIdentityVerificationService {
   @override
   Future<IdentityVerificationServiceResponse> createIdentification({
     required User user,
