@@ -49,7 +49,7 @@ abstract class PushNotificationService extends ApiService {
 
 class FirebasePushNotificationService extends PushNotificationService {
   final _messaging = FirebaseMessaging.instance;
-  late final Store<AppState> store;
+  Store<AppState>? store;
   final PushNotificationStorageService storageService;
   bool isInitialized = false;
 
@@ -128,7 +128,9 @@ class FirebasePushNotificationService extends PushNotificationService {
   }
 
   void _pushNotificationReceived(RemoteMessage? message) {
-    forceReloadAppStates(store);
+    if (store == null) return;
+
+    forceReloadAppStates(store!);
   }
 
   Future<void> handleAndroidLocalNotifications() async {
@@ -178,8 +180,10 @@ class FirebasePushNotificationService extends PushNotificationService {
     final context = navigatorKey.currentContext as BuildContext;
     final notificationType = RemoteMessageUtils.getNotificationType(message.data["type"] as String);
 
+    if (store == null) return;
+
     if (notificationType == NotificationType.scaChallenge) {
-      store.dispatch(ReceivedTransactionApprovalNotificationEventAction(
+      store!.dispatch(ReceivedTransactionApprovalNotificationEventAction(
         user: user!,
         message: RemoteMessageUtils.getNotificationTransactionMessage(message),
       ));
