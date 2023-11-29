@@ -71,7 +71,8 @@ class OnboardingIdentityVerificationMiddleware extends MiddlewareClass<AppState>
     if (action is SignWithTanCommandAction) {
       store.dispatch(OnboardingIdentityVerificationLoadingEventAction());
 
-      final response = await _onboardingIdentityVerificationService.signWithTan(tan: action.tan);
+      final response =
+          await _onboardingIdentityVerificationService.signWithTan(user: authState.cognitoUser, tan: action.tan);
 
       if (response is SignWithTanSuccessResponse) {
         store.dispatch(SignWithTanSuccessEventAction());

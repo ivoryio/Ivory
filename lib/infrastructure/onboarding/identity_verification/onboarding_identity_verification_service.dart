@@ -82,12 +82,15 @@ class OnbordingIdentityVerificationService extends ApiService {
     }
   }
 
-  Future<IdentityVerificationServiceResponse> signWithTan({required String tan}) async {
+  Future<IdentityVerificationServiceResponse> signWithTan({
+    required User user,
+    required String tan,
+  }) async {
     this.user = user;
 
     const path = '/signup/identification/confirm';
     Map<String, dynamic> body = {
-      'tan': tan,
+      'token': tan,
     };
 
     try {
@@ -95,6 +98,16 @@ class OnbordingIdentityVerificationService extends ApiService {
 
       return SignWithTanSuccessResponse();
     } catch (err) {
+      if (err is HttpException && err.getErrBody['errors'] is List) {
+        final errors = err.getErrBody['errors'] as List;
+        final hasInvalidToken = errors.any((error) => error['code'] == 'invalid_token');
+
+        if (hasInvalidToken) {
+          return const IdentityVerificationServiceErrorResponse(
+              errorType: OnboardingIdentityVerificationErrorType.invalidTan);
+        }
+      }
+
       return const IdentityVerificationServiceErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
     }
   }
