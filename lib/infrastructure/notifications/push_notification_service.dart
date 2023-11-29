@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:redux/redux.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_storage_service.dart';
@@ -72,7 +73,7 @@ class FirebasePushNotificationService extends PushNotificationService {
     }
 
     // Show notification when app is in foreground
-    if (Platform.isIOS) {
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
       // iOS foreground notifications are handled by the OS
       await _messaging.setForegroundNotificationPresentationOptions(
         alert: true,

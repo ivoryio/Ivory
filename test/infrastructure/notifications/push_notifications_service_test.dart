@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
 import 'package:mockito/mockito.dart';
@@ -8,6 +9,7 @@ import 'package:solarisdemo/infrastructure/notifications/push_notification_stora
 
 import '../../setup/create_app_state.dart';
 import '../../setup/create_store.dart';
+import '../../setup/platform.dart';
 import 'firebase_messaging_mocks.dart';
 import 'push_notifications_service_mocks.dart';
 
@@ -23,6 +25,10 @@ void main() {
     FirebaseMessagingPlatform.instance = mockMessagingPlatform;
     messaging = FirebaseMessaging.instance;
     storageService = MockPushNotificationStorageService();
+  });
+
+  tearDown(() {
+    resetPlatformOverride();
   });
 
   group('FirebaseMessaging instance', () {
@@ -50,6 +56,24 @@ void main() {
 
         // then
         expect(pushNotificationService.isInitialized, false);
+      });
+
+      test("When the user granted the permission from iOS platform, the service should be initialized", () async {
+        // given
+        setPlatformOverride(TargetPlatform.iOS);
+
+        when(mockMessagingPlatform.requestPermission()).thenAnswer((_) async => authorizedNotificationSettings);
+        when(mockMessagingPlatform.setForegroundNotificationPresentationOptions(alert: true, sound: true))
+            .thenAnswer((_) async => {});
+
+        final pushNotificationService = FirebasePushNotificationService(storageService: storageService);
+        final store = createTestStore(initialState: createAppState());
+
+        // when
+        await pushNotificationService.init(store);
+
+        // then
+        expect(pushNotificationService.isInitialized, true);
       });
     });
   });

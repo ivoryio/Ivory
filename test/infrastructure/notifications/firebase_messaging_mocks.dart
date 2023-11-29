@@ -142,6 +142,22 @@ class MockFirebaseMessaging extends Mock with MockPlatformInterfaceMixin impleme
     return super.noSuchMethod(Invocation.method(#unsubscribeFromTopic, [topic]),
         returnValue: Future<void>.value(), returnValueForMissingStub: Future<void>.value());
   }
+
+  @override
+  Future<void> setForegroundNotificationPresentationOptions({
+    bool? alert = true,
+    bool? badge = true,
+    bool? sound = true,
+  }) {
+    return super.noSuchMethod(
+        Invocation.method(#setForegroundNotificationPresentationOptions, [], {
+          #alert: alert,
+          #badge: badge,
+          #sound: sound,
+        }),
+        returnValue: Future<void>.value(),
+        returnValueForMissingStub: Future<void>.value());
+  }
 }
 
 class TestFirebaseMessagingPlatform extends FirebaseMessagingPlatform {
