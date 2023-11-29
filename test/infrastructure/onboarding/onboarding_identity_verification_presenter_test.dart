@@ -101,7 +101,7 @@ void main() {
       //given
       const onboardingIdentityVerificationState = OnboardingIdentityVerificationState(
         isLoading: true,
-        isTanSent: true,
+        isTanConfirmed: true,
       );
       //when
       final viewModel = OnboardingIdentityVerificationPresenter.present(
@@ -111,7 +111,7 @@ void main() {
           viewModel,
           const OnboardingIdentityVerificationViewModel(
             isLoading: true,
-            isTanSent: true,
+            isTanConfirmed: true,
           ));
     });
 
@@ -138,7 +138,7 @@ void main() {
       //given
       const onboardingIdentityVerificationState = OnboardingIdentityVerificationState(
         isLoading: false,
-        isTanSent: true,
+        isTanConfirmed: true,
       );
       //when
       final viewModel = OnboardingIdentityVerificationPresenter.present(
@@ -148,7 +148,7 @@ void main() {
           viewModel,
           const OnboardingIdentityVerificationViewModel(
             isLoading: false,
-            isTanSent: true,
+            isTanConfirmed: true,
           ));
     });
   });

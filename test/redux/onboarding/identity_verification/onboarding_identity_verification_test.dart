@@ -279,7 +279,7 @@ void main() {
           authState: authInitializedState,
           onboardingIdentityVerificationState: const OnboardingIdentityVerificationState(
             isLoading: false,
-            isTanSent: true,
+            isTanConfirmed: true,
           ),
         ),
       );
@@ -293,7 +293,7 @@ void main() {
 
       expect(signWithTanState.isLoading, true);
       expect(signWithTanState.errorType, null);
-      expect(signWithTanState.isTanSent, null);
+      expect(signWithTanState.isTanConfirmed, null);
     });
 
     test('when tan successful sent it should update with success', () async {
@@ -304,13 +304,13 @@ void main() {
           authState: authInitializedState,
           onboardingIdentityVerificationState: const OnboardingIdentityVerificationState(
             isLoading: false,
-            isTanSent: true,
+            isTanConfirmed: true,
           ),
         ),
       );
 
       final appState = store.onChange.firstWhere((state) =>
-          state.onboardingIdentityVerificationState.isTanSent == true &&
+          state.onboardingIdentityVerificationState.isTanConfirmed == true &&
           state.onboardingIdentityVerificationState.isLoading == false);
       //when
       store.dispatch(SignWithTanCommandAction(tan: '212212'));
@@ -319,7 +319,7 @@ void main() {
 
       expect(signWithTanState.isLoading, false);
       expect(signWithTanState.errorType, null);
-      expect(signWithTanState.isTanSent, true);
+      expect(signWithTanState.isTanConfirmed, true);
     });
 
     test('when tan unsuccessful sent it should update with error', () async {
@@ -330,8 +330,8 @@ void main() {
           authState: authInitializedState,
           onboardingIdentityVerificationState: const OnboardingIdentityVerificationState(
             isLoading: false,
-            errorType: OnboardingIdentityVerificationErrorType.unknown,
-            isTanSent: true,
+            errorType: null,
+            isTanConfirmed: null,
           ),
         ),
       );
@@ -345,7 +345,7 @@ void main() {
 
       expect(signWithTanState.isLoading, false);
       expect(signWithTanState.errorType, OnboardingIdentityVerificationErrorType.unknown);
-      expect(signWithTanState.isTanSent, true);
+      expect(signWithTanState.isTanConfirmed, null);
     });
   });
 }

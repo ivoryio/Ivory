@@ -13,7 +13,7 @@ class OnboardingIdentityVerificationPresenter {
       errorType: identityVerificationState.errorType,
       identificationStatus: identityVerificationState.status,
       isAuthorized: identityVerificationState.isAuthorized,
-      isTanSent: identityVerificationState.isTanSent,
+      isTanConfirmed: identityVerificationState.isTanConfirmed,
     );
   }
 }
@@ -24,7 +24,7 @@ class OnboardingIdentityVerificationViewModel extends Equatable {
   final OnboardingIdentityVerificationErrorType? errorType;
   final OnboardingIdentificationStatus? identificationStatus;
   final bool? isAuthorized;
-  final bool? isTanSent;
+  final bool? isTanConfirmed;
 
   const OnboardingIdentityVerificationViewModel({
     this.urlForIntegration,
@@ -32,9 +32,10 @@ class OnboardingIdentityVerificationViewModel extends Equatable {
     this.errorType,
     this.identificationStatus,
     this.isAuthorized,
-    this.isTanSent,
+    this.isTanConfirmed,
   });
 
   @override
-  List<Object?> get props => [urlForIntegration, isLoading, errorType, identificationStatus, isAuthorized, isTanSent];
+  List<Object?> get props =>
+      [urlForIntegration, isLoading, errorType, identificationStatus, isAuthorized, isTanConfirmed];
 }
