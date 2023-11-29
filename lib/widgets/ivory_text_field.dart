@@ -403,9 +403,7 @@ class IvoryTextFieldController extends ChangeNotifier {
 class _DatePickerContent extends StatefulWidget {
   final DateTime currentDate;
   final DateTime initialDate;
-  final DateTime? minimumDate;
   final DateTime maximumDate;
-  final int minimumYear;
   final int maximumYear;
 
   final void Function(String) onConfirm;
@@ -414,9 +412,7 @@ class _DatePickerContent extends StatefulWidget {
     required this.onConfirm,
     required this.initialDate,
     required this.currentDate,
-    this.minimumDate,
     required this.maximumDate,
-    this.minimumYear = 1900,
     required this.maximumYear,
   });
 
@@ -456,9 +452,8 @@ class _DatePickerContentState extends State<_DatePickerContent> {
               ),
               child: CupertinoDatePicker(
                 mode: CupertinoDatePickerMode.date,
-                minimumDate: widget.minimumDate,
                 maximumDate: widget.maximumDate,
-                minimumYear: widget.minimumYear,
+                minimumYear: 1900,
                 maximumYear: widget.maximumYear,
                 initialDateTime: _initialDateTime,
                 onDateTimeChanged: (DateTime newDate) {

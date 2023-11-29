@@ -19,6 +19,8 @@ class Document extends Equatable {
         return "Credit Card Contract";
       case DocumentType.creditCardSecci:
         return "Credit Card SECCI";
+      case DocumentType.qesDocument:
+        return "Qualified Electronic Signature";
       case DocumentType.unknown:
         return "Unknown";
     }
@@ -30,6 +32,8 @@ class Document extends Equatable {
         return "credit_card_contract";
       case DocumentType.creditCardSecci:
         return "credit_card_secci";
+      case DocumentType.qesDocument:
+        return "qes_document";
       case DocumentType.unknown:
         return "unknown";
     }
@@ -42,5 +46,22 @@ class Document extends Equatable {
 enum DocumentType {
   creditCardContract,
   creditCardSecci,
+  qesDocument,
   unknown,
+}
+
+extension DocumentTypeParser on DocumentType {
+  static DocumentType parse(String documentType) {
+    switch (documentType) {
+      case 'CREDIT_CARD_CONTRACT':
+        return DocumentType.creditCardContract;
+      case 'CREDIT_CARD_SECCI':
+        return DocumentType.creditCardSecci;
+      case 'QES_DOCUMENT':
+        return DocumentType.qesDocument;
+
+      default:
+        return DocumentType.unknown;
+    }
+  }
 }
