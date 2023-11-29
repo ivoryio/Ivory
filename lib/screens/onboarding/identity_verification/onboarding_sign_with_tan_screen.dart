@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/onboarding/identity_verification/onboarding_identity_verification_presenter.dart';
+import 'package:solarisdemo/models/onboarding/onboarding_identity_verification_error_type.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/onboarding/identity_verification/onboarding_identity_verification_action.dart';
-
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
@@ -77,6 +77,37 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
         if (newViewModel.isLoading == true) {
           _continueButtonController.setLoading();
         }
+
+        if (newViewModel.errorType == OnboardingIdentityVerificationErrorType.invalidTan) {
+          showBottomModal(
+            context: context,
+            showCloseButton: false,
+            title: 'Code is incorrect',
+            textWidget: Text(
+              'Please try again. After tapping the button below, we will send you a new code.',
+              style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+            ),
+            content: Column(
+              children: [
+                const SizedBox(height: 24),
+                PrimaryButton(
+                  text: "Try again with new TAN",
+                  onPressed: () {
+                    StoreProvider.of<AppState>(context).dispatch(AuthorizeIdentificationSigningCommandAction());
+
+                    Navigator.pushReplacementNamed(context, OnboardingSignWithTanScreen.routeName);
+                  },
+                ),
+                const SizedBox(height: 16),
+              ],
+            ),
+          );
+        }
+
+        if (newViewModel.isTanConfirmed == true) {
+          // Navigator.pushNamedAndRemoveUntil(context, NextScreen.routeName, (_) => false);
+        }
+        ;
       },
       distinct: true,
       builder: (context, viewModel) {
@@ -125,11 +156,8 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
                                           StoreProvider.of<AppState>(context)
                                               .dispatch(AuthorizeIdentificationSigningCommandAction());
 
-                                          Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (BuildContext context) => const OnboardingSignWithTanScreen()),
-                                          );
+                                          Navigator.pushReplacementNamed(
+                                              context, OnboardingSignWithTanScreen.routeName);
                                         },
                                       ),
                                       const SizedBox(height: 16),
@@ -204,11 +232,8 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
                             isLoading: _continueButtonController.isLoading,
                             onPressed: _continueButtonController.isEnabled
                                 ? () {
-                                    StoreProvider.of<AppState>(context).dispatch(
-                                      SignWithTanCommandAction(tan: _tanController.text),
-                                    );
-
-                                    // Navigator.pushNamed(context, NextScreen.routeName);
+                                    StoreProvider.of<AppState>(context)
+                                        .dispatch(SignWithTanCommandAction(tan: _tanController.text));
                                   }
                                 : null),
                       ),
