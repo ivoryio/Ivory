@@ -1,1 +1,1 @@
-enum OnboardingIdentityVerificationErrorType { unknown, invalidIban }
+enum OnboardingIdentityVerificationErrorType { unknown, invalidIban, pendingIdentification }

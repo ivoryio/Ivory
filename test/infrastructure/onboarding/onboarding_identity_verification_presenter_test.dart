@@ -72,4 +72,27 @@ void main() {
       ),
     );
   });
+
+  test("When is authorized, the view model should contain isAuthorized = true", () {
+    // given
+    const onboardingIdentityVerificationState = OnboardingIdentityVerificationState(
+      urlForIntegration: 'https://url.com',
+      isLoading: false,
+      isAuthorized: true,
+    );
+
+    // when
+    final viewModel =
+        OnboardingIdentityVerificationPresenter.present(identityVerificationState: onboardingIdentityVerificationState);
+
+    // then
+    expect(
+      viewModel,
+      const OnboardingIdentityVerificationViewModel(
+        urlForIntegration: 'https://url.com',
+        isLoading: false,
+        isAuthorized: true,
+      ),
+    );
+  });
 }
