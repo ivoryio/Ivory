@@ -19,8 +19,8 @@ class DocumentsService extends ApiService {
           .map(
             (document) => Document(
               id: document['id'],
-              documentType: _getDocumentType(document['document_type']),
-              fileType: _getFileType(document['document_content_type']),
+              documentType: DocumentTypeParser.parse(document['document_type']),
+              fileType: document['document_content_type'] ?? '',
               fileSize: document['document_size'] ?? 0,
             ),
           )
@@ -32,11 +32,20 @@ class DocumentsService extends ApiService {
     }
   }
 
-  Future<DocumentsServiceResponse> downloadPostboxDocument({required User user, required Document document}) async {
+  Future<DocumentsServiceResponse> downloadDocument({
+    required User user,
+    required Document document,
+    required DocumentDownloadLocation downloadLocation,
+  }) async {
     this.user = user;
 
     try {
-      final response = await downloadFile('/postbox_items/${document.id}');
+      final Map<DocumentDownloadLocation, String> downloadLocations = {
+        DocumentDownloadLocation.postbox: '/postbox_items/${document.id}',
+        DocumentDownloadLocation.person: '/person/documents/${document.id}',
+      };
+
+      final response = await downloadFile(downloadLocations[downloadLocation]!);
 
       return DownloadDocumentSuccessResponse(document: document, file: response);
     } catch (error) {
@@ -66,24 +75,7 @@ class DocumentsService extends ApiService {
   }
 }
 
-String _getFileType(String fileType) {
-  if (fileType == 'application/pdf') {
-    return "PDF";
-  }
-
-  return "";
-}
-
-DocumentType _getDocumentType(String documentType) {
-  switch (documentType) {
-    case 'CREDIT_CARD_CONTRACT':
-      return DocumentType.creditCardContract;
-    case 'CREDIT_CARD_SECCI':
-      return DocumentType.creditCardSecci;
-    default:
-      return DocumentType.unknown;
-  }
-}
+enum DocumentDownloadLocation { postbox, person }
 
 abstract class DocumentsServiceResponse extends Equatable {
   @override

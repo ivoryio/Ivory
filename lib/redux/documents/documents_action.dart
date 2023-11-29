@@ -1,3 +1,4 @@
+import 'package:solarisdemo/infrastructure/documents/documents_service.dart';
 import 'package:solarisdemo/models/documents/document.dart';
 import 'package:solarisdemo/models/documents/documents_error_type.dart';
 
@@ -19,8 +20,9 @@ class GetDocumentsFailedEventAction {
 
 class DownloadDocumentCommandAction {
   final Document document;
+  final DocumentDownloadLocation downloadLocation;
 
-  DownloadDocumentCommandAction({required this.document});
+  DownloadDocumentCommandAction({required this.document, required this.downloadLocation});
 }
 
 class DownloadDocumentLoadingEventAction {

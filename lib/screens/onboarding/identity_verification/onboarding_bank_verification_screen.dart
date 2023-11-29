@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/infrastructure/onboarding/identity_verification/onboarding_identity_verification_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
-import 'package:solarisdemo/screens/welcome/welcome_screen.dart';
+import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_review_updated_contracts_screen.dart';
 import 'package:solarisdemo/widgets/circular_loading_indicator.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -35,7 +35,8 @@ class _OnboardingBankVerificationScreenState extends State<OnboardingBankVerific
             final url = urlChange.url;
 
             if (url != null && url.endsWith("?success")) {
-              Navigator.pushNamedAndRemoveUntil(context, WelcomeScreen.routeName, (route) => false);
+              Navigator.pushNamedAndRemoveUntil(
+                  context, OnboardingReviewUpdatedContractsScreen.routeName, (route) => false);
             }
           },
         ),

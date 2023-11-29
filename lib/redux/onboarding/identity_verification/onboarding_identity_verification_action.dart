@@ -1,3 +1,4 @@
+import 'package:solarisdemo/models/onboarding/onboarding_identification_status.dart';
 import 'package:solarisdemo/models/onboarding/onboarding_identity_verification_error_type.dart';
 
 class CreateIdentificationCommandAction {
@@ -18,13 +19,25 @@ class CreateIdentificationSuccessEventAction {
   CreateIdentificationSuccessEventAction({required this.urlForIntegration});
 }
 
-class CreateIdentificationFailedEventAction {
-  final OnboardingIdentityVerificationErrorType errorType;
+class GetSignupIdentificationInfoCommandAction {}
 
-  CreateIdentificationFailedEventAction({required this.errorType});
+class SignupIdentificationInfoFetchedEventAction {
+  final OnboardingIdentificationStatus identificationStatus;
+
+  SignupIdentificationInfoFetchedEventAction({required this.identificationStatus});
 }
 
 class AuthorizeIdentificationSigningCommandAction {}
+
+class OnboardingIdentityAuthorizationLoadingEventAction {}
+
+class AuthorizeIdentificationSigningSuccessEventAction {}
+
+class OnboardingIdentityVerificationErrorEventAction {
+  final OnboardingIdentityVerificationErrorType errorType;
+
+  OnboardingIdentityVerificationErrorEventAction({required this.errorType});
+}
 
 class SignWithTanCommandAction {
   final String tan;

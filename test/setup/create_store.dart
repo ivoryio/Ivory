@@ -16,6 +16,7 @@ import 'package:solarisdemo/infrastructure/documents/documents_service.dart';
 import 'package:solarisdemo/infrastructure/file_saver_service.dart';
 import 'package:solarisdemo/infrastructure/mobile_number/mobile_number_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
+import 'package:solarisdemo/infrastructure/onboarding/card_configuration/onboarding_card_configuration_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/financial_details/onboarding_financial_details_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/identity_verification/onboarding_identity_verification_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/onboarding_service.dart';
@@ -77,6 +78,7 @@ Store<AppState> createTestStore({
   DocumentsService? documentsService,
   FileSaverService? fileSaverService,
   OnbordingIdentityVerificationService? onboardingIdentityVerificationService,
+  OnboardingCardConfigurationService? onboardingCardConfigurationService,
 }) {
   return createStore(
     initialState: initialState,
@@ -112,6 +114,8 @@ Store<AppState> createTestStore({
     fileSaverService: fileSaverService ?? NotImplementedFileSaverService(),
     onboardingIdentityVerificationService:
         onboardingIdentityVerificationService ?? NotImplementedOnbordingIdentityVerificationService(),
+    onboardingCardConfigurationService:
+        onboardingCardConfigurationService ?? NotImplementedOnboardingCardConfigurationService(),
   );
 }
 
@@ -517,7 +521,11 @@ class NotImplementedDocumentsService extends DocumentsService {
   }
 
   @override
-  Future<DocumentsServiceResponse> downloadPostboxDocument({required User user, required Document document}) async {
+  Future<DocumentsServiceResponse> downloadDocument({
+    required User user,
+    required Document document,
+    required DocumentDownloadLocation downloadLocation,
+  }) async {
     throw UnimplementedError();
   }
 
@@ -539,7 +547,7 @@ class NotImplementedFileSaverService extends FileSaverService {
 
 class NotImplementedOnbordingIdentityVerificationService extends OnbordingIdentityVerificationService {
   @override
-  Future<CreateIdentificationResponse> createIdentification({
+  Future<IdentityVerificationServiceResponse> createIdentification({
     required User user,
     required String accountName,
     required String iban,
@@ -549,7 +557,26 @@ class NotImplementedOnbordingIdentityVerificationService extends OnbordingIdenti
   }
 
   @override
-  Future<CreateIdentificationResponse> signWithTan({required String tan}) async {
+  Future<IdentityVerificationServiceResponse> signWithTan({required String tan}) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<IdentityVerificationServiceResponse> getSignupIdentificationInfo({
+    required User user,
+  }) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<IdentityVerificationServiceResponse> authorizeIdentification({required User user}) async {
+    throw UnimplementedError();
+  }
+}
+
+class NotImplementedOnboardingCardConfigurationService extends OnboardingCardConfigurationService {
+  @override
+  Future<OnboardingCardConfigurationResponse> getCardholderName({required User user}) {
     throw UnimplementedError();
   }
 }

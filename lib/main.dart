@@ -18,6 +18,7 @@ import 'package:solarisdemo/infrastructure/file_saver_service.dart';
 import 'package:solarisdemo/infrastructure/mobile_number/mobile_number_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_storage_service.dart';
+import 'package:solarisdemo/infrastructure/onboarding/card_configuration/onboarding_card_configuration_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/financial_details/onboarding_financial_details_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/identity_verification/onboarding_identity_verification_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/onboarding_service.dart';
@@ -94,6 +95,7 @@ Store<AppState> _buildStore() {
     documentsService: DocumentsService(),
     fileSaverService: FileSaverService(),
     onboardingIdentityVerificationService: OnbordingIdentityVerificationService(),
+    onboardingCardConfigurationService: OnboardingCardConfigurationService(),
   );
 
   return store;

@@ -8,6 +8,7 @@ import 'package:solarisdemo/redux/documents/confirm/confirm_documents_state.dart
 import 'package:solarisdemo/redux/documents/documents_state.dart';
 import 'package:solarisdemo/redux/documents/download/download_document_state.dart';
 import 'package:solarisdemo/redux/notification/notification_state.dart';
+import 'package:solarisdemo/redux/onboarding/card_configuration/onboarding_card_configuration_state.dart';
 import 'package:solarisdemo/redux/onboarding/financial_details/onboarding_financial_details_state.dart';
 import 'package:solarisdemo/redux/onboarding/identity_verification/onboarding_identity_verification_state.dart';
 import 'package:solarisdemo/redux/onboarding/onboarding_progress_state.dart';
@@ -55,6 +56,7 @@ class AppState extends Equatable {
   final DownloadDocumentState downloadDocumentState;
   final ConfirmDocumentsState confirmDocumentsState;
   final OnboardingIdentityVerificationState onboardingIdentityVerificationState;
+  final OnboardingCardConfigurationState onboardingCardConfigurationState;
 
   const AppState({
     required this.transactionsState,
@@ -85,6 +87,7 @@ class AppState extends Equatable {
     required this.downloadDocumentState,
     required this.confirmDocumentsState,
     required this.onboardingIdentityVerificationState,
+    required this.onboardingCardConfigurationState,
   });
 
   factory AppState.initialState() {
@@ -107,16 +110,17 @@ class AppState extends Equatable {
       accountSummaryState: AccountSummaryInitialState(),
       authState: AuthInitialState(),
       homePageTransactionsState: TransactionsInitialState(),
-      onboardingSignupState: OnboardingSignupState(),
+      onboardingSignupState: const OnboardingSignupState(),
       onboardingProgressState: OnboardingProgressInitialLoadingState(),
       onboardingPersonalDetailsState: const OnboardingPersonalDetailsState(),
       citySuggestionsState: CitySuggestionsInitialState(),
       addressSuggestionsState: AddressSuggestionsInitialState(),
-      onboardingFinancialDetailsState: OnboardingFinancialDetailsState(),
+      onboardingFinancialDetailsState: const OnboardingFinancialDetailsState(),
       documentsState: DocumentsInitialLoadingState(),
       downloadDocumentState: DownloadDocumentInitialState(),
       confirmDocumentsState: ConfirmDocumentsInitialState(),
-      onboardingIdentityVerificationState: OnboardingIdentityVerificationState(),
+      onboardingIdentityVerificationState: const OnboardingIdentityVerificationState(),
+      onboardingCardConfigurationState: OnboardingCardConfigurationInitialState(),
     );
   }
 
@@ -150,6 +154,7 @@ class AppState extends Equatable {
         downloadDocumentState,
         confirmDocumentsState,
         onboardingIdentityVerificationState,
+        onboardingCardConfigurationState,
       ];
 
   @override

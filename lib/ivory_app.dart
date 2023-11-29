@@ -13,6 +13,8 @@ import 'package:solarisdemo/screens/available_balance/available_balance_screen.d
 import 'package:solarisdemo/screens/login/login_with_biometrics_screen.dart';
 import 'package:solarisdemo/screens/login/login_with_tan_screen.dart';
 import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_monthly_income_screen.dart';
+import 'package:solarisdemo/screens/onboarding/card_configuration/onboarding_configure_card.dart';
+import 'package:solarisdemo/screens/onboarding/card_configuration/onboarding_order_card.dart';
 import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_occupational_status_screen.dart';
 import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_public_status_screen.dart';
 import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_remember_screen.dart';
@@ -22,6 +24,7 @@ import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_identity_verification_method_screen.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_reference_account_iban.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_sign_with_tan_screen.dart';
+import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_review_updated_contracts_screen.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_video_identification_not_available_screen.dart';
 import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_address_of_residence_error_screen.dart';
 import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_address_of_residence_screen.dart';
@@ -279,6 +282,11 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
             OnboardingContractsConfirmScreen.routeName: (context) => const OnboardingContractsConfirmScreen(),
             OnboardingBankVerificationScreen.routeName: (context) => const OnboardingBankVerificationScreen(),
             OnboardingSignWithTanScreen.routeName: (context) => const OnboardingSignWithTanScreen(),
+            OnboardingReviewUpdatedContractsScreen.routeName: (context) =>
+                const OnboardingReviewUpdatedContractsScreen(),
+            //onboarding/card_configuration
+            OnboardingOrderCardScreen.routeName: (context) => const OnboardingOrderCardScreen(),
+            OnboardingConfigureCardScreen.routeName: (context) => const OnboardingConfigureCardScreen(),
           },
         );
       }),
