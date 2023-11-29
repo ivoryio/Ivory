@@ -188,9 +188,7 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
                                     .copyWith(color: ClientConfig.getColorScheme().secondary),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    _tanInputKey.currentState?.controllers.forEach((element) {
-                                      element.clear();
-                                    });
+                                    _tanInputKey.currentState?.clear();
                                     _countdownTimer = const Duration(seconds: 59);
                                     _startTimer();
 
