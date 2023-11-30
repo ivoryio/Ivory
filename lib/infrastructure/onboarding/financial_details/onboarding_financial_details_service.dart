@@ -45,8 +45,9 @@ class OnboardingFinancialDetailsService extends ApiService {
     this.user = user;
 
     try {
-      final formattedDateOfEmployment =
-          DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy').parse(dateOfEmployment));
+      final formattedDateOfEmployment = dateOfEmployment.isNotEmpty
+          ? DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy').parse(dateOfEmployment))
+          : '';
 
       await post(
         '/person/credit_card_application',
