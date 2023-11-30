@@ -117,7 +117,7 @@ class _OnboardingMonthlyIncomeScreenState extends State<OnboardingMonthlyIncomeS
                         maxLength: 17,
                         controller: _monthlyExpenseController,
                         currencyPathIcon: 'assets/icons/euro_icon.svg',
-                        label: 'Monthly expenses',
+                        label: 'Monthly expenses',                     
                       ),
                       const SizedBox(height: 24),
                       InputCurrencyField(
