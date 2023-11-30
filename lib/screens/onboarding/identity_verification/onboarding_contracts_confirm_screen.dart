@@ -1,16 +1,16 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/documents/documents_presenter.dart';
+import 'package:solarisdemo/infrastructure/documents/documents_service.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/documents/documents_action.dart';
-import 'package:solarisdemo/utilities/format.dart';
+import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_reference_account_iban.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/circular_loading_indicator.dart';
+import 'package:solarisdemo/widgets/documents_list_view.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 class OnboardingContractsConfirmScreen extends StatefulWidget {
@@ -34,7 +34,7 @@ class _OnboardingContractsConfirmScreenState extends State<OnboardingContractsCo
       ),
       onWillChange: (previousViewModel, newViewModel) {
         if (newViewModel is DocumentsConfirmedViewModel) {
-          log("Documents confirmed");
+          Navigator.pushNamedAndRemoveUntil(context, OnboardingReferenceAccountIbanScreen.routeName, (route) => false);
         }
       },
       distinct: true,
@@ -122,24 +122,16 @@ class _OnboardingContractsConfirmScreenState extends State<OnboardingContractsCo
             ),
           ),
           const SizedBox(height: 24),
-          ListView.builder(
-            itemCount: viewModel.documents.length,
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-              final document = viewModel.documents[index];
-
-              return DocumentListItem(
-                title: document.title,
-                subtitle: "${document.fileSize}, ${document.fileType}",
-                isDownloading:
-                    viewModel is DocumentDownloadingViewModel && document.id == viewModel.downloadingDocument.id,
-                fileSize: Format.fileSize(document.fileSize),
-                fileType: document.fileType,
-                onTapDownload: () {
-                  StoreProvider.of<AppState>(context).dispatch(
-                    DownloadDocumentCommandAction(document: viewModel.documents[index]),
-                  );
-                },
+          DocumentsListView(
+            documents: viewModel.documents,
+            downloadingDocument: viewModel is DocumentDownloadingViewModel ? viewModel.downloadingDocument : null,
+            enabled: viewModel is! DocumentsConfirmingViewModel,
+            onTapDownload: (document) {
+              StoreProvider.of<AppState>(context).dispatch(
+                DownloadDocumentCommandAction(
+                  document: document,
+                  downloadLocation: DocumentDownloadLocation.postbox,
+                ),
               );
             },
           ),

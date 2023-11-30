@@ -116,6 +116,16 @@ class Format {
       return '${sizeInMB.toStringAsFixed(2)} MB';
     }
   }
+
+  static String fileType(String fileType) {
+    final Map<String, String> fileTypes = {
+      'application/pdf': 'PDF',
+      'image/jpeg': 'JPEG',
+      'image/png': 'PNG',
+    };
+
+    return fileTypes[fileType] ?? fileType;
+  }
 }
 
 class InputFormatter {
