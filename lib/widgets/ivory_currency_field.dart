@@ -11,6 +11,7 @@ class InputCurrencyField extends StatefulWidget {
   final Widget? labelSuffix;
   final String? placeHolder;
   final FocusNode? focusNode;
+  final int? maxLength;
 
   const InputCurrencyField({
     super.key,
@@ -20,6 +21,7 @@ class InputCurrencyField extends StatefulWidget {
     this.labelSuffix,
     this.placeHolder = '0.00',
     this.focusNode,
+    this.maxLength,
   });
 
   @override
@@ -70,49 +72,66 @@ class _InputCurrencyFieldState extends State<InputCurrencyField> {
           ),
           child: Row(
             children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 11),
-                decoration: BoxDecoration(
-                    color: ClientConfig.getCustomColors().neutral100,
-                    borderRadius: const BorderRadius.only(topLeft: Radius.circular(8), bottomLeft: Radius.circular(8)),
-                    border: Border(
-                      top: BorderSide(
-                        width: _focusNode.hasFocus ? 1 : 0,
-                        color: _focusNode.hasFocus ? ClientConfig.getColorScheme().primary : const Color(0x00FFFFFF),
-                      ),
-                      right: BorderSide(
-                        width: _focusNode.hasFocus ? 0 : 1,
-                        color: _focusNode.hasFocus ? ClientConfig.getColorScheme().primary : const Color(0x00FFFFFF),
-                      ),
-                      bottom: BorderSide(
-                        width: _focusNode.hasFocus ? 1 : 0,
-                        color: _focusNode.hasFocus ? ClientConfig.getColorScheme().primary : const Color(0x00FFFFFF),
-                      ),
-                      left: BorderSide(
-                        width: _focusNode.hasFocus ? 1 : 0,
-                        color: _focusNode.hasFocus ? ClientConfig.getColorScheme().primary : const Color(0x00FFFFFF),
-                      ),
+              ListenableBuilder(
+                listenable: _focusNode,
+                builder: ((context, child) => Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 11),
+                          decoration: BoxDecoration(
+                              color: ClientConfig.getCustomColors().neutral100,
+                              borderRadius:
+                                  const BorderRadius.only(topLeft: Radius.circular(8), bottomLeft: Radius.circular(8)),
+                              border: Border(
+                                top: BorderSide(
+                                  width: _focusNode.hasFocus ? 1 : 0,
+                                  color: _focusNode.hasFocus
+                                      ? ClientConfig.getColorScheme().primary
+                                      : const Color(0x00FFFFFF),
+                                ),
+                                right: BorderSide(
+                                  width: _focusNode.hasFocus ? 0 : 1,
+                                  color: _focusNode.hasFocus
+                                      ? ClientConfig.getColorScheme().primary
+                                      : const Color(0x00FFFFFF),
+                                ),
+                                bottom: BorderSide(
+                                  width: _focusNode.hasFocus ? 1 : 0,
+                                  color: _focusNode.hasFocus
+                                      ? ClientConfig.getColorScheme().primary
+                                      : const Color(0x00FFFFFF),
+                                ),
+                                left: BorderSide(
+                                  width: _focusNode.hasFocus ? 1 : 0,
+                                  color: _focusNode.hasFocus
+                                      ? ClientConfig.getColorScheme().primary
+                                      : const Color(0x00FFFFFF),
+                                ),
+                              )),
+                          child: SvgPicture.asset(
+                            widget.currencyPathIcon,
+                            width: 24,
+                            height: 24,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        if (!_focusNode.hasFocus) ...[
+                          SizedBox(
+                            width: 1,
+                            height: 48,
+                            child: VerticalDivider(
+                              width: 1,
+                              thickness: 1,
+                              color: ClientConfig.getCustomColors().neutral400,
+                            ),
+                          )
+                        ],
+                      ],
                     )),
-                child: SvgPicture.asset(
-                  widget.currencyPathIcon,
-                  width: 24,
-                  height: 24,
-                  fit: BoxFit.cover,
-                ),
               ),
-              if (!_focusNode.hasFocus) ...[
-                SizedBox(
-                  width: 1,
-                  height: 48,
-                  child: VerticalDivider(
-                    width: 1,
-                    thickness: 1,
-                    color: ClientConfig.getCustomColors().neutral400,
-                  ),
-                )
-              ],
               Expanded(
                 child: TextField(
+                  maxLength: widget.maxLength,
                   style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
                   controller: _currencyController,
                   focusNode: _focusNode,
@@ -121,6 +140,7 @@ class _InputCurrencyFieldState extends State<InputCurrencyField> {
                     ThousandsSeparatorInputFormatter(),
                   ],
                   decoration: InputDecoration(
+                    counterText: '',
                     hintText: widget.placeHolder,
                     hintStyle: ClientConfig.getTextStyleScheme()
                         .bodyLargeRegular
@@ -178,6 +198,6 @@ class ThousandsSeparatorInputFormatter extends TextInputFormatter {
   }
 
   String _formatIntegerPart(String integerValueOfNumber) {
-    return integerValueOfNumber.isNotEmpty ? NumberFormat('#,###').format(int.parse(integerValueOfNumber)) : '';
+    return integerValueOfNumber.isNotEmpty ? NumberFormat('#,###').format(double.parse(integerValueOfNumber)) : '';
   }
 }

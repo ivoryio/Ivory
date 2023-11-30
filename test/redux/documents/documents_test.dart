@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:solarisdemo/infrastructure/documents/documents_service.dart';
 import 'package:solarisdemo/models/auth/auth_type.dart';
 import 'package:solarisdemo/models/documents/document.dart';
 import 'package:solarisdemo/redux/auth/auth_state.dart';
@@ -83,7 +84,10 @@ void main() {
           store.onChange.firstWhere((element) => element.downloadDocumentState is DocumentDownloadingState);
 
       // when
-      store.dispatch(DownloadDocumentCommandAction(document: document1));
+      store.dispatch(DownloadDocumentCommandAction(
+        document: document1,
+        downloadLocation: DocumentDownloadLocation.postbox,
+      ));
 
       // then
       expect((await appState).downloadDocumentState, isA<DocumentDownloadingState>());
@@ -102,7 +106,10 @@ void main() {
       final appState = store.onChange.firstWhere((element) => element.downloadDocumentState is DocumentDownloadedState);
 
       // when
-      store.dispatch(DownloadDocumentCommandAction(document: document2));
+      store.dispatch(DownloadDocumentCommandAction(
+        document: document2,
+        downloadLocation: DocumentDownloadLocation.postbox,
+      ));
 
       // then
       expect((await appState).downloadDocumentState, isA<DocumentDownloadedState>());
@@ -122,7 +129,10 @@ void main() {
           store.onChange.firstWhere((element) => element.downloadDocumentState is DocumentDownloadErrorState);
 
       // when
-      store.dispatch(DownloadDocumentCommandAction(document: document1));
+      store.dispatch(DownloadDocumentCommandAction(
+        document: document1,
+        downloadLocation: DocumentDownloadLocation.postbox,
+      ));
 
       // then
       expect((await appState).downloadDocumentState, isA<DocumentDownloadErrorState>());
