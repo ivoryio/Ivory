@@ -32,7 +32,7 @@ class _LoginWithBiometricsScreenState extends State<LoginWithBiometricsScreen> {
             (store.state.authState as AuthenticationInitializedState).authType == AuthType.withBiometrics) {
           final cognitoUser =
               (StoreProvider.of<AppState>(context).state.authState as AuthenticationInitializedState).cognitoUser;
-          firstName = cognitoUser.firstName!;
+          firstName = cognitoUser.firstName ?? '';
           store.dispatch(
             AuthenticateUserCommandAction(
               authType: AuthType.withBiometrics,

@@ -15,10 +15,7 @@ class DeviceBindingPresenter {
       return DeviceBindingFetchedViewModel(
         devices: deviceBindingState.devices,
         thisDevice: deviceBindingState.thisDevice,
-      );
-    } else if (deviceBindingState is DeviceBindingFetchedButEmptyState) {
-      return DeviceBindingFetchedButEmptyViewModel(
-        thisDevice: deviceBindingState.thisDevice,
+        isBoundDevice: deviceBindingState.isBoundDevice,
       );
     } else if (deviceBindingState is DeviceBindingDeletedState) {
       return DeviceBindingDeletedViewModel();
@@ -33,7 +30,7 @@ class DeviceBindingPresenter {
         deviceId: deviceBindingState.deviceId,
       );
     }
-    
+
     return DeviceBindingInitialViewModel();
   }
 }
@@ -42,10 +39,12 @@ class DeviceBindingViewModel extends Equatable {
   final List<Device>? devices;
   final Device? thisDevice;
   final String? deviceId;
-  const DeviceBindingViewModel({this.devices, this.thisDevice, this.deviceId});
+  final bool? isBoundDevice;
+
+  const DeviceBindingViewModel({this.devices, this.thisDevice, this.deviceId, this.isBoundDevice});
 
   @override
-  List<Object?> get props => [devices, thisDevice, deviceId];
+  List<Object?> get props => [devices, thisDevice, deviceId, isBoundDevice];
 }
 
 class DeviceBindingInitialViewModel extends DeviceBindingViewModel {}
@@ -78,19 +77,11 @@ class DeviceBindingFetchedViewModel extends DeviceBindingViewModel {
   const DeviceBindingFetchedViewModel({
     required List<Device> devices,
     required Device thisDevice,
-  }) : super(devices: devices, thisDevice: thisDevice);
+    required bool isBoundDevice,
+  }) : super(devices: devices, thisDevice: thisDevice, isBoundDevice: isBoundDevice);
 
   @override
-  List<Object?> get props => [devices, thisDevice];
-}
-
-class DeviceBindingFetchedButEmptyViewModel extends DeviceBindingViewModel {
-  const DeviceBindingFetchedButEmptyViewModel({
-    required Device thisDevice,
-  }) : super(thisDevice: thisDevice);
-
-  @override
-  List<Object?> get props => [thisDevice];
+  List<Object?> get props => [devices, thisDevice, isBoundDevice];
 }
 
 class DeviceBindingDeletedViewModel extends DeviceBindingViewModel {}

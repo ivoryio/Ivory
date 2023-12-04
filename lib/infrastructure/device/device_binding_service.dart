@@ -92,8 +92,10 @@ class DeviceBindingService extends ApiService {
         'person/device',
       );
 
+      List<Device> devices = (data as List).map((device) => Device.fromJson(device)).toList();
+
       return GetDeviceBindingSuccessResponse(
-        devices: List<Device>.from(data.map((device) => Device.fromJson(device))),
+        devices: devices,
       );
     } catch (e) {
       return const DeviceBindingServiceErrorResponse(

@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:solarisdemo/models/device.dart';
 import 'package:solarisdemo/redux/device/device_action.dart';
 import 'package:solarisdemo/redux/device/device_state.dart';
 
@@ -87,7 +88,6 @@ void main() {
   });
 
   group('Deleting device binding', () {
-
     test('When deleting device binding successfully should be succesful', () async {
       // given
       final store = createTestStore(
@@ -188,5 +188,56 @@ void main() {
       expect((await loadingState).deviceBindingState, isA<DeviceBindingLoadingState>());
       expect((await appState).deviceBindingState, isA<DeviceBindingErrorState>());
     });
+  });
+
+  group('Get bound device', () {
+    test('When fetching bound devices succesfully, should return a lust of devices', () async {
+      //given
+      final store = createTestStore(
+        deviceBindingService: FakeDeviceBindingService(),
+        initialState: createAppState(
+          deviceBindingState: DeviceBindingInitialState(),
+          authState: authState,
+        ),
+      );
+      List<Device> boundDevices = [
+        Device(deviceId: 'deviceId', deviceName: 'deviceName'),
+        Device(deviceId: 'deviceId2', deviceName: 'deviceName2'),
+      ];
+
+      final appState = store.onChange.firstWhere((element) => element.deviceBindingState is DeviceBindingFetchedState);
+
+      //when
+      store.dispatch(
+        FetchBoundDevicesCommandAction(),
+      );
+
+      print(((await appState).deviceBindingState as DeviceBindingFetchedState).devices);
+      print(boundDevices);
+      //then
+      expect((await appState).deviceBindingState, isA<DeviceBindingFetchedState>());
+      expect(((await appState).deviceBindingState as DeviceBindingFetchedState).devices.length, 2);
+    });
+  });
+
+  test('When fetching bound devices fails, should return error with the proper type', () async {
+    //given
+    final store = createTestStore(
+      deviceBindingService: FakeFailingDeviceBindingService(),
+      initialState: createAppState(
+        deviceBindingState: DeviceBindingInitialState(),
+        authState: authState,
+      ),
+    );
+
+    final appState = store.onChange.firstWhere((element) => element.deviceBindingState is DeviceBindingErrorState);
+
+    //when
+    store.dispatch(
+      FetchBoundDevicesCommandAction(),
+    );
+
+    //then
+    expect((await appState).deviceBindingState, isA<DeviceBindingErrorState>());
   });
 }

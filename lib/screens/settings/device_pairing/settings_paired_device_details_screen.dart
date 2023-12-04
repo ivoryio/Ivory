@@ -210,7 +210,6 @@ class SettingsPairedDeviceDetailsScreen extends StatelessWidget {
                         onTap: () {
                           _showUnpairModal(
                             context: context,
-                            viewModel: viewModel,
                           );
                         },
                       ),
@@ -227,12 +226,11 @@ class SettingsPairedDeviceDetailsScreen extends StatelessWidget {
 
   void _showUnpairModal({
     required BuildContext context,
-    required DeviceBindingViewModel viewModel,
   }) {
     showBottomModal(
       context: context,
-      title: 'Are you sure you want to unpair ${viewModel.thisDevice!.deviceName} '
-          '(ID: ${viewModel.thisDevice!.deviceId.substring(0, 13)})?',
+      title: 'Are you sure you want to unpair ${params.device.deviceName} '
+          '(ID: ${params.device.deviceId})?',
       textWidget: Text(
         'You will not be able to make any transactions or other complex actions with this device.',
         style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
@@ -263,7 +261,7 @@ class SettingsPairedDeviceDetailsScreen extends StatelessWidget {
               Navigator.pop(context);
               StoreProvider.of<AppState>(context).dispatch(
                 DeleteBoundDeviceCommandAction(
-                  deviceId: viewModel.thisDevice!.deviceId,
+                  deviceId: params.device.deviceId,
                 ),
               );
             },

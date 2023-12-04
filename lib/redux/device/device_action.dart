@@ -27,10 +27,15 @@ class DeleteIncompleteDeviceBindingCommandAction {}
 class FetchBoundDevicesCommandAction {}
 
 class BoundDevicesFetchedEventAction {
-  final List<Device> devices;
+  final List<Device> boundDevices;
   final Device thisDevice;
+  final bool isBoundDevice;
 
-  BoundDevicesFetchedEventAction(this.devices, this.thisDevice);
+  BoundDevicesFetchedEventAction({
+    required this.boundDevices,
+    required this.thisDevice,
+    required this.isBoundDevice,
+  });
 }
 
 class DeviceBindingCreatedEventAction {}
@@ -45,12 +50,6 @@ class DeviceBindingChallengeVerifiedEventAction {
   final Device thisDevice;
 
   DeviceBindingChallengeVerifiedEventAction(this.thisDevice);
-}
-
-class BoundDevicesFetchedButEmptyEventAction {
-  final Device thisDevice;
-
-  BoundDevicesFetchedButEmptyEventAction(this.thisDevice);
 }
 
 class DeviceBoundedEventAction {}

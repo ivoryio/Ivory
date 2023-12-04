@@ -76,8 +76,7 @@ class SettingsDevicePairingScreen extends StatelessWidget {
                           child: Text('Error'),
                         );
                       }
-                      if (viewModel is DeviceBindingFetchedViewModel ||
-                          viewModel is DeviceBindingFetchedButEmptyViewModel) {
+                      if (viewModel is DeviceBindingFetchedViewModel) {
                         return _buildPageContent(
                           context: context,
                           viewModel: viewModel,
@@ -147,12 +146,16 @@ class SettingsDevicePairingScreen extends StatelessWidget {
                         Icon(
                           Icons.mobile_off,
                           size: 16,
-                          color: viewModel is DeviceBindingFetchedViewModel ? Colors.green : Colors.red,
+                          color: (viewModel is DeviceBindingFetchedViewModel && viewModel.isBoundDevice!)
+                              ? Colors.green
+                              : Colors.red,
                         ),
                         const SizedBox(
                           width: 4,
                         ),
-                        Text(viewModel is DeviceBindingFetchedViewModel ? 'Paired' : 'Not paired'),
+                        Text((viewModel is DeviceBindingFetchedViewModel && viewModel.isBoundDevice!)
+                            ? 'Paired'
+                            : 'Not paired'),
                       ],
                     ),
                   ],
@@ -176,7 +179,7 @@ class SettingsDevicePairingScreen extends StatelessWidget {
                             style: ClientConfig.getTextStyleScheme().bodySmallBold,
                           ),
                           Text(
-                            '${viewModel.devices != null ? viewModel.devices!.length : 0}/5',
+                            '${viewModel is DeviceBindingFetchedViewModel ? viewModel.devices!.length : 0}/5',
                             style: ClientConfig.getTextStyleScheme().bodySmallBold,
                           ),
                         ],
@@ -185,7 +188,10 @@ class SettingsDevicePairingScreen extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(vertical: 8),
                         child: LinearPercentIndicator(
                           backgroundColor: ClientConfig.getCustomColors().neutral200,
-                          progressColor: ClientConfig.getColorScheme().secondary,
+                          progressColor: viewModel is DeviceBindingFetchedViewModel && viewModel.devices!.length < 5 ||
+                                  viewModel.isBoundDevice!
+                              ? ClientConfig.getColorScheme().secondary
+                              : ClientConfig.getColorScheme().error,
                           lineHeight: 8,
                           barRadius: const Radius.circular(1000),
                           percent: (viewModel.devices != null ? viewModel.devices!.length : 0) / 5,
@@ -194,20 +200,58 @@ class SettingsDevicePairingScreen extends StatelessWidget {
                       ),
                       Row(
                         children: [
+                          if (viewModel is DeviceBindingFetchedViewModel && (viewModel.devices!.length < 5))
                           Text(
-                              'You can pair ${5 - (viewModel.devices != null ? viewModel.devices!.length : 0)} more devices'),
+                              'You can pair ${5 - (viewModel.devices!.length)} more devices',
+                            ),
+                          if (viewModel is DeviceBindingFetchedViewModel && viewModel.devices!.length >= 5)
+                            Flexible(
+                              child: RichText(
+                                overflow: TextOverflow.clip,
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: 'Limit reached. ',
+                                      style: !viewModel.isBoundDevice!
+                                          ? ClientConfig.getTextStyleScheme().bodySmallBold.copyWith(
+                                                color: ClientConfig.getColorScheme().error,
+                                              )
+                                          : ClientConfig.getTextStyleScheme().bodySmallBold.copyWith(
+                                                color: ClientConfig.getCustomColors().neutral700,
+                                              ),
+                                    ),
+                                    if (!viewModel.isBoundDevice!)
+                                      TextSpan(
+                                        text: "Unpair one of your devices to be able to pair this device.",
+                                        style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(
+                                              color: ClientConfig.getColorScheme().error,
+                                            ),
+                                      ),
+                                    if (viewModel.isBoundDevice!)
+                                      TextSpan(
+                                        text: "You cannot pair any additional devices.",
+                                        style: ClientConfig.getTextStyleScheme().bodySmallRegular.copyWith(
+                                              color: ClientConfig.getCustomColors().neutral700,
+                                            ),
+                                      )
+                                  ],
+                                ),
+                              ),
+                            ),
                         ],
                       ),
                     ],
                   ),
                 ),
               ),
-              if (viewModel is DeviceBindingFetchedButEmptyViewModel)
+              if (!viewModel.isBoundDevice!)
                 Container(
                   height: 1,
                   color: ClientConfig.getCustomColors().neutral300,
                 ),
-              if (viewModel is DeviceBindingFetchedButEmptyViewModel)
+              if (viewModel is DeviceBindingFetchedViewModel &&
+                  !viewModel.isBoundDevice! &&
+                  viewModel.devices!.length < 5)
                 GestureDetector(
                   onTap: () async {
                     final isBiometricsAvailable = await BiometricsService.areBiometricsAvailable();
@@ -237,7 +281,7 @@ class SettingsDevicePairingScreen extends StatelessWidget {
         ),
         if (viewModel is DeviceBindingFetchedViewModel)
           const SizedBox(
-            height: 24,
+            height: 16,
           ),
         if (viewModel is DeviceBindingFetchedViewModel)
           _buildDeviceList(
@@ -252,31 +296,31 @@ class SettingsDevicePairingScreen extends StatelessWidget {
     required BuildContext context,
     required DeviceBindingViewModel viewModel,
   }) {
-    List<Widget> deviceWidgets = viewModel.devices!.map((device) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const IvoryListTitle(title: "Paired devices"),
-          IvoryListTile(
-            leftIcon: Icons.phonelink_ring,
-            title: device.deviceName,
-            subtitle: 'ID: ${device.deviceId.substring(0, 13)}',
-            rightIcon: Icons.arrow_forward_ios,
-            onTap: () {
-              Navigator.pushNamed(
-                context,
-                SettingsPairedDeviceDetailsScreen.routeName,
-                arguments: SettingsPairedDeviceDetailsScreenParams(device: device),
-              );
-            },
-          ),
-          const SizedBox(height: 8),
-        ],
-      );
+    List<Widget> deviceWidgets = viewModel.devices!.expand((device) {
+      return [
+        IvoryListTile(
+          leftIcon: Icons.phonelink_ring,
+          title: device.deviceName,
+          subtitle: 'ID: ${device.deviceId.substring(0, 13)}',
+          rightIcon: Icons.arrow_forward_ios,
+          onTap: () {
+            Navigator.pushNamed(
+              context,
+              SettingsPairedDeviceDetailsScreen.routeName,
+              arguments: SettingsPairedDeviceDetailsScreenParams(device: device),
+            );
+          },
+        ),
+        const SizedBox(height: 8),
+      ];
     }).toList();
 
     return Column(
-      children: deviceWidgets,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const IvoryListTitle(title: "Paired devices"),
+        ...deviceWidgets,
+      ],
     );
   }
 

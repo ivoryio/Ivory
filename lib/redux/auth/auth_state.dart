@@ -48,8 +48,10 @@ class AuthenticationInitializedState extends AuthState {
 class AuthenticatedState extends AuthState {
   final AuthType authType;
   final AuthenticatedUser authenticatedUser;
-
-  AuthenticatedState(this.authenticatedUser, this.authType);
+  AuthenticatedState(
+    this.authenticatedUser,
+    this.authType,
+  );
 
   @override
   List<Object?> get props => [authenticatedUser];
