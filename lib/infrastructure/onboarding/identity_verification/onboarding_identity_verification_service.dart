@@ -81,6 +81,27 @@ class OnbordingIdentityVerificationService extends ApiService {
       return const IdentityVerificationServiceErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
     }
   }
+
+  Future<IdentityVerificationServiceResponse> signWithTan({
+    required User user,
+    required String tan,
+  }) async {
+    this.user = user;
+
+    const path = '/signup/identification/confirm';
+    Map<String, dynamic> body = {
+      'token': tan,
+    };
+
+    try {
+      await patch(path, body: body);
+
+      return SignWithTanSuccessResponse();
+    } catch (err) {
+      return const IdentityVerificationServiceErrorResponse(
+          errorType: OnboardingIdentityVerificationErrorType.invalidTan);
+    }
+  }
 }
 
 OnboardingIdentificationStatus _parseIdentificationStatus(String status) {
@@ -132,3 +153,5 @@ class IdentityVerificationServiceErrorResponse extends IdentityVerificationServi
   @override
   List<Object?> get props => [errorType];
 }
+
+class SignWithTanSuccessResponse extends IdentityVerificationServiceResponse {}

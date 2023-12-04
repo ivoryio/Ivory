@@ -33,6 +33,11 @@ OnboardingIdentityVerificationState identityVerificationReducer(
       isLoading: false,
       errorType: action.errorType,
     );
+  } else if (action is SignWithTanSuccessEventAction) {
+    return const OnboardingIdentityVerificationState(
+      isLoading: false,
+      isTanConfirmed: false,
+    );
   }
 
   return state;
