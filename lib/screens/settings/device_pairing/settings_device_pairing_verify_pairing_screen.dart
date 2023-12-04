@@ -8,6 +8,7 @@ import 'package:solarisdemo/screens/settings/device_pairing/settings_device_pair
 import 'package:solarisdemo/screens/settings/device_pairing/settings_device_pairing_success_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
+import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/tan_input.dart';
 
@@ -37,6 +38,33 @@ class _SettingsDevicePairingVerifyPairingScreenState extends State<SettingsDevic
           if (previousViewModel is DeviceBindingLoadingViewModel &&
               viewModel is DeviceBindingChallengeVerifiedViewModel) {
             Navigator.pushNamed(context, SettingsDevicePairingSuccessScreen.routeName);
+          }
+          if (previousViewModel is DeviceBindingLoadingViewModel &&
+              viewModel is DeviceBindingVerificationErrorViewModel) {
+            showBottomModal(
+              context: context,
+              isDismissible: false,
+              showCloseButton: false,
+              title: "Code is incorrect",
+              textWidget: const Text(
+                'Please try again binding your device, and make sure you enter the correct code.',
+              ),
+              content: Column(
+                children: [
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    width: double.infinity,
+                    child: PrimaryButton(
+                      text: 'Try again',
+                      onPressed: () async {
+                        StoreProvider.of<AppState>(context).dispatch(DeleteIncompleteDeviceBindingCommandAction());
+                        Navigator.popUntil(context, ModalRoute.withName(SettingsDevicePairingScreen.routeName));
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            );
           }
         },
         converter: (store) => DeviceBindingPresenter.presentDeviceBinding(

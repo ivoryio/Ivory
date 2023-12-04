@@ -17,6 +17,8 @@ DeviceBindingState deviceBindingState(DeviceBindingState currentState, dynamic a
     return DeviceBindingCreatedState();
   } else if (action is DeviceBindingChallengeVerifiedEventAction) {
     return DeviceBindingChallengeVerifiedState(action.thisDevice);
+  } else if (action is DeviceBindingChallengeVerificationFailedEventAction) {
+    return DeviceBindingVerificationErrorState(action.deviceId);
   }
   return currentState;
 }

@@ -28,7 +28,12 @@ class DeviceBindingPresenter {
       return DeviceBindingChallengeVerifiedViewModel(
         thisDevice: deviceBindingState.thisDevice,
       );
+    } else if (deviceBindingState is DeviceBindingVerificationErrorState) {
+      return DeviceBindingVerificationErrorViewModel(
+        deviceId: deviceBindingState.deviceId,
+      );
     }
+    
     return DeviceBindingInitialViewModel();
   }
 }
@@ -36,11 +41,11 @@ class DeviceBindingPresenter {
 class DeviceBindingViewModel extends Equatable {
   final List<Device>? devices;
   final Device? thisDevice;
-
-  const DeviceBindingViewModel({this.devices, this.thisDevice});
+  final String? deviceId;
+  const DeviceBindingViewModel({this.devices, this.thisDevice, this.deviceId});
 
   @override
-  List<Object?> get props => [devices, thisDevice];
+  List<Object?> get props => [devices, thisDevice, deviceId];
 }
 
 class DeviceBindingInitialViewModel extends DeviceBindingViewModel {}
@@ -48,6 +53,15 @@ class DeviceBindingInitialViewModel extends DeviceBindingViewModel {}
 class DeviceBindingLoadingViewModel extends DeviceBindingViewModel {}
 
 class DeviceBindingErrorViewModel extends DeviceBindingViewModel {}
+
+class DeviceBindingVerificationErrorViewModel extends DeviceBindingViewModel {
+  const DeviceBindingVerificationErrorViewModel({
+    required String deviceId,
+  }) : super(deviceId: deviceId);
+
+  @override
+  List<Object?> get props => [deviceId];
+}
 
 class DeviceBindingCreatedViewModel extends DeviceBindingViewModel {}
 
