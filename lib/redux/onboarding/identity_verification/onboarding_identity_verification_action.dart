@@ -38,3 +38,11 @@ class OnboardingIdentityVerificationErrorEventAction {
 
   OnboardingIdentityVerificationErrorEventAction({required this.errorType});
 }
+
+class SignWithTanCommandAction {
+  final String tan;
+
+  SignWithTanCommandAction({required this.tan});
+}
+
+class SignWithTanSuccessEventAction {}

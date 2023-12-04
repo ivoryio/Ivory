@@ -95,4 +95,61 @@ void main() {
       ),
     );
   });
+
+  group('sign with TAN', () {
+    test('when screen sent TAN should return a loading viewModel', () {
+      //given
+      const onboardingIdentityVerificationState = OnboardingIdentityVerificationState(
+        isLoading: true,
+        isTanConfirmed: true,
+      );
+      //when
+      final viewModel = OnboardingIdentityVerificationPresenter.present(
+          identityVerificationState: onboardingIdentityVerificationState);
+      //then
+      expect(
+          viewModel,
+          const OnboardingIdentityVerificationViewModel(
+            isLoading: true,
+            isTanConfirmed: true,
+          ));
+    });
+
+    test('when screen sent incorrect TAN should return a error viewModel', () {
+      //given
+      const onboardingIdentityVerificationState = OnboardingIdentityVerificationState(
+        isLoading: false,
+        errorType: OnboardingIdentityVerificationErrorType.unknown,
+      );
+      //when
+      final viewModel = OnboardingIdentityVerificationPresenter.present(
+          identityVerificationState: onboardingIdentityVerificationState);
+      //then
+      expect(
+        viewModel,
+        const OnboardingIdentityVerificationViewModel(
+          isLoading: false,
+          errorType: OnboardingIdentityVerificationErrorType.unknown,
+        ),
+      );
+    });
+
+    test('when screen sent correct TAN should return viewModel', () {
+      //given
+      const onboardingIdentityVerificationState = OnboardingIdentityVerificationState(
+        isLoading: false,
+        isTanConfirmed: true,
+      );
+      //when
+      final viewModel = OnboardingIdentityVerificationPresenter.present(
+          identityVerificationState: onboardingIdentityVerificationState);
+      //then
+      expect(
+          viewModel,
+          const OnboardingIdentityVerificationViewModel(
+            isLoading: false,
+            isTanConfirmed: true,
+          ));
+    });
+  });
 }

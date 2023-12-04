@@ -269,4 +269,83 @@ void main() {
       expect(identityVerificationState.errorType, OnboardingIdentityVerificationErrorType.unknown);
     });
   });
+
+  group('sign with tan', () {
+    test('when tan was sent it should display loading state', () async {
+      //given
+      final store = createTestStore(
+        onboardingIdentityVerificationService: FakeOnbordingSignWithTanService(),
+        initialState: createAppState(
+          authState: authInitializedState,
+          onboardingIdentityVerificationState: const OnboardingIdentityVerificationState(
+            isLoading: false,
+            isTanConfirmed: true,
+          ),
+        ),
+      );
+
+      final appState =
+          store.onChange.firstWhere((state) => state.onboardingIdentityVerificationState.isLoading == true);
+      //when
+      store.dispatch(SignWithTanCommandAction(tan: '212212'));
+      //then
+      final signWithTanState = (await appState).onboardingIdentityVerificationState;
+
+      expect(signWithTanState.isLoading, true);
+      expect(signWithTanState.errorType, null);
+      expect(signWithTanState.isTanConfirmed, null);
+    });
+
+    test('when tan successful sent it should update with success', () async {
+      //given
+      final store = createTestStore(
+        onboardingIdentityVerificationService: FakeOnbordingSignWithTanService(),
+        initialState: createAppState(
+          authState: authInitializedState,
+          onboardingIdentityVerificationState: const OnboardingIdentityVerificationState(
+            isLoading: false,
+            isTanConfirmed: true,
+          ),
+        ),
+      );
+
+      final appState = store.onChange.firstWhere((state) =>
+          state.onboardingIdentityVerificationState.isTanConfirmed == true &&
+          state.onboardingIdentityVerificationState.isLoading == false);
+      //when
+      store.dispatch(SignWithTanCommandAction(tan: '212212'));
+      //then
+      final signWithTanState = (await appState).onboardingIdentityVerificationState;
+
+      expect(signWithTanState.isLoading, false);
+      expect(signWithTanState.errorType, null);
+      expect(signWithTanState.isTanConfirmed, true);
+    });
+
+    test('when tan unsuccessful sent it should update with error', () async {
+      //given
+      final store = createTestStore(
+        onboardingIdentityVerificationService: FakeFailingOnbordingSignWithTanService(),
+        initialState: createAppState(
+          authState: authInitializedState,
+          onboardingIdentityVerificationState: const OnboardingIdentityVerificationState(
+            isLoading: false,
+            errorType: null,
+            isTanConfirmed: null,
+          ),
+        ),
+      );
+
+      final appState =
+          store.onChange.firstWhere((state) => state.onboardingIdentityVerificationState.errorType != null);
+      //when
+      store.dispatch(SignWithTanCommandAction(tan: '212212'));
+      //then
+      final signWithTanState = (await appState).onboardingIdentityVerificationState;
+
+      expect(signWithTanState.isLoading, false);
+      expect(signWithTanState.errorType, OnboardingIdentityVerificationErrorType.unknown);
+      expect(signWithTanState.isTanConfirmed, null);
+    });
+  });
 }

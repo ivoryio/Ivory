@@ -562,6 +562,11 @@ class NotImplementedOnbordingIdentityVerificationService extends OnbordingIdenti
   }
 
   @override
+  Future<IdentityVerificationServiceResponse> signWithTan({required User user, required String tan}) async {
+    throw UnimplementedError();
+  }
+
+  @override
   Future<IdentityVerificationServiceResponse> getSignupIdentificationInfo({
     required User user,
   }) async {
