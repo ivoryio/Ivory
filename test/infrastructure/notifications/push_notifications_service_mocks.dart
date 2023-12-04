@@ -1,5 +1,4 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mockito/mockito.dart';
 import 'package:redux/redux.dart';
@@ -19,16 +18,6 @@ class MockFlutterLocalNotificationsPlugin extends Mock implements FlutterLocalNo
       returnValue: Future<void>.value(),
       returnValueForMissingStub: Future<void>.value(),
     );
-  }
-}
-
-class MockNavigatorObserver extends Mock implements NavigatorObserver {
-  @override
-  NavigatorState? get navigator => super.noSuchMethod(Invocation.getter(#navigator));
-
-  @override
-  void didPush(Route<dynamic>? route, Route<dynamic>? previousRoute) {
-    super.noSuchMethod(Invocation.method(#didPush, [route, previousRoute]));
   }
 }
 
@@ -62,6 +51,10 @@ class MockPushNotificationStorageService extends Mock implements PushNotificatio
 }
 
 class MockRemoteMessages {
+  static RemoteMessage unknownMessageType = const RemoteMessage(data: {
+    'type': 'UNKNOWN_TYPE',
+  });
+
   static RemoteMessage scaChallengeMessage = const RemoteMessage(data: {
     'type': 'SCA_CHALLENGE',
     'card_id': 'card_id',
@@ -72,5 +65,9 @@ class MockRemoteMessages {
     'change_request_id': 'change_request_id',
     'decline_change_request_id': 'decline_change_request_id',
     'challenged_at': '2023-12-04T00:00:00.000Z',
+  });
+
+  static RemoteMessage scoringSuccessfulMessage = const RemoteMessage(data: {
+    'type': 'SCORING_SUCCESSFUL',
   });
 }

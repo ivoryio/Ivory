@@ -9,6 +9,7 @@ import 'package:mockito/mockito.dart';
 import 'package:redux/redux.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_storage_service.dart';
+import 'package:solarisdemo/navigator_observers/general_navigation_observer.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/notification/notification_action.dart';
 import 'package:solarisdemo/screens/transactions/transaction_approval_pending_screen.dart';
@@ -26,7 +27,6 @@ void main() {
   late FirebaseMessaging messaging;
   late PushNotificationStorageService storageService;
   late Store<AppState> mockStore;
-  late MockNavigatorObserver mockNavigatorObserver;
   late MockFlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
   setUpAll(() async {
@@ -36,7 +36,6 @@ void main() {
     messaging = FirebaseMessaging.instance;
     storageService = MockPushNotificationStorageService();
     mockStore = MockReduxStore();
-    mockNavigatorObserver = MockNavigatorObserver();
     flutterLocalNotificationsPlugin = MockFlutterLocalNotificationsPlugin();
   });
 
@@ -104,12 +103,47 @@ void main() {
         verifyNever(storageService.delete());
       });
 
+      testWidgets("When the notification type is unknown, it should only delete it", (tester) async {
+        // given
+        final pushNotificationService = FirebasePushNotificationService(storageService: storageService);
+
+        final navigatorKey = GlobalKey<NavigatorState>();
+        final navigationObserver = NavigationGeneralObserver();
+
+        pushNotificationService.store = mockStore;
+        pushNotificationService.navigatorKey = navigatorKey;
+        pushNotificationService.flutterLocalNotificationsPlugin = flutterLocalNotificationsPlugin;
+
+        when(storageService.find()).thenAnswer(
+          (_) async => jsonEncode(MockRemoteMessages.unknownMessageType.toMap()),
+        );
+
+        await tester.pumpWidget(
+          MaterialApp(
+            navigatorObservers: [navigationObserver],
+            navigatorKey: navigatorKey,
+            home: Container(),
+          ),
+        );
+
+        // when
+        await pushNotificationService.handleSavedNotification();
+
+        // then
+        verify(storageService.delete()).called(1);
+        verifyNever(mockStore.dispatch(any));
+
+        expect(navigationObserver.routeStack.last, "/");
+      });
+
       testWidgets(
           "When NotificationType.scaChallenge is saved, the store should dispatch the correct action and redirect to the correct screen",
           (tester) async {
         // given
         final pushNotificationService = FirebasePushNotificationService(storageService: storageService);
+
         final navigatorKey = GlobalKey<NavigatorState>();
+        final navigationObserver = NavigationGeneralObserver();
 
         pushNotificationService.user = MockUser();
         pushNotificationService.store = mockStore;
@@ -122,15 +156,9 @@ void main() {
 
         await tester.pumpWidget(
           MaterialApp(
-            navigatorObservers: [mockNavigatorObserver],
+            navigatorObservers: [navigationObserver],
             navigatorKey: navigatorKey,
-            home: Navigator(
-              onGenerateRoute: (settings) {
-                return MaterialPageRoute(
-                  builder: (context) => Container(),
-                );
-              },
-            ),
+            home: Container(),
             routes: {
               TransactionApprovalPendingScreen.routeName: (context) => Container(),
             },
@@ -142,10 +170,50 @@ void main() {
 
         // then
         final dispatch = verify(mockStore.dispatch(captureAny)).captured;
-        final capturedRoute = verify(mockNavigatorObserver.didPush(captureAny, any)).captured.last as Route;
 
         expect(dispatch.single, isA<ReceivedTransactionApprovalNotificationEventAction>());
-        expect(capturedRoute.settings.name, TransactionApprovalPendingScreen.routeName);
+        expect(navigationObserver.routeStack.last, TransactionApprovalPendingScreen.routeName);
+
+        verify(storageService.delete()).called(1);
+      });
+
+      testWidgets(
+          "When NotificationType.scoringSuccessful is saved, the store should dispatch the correct action and redirect to the correct screen",
+          (tester) async {
+        // given
+        final pushNotificationService = FirebasePushNotificationService(storageService: storageService);
+
+        final navigatorKey = GlobalKey<NavigatorState>();
+        final navigationObserver = NavigationGeneralObserver();
+
+        pushNotificationService.user = MockUser();
+        pushNotificationService.store = mockStore;
+        pushNotificationService.navigatorKey = navigatorKey;
+        pushNotificationService.flutterLocalNotificationsPlugin = flutterLocalNotificationsPlugin;
+
+        when(storageService.find()).thenAnswer(
+          (_) async => jsonEncode(MockRemoteMessages.scoringSuccessfulMessage.toMap()),
+        );
+
+        await tester.pumpWidget(
+          MaterialApp(
+            navigatorObservers: [navigationObserver],
+            navigatorKey: navigatorKey,
+            home: Container(),
+            routes: {
+              // TODO: OnboardingScoringSuccessfulScreen.routeName: (context) => Container(),
+            },
+          ),
+        );
+
+        // when
+        await pushNotificationService.handleSavedNotification();
+
+        // then
+        final dispatch = verify(mockStore.dispatch(captureAny)).captured;
+
+        expect(dispatch.single, isA<ReceivedScoringSuccessfulNotificationEventAction>());
+        // TODO: expect(navigationObserver.routeStack.last, OnboardingScoringSuccessfulScreen.routeName);
 
         verify(storageService.delete()).called(1);
       });

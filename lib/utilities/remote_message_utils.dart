@@ -11,8 +11,10 @@ class RemoteMessageUtils {
         return NotificationType.repaymentReminder;
       case "SCA_CHALLENGE":
         return NotificationType.scaChallenge;
+      case "SCORING_SUCCESSFUL":
+        return NotificationType.scoringSuccessful;
       default:
-        throw Exception("Unsupported notification type");
+        return NotificationType.unknown;
     }
   }
 
