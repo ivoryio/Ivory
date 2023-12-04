@@ -67,5 +67,18 @@ class OnboardingIdentityVerificationMiddleware extends MiddlewareClass<AppState>
         store.dispatch(OnboardingIdentityVerificationErrorEventAction(errorType: response.errorType));
       }
     }
+
+    if (action is SignWithTanCommandAction) {
+      store.dispatch(OnboardingIdentityVerificationLoadingEventAction());
+
+      final response =
+          await _onboardingIdentityVerificationService.signWithTan(user: authState.cognitoUser, tan: action.tan);
+
+      if (response is SignWithTanSuccessResponse) {
+        store.dispatch(SignWithTanSuccessEventAction());
+      } else if (response is IdentityVerificationServiceErrorResponse) {
+        store.dispatch(OnboardingIdentityVerificationErrorEventAction(errorType: response.errorType));
+      }
+    }
   }
 }

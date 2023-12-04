@@ -65,7 +65,7 @@ class ApiService<T> {
 
       log(response.body, name: "POST $path $queryParameters RESPONSE");
       if (response.statusCode != 200 && response.statusCode != 201) {
-        throw HttpException(method: "POST", statusCode: response.statusCode);
+        throw HttpException(method: "POST", statusCode: response.statusCode, responseBody: requestBody);
       }
 
       return jsonDecode(response.body);
@@ -98,7 +98,7 @@ class ApiService<T> {
 
       log(response.body, name: "PATCH $path $queryParameters RESPONSE");
       if (response.statusCode != 200 && response.statusCode != 201) {
-        throw HttpException(method: "PATCH", statusCode: response.statusCode);
+        throw HttpException(method: "PATCH", statusCode: response.statusCode, responseBody: response.body);
       }
 
       return jsonDecode(response.body);
@@ -131,7 +131,7 @@ class ApiService<T> {
 
       log(response.body, name: "DELETE $path $queryParameters RESPONSE");
       if (response.statusCode != 200 && response.statusCode != 201 && response.statusCode != 204) {
-        throw HttpException(method: "DELETE", statusCode: response.statusCode);
+        throw HttpException(method: "DELETE", statusCode: response.statusCode, responseBody: requestBody);
       }
 
       return response.body.isNotEmpty ? jsonDecode(response.body) : {};
@@ -193,14 +193,20 @@ class HttpException implements Exception {
   final String method;
   final String message;
   final int statusCode;
+  final String? responseBody;
 
   HttpException({
     required this.method,
     this.message = "HTTP request failed",
     this.statusCode = 500,
     StackTrace? stackTrace,
+    this.responseBody,
   }) {
     // log("$method request failed with statusCode: $statusCode");
+  }
+
+  get getErrBody {
+    return responseBody != null ? jsonDecode(responseBody!) : {};
   }
 
   @override

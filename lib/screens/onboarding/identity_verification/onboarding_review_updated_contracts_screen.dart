@@ -10,6 +10,7 @@ import 'package:solarisdemo/models/onboarding/onboarding_identification_status.d
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/documents/documents_action.dart';
 import 'package:solarisdemo/redux/onboarding/identity_verification/onboarding_identity_verification_action.dart';
+import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_sign_with_tan_screen.dart';
 import 'package:solarisdemo/utilities/ivory_color_mapper.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -216,6 +217,8 @@ class OnboardingReviewUpdatedContractsScreen extends StatelessWidget {
               isLoading: identityVerificationViewModel.isLoading,
               onPressed: () {
                 StoreProvider.of<AppState>(context).dispatch(AuthorizeIdentificationSigningCommandAction());
+
+                Navigator.pushNamedAndRemoveUntil(context, OnboardingSignWithTanScreen.routeName, (_) => false);
               },
               text: "Continue to signing",
             ),
