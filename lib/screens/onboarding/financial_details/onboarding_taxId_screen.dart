@@ -81,7 +81,8 @@ class _OnboardingTaxIdScreenState extends State<OnboardingTaxIdScreen> {
                     onWillChange: (previousViewModel, newViewModel) {
                       if (newViewModel.isLoading) {
                         _continueButtonController.setLoading();
-                      } else if (newViewModel.financialDetailsAttributes.taxId != null) {
+                      } else if (previousViewModel!.financialDetailsAttributes.taxId == null &&
+                          newViewModel.financialDetailsAttributes.taxId != null) {
                         Navigator.pushNamed(context, OnboardingPublicStatusScreen.routeName);
                       } else if (newViewModel.errorType != null) {
                         _taxIdController.setErrorText('This Tax ID is invalid for Germany. Please try another.');

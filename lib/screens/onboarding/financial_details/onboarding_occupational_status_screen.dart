@@ -122,16 +122,17 @@ class _OnboardingOccupationalStatusScreenState extends State<OnboardingOccupatio
                         isLoading: _continueButtonController.isLoading,
                         onPressed: _continueButtonController.isEnabled
                             ? () {
-                                if (!Validator.isValidDate(_dateOfEmploymentController.text,
-                                    pattern: textFieldDatePattern)) {
-                                  _dateOfEmploymentController.setErrorText("Invalid date of employment");
-                                  _continueButtonController.setDisabled();
-                                  return;
-                                }
-
                                 _dateOfEmploymentController.setError(false);
 
                                 if (_occupationController.selectedOptions.firstOrNull?.value == 'employed') {
+                                  if (!Validator.isValidDate(
+                                    _dateOfEmploymentController.text,
+                                    pattern: textFieldDatePattern,
+                                  )) {
+                                  _dateOfEmploymentController.setErrorText("Invalid date of employment");
+                                  _continueButtonController.setDisabled();
+                                  return;
+                                  }
                                   StoreProvider.of<AppState>(context)
                                       .dispatch(CreateEmployedOccupationalStatusCommandAction(
                                     occupationalStatus: OnboardingOccupationalStatus.employed,

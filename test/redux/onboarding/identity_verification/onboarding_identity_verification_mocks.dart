@@ -67,3 +67,17 @@ class FakeFailingOnbordingIdentityVerificationService extends OnbordingIdentityV
     return const IdentityVerificationServiceErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
   }
 }
+
+class FakeOnbordingSignWithTanService extends OnbordingIdentityVerificationService {
+  @override
+  Future<IdentityVerificationServiceResponse> signWithTan({required User user, required String tan}) async {
+    return SignWithTanSuccessResponse();
+  }
+}
+
+class FakeFailingOnbordingSignWithTanService extends OnbordingIdentityVerificationService {
+  @override
+  Future<IdentityVerificationServiceResponse> signWithTan({required User user, required String tan}) async {
+    return const IdentityVerificationServiceErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
+  }
+}

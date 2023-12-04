@@ -107,18 +107,21 @@ class _OnboardingMonthlyIncomeScreenState extends State<OnboardingMonthlyIncomeS
                       ),
                       const SizedBox(height: 24),
                       InputCurrencyField(
+                        maxLength: 17,
                         controller: _monthlyIncomeController,
                         currencyPathIcon: 'assets/icons/euro_icon.svg',
                         label: 'Monthly income',
                       ),
                       const SizedBox(height: 24),
                       InputCurrencyField(
+                        maxLength: 17,
                         controller: _monthlyExpenseController,
                         currencyPathIcon: 'assets/icons/euro_icon.svg',
-                        label: 'Monthly expenses',
+                        label: 'Monthly expenses',                     
                       ),
                       const SizedBox(height: 24),
                       InputCurrencyField(
+                        maxLength: 17,
                         controller: _totalCurrentDebtController,
                         currencyPathIcon: 'assets/icons/euro_icon.svg',
                         label: 'Total current debt',
@@ -133,6 +136,7 @@ class _OnboardingMonthlyIncomeScreenState extends State<OnboardingMonthlyIncomeS
                       ),
                       const SizedBox(height: 24),
                       InputCurrencyField(
+                        maxLength: 17,
                         controller: _totalCreditLimitController,
                         currencyPathIcon: 'assets/icons/euro_icon.svg',
                         label: 'Total credit limit',
@@ -150,29 +154,27 @@ class _OnboardingMonthlyIncomeScreenState extends State<OnboardingMonthlyIncomeS
                       ListenableBuilder(
                         listenable: _continueButtonController,
                         builder: (context, child) => PrimaryButton(
-                            text: "Continue",
-                            isLoading: _continueButtonController.isLoading,
-                            onPressed: _continueButtonController.isEnabled
-                                ? () {
-                                    StoreProvider.of<AppState>(context).dispatch(
-                                      CreateCreditCardApplicationCommandAction(
+                          text: "Continue",
+                          isLoading: _continueButtonController.isLoading,
+                          onPressed: _continueButtonController.isEnabled
+                              ? () {
+                                  StoreProvider.of<AppState>(context).dispatch(
+                                    CreateCreditCardApplicationCommandAction(
                                       monthlyExpense: num.parse(
                                         _monthlyExpenseController.text.replaceAll(',', ''),
                                       ),
                                       monthlyIncome: num.parse(
                                         _monthlyIncomeController.text.replaceAll(',', ''),
                                       ),
-                                        totalCreditLimit:
-                                            num.parse(
+                                      totalCreditLimit: num.parse(
                                         _totalCreditLimitController.text.replaceAll(',', ''),
                                       ),
-                                        totalCurrentDebt:
-                                            num.parse(
+                                      totalCurrentDebt: num.parse(
                                         _totalCurrentDebtController.text.replaceAll(',', ''),
                                       ),
-                                      ),
-                                    );
-                                  }
+                                    ),
+                                  );
+                                }
                               : null,
                         ),
                       ),
