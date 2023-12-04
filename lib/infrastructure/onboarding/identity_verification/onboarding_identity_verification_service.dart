@@ -98,17 +98,8 @@ class OnbordingIdentityVerificationService extends ApiService {
 
       return SignWithTanSuccessResponse();
     } catch (err) {
-      if (err is HttpException && err.getErrBody['errors'] is List) {
-        final errors = err.getErrBody['errors'] as List;
-        final hasInvalidToken = errors.any((error) => error['code'] == 'invalid_token');
-
-        if (hasInvalidToken) {
-          return const IdentityVerificationServiceErrorResponse(
-              errorType: OnboardingIdentityVerificationErrorType.invalidTan);
-        }
-      }
-
-      return const IdentityVerificationServiceErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
+      return const IdentityVerificationServiceErrorResponse(
+          errorType: OnboardingIdentityVerificationErrorType.invalidTan);
     }
   }
 }
