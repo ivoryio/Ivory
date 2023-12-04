@@ -117,8 +117,9 @@ class _SettingsDevicePairingVerifyPairingScreenState extends State<SettingsDevic
                               ? () {
                                   StoreProvider.of<AppState>(context)
                                       .dispatch(VerifyDeviceBindingSignatureCommandAction(
-                                    tan: '212212', //static tan
-                                  ));
+                                      tan: _tanInputController.text,
+                                    ),
+                                  );
                                 }
                               : null,
                         ),
