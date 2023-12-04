@@ -194,7 +194,7 @@ class FirebasePushNotificationService extends PushNotificationService {
       ));
       Navigator.of(context).pushNamed(TransactionApprovalPendingScreen.routeName);
     } else if (notificationType == NotificationType.scoringSuccessful) {
-      store!.dispatch(ReceivedScoringSuccessfulNotificationEventAction(user: user!));
+      store!.dispatch(ReceivedScoringSuccessfulNotificationEventAction());
       // TODO: add redirect to scoring successful screen
     } else {
       debugPrint("Unsupported notification type ${message.data["type"]}");
@@ -206,7 +206,7 @@ class FirebasePushNotificationService extends PushNotificationService {
     final message = await storageService.find();
     if (message == null) return;
 
-    debugPrint("Redirect from saved notification");
+    debugPrint("Handle saved notification");
 
     final notification = RemoteMessage.fromMap(jsonDecode(message));
     _redirect(notification);

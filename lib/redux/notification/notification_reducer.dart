@@ -4,6 +4,8 @@ import 'package:solarisdemo/redux/notification/notification_state.dart';
 NotificationState notificationReducer(NotificationState currentState, dynamic action) {
   if (action is ReceivedTransactionApprovalNotificationEventAction) {
     return NotificationTransactionApprovalState(message: action.message);
+  } else if (action is ReceivedScoringSuccessfulNotificationEventAction) {
+    return NotificationScoringSuccessfulState();
   } else if (action is ResetNotificationCommandAction) {
     return NotificationInitialState();
   }

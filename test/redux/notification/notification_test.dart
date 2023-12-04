@@ -21,34 +21,6 @@ void main() {
     declineChangeRequestId: "declineChangeRequestId",
   );
 
-  test("When received a transaction approval notification the states should change accordingly", () async {
-    // given
-    final store = createTestStore(
-      deviceService: FakeDeviceService(),
-      biometricsService: FakeBiometricsService(),
-      deviceFingerprintService: FakeDeviceFingerprintService(),
-      changeRequestService: FakeChangeRequestService(),
-      initialState: createAppState(
-        notificationState: NotificationInitialState(),
-        transactionApprovalState: TransactionApprovalInitialState(),
-      ),
-    );
-
-    final appState = store.onChange.firstWhere(
-      (element) => element.notificationState is NotificationTransactionApprovalState,
-    );
-    final transactionApprovalState = store.onChange.firstWhere(
-      (element) => element.transactionApprovalState is TransactionApprovalLoadingState,
-    );
-
-    // when
-    store.dispatch(ReceivedTransactionApprovalNotificationEventAction(user: MockUser(), message: message));
-
-    // then
-    expect((await appState).notificationState, isA<NotificationTransactionApprovalState>());
-    expect((await transactionApprovalState).transactionApprovalState, isA<TransactionApprovalLoadingState>());
-  });
-
   test("When using the reset command the state should reset to initial", () async {
     // given
     final store = createTestStore(
@@ -68,5 +40,53 @@ void main() {
 
     // then
     expect((await appState).notificationState, isA<NotificationInitialState>());
+  });
+
+  group("When receiving a notification", () {
+    test("When received a transaction approval notification the states should change accordingly", () async {
+      // given
+      final store = createTestStore(
+        deviceService: FakeDeviceService(),
+        biometricsService: FakeBiometricsService(),
+        deviceFingerprintService: FakeDeviceFingerprintService(),
+        changeRequestService: FakeChangeRequestService(),
+        initialState: createAppState(
+          notificationState: NotificationInitialState(),
+          transactionApprovalState: TransactionApprovalInitialState(),
+        ),
+      );
+
+      final appState = store.onChange.firstWhere(
+        (element) => element.notificationState is NotificationTransactionApprovalState,
+      );
+      final transactionApprovalState = store.onChange.firstWhere(
+        (element) => element.transactionApprovalState is TransactionApprovalLoadingState,
+      );
+
+      // when
+      store.dispatch(ReceivedTransactionApprovalNotificationEventAction(user: MockUser(), message: message));
+
+      // then
+      expect((await appState).notificationState, isA<NotificationTransactionApprovalState>());
+      expect((await transactionApprovalState).transactionApprovalState, isA<TransactionApprovalLoadingState>());
+    });
+
+    test("When received a scoring successful notification, the state should change", () async {
+      // given
+      final store = createTestStore(
+        initialState: createAppState(
+          notificationState: NotificationInitialState(),
+        ),
+      );
+      final appState = store.onChange.firstWhere(
+        (element) => element.notificationState is NotificationScoringSuccessfulState,
+      );
+
+      // when
+      store.dispatch(ReceivedScoringSuccessfulNotificationEventAction());
+
+      // then
+      expect((await appState).notificationState, isA<NotificationScoringSuccessfulState>());
+    });
   });
 }

@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:solarisdemo/infrastructure/onboarding/identity_verification/onboarding_identity_verification_presenter.dart';
 import 'package:solarisdemo/models/onboarding/onboarding_identity_verification_error_type.dart';
+import 'package:solarisdemo/redux/notification/notification_state.dart';
 import 'package:solarisdemo/redux/onboarding/identity_verification/onboarding_identity_verification_state.dart';
 
 void main() {
@@ -150,6 +151,30 @@ void main() {
             isLoading: false,
             isTanConfirmed: true,
           ));
+    });
+
+    test(
+        "When notificationsState is NotificationScoringSuccessfulState, the view model should contain isScoringSuccessful = true",
+        () {
+      // given
+      const onboardingIdentityVerificationState = OnboardingIdentityVerificationState(
+        isLoading: false,
+      );
+
+      // when
+      final viewModel = OnboardingIdentityVerificationPresenter.present(
+        identityVerificationState: onboardingIdentityVerificationState,
+        notificationState: NotificationScoringSuccessfulState(),
+      );
+
+      // then
+      expect(
+        viewModel,
+        const OnboardingIdentityVerificationViewModel(
+          isLoading: false,
+          isScoringSuccessful: true,
+        ),
+      );
     });
   });
 }
