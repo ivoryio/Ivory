@@ -16,7 +16,6 @@ typedef Callback = Function(MethodCall call);
 final MockFirebaseMessaging mockMessagingPlatform = MockFirebaseMessaging();
 
 Future<T> neverEndingFuture<T>() async {
-  // ignore: literal_only_boolean_expressions
   while (true) {
     await Future.delayed(const Duration(minutes: 5));
   }
@@ -28,17 +27,12 @@ void setupFirebaseMessagingMocks() {
   setupFirebaseCoreMocks();
 
   // Mock Platform Interface Methods
-  // ignore: invalid_use_of_protected_member
   when(mockMessagingPlatform.delegateFor(app: anyNamed('app'))).thenReturn(mockMessagingPlatform);
-  // ignore: invalid_use_of_protected_member
   when(mockMessagingPlatform.setInitialValues(
     isAutoInitEnabled: anyNamed('isAutoInitEnabled'),
   )).thenReturn(mockMessagingPlatform);
 }
 
-// Platform Interface Mock Classes
-
-// FirebaseMessagingPlatform Mock
 class MockFirebaseMessaging extends Mock with MockPlatformInterfaceMixin implements FirebaseMessagingPlatform {
   MockFirebaseMessaging() {
     TestFirebaseMessagingPlatform();

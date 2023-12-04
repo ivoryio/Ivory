@@ -10,7 +10,7 @@ import 'package:redux/redux.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_storage_service.dart';
 import 'package:solarisdemo/models/notifications/notification_type.dart';
 import 'package:solarisdemo/models/user.dart';
-import 'package:solarisdemo/navigator.dart';
+import 'package:solarisdemo/navigator.dart' as navigator;
 import 'package:solarisdemo/redux/notification/notification_action.dart';
 import 'package:solarisdemo/screens/transactions/transaction_approval_pending_screen.dart';
 import 'package:solarisdemo/services/api_service.dart';
@@ -45,13 +45,17 @@ abstract class PushNotificationService extends ApiService {
 
   Future<String?> getToken();
 
-  void handleTokenRefresh({User user});
+  void handleTokenRefresh({required User user});
 }
 
 class FirebasePushNotificationService extends PushNotificationService {
-  final _messaging = FirebaseMessaging.instance;
   Store<AppState>? store;
+
+  final _messaging = FirebaseMessaging.instance;
   final PushNotificationStorageService storageService;
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  GlobalKey<NavigatorState> navigatorKey = navigator.navigatorKey;
+
   bool isInitialized = false;
 
   FirebasePushNotificationService({super.user, required this.storageService}) {
@@ -86,7 +90,7 @@ class FirebasePushNotificationService extends PushNotificationService {
         final android = message.notification?.android;
 
         if (notification != null && android != null) {
-          FlutterLocalNotificationsPlugin().show(
+          flutterLocalNotificationsPlugin.show(
             notification.hashCode,
             notification.title,
             notification.body,
@@ -111,8 +115,8 @@ class FirebasePushNotificationService extends PushNotificationService {
   }
 
   @override
-  void handleTokenRefresh({User? user}) {
-    if (user != null) this.user = user;
+  void handleTokenRefresh({required User user}) {
+    this.user = user;
 
     // Handle token
     _messaging.getToken().then(_onTokenRefresh); // Initial token (on app start)
@@ -142,8 +146,8 @@ class FirebasePushNotificationService extends PushNotificationService {
       highImportanceChannelId,
       importance: Importance.max,
     );
-    final androidImplementation = FlutterLocalNotificationsPlugin()
-        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+    final androidImplementation =
+        flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
 
     await androidImplementation?.initialize(
       const AndroidInitializationSettings('@mipmap/ic_launcher'),
@@ -177,18 +181,18 @@ class FirebasePushNotificationService extends PushNotificationService {
   }
 
   void _redirect(RemoteMessage message) {
+    if (store == null) return;
+
     debugPrint("Redirect from notification");
     final context = navigatorKey.currentContext as BuildContext;
     final notificationType = RemoteMessageUtils.getNotificationType(message.data["type"] as String);
-
-    if (store == null) return;
 
     if (notificationType == NotificationType.scaChallenge) {
       store!.dispatch(ReceivedTransactionApprovalNotificationEventAction(
         user: user!,
         message: RemoteMessageUtils.getNotificationTransactionMessage(message),
       ));
-      Navigator.pushNamed(context, TransactionApprovalPendingScreen.routeName);
+      Navigator.of(context).pushNamed(TransactionApprovalPendingScreen.routeName);
     } else {
       debugPrint("Unsupported notification type ${message.data["type"]}");
     }
@@ -215,6 +219,6 @@ class FirebasePushNotificationService extends PushNotificationService {
   Future<void> clearNotification() async {
     debugPrint("Clear notification");
     await storageService.delete();
-    await FlutterLocalNotificationsPlugin().cancelAll();
+    await flutterLocalNotificationsPlugin.cancelAll();
   }
 }
