@@ -121,7 +121,7 @@ class DeviceBindingMiddleware extends MiddlewareClass<AppState> {
         signature: signature,
       );
       if (verifyDeviceBindingChallenegeResponse is DeviceBindingServiceErrorResponse) {
-        store.dispatch(DeviceBindingFailedEventAction());
+        store.dispatch(DeviceBindingChallengeVerificationFailedEventAction(deviceId));
         return null;
       }
 

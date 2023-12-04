@@ -35,6 +35,12 @@ class BoundDevicesFetchedEventAction {
 
 class DeviceBindingCreatedEventAction {}
 
+class DeviceBindingChallengeVerificationFailedEventAction {
+  final String deviceId;
+
+  DeviceBindingChallengeVerificationFailedEventAction(this.deviceId);
+}
+
 class DeviceBindingChallengeVerifiedEventAction {
   final Device thisDevice;
 

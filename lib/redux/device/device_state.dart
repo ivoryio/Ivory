@@ -13,6 +13,15 @@ class DeviceBindingLoadingState extends DeviceBindingState {}
 
 class DeviceBindingErrorState extends DeviceBindingState {}
 
+class DeviceBindingVerificationErrorState extends DeviceBindingState {
+  final String deviceId;
+
+  DeviceBindingVerificationErrorState(this.deviceId);
+
+  @override
+  List<Object?> get props => [deviceId];
+}
+
 class DeviceBindingFetchedState extends DeviceBindingState {
   final List<Device> devices;
   final Device thisDevice;
