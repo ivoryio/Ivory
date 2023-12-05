@@ -5,6 +5,8 @@ import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/onboarding/onboarding_progress_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/onboarding/onboarding_progress_action.dart';
+import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_scoring_rejected_screen.dart';
+import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_scoring_success_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/circular_percent_indicator.dart';
@@ -30,6 +32,13 @@ class _OnboardingStepperScreenState extends State<OnboardingStepperScreen> {
           onboardingProgressState: store.state.onboardingProgressState,
         ),
         distinct: true,
+        onInitialBuild: (viewModel) {
+          if (viewModel is RedirectToScoringSuccessViewModel) {
+            Navigator.pushNamedAndRemoveUntil(context, OnboardingScoringSuccessScreen.routeName, (route) => false);
+          } else if (viewModel is RedirectToScoringFailedViewModel) {
+            Navigator.pushNamedAndRemoveUntil(context, OnboardingScoringRejectedScreen.routeName, (route) => false);
+          }
+        },
         builder: (context, viewModel) {
           return viewModel is OnboardingProgressFetchedViewModel
               ? _buildContent(context, viewModel)
