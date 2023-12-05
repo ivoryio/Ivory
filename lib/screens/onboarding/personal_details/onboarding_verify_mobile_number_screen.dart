@@ -40,12 +40,14 @@ class _OnboardingVerifyMobileNumberScreenState extends State<OnboardingVerifyMob
     super.initState();
   }
 
-  void updateInputComplete(bool isComplete) {
-    if (isComplete) {
-      _continueButtonController.setEnabled();
-    } else {
-      _continueButtonController.setDisabled();
-    }
+  void onTanChanged(String tan) {
+    setState(() {
+      if (tan.length == 6) {
+        _continueButtonController.setEnabled();
+      } else {
+        _continueButtonController.setDisabled();
+      }
+    });
   }
 
   void startTimer() {
@@ -105,7 +107,7 @@ class _OnboardingVerifyMobileNumberScreenState extends State<OnboardingVerifyMob
                         ),
                       );
                       _continueButtonController.setDisabled();
-                      _tanInputKey.currentState!.clear();
+                      // _tanInputKey.currentState!.clear();
                       _tanInputController.clear();
                       startTimer();
                       Navigator.pop(context);
@@ -169,18 +171,11 @@ class _OnboardingVerifyMobileNumberScreenState extends State<OnboardingVerifyMob
                         height: 24,
                       ),
                       TanInput(
+                        isLoading: _continueButtonController.isLoading,
                         key: _tanInputKey,
-                        hintText: '#',
                         length: 6,
-                        onCompleted: (String tan) {
-                          if (tan.length == 6) {
-                            _continueButtonController.setEnabled();
-                          } else {
-                            _continueButtonController.setDisabled();
-                          }
-                        },
+                        onChanged: (String tan) => onTanChanged(tan),
                         controller: _tanInputController,
-                        updateInputComplete: updateInputComplete,
                       ),
                       const SizedBox(height: 24),
                       const Spacer(),
@@ -195,7 +190,7 @@ class _OnboardingVerifyMobileNumberScreenState extends State<OnboardingVerifyMob
                                       mobileNumber: viewModel.attributes.mobileNumber!,
                                     ),
                                   );
-                                  _tanInputKey.currentState!.clear();
+                                  // _tanInputKey.currentState!.clear();
                                   _tanInputController.clear();
                                   startTimer();
                                 },

@@ -1,199 +1,92 @@
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
-import '../config.dart';
-
-class InputCodeBox extends StatefulWidget {
-  final bool? obscureText;
-  final String? hintText;
-  final FocusNode? focusNode;
-  final TextEditingController? controller;
-  final Function(String value)? onChanged;
-  final bool isFocused;
-
-  const InputCodeBox({
-    Key? key,
-    this.controller,
-    this.focusNode,
-    this.hintText,
-    this.obscureText = false,
-    this.onChanged,
-    required this.isFocused,
-  }) : super(key: key);
-
-  @override
-  _InputCodeBoxState createState() => _InputCodeBoxState();
-}
-
-class _InputCodeBoxState extends State<InputCodeBox> {
-  @override
-  Widget build(BuildContext context) {
-    final borderColor = widget.isFocused ? ClientConfig.getColorScheme().primary : ClientConfig.getCustomColors().neutral400;
-
-    return Container(
-      padding: const EdgeInsets.only(left: 4),
-      width: 48,
-      height: 64,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(4),
-        border: Border.all(
-          width: 1,
-          color: borderColor,
-        ),
-        color: ClientConfig.getCustomColors().neutral100,
-      ),
-      child: Center(
-        child: TextFormField(
-          focusNode: widget.focusNode,
-          controller: widget.controller,
-          textAlign: TextAlign.center,
-          obscureText: widget.obscureText!,
-          keyboardType: TextInputType.number,
-          inputFormatters: [
-            FilteringTextInputFormatter.digitsOnly,
-            LengthLimitingTextInputFormatter(1),
-          ],
-          onChanged: widget.onChanged,
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            contentPadding: EdgeInsets.zero,
-            hintText: widget.hintText ?? '',
-            hintStyle: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              color: ClientConfig.getCustomColors().neutral500,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
+import 'package:pin_input_text_field/pin_input_text_field.dart' as tan_input;
+import 'package:pin_input_text_field/pin_input_text_field.dart';
+import 'package:solarisdemo/config.dart';
 
 class TanInput extends StatefulWidget {
   final int length;
-  final Function(String tan) onCompleted;
-  final Function(bool)? updateInputComplete;
-  final String? hintText;
   final TextEditingController? controller;
+  final FocusNode? focusNode;
+  final bool? isLoading;
+  final Function(String tan) onChanged;
 
   const TanInput({
-    Key? key,
+    super.key,
     required this.length,
-    required this.onCompleted,
-    this.hintText,
+    required this.onChanged,
     this.controller,
-    this.updateInputComplete,
-  }) : super(key: key);
+    this.focusNode,
+    this.isLoading,
+  });
 
   @override
-  TanInputState createState() => TanInputState();
+  State<TanInput> createState() => TanInputState();
 }
 
 class TanInputState extends State<TanInput> {
-  late GlobalKey<FormState> formKey;
-
-  late List<TextEditingController> controllers;
-  late List<FocusNode> focusNodes;
-  bool anyInputFocused = false;
-
   @override
   void initState() {
+    if (widget.focusNode != null) {
+      widget.focusNode!.addListener(() {
+        setState(() {});
+      });
+    }
     super.initState();
-
-    formKey = GlobalKey<FormState>();
-
-    controllers = List.from(
-      [for (var i = 0; i < widget.length; i++) TextEditingController()],
-    );
-
-    focusNodes = List.from(
-      [for (var i = 0; i < widget.length; i++) FocusNode()],
-    );
-
-    for (var focusNode in focusNodes) {
-      focusNode.addListener(_updateFocusStatus);
-    }
-
-    if (widget.controller != null) {
-      for (var i = 0; i < widget.length; i++) {
-        controllers[i].text = widget.controller!.text.length > i ? widget.controller!.text[i] : '';
-        controllers[i].addListener(() {
-          widget.controller!.text = controllers.map((controller) => controller.text).join();
-        });
-      }
-    }
-  }
-
-  void clear() {
-    for (var controller in controllers) {
-      controller.clear();
-    }
-  }
-
-  void _updateFocusStatus() {
-    setState(() {
-      anyInputFocused = focusNodes.any((node) => node.hasFocus);
-    });
-  }
-
-  void onChange(int inputIndex) {
-    String tan = controllers.map((controller) => controller.text).join("");
-
-    if (widget.updateInputComplete != null) {
-      if (tan.length < widget.length) {
-        widget.updateInputComplete!(false);
-      }
-    }
-
-    if (controllers[inputIndex].text.isEmpty) {
-      return;
-    }
-
-    for (var i = 0; i < controllers.length - 1; i++) {
-      if (controllers[i].text.isNotEmpty) {
-        int nextIndex = controllers.indexWhere((controller) => controller.text.isEmpty);
-        if (nextIndex != -1) {
-          FocusScope.of(context).unfocus(disposition: UnfocusDisposition.previouslyFocusedChild);
-          FocusScope.of(context).requestFocus(focusNodes[nextIndex]);
-        }
-      }
-    }
-
-    if (tan.length == widget.length) {
-      widget.onCompleted(tan);
-      FocusScope.of(context).unfocus(disposition: UnfocusDisposition.previouslyFocusedChild);
-    }
-  }
-
-  @override
-  void dispose() {
-    for (var controller in controllers) {
-      controller.dispose();
-    }
-    for (var focusNode in focusNodes) {
-      focusNode.dispose();
-    }
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: formKey,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          for (var inputIndex = 0; inputIndex < widget.length; inputIndex++)
-            InputCodeBox(
-              controller: controllers[inputIndex],
-              focusNode: focusNodes[inputIndex],
-              onChanged: (value) => onChange(inputIndex),
-              hintText: widget.hintText,
-              isFocused: anyInputFocused,
+    return Expanded(
+      child: Center(
+        child: ListView(
+          children: <Widget>[
+            SizedBox(
+              height: 64,
+              child: tan_input.PinInputTextField(
+                pinLength: widget.length,
+                decoration: tan_input.BoxLooseDecoration(
+                  gapSpace: 8,
+                  radius: const Radius.circular(4),
+                  strokeColorBuilder: FixedColorBuilder(
+                    widget.focusNode != null && widget.focusNode!.hasFocus
+                        ? ClientConfig.getColorScheme().primary
+                        : ClientConfig.getCustomColors().neutral300,
+                  ),
+                  bgColorBuilder: FixedColorBuilder(
+                    ClientConfig.getCustomColors().neutral100,
+                  ),
+                  hintText: List.filled(widget.length, '#').join(),
+                  textStyle: widget.isLoading != null && widget.isLoading!
+                      ? ClientConfig.getTextStyleScheme().labelMedium.copyWith(
+                            color: ClientConfig.getCustomColors().neutral500,
+                          )
+                      : ClientConfig.getTextStyleScheme().labelMedium.copyWith(
+                            color: ClientConfig.getCustomColors().neutral900,
+                          ),
+                  hintTextStyle: ClientConfig.getTextStyleScheme().labelMedium.copyWith(
+                        color: ClientConfig.getCustomColors().neutral500,
+                      ),
+                ),
+                controller: widget.controller,
+                focusNode: widget.focusNode,
+                enabled: widget.isLoading != null && !widget.isLoading!,
+                keyboardType: TextInputType.number,
+                onSubmit: (pin) {
+                  debugPrint('submit pin:$pin');
+                },
+                onChanged: (pin) => widget.onChanged(pin),
+                cursor: tan_input.Cursor(
+                  height: 16,
+                  width: 1,
+                  offset: 0,
+                  color: ClientConfig.getCustomColors().neutral900,
+                  radius: const Radius.circular(1),
+                  enabled: widget.focusNode != null && widget.focusNode!.hasFocus,
+                ),
+              ),
             ),
-        ],
+          ],
+        ),
       ),
     );
   }

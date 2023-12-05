@@ -21,11 +21,23 @@ class SettingsDevicePairingVerifyPairingScreen extends StatefulWidget {
 
 class _SettingsDevicePairingVerifyPairingScreenState extends State<SettingsDevicePairingVerifyPairingScreen> {
   final TextEditingController _tanInputController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
   bool _isInputComplete = false;
 
   void updateInputComplete(bool isComplete) {
     setState(() {
       _isInputComplete = isComplete;
+    });
+  }
+
+  void onTanChanged(String tan) {
+    setState(() {
+      if (_tanInputController.text.length == 6) {
+        _focusNode.unfocus();
+        updateInputComplete(true);
+      } else {
+        updateInputComplete(false);
+      }
     });
   }
 
@@ -91,17 +103,11 @@ class _SettingsDevicePairingVerifyPairingScreenState extends State<SettingsDevic
                         height: 24,
                       ),
                       TanInput(
-                        hintText: '#',
+                        isLoading: viewModel is DeviceBindingLoadingViewModel,
                         length: 6,
-                        onCompleted: (String tan) {
-                          setState(() {
-                            if (tan.length == 6) {
-                              updateInputComplete(true);
-                            }
-                          });
-                        },
+                        focusNode: _focusNode,
                         controller: _tanInputController,
-                        updateInputComplete: updateInputComplete,
+                        onChanged: (tan) => onTanChanged(tan),
                       ),
                       const Spacer(),
                       SizedBox(

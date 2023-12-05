@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -193,11 +192,9 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
                       TanInput(
                         key: _tanInputKey,
                         length: 6,
-                        hintText: '#',
-                        onCompleted: (String tan) {
-                          log('signWithTan ===> ${_tanController.text}');
-                        },
                         controller: _tanController,
+                        isLoading: _continueButtonController.isLoading,
+                        onChanged: (tan) {},
                       ),
                       const Spacer(),
                       Container(
@@ -216,7 +213,7 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
                                     .copyWith(color: ClientConfig.getColorScheme().secondary),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    _tanInputKey.currentState?.clear();
+                                    // _tanInputKey.currentState?.clear();
                                     _countdownTimer = const Duration(seconds: 59);
                                     _startTimer();
 

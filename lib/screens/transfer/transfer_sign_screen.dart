@@ -62,13 +62,15 @@ class TransferSignScreen extends StatelessWidget {
                       const SizedBox(height: 16),
                       TanInput(
                         length: 6,
-                        onCompleted: (tan) {
-                          StoreProvider.of<AppState>(context).dispatch(
-                            ConfirmTransferCommandAction(
-                              changeRequestId: viewModel.changeRequestId,
-                              tan: tan,
-                            ),
-                          );
+                        onChanged: (tan) {
+                          if (tan.length == 6) {
+                            StoreProvider.of<AppState>(context).dispatch(
+                              ConfirmTransferCommandAction(
+                                changeRequestId: viewModel.changeRequestId,
+                                tan: tan,
+                              ),
+                            );
+                          }                      
                         },
                       ),
                     ]
