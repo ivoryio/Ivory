@@ -42,8 +42,10 @@ void main() {
     expect((await appState).notificationState, isA<NotificationInitialState>());
   });
 
-  group("When receiving a notification", () {
-    test("When received a transaction approval notification the states should change accordingly", () async {
+  group("Receiving a notification", () {
+    test(
+        "When a transaction approval notification is received, the transaction approval state and notification state should change ",
+        () async {
       // given
       final store = createTestStore(
         deviceService: FakeDeviceService(),
@@ -71,7 +73,7 @@ void main() {
       expect((await transactionApprovalState).transactionApprovalState, isA<TransactionApprovalLoadingState>());
     });
 
-    test("When received a scoring successful notification, the state should change", () async {
+    test("When a scoring successful notification is received, the state should change", () async {
       // given
       final store = createTestStore(
         initialState: createAppState(
@@ -89,7 +91,7 @@ void main() {
       expect((await appState).notificationState, isA<NotificationScoringSuccessfulState>());
     });
 
-    test("When received a scoring failed notification, the state should change", () async {
+    test("When a scoring failed notification is received, the state should change", () async {
       // given
       final store = createTestStore(
         initialState: createAppState(
