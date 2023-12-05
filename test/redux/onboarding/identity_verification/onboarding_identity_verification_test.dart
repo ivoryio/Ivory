@@ -304,7 +304,7 @@ void main() {
           authState: authInitializedState,
           onboardingIdentityVerificationState: const OnboardingIdentityVerificationState(
             isLoading: false,
-            isTanConfirmed: true,
+            isTanConfirmed: null,
           ),
         ),
       );
