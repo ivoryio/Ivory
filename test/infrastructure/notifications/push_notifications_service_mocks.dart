@@ -70,4 +70,12 @@ class MockRemoteMessages {
   static RemoteMessage scoringSuccessfulMessage = const RemoteMessage(data: {
     'type': 'SCORING_SUCCESSFUL',
   });
+
+  static RemoteMessage scoringFailedMessage = const RemoteMessage(data: {
+    'type': 'SCORING_FAILED',
+  });
+
+  static RemoteMessage scoringInProgressMessage = const RemoteMessage(data: {
+    'type': 'SCORING_IN_PROGRESS',
+  });
 }

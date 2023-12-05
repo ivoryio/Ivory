@@ -171,14 +171,13 @@ void main() {
         // then
         final dispatch = verify(mockStore.dispatch(captureAny)).captured;
 
+        verify(storageService.delete()).called(1);
+
         expect(dispatch.single, isA<ReceivedTransactionApprovalNotificationEventAction>());
         expect(navigationObserver.routeStack.last, TransactionApprovalPendingScreen.routeName);
-
-        verify(storageService.delete()).called(1);
       });
 
-      testWidgets(
-          "When NotificationType.scoringSuccessful is saved, the store should dispatch the correct action and redirect to the correct screen",
+      testWidgets("When NotificationType.scoringSuccessful is saved, the store should dispatch the correct action",
           (tester) async {
         // given
         final pushNotificationService = FirebasePushNotificationService(storageService: storageService);
@@ -200,9 +199,7 @@ void main() {
             navigatorObservers: [navigationObserver],
             navigatorKey: navigatorKey,
             home: Container(),
-            routes: {
-              // TODO: OnboardingScoringSuccessfulScreen.routeName: (context) => Container(),
-            },
+            routes: const {},
           ),
         );
 
@@ -212,10 +209,43 @@ void main() {
         // then
         final dispatch = verify(mockStore.dispatch(captureAny)).captured;
 
+        verify(storageService.delete()).called(1);
         expect(dispatch.single, isA<ReceivedScoringSuccessfulNotificationEventAction>());
-        // TODO: expect(navigationObserver.routeStack.last, OnboardingScoringSuccessfulScreen.routeName);
+      });
+
+      testWidgets("When NotificationType.scoringFailed, the store should dispatch the correct action", (tester) async {
+        // given
+        final pushNotificationService = FirebasePushNotificationService(storageService: storageService);
+
+        final navigatorKey = GlobalKey<NavigatorState>();
+        final navigationObserver = NavigationGeneralObserver();
+
+        pushNotificationService.user = MockUser();
+        pushNotificationService.store = mockStore;
+        pushNotificationService.navigatorKey = navigatorKey;
+        pushNotificationService.flutterLocalNotificationsPlugin = flutterLocalNotificationsPlugin;
+
+        when(storageService.find()).thenAnswer(
+          (_) async => jsonEncode(MockRemoteMessages.scoringFailedMessage.toMap()),
+        );
+
+        await tester.pumpWidget(
+          MaterialApp(
+            navigatorObservers: [navigationObserver],
+            navigatorKey: navigatorKey,
+            home: Container(),
+            routes: const {},
+          ),
+        );
+
+        // when
+        await pushNotificationService.handleSavedNotification();
+
+        // then
+        final dispatch = verify(mockStore.dispatch(captureAny)).captured;
 
         verify(storageService.delete()).called(1);
+        expect(dispatch.single, isA<ReceivedScoringFailedNotificationEventAction>());
       });
     });
   });

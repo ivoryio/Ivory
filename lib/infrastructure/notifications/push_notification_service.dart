@@ -195,7 +195,8 @@ class FirebasePushNotificationService extends PushNotificationService {
       Navigator.of(context).pushNamed(TransactionApprovalPendingScreen.routeName);
     } else if (notificationType == NotificationType.scoringSuccessful) {
       store!.dispatch(ReceivedScoringSuccessfulNotificationEventAction());
-      // TODO: add redirect to scoring successful screen
+    } else if (notificationType == NotificationType.scoringFailed) {
+      store!.dispatch(ReceivedScoringFailedNotificationEventAction());
     } else {
       debugPrint("Unsupported notification type ${message.data["type"]}");
     }

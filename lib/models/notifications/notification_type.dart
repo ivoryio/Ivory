@@ -4,4 +4,5 @@ enum NotificationType {
   repaymentReminder,
   scaChallenge,
   scoringSuccessful,
+  scoringFailed,
 }

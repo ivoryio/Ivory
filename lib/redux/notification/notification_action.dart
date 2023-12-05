@@ -10,4 +10,6 @@ class ReceivedTransactionApprovalNotificationEventAction {
 
 class ReceivedScoringSuccessfulNotificationEventAction {}
 
+class ReceivedScoringFailedNotificationEventAction {}
+
 class ResetNotificationCommandAction {}

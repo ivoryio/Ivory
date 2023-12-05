@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/onboarding/identity_verification/onboarding_identity_verification_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_scoring_success_screen.dart';
 import 'package:solarisdemo/utilities/ivory_color_mapper.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -24,8 +25,7 @@ class OnboardingScoringWaitingScreen extends StatelessWidget {
       ),
       onWillChange: (previousViewModel, newViewModel) {
         if (newViewModel.isScoringSuccessful) {
-          print("Scoring successful");
-          // TODO: Navigator.pushNamedAndRemoveUntil(context, OnboardingScoringSuccessScreen.routeName, (route) => false);
+          Navigator.pushNamedAndRemoveUntil(context, OnboardingScoringSuccessScreen.routeName, (route) => false);
         }
       },
       builder: (context, viewModel) => ScreenScaffold(
