@@ -11,10 +11,10 @@ import 'package:solarisdemo/widgets/ivory_asset_with_badge.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
 
-class OnboardingScoringRejectionScreen extends StatelessWidget {
-  static const routeName = "/onboardingScoringRejectionScreen";
+class OnboardingScoringRejectedScreen extends StatelessWidget {
+  static const routeName = "/onboardingScoringRejectedScreen";
 
-  const OnboardingScoringRejectionScreen({super.key});
+  const OnboardingScoringRejectedScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
