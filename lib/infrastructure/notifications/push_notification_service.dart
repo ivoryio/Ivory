@@ -168,6 +168,11 @@ class FirebasePushNotificationService extends PushNotificationService {
     if (token == null) return;
 
     try {
+      if (await hasPermission() == false) {
+        debugPrint('onTokenRefresh: User declined or has not accepted notifications');
+        return;
+      }
+
       await post('notifications/token', body: {'token': token}, authNeeded: true);
     } catch (e) {
       log(e.toString());
