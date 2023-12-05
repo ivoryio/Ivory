@@ -15,7 +15,13 @@ class OnboardingCardConfigurationPresenter {
           cardholderName: cardConfigurationState.cardholderName,
           isLoading: cardConfigurationState.isLoading,
       );
-    }
+    } else if (cardConfigurationState is WithCardInfoState) {
+     return WithCardInfoViewModel(
+         cardholderName: cardConfigurationState.cardholderName,
+         maskedPAN: cardConfigurationState.maskedPAN,
+         expiryDate: cardConfigurationState.expiryDate,
+     );
+   }
 
     return OnboardingCardConfigurationInitialViewModel();
   }
@@ -41,4 +47,19 @@ class WithCardholderNameViewModel extends OnboardingCardConfigurationViewModel {
 
   @override
   List<Object?> get props => [cardholderName, isLoading];
+}
+
+class WithCardInfoViewModel extends OnboardingCardConfigurationViewModel {
+  final String cardholderName;
+  final String maskedPAN;
+  final String expiryDate;
+
+  WithCardInfoViewModel({
+    required this.cardholderName,
+    required this.maskedPAN,
+    required this.expiryDate,
+  });
+
+  @override
+  List<Object?> get props => [cardholderName, maskedPAN, expiryDate];
 }

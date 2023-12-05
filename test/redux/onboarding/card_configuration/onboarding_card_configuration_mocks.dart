@@ -11,6 +11,15 @@ class FakeOnboardingCardConfigurationService extends OnboardingCardConfiguration
   Future<OnboardingCardConfigurationResponse> onboardingCreateCard({required User user}) async {
     return OnboardingCardConfigurationSuccessResponse();
   }
+
+  @override
+  Future<OnboardingCardConfigurationResponse> onboardingGetCardInfo({required User user}) async {
+    return GetCardInfoSuccessResponse(
+        cardholderName: "Ivory TS",
+        maskedPAN: "493441******6055",
+        expiryDate: "09/26",
+    );
+  }
 }
 
 class FakeFailingOnboardingCardConfigurationService extends OnboardingCardConfigurationService {
@@ -21,6 +30,11 @@ class FakeFailingOnboardingCardConfigurationService extends OnboardingCardConfig
 
   @override
   Future<OnboardingCardConfigurationResponse> onboardingCreateCard({required User user}) async {
+    return OnboardingCardConfigurationErrorResponse();
+  }
+
+  @override
+  Future<OnboardingCardConfigurationResponse> onboardingGetCardInfo({required User user}) async {
     return OnboardingCardConfigurationErrorResponse();
   }
 }

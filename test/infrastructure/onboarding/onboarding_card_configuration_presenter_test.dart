@@ -4,6 +4,8 @@ import 'package:solarisdemo/redux/onboarding/card_configuration/onboarding_card_
 
 void main(){
   const cardholderName = "Ivory TS";
+  const maskedPAN = "493441******6055";
+  const expiryDate = "09/26";
 
   test("When fetching cardholder name is successful should return a name", () {
     //given
@@ -14,7 +16,7 @@ void main(){
     expect(viewModel, WithCardholderNameViewModel(cardholderName: cardholderName, isLoading: false));
   });
 
-  test("When fetching cardholder name fails should return an error", () {
+  test("When any card configuration request fails should return an error", () {
     //given
     final onboardingCardConfigurationState = OnboardingCardConfigurationGenericErrorState();
     //when
@@ -39,5 +41,22 @@ void main(){
     final viewModel = OnboardingCardConfigurationPresenter.presentCardConfiguration(cardConfigurationState: onboardingCardConfigurationState);
     //then
     expect(viewModel, OnboardingCardConfigurationGenericSuccessViewModel());
+  });
+
+  test("When fetching card details is successful should return card details data", () {
+    //given
+    final onboardingCardConfigurationState = WithCardInfoState(
+        cardholderName: cardholderName,
+        maskedPAN: maskedPAN,
+        expiryDate: expiryDate,
+    );
+    //when
+    final viewModel = OnboardingCardConfigurationPresenter.presentCardConfiguration(cardConfigurationState: onboardingCardConfigurationState);
+    //then
+    expect(viewModel,WithCardInfoViewModel(
+        cardholderName: cardholderName,
+        maskedPAN: maskedPAN,
+        expiryDate: expiryDate,
+    ));
   });
 }

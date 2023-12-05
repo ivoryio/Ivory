@@ -95,4 +95,39 @@ void main() {
     //then
     expect((await appState).onboardingCardConfigurationState, isA<OnboardingCardConfigurationGenericSuccessState>());
   });
+
+  test("When getting the details of a card fails should return error state", () async{
+    //given
+    final store = createTestStore(
+        onboardingCardConfigurationService: FakeFailingOnboardingCardConfigurationService(),
+        initialState: createAppState(
+          onboardingCardConfigurationState: WithCardholderNameState(cardholderName: "Ivory TS"),
+          authState: authState,
+        ));
+
+    final appState = store.onChange.firstWhere((element) => element.onboardingCardConfigurationState is OnboardingCardConfigurationGenericErrorState);
+    //when
+    store.dispatch(GetOnboardingCardInfoCommandAction());
+    //then
+    expect((await appState).onboardingCardConfigurationState, isA<OnboardingCardConfigurationGenericErrorState>());
+  });
+
+  test("When getting the details of a card is successful should return success", () async{
+    //given
+    final store = createTestStore(
+        onboardingCardConfigurationService: FakeOnboardingCardConfigurationService(),
+        initialState: createAppState(
+          onboardingCardConfigurationState: WithCardholderNameState(cardholderName: "Ivory TS"),
+          authState: authState,
+        ));
+
+    final appState = store.onChange.firstWhere((element) => element.onboardingCardConfigurationState is WithCardInfoState);
+    //when
+    store.dispatch(GetOnboardingCardInfoCommandAction());
+    //then
+    expect((await appState).onboardingCardConfigurationState, isA<WithCardInfoState>());
+    expect(((await appState).onboardingCardConfigurationState as WithCardInfoState).cardholderName, "Ivory TS");
+    expect(((await appState).onboardingCardConfigurationState as WithCardInfoState).maskedPAN, "493441******6055");
+    expect(((await appState).onboardingCardConfigurationState as WithCardInfoState).expiryDate, "09/26");
+  });
 }
