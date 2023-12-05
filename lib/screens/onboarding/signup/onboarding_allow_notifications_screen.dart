@@ -42,7 +42,7 @@ class _OnboardingAllowNotificationsScreenState extends State<OnboardingAllowNoti
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    final currentRoute = IvoryApp.generalRouteObserver.routeStack.last;
+    final currentRoute = IvoryApp.generalRouteObserver.routeStack.lastOrNull;
 
     if (state == AppLifecycleState.resumed && currentRoute == OnboardingAllowNotificationsScreen.routeName) {
       StoreProvider.of<AppState>(context).dispatch(CheckPushNotificationPermissionCommandAction());
