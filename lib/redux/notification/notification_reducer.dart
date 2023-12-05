@@ -6,6 +6,8 @@ NotificationState notificationReducer(NotificationState currentState, dynamic ac
     return NotificationTransactionApprovalState(message: action.message);
   } else if (action is ReceivedScoringSuccessfulNotificationEventAction) {
     return NotificationScoringSuccessfulState();
+  } else if (action is ReceivedScoringFailedNotificationEventAction) {
+    return NotificationScoringFailedState();
   } else if (action is ResetNotificationCommandAction) {
     return NotificationInitialState();
   }

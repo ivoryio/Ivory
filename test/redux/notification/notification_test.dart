@@ -88,5 +88,23 @@ void main() {
       // then
       expect((await appState).notificationState, isA<NotificationScoringSuccessfulState>());
     });
+
+    test("When received a scoring failed notification, the state should change", () async {
+      // given
+      final store = createTestStore(
+        initialState: createAppState(
+          notificationState: NotificationInitialState(),
+        ),
+      );
+      final appState = store.onChange.firstWhere(
+        (element) => element.notificationState is NotificationScoringFailedState,
+      );
+
+      // when
+      store.dispatch(ReceivedScoringFailedNotificationEventAction());
+
+      // then
+      expect((await appState).notificationState, isA<NotificationScoringFailedState>());
+    });
   });
 }
