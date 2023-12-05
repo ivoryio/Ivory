@@ -57,13 +57,13 @@ class TanInputState extends State<TanInput> {
                   ),
                   hintText: List.filled(widget.length, '#').join(),
                   textStyle: widget.isLoading != null && widget.isLoading!
-                      ? ClientConfig.getTextStyleScheme().labelMedium.copyWith(
+                      ? ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(
                             color: ClientConfig.getCustomColors().neutral500,
                           )
-                      : ClientConfig.getTextStyleScheme().labelMedium.copyWith(
+                      : ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(
                             color: ClientConfig.getCustomColors().neutral900,
                           ),
-                  hintTextStyle: ClientConfig.getTextStyleScheme().labelMedium.copyWith(
+                  hintTextStyle: ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(
                         color: ClientConfig.getCustomColors().neutral500,
                       ),
                 ),
