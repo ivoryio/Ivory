@@ -32,10 +32,10 @@ class _OnboardingStepperScreenState extends State<OnboardingStepperScreen> {
           onboardingProgressState: store.state.onboardingProgressState,
         ),
         distinct: true,
-        onInitialBuild: (viewModel) {
-          if (viewModel is RedirectToScoringSuccessViewModel) {
+        onWillChange: (previousViewModel, newViewModel) {
+          if (newViewModel is RedirectToScoringSuccessViewModel) {
             Navigator.pushNamedAndRemoveUntil(context, OnboardingScoringSuccessScreen.routeName, (route) => false);
-          } else if (viewModel is RedirectToScoringFailedViewModel) {
+          } else if (newViewModel is RedirectToScoringFailedViewModel) {
             Navigator.pushNamedAndRemoveUntil(context, OnboardingScoringRejectedScreen.routeName, (route) => false);
           }
         },

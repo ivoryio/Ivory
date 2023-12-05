@@ -136,6 +136,7 @@ class FirebasePushNotificationService extends PushNotificationService {
     if (store == null) return;
 
     forceReloadAppStates(store!);
+    _onMessage(message);
   }
 
   Future<void> handleAndroidLocalNotifications() async {
