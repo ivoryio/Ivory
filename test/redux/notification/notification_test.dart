@@ -108,5 +108,23 @@ void main() {
       // then
       expect((await appState).notificationState, isA<NotificationScoringFailedState>());
     });
+
+    test("When a scoring in progress notification is received, the state should change", () async {
+      // given
+      final store = createTestStore(
+        initialState: createAppState(
+          notificationState: NotificationInitialState(),
+        ),
+      );
+      final appState = store.onChange.firstWhere(
+        (element) => element.notificationState is NotificationScoringInProgressState,
+      );
+
+      // when
+      store.dispatch(ReceivedScoringInProgressNotificationEventAction());
+
+      // then
+      expect((await appState).notificationState, isA<NotificationScoringInProgressState>());
+    });
   });
 }

@@ -5,4 +5,5 @@ enum NotificationType {
   scaChallenge,
   scoringSuccessful,
   scoringFailed,
+  scoringInProgress,
 }

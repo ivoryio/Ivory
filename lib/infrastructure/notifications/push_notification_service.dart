@@ -197,6 +197,8 @@ class FirebasePushNotificationService extends PushNotificationService {
       store!.dispatch(ReceivedScoringSuccessfulNotificationEventAction());
     } else if (notificationType == NotificationType.scoringFailed) {
       store!.dispatch(ReceivedScoringFailedNotificationEventAction());
+    } else if (notificationType == NotificationType.scoringInProgress) {
+      store!.dispatch(ReceivedScoringInProgressNotificationEventAction());
     } else {
       debugPrint("Unsupported notification type ${message.data["type"]}");
     }

@@ -213,7 +213,8 @@ void main() {
         expect(dispatch.single, isA<ReceivedScoringSuccessfulNotificationEventAction>());
       });
 
-      testWidgets("When NotificationType.scoringFailed, the store should dispatch the correct action", (tester) async {
+      testWidgets("When NotificationType.scoringFailed is saved, the store should dispatch the correct action",
+          (tester) async {
         // given
         final pushNotificationService = FirebasePushNotificationService(storageService: storageService);
 
@@ -246,6 +247,42 @@ void main() {
 
         verify(storageService.delete()).called(1);
         expect(dispatch.single, isA<ReceivedScoringFailedNotificationEventAction>());
+      });
+
+      testWidgets("When NotificationType.scoringInProgress is saved, the store should dispatch the correct action",
+          (tester) async {
+        // given
+        final pushNotificationService = FirebasePushNotificationService(storageService: storageService);
+
+        final navigatorKey = GlobalKey<NavigatorState>();
+        final navigationObserver = NavigationGeneralObserver();
+
+        pushNotificationService.user = MockUser();
+        pushNotificationService.store = mockStore;
+        pushNotificationService.navigatorKey = navigatorKey;
+        pushNotificationService.flutterLocalNotificationsPlugin = flutterLocalNotificationsPlugin;
+
+        when(storageService.find()).thenAnswer(
+          (_) async => jsonEncode(MockRemoteMessages.scoringInProgressMessage.toMap()),
+        );
+
+        await tester.pumpWidget(
+          MaterialApp(
+            navigatorObservers: [navigationObserver],
+            navigatorKey: navigatorKey,
+            home: Container(),
+            routes: const {},
+          ),
+        );
+
+        // when
+        await pushNotificationService.handleSavedNotification();
+
+        // then
+        final dispatch = verify(mockStore.dispatch(captureAny)).captured;
+
+        verify(storageService.delete()).called(1);
+        expect(dispatch.single, isA<ReceivedScoringInProgressNotificationEventAction>());
       });
     });
   });

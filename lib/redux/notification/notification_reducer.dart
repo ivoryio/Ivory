@@ -8,6 +8,8 @@ NotificationState notificationReducer(NotificationState currentState, dynamic ac
     return NotificationScoringSuccessfulState();
   } else if (action is ReceivedScoringFailedNotificationEventAction) {
     return NotificationScoringFailedState();
+  } else if (action is ReceivedScoringInProgressNotificationEventAction) {
+    return NotificationScoringInProgressState();
   } else if (action is ResetNotificationCommandAction) {
     return NotificationInitialState();
   }

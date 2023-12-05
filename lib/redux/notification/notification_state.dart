@@ -17,3 +17,5 @@ class NotificationTransactionApprovalState extends NotificationState {
 class NotificationScoringSuccessfulState extends NotificationState {}
 
 class NotificationScoringFailedState extends NotificationState {}
+
+class NotificationScoringInProgressState extends NotificationState {}

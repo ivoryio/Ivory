@@ -10,6 +10,7 @@ class RemoteMessageUtils {
       "SCA_CHALLENGE": NotificationType.scaChallenge,
       "SCORING_SUCCESSFUL": NotificationType.scoringSuccessful,
       "SCORING_FAILED": NotificationType.scoringFailed,
+      "SCORING_IN_PROGRESS": NotificationType.scoringInProgress,
     };
 
     return notificationTypeMap[type] ?? NotificationType.unknown;

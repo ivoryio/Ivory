@@ -12,4 +12,6 @@ class ReceivedScoringSuccessfulNotificationEventAction {}
 
 class ReceivedScoringFailedNotificationEventAction {}
 
+class ReceivedScoringInProgressNotificationEventAction {}
+
 class ResetNotificationCommandAction {}
