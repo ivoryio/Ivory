@@ -37,7 +37,14 @@ class BankCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: ClientConfig.getCustomColors().neutral300,
+          width: 1,
+        ),
+      ),
       width: customWidth ?? defaultWidth,
       height: customHeight ?? defaultHeigth,
       child: Card(
