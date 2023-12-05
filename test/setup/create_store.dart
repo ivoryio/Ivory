@@ -114,7 +114,8 @@ Store<AppState> createTestStore({
     fileSaverService: fileSaverService ?? NotImplementedFileSaverService(),
     onboardingIdentityVerificationService:
         onboardingIdentityVerificationService ?? NotImplementedOnbordingIdentityVerificationService(),
-    onboardingCardConfigurationService: onboardingCardConfigurationService ?? NotImplementedOnboardingCardConfigurationService(),
+    onboardingCardConfigurationService:
+        onboardingCardConfigurationService ?? NotImplementedOnboardingCardConfigurationService(),
   );
 }
 
@@ -520,7 +521,11 @@ class NotImplementedDocumentsService extends DocumentsService {
   }
 
   @override
-  Future<DocumentsServiceResponse> downloadPostboxDocument({required User user, required Document document}) async {
+  Future<DocumentsServiceResponse> downloadDocument({
+    required User user,
+    required Document document,
+    required DocumentDownloadLocation downloadLocation,
+  }) async {
     throw UnimplementedError();
   }
 
@@ -542,12 +547,29 @@ class NotImplementedFileSaverService extends FileSaverService {
 
 class NotImplementedOnbordingIdentityVerificationService extends OnbordingIdentityVerificationService {
   @override
-  Future<CreateIdentificationResponse> createIdentification({
+  Future<IdentityVerificationServiceResponse> createIdentification({
     required User user,
     required String accountName,
     required String iban,
     required String termsAndCondsSignedAt,
   }) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<IdentityVerificationServiceResponse> signWithTan({required User user, required String tan}) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<IdentityVerificationServiceResponse> getSignupIdentificationInfo({
+    required User user,
+  }) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<IdentityVerificationServiceResponse> authorizeIdentification({required User user}) async {
     throw UnimplementedError();
   }
 }
