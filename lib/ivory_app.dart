@@ -23,6 +23,8 @@ import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_contracts_confirm_screen.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_identity_verification_method_screen.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_reference_account_iban.dart';
+import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_scoring_rejection_screen.dart';
+import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_scoring_success_screen.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_scoring_waiting_screen.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_sign_with_tan_screen.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_review_updated_contracts_screen.dart';
@@ -286,6 +288,8 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
             OnboardingReviewUpdatedContractsScreen.routeName: (context) =>
                 const OnboardingReviewUpdatedContractsScreen(),
             OnboardingScoringWaitingScreen.routeName: (context) => const OnboardingScoringWaitingScreen(),
+            OnboardingScoringSuccessScreen.routeName: (context) => const OnboardingScoringSuccessScreen(),
+            OnboardingScoringRejectionScreen.routeName: (context) => const OnboardingScoringRejectionScreen(),
             //onboarding/card_configuration
             OnboardingOrderCardScreen.routeName: (context) => const OnboardingOrderCardScreen(),
             OnboardingConfigureCardScreen.routeName: (context) => const OnboardingConfigureCardScreen(),
