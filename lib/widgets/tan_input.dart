@@ -5,8 +5,8 @@ import 'package:solarisdemo/config.dart';
 
 class TanInput extends StatefulWidget {
   final int length;
-  final TextEditingController? controller;
-  final FocusNode? focusNode;
+  final TextEditingController controller;
+  final FocusNode focusNode;
   final bool? isLoading;
   final Function(String tan) onChanged;
 
@@ -14,8 +14,8 @@ class TanInput extends StatefulWidget {
     super.key,
     required this.length,
     required this.onChanged,
-    this.controller,
-    this.focusNode,
+    required this.controller,
+    required this.focusNode,
     this.isLoading,
   });
 
@@ -26,11 +26,9 @@ class TanInput extends StatefulWidget {
 class TanInputState extends State<TanInput> {
   @override
   void initState() {
-    if (widget.focusNode != null) {
-      widget.focusNode!.addListener(() {
-        setState(() {});
-      });
-    }
+    widget.focusNode.addListener(() {
+      setState(() {});
+    });
     super.initState();
   }
 
@@ -48,7 +46,7 @@ class TanInputState extends State<TanInput> {
                   gapSpace: 8,
                   radius: const Radius.circular(4),
                   strokeColorBuilder: FixedColorBuilder(
-                    widget.focusNode != null && widget.focusNode!.hasFocus
+                    widget.focusNode.hasFocus
                         ? ClientConfig.getColorScheme().primary
                         : ClientConfig.getCustomColors().neutral300,
                   ),
@@ -81,7 +79,7 @@ class TanInputState extends State<TanInput> {
                   offset: 0,
                   color: ClientConfig.getCustomColors().neutral900,
                   radius: const Radius.circular(1),
-                  enabled: widget.focusNode != null && widget.focusNode!.hasFocus,
+                  enabled: widget.focusNode.hasFocus,
                 ),
               ),
             ),
