@@ -16,8 +16,18 @@ class OnboardingIdentityVerificationPresenter {
       identificationStatus: identityVerificationState.status,
       isAuthorized: identityVerificationState.isAuthorized,
       isTanConfirmed: identityVerificationState.isTanConfirmed,
-      isScoringSuccessful: notificationState is NotificationScoringSuccessfulState,
+      isScoringSuccessful: getScoringSuccessState(notificationState),
     );
+  }
+
+  static bool? getScoringSuccessState(NotificationState? notificationState) {
+    if (notificationState is NotificationScoringSuccessfulState) {
+      return true;
+    } else if (notificationState is NotificationScoringFailedState) {
+      return false;
+    }
+
+    return null;
   }
 }
 
@@ -28,7 +38,7 @@ class OnboardingIdentityVerificationViewModel extends Equatable {
   final OnboardingIdentificationStatus? identificationStatus;
   final bool? isAuthorized;
   final bool? isTanConfirmed;
-  final bool isScoringSuccessful;
+  final bool? isScoringSuccessful;
 
   const OnboardingIdentityVerificationViewModel({
     this.urlForIntegration,
@@ -37,7 +47,7 @@ class OnboardingIdentityVerificationViewModel extends Equatable {
     this.identificationStatus,
     this.isAuthorized,
     this.isTanConfirmed,
-    this.isScoringSuccessful = false,
+    this.isScoringSuccessful,
   });
 
   @override

@@ -153,6 +153,28 @@ void main() {
           ));
     });
 
+    test("When notificationsState is null, the view model should contain isScoringSuccessful = null", () {
+      // given
+      const onboardingIdentityVerificationState = OnboardingIdentityVerificationState(
+        isLoading: false,
+      );
+
+      // when
+      final viewModel = OnboardingIdentityVerificationPresenter.present(
+        identityVerificationState: onboardingIdentityVerificationState,
+        notificationState: null,
+      );
+
+      // then
+      expect(
+        viewModel,
+        const OnboardingIdentityVerificationViewModel(
+          isLoading: false,
+          isScoringSuccessful: null,
+        ),
+      );
+    });
+
     test(
         "When notificationsState is NotificationScoringSuccessfulState, the view model should contain isScoringSuccessful = true",
         () {
@@ -173,6 +195,30 @@ void main() {
         const OnboardingIdentityVerificationViewModel(
           isLoading: false,
           isScoringSuccessful: true,
+        ),
+      );
+    });
+
+    test(
+        "When notificationsState is NotificationScoringFailedState, the view model should contain isScoringSuccessful = false",
+        () {
+      // given
+      const onboardingIdentityVerificationState = OnboardingIdentityVerificationState(
+        isLoading: false,
+      );
+
+      // when
+      final viewModel = OnboardingIdentityVerificationPresenter.present(
+        identityVerificationState: onboardingIdentityVerificationState,
+        notificationState: NotificationScoringFailedState(),
+      );
+
+      // then
+      expect(
+        viewModel,
+        const OnboardingIdentityVerificationViewModel(
+          isLoading: false,
+          isScoringSuccessful: false,
         ),
       );
     });
