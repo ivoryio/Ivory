@@ -88,18 +88,51 @@ class OnbordingIdentityVerificationService extends ApiService {
   }) async {
     this.user = user;
 
-    const path = '/signup/identification/confirm';
+    String url = '/signup/identification/confirm';
     Map<String, dynamic> body = {
       'token': tan,
     };
 
     try {
-      await patch(path, body: body);
+      await patch(url, body: body);
 
       return SignWithTanSuccessResponse();
     } catch (err) {
       return const IdentityVerificationServiceErrorResponse(
           errorType: OnboardingIdentityVerificationErrorType.invalidTan);
+    }
+  }
+
+  Future<IdentityVerificationServiceResponse> getCardLimit({required User user}) async {
+    this.user = user;
+
+    String url = '/credit_card_applications';
+
+    try {
+      final response = await get(url);
+
+      int valueApprovedLimit = response['approved_limit']['value'];
+
+      return CreditLimitServiceSuccessResponse(creditLimit: valueApprovedLimit);
+    } catch (err) {
+      return const IdentityVerificationServiceErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
+    }
+  }
+
+  Future<IdentityVerificationServiceResponse> finalizeIdentification({required User user}) async {
+    this.user = user;
+
+    String url = '/signup/identification/finalize';
+    Map<String, dynamic> body = {
+      'token': '212212',
+    };
+
+    try {
+      await post(url, body: body);
+
+      return FinalizeIdentificationServiceSuccessResponse();
+    } catch (err) {
+      return const IdentityVerificationServiceErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
     }
   }
 }
@@ -155,3 +188,14 @@ class IdentityVerificationServiceErrorResponse extends IdentityVerificationServi
 }
 
 class SignWithTanSuccessResponse extends IdentityVerificationServiceResponse {}
+
+class CreditLimitServiceSuccessResponse extends IdentityVerificationServiceResponse {
+  final int creditLimit;
+
+  const CreditLimitServiceSuccessResponse({required this.creditLimit});
+
+  @override
+  List<Object?> get props => [creditLimit];
+}
+
+class FinalizeIdentificationServiceSuccessResponse extends IdentityVerificationServiceResponse {}

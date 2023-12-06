@@ -14,6 +14,7 @@ class OnboardingIdentityVerificationPresenter {
       identificationStatus: identityVerificationState.status,
       isAuthorized: identityVerificationState.isAuthorized,
       isTanConfirmed: identityVerificationState.isTanConfirmed,
+      creditLimit: identityVerificationState.creditLimit,
     );
   }
 }
@@ -25,6 +26,7 @@ class OnboardingIdentityVerificationViewModel extends Equatable {
   final OnboardingIdentificationStatus? identificationStatus;
   final bool? isAuthorized;
   final bool? isTanConfirmed;
+  final int? creditLimit;
 
   const OnboardingIdentityVerificationViewModel({
     this.urlForIntegration,
@@ -33,9 +35,9 @@ class OnboardingIdentityVerificationViewModel extends Equatable {
     this.identificationStatus,
     this.isAuthorized,
     this.isTanConfirmed,
+    this.creditLimit,
   });
 
   @override
-  List<Object?> get props =>
-      [urlForIntegration, isLoading, errorType, identificationStatus, isAuthorized, isTanConfirmed];
+  List<Object?> get props => [urlForIntegration, isLoading, errorType, identificationStatus, isAuthorized, creditLimit];
 }

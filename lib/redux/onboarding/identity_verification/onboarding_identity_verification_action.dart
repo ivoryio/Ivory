@@ -46,3 +46,17 @@ class SignWithTanCommandAction {
 }
 
 class SignWithTanSuccessEventAction {}
+
+class GetCreditLimitCommandAction {}
+
+class CreditLimitSuccessEventAction {
+  final int approvedCreditLimit;
+
+  CreditLimitSuccessEventAction({required this.approvedCreditLimit});
+}
+
+class FinalizeIdCommandAction {}
+
+class FinalizeIdentificationLoadingEventAction {}
+
+class FinalizeIdentificationSuccessEventAction {}
