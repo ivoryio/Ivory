@@ -49,6 +49,11 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
     const oneSec = Duration(seconds: 1);
 
     Timer.periodic(oneSec, (Timer timer) {
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
+
       if (_countdownTimer.inSeconds == 0) {
         setState(() {
           timer.cancel();
