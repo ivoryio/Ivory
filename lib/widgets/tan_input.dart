@@ -37,7 +37,7 @@ class TanInputState extends State<TanInput> {
   Widget build(BuildContext context) {
     return Expanded(
       child: Center(
-        child: ListView(
+        child: Column(
           children: <Widget>[
             SizedBox(
               height: 64,
