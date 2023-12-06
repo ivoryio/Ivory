@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pin_input_text_field/pin_input_text_field.dart' as tan_input;
 import 'package:pin_input_text_field/pin_input_text_field.dart';
 import 'package:solarisdemo/config.dart';
@@ -69,6 +70,9 @@ class TanInputState extends State<TanInput> {
                 focusNode: widget.focusNode,
                 enabled: widget.isLoading != null && !widget.isLoading!,
                 keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
                 onSubmit: (pin) {
                   debugPrint('submit pin:$pin');
                 },
