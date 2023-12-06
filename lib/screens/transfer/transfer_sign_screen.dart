@@ -10,10 +10,25 @@ import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/tan_input.dart';
 
-class TransferSignScreen extends StatelessWidget {
+class TransferSignScreen extends StatefulWidget {
   static const routeName = "/transferSignScreen";
 
   const TransferSignScreen({super.key});
+
+  @override
+  State<TransferSignScreen> createState() => _TransferSignScreenState();
+}
+
+class _TransferSignScreenState extends State<TransferSignScreen> {
+  late TextEditingController _tanInputController;
+  late FocusNode _focusNode;
+
+  @override
+  void initState() {
+    _tanInputController = TextEditingController();
+    _focusNode = FocusNode();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,14 +76,18 @@ class TransferSignScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 16),
                       TanInput(
+                        controller: _tanInputController,
+                        focusNode: _focusNode,
                         length: 6,
-                        onCompleted: (tan) {
-                          StoreProvider.of<AppState>(context).dispatch(
-                            ConfirmTransferCommandAction(
-                              changeRequestId: viewModel.changeRequestId,
-                              tan: tan,
-                            ),
-                          );
+                        onChanged: (tan) {
+                          if (tan.length == 6) {
+                            StoreProvider.of<AppState>(context).dispatch(
+                              ConfirmTransferCommandAction(
+                                changeRequestId: viewModel.changeRequestId,
+                                tan: tan,
+                              ),
+                            );
+                          }
                         },
                       ),
                     ]
