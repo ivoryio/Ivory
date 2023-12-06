@@ -4,9 +4,11 @@ import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/onboarding/identity_verification/onboarding_identity_verification_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
+import 'package:solarisdemo/redux/onboarding/identity_verification/onboarding_identity_verification_action.dart';
 import 'package:solarisdemo/utilities/ivory_color_mapper.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -28,13 +30,12 @@ class OnboardingCreditLimitCongratsScreen extends StatefulWidget {
 
 class _OnboardingCreditLimitCongratsScreenState extends State<OnboardingCreditLimitCongratsScreen> {
   final ContinueButtonController _continueButtonController = ContinueButtonController();
-  bool _loadingState = false;
 
   @override
   void initState() {
     super.initState();
 
-    _continueButtonController.setEnabled();
+    _continueButtonController.setDisabled();
   }
 
   @override
@@ -46,12 +47,14 @@ class _OnboardingCreditLimitCongratsScreenState extends State<OnboardingCreditLi
     return StoreConnector<AppState, OnboardingIdentityVerificationViewModel>(
       converter: (store) => OnboardingIdentityVerificationPresenter.present(
           identityVerificationState: store.state.onboardingIdentityVerificationState),
-      // onInit: (store) => store.dispatch(OnboardingCreditCardLimitCommandAction()),
-      // onWillChange: (previousViewModel, newViewModel) {
-      //   if (newViewModel is OnboardingIdentityVerificationViewModel) {
-
-      //   }
-      // },
+      onInit: (store) => store.dispatch(GetCreditLimitCommandAction()),
+      onWillChange: (previousViewModel, newViewModel) {
+        if (newViewModel.creditLimit != null) {
+          _continueButtonController.setEnabled();
+        } else {
+          _continueButtonController.setDisabled();
+        }
+      },
       distinct: true,
       builder: (context, viewModel) {
         return ScreenScaffold(
@@ -71,7 +74,7 @@ class _OnboardingCreditLimitCongratsScreenState extends State<OnboardingCreditLi
                     children: [
                       const SizedBox(height: 16),
                       Align(
-                          // alignment: Alignment.centerLeft,
+                          alignment: Alignment.centerLeft,
                           child: Text('Congratulations!', style: ClientConfig.getTextStyleScheme().heading2)),
                       const SizedBox(height: 24),
                       Text(
@@ -99,8 +102,9 @@ class _OnboardingCreditLimitCongratsScreenState extends State<OnboardingCreditLi
                                         .labelMedium
                                         .copyWith(color: ClientConfig.getCustomColors().neutral700)),
                                 const SizedBox(height: 4),
-                                (_loadingState)
-                                    ? Text('€10,000', style: ClientConfig.getTextStyleScheme().heading1)
+                                (viewModel.creditLimit != null)
+                                    ? Text('€${NumberFormat('#,###').format(viewModel.creditLimit)}',
+                                        style: ClientConfig.getTextStyleScheme().heading1)
                                     : Padding(
                                         padding: const EdgeInsets.only(top: 16),
                                         child: CircularLoadingIndicator(
@@ -118,7 +122,7 @@ class _OnboardingCreditLimitCongratsScreenState extends State<OnboardingCreditLi
                           ],
                         ),
                         builder: (context, child) {
-                          return (_loadingState)
+                          return (viewModel.creditLimit != null)
                               ? Expanded(
                                   child: IvoryAssetWithBadge(
                                     childWidget: child!,
@@ -142,10 +146,16 @@ class _OnboardingCreditLimitCongratsScreenState extends State<OnboardingCreditLi
                             isLoading: _continueButtonController.isLoading,
                             onPressed: _continueButtonController.isEnabled
                                 ? () {
-                                    setState(() {
-                                      _loadingState = !_loadingState;
-                                    });
-                                    log('Clicked button');
+                                    viewModel.isLoading == true;
+                                    if (viewModel.creditLimit != null) {
+                                      log(viewModel.toString());
+                                      setState(() {
+                                        // viewModel.isLoading = false;
+                                        _continueButtonController.setLoading();
+                                      });
+                                      // StoreProvider.of<AppState>(context).dispatch(GetFinalizeIdCommandAction());
+                                      // log('Clicked button');
+                                    }
                                   }
                                 : null),
                       ),
