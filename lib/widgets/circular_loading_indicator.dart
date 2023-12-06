@@ -7,12 +7,14 @@ class CircularLoadingIndicator extends StatefulWidget {
   final double width;
   final List<Color>? gradientColors;
   final double strokeWidth;
+  final bool clockwise;
 
   const CircularLoadingIndicator({
     super.key,
     this.width = 128,
     this.gradientColors,
     this.strokeWidth = 15.0,
+    this.clockwise = false,
   });
 
   @override
@@ -36,7 +38,7 @@ class _CircularLoadingIndicatorState extends State<CircularLoadingIndicator> wit
   @override
   Widget build(BuildContext context) {
     return RotationTransition(
-      turns: Tween(begin: 0.0, end: -1.0).animate(
+      turns: Tween(begin: 0.0, end: (widget.clockwise) ? 1.0 : -1.0).animate(
         CurvedAnimation(
           parent: _animationController,
           curve: Curves.fastOutSlowIn,
