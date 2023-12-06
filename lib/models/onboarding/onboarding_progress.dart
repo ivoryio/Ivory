@@ -7,6 +7,8 @@ enum OnboardingStep {
   taxIdAdded,
   creditCardApplicationCreated,
   postboxItemsConfirmed,
+  scoringSuccessful,
+  identificationFinished,
   unknown,
 }
 
@@ -29,6 +31,10 @@ extension OnboardingStepExtension on OnboardingStep {
         return OnboardingStep.creditCardApplicationCreated;
       case "postboxItemsConfirmed":
         return OnboardingStep.postboxItemsConfirmed;
+      case "scoringSuccessful":
+        return OnboardingStep.scoringSuccessful;
+      case "identificationFinished":
+        return OnboardingStep.identificationFinished;
       default:
         return OnboardingStep.unknown;
     }
