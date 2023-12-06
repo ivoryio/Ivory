@@ -111,7 +111,6 @@ class _OnboardingVerifyMobileNumberScreenState extends State<OnboardingVerifyMob
                         ),
                       );
                       _continueButtonController.setDisabled();
-                      // _tanInputKey.currentState!.clear();
                       _tanInputController.clear();
                       startTimer();
                       Navigator.pop(context);
@@ -195,7 +194,6 @@ class _OnboardingVerifyMobileNumberScreenState extends State<OnboardingVerifyMob
                                       mobileNumber: viewModel.attributes.mobileNumber!,
                                     ),
                                   );
-                                  // _tanInputKey.currentState!.clear();
                                   _tanInputController.clear();
                                   startTimer();
                                 },
