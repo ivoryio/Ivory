@@ -20,8 +20,16 @@ class TransferSignScreen extends StatefulWidget {
 }
 
 class _TransferSignScreenState extends State<TransferSignScreen> {
-  final TextEditingController _tanInputController = TextEditingController();
-  final FocusNode _focusNode = FocusNode();
+  late TextEditingController _tanInputController;
+  late FocusNode _focusNode;
+
+  @override
+  void initState() {
+    _tanInputController = TextEditingController();
+    _focusNode = FocusNode();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, TransferViewModel>(
@@ -79,7 +87,7 @@ class _TransferSignScreenState extends State<TransferSignScreen> {
                                 tan: tan,
                               ),
                             );
-                          }                      
+                          }
                         },
                       ),
                     ]

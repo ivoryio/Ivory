@@ -68,7 +68,7 @@ class TanInputState extends State<TanInput> {
                 ),
                 controller: widget.controller,
                 focusNode: widget.focusNode,
-                enabled: widget.isLoading != null && !widget.isLoading!,
+                enabled: widget.isLoading != null && !widget.isLoading! ? !widget.isLoading! : true,
                 keyboardType: TextInputType.number,
                 inputFormatters: [
                   FilteringTextInputFormatter.digitsOnly,
