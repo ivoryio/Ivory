@@ -1,11 +1,11 @@
 import 'package:equatable/equatable.dart';
 import 'package:solarisdemo/redux/onboarding/onboarding_progress_state.dart';
+import 'package:solarisdemo/screens/onboarding/card_configuration/onboarding_order_card.dart';
 import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_public_status_screen.dart';
 import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_remember_screen.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_credit_limit_congratulations_screen.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_identity_verification_method_screen.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_reference_account_iban.dart';
-import 'package:solarisdemo/screens/onboarding/onboarding_stepper_screen.dart';
 import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_date_and_place_of_birth_screen.dart';
 import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_mobile_number_screen.dart';
 import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_verify_mobile_number_screen.dart';
@@ -120,7 +120,7 @@ OnboardingProgress _onboardingProgressMapper(OnboardingStep step) {
     OnboardingStep.identificationFinished: const OnboardingProgress(
       activeStep: StepperItemType.cardConfiguration,
       progressPercentage: 80,
-      routeName: OnboardingStepperScreen.routeName,
+      routeName: OnboardingOrderCardScreen.routeName,
     ),
   };
 
