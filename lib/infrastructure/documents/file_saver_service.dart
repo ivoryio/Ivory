@@ -7,8 +7,10 @@ import 'package:share_plus/share_plus.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
 
 class FileSaverService {
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
   Future<void> saveFile({required String name, String? ext, required Uint8List bytes, String? mimeType}) async {
-    if (Platform.isIOS) {
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
       // Open the share sheet. This has option to save to files
       final xFile = XFile.fromData(bytes, name: name, mimeType: mimeType);
       Share.shareXFiles([xFile]);
@@ -16,7 +18,7 @@ class FileSaverService {
       try {
         await _writeLocalFile(name: name, extension: ext!, bytes: bytes);
 
-        FlutterLocalNotificationsPlugin().show(
+        flutterLocalNotificationsPlugin.show(
           name.hashCode,
           'File downloaded',
           'File is in your Downloads folder',
@@ -28,7 +30,7 @@ class FileSaverService {
           ),
         );
       } catch (error) {
-        FlutterLocalNotificationsPlugin().show(
+        flutterLocalNotificationsPlugin.show(
           name.hashCode,
           'File download failed',
           'Please try again',
