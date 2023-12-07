@@ -16,7 +16,7 @@ import 'package:solarisdemo/infrastructure/device/device_binding_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/infrastructure/documents/documents_middleware.dart';
 import 'package:solarisdemo/infrastructure/documents/documents_service.dart';
-import 'package:solarisdemo/infrastructure/file_saver_service.dart';
+import 'package:solarisdemo/infrastructure/documents/file_saver_service.dart';
 import 'package:solarisdemo/infrastructure/mobile_number/mobile_number_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/notifications_middleware.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';

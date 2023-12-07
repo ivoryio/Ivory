@@ -1,5 +1,5 @@
 import 'package:redux/redux.dart';
-import 'package:solarisdemo/infrastructure/file_saver_service.dart';
+import 'package:solarisdemo/infrastructure/documents/file_saver_service.dart';
 import 'package:solarisdemo/infrastructure/repayments/bills/bill_service.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/repayments/bills/bills_action.dart';
