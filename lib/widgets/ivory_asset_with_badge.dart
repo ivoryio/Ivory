@@ -52,8 +52,8 @@ class IvoryAssetWithBadge extends StatelessWidget {
       );
     } else {
       return Container(
-        height: 64,
-        width: 64,
+        height: IvoryAssetWithBadge.badgeSize,
+        width: IvoryAssetWithBadge.badgeSize,
         decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.red),
         child: Icon(
           Icons.close_rounded,
