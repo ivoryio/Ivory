@@ -80,5 +80,29 @@ class OnboardingIdentityVerificationMiddleware extends MiddlewareClass<AppState>
         store.dispatch(OnboardingIdentityVerificationErrorEventAction(errorType: response.errorType));
       }
     }
+
+    if (action is GetCreditLimitCommandAction) {
+      store.dispatch(OnboardingIdentityVerificationLoadingEventAction());
+
+      final response = await _onboardingIdentityVerificationService.getCreditLimit(user: authState.cognitoUser);
+
+      if (response is GetCreditLimitSuccessResponse) {
+        store.dispatch(CreditLimitSuccessEventAction(approvedCreditLimit: response.creditLimit ~/ 100));
+      } else if (response is IdentityVerificationServiceErrorResponse) {
+        store.dispatch(OnboardingIdentityVerificationErrorEventAction(errorType: response.errorType));
+      }
+    }
+
+    if (action is FinalizeIdentificationCommandAction) {
+      store.dispatch(FinalizeIdentificationLoadingEventAction());
+
+      final response = await _onboardingIdentityVerificationService.finalizeIdentification(user: authState.cognitoUser);
+
+      if (response is FinalizeIdentificationSuccessResponse) {
+        store.dispatch(FinalizeIdentificationSuccessEventAction());
+      } else if (response is IdentityVerificationServiceErrorResponse) {
+        store.dispatch(OnboardingIdentityVerificationErrorEventAction(errorType: response.errorType));
+      }
+    }
   }
 }

@@ -21,6 +21,7 @@ import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_reme
 import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_taxId_screen.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_bank_verification_screen.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_contracts_confirm_screen.dart';
+import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_credit_limit_congratulations_screen.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_identity_verification_method_screen.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_reference_account_iban.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_sign_with_tan_screen.dart';
@@ -287,6 +288,8 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
             //onboarding/card_configuration
             OnboardingOrderCardScreen.routeName: (context) => const OnboardingOrderCardScreen(),
             OnboardingConfigureCardScreen.routeName: (context) => const OnboardingConfigureCardScreen(),
+            OnboardingCreditLimitCongratulationsScreen.routeName: (context) =>
+                const OnboardingCreditLimitCongratulationsScreen(),
           },
         );
       }),
