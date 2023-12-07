@@ -223,4 +223,25 @@ void main() {
       );
     });
   });
+
+  group('credit limit congratulations screen', () {
+    test('when fetching credit limit, should return to viewModel', () {
+      //given
+      const onboardingIdentityVerificationState = OnboardingIdentityVerificationState(
+        isLoading: false,
+        creditLimit: 1000,
+      );
+      //when
+      final viewModel = OnboardingIdentityVerificationPresenter.present(
+          identityVerificationState: onboardingIdentityVerificationState);
+      //then
+      expect(
+        viewModel,
+        const OnboardingIdentityVerificationViewModel(
+          isLoading: false,
+          creditLimit: 1000,
+        ),
+      );
+    });
+  });
 }

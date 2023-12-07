@@ -38,6 +38,16 @@ OnboardingIdentityVerificationState identityVerificationReducer(
       isLoading: false,
       isTanConfirmed: true,
     );
+  } else if (action is CreditLimitSuccessEventAction) {
+    return OnboardingIdentityVerificationState(
+      isLoading: false,
+      creditLimit: action.approvedCreditLimit,
+    );
+  } else if (action is FinalizeIdentificationLoadingEventAction) {
+    return OnboardingIdentityVerificationState(
+      isLoading: true,
+      creditLimit: state.creditLimit,
+    );
   }
 
   return state;

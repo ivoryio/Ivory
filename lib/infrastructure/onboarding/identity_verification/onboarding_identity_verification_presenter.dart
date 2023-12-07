@@ -16,6 +16,7 @@ class OnboardingIdentityVerificationPresenter {
       identificationStatus: identityVerificationState.status,
       isAuthorized: identityVerificationState.isAuthorized,
       isTanConfirmed: identityVerificationState.isTanConfirmed,
+      creditLimit: identityVerificationState.creditLimit,
       isScoringSuccessful: getScoringSuccessState(notificationState),
     );
   }
@@ -38,6 +39,7 @@ class OnboardingIdentityVerificationViewModel extends Equatable {
   final OnboardingIdentificationStatus? identificationStatus;
   final bool? isAuthorized;
   final bool? isTanConfirmed;
+  final int? creditLimit;
   final bool? isScoringSuccessful;
 
   const OnboardingIdentityVerificationViewModel({
@@ -47,6 +49,7 @@ class OnboardingIdentityVerificationViewModel extends Equatable {
     this.identificationStatus,
     this.isAuthorized,
     this.isTanConfirmed,
+    this.creditLimit,
     this.isScoringSuccessful,
   });
 
@@ -58,6 +61,7 @@ class OnboardingIdentityVerificationViewModel extends Equatable {
         identificationStatus,
         isAuthorized,
         isTanConfirmed,
-        isScoringSuccessful,
+        creditLimit,
+        isScoringSuccessful
       ];
 }

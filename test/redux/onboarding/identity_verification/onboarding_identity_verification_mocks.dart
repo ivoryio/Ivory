@@ -81,3 +81,19 @@ class FakeFailingOnbordingSignWithTanService extends OnbordingIdentityVerificati
     return const IdentityVerificationServiceErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
   }
 }
+
+class FakeOnbordingCreditLimitService extends OnbordingIdentityVerificationService {
+  @override
+  Future<IdentityVerificationServiceResponse> getCreditLimit({
+    required User user,
+  }) async {
+    return const GetCreditLimitSuccessResponse(creditLimit: 1000);
+  }
+
+  @override
+  Future<IdentityVerificationServiceResponse> finalizeIdentification({
+    required User user,
+  }) async {
+    return FinalizeIdentificationSuccessResponse();
+  }
+}
