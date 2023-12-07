@@ -94,6 +94,6 @@ class FakeOnbordingCreditLimitService extends OnbordingIdentityVerificationServi
   Future<IdentityVerificationServiceResponse> finalizeIdentification({
     required User user,
   }) async {
-    return FinalizeIdentificationServiceSuccessResponse();
+    return FinalizeIdentificationSuccessResponse();
   }
 }

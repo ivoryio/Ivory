@@ -130,7 +130,7 @@ class OnbordingIdentityVerificationService extends ApiService {
     try {
       await post(url, body: body);
 
-      return FinalizeIdentificationServiceSuccessResponse();
+      return FinalizeIdentificationSuccessResponse();
     } catch (err) {
       return const IdentityVerificationServiceErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
     }
@@ -198,4 +198,4 @@ class GetCreditLimitSuccessResponse extends IdentityVerificationServiceResponse 
   List<Object?> get props => [creditLimit];
 }
 
-class FinalizeIdentificationServiceSuccessResponse extends IdentityVerificationServiceResponse {}
+class FinalizeIdentificationSuccessResponse extends IdentityVerificationServiceResponse {}

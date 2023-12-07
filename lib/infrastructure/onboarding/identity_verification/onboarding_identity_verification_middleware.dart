@@ -98,7 +98,7 @@ class OnboardingIdentityVerificationMiddleware extends MiddlewareClass<AppState>
 
       final response = await _onboardingIdentityVerificationService.finalizeIdentification(user: authState.cognitoUser);
 
-      if (response is FinalizeIdentificationServiceSuccessResponse) {
+      if (response is FinalizeIdentificationSuccessResponse) {
         store.dispatch(FinalizeIdentificationSuccessEventAction());
       } else if (response is IdentityVerificationServiceErrorResponse) {
         store.dispatch(OnboardingIdentityVerificationErrorEventAction(errorType: response.errorType));
