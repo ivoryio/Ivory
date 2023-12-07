@@ -7,6 +7,8 @@ import 'package:solarisdemo/screens/wallet/cards_screen.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 import '../../config.dart';
+import '../onboarding/card_configuration/onboarding_configure_card.dart';
+import '../onboarding/card_configuration/onboarding_order_card.dart';
 
 final List<MainNavigationScreens> mainNavigationScreens = [
   MainNavigationScreens.homeScreen,
@@ -54,6 +56,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       case MainNavigationScreens.homeScreen:
         return const HomeScreen();
       case MainNavigationScreens.cardsScreen:
+        return const OnboardingConfigureCardScreen();
         return const BankCardsScreen();
       case MainNavigationScreens.transactionsScreen:
         return const TransactionsScreen();

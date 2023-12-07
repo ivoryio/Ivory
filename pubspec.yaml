@@ -75,6 +75,7 @@ dependencies:
   video_player: ^2.7.2
   jwt_decoder: ^2.0.1
   webview_flutter: ^4.4.2
+  pin_input_text_field: ^4.5.1
 
 dev_dependencies:
   flutter_test:

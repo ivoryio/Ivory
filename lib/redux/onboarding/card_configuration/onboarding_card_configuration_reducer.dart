@@ -12,6 +12,12 @@ OnboardingCardConfigurationState onboardingCardConfigurationReducer(
     return OnboardingCardConfigurationGenericSuccessState();
   } else if (action is WithCardholderNameEventAction) {
     return WithCardholderNameState(cardholderName: action.cardholderName);
+  } else if (action is WithCardInfoEventAction) {
+    return WithCardInfoState(
+        cardholderName: action.cardholderName,
+        maskedPAN: action.maskedPAN,
+        expiryDate: action.expiryDate,
+    );
   }
   return currentState;
 }
