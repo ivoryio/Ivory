@@ -115,7 +115,7 @@ OnboardingProgress _onboardingProgressMapper(OnboardingStep step) {
     OnboardingStep.scoringSuccessful: const OnboardingProgress(
       activeStep: StepperItemType.identityVerification,
       progressPercentage: 60,
-      routeName: OnboardingCreditLimitCongratsScreen.routeName,
+      routeName: OnboardingCreditLimitCongratulationsScreen.routeName,
     ),
     OnboardingStep.identificationFinished: const OnboardingProgress(
       activeStep: StepperItemType.cardConfiguration,

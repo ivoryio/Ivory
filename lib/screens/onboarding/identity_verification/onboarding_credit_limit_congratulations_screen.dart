@@ -17,15 +17,15 @@ import 'package:solarisdemo/widgets/ivory_asset_with_badge.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
 
-class OnboardingCreditLimitCongratsScreen extends StatefulWidget {
+class OnboardingCreditLimitCongratulationsScreen extends StatefulWidget {
   static const routeName = '/onboardingCreditLimitCongratsScreen';
-  const OnboardingCreditLimitCongratsScreen({super.key});
+  const OnboardingCreditLimitCongratulationsScreen({super.key});
 
   @override
-  State<OnboardingCreditLimitCongratsScreen> createState() => _OnboardingCreditLimitCongratsScreenState();
+  State<OnboardingCreditLimitCongratulationsScreen> createState() => _OnboardingCreditLimitCongratulationsScreenState();
 }
 
-class _OnboardingCreditLimitCongratsScreenState extends State<OnboardingCreditLimitCongratsScreen> {
+class _OnboardingCreditLimitCongratulationsScreenState extends State<OnboardingCreditLimitCongratulationsScreen> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;

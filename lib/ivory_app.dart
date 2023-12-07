@@ -288,7 +288,8 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
             //onboarding/card_configuration
             OnboardingOrderCardScreen.routeName: (context) => const OnboardingOrderCardScreen(),
             OnboardingConfigureCardScreen.routeName: (context) => const OnboardingConfigureCardScreen(),
-            OnboardingCreditLimitCongratsScreen.routeName: (context) => const OnboardingCreditLimitCongratsScreen(),
+            OnboardingCreditLimitCongratulationsScreen.routeName: (context) =>
+                const OnboardingCreditLimitCongratulationsScreen(),
           },
         );
       }),
