@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -66,7 +64,11 @@ class _OnboardingCreditLimitCongratsScreenState extends State<OnboardingCreditLi
                 actions: const [AppbarLogo()],
                 backButtonEnabled: false,
               ),
-              AnimatedLinearProgressIndicator.step(current: 7, totalSteps: 7),
+              AnimatedLinearProgressIndicator.step(
+                current: 7,
+                totalSteps: 7,
+                isCompleted: true,
+              ),
               Expanded(
                 child: ScrollableScreenContainer(
                   padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
@@ -82,57 +84,71 @@ class _OnboardingCreditLimitCongratsScreenState extends State<OnboardingCreditLi
                           style: ClientConfig.getTextStyleScheme().bodyLargeRegular),
                       const SizedBox(height: 24),
                       CustomBuilder(
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            SvgPicture(
-                              SvgAssetLoader(
-                                'assets/images/credit_limit.svg',
-                                colorMapper: IvoryColorMapper(
-                                  baseColor: ClientConfig.getColorScheme().secondary,
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color(0x12000000),
+                                offset: Offset(0, 2),
+                                blurRadius: 6,
+                                spreadRadius: 1,
+                              ),
+                            ],
+                          ),
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Container(
+                                child: SvgPicture(
+                                  SvgAssetLoader(
+                                    'assets/images/credit_limit.svg',
+                                    colorMapper: IvoryColorMapper(
+                                      baseColor: ClientConfig.getColorScheme().secondary,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                            Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const SizedBox(height: 8),
-                                Text('Your credit limit',
-                                    style: ClientConfig.getTextStyleScheme()
-                                        .labelMedium
-                                        .copyWith(color: ClientConfig.getCustomColors().neutral700)),
-                                const SizedBox(height: 4),
-                                (viewModel.creditLimit != null)
-                                    ? Text('€${NumberFormat('#,###').format(viewModel.creditLimit)}',
-                                        style: ClientConfig.getTextStyleScheme().heading1)
-                                    : Padding(
-                                        padding: const EdgeInsets.only(top: 16),
-                                        child: CircularLoadingIndicator(
-                                          width: 24,
-                                          strokeWidth: 3,
-                                          clockwise: true,
-                                          gradientColors: [
-                                            const Color(0xFFD9D9D9),
-                                            ClientConfig.getCustomColors().neutral500,
-                                          ],
+                              Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const SizedBox(height: 8),
+                                  Text('Your credit limit',
+                                      style: ClientConfig.getTextStyleScheme()
+                                          .labelMedium
+                                          .copyWith(color: ClientConfig.getCustomColors().neutral700)),
+                                  const SizedBox(height: 4),
+                                  (viewModel.creditLimit != null)
+                                      ? Text('€${NumberFormat('#,###').format(viewModel.creditLimit)}',
+                                          style: ClientConfig.getTextStyleScheme().heading1)
+                                      : Padding(
+                                          padding: const EdgeInsets.only(top: 16),
+                                          child: CircularLoadingIndicator(
+                                            width: 24,
+                                            strokeWidth: 3,
+                                            clockwise: true,
+                                            gradientColors: [
+                                              const Color(0xFFD9D9D9),
+                                              ClientConfig.getColorScheme().secondary,
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                              ],
-                            ),
-                          ],
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                         builder: (context, child) {
                           return (viewModel.creditLimit != null)
-                              ? Expanded(
-                                  child: IvoryAssetWithBadge(
-                                    childWidget: child!,
-                                    childPosition: BadgePosition.topStart(
-                                        start: screenWidth / 2 - horizontalPadding - middleOfIsSuccessIcon,
-                                        top: -middleOfIsSuccessIcon),
-                                    isSuccess: true,
-                                  ),
+                              ? IvoryAssetWithBadge(
+                                  childWidget: child!,
+                                  childPosition: BadgePosition.topStart(
+                                      start: screenWidth / 2 - horizontalPadding - middleOfIsSuccessIcon,
+                                      top: -middleOfIsSuccessIcon),
+                                  isSuccess: true,
                                 )
-                              : Expanded(
+                              : Padding(
+                                  padding: const EdgeInsets.only(top: 32),
                                   child: child!,
                                 );
                         },
@@ -143,18 +159,13 @@ class _OnboardingCreditLimitCongratsScreenState extends State<OnboardingCreditLi
                         listenable: _continueButtonController,
                         builder: (context, child) => PrimaryButton(
                             text: 'Continue',
-                            isLoading: _continueButtonController.isLoading,
+                            isLoading: (viewModel.creditLimit != null)
+                                ? viewModel.isLoading
+                                : _continueButtonController.isLoading,
                             onPressed: _continueButtonController.isEnabled
                                 ? () {
-                                    viewModel.isLoading == true;
                                     if (viewModel.creditLimit != null) {
-                                      log(viewModel.toString());
-                                      setState(() {
-                                        // viewModel.isLoading = false;
-                                        _continueButtonController.setLoading();
-                                      });
-                                      // StoreProvider.of<AppState>(context).dispatch(GetFinalizeIdCommandAction());
-                                      // log('Clicked button');
+                                      StoreProvider.of<AppState>(context).dispatch(FinalizeIdCommandAction());
                                     }
                                   }
                                 : null),
