@@ -84,10 +84,10 @@ class FakeFailingOnbordingSignWithTanService extends OnbordingIdentityVerificati
 
 class FakeOnbordingCreditLimitService extends OnbordingIdentityVerificationService {
   @override
-  Future<IdentityVerificationServiceResponse> getCardLimit({
+  Future<IdentityVerificationServiceResponse> getCreditLimit({
     required User user,
   }) async {
-    return const CreditLimitServiceSuccessResponse(creditLimit: 1000);
+    return const GetCreditLimitSuccessResponse(creditLimit: 1000);
   }
 
   @override

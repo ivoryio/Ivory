@@ -419,7 +419,7 @@ void main() {
           state.onboardingIdentityVerificationState.creditLimit == mockCreditLimit);
 
       //when
-      store.dispatch(FinalizeIdCommandAction());
+      store.dispatch(FinalizeIdentificationCommandAction());
       //then
       final creditLimitState = (await appState).onboardingIdentityVerificationState;
 
