@@ -103,7 +103,7 @@ class OnbordingIdentityVerificationService extends ApiService {
     }
   }
 
-  Future<IdentityVerificationServiceResponse> getCardLimit({required User user}) async {
+  Future<IdentityVerificationServiceResponse> getCreditLimit({required User user}) async {
     this.user = user;
 
     String url = '/credit_card_applications';
@@ -113,7 +113,7 @@ class OnbordingIdentityVerificationService extends ApiService {
 
       int valueApprovedLimit = response['approved_limit']['value'];
 
-      return CreditLimitServiceSuccessResponse(creditLimit: valueApprovedLimit);
+      return GetCreditLimitSuccessResponse(creditLimit: valueApprovedLimit);
     } catch (err) {
       return const IdentityVerificationServiceErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
     }
@@ -189,10 +189,10 @@ class IdentityVerificationServiceErrorResponse extends IdentityVerificationServi
 
 class SignWithTanSuccessResponse extends IdentityVerificationServiceResponse {}
 
-class CreditLimitServiceSuccessResponse extends IdentityVerificationServiceResponse {
+class GetCreditLimitSuccessResponse extends IdentityVerificationServiceResponse {
   final int creditLimit;
 
-  const CreditLimitServiceSuccessResponse({required this.creditLimit});
+  const GetCreditLimitSuccessResponse({required this.creditLimit});
 
   @override
   List<Object?> get props => [creditLimit];

@@ -55,7 +55,7 @@ class CreditLimitSuccessEventAction {
   CreditLimitSuccessEventAction({required this.approvedCreditLimit});
 }
 
-class FinalizeIdCommandAction {}
+class FinalizeIdentificationCommandAction {}
 
 class FinalizeIdentificationLoadingEventAction {}
 

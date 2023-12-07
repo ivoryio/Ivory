@@ -84,25 +84,25 @@ class OnboardingIdentityVerificationMiddleware extends MiddlewareClass<AppState>
     if (action is GetCreditLimitCommandAction) {
       store.dispatch(OnboardingIdentityVerificationLoadingEventAction());
 
-      final response = await _onboardingIdentityVerificationService.getCardLimit(user: authState.cognitoUser);
+      final response = await _onboardingIdentityVerificationService.getCreditLimit(user: authState.cognitoUser);
 
-      if (response is CreditLimitServiceSuccessResponse) {
+      if (response is GetCreditLimitSuccessResponse) {
         store.dispatch(CreditLimitSuccessEventAction(approvedCreditLimit: response.creditLimit ~/ 100));
       } else if (response is IdentityVerificationServiceErrorResponse) {
         store.dispatch(OnboardingIdentityVerificationErrorEventAction(errorType: response.errorType));
       }
     }
 
-    if (action is FinalizeIdCommandAction) {
+    if (action is FinalizeIdentificationCommandAction) {
       store.dispatch(FinalizeIdentificationLoadingEventAction());
 
-      final response = await _onboardingIdentityVerificationService.finalizeIdentification(user: authState.cognitoUser);
+      // final response = await _onboardingIdentityVerificationService.finalizeIdentification(user: authState.cognitoUser);
 
-      if (response is FinalizeIdentificationServiceSuccessResponse) {
-        store.dispatch(FinalizeIdentificationSuccessEventAction());
-      } else if (response is IdentityVerificationServiceErrorResponse) {
-        store.dispatch(OnboardingIdentityVerificationErrorEventAction(errorType: response.errorType));
-      }
+      // if (response is FinalizeIdentificationServiceSuccessResponse) {
+      //   store.dispatch(FinalizeIdentificationSuccessEventAction());
+      // } else if (response is IdentityVerificationServiceErrorResponse) {
+      //   store.dispatch(OnboardingIdentityVerificationErrorEventAction(errorType: response.errorType));
+      // }
     }
   }
 }
