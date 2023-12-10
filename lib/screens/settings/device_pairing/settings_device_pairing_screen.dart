@@ -4,11 +4,13 @@ import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_presenter.dart';
 import 'package:solarisdemo/ivory_app.dart';
+import 'package:solarisdemo/models/device_binding.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_state.dart';
 import 'package:solarisdemo/redux/device/device_action.dart';
 import 'package:solarisdemo/screens/settings/app_settings/biometric_needed_screen.dart';
 import 'package:solarisdemo/screens/settings/device_pairing/settings_device_pairing_inital_screen.dart';
+import 'package:solarisdemo/screens/settings/device_pairing/settings_device_pairing_temporary_restriction_screen.dart';
 import 'package:solarisdemo/screens/settings/device_pairing/settings_paired_device_details_screen.dart';
 import 'package:solarisdemo/screens/wallet/card_details/card_details_screen.dart';
 import 'package:solarisdemo/screens/wallet/change_pin/card_change_pin_choose_screen.dart';
@@ -63,6 +65,20 @@ class SettingsDevicePairingScreen extends StatelessWidget {
                     converter: (store) => DeviceBindingPresenter.presentDeviceBinding(
                       deviceBindingState: store.state.deviceBindingState,
                     ),
+                    onWillChange: (previousViewModel, newViewModel) {
+                      if (previousViewModel is DeviceBindingFetchedViewModel &&
+                          newViewModel is DeviceBindingNotPossibleViewModel) {
+                        if (newViewModel.reason == DeviceBindingNotPossibleReason.alreadyTriedInLast5Minutes) {
+                          Navigator.pushNamed(context, SettingsDevicePairingTemporaryRestrictionScreen.routeName);
+                        }
+                        if (newViewModel.reason == DeviceBindingNotPossibleReason.noBiometricsAvailable) {
+                          Navigator.pushNamed(context, AppSettingsBiometricNeededScreen.routeName);
+                        }
+                      }
+                      if (newViewModel is DeviceBindingFetchedViewModel && newViewModel.isBindingPossible == true) {
+                        Navigator.pushNamed(context, SettingsDevicePairingInitialScreen.routeName);
+                      }
+                    },
                     builder: (context, viewModel) {
                       if (viewModel is DeviceBindingLoadingViewModel) {
                         return const Expanded(
@@ -201,7 +217,7 @@ class SettingsDevicePairingScreen extends StatelessWidget {
                       Row(
                         children: [
                           if (viewModel is DeviceBindingFetchedViewModel && (viewModel.devices!.length < 5))
-                          Text(
+                            Text(
                               'You can pair ${5 - (viewModel.devices!.length)} more devices',
                             ),
                           if (viewModel is DeviceBindingFetchedViewModel && viewModel.devices!.length >= 5)
@@ -254,14 +270,7 @@ class SettingsDevicePairingScreen extends StatelessWidget {
                   viewModel.devices!.length < 5)
                 GestureDetector(
                   onTap: () async {
-                    final isBiometricsAvailable = await BiometricsService.areBiometricsAvailable();
-                    if (isBiometricsAvailable) {
-                      // ignore: use_build_context_synchronously
-                      Navigator.pushNamed(context, SettingsDevicePairingInitialScreen.routeName);
-                    } else {
-                      // ignore: use_build_context_synchronously
-                      Navigator.pushNamed(context, AppSettingsBiometricNeededScreen.routeName);
-                    }
+                    StoreProvider.of<AppState>(context).dispatch(DeviceBindingCheckIfPossibleCommandAction());
                   },
                   child: SizedBox(
                     height: 48,

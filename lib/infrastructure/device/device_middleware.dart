@@ -1,9 +1,12 @@
 import 'package:redux/redux.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_fingerprint_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
+import 'package:solarisdemo/models/device_binding.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/device/device_action.dart';
+import 'package:solarisdemo/redux/device/device_state.dart';
 import 'package:solarisdemo/utilities/device_info/device_info.dart';
 
 import '../../models/device.dart';
@@ -15,12 +18,14 @@ class DeviceBindingMiddleware extends MiddlewareClass<AppState> {
   final DeviceBindingService _deviceBindingService;
   final DeviceService _deviceService;
   final DeviceFingerprintService _deviceFingerprintService;
+  final BiometricsService _biometricsService;
 
   DeviceBindingMiddleware(
     this._deviceBindingService,
     this._deviceService,
     this._deviceInfoService,
     this._deviceFingerprintService,
+    this._biometricsService,
   );
 
   @override
@@ -28,6 +33,37 @@ class DeviceBindingMiddleware extends MiddlewareClass<AppState> {
     next(action);
 
     final authState = store.state.authState;
+
+    if (action is DeviceBindingCheckIfPossibleCommandAction) {
+      final deviceBindingState = store.state.deviceBindingState as DeviceBindingFetchedState;
+
+      int? devicePairingTriedAt = await _deviceService.getDevicePairingTriedAt();
+      final alreadyTriedInLast5Minutes = devicePairingTriedAt != null &&
+          DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(devicePairingTriedAt)).inMinutes <= 5;
+
+      if (alreadyTriedInLast5Minutes) {
+        store.dispatch(
+            DeviceBindingNotPossibleEventAction(reason: DeviceBindingNotPossibleReason.alreadyTriedInLast5Minutes));
+        return;
+      }
+
+      final isBiometricsAvailable = await _biometricsService.biometricsAvailable();
+
+      if (!isBiometricsAvailable) {
+        store.dispatch(
+            DeviceBindingNotPossibleEventAction(reason: DeviceBindingNotPossibleReason.noBiometricsAvailable));
+        return;
+      }
+
+      store.dispatch(
+        BoundDevicesFetchedEventAction(
+          boundDevices: deviceBindingState.devices,
+          thisDevice: deviceBindingState.thisDevice,
+          isBoundDevice: deviceBindingState.isBoundDevice,
+          isBindingPossible: true,
+        ),
+      );
+    }
 
     if (action is CreateDeviceBindingCommandAction) {
       if (authState is! AuthenticatedState) {
@@ -244,6 +280,9 @@ class DeviceBindingMiddleware extends MiddlewareClass<AppState> {
       prefs.remove('device_id');
       prefs.remove('restrictedKeyPair');
       prefs.remove('unrestrictedKeyPair');
+
+      _deviceService.saveDevicePairingTriedAt();
+
       store.dispatch(FetchBoundDevicesCommandAction());
     }
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:solarisdemo/models/device.dart';
+import 'package:solarisdemo/models/device_binding.dart';
 import 'package:solarisdemo/redux/device/device_action.dart';
 import 'package:solarisdemo/redux/device/device_state.dart';
 
@@ -179,31 +179,29 @@ void main() {
       );
       final loadingState =
           store.onChange.firstWhere((element) => element.deviceBindingState is DeviceBindingLoadingState);
-      final appState = store.onChange.firstWhere((element) => element.deviceBindingState is DeviceBindingErrorState);
+      final appState =
+          store.onChange.firstWhere((element) => element.deviceBindingState is DeviceBindingVerificationErrorState);
       // when
       store.dispatch(
-        VerifyDeviceBindingSignatureCommandAction(tan: '212212'),
+        VerifyDeviceBindingSignatureCommandAction(tan: '111222'),
       );
       // then
       expect((await loadingState).deviceBindingState, isA<DeviceBindingLoadingState>());
-      expect((await appState).deviceBindingState, isA<DeviceBindingErrorState>());
+      expect((await appState).deviceBindingState, isA<DeviceBindingVerificationErrorState>());
     });
   });
 
-  group('Get bound device', () {
+  group('Fetch bound devices', () {
     test('When fetching bound devices succesfully, should return a lust of devices', () async {
       //given
       final store = createTestStore(
         deviceBindingService: FakeDeviceBindingService(),
+        deviceService: FakeDeviceService(),
         initialState: createAppState(
           deviceBindingState: DeviceBindingInitialState(),
           authState: authState,
         ),
       );
-      List<Device> boundDevices = [
-        Device(deviceId: 'deviceId', deviceName: 'deviceName'),
-        Device(deviceId: 'deviceId2', deviceName: 'deviceName2'),
-      ];
 
       final appState = store.onChange.firstWhere((element) => element.deviceBindingState is DeviceBindingFetchedState);
 
@@ -212,25 +210,25 @@ void main() {
         FetchBoundDevicesCommandAction(),
       );
 
-      print(((await appState).deviceBindingState as DeviceBindingFetchedState).devices);
-      print(boundDevices);
       //then
       expect((await appState).deviceBindingState, isA<DeviceBindingFetchedState>());
       expect(((await appState).deviceBindingState as DeviceBindingFetchedState).devices.length, 2);
     });
   });
 
-  test('When fetching bound devices fails, should return error with the proper type', () async {
+  test('When fetching bound devices fails, should return error with empty list', () async {
     //given
     final store = createTestStore(
       deviceBindingService: FakeFailingDeviceBindingService(),
+      deviceService: FakeDeviceService(),
+      deviceInfoService: FakeDeviceInfoService(),
       initialState: createAppState(
         deviceBindingState: DeviceBindingInitialState(),
         authState: authState,
       ),
     );
 
-    final appState = store.onChange.firstWhere((element) => element.deviceBindingState is DeviceBindingErrorState);
+    final appState = store.onChange.firstWhere((element) => element.deviceBindingState is DeviceBindingFetchedState);
 
     //when
     store.dispatch(
@@ -238,6 +236,95 @@ void main() {
     );
 
     //then
-    expect((await appState).deviceBindingState, isA<DeviceBindingErrorState>());
+    expect((await appState).deviceBindingState, isA<DeviceBindingFetchedState>());
+    expect(((await appState).deviceBindingState as DeviceBindingFetchedState).devices.length, 0);
+  });
+
+  group('Check if binding is possible', () {
+    test('When checking if binding is possible succesfully, should return true', () async {
+      //given
+      final store = createTestStore(
+        deviceBindingService: FakeDeviceBindingService(),
+        deviceService: FakeDeviceService(),
+        deviceInfoService: FakeDeviceInfoService(),
+        biometricsService: FakeBiometricsService(),
+        initialState: createAppState(
+          deviceBindingState: DeviceBindingFetchedState(devices, devices[0], false, false),
+          authState: authState,
+        ),
+      );
+
+      final appState = store.onChange.skip(1).firstWhere((element) =>
+          element.deviceBindingState is DeviceBindingFetchedState &&
+          (element.deviceBindingState as DeviceBindingFetchedState).isBindingPossible == true);
+
+      //when
+      store.dispatch(
+        DeviceBindingCheckIfPossibleCommandAction(),
+      );
+
+      //then
+      expect((await appState).deviceBindingState, isA<DeviceBindingFetchedState>());
+      expect(((await appState).deviceBindingState as DeviceBindingFetchedState).isBindingPossible, true);
+    });
+
+    test('When binding is not possible because of biometrics, should return the proper state', () async {
+      //given
+      final store = createTestStore(
+        deviceBindingService: FakeDeviceBindingService(),
+        deviceService: FakeDeviceService(),
+        deviceInfoService: FakeDeviceInfoService(),
+        biometricsService: FakeFailingBiometricsService(),
+        initialState: createAppState(
+          deviceBindingState: DeviceBindingFetchedState(devices, devices[0], false, false),
+          authState: authState,
+        ),
+      );
+
+      final appState = store.onChange.firstWhere((element) =>
+          element.deviceBindingState is DeviceBindingNotPossibleState &&
+          (element.deviceBindingState as DeviceBindingNotPossibleState).reason ==
+              DeviceBindingNotPossibleReason.noBiometricsAvailable);
+
+      //when
+      store.dispatch(
+        DeviceBindingCheckIfPossibleCommandAction(),
+      );
+
+      //then
+      expect((await appState).deviceBindingState, isA<DeviceBindingNotPossibleState>());
+      expect(((await appState).deviceBindingState as DeviceBindingNotPossibleState).reason,
+          DeviceBindingNotPossibleReason.noBiometricsAvailable);
+    });
+
+    test('When binding is not possible because it was already tried in the last 5 minutes, should return proper state',
+        () async {
+      //given
+      final store = createTestStore(
+        deviceBindingService: FakeDeviceBindingService(),
+        deviceService: FakeFailingDeviceService(),
+        deviceInfoService: FakeDeviceInfoService(),
+        biometricsService: FakeBiometricsService(),
+        initialState: createAppState(
+          deviceBindingState: DeviceBindingFetchedState(devices, devices[0], false, false),
+          authState: authState,
+        ),
+      );
+
+      final appState = store.onChange.firstWhere((element) =>
+          element.deviceBindingState is DeviceBindingNotPossibleState &&
+          (element.deviceBindingState as DeviceBindingNotPossibleState).reason ==
+              DeviceBindingNotPossibleReason.alreadyTriedInLast5Minutes);
+
+      //when
+      store.dispatch(
+        DeviceBindingCheckIfPossibleCommandAction(),
+      );
+
+      //then
+      expect((await appState).deviceBindingState, isA<DeviceBindingNotPossibleState>());
+      expect(((await appState).deviceBindingState as DeviceBindingNotPossibleState).reason,
+          DeviceBindingNotPossibleReason.alreadyTriedInLast5Minutes);
+    });
   });
 }

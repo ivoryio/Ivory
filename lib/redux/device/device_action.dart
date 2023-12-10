@@ -1,8 +1,20 @@
+import 'package:solarisdemo/models/device_binding.dart';
+
 import '../../models/device.dart';
 
 class DeviceBindingLoadingEventAction {}
 
 class DeviceBindingFailedEventAction {}
+
+class DeviceBindingNotPossibleEventAction {
+  final DeviceBindingNotPossibleReason reason;
+
+  DeviceBindingNotPossibleEventAction({
+    required this.reason,
+  });
+}
+
+class DeviceBindingCheckIfPossibleCommandAction {}
 
 class CreateDeviceBindingCommandAction {}
 
@@ -30,11 +42,14 @@ class BoundDevicesFetchedEventAction {
   final List<Device> boundDevices;
   final Device thisDevice;
   final bool isBoundDevice;
+  final bool? isBindingPossible;
 
   BoundDevicesFetchedEventAction({
     required this.boundDevices,
     required this.thisDevice,
     required this.isBoundDevice,
+    this.isBindingPossible,
+
   });
 }
 

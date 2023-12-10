@@ -31,7 +31,7 @@ class SettingsDevicePairingInitialScreen extends StatelessWidget {
             },
           ),
           StoreConnector<AppState, DeviceBindingViewModel>(
-            onDidChange: ((previousViewModel, viewModel) {
+            onWillChange: ((previousViewModel, viewModel) {
               if (previousViewModel is DeviceBindingLoadingViewModel && viewModel is DeviceBindingCreatedViewModel) {
                 Navigator.pushNamed(context, SettingsDevicePairingVerifyPairingScreen.routeName);
               }

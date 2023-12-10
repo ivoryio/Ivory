@@ -44,10 +44,25 @@ class _SettingsDevicePairingVerifyPairingScreenState extends State<SettingsDevic
             showBottomModal(
               context: context,
               isDismissible: false,
-              showCloseButton: false,
-              title: "Code is incorrect",
-              textWidget: const Text(
-                'Please try again binding your device, and make sure you enter the correct code.',
+              showCloseButton: true,
+              title: "Code was incorrect",
+              textWidget: RichText(
+                text: TextSpan(
+                  style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                  children: [
+                    const TextSpan(
+                      text:
+                          'To ensure your account security, we\'ve temporarily restricted device pairing after an incorrect attempt. \n\n',
+                    ),
+                    const TextSpan(
+                      text: 'Please ',
+                    ),
+                    TextSpan(
+                      text: 'try again in approximately 5 minutes.',
+                      style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
+                    ),
+                  ],
+                ),
               ),
               content: Column(
                 children: [
@@ -55,7 +70,7 @@ class _SettingsDevicePairingVerifyPairingScreenState extends State<SettingsDevic
                   SizedBox(
                     width: double.infinity,
                     child: PrimaryButton(
-                      text: 'Try again',
+                      text: 'Try again later',
                       onPressed: () async {
                         StoreProvider.of<AppState>(context).dispatch(DeleteIncompleteDeviceBindingCommandAction());
                         Navigator.popUntil(context, ModalRoute.withName(SettingsDevicePairingScreen.routeName));
@@ -83,8 +98,42 @@ class _SettingsDevicePairingVerifyPairingScreenState extends State<SettingsDevic
                 backButtonEnabled: viewModel is! DeviceBindingLoadingViewModel,
                 padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
                 onBackButtonPressed: () {
-                  Navigator.popUntil(context, ModalRoute.withName(SettingsDevicePairingScreen.routeName));
-                  StoreProvider.of<AppState>(context).dispatch(DeleteIncompleteDeviceBindingCommandAction());
+                  showBottomModal(
+                    context: context,
+                    isDismissible: false,
+                    showCloseButton: true,
+                    title: 'Are you sure you want to leave device pairing?',
+                    textWidget:
+                        const Text('You will need to wait for 5 minutes to pair your device again if you leave now.'),
+                    content: Column(
+                      children: [
+                        const SizedBox(height: 24),
+                        SizedBox(
+                          width: double.infinity,
+                          child: SecondaryButton(
+                            text: 'Cancel',
+                            onPressed: () async {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        SizedBox(
+                          width: double.infinity,
+                          child: Button(
+                            color: ClientConfig.getColorScheme().error,
+                            text: 'Yes, leave',
+                            onPressed: () async {
+                              Navigator.popUntil(context, ModalRoute.withName(SettingsDevicePairingScreen.routeName));
+                              StoreProvider.of<AppState>(context).dispatch(
+                                DeleteIncompleteDeviceBindingCommandAction(),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
                 },
               ),
               Expanded(
@@ -143,8 +192,8 @@ class _SettingsDevicePairingVerifyPairingScreenState extends State<SettingsDevic
                           isLoading: viewModel is DeviceBindingLoadingViewModel,
                           onPressed: _isInputComplete
                               ? () {
-                                  StoreProvider.of<AppState>(context)
-                                      .dispatch(VerifyDeviceBindingSignatureCommandAction(
+                                  StoreProvider.of<AppState>(context).dispatch(
+                                    VerifyDeviceBindingSignatureCommandAction(
                                       tan: _tanInputController.text,
                                     ),
                                   );

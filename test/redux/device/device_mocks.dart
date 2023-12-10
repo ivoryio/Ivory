@@ -1,5 +1,7 @@
+import 'package:local_auth/local_auth.dart';
 import 'package:mockito/mockito.dart';
 import 'package:pointycastle/pointycastle.dart';
+import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_binding_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_fingerprint_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
@@ -19,6 +21,47 @@ class MockUser extends Mock implements User {
 class MockPerson extends Mock implements Person {}
 
 class MockPersonAccount extends Mock implements PersonAccount {}
+
+class MockLocalAutentication extends Mock implements LocalAuthentication {
+  final mockLocal = MockLocalAutentication();
+
+  Future<bool> authenticateWithBiometrics({required String message}) async {
+    return true;
+  }
+}
+
+final devices = [
+  Device(deviceId: 'deviceId', deviceName: 'deviceName'),
+  Device(deviceId: 'deviceId2', deviceName: 'deviceName2'),
+];
+
+class FakeBiometricsService extends BiometricsService {
+  FakeBiometricsService() : super();
+
+  @override
+  Future<bool> authenticateWithBiometrics({required String message}) async {
+    return true;
+  }
+
+  @override
+  Future<bool> biometricsAvailable() async {
+    return true;
+  }
+}
+
+class FakeFailingBiometricsService extends BiometricsService {
+  FakeFailingBiometricsService() : super();
+
+  @override
+  Future<bool> authenticateWithBiometrics({required String message}) async {
+    return false;
+  }
+
+  @override
+  Future<bool> biometricsAvailable() async {
+    return false;
+  }
+}
 
 class FakeDeviceBindingService extends DeviceBindingService {
   @override
@@ -143,6 +186,11 @@ class FakeDeviceService extends DeviceService {
   }
 
   @override
+  Future<int?> getDevicePairingTriedAt() async {
+    return DateTime.now().subtract(const Duration(minutes: 10)).millisecondsSinceEpoch;
+  }
+
+  @override
   String? generateSignature({required String privateKey, required String stringToSign}) {
     return 'signature';
   }
@@ -173,6 +221,71 @@ class FakeDeviceService extends DeviceService {
       n: 'n',
       e: 'e',
     );
+  }
+
+  @override
+  Future<void> saveCredentialsInCache(String email, String password) async {
+    return;
+  }
+
+  @override
+  Future<void> saveConsentIdInCache(String consentId) async {
+    return;
+  }
+}
+
+class FakeFailingDeviceService extends DeviceService {
+  @override
+  Future<String?> getConsentId() async {
+    return null;
+  }
+
+  @override
+  Future<String?> getDeviceId() async {
+    return null;
+  }
+
+  @override
+  Future<void> saveKeyPairIntoCache({
+    required DeviceKeyPairs keyPair,
+    bool restricted = false,
+  }) async {
+    return;
+  }
+
+  @override
+  Future<void> saveDeviceIdIntoCache(String deviceId) async {
+    return;
+  }
+
+  @override
+  Future<DeviceKeyPairs?> getDeviceKeyPairs({bool restricted = false}) async {
+    return null;
+  }
+
+  @override
+  Future<int?> getDevicePairingTriedAt() async {
+    return DateTime.now().millisecondsSinceEpoch;
+  }
+
+  @override
+  String? generateSignature({required String privateKey, required String stringToSign}) {
+    return null;
+  }
+
+  @override
+  DeviceKeyPairs? generateECKey() {
+    return null;
+  }
+
+  @override
+  RSAKeyPair? generateRSAKey() {
+    return null;
+  }
+
+  @override
+  Jwk? convertRSAPublicKeyToJWK({required RSAPublicKey rsaPublicKey}) {
+    return null;
   }
 
   @override

@@ -134,63 +134,6 @@ class SettingsPairedDeviceDetailsScreen extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: 4.0),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          'Brand',
-                                          style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                                        ),
-                                        Text(
-                                          'IOS',
-                                          style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: 4.0),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          'Version',
-                                          style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                                        ),
-                                        Text(
-                                          '15.4.1',
-                                          style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: 4.0),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          'Last login',
-                                          style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                                        ),
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.end,
-                                          children: [
-                                            Text(
-                                              '16:21, 13 Apr 2022',
-                                              style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
-                                            ),
-                                            Text(
-                                              'near Berlin, Germany',
-                                              style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  )
                                 ],
                               ),
                             ),

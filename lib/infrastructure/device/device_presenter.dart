@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:solarisdemo/models/device_binding.dart';
 import 'package:solarisdemo/redux/device/device_state.dart';
 
 import '../../models/device.dart';
@@ -16,6 +17,7 @@ class DeviceBindingPresenter {
         devices: deviceBindingState.devices,
         thisDevice: deviceBindingState.thisDevice,
         isBoundDevice: deviceBindingState.isBoundDevice,
+        isBindingPossible: deviceBindingState.isBindingPossible,
       );
     } else if (deviceBindingState is DeviceBindingDeletedState) {
       return DeviceBindingDeletedViewModel();
@@ -29,6 +31,10 @@ class DeviceBindingPresenter {
       return DeviceBindingVerificationErrorViewModel(
         deviceId: deviceBindingState.deviceId,
       );
+    } else if (deviceBindingState is DeviceBindingNotPossibleState) {
+      return DeviceBindingNotPossibleViewModel(
+        reason: deviceBindingState.reason,
+      );
     }
 
     return DeviceBindingInitialViewModel();
@@ -40,14 +46,26 @@ class DeviceBindingViewModel extends Equatable {
   final Device? thisDevice;
   final String? deviceId;
   final bool? isBoundDevice;
+  final bool? isBindingPossible;
+  final DeviceBindingNotPossibleReason? reason;
 
-  const DeviceBindingViewModel({this.devices, this.thisDevice, this.deviceId, this.isBoundDevice});
+  const DeviceBindingViewModel(
+      {this.devices, this.thisDevice, this.deviceId, this.isBoundDevice, this.reason, this.isBindingPossible});
 
   @override
-  List<Object?> get props => [devices, thisDevice, deviceId, isBoundDevice];
+  List<Object?> get props => [devices, thisDevice, deviceId, isBoundDevice, reason, isBindingPossible];
 }
 
 class DeviceBindingInitialViewModel extends DeviceBindingViewModel {}
+
+class DeviceBindingNotPossibleViewModel extends DeviceBindingViewModel {
+  const DeviceBindingNotPossibleViewModel({
+    required DeviceBindingNotPossibleReason reason,
+  }) : super(reason: reason);
+
+  @override
+  List<Object?> get props => [reason];
+}
 
 class DeviceBindingLoadingViewModel extends DeviceBindingViewModel {}
 
@@ -78,10 +96,15 @@ class DeviceBindingFetchedViewModel extends DeviceBindingViewModel {
     required List<Device> devices,
     required Device thisDevice,
     required bool isBoundDevice,
-  }) : super(devices: devices, thisDevice: thisDevice, isBoundDevice: isBoundDevice);
+    required bool isBindingPossible,
+  }) : super(
+            devices: devices,
+            thisDevice: thisDevice,
+            isBoundDevice: isBoundDevice,
+            isBindingPossible: isBindingPossible);
 
   @override
-  List<Object?> get props => [devices, thisDevice, isBoundDevice];
+  List<Object?> get props => [devices, thisDevice, isBoundDevice, isBindingPossible];
 }
 
 class DeviceBindingDeletedViewModel extends DeviceBindingViewModel {}
