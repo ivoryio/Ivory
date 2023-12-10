@@ -21,3 +21,18 @@ class WithCardholderNameState extends OnboardingCardConfigurationState {
   @override
   List<Object?> get props => [cardholderName, isLoading];
 }
+
+class WithCardInfoState extends OnboardingCardConfigurationState {
+  final String cardholderName;
+  final String maskedPAN;
+  final String expiryDate;
+
+  WithCardInfoState({
+    required this.cardholderName,
+    required this.maskedPAN,
+    required this.expiryDate,
+  });
+
+  @override
+  List<Object?> get props => [cardholderName, maskedPAN, expiryDate];
+}

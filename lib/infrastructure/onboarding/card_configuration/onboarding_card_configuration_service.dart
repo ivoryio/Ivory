@@ -25,6 +25,21 @@ class OnboardingCardConfigurationService extends ApiService {
       return OnboardingCardConfigurationErrorResponse();
     }
   }
+
+  Future<OnboardingCardConfigurationResponse> onboardingGetCardInfo({required User user}) async {
+    this.user = user;
+    try {
+      final response = await get("/account/cards");
+      final cardData =  (response.data as List).first["representation"];
+      return GetCardInfoSuccessResponse(
+          cardholderName: cardData["line_1"],
+          maskedPAN: cardData["masked_pan"],
+          expiryDate: cardData["formatted_expiration_date"],
+      );
+    } catch (e) {
+      return OnboardingCardConfigurationErrorResponse();
+    }
+  }
 }
 
 abstract class OnboardingCardConfigurationResponse extends Equatable {
@@ -39,6 +54,21 @@ class GetCardholderNameSuccessResponse extends OnboardingCardConfigurationRespon
 
   @override
   List<Object?> get props => [cardholderName];
+}
+
+class GetCardInfoSuccessResponse extends OnboardingCardConfigurationResponse {
+  final String cardholderName;
+  final String maskedPAN;
+  final String expiryDate;
+
+  GetCardInfoSuccessResponse({
+    required this.cardholderName,
+    required this.maskedPAN,
+    required this.expiryDate,
+  });
+
+  @override
+  List<Object?> get props => [cardholderName,maskedPAN,expiryDate];
 }
 
 class OnboardingCardConfigurationSuccessResponse extends OnboardingCardConfigurationResponse {}

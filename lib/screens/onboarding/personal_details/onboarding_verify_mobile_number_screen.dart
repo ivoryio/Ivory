@@ -28,6 +28,7 @@ class OnboardingVerifyMobileNumberScreen extends StatefulWidget {
 class _OnboardingVerifyMobileNumberScreenState extends State<OnboardingVerifyMobileNumberScreen> {
   late TextEditingController _tanInputController;
   late ContinueButtonController _continueButtonController;
+  late FocusNode _tanInputFocusNode;
   final GlobalKey<TanInputState> _tanInputKey = GlobalKey<TanInputState>();
   final Duration _countdownDuration = const Duration(seconds: 60);
   Duration _currentDuration = const Duration();
@@ -37,15 +38,19 @@ class _OnboardingVerifyMobileNumberScreenState extends State<OnboardingVerifyMob
   void initState() {
     _tanInputController = TextEditingController();
     _continueButtonController = ContinueButtonController();
+    _tanInputFocusNode = FocusNode();
     super.initState();
   }
 
-  void updateInputComplete(bool isComplete) {
-    if (isComplete) {
-      _continueButtonController.setEnabled();
-    } else {
-      _continueButtonController.setDisabled();
-    }
+  void onTanChanged(String tan) {
+    setState(() {
+      if (tan.length == 6) {
+        _tanInputFocusNode.unfocus();
+        _continueButtonController.setEnabled();
+      } else {
+        _continueButtonController.setDisabled();
+      }
+    });
   }
 
   void startTimer() {
@@ -67,6 +72,7 @@ class _OnboardingVerifyMobileNumberScreenState extends State<OnboardingVerifyMob
   @override
   void dispose() {
     _tanInputController.dispose();
+    _tanInputFocusNode.dispose();
     _countdownTimer?.cancel();
     super.dispose();
   }
@@ -105,7 +111,6 @@ class _OnboardingVerifyMobileNumberScreenState extends State<OnboardingVerifyMob
                         ),
                       );
                       _continueButtonController.setDisabled();
-                      _tanInputKey.currentState!.clear();
                       _tanInputController.clear();
                       startTimer();
                       Navigator.pop(context);
@@ -169,18 +174,12 @@ class _OnboardingVerifyMobileNumberScreenState extends State<OnboardingVerifyMob
                         height: 24,
                       ),
                       TanInput(
+                        isLoading: _continueButtonController.isLoading,
                         key: _tanInputKey,
-                        hintText: '#',
                         length: 6,
-                        onCompleted: (String tan) {
-                          if (tan.length == 6) {
-                            _continueButtonController.setEnabled();
-                          } else {
-                            _continueButtonController.setDisabled();
-                          }
-                        },
+                        onChanged: (String tan) => onTanChanged(tan),
                         controller: _tanInputController,
-                        updateInputComplete: updateInputComplete,
+                        focusNode: _tanInputFocusNode,
                       ),
                       const SizedBox(height: 24),
                       const Spacer(),
@@ -195,7 +194,6 @@ class _OnboardingVerifyMobileNumberScreenState extends State<OnboardingVerifyMob
                                       mobileNumber: viewModel.attributes.mobileNumber!,
                                     ),
                                   );
-                                  _tanInputKey.currentState!.clear();
                                   _tanInputController.clear();
                                   startTimer();
                                 },

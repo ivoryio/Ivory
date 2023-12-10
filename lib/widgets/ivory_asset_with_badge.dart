@@ -10,6 +10,8 @@ class IvoryAssetWithBadge extends StatelessWidget {
   const IvoryAssetWithBadge(
       {super.key, required this.childWidget, required this.isSuccess, required this.childPosition});
 
+  static const double badgeSize = 64;
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -39,8 +41,8 @@ class IvoryAssetWithBadge extends StatelessWidget {
   Widget _badgeContent() {
     if (isSuccess) {
       return Container(
-        height: 64,
-        width: 64,
+        height: IvoryAssetWithBadge.badgeSize,
+        width: IvoryAssetWithBadge.badgeSize,
         decoration: BoxDecoration(shape: BoxShape.circle, color: ClientConfig.getCustomColors().success),
         child: Icon(
           Icons.check_rounded,
@@ -50,8 +52,8 @@ class IvoryAssetWithBadge extends StatelessWidget {
       );
     } else {
       return Container(
-        height: 64,
-        width: 64,
+        height: IvoryAssetWithBadge.badgeSize,
+        width: IvoryAssetWithBadge.badgeSize,
         decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.red),
         child: Icon(
           Icons.close_rounded,

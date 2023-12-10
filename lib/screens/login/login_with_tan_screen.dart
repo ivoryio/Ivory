@@ -25,11 +25,23 @@ class LoginWithTanScreen extends StatefulWidget {
 
 class _LoginWithTanScreenState extends State<LoginWithTanScreen> {
   final TextEditingController _tanInputController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
   bool _isInputComplete = false;
 
   void updateInputComplete(bool isComplete) {
     setState(() {
       _isInputComplete = isComplete;
+    });
+  }
+  
+  void onTanChanged(String tan) {
+    setState(() {
+      if (_tanInputController.text.length == 6) {
+        _focusNode.unfocus();
+        updateInputComplete(true);
+      } else {
+        updateInputComplete(false);
+      }
     });
   }
 
@@ -51,7 +63,7 @@ class _LoginWithTanScreenState extends State<LoginWithTanScreen> {
                 actions: const [
                   AppbarLogo(),
                 ],
-                padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,      
+                padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
               ),
               Expanded(
                 child: Padding(
@@ -84,17 +96,11 @@ class _LoginWithTanScreenState extends State<LoginWithTanScreen> {
                         height: 24,
                       ),
                       TanInput(
-                        hintText: '#',
-                        length: 6,
-                        onCompleted: (String tan) {
-                          setState(() {
-                            if (tan.length == 6) {
-                              updateInputComplete(true);
-                            }
-                          });
-                        },
                         controller: _tanInputController,
-                        updateInputComplete: updateInputComplete,
+                        focusNode: _focusNode,
+                        isLoading: viewModel is AuthLoadingViewModel,
+                        length: 6,
+                        onChanged: (tan) => onTanChanged(tan),
                       ),
                       const SizedBox(height: 24),
                       const Spacer(),

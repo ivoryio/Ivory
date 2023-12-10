@@ -28,6 +28,7 @@ class _OnboardingOrderCardScreenState extends State<OnboardingOrderCardScreen> {
   Widget build(BuildContext context) {
     return ScreenScaffold(body:
     Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
        AppToolbar(
          richTextTitle: StepRichTextTitle(step: 1, totalSteps: 3),
@@ -37,7 +38,7 @@ class _OnboardingOrderCardScreenState extends State<OnboardingOrderCardScreen> {
        AnimatedLinearProgressIndicator.step(current: 1, totalSteps: 3),
        const SizedBox(height: 16,),
        Padding(
-         padding: ClientConfig.getCustomClientUiSettings().defaultScreenVerticalPadding,
+         padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
          child: Text(
            "Order your Ivory credit card",
            style: ClientConfig.getTextStyleScheme().heading2,
