@@ -35,13 +35,14 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
   final ContinueButtonController _continueButtonController = ContinueButtonController();
   final Duration _stepTime = const Duration(minutes: 4, seconds: 59);
   Duration _countdownTimer = const Duration(seconds: 59);
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
     _continueButtonController.setDisabled();
 
-    _startTimer();
+    // _startTimer();
 
     _tanController.addListener(_validToContinue);
   }
@@ -49,7 +50,7 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
   void _startTimer() {
     const oneSec = Duration(seconds: 1);
 
-    Timer.periodic(oneSec, (Timer timer) {
+    _timer = Timer.periodic(oneSec, (Timer timer) {
       if (!mounted) {
         timer.cancel();
         return;
@@ -77,13 +78,14 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
   void dispose() {
     _tanController.dispose();
     _focusNode.dispose();
-
+    _timer?.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     log('OnboardingSignWithTanScreen.build');
+    log('TIMER VALUE ===> $_timer');
     return StoreConnector<AppState, OnboardingIdentityVerificationViewModel>(
       converter: (store) => OnboardingIdentityVerificationPresenter.present(
         identityVerificationState: store.state.onboardingIdentityVerificationState,
@@ -105,14 +107,11 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
                 PrimaryButton(
                   text: "Try again with new TAN",
                   onPressed: () {
-                    Navigator.pop(context);
                     _tanController.clear();
                     setState(() {
                       _countdownTimer = const Duration(seconds: 59);
                     });
-
-                    // _countdownTimer = const Duration(seconds: 59);
-                    // _startTimer();
+                    Navigator.pop(context);
 
                     StoreProvider.of<AppState>(context).dispatch(AuthorizeIdentificationSigningCommandAction());
                   },
@@ -217,38 +216,16 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
                         onChanged: (tan) {},
                       ),
                       const Spacer(),
-                      // Container(
-                      //   width: double.infinity,
-                      //   height: 48,
-                      //   alignment: Alignment.center,
-                      //   child: (_countdownTimer.inSeconds > 0)
-                      //       ? Text('Request new code in 0:${_countdownTimer.inSeconds.toString().padLeft(2, '0')}',
-                      //           style: ClientConfig.getTextStyleScheme()
-                      //               .labelMedium
-                      //               .copyWith(color: ClientConfig.getCustomColors().neutral500))
-                      //       : Text.rich(TextSpan(
-                      //           text: 'Request new code',
-                      //           style: ClientConfig.getTextStyleScheme()
-                      //               .labelMedium
-                      //               .copyWith(color: ClientConfig.getColorScheme().secondary),
-                      //           recognizer: TapGestureRecognizer()
-                      //             ..onTap = () {
-                      //               _tanController.clear();
-                      //               setState(() {
-                      //                 _countdownTimer = const Duration(seconds: 59);
-                      //               });
-                      //               // _startTimer();
-
-                      //               StoreProvider.of<AppState>(context)
-                      //                   .dispatch(AuthorizeIdentificationSigningCommandAction());
-                      //             })),
-                      // ),
-                      CountDownTimerBuilder(
-                        timeDuration: const Duration(seconds: 59),
-                        builder: (context, remainingTime, resetTimer) {
-                          if (remainingTime.inSeconds == 0) {
-                            return Text.rich(
-                              TextSpan(
+                      Container(
+                        width: double.infinity,
+                        height: 48,
+                        alignment: Alignment.center,
+                        child: (_countdownTimer.inSeconds > 0)
+                            ? Text('Request new code in 0:${_countdownTimer.inSeconds.toString().padLeft(2, '0')}',
+                                style: ClientConfig.getTextStyleScheme()
+                                    .labelMedium
+                                    .copyWith(color: ClientConfig.getCustomColors().neutral500))
+                            : Text.rich(TextSpan(
                                 text: 'Request new code',
                                 style: ClientConfig.getTextStyleScheme()
                                     .labelMedium
@@ -256,22 +233,14 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
                                     _tanController.clear();
-                                    resetTimer();
+                                    setState(() {
+                                      _countdownTimer = const Duration(seconds: 59);
+                                    });
+                                    _startTimer();
 
                                     StoreProvider.of<AppState>(context)
                                         .dispatch(AuthorizeIdentificationSigningCommandAction());
-                                  },
-                              ),
-                            );
-                          }
-
-                          return Text(
-                            'Request new code in 0:${remainingTime.inSeconds.toString().padLeft(2, '0')}',
-                            style: ClientConfig.getTextStyleScheme()
-                                .labelMedium
-                                .copyWith(color: ClientConfig.getCustomColors().neutral500),
-                          );
-                        },
+                                  })),
                       ),
                       const SizedBox(height: 16),
                       ListenableBuilder(
@@ -297,52 +266,4 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
       },
     );
   }
-}
-
-class CountDownTimerBuilder extends StatefulWidget {
-  final Duration timeDuration;
-  final Widget Function(BuildContext context, Duration remainingTime, VoidCallback resetTimer) builder;
-
-  const CountDownTimerBuilder({super.key, required this.timeDuration, required this.builder});
-
-  @override
-  State<CountDownTimerBuilder> createState() => _CountDownTimerBuilderState();
-}
-
-class _CountDownTimerBuilderState extends State<CountDownTimerBuilder> {
-  late Timer _timer;
-  late Duration _remainingTime;
-
-  @override
-  void initState() {
-    super.initState();
-    _remainingTime = widget.timeDuration;
-    _timer = getTimer();
-  }
-
-  Timer getTimer() => Timer.periodic(const Duration(seconds: 1), (timer) {
-        if (_remainingTime.inSeconds == 0) {
-          timer.cancel();
-        } else {
-          setState(() {
-            _remainingTime = _remainingTime - const Duration(seconds: 1);
-          });
-        }
-      });
-
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
-  }
-
-  void reset() {
-    setState(() {
-      _remainingTime = widget.timeDuration;
-      _timer = getTimer();
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) => widget.builder(context, _remainingTime, reset);
 }
