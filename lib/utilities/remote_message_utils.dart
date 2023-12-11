@@ -4,16 +4,16 @@ import 'package:solarisdemo/models/notifications/notification_type.dart';
 
 class RemoteMessageUtils {
   static NotificationType getNotificationType(String type) {
-    switch (type) {
-      case "BASIC_NOTIFICATION":
-        return NotificationType.basicNotification;
-      case "REPAYMENT_REMINDER":
-        return NotificationType.repaymentReminder;
-      case "SCA_CHALLENGE":
-        return NotificationType.scaChallenge;
-      default:
-        throw Exception("Unsupported notification type");
-    }
+    final Map<String, NotificationType> notificationTypeMap = {
+      "BASIC_NOTIFICATION": NotificationType.basicNotification,
+      "REPAYMENT_REMINDER": NotificationType.repaymentReminder,
+      "SCA_CHALLENGE": NotificationType.scaChallenge,
+      "SCORING_SUCCESSFUL": NotificationType.scoringSuccessful,
+      "SCORING_FAILED": NotificationType.scoringFailed,
+      "SCORING_IN_PROGRESS": NotificationType.scoringInProgress,
+    };
+
+    return notificationTypeMap[type] ?? NotificationType.unknown;
   }
 
   static NotificationTransactionMessage getNotificationTransactionMessage(RemoteMessage message) {

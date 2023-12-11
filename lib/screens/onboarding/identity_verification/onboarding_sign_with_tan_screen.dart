@@ -8,6 +8,7 @@ import 'package:solarisdemo/infrastructure/onboarding/identity_verification/onbo
 import 'package:solarisdemo/models/onboarding/onboarding_identity_verification_error_type.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/onboarding/identity_verification/onboarding_identity_verification_action.dart';
+import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_scoring_waiting_screen.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
@@ -48,6 +49,11 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
     const oneSec = Duration(seconds: 1);
 
     Timer.periodic(oneSec, (Timer timer) {
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
+
       if (_countdownTimer.inSeconds == 0) {
         setState(() {
           timer.cancel();
@@ -72,7 +78,8 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
   Widget build(BuildContext context) {
     return StoreConnector<AppState, OnboardingIdentityVerificationViewModel>(
       converter: (store) => OnboardingIdentityVerificationPresenter.present(
-          identityVerificationState: store.state.onboardingIdentityVerificationState),
+        identityVerificationState: store.state.onboardingIdentityVerificationState,
+      ),
       onWillChange: (previousViewModel, newViewModel) {
         if (newViewModel.isLoading == true) {
           _continueButtonController.setLoading();
@@ -105,9 +112,8 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
         }
 
         if (newViewModel.isTanConfirmed == true) {
-          // Navigator.pushNamedAndRemoveUntil(context, NextScreen.routeName, (_) => false);
+          Navigator.pushNamedAndRemoveUntil(context, OnboardingScoringWaitingScreen.routeName, (_) => false);
         }
-        ;
       },
       distinct: true,
       builder: (context, viewModel) {

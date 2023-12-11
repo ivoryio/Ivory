@@ -24,6 +24,8 @@ import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_credit_limit_congratulations_screen.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_identity_verification_method_screen.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_reference_account_iban.dart';
+import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_scoring_rejected_screen.dart';
+import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_scoring_waiting_screen.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_sign_with_tan_screen.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_review_updated_contracts_screen.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_video_identification_not_available_screen.dart';
@@ -285,11 +287,13 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
             OnboardingSignWithTanScreen.routeName: (context) => const OnboardingSignWithTanScreen(),
             OnboardingReviewUpdatedContractsScreen.routeName: (context) =>
                 const OnboardingReviewUpdatedContractsScreen(),
+            OnboardingScoringWaitingScreen.routeName: (context) => const OnboardingScoringWaitingScreen(),
+            OnboardingCreditLimitCongratulationsScreen.routeName: (context) =>
+                const OnboardingCreditLimitCongratulationsScreen(),
+            OnboardingScoringRejectedScreen.routeName: (context) => const OnboardingScoringRejectedScreen(),
             //onboarding/card_configuration
             OnboardingOrderCardScreen.routeName: (context) => const OnboardingOrderCardScreen(),
             OnboardingConfigureCardScreen.routeName: (context) => const OnboardingConfigureCardScreen(),
-            OnboardingCreditLimitCongratulationsScreen.routeName: (context) =>
-                const OnboardingCreditLimitCongratulationsScreen(),
           },
         );
       }),

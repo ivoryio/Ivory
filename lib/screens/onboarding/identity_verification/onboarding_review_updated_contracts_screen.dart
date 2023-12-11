@@ -36,7 +36,7 @@ class OnboardingReviewUpdatedContractsScreen extends StatelessWidget {
       ),
       onWillChange: (previousViewModel, newViewModel) {
         if (newViewModel.isAuthorized == true) {
-          print("OnboardingReviewUpdatedContractsScreen: isAuthorized");
+          Navigator.pushNamedAndRemoveUntil(context, OnboardingSignWithTanScreen.routeName, (_) => false);
         }
       },
       builder: (context, viewModel) {
@@ -217,8 +217,6 @@ class OnboardingReviewUpdatedContractsScreen extends StatelessWidget {
               isLoading: identityVerificationViewModel.isLoading,
               onPressed: () {
                 StoreProvider.of<AppState>(context).dispatch(AuthorizeIdentificationSigningCommandAction());
-
-                Navigator.pushNamedAndRemoveUntil(context, OnboardingSignWithTanScreen.routeName, (_) => false);
               },
               text: "Continue to signing",
             ),
