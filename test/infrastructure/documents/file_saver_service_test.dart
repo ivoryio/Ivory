@@ -27,7 +27,6 @@ void main() {
       test('when the file is saved it should show a success notification', () async {
         // given
         final fileSaverService = FileSaverService();
-
         fileSaverService.flutterLocalNotificationsPlugin = mockFlutterLocalNotificationsPlugin;
 
         const name = 'document';
@@ -35,11 +34,16 @@ void main() {
         final bytes = Uint8List.fromList([0, 1, 2, 3, 4]);
 
         final mockFile = MockFile();
-        final fakeSavedFile = FakeFile();
 
-        when(mockFile.exists()).thenAnswer((_) => Future.value(false));
+        int existsCallCount = 0;
+        when(mockFile.exists()).thenAnswer((_) async {
+          // The first call is to check if file exists before writing
+          // The second call is to check if file exists after writing
+          existsCallCount++;
+          return existsCallCount > 1;
+        });
         when(mockFile.writeAsBytes(any, mode: anyNamed('mode'), flush: anyNamed('flush'))).thenAnswer(
-          (_) async => fakeSavedFile,
+          (_) async => mockFile,
         );
 
         IOOverrides.runZoned(
@@ -48,6 +52,11 @@ void main() {
             await fileSaverService.saveFile(name: name, ext: ext, bytes: bytes);
 
             // then
+            expect(
+              verify(mockFile.writeAsBytes(captureAny, mode: FileMode.write, flush: false)).captured.first,
+              equals(bytes),
+            );
+
             verify(mockFlutterLocalNotificationsPlugin.show(
               name.hashCode,
               'File downloaded',
@@ -133,7 +142,7 @@ void main() {
         await fileSaverService.saveFile(name: name, ext: ext, bytes: bytes);
 
         // then
-        final xfile = verify(
+        final xfiles = verify(
           mockShare.shareXFiles(
             captureAny,
             subject: anyNamed("subject"),
@@ -142,7 +151,7 @@ void main() {
           ),
         ).captured.first as List<XFile>;
 
-        expect(await xfile.firstOrNull?.readAsBytes(), equals(bytes));
+        expect(await xfiles.firstOrNull?.readAsBytes(), equals(bytes));
       });
     });
   });
