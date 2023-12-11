@@ -14,29 +14,23 @@ class Document extends Equatable {
   });
 
   String get title {
-    switch (documentType) {
-      case DocumentType.creditCardContract:
-        return "Credit Card Contract";
-      case DocumentType.creditCardSecci:
-        return "Credit Card SECCI";
-      case DocumentType.qesDocument:
-        return "Qualified Electronic Signature";
-      case DocumentType.unknown:
-        return "Unknown";
-    }
+    final titleMap = {
+      DocumentType.creditCardContract: "Credit Card Contract",
+      DocumentType.creditCardSecci: "Credit Card SECCI",
+      DocumentType.qesDocument: "Qualified Electronic Signature",
+    };
+
+    return titleMap[documentType] ?? "Unknown";
   }
 
   String get fileName {
-    switch (documentType) {
-      case DocumentType.creditCardContract:
-        return "credit_card_contract";
-      case DocumentType.creditCardSecci:
-        return "credit_card_secci";
-      case DocumentType.qesDocument:
-        return "qes_document";
-      case DocumentType.unknown:
-        return "unknown";
-    }
+    final fileNameMap = {
+      DocumentType.creditCardContract: "credit_card_contract_$id",
+      DocumentType.creditCardSecci: "credit_card_secci_$id",
+      DocumentType.qesDocument: "qes_document_$id",
+    };
+
+    return fileNameMap[documentType] ?? id;
   }
 
   @override
@@ -52,16 +46,12 @@ enum DocumentType {
 
 extension DocumentTypeParser on DocumentType {
   static DocumentType parse(String documentType) {
-    switch (documentType) {
-      case 'CREDIT_CARD_CONTRACT':
-        return DocumentType.creditCardContract;
-      case 'CREDIT_CARD_SECCI':
-        return DocumentType.creditCardSecci;
-      case 'QES_DOCUMENT':
-        return DocumentType.qesDocument;
+    final documentTypeMap = {
+      'CREDIT_CARD_CONTRACT': DocumentType.creditCardContract,
+      'CREDIT_CARD_SECCI': DocumentType.creditCardSecci,
+      'QES_DOCUMENT': DocumentType.qesDocument,
+    };
 
-      default:
-        return DocumentType.unknown;
-    }
+    return documentTypeMap[documentType] ?? DocumentType.unknown;
   }
 }
