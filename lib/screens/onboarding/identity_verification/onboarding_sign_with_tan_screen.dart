@@ -75,17 +75,22 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
   }
 
   @override
+  void dispose() {
+    _tanController.dispose();
+    _focusNode.dispose();
+
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, OnboardingIdentityVerificationViewModel>(
       converter: (store) => OnboardingIdentityVerificationPresenter.present(
         identityVerificationState: store.state.onboardingIdentityVerificationState,
       ),
       onWillChange: (previousViewModel, newViewModel) {
-        if (newViewModel.isLoading == true) {
-          _continueButtonController.setLoading();
-        }
-
-        if (newViewModel.errorType == OnboardingIdentityVerificationErrorType.invalidTan) {
+        if (previousViewModel?.errorType == null &&
+            newViewModel.errorType == OnboardingIdentityVerificationErrorType.invalidTan) {
           showBottomModal(
             context: context,
             showCloseButton: false,
@@ -100,9 +105,11 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
                 PrimaryButton(
                   text: "Try again with new TAN",
                   onPressed: () {
-                    StoreProvider.of<AppState>(context).dispatch(AuthorizeIdentificationSigningCommandAction());
+                    _tanController.clear();
+                    _startTimer();
+                    Navigator.pop(context);
 
-                    Navigator.pushReplacementNamed(context, OnboardingSignWithTanScreen.routeName);
+                    StoreProvider.of<AppState>(context).dispatch(AuthorizeIdentificationSigningCommandAction());
                   },
                 ),
                 const SizedBox(height: 16),
@@ -234,7 +241,7 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
                         listenable: _continueButtonController,
                         builder: (context, child) => PrimaryButton(
                             text: 'Confirm and sign',
-                            isLoading: _continueButtonController.isLoading,
+                            isLoading: viewModel.isLoading,
                             onPressed: _continueButtonController.isEnabled
                                 ? () {
                                     StoreProvider.of<AppState>(context)
