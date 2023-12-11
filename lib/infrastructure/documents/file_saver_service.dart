@@ -30,6 +30,23 @@ class FileSaverService {
           ),
         );
       } catch (error) {
+        if (error is FileAlreadyExistsException) {
+          log("File already exists");
+
+          flutterLocalNotificationsPlugin.show(
+            name.hashCode,
+            'File download failed',
+            'File already exists',
+            const NotificationDetails(
+              android: AndroidNotificationDetails(
+                highImportanceChannelId,
+                highImportanceChannelId,
+              ),
+            ),
+          );
+          return;
+        }
+
         flutterLocalNotificationsPlugin.show(
           name.hashCode,
           'File download failed',
@@ -55,10 +72,19 @@ Future<void> _writeLocalFile({required String name, required String extension, r
   final path = downloadDirectory.path;
   final fileObject = File('$path/$name.$extension');
 
+  if (await fileObject.exists()) {
+    log("File already exists");
+    throw FileAlreadyExistsException();
+  }
+
   final file = await fileObject.writeAsBytes(bytes);
 
   if (!(await file.exists())) {
     log("File not saved");
-    throw Exception('File not saved');
+    throw FileNotSavedException();
   }
 }
+
+class FileAlreadyExistsException implements Exception {}
+
+class FileNotSavedException implements Exception {}

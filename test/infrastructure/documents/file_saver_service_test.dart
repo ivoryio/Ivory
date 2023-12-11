@@ -1,70 +1,13 @@
-import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:solarisdemo/infrastructure/documents/file_saver_service.dart';
+import 'package:share_plus_platform_interface/share_plus_platform_interface.dart';
 
 import '../../setup/platform.dart';
-
-class MockFlutterLocalNotificationsPlugin extends Mock implements FlutterLocalNotificationsPlugin {
-  @override
-  Future<void> show(
-    int? id,
-    String? title,
-    String? body,
-    NotificationDetails? notificationDetails, {
-    String? payload,
-  }) async {
-    return super.noSuchMethod(
-      Invocation.method(#show, [id, title, body, notificationDetails, payload]),
-      returnValue: Future<void>.value(),
-      returnValueForMissingStub: Future<void>.value(),
-    );
-  }
-}
-
-class MockDirectory extends Mock implements Directory {
-  @override
-  bool existsSync() {
-    return super.noSuchMethod(
-      Invocation.method(#existsSync, []),
-      returnValue: true,
-      returnValueForMissingStub: true,
-    );
-  }
-
-  @override
-  String get path {
-    return super.noSuchMethod(
-      Invocation.getter(#path),
-      returnValue: '',
-      returnValueForMissingStub: '',
-    );
-  }
-}
-
-class MockFile extends Mock implements File {
-  @override
-  Future<File> writeAsBytes(List<int>? bytes, {FileMode? mode = FileMode.write, bool? flush = false}) {
-    return super.noSuchMethod(
-      Invocation.method(#writeAsBytes, [bytes], {#mode: mode, #flush: flush}),
-      returnValue: Future<File>.value(File('')),
-      returnValueForMissingStub: Future<File>.value(File('')),
-    );
-  }
-
-  @override
-  Future<bool> exists() {
-    return super.noSuchMethod(
-      Invocation.method(#exists, []),
-      returnValue: Future.value(true),
-      returnValueForMissingStub: Future.value(true),
-    );
-  }
-}
+import 'file_saver_service_mocks.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -76,46 +19,131 @@ void main() {
   });
 
   group('saveFile', () {
-    test('should write local file and show notification on Android', () async {
-      // given
-      setPlatformOverride(TargetPlatform.android);
+    group("android platform", () {
+      setUpAll(() {
+        setPlatformOverride(TargetPlatform.android);
+      });
 
-      final fileSaverService = FileSaverService();
-      fileSaverService.flutterLocalNotificationsPlugin = mockFlutterLocalNotificationsPlugin;
+      test('when the file is saved it should show a success notification', () async {
+        // given
+        final fileSaverService = FileSaverService();
 
-      final mockDirectory = MockDirectory();
-      final mockFile = MockFile();
+        fileSaverService.flutterLocalNotificationsPlugin = mockFlutterLocalNotificationsPlugin;
 
-      when(mockDirectory.path).thenReturn('/storage/emulated/0/Download');
-      when(mockDirectory.existsSync()).thenReturn(true);
-      when(mockFile.exists()).thenAnswer((_) async => true);
-      when(mockFile.writeAsBytes(any)).thenAnswer((_) async => mockFile);
+        const name = 'document';
+        const ext = 'pdf';
+        final bytes = Uint8List.fromList([0, 1, 2, 3, 4]);
 
-      const name = 'document';
-      const ext = 'pdf';
-      final bytes = Uint8List.fromList([0, 1, 2, 3, 4]);
+        final mockFile = MockFile();
+        final fakeSavedFile = FakeFile();
 
-      String? usedFilePath;
+        when(mockFile.exists()).thenAnswer((_) => Future.value(false));
+        when(mockFile.writeAsBytes(any, mode: anyNamed('mode'), flush: anyNamed('flush'))).thenAnswer(
+          (_) async => fakeSavedFile,
+        );
 
-      IOOverrides.runZoned(
-        () async {
-          // when
-          await fileSaverService.saveFile(name: name, ext: ext, bytes: bytes);
+        IOOverrides.runZoned(
+          () async {
+            // when
+            await fileSaverService.saveFile(name: name, ext: ext, bytes: bytes);
 
-          // then
-          verify(mockFlutterLocalNotificationsPlugin.show(
-            name.hashCode,
-            'File downloaded',
-            'File is in your Downloads folder',
-            any,
-          ));
-        },
-        createDirectory: (String path) => mockDirectory,
-        createFile: (String path) {
-          usedFilePath = path;
-          return mockFile;
-        },
-      );
+            // then
+            verify(mockFlutterLocalNotificationsPlugin.show(
+              name.hashCode,
+              'File downloaded',
+              'File is in your Downloads folder',
+              any,
+            ));
+          },
+          createDirectory: (String path) => FakeDownloadDirectory(),
+          createFile: (String path) => mockFile,
+        );
+      });
+
+      test("when the file can't be saved it should show a failure notification", () async {
+        // given
+        final fileSaverService = FileSaverService();
+        fileSaverService.flutterLocalNotificationsPlugin = mockFlutterLocalNotificationsPlugin;
+
+        const name = 'document';
+        const ext = 'pdf';
+        final bytes = Uint8List.fromList([0, 1, 2, 3, 4]);
+
+        IOOverrides.runZoned(
+          () async {
+            // when
+            await fileSaverService.saveFile(name: name, ext: ext, bytes: bytes);
+
+            // then
+            verify(mockFlutterLocalNotificationsPlugin.show(
+              name.hashCode,
+              'File download failed',
+              'Please try again',
+              any,
+            ));
+          },
+          createDirectory: (String path) => FakeDownloadDirectory(),
+          createFile: (String path) => FakeInexistentFile(),
+        );
+      });
+
+      test("when the file already exists it should show a failure notification", () async {
+        // given
+        final fileSaverService = FileSaverService();
+        fileSaverService.flutterLocalNotificationsPlugin = mockFlutterLocalNotificationsPlugin;
+
+        const name = 'document';
+        const ext = 'pdf';
+        final bytes = Uint8List.fromList([0, 1, 2, 3, 4]);
+
+        IOOverrides.runZoned(
+          () async {
+            // when
+            await fileSaverService.saveFile(name: name, ext: ext, bytes: bytes);
+
+            // then
+            verify(mockFlutterLocalNotificationsPlugin.show(
+              name.hashCode,
+              'File download failed',
+              'File already exists',
+              any,
+            ));
+          },
+          createDirectory: (String path) => FakeDownloadDirectory(),
+          createFile: (String path) => FakeFile(),
+        );
+      });
+    });
+    group("iOS platform", () {
+      setUpAll(() {
+        setPlatformOverride(TargetPlatform.iOS);
+      });
+
+      test("when the file is saved, it should use the share sheet", () async {
+        // given
+        final fileSaverService = FileSaverService();
+
+        final mockShare = MockSharePlatform();
+        SharePlatform.instance = mockShare;
+
+        const name = 'document';
+        const ext = 'pdf';
+        final bytes = Uint8List.fromList([0, 1, 2, 3, 4]);
+
+        await fileSaverService.saveFile(name: name, ext: ext, bytes: bytes);
+
+        // then
+        final xfile = verify(
+          mockShare.shareXFiles(
+            captureAny,
+            subject: anyNamed("subject"),
+            text: anyNamed("text"),
+            sharePositionOrigin: anyNamed("sharePositionOrigin"),
+          ),
+        ).captured.first as List<XFile>;
+
+        expect(await xfile.firstOrNull?.readAsBytes(), equals(bytes));
+      });
     });
   });
 }
