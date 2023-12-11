@@ -55,13 +55,9 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
       }
 
       if (_countdownTimer.inSeconds == 0) {
-        setState(() {
-          timer.cancel();
-        });
+        timer.cancel();
       } else {
-        setState(() {
-          _countdownTimer = _countdownTimer - oneSec;
-        });
+        _countdownTimer = _countdownTimer - oneSec;
       }
     });
   }
@@ -105,9 +101,10 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
                 PrimaryButton(
                   text: "Try again with new TAN",
                   onPressed: () {
-                    _tanController.clear();
-                    _startTimer();
                     Navigator.pop(context);
+                    _tanController.clear();
+                    _countdownTimer = const Duration(seconds: 59);
+                    _startTimer();
 
                     StoreProvider.of<AppState>(context).dispatch(AuthorizeIdentificationSigningCommandAction());
                   },
