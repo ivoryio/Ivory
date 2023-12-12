@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:solarisdemo/infrastructure/documents/documents_service.dart';
-import 'package:solarisdemo/infrastructure/file_saver_service.dart';
+import 'package:solarisdemo/infrastructure/documents/file_saver_service.dart';
 import 'package:solarisdemo/models/documents/document.dart';
 import 'package:solarisdemo/models/documents/documents_error_type.dart';
 import 'package:solarisdemo/models/user.dart';

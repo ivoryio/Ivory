@@ -76,6 +76,7 @@ dependencies:
   jwt_decoder: ^2.0.1
   webview_flutter: ^4.4.2
   pin_input_text_field: ^4.5.1
+  plugin_platform_interface: ^2.1.7
 
 dev_dependencies:
   flutter_test:

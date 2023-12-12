@@ -1,6 +1,6 @@
 import 'package:redux/redux.dart';
 import 'package:solarisdemo/infrastructure/documents/documents_service.dart';
-import 'package:solarisdemo/infrastructure/file_saver_service.dart';
+import 'package:solarisdemo/infrastructure/documents/file_saver_service.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/documents/documents_action.dart';
