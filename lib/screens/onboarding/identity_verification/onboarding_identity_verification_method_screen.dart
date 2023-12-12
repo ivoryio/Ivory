@@ -52,7 +52,7 @@ class _OnboardingIdentityVerificationMethodScreenState extends State<OnboardingI
                           title: "Bank Identification",
                           subtitle:
                               "We will verify your identity by triggering a transfer of 0.01€ from your reference bank account. Available anytime.",
-                          timeEstimation: "2 MIN",
+                          timeEstimation: "5 MIN",
                           value: "bankIdentification",
                         ),
                         RadioSelectItem(
