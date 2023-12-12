@@ -15,8 +15,8 @@ class Document extends Equatable {
 
   String get title {
     final titleMap = {
-      DocumentType.creditCardContract: "Credit Card Contract",
-      DocumentType.creditCardSecci: "Credit Card SECCI",
+      DocumentType.creditCardContract: "Credit Card Application",
+      DocumentType.creditCardSecci: "Standard European Consumer Credit Information (SECCI)",
       DocumentType.qesDocument: "Qualified Electronic Signature",
     };
 
