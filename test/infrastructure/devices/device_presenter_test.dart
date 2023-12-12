@@ -34,7 +34,7 @@ void main() {
 
   test("When fetching is successful it should return fetched", () {
     // given
-    final deviceBindingFetchedState = DeviceBindingFetchedState([device], device);
+    final deviceBindingFetchedState = DeviceBindingFetchedState([device], device, true, true);
 
     // when
     final viewModel = DeviceBindingPresenter.presentDeviceBinding(deviceBindingState: deviceBindingFetchedState);
@@ -68,7 +68,7 @@ void main() {
 
   test('When creating a device binding is successful it should return fetched', () {
     // given
-    final deviceBindingFetchedState = DeviceBindingFetchedState([device], device);
+    final deviceBindingFetchedState = DeviceBindingFetchedState([device], device, true, true);
 
     // when
     final viewModel = DeviceBindingPresenter.presentDeviceBinding(deviceBindingState: deviceBindingFetchedState);
@@ -102,7 +102,7 @@ void main() {
 
   test('When deleting a device binding is successful it should return fetched', () {
     // given
-    final deviceBindingFetchedState = DeviceBindingFetchedState([device], device);
+    final deviceBindingFetchedState = DeviceBindingFetchedState([device], device, false, true);
 
     // when
     final viewModel = DeviceBindingPresenter.presentDeviceBinding(deviceBindingState: deviceBindingFetchedState);

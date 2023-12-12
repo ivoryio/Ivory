@@ -238,6 +238,8 @@ void main() {
         authService: FakeAuthService(),
         deviceService: FakeDeviceServiceWithNoDeviceId(),
         deviceFingerprintService: FakeDeviceFingerprintService(),
+        deviceBindingService: FakeDeviceBindingService(),
+        deviceInfoService: FakeDeviceInfoService(),
         onboardingSignupService: FakeOnboardingSignupService(),
         pushNotificationService: FakeNotificationService(),
         initialState: createAppState(

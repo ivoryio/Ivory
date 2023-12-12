@@ -2,12 +2,15 @@ import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 import 'package:mockito/mockito.dart';
 import 'package:solarisdemo/infrastructure/auth/auth_service.dart';
 import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
+import 'package:solarisdemo/infrastructure/device/device_binding_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_fingerprint_service.dart';
 import 'package:solarisdemo/models/auth/auth_error_type.dart';
 import 'package:solarisdemo/models/auth/auth_user_group.dart';
 import 'package:solarisdemo/models/auth/device_fingerprint_error_type.dart';
+import 'package:solarisdemo/models/device.dart';
 import 'package:solarisdemo/models/device_activity.dart';
 import 'package:solarisdemo/models/user.dart';
+import 'package:solarisdemo/utilities/device_info/device_info.dart';
 
 import '../bank_card/bank_card_mocks.dart';
 
@@ -115,5 +118,30 @@ class FakeFailingBiometricsService extends BiometricsService {
   @override
   Future<bool> authenticateWithBiometrics({required String message}) async {
     return false;
+  }
+}
+
+class FakeDeviceBindingService extends DeviceBindingService {
+  @override
+  Future<DeviceBindingServiceResponse> getDeviceBinding({required User user}) async {
+    return GetDeviceBindingSuccessResponse(
+      devices: [
+        Device(
+          deviceId: 'deviceId',
+          deviceName: 'deviceName',
+        ),
+        Device(
+          deviceId: 'deviceId2',
+          deviceName: 'deviceName2',
+        ),
+      ],
+    );
+  }
+}
+
+class FakeDeviceInfoService extends DeviceInfoService {
+  @override
+  Future<String> getDeviceName() async {
+    return 'deviceName';
   }
 }

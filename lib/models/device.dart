@@ -199,6 +199,7 @@ class VerifyDeviceSignatureChallengeRequest {
 
 enum DeviceBindingServiceErrorType {
   unknown,
+  getDeviceBindingFailed,
   deviceBindingFailed,
   verifyDeviceBindingSignatureFailed,
   createRestrictedKeyFailed,
@@ -209,5 +210,13 @@ class Device {
   final String deviceId;
   final String deviceName;
 
-  Device({required this.deviceId, required this.deviceName});
+  Device({
+    required this.deviceId,
+    required this.deviceName,
+  });
+
+  factory Device.fromJson(Map<String, dynamic> json) => Device(
+        deviceId: json['id'],
+        deviceName: json['name'],
+      );
 }

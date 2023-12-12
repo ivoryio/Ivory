@@ -43,6 +43,16 @@ class DeviceService {
     }
   }
 
+  Future<void> saveDevicePairingTriedAt() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('device_pairing_tried_at', DateTime.now().millisecondsSinceEpoch);
+  }
+
+  Future<int?> getDevicePairingTriedAt() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getInt('device_pairing_tried_at');
+  }
+
   Future<String?> encryptPin({required String pinToEncrypt, required Map<String, dynamic> pinKey}) async {
     try {
       if (defaultTargetPlatform == TargetPlatform.android) {
