@@ -48,6 +48,12 @@ OnboardingIdentityVerificationState identityVerificationReducer(
       isLoading: true,
       creditLimit: state.creditLimit,
     );
+  } else if (action is FinalizeIdentificationSuccessEventAction) {
+    return OnboardingIdentityVerificationState(
+      isLoading: false,
+      isIdentificationSuccessful: true,
+      creditLimit: state.creditLimit,
+    );
   }
 
   return state;

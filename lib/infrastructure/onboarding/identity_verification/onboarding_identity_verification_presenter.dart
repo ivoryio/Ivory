@@ -18,6 +18,7 @@ class OnboardingIdentityVerificationPresenter {
       isTanConfirmed: identityVerificationState.isTanConfirmed,
       creditLimit: identityVerificationState.creditLimit,
       isScoringSuccessful: getScoringSuccessState(notificationState),
+      isIdentificationSuccessful: identityVerificationState.isIdentificationSuccessful,
     );
   }
 
@@ -41,6 +42,7 @@ class OnboardingIdentityVerificationViewModel extends Equatable {
   final bool? isTanConfirmed;
   final int? creditLimit;
   final bool? isScoringSuccessful;
+  final bool? isIdentificationSuccessful;
 
   const OnboardingIdentityVerificationViewModel({
     this.urlForIntegration,
@@ -51,6 +53,7 @@ class OnboardingIdentityVerificationViewModel extends Equatable {
     this.isTanConfirmed,
     this.creditLimit,
     this.isScoringSuccessful,
+    this.isIdentificationSuccessful,
   });
 
   @override
@@ -62,6 +65,7 @@ class OnboardingIdentityVerificationViewModel extends Equatable {
         isAuthorized,
         isTanConfirmed,
         creditLimit,
-        isScoringSuccessful
+        isScoringSuccessful,
+        isIdentificationSuccessful,
       ];
 }

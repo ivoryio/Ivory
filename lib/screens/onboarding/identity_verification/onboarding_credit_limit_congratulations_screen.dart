@@ -7,6 +7,7 @@ import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/onboarding/identity_verification/onboarding_identity_verification_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/onboarding/identity_verification/onboarding_identity_verification_action.dart';
+import 'package:solarisdemo/screens/onboarding/onboarding_stepper_screen.dart';
 import 'package:solarisdemo/utilities/ivory_color_mapper.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -33,9 +34,15 @@ class _OnboardingCreditLimitCongratulationsScreenState extends State<OnboardingC
     double halfBadgeSize = IvoryAssetWithBadge.badgeSize / 2;
 
     return StoreConnector<AppState, OnboardingIdentityVerificationViewModel>(
-      converter: (store) => OnboardingIdentityVerificationPresenter.present(
-          identityVerificationState: store.state.onboardingIdentityVerificationState),
       onInit: (store) => store.dispatch(GetCreditLimitCommandAction()),
+      converter: (store) => OnboardingIdentityVerificationPresenter.present(
+        identityVerificationState: store.state.onboardingIdentityVerificationState,
+      ),
+      onWillChange: (previousViewModel, newViewModel) {
+        if (newViewModel.isIdentificationSuccessful == true) {
+          Navigator.pushNamedAndRemoveUntil(context, OnboardingStepperScreen.routeName, (route) => false);
+        }
+      },
       distinct: true,
       builder: (context, viewModel) {
         return ScreenScaffold(

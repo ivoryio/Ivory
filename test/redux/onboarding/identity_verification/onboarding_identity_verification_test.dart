@@ -349,7 +349,7 @@ void main() {
     });
   });
 
-  group('credit limit', () {
+  group('fetching credit limit', () {
     const mockCreditLimit = 1000;
 
     test('when credit limit was ordered it should display loading state', () async {
@@ -400,7 +400,10 @@ void main() {
       expect(creditLimitState.isLoading, false);
       expect(creditLimitState.creditLimit, mockCreditLimit ~/ 100);
     });
+  });
 
+  group("finalize identification", () {
+    const mockCreditLimit = 1000;
     test('when requesting the finalizing step, it should display the credit limit and loading state', () async {
       //given
       final store = createTestStore(
@@ -424,6 +427,37 @@ void main() {
       final creditLimitState = (await appState).onboardingIdentityVerificationState;
 
       expect(creditLimitState.isLoading, true);
+      expect(creditLimitState.creditLimit, mockCreditLimit);
+    });
+
+    test(
+        "when finalize is successful, the isIdentificationSuccessful should be true and creditLimit should not be null",
+        () async {
+      // given
+      final store = createTestStore(
+        onboardingIdentityVerificationService: FakeOnbordingCreditLimitService(),
+        initialState: createAppState(
+          authState: authInitializedState,
+          onboardingIdentityVerificationState: const OnboardingIdentityVerificationState(
+            isLoading: false,
+            creditLimit: mockCreditLimit,
+            isIdentificationSuccessful: null,
+          ),
+        ),
+      );
+
+      final appState = store.onChange.firstWhere((state) =>
+          state.onboardingIdentityVerificationState.isLoading == false &&
+          state.onboardingIdentityVerificationState.isIdentificationSuccessful == true);
+
+      // when
+      store.dispatch(FinalizeIdentificationCommandAction());
+
+      // then
+      final creditLimitState = (await appState).onboardingIdentityVerificationState;
+
+      expect(creditLimitState.isLoading, false);
+      expect(creditLimitState.isIdentificationSuccessful, true);
       expect(creditLimitState.creditLimit, mockCreditLimit);
     });
   });
