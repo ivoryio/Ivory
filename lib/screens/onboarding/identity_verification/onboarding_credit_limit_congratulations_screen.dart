@@ -7,6 +7,7 @@ import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/onboarding/identity_verification/onboarding_identity_verification_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/onboarding/identity_verification/onboarding_identity_verification_action.dart';
+import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_identity_verification_error_screen.dart';
 import 'package:solarisdemo/screens/onboarding/onboarding_stepper_screen.dart';
 import 'package:solarisdemo/utilities/ivory_color_mapper.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
@@ -41,6 +42,12 @@ class _OnboardingCreditLimitCongratulationsScreenState extends State<OnboardingC
       onWillChange: (previousViewModel, newViewModel) {
         if (newViewModel.isIdentificationSuccessful == true) {
           Navigator.pushNamedAndRemoveUntil(context, OnboardingStepperScreen.routeName, (route) => false);
+        } else if (newViewModel.errorType != null) {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            OnboardingIdentityVerificationErrorScreen.routeName,
+            (route) => false,
+          );
         }
       },
       distinct: true,
