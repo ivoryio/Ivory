@@ -36,7 +36,7 @@ OnboardingIdentityVerificationState identityVerificationReducer(
   } else if (action is SignWithTanSuccessEventAction) {
     return const OnboardingIdentityVerificationState(
       isLoading: false,
-      isTanConfirmed: false,
+      isTanConfirmed: true,
     );
   } else if (action is CreditLimitSuccessEventAction) {
     return OnboardingIdentityVerificationState(

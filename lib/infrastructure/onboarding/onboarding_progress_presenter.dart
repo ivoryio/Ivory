@@ -6,6 +6,7 @@ import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_reme
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_credit_limit_congratulations_screen.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_identity_verification_method_screen.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_reference_account_iban.dart';
+import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_scoring_waiting_screen.dart';
 import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_date_and_place_of_birth_screen.dart';
 import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_mobile_number_screen.dart';
 import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_verify_mobile_number_screen.dart';
@@ -20,6 +21,11 @@ class OnboardingProgressPresenter {
     required OnboardingProgressState onboardingProgressState,
   }) {
     if (onboardingProgressState is OnboardingProgressFetchedState) {
+      if (onboardingProgressState.step == OnboardingStep.scoringSuccessful) {
+        return RedirectToScoringSuccessViewModel();
+      } else if (onboardingProgressState.step == OnboardingStep.scoringFailed) {
+        return RedirectToScoringFailedViewModel();
+      }
       return OnboardingProgressFetchedViewModel(
         progress: _onboardingProgressMapper(onboardingProgressState.step),
       );
@@ -46,6 +52,10 @@ class OnboardingProgressFetchedViewModel extends OnboardingProgressViewModel {
   @override
   List<Object> get props => [progress];
 }
+
+class RedirectToScoringSuccessViewModel extends OnboardingProgressViewModel {}
+
+class RedirectToScoringFailedViewModel extends OnboardingProgressViewModel {}
 
 class OnboardingProgressErrorViewModel extends OnboardingProgressViewModel {}
 
@@ -112,10 +122,20 @@ OnboardingProgress _onboardingProgressMapper(OnboardingStep step) {
       progressPercentage: 60,
       routeName: OnboardingReferenceAccountIbanScreen.routeName,
     ),
+    OnboardingStep.identificationContractsSigned: const OnboardingProgress(
+      activeStep: StepperItemType.identityVerification,
+      progressPercentage: 60,
+      routeName: OnboardingScoringWaitingScreen.routeName,
+    ),
     OnboardingStep.scoringSuccessful: const OnboardingProgress(
       activeStep: StepperItemType.identityVerification,
       progressPercentage: 60,
       routeName: OnboardingCreditLimitCongratulationsScreen.routeName,
+    ),
+    OnboardingStep.scoringFailed: const OnboardingProgress(
+      activeStep: StepperItemType.identityVerification,
+      progressPercentage: 60,
+      routeName: OnboardingScoringWaitingScreen.routeName,
     ),
     OnboardingStep.identificationFinished: const OnboardingProgress(
       activeStep: StepperItemType.cardConfiguration,
