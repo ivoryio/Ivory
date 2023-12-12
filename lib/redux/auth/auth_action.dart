@@ -1,5 +1,6 @@
 import 'package:solarisdemo/models/auth/auth_error_type.dart';
 import 'package:solarisdemo/models/auth/auth_type.dart';
+import 'package:solarisdemo/models/device.dart';
 import 'package:solarisdemo/models/user.dart';
 
 class InitUserAuthenticationCommandAction {
@@ -42,16 +43,19 @@ class CredentialsLoadedEventAction {
 class AuthenticationInitializedEventAction {
   final AuthType authType;
   final User cognitoUser;
+  final Device thisDevice;
+  final List<Device> boundDevices;
   AuthenticationInitializedEventAction({
     required this.cognitoUser,
     required this.authType,
+    required this.thisDevice,
+    required this.boundDevices,
   });
 }
 
 class AuthenticatedEventAction {
   final AuthType authType;
   final AuthenticatedUser authenticatedUser;
-
   AuthenticatedEventAction({
     required this.authenticatedUser,
     required this.authType,

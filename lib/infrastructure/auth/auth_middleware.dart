@@ -1,28 +1,35 @@
 import 'package:redux/redux.dart';
 import 'package:solarisdemo/infrastructure/auth/auth_service.dart';
 import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
+import 'package:solarisdemo/infrastructure/device/device_binding_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_fingerprint_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
 import 'package:solarisdemo/infrastructure/person/person_service.dart';
 import 'package:solarisdemo/models/auth/auth_error_type.dart';
 import 'package:solarisdemo/models/auth/auth_type.dart';
 import 'package:solarisdemo/models/auth/auth_user_group.dart';
+import 'package:solarisdemo/models/device.dart';
 import 'package:solarisdemo/models/device_activity.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/auth/auth_action.dart';
+import 'package:solarisdemo/utilities/device_info/device_info.dart';
 
 class AuthMiddleware extends MiddlewareClass<AppState> {
   final AuthService _authService;
   final DeviceService _deviceService;
+  final DeviceBindingService _deviceBindingService;
   final DeviceFingerprintService _deviceFingerprintService;
+  final DeviceInfoService _deviceInfoService;
   final PersonService _personService;
   final BiometricsService _biometricsService;
 
   AuthMiddleware(
     this._authService,
     this._deviceService,
+    this._deviceBindingService,
     this._deviceFingerprintService,
+    this._deviceInfoService,
     this._personService,
     this._biometricsService,
   );
@@ -73,7 +80,15 @@ class AuthMiddleware extends MiddlewareClass<AppState> {
       );
 
       if (loginResponse.user.userGroup == CognitoUserGroup.registering) {
-        store.dispatch(AuthenticationInitializedEventAction(cognitoUser: user, authType: AuthType.onboarding));
+        store.dispatch(AuthenticationInitializedEventAction(
+          cognitoUser: user,
+          authType: AuthType.onboarding,
+          boundDevices: List<Device>.empty(growable: true),
+          thisDevice: Device(
+            deviceId: '',
+            deviceName: await _deviceInfoService.getDeviceName(),
+          ),
+        ));
         return;
       }
 
@@ -119,18 +134,37 @@ class AuthMiddleware extends MiddlewareClass<AppState> {
         store.dispatch(AuthFailedEventAction(errorType: AuthErrorType.cantCreateActivity));
         return;
       }
-      final boundDeviceId = await _deviceService.getDeviceId();
-      if (boundDeviceId != '') {
-        store.dispatch(AuthenticationInitializedEventAction(
-          cognitoUser: user,
-          authType: AuthType.withBiometrics,
-        ));
-        return;
+
+      final getBoundDevicesResponse = await _deviceBindingService.getDeviceBinding(
+        user: user,
+      );
+
+      final cachedDeviceId = await _deviceService.getDeviceId();
+      Device? boundDevice;
+      List<Device> boundDevices = List<Device>.empty(growable: true);
+
+      if (cachedDeviceId != '') {
+        if (getBoundDevicesResponse is GetDeviceBindingSuccessResponse) {
+          boundDevices = getBoundDevicesResponse.devices;
+
+          for (final device in boundDevices) {
+            if (device.deviceId == cachedDeviceId) {
+              boundDevice = device;
+              break;
+            }
+          }
+        }
       }
 
       store.dispatch(AuthenticationInitializedEventAction(
         cognitoUser: user,
-        authType: AuthType.withTan,
+        authType: boundDevice != null ? AuthType.withBiometrics : AuthType.withTan,
+        thisDevice: boundDevice ??
+            Device(
+              deviceId: '',
+              deviceName: await _deviceInfoService.getDeviceName(),
+            ),
+        boundDevices: boundDevices,
       ));
     }
 

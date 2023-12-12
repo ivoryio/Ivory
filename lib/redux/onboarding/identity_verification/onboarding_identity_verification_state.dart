@@ -9,6 +9,7 @@ class OnboardingIdentityVerificationState extends Equatable {
   final OnboardingIdentityVerificationErrorType? errorType;
   final bool? isTanConfirmed;
   final bool? isAuthorized;
+  final int? creditLimit;
 
   const OnboardingIdentityVerificationState({
     this.urlForIntegration,
@@ -17,8 +18,10 @@ class OnboardingIdentityVerificationState extends Equatable {
     this.isAuthorized,
     this.errorType,
     this.isTanConfirmed,
+    this.creditLimit,
   });
 
   @override
-  List<Object?> get props => [urlForIntegration, isLoading, errorType, status, isAuthorized, isTanConfirmed];
+  List<Object?> get props =>
+      [urlForIntegration, isLoading, errorType, status, isAuthorized, isTanConfirmed, creditLimit];
 }

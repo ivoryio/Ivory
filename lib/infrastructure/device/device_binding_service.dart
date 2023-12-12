@@ -84,6 +84,25 @@ class DeviceBindingService extends ApiService {
           errorType: DeviceBindingServiceErrorType.deletingDeviceBindingFailed);
     }
   }
+
+  Future<DeviceBindingServiceResponse> getDeviceBinding({required User user}) async {
+    this.user = user;
+    try {
+      var data = await get(
+        'person/device',
+      );
+
+      List<Device> devices = (data as List).map((device) => Device.fromJson(device)).toList();
+
+      return GetDeviceBindingSuccessResponse(
+        devices: devices,
+      );
+    } catch (e) {
+      return const DeviceBindingServiceErrorResponse(
+        errorType: DeviceBindingServiceErrorType.getDeviceBindingFailed,
+      );
+    }
+  }
 }
 
 abstract class DeviceBindingServiceResponse extends Equatable {
@@ -104,6 +123,17 @@ class CreateDeviceBindingSuccessResponse extends DeviceBindingServiceResponse {
 
   @override
   List<Object> get props => [deviceId, deviceName];
+}
+
+class GetDeviceBindingSuccessResponse extends DeviceBindingServiceResponse {
+  final List<Device> devices;
+
+  const GetDeviceBindingSuccessResponse({
+    required this.devices,
+  });
+
+  @override
+  List<Object> get props => [devices];
 }
 
 class VerifyDeviceBindingSignatureSuccessResponse extends DeviceBindingServiceResponse {}

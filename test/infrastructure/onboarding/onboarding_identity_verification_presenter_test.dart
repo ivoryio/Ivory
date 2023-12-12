@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:solarisdemo/infrastructure/onboarding/identity_verification/onboarding_identity_verification_presenter.dart';
 import 'package:solarisdemo/models/onboarding/onboarding_identity_verification_error_type.dart';
+import 'package:solarisdemo/redux/notification/notification_state.dart';
 import 'package:solarisdemo/redux/onboarding/identity_verification/onboarding_identity_verification_state.dart';
 
 void main() {
@@ -150,6 +151,97 @@ void main() {
             isLoading: false,
             isTanConfirmed: true,
           ));
+    });
+
+    test("When notificationsState is null, the view model should contain isScoringSuccessful = null", () {
+      // given
+      const onboardingIdentityVerificationState = OnboardingIdentityVerificationState(
+        isLoading: false,
+      );
+
+      // when
+      final viewModel = OnboardingIdentityVerificationPresenter.present(
+        identityVerificationState: onboardingIdentityVerificationState,
+        notificationState: null,
+      );
+
+      // then
+      expect(
+        viewModel,
+        const OnboardingIdentityVerificationViewModel(
+          isLoading: false,
+          isScoringSuccessful: null,
+        ),
+      );
+    });
+
+    test(
+        "When notificationsState is NotificationScoringSuccessfulState, the view model should contain isScoringSuccessful = true",
+        () {
+      // given
+      const onboardingIdentityVerificationState = OnboardingIdentityVerificationState(
+        isLoading: false,
+      );
+
+      // when
+      final viewModel = OnboardingIdentityVerificationPresenter.present(
+        identityVerificationState: onboardingIdentityVerificationState,
+        notificationState: NotificationScoringSuccessfulState(),
+      );
+
+      // then
+      expect(
+        viewModel,
+        const OnboardingIdentityVerificationViewModel(
+          isLoading: false,
+          isScoringSuccessful: true,
+        ),
+      );
+    });
+
+    test(
+        "When notificationsState is NotificationScoringFailedState, the view model should contain isScoringSuccessful = false",
+        () {
+      // given
+      const onboardingIdentityVerificationState = OnboardingIdentityVerificationState(
+        isLoading: false,
+      );
+
+      // when
+      final viewModel = OnboardingIdentityVerificationPresenter.present(
+        identityVerificationState: onboardingIdentityVerificationState,
+        notificationState: NotificationScoringFailedState(),
+      );
+
+      // then
+      expect(
+        viewModel,
+        const OnboardingIdentityVerificationViewModel(
+          isLoading: false,
+          isScoringSuccessful: false,
+        ),
+      );
+    });
+  });
+
+  group('credit limit congratulations screen', () {
+    test('when fetching credit limit, should return to viewModel', () {
+      //given
+      const onboardingIdentityVerificationState = OnboardingIdentityVerificationState(
+        isLoading: false,
+        creditLimit: 1000,
+      );
+      //when
+      final viewModel = OnboardingIdentityVerificationPresenter.present(
+          identityVerificationState: onboardingIdentityVerificationState);
+      //then
+      expect(
+        viewModel,
+        const OnboardingIdentityVerificationViewModel(
+          isLoading: false,
+          creditLimit: 1000,
+        ),
+      );
     });
   });
 }

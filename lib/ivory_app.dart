@@ -21,8 +21,11 @@ import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_reme
 import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_taxId_screen.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_bank_verification_screen.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_contracts_confirm_screen.dart';
+import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_credit_limit_congratulations_screen.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_identity_verification_method_screen.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_reference_account_iban.dart';
+import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_scoring_rejected_screen.dart';
+import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_scoring_waiting_screen.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_sign_with_tan_screen.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_review_updated_contracts_screen.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_video_identification_not_available_screen.dart';
@@ -44,6 +47,7 @@ import 'package:solarisdemo/screens/onboarding/start/onboarding_usa_tax_payer_er
 import 'package:solarisdemo/screens/settings/app_settings/biometric_enabled_screen.dart';
 import 'package:solarisdemo/screens/settings/app_settings/biometric_needed_screen.dart';
 import 'package:solarisdemo/screens/onboarding/onboarding_stepper_screen.dart';
+import 'package:solarisdemo/screens/settings/device_pairing/settings_device_pairing_temporary_restriction_screen.dart';
 import 'package:solarisdemo/screens/wallet/card_activation/card_activation_apple_wallet.dart';
 import 'package:solarisdemo/screens/wallet/card_activation/card_activation_choose_pin.dart';
 import 'package:solarisdemo/screens/wallet/card_activation/card_activation_confirm_pin_screen.dart';
@@ -172,7 +176,8 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
             SettingsDevicePairingVerifyPairingScreen.routeName: (context) =>
                 const SettingsDevicePairingVerifyPairingScreen(),
             SettingsDevicePairingSuccessScreen.routeName: (context) => const SettingsDevicePairingSuccessScreen(),
-
+            SettingsDevicePairingTemporaryRestrictionScreen.routeName: (context) =>
+                const SettingsDevicePairingTemporaryRestrictionScreen(),
             //settings - app settings
             AppSettingsBiometricNeededScreen.routeName: (context) => const AppSettingsBiometricNeededScreen(),
             AppSettingsBiometricEnabledScreen.routeName: (context) => const AppSettingsBiometricEnabledScreen(),
@@ -284,6 +289,10 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
             OnboardingSignWithTanScreen.routeName: (context) => const OnboardingSignWithTanScreen(),
             OnboardingReviewUpdatedContractsScreen.routeName: (context) =>
                 const OnboardingReviewUpdatedContractsScreen(),
+            OnboardingScoringWaitingScreen.routeName: (context) => const OnboardingScoringWaitingScreen(),
+            OnboardingCreditLimitCongratulationsScreen.routeName: (context) =>
+                const OnboardingCreditLimitCongratulationsScreen(),
+            OnboardingScoringRejectedScreen.routeName: (context) => const OnboardingScoringRejectedScreen(),
             //onboarding/card_configuration
             OnboardingOrderCardScreen.routeName: (context) => const OnboardingOrderCardScreen(),
             OnboardingConfigureCardScreen.routeName: (context) => const OnboardingConfigureCardScreen(),

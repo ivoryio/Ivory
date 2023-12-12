@@ -8,4 +8,10 @@ class ReceivedTransactionApprovalNotificationEventAction {
   ReceivedTransactionApprovalNotificationEventAction({required this.user, required this.message});
 }
 
+class ReceivedScoringSuccessfulNotificationEventAction {}
+
+class ReceivedScoringFailedNotificationEventAction {}
+
+class ReceivedScoringInProgressNotificationEventAction {}
+
 class ResetNotificationCommandAction {}

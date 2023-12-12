@@ -304,7 +304,7 @@ void main() {
           authState: authInitializedState,
           onboardingIdentityVerificationState: const OnboardingIdentityVerificationState(
             isLoading: false,
-            isTanConfirmed: true,
+            isTanConfirmed: null,
           ),
         ),
       );
@@ -346,6 +346,85 @@ void main() {
       expect(signWithTanState.isLoading, false);
       expect(signWithTanState.errorType, OnboardingIdentityVerificationErrorType.unknown);
       expect(signWithTanState.isTanConfirmed, null);
+    });
+  });
+
+  group('credit limit', () {
+    const mockCreditLimit = 1000;
+
+    test('when credit limit was ordered it should display loading state', () async {
+      //given
+      final store = createTestStore(
+        onboardingIdentityVerificationService: FakeOnbordingCreditLimitService(),
+        initialState: createAppState(
+          authState: authInitializedState,
+          onboardingIdentityVerificationState: const OnboardingIdentityVerificationState(
+            isLoading: false,
+            creditLimit: null,
+          ),
+        ),
+      );
+
+      final appState =
+          store.onChange.firstWhere((state) => state.onboardingIdentityVerificationState.isLoading == true);
+      //when
+      store.dispatch(GetCreditLimitCommandAction());
+      //then
+      final creditLimitState = (await appState).onboardingIdentityVerificationState;
+
+      expect(creditLimitState.isLoading, true);
+      expect(creditLimitState.creditLimit, null);
+    });
+
+    test('when credit limit is successful fetched it should be displayed', () async {
+      //given
+      final store = createTestStore(
+        onboardingIdentityVerificationService: FakeOnbordingCreditLimitService(),
+        initialState: createAppState(
+          authState: authInitializedState,
+          onboardingIdentityVerificationState: const OnboardingIdentityVerificationState(
+            isLoading: false,
+            creditLimit: null,
+          ),
+        ),
+      );
+
+      final appState = store.onChange.firstWhere((state) =>
+          state.onboardingIdentityVerificationState.creditLimit != null &&
+          state.onboardingIdentityVerificationState.isLoading == false);
+      //when
+      store.dispatch(GetCreditLimitCommandAction());
+      //then
+      final creditLimitState = (await appState).onboardingIdentityVerificationState;
+
+      expect(creditLimitState.isLoading, false);
+      expect(creditLimitState.creditLimit, mockCreditLimit ~/ 100);
+    });
+
+    test('when requesting the finalizing step, it should display the credit limit and loading state', () async {
+      //given
+      final store = createTestStore(
+        onboardingIdentityVerificationService: FakeOnbordingCreditLimitService(),
+        initialState: createAppState(
+          authState: authInitializedState,
+          onboardingIdentityVerificationState: const OnboardingIdentityVerificationState(
+            isLoading: false,
+            creditLimit: mockCreditLimit,
+          ),
+        ),
+      );
+
+      final appState = store.onChange.firstWhere((state) =>
+          state.onboardingIdentityVerificationState.isLoading == true &&
+          state.onboardingIdentityVerificationState.creditLimit == mockCreditLimit);
+
+      //when
+      store.dispatch(FinalizeIdentificationCommandAction());
+      //then
+      final creditLimitState = (await appState).onboardingIdentityVerificationState;
+
+      expect(creditLimitState.isLoading, true);
+      expect(creditLimitState.creditLimit, mockCreditLimit);
     });
   });
 }

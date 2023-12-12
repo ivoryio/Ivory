@@ -43,6 +43,7 @@ class WelcomeScreen extends StatelessWidget {
                 newViewModel.email!.isNotEmpty &&
                 newViewModel.password!.isNotEmpty &&
                 newViewModel.deviceId!.isEmpty) {
+              print('1');
               Navigator.pushNamed(context, LoginScreen.routeName);
             }
             if (previousViewModel is AuthLoadingViewModel &&
@@ -50,6 +51,7 @@ class WelcomeScreen extends StatelessWidget {
                 newViewModel.email!.isNotEmpty &&
                 newViewModel.password!.isNotEmpty &&
                 newViewModel.deviceId!.isNotEmpty) {
+              print('2');
               StoreProvider.of<AppState>(context).dispatch(
                 InitUserAuthenticationCommandAction(
                   email: newViewModel.email!,

@@ -1,9 +1,12 @@
 import 'package:redux/redux.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_fingerprint_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_service.dart';
+import 'package:solarisdemo/models/device_binding.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/device/device_action.dart';
+import 'package:solarisdemo/redux/device/device_state.dart';
 import 'package:solarisdemo/utilities/device_info/device_info.dart';
 
 import '../../models/device.dart';
@@ -15,8 +18,15 @@ class DeviceBindingMiddleware extends MiddlewareClass<AppState> {
   final DeviceBindingService _deviceBindingService;
   final DeviceService _deviceService;
   final DeviceFingerprintService _deviceFingerprintService;
+  final BiometricsService _biometricsService;
 
-  DeviceBindingMiddleware(this._deviceBindingService, this._deviceService, this._deviceInfoService, this._deviceFingerprintService);
+  DeviceBindingMiddleware(
+    this._deviceBindingService,
+    this._deviceService,
+    this._deviceInfoService,
+    this._deviceFingerprintService,
+    this._biometricsService,
+  );
 
   @override
   call(Store<AppState> store, action, NextDispatcher next) async {
@@ -24,8 +34,39 @@ class DeviceBindingMiddleware extends MiddlewareClass<AppState> {
 
     final authState = store.state.authState;
 
+    if (action is DeviceBindingCheckIfPossibleCommandAction) {
+      final deviceBindingState = store.state.deviceBindingState as DeviceBindingFetchedState;
+
+      int? devicePairingTriedAt = await _deviceService.getDevicePairingTriedAt();
+      final alreadyTriedInLast5Minutes = devicePairingTriedAt != null &&
+          DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(devicePairingTriedAt)).inMinutes <= 5;
+
+      if (alreadyTriedInLast5Minutes) {
+        store.dispatch(
+            DeviceBindingNotPossibleEventAction(reason: DeviceBindingNotPossibleReason.alreadyTriedInLast5Minutes));
+        return;
+      }
+
+      final isBiometricsAvailable = await _biometricsService.biometricsAvailable();
+
+      if (!isBiometricsAvailable) {
+        store.dispatch(
+            DeviceBindingNotPossibleEventAction(reason: DeviceBindingNotPossibleReason.noBiometricsAvailable));
+        return;
+      }
+
+      store.dispatch(
+        BoundDevicesFetchedEventAction(
+          boundDevices: deviceBindingState.devices,
+          thisDevice: deviceBindingState.thisDevice,
+          isBoundDevice: deviceBindingState.isBoundDevice,
+          isBindingPossible: true,
+        ),
+      );
+    }
+
     if (action is CreateDeviceBindingCommandAction) {
-      if(authState is! AuthenticatedState) {
+      if (authState is! AuthenticatedState) {
         return;
       }
 
@@ -77,7 +118,7 @@ class DeviceBindingMiddleware extends MiddlewareClass<AppState> {
     }
 
     if (action is VerifyDeviceBindingSignatureCommandAction) {
-      if(authState is! AuthenticatedState) {
+      if (authState is! AuthenticatedState) {
         return;
       }
 
@@ -121,7 +162,7 @@ class DeviceBindingMiddleware extends MiddlewareClass<AppState> {
         signature: signature,
       );
       if (verifyDeviceBindingChallenegeResponse is DeviceBindingServiceErrorResponse) {
-        store.dispatch(DeviceBindingFailedEventAction());
+        store.dispatch(DeviceBindingChallengeVerificationFailedEventAction(deviceId));
         return null;
       }
 
@@ -174,26 +215,45 @@ class DeviceBindingMiddleware extends MiddlewareClass<AppState> {
 
     if (action is FetchBoundDevicesCommandAction) {
       store.dispatch(DeviceBindingLoadingEventAction());
-      final deviceName = await _deviceInfoService.getDeviceName();
-      final deviceId = await _deviceService.getDeviceId();
-      List<Device> devices = [];
-      if (deviceId != '') {
-        Device thisDevice = Device(
-          deviceId: deviceId!,
-          deviceName: deviceName,
+
+      if (authState is AuthenticatedState) {
+        final response = await _deviceBindingService.getDeviceBinding(
+          user: authState.authenticatedUser.cognito,
         );
-        devices.add(thisDevice);
-        store.dispatch(BoundDevicesFetchedEventAction(devices, thisDevice));
-      } else {
-        store.dispatch(BoundDevicesFetchedButEmptyEventAction(Device(
-          deviceId: '',
-          deviceName: deviceName,
-        )));
+
+        Device? boundDevice;
+        List<Device> boundDevices = List<Device>.empty(growable: true);
+
+        if (response is GetDeviceBindingSuccessResponse) {
+          final cachedDeviceId = await _deviceService.getDeviceId();
+          boundDevices = response.devices;
+
+          if (cachedDeviceId != '') {
+            for (final device in boundDevices) {
+              if (device.deviceId == cachedDeviceId) {
+                boundDevice = device;
+                break;
+              }
+            }
+          }
+        }
+
+        store.dispatch(
+          BoundDevicesFetchedEventAction(
+            boundDevices: boundDevices,
+            thisDevice: boundDevice ??
+                Device(
+                  deviceId: '',
+                  deviceName: await _deviceInfoService.getDeviceName(),
+                ),
+            isBoundDevice: boundDevice != null ? true : false,
+          ),
+        );
       }
     }
 
     if (action is DeleteBoundDeviceCommandAction) {
-      if(authState is! AuthenticatedState) {
+      if (authState is! AuthenticatedState) {
         return;
       }
 
@@ -221,13 +281,9 @@ class DeviceBindingMiddleware extends MiddlewareClass<AppState> {
       prefs.remove('restrictedKeyPair');
       prefs.remove('unrestrictedKeyPair');
 
-      final deviceName = await _deviceInfoService.getDeviceName();
+      _deviceService.saveDevicePairingTriedAt();
 
-      Device thisDevice = Device(
-        deviceId: '',
-        deviceName: deviceName,
-      );
-      store.dispatch(BoundDevicesFetchedButEmptyEventAction(thisDevice));
+      store.dispatch(FetchBoundDevicesCommandAction());
     }
   }
 }

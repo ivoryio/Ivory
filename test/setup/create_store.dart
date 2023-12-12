@@ -340,6 +340,16 @@ class NotImplementedDeviceBindingService extends DeviceBindingService {
   }) {
     throw UnimplementedError();
   }
+
+  @override
+  Future<DeviceBindingServiceResponse> getDeviceBinding({required User user}) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<DeviceBindingServiceResponse> deleteDeviceBinding({required User user, required String deviceId}) {
+    throw UnimplementedError();
+  }
 }
 
 class NotImplementedDeviceService extends DeviceService {
@@ -391,6 +401,16 @@ class MockLocalAutentication extends Mock implements LocalAuthentication {}
 
 class NotImplementedBiometricsService extends BiometricsService {
   NotImplementedBiometricsService() : super();
+
+  @override
+  Future<bool> authenticateWithBiometrics({required String message}) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> biometricsAvailable() async {
+    throw UnimplementedError();
+  }
 }
 
 class NotImplementedAccountSummaryService extends AccountSummaryService {

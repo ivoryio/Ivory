@@ -8,6 +8,7 @@ import 'package:solarisdemo/screens/settings/device_pairing/settings_device_pair
 import 'package:solarisdemo/screens/settings/device_pairing/settings_device_pairing_success_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
+import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/tan_input.dart';
 
@@ -50,6 +51,48 @@ class _SettingsDevicePairingVerifyPairingScreenState extends State<SettingsDevic
               viewModel is DeviceBindingChallengeVerifiedViewModel) {
             Navigator.pushNamed(context, SettingsDevicePairingSuccessScreen.routeName);
           }
+          if (previousViewModel is DeviceBindingLoadingViewModel &&
+              viewModel is DeviceBindingVerificationErrorViewModel) {
+            showBottomModal(
+              context: context,
+              isDismissible: false,
+              showCloseButton: true,
+              title: "Code was incorrect",
+              textWidget: RichText(
+                text: TextSpan(
+                  style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                  children: [
+                    const TextSpan(
+                      text:
+                          'To ensure your account security, we\'ve temporarily restricted device pairing after an incorrect attempt. \n\n',
+                    ),
+                    const TextSpan(
+                      text: 'Please ',
+                    ),
+                    TextSpan(
+                      text: 'try again in approximately 5 minutes.',
+                      style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
+                    ),
+                  ],
+                ),
+              ),
+              content: Column(
+                children: [
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    width: double.infinity,
+                    child: PrimaryButton(
+                      text: 'Try again later',
+                      onPressed: () async {
+                        StoreProvider.of<AppState>(context).dispatch(DeleteIncompleteDeviceBindingCommandAction());
+                        Navigator.popUntil(context, ModalRoute.withName(SettingsDevicePairingScreen.routeName));
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
         },
         converter: (store) => DeviceBindingPresenter.presentDeviceBinding(
           deviceBindingState: store.state.deviceBindingState,
@@ -67,8 +110,42 @@ class _SettingsDevicePairingVerifyPairingScreenState extends State<SettingsDevic
                 backButtonEnabled: viewModel is! DeviceBindingLoadingViewModel,
                 padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
                 onBackButtonPressed: () {
-                  Navigator.popUntil(context, ModalRoute.withName(SettingsDevicePairingScreen.routeName));
-                  StoreProvider.of<AppState>(context).dispatch(DeleteIncompleteDeviceBindingCommandAction());
+                  showBottomModal(
+                    context: context,
+                    isDismissible: false,
+                    showCloseButton: true,
+                    title: 'Are you sure you want to leave device pairing?',
+                    textWidget:
+                        const Text('You will need to wait for 5 minutes to pair your device again if you leave now.'),
+                    content: Column(
+                      children: [
+                        const SizedBox(height: 24),
+                        SizedBox(
+                          width: double.infinity,
+                          child: SecondaryButton(
+                            text: 'Cancel',
+                            onPressed: () async {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        SizedBox(
+                          width: double.infinity,
+                          child: Button(
+                            color: ClientConfig.getColorScheme().error,
+                            text: 'Yes, leave',
+                            onPressed: () async {
+                              Navigator.popUntil(context, ModalRoute.withName(SettingsDevicePairingScreen.routeName));
+                              StoreProvider.of<AppState>(context).dispatch(
+                                DeleteIncompleteDeviceBindingCommandAction(),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
                 },
               ),
               Expanded(

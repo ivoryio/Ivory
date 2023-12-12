@@ -36,4 +36,8 @@ static Future<bool> areBiometricsAvailable() async {
       return false;
     }
   }
+
+  Future<bool> biometricsAvailable() async {
+    return await areBiometricsAvailable();
+  }
 }
