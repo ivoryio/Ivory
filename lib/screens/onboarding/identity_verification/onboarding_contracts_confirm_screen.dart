@@ -36,7 +36,7 @@ class _OnboardingContractsConfirmScreenState extends State<OnboardingContractsCo
       onWillChange: (previousViewModel, newViewModel) {
         if (newViewModel is DocumentsConfirmedViewModel) {
           Navigator.pushNamedAndRemoveUntil(context, OnboardingReferenceAccountIbanScreen.routeName, (route) => false);
-        } else if (newViewModel is DocumentsConfirmErrorViewModel) {
+        } else if (newViewModel is DocumentsErrorViewModel || newViewModel is DocumentsConfirmErrorViewModel) {
           Navigator.pushNamedAndRemoveUntil(
             context,
             OnboardingIdentityVerificationErrorScreen.routeName,
