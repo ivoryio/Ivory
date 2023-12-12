@@ -10,6 +10,7 @@ import 'package:solarisdemo/navigator.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/screens/account/account_details_screen.dart';
 import 'package:solarisdemo/screens/available_balance/available_balance_screen.dart';
+import 'package:solarisdemo/screens/countdown_timer_screen.dart';
 import 'package:solarisdemo/screens/login/login_with_biometrics_screen.dart';
 import 'package:solarisdemo/screens/login/login_with_tan_screen.dart';
 import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_monthly_income_screen.dart';
@@ -147,7 +148,7 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
           ],
           debugShowCheckedModeBanner: false,
           navigatorKey: navigatorKey,
-          initialRoute: WelcomeScreen.routeName,
+          initialRoute: CountdownTimerScreen.routeName,
           routes: {
             // landing
             WelcomeScreen.routeName: (context) => const WelcomeScreen(),
@@ -296,6 +297,9 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
             //onboarding/card_configuration
             OnboardingOrderCardScreen.routeName: (context) => const OnboardingOrderCardScreen(),
             OnboardingConfigureCardScreen.routeName: (context) => const OnboardingConfigureCardScreen(),
+
+            // test
+            CountdownTimerScreen.routeName: (context) => const CountdownTimerScreen(),
           },
         );
       }),
