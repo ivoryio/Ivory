@@ -1,13 +1,10 @@
 import 'dart:async';
-import 'dart:developer';
-import 'dart:html';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/onboarding/identity_verification/onboarding_identity_verification_presenter.dart';
-import 'package:solarisdemo/ivory_app.dart';
 import 'package:solarisdemo/models/onboarding/onboarding_identity_verification_error_type.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/onboarding/identity_verification/onboarding_identity_verification_action.dart';
@@ -35,9 +32,10 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
   final TextEditingController _tanController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
   final ContinueButtonController _continueButtonController = ContinueButtonController();
-  final Duration _stepTime = const Duration(minutes: 0, seconds: 20);
+  final Duration _countdownProgress = const Duration(minutes: 4, seconds: 59);
   Duration _countdownTimer = const Duration(seconds: 59);
   Timer? _timer;
+  Key key = UniqueKey();
 
   @override
   void initState() {
@@ -55,6 +53,12 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
     } else {
       _continueButtonController.setDisabled();
     }
+  }
+
+  void restartCountdown() {
+    setState(() {
+      key = UniqueKey();
+    });
   }
 
   void _startTimer() {
@@ -90,9 +94,6 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
 
   @override
   Widget build(BuildContext context) {
-    log('OnboardingSignWithTanScreen.build');
-    log(IvoryApp.generalRouteObserver.routeStack.toString());
-
     return StoreConnector<AppState, OnboardingIdentityVerificationViewModel>(
       converter: (store) => OnboardingIdentityVerificationPresenter.present(
         identityVerificationState: store.state.onboardingIdentityVerificationState,
@@ -160,45 +161,41 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
                           SizedBox(
                             width: 70,
                             height: 70,
-                            child: ListenableBuilder(
-                              listenable: _continueButtonController,
-                              builder: (context, child) {
-                                return CircularCountdownProgress(
-                                  duration: _stepTime,
-                                  onCompleted: () {
-                                    showBottomModal(
-                                      context: context,
-                                      showCloseButton: false,
-                                      isDismissible: false,
-                                      title: 'Time has expired',
-                                      textWidget: Text(
-                                        'Please try again. After tapping the button below, we will send you a new code.',
-                                        style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                                      ),
-                                      content: Column(
-                                        children: [
-                                          const SizedBox(height: 24),
-                                          PrimaryButton(
-                                            text: "Try again with new TAN",
-                                            onPressed: () {
-                                              _tanController.clear();
-                                              setState(() {
-                                                _countdownTimer = const Duration(seconds: 59);
-                                              });
+                            child: CircularCountdownProgress(
+                              key: key,
+                              duration: _countdownProgress,
+                              onCompleted: () {
+                                showBottomModal(
+                                  context: context,
+                                  showCloseButton: false,
+                                  isDismissible: false,
+                                  title: 'Time has expired',
+                                  textWidget: Text(
+                                    'Please try again. After tapping the button below, we will send you a new code.',
+                                    style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                                  ),
+                                  content: Column(
+                                    children: [
+                                      const SizedBox(height: 24),
+                                      PrimaryButton(
+                                        text: "Try again with new TAN",
+                                        onPressed: () {
+                                          _tanController.clear();
+                                          setState(() {
+                                            _countdownTimer = const Duration(seconds: 59);
+                                          });
 
-                                              Navigator.pop(context);
+                                          restartCountdown();
 
-                                              StoreProvider.of<AppState>(context)
-                                                  .dispatch(AuthorizeIdentificationSigningCommandAction());
-                                              // Navigator.pushNamedAndRemoveUntil(
-                                              //     context, OnboardingSignWithTanScreen.routeName, (_) => false);
-                                            },
-                                          ),
-                                          const SizedBox(height: 16),
-                                        ],
+                                          Navigator.pop(context);
+
+                                          StoreProvider.of<AppState>(context)
+                                              .dispatch(AuthorizeIdentificationSigningCommandAction());
+                                        },
                                       ),
-                                    );
-                                  },
+                                      const SizedBox(height: 16),
+                                    ],
+                                  ),
                                 );
                               },
                             ),
@@ -244,7 +241,6 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
                                 style: ClientConfig.getTextStyleScheme()
                                     .labelMedium
                                     .copyWith(color: ClientConfig.getCustomColors().neutral500))
-                            // ? CountdownTimer(duration: _countdownTimer)
                             : Text.rich(TextSpan(
                                 text: 'Request new code',
                                 style: ClientConfig.getTextStyleScheme()
