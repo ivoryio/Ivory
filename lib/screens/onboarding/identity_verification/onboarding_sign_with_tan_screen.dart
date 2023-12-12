@@ -55,7 +55,7 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
     }
   }
 
-  void restartCountdown() {
+  void _restartCountdownProgress() {
     setState(() {
       key = UniqueKey();
     });
@@ -64,12 +64,12 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
   void _startTimer() {
     const oneSec = Duration(seconds: 1);
 
-    _timer = Timer.periodic(oneSec, (Timer timer) {
-      if (!mounted) {
-        _stopTimer();
-        return;
-      }
+    if (_timer != null) {
+      _stopTimer();
+      _timer = null;
+    }
 
+    _timer = Timer.periodic(oneSec, (Timer timer) {
       if (_countdownTimer.inSeconds == 0) {
         _stopTimer();
       } else {
@@ -185,7 +185,7 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
                                             _countdownTimer = const Duration(seconds: 59);
                                           });
 
-                                          restartCountdown();
+                                          _restartCountdownProgress();
 
                                           Navigator.pop(context);
 
