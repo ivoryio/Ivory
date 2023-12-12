@@ -15,8 +15,7 @@ class CircularCountdownProgress extends StatefulWidget {
   });
 
   @override
-  State<CircularCountdownProgress> createState() =>
-      _CircularCountdownProgressState();
+  State<CircularCountdownProgress> createState() => _CircularCountdownProgressState();
 }
 
 class _CircularCountdownProgressState extends State<CircularCountdownProgress> {
@@ -33,6 +32,15 @@ class _CircularCountdownProgressState extends State<CircularCountdownProgress> {
     _isRunning = false;
     _showValue = convertNumberToMinutesAndSeconds(widget.duration!);
     _handleTap();
+  }
+
+  @override
+  void didUpdateWidget(CircularCountdownProgress oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.duration != oldWidget.duration) {
+      _timer.cancel();
+      _startTimer();
+    }
   }
 
   void _startTimer() {
@@ -112,18 +120,18 @@ class _CircularCountdownProgressState extends State<CircularCountdownProgress> {
           child: Center(
             child: Text(
               _isRunning ? _showValue : '00:00',
-              style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: ClientConfig.getCustomColors().neutral900),
+              style: ClientConfig.getTextStyleScheme()
+                  .labelSmall
+                  .copyWith(color: ClientConfig.getCustomColors().neutral900),
             ),
           ),
         ),
         Positioned.fill(
           child: CircularProgressIndicator(
             strokeWidth: 7,
-            value: widget.duration!.inSeconds > 0
-                ? _remainingTime / widget.duration!.inSeconds
-                : 0,
+            value: widget.duration!.inSeconds > 0 ? _remainingTime / widget.duration!.inSeconds : 0,
             backgroundColor: ClientConfig.getCustomColors().neutral200,
-            valueColor: AlwaysStoppedAnimation<Color>( ClientConfig.getColorScheme().secondary),
+            valueColor: AlwaysStoppedAnimation<Color>(ClientConfig.getColorScheme().secondary),
           ),
         ),
       ],
