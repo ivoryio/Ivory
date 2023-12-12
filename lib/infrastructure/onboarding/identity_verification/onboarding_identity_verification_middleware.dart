@@ -40,7 +40,7 @@ class OnboardingIdentityVerificationMiddleware extends MiddlewareClass<AppState>
       store.dispatch(OnboardingIdentityVerificationLoadingEventAction());
 
       // needed because the bank ident status is not updated immediately after the bank ident is successful
-      await Future.delayed(const Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 3));
 
       final response = await _onboardingIdentityVerificationService.getSignupIdentificationInfo(
         user: authState.cognitoUser,
