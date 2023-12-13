@@ -42,6 +42,25 @@ class FakeOnbordingIdentityVerificationService extends OnbordingIdentityVerifica
   Future<IdentityVerificationServiceResponse> authorizeIdentification({required User user}) async {
     return AuthorizeIdentificationSuccessResponse();
   }
+
+  @override
+  Future<IdentityVerificationServiceResponse> signWithTan({required User user, required String tan}) async {
+    return SignWithTanSuccessResponse();
+  }
+
+  @override
+  Future<IdentityVerificationServiceResponse> getCreditLimit({
+    required User user,
+  }) async {
+    return const GetCreditLimitSuccessResponse(creditLimit: 1000);
+  }
+
+  @override
+  Future<IdentityVerificationServiceResponse> finalizeIdentification({
+    required User user,
+  }) async {
+    return FinalizeIdentificationSuccessResponse();
+  }
 }
 
 class FakeFailingOnbordingIdentityVerificationService extends OnbordingIdentityVerificationService {
@@ -66,23 +85,12 @@ class FakeFailingOnbordingIdentityVerificationService extends OnbordingIdentityV
   Future<IdentityVerificationServiceResponse> authorizeIdentification({required User user}) async {
     return const IdentityVerificationServiceErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
   }
-}
 
-class FakeOnbordingSignWithTanService extends OnbordingIdentityVerificationService {
-  @override
-  Future<IdentityVerificationServiceResponse> signWithTan({required User user, required String tan}) async {
-    return SignWithTanSuccessResponse();
-  }
-}
-
-class FakeFailingOnbordingSignWithTanService extends OnbordingIdentityVerificationService {
   @override
   Future<IdentityVerificationServiceResponse> signWithTan({required User user, required String tan}) async {
     return const IdentityVerificationServiceErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
   }
-}
 
-class FakeOnbordingCreditLimitService extends OnbordingIdentityVerificationService {
   @override
   Future<IdentityVerificationServiceResponse> getCreditLimit({
     required User user,
@@ -94,6 +102,6 @@ class FakeOnbordingCreditLimitService extends OnbordingIdentityVerificationServi
   Future<IdentityVerificationServiceResponse> finalizeIdentification({
     required User user,
   }) async {
-    return FinalizeIdentificationSuccessResponse();
+    return const IdentityVerificationServiceErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
   }
 }

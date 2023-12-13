@@ -1,4 +1,5 @@
 import 'package:badges/badges.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -7,6 +8,7 @@ import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/onboarding/identity_verification/onboarding_identity_verification_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/onboarding/identity_verification/onboarding_identity_verification_action.dart';
+import 'package:solarisdemo/screens/onboarding/onboarding_stepper_screen.dart';
 import 'package:solarisdemo/utilities/ivory_color_mapper.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -14,8 +16,10 @@ import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/circular_loading_indicator.dart';
 import 'package:solarisdemo/widgets/custom_builder.dart';
 import 'package:solarisdemo/widgets/ivory_asset_with_badge.dart';
+import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OnboardingCreditLimitCongratulationsScreen extends StatefulWidget {
   static const routeName = '/onboardingCreditLimitCongratsScreen';
@@ -33,9 +37,17 @@ class _OnboardingCreditLimitCongratulationsScreenState extends State<OnboardingC
     double halfBadgeSize = IvoryAssetWithBadge.badgeSize / 2;
 
     return StoreConnector<AppState, OnboardingIdentityVerificationViewModel>(
-      converter: (store) => OnboardingIdentityVerificationPresenter.present(
-          identityVerificationState: store.state.onboardingIdentityVerificationState),
       onInit: (store) => store.dispatch(GetCreditLimitCommandAction()),
+      converter: (store) => OnboardingIdentityVerificationPresenter.present(
+        identityVerificationState: store.state.onboardingIdentityVerificationState,
+      ),
+      onWillChange: (previousViewModel, newViewModel) {
+        if (newViewModel.isIdentificationSuccessful == true) {
+          Navigator.pushNamedAndRemoveUntil(context, OnboardingStepperScreen.routeName, (route) => false);
+        } else if (newViewModel.errorType != null) {
+          _showServerErrorBottomSheet(context);
+        }
+      },
       distinct: true,
       builder: (context, viewModel) {
         return ScreenScaffold(
@@ -154,6 +166,53 @@ class _OnboardingCreditLimitCongratulationsScreenState extends State<OnboardingC
           ),
         );
       },
+    );
+  }
+
+  void _showServerErrorBottomSheet(BuildContext context) {
+    showBottomModal(
+      context: context,
+      showCloseButton: false,
+      isDismissible: false,
+      title: 'Server error',
+      textWidget: RichText(
+        text: TextSpan(style: ClientConfig.getTextStyleScheme().bodyLargeRegular, children: [
+          const TextSpan(
+            text:
+                'We encountered an unexpected technical error. Please try again. If the issue persists, please contact our support team at ',
+          ),
+          TextSpan(
+              text: "+49 (0)123 456789",
+              style: ClientConfig.getTextStyleScheme()
+                  .bodyLargeRegularBold
+                  .copyWith(color: ClientConfig.getColorScheme().secondary),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () async {
+                  final telUri = Uri(
+                    scheme: 'tel',
+                    path: '+490123456789',
+                  );
+
+                  if (await canLaunchUrl(telUri)) {
+                    await launchUrl(telUri);
+                  }
+                }),
+          const TextSpan(text: '.')
+        ]),
+      ),
+      content: Column(
+        children: [
+          const SizedBox(height: 24),
+          PrimaryButton(
+            text: "Try again",
+            onPressed: () {
+              Navigator.pop(context);
+              StoreProvider.of<AppState>(context).dispatch(FinalizeIdentificationCommandAction());
+            },
+          ),
+          const SizedBox(height: 16),
+        ],
+      ),
     );
   }
 }
