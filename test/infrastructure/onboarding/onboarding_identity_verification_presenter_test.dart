@@ -243,5 +243,27 @@ void main() {
         ),
       );
     });
+
+    test("when state isIdentificationSuccessful is not null, should return to viewModel", () {
+      // given
+      const onboardingIdentityVerificationState = OnboardingIdentityVerificationState(
+        isLoading: false,
+        isIdentificationSuccessful: true,
+      );
+
+      // when
+      final viewModel = OnboardingIdentityVerificationPresenter.present(
+        identityVerificationState: onboardingIdentityVerificationState,
+      );
+
+      // then
+      expect(
+        viewModel,
+        const OnboardingIdentityVerificationViewModel(
+          isLoading: false,
+          isIdentificationSuccessful: true,
+        ),
+      );
+    });
   });
 }

@@ -158,32 +158,32 @@ class OnboardingStepper extends StatelessWidget {
       type: StepperItemType.signUp,
       title: 'Sign up',
       description: 'Fill in your title, name, email address and choose your password. It\'s that easy.',
-      timeEstimation: 2,
+      timeEstimation: "2 MIN",
     ),
     OnboardingStepperItem(
       type: StepperItemType.personalDetails,
       title: 'Personal details',
       description: 'We\'ll need a few personal details from you. Rest assured your data is in good hands with us.',
-      timeEstimation: 3,
+      timeEstimation: "3 MIN",
     ),
     OnboardingStepperItem(
       type: StepperItemType.financialDetails,
       title: 'Financial details',
       description:
           'Tailored to your financial needs, we\'ll gather essential information through a few simple questions.',
-      timeEstimation: 5,
+      timeEstimation: "5 MIN",
     ),
     OnboardingStepperItem(
       type: StepperItemType.identityVerification,
       title: 'Identity verification',
       description: 'Verify your identity quickly and easily with your preferred method.',
-      timeEstimation: 3,
+      timeEstimation: "5-15 MIN",
     ),
     OnboardingStepperItem(
       type: StepperItemType.cardConfiguration,
       title: 'Card configuration',
       description: 'Provide your reference account, select your repayment option and let\'s get you your credit card.',
-      timeEstimation: 1,
+      timeEstimation: "1 MIN",
     ),
   ];
 }
@@ -235,7 +235,7 @@ class OnboardingStepListTile extends StatelessWidget {
                 if (state == OnboardingStepState.inProgress) ...[
                   Row(
                     children: [
-                      Text('${item.timeEstimation} MIN', style: ClientConfig.getTextStyleScheme().labelCaps),
+                      Text(item.timeEstimation, style: ClientConfig.getTextStyleScheme().labelCaps),
                       const SizedBox(width: 8),
                       SvgPicture.asset('assets/icons/clock.svg', width: 16, height: 16),
                     ],
@@ -243,7 +243,7 @@ class OnboardingStepListTile extends StatelessWidget {
                 ] else if (state == OnboardingStepState.notStarted) ...[
                   Row(
                     children: [
-                      Text('${item.timeEstimation} MIN',
+                      Text(item.timeEstimation,
                           style: ClientConfig.getTextStyleScheme()
                               .labelCaps
                               .copyWith(color: ClientConfig.getCustomColors().neutral500)),
@@ -345,7 +345,7 @@ class OnboardingStepperItem {
   final StepperItemType type;
   final String title;
   final String description;
-  final int timeEstimation;
+  final String timeEstimation;
 
   const OnboardingStepperItem({
     required this.type,

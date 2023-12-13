@@ -5,6 +5,7 @@ import 'package:solarisdemo/infrastructure/documents/documents_presenter.dart';
 import 'package:solarisdemo/infrastructure/documents/documents_service.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/documents/documents_action.dart';
+import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_identity_verification_error_screen.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_reference_account_iban.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -35,6 +36,12 @@ class _OnboardingContractsConfirmScreenState extends State<OnboardingContractsCo
       onWillChange: (previousViewModel, newViewModel) {
         if (newViewModel is DocumentsConfirmedViewModel) {
           Navigator.pushNamedAndRemoveUntil(context, OnboardingReferenceAccountIbanScreen.routeName, (route) => false);
+        } else if (newViewModel is DocumentsErrorViewModel || newViewModel is DocumentsConfirmErrorViewModel) {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            OnboardingIdentityVerificationErrorScreen.routeName,
+            (route) => false,
+          );
         }
       },
       distinct: true,

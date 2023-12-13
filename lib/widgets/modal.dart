@@ -20,6 +20,7 @@ Future<dynamic> showBottomModal({
     backgroundColor: Colors.white,
     useSafeArea: useSafeArea,
     isDismissible: isDismissible,
+    enableDrag: isDismissible,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.only(
         topLeft: Radius.circular(24),

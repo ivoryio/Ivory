@@ -32,6 +32,7 @@ class OnboardingScoringWaitingScreen extends StatelessWidget {
           Navigator.pushNamedAndRemoveUntil(context, OnboardingScoringRejectedScreen.routeName, (route) => false);
         }
       },
+      distinct: true,
       builder: (context, viewModel) => ScreenScaffold(
         body: Column(
           children: [

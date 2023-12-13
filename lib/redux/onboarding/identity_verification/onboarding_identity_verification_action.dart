@@ -60,3 +60,9 @@ class FinalizeIdentificationCommandAction {}
 class FinalizeIdentificationLoadingEventAction {}
 
 class FinalizeIdentificationSuccessEventAction {}
+
+class FinalizeIdentificationErrorEventAction {
+  final OnboardingIdentityVerificationErrorType errorType;
+
+  FinalizeIdentificationErrorEventAction({required this.errorType});
+}
