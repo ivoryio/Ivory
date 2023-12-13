@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/onboarding/onboarding_progress_state.dart';
 import 'package:solarisdemo/screens/onboarding/card_configuration/onboarding_order_card.dart';
 import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_public_status_screen.dart';
@@ -19,6 +20,7 @@ enum StepperItemType { signUp, personalDetails, financialDetails, identityVerifi
 class OnboardingProgressPresenter {
   static OnboardingProgressViewModel presentOnboardingProgress({
     required OnboardingProgressState onboardingProgressState,
+    AuthState? authState,
   }) {
     if (onboardingProgressState is OnboardingProgressFetchedState) {
       if (onboardingProgressState.step == OnboardingStep.scoringSuccessful) {
@@ -29,7 +31,9 @@ class OnboardingProgressPresenter {
       return OnboardingProgressFetchedViewModel(
         progress: _onboardingProgressMapper(onboardingProgressState.step),
       );
-    } else if (onboardingProgressState is OnboardingProgressErrorState) {
+    } else if (onboardingProgressState is OnboardingFinalizedState && authState is AuthenticatedState) {
+      return RedirectToHomeViewModel();
+    } else if (onboardingProgressState is OnboardingProgressErrorState || authState is AuthErrorState) {
       return OnboardingProgressErrorViewModel();
     }
 
@@ -56,6 +60,8 @@ class OnboardingProgressFetchedViewModel extends OnboardingProgressViewModel {
 class RedirectToScoringSuccessViewModel extends OnboardingProgressViewModel {}
 
 class RedirectToScoringFailedViewModel extends OnboardingProgressViewModel {}
+
+class RedirectToHomeViewModel extends OnboardingProgressViewModel {}
 
 class OnboardingProgressErrorViewModel extends OnboardingProgressViewModel {}
 
