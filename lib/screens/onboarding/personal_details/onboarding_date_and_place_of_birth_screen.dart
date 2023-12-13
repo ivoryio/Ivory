@@ -37,15 +37,31 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
   final IvorySelectOptionController _selectCityController = IvorySelectOptionController(enabled: false);
   final IvorySelectOptionController _selectNationalityController = IvorySelectOptionController(loading: true);
   final ContinueButtonController _continueButtonController = ContinueButtonController();
-  final DateTime _maxDate = DateTime.now().subtract(const Duration(days: 365 * 18));
+  DateTime _maxDate = DateTime.now().subtract(const Duration(days: 365 * 18));
+  late int _leapYears;
 
   final _debouncer = Debouncer(seconds: 1);
 
   @override
   void initState() {
     super.initState();
+    _leapYears = _calculatePastLeapYears(DateTime.now().year);
+    _maxDate = _maxDate.subtract(Duration(days: _leapYears));
 
     _loadCountries();
+  }
+
+  int _calculatePastLeapYears(int currentYear, {int yearsAgo = 18}) {
+    int leapYears = 0;
+    int endYear = currentYear - yearsAgo;
+
+    for (int year = endYear; year <= currentYear; year++) {
+      if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)) {
+        leapYears++;
+      }
+    }
+
+    return leapYears;
   }
 
   void onChanged() {
@@ -66,8 +82,13 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
   }
 
   bool _isValidInputDate() {
-    return Validator.isValidDate(_dateOfBirthController.text,
-        pattern: textFieldDatePattern, maxYear: _maxDate.year, maxMonth: _maxDate.month, maxDay: _maxDate.day);
+    return Validator.isValidDate(
+      _dateOfBirthController.text,
+      pattern: textFieldDatePattern,
+      maxYear: _maxDate.year,
+      maxMonth: _maxDate.month,
+      maxDay: _maxDate.day,
+    );
   }
 
   @override
@@ -285,8 +306,10 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
                                     return;
                                   }
 
-                                  if (!Validator.isValidDate(_dateOfBirthController.text,
-                                      pattern: textFieldDatePattern)) {
+                                  if (!Validator.isValidDate(
+                                    _dateOfBirthController.text,
+                                    pattern: textFieldDatePattern,
+                                  )) {
                                     _dateOfBirthController.setErrorText("Invalid date of birth");
                                     return;
                                   }
