@@ -68,11 +68,11 @@ class _OnboardingTaxIdScreenState extends State<OnboardingTaxIdScreen> {
                   const SizedBox(height: 16),
                   IvoryTextField(
                     label: 'Tax ID number',
+                    placeholder: 'E.g. 489 543 712 07',
                     controller: _taxIdController,
                     inputFormatters: [InputFormatter.taxId(_taxIdController.text)],
                     inputType: TextFieldInputType.number,
                     keyboardType: TextInputType.number,
-                    placeholder: '489 543 712 07',
                   ),
                   const Spacer(),
                   StoreConnector<AppState, OnboardingFinancialDetailsViewModel>(

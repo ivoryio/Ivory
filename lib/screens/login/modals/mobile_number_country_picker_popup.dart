@@ -57,8 +57,8 @@ class _CountryPrefixPickerState extends State<CountryPrefixPicker> {
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: IvoryTextField(
               controller: _searchController,
-              label: "Search prefix or country...",
-              prefix: const Icon(Icons.search),
+              placeholder: 'Search prefix or country...',
+              suffix: Icon(Icons.search, color: ClientConfig.getCustomColors().neutral700),
             ),
           ),
           const SizedBox(height: 16),
@@ -166,4 +166,3 @@ class CountryPrefixItem {
     phoneNumberFormat: "+49(##) #######",
   );
 }
-
