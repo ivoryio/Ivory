@@ -101,7 +101,7 @@ class OnboardingIdentityVerificationMiddleware extends MiddlewareClass<AppState>
       if (response is FinalizeIdentificationSuccessResponse) {
         store.dispatch(FinalizeIdentificationSuccessEventAction());
       } else if (response is IdentityVerificationServiceErrorResponse) {
-        store.dispatch(OnboardingIdentityVerificationErrorEventAction(errorType: response.errorType));
+        store.dispatch(FinalizeIdentificationErrorEventAction(errorType: response.errorType));
       }
     }
   }

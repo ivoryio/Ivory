@@ -274,7 +274,7 @@ void main() {
     test('when tan was sent it should display loading state', () async {
       //given
       final store = createTestStore(
-        onboardingIdentityVerificationService: FakeOnbordingSignWithTanService(),
+        onboardingIdentityVerificationService: FakeOnbordingIdentityVerificationService(),
         initialState: createAppState(
           authState: authInitializedState,
           onboardingIdentityVerificationState: const OnboardingIdentityVerificationState(
@@ -299,7 +299,7 @@ void main() {
     test('when tan successful sent it should update with success', () async {
       //given
       final store = createTestStore(
-        onboardingIdentityVerificationService: FakeOnbordingSignWithTanService(),
+        onboardingIdentityVerificationService: FakeOnbordingIdentityVerificationService(),
         initialState: createAppState(
           authState: authInitializedState,
           onboardingIdentityVerificationState: const OnboardingIdentityVerificationState(
@@ -325,7 +325,7 @@ void main() {
     test('when tan unsuccessful sent it should update with error', () async {
       //given
       final store = createTestStore(
-        onboardingIdentityVerificationService: FakeFailingOnbordingSignWithTanService(),
+        onboardingIdentityVerificationService: FakeFailingOnbordingIdentityVerificationService(),
         initialState: createAppState(
           authState: authInitializedState,
           onboardingIdentityVerificationState: const OnboardingIdentityVerificationState(
@@ -355,7 +355,7 @@ void main() {
     test('when credit limit was ordered it should display loading state', () async {
       //given
       final store = createTestStore(
-        onboardingIdentityVerificationService: FakeOnbordingCreditLimitService(),
+        onboardingIdentityVerificationService: FakeOnbordingIdentityVerificationService(),
         initialState: createAppState(
           authState: authInitializedState,
           onboardingIdentityVerificationState: const OnboardingIdentityVerificationState(
@@ -379,7 +379,7 @@ void main() {
     test('when credit limit is successful fetched it should be displayed', () async {
       //given
       final store = createTestStore(
-        onboardingIdentityVerificationService: FakeOnbordingCreditLimitService(),
+        onboardingIdentityVerificationService: FakeOnbordingIdentityVerificationService(),
         initialState: createAppState(
           authState: authInitializedState,
           onboardingIdentityVerificationState: const OnboardingIdentityVerificationState(
@@ -407,7 +407,7 @@ void main() {
     test('when requesting the finalizing step, it should display the credit limit and loading state', () async {
       //given
       final store = createTestStore(
-        onboardingIdentityVerificationService: FakeOnbordingCreditLimitService(),
+        onboardingIdentityVerificationService: FakeOnbordingIdentityVerificationService(),
         initialState: createAppState(
           authState: authInitializedState,
           onboardingIdentityVerificationState: const OnboardingIdentityVerificationState(
@@ -435,7 +435,7 @@ void main() {
         () async {
       // given
       final store = createTestStore(
-        onboardingIdentityVerificationService: FakeOnbordingCreditLimitService(),
+        onboardingIdentityVerificationService: FakeOnbordingIdentityVerificationService(),
         initialState: createAppState(
           authState: authInitializedState,
           onboardingIdentityVerificationState: const OnboardingIdentityVerificationState(
@@ -459,6 +459,40 @@ void main() {
       expect(creditLimitState.isLoading, false);
       expect(creditLimitState.isIdentificationSuccessful, true);
       expect(creditLimitState.creditLimit, mockCreditLimit);
+    });
+
+    test(
+        "when finalize has failed, the errorType and creditLimit should not be null and isIdentificationSuccessful should be false",
+        () async {
+      // given
+      final store = createTestStore(
+        onboardingIdentityVerificationService: FakeFailingOnbordingIdentityVerificationService(),
+        initialState: createAppState(
+          authState: authInitializedState,
+          onboardingIdentityVerificationState: const OnboardingIdentityVerificationState(
+            isLoading: false,
+            creditLimit: mockCreditLimit,
+            isIdentificationSuccessful: null,
+          ),
+        ),
+      );
+
+      final appState = store.onChange.firstWhere((state) =>
+          state.onboardingIdentityVerificationState.isLoading == false &&
+          state.onboardingIdentityVerificationState.errorType != null &&
+          state.onboardingIdentityVerificationState.creditLimit != null &&
+          state.onboardingIdentityVerificationState.isIdentificationSuccessful == false);
+
+      // when
+      store.dispatch(FinalizeIdentificationCommandAction());
+
+      // then
+      final creditLimitState = (await appState).onboardingIdentityVerificationState;
+
+      expect(creditLimitState.isLoading, false);
+      expect(creditLimitState.errorType, OnboardingIdentityVerificationErrorType.unknown);
+      expect(creditLimitState.creditLimit, mockCreditLimit);
+      expect(creditLimitState.isIdentificationSuccessful, false);
     });
   });
 }
