@@ -9,6 +9,8 @@ abstract class OnboardingProgressState extends Equatable {
 
 class OnboardingProgressInitialLoadingState extends OnboardingProgressState {}
 
+class OnboardingFinalizedState extends OnboardingProgressState {}
+
 class OnboardingProgressFetchedState extends OnboardingProgressState {
   final OnboardingStep step;
 

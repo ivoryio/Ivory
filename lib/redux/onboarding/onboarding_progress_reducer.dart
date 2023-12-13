@@ -7,8 +7,10 @@ OnboardingProgressState onboardingProgressReducer(OnboardingProgressState curren
     return OnboardingProgressInitialLoadingState();
   } else if (action is OnboardingProgressFetchedEvendAction) {
     return OnboardingProgressFetchedState(step: action.step);
-  } else if (action is GetOnboardingProgressFailedEventAction) {
+  } else if (action is OnboardingProgressFailedEventAction) {
     return OnboardingProgressErrorState();
+  } else if (action is OnboardingFinalizedEventAction) {
+    return OnboardingFinalizedState();
   }
 
   return currentState;
