@@ -166,7 +166,7 @@ void main() {
       expect((await appState).onboardingProgressState, isA<OnboardingProgressErrorState>());
     });
 
-    test("When finalize onboarding is successful, the state should change to success", () async {
+    test("When finalize onboarding is successful, onboardingProgressState and authState should be success", () async {
       // given
       final store = createTestStore(
         onboardingService: FakeOnboardingService(),
@@ -181,12 +181,16 @@ void main() {
       final appState = store.onChange.firstWhere(
         (element) => element.onboardingProgressState is OnboardingFinalizedState,
       );
+      final authState = store.onChange.firstWhere(
+        (element) => element.authState is AuthenticatedState,
+      );
 
       // when
       store.dispatch(FinalizeOnboardingCommandAction());
 
       // then
       expect((await appState).onboardingProgressState, isA<OnboardingFinalizedState>());
+      expect((await authState).authState, isA<AuthenticatedState>());
     });
   });
 }
