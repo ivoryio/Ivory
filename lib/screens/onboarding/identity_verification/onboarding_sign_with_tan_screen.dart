@@ -32,8 +32,10 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
   final TextEditingController _tanController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
   final ContinueButtonController _continueButtonController = ContinueButtonController();
-  final Duration _stepTime = const Duration(minutes: 4, seconds: 59);
+  final Duration _countdownProgress = const Duration(minutes: 4, seconds: 59);
   Duration _countdownTimer = const Duration(seconds: 59);
+  Timer? _timer;
+  Key key = UniqueKey();
 
   @override
   void initState() {
@@ -45,19 +47,31 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
     _tanController.addListener(_validToContinue);
   }
 
+  void _validToContinue() {
+    if (_tanController.text.length == 6) {
+      _continueButtonController.setEnabled();
+    } else {
+      _continueButtonController.setDisabled();
+    }
+  }
+
+  void _restartCountdownProgress() {
+    setState(() {
+      key = UniqueKey();
+    });
+  }
+
   void _startTimer() {
     const oneSec = Duration(seconds: 1);
 
-    Timer.periodic(oneSec, (Timer timer) {
-      if (!mounted) {
-        timer.cancel();
-        return;
-      }
+    if (_timer != null) {
+      _stopTimer();
+      _timer = null;
+    }
 
+    _timer = Timer.periodic(oneSec, (Timer timer) {
       if (_countdownTimer.inSeconds == 0) {
-        setState(() {
-          timer.cancel();
-        });
+        _stopTimer();
       } else {
         setState(() {
           _countdownTimer = _countdownTimer - oneSec;
@@ -66,12 +80,16 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
     });
   }
 
-  void _validToContinue() {
-    if (_tanController.text.length == 6) {
-      _continueButtonController.setEnabled();
-    } else {
-      _continueButtonController.setDisabled();
-    }
+  void _stopTimer() {
+    _timer?.cancel();
+  }
+
+  @override
+  void dispose() {
+    _tanController.dispose();
+    _focusNode.dispose();
+    _timer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -81,11 +99,8 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
         identityVerificationState: store.state.onboardingIdentityVerificationState,
       ),
       onWillChange: (previousViewModel, newViewModel) {
-        if (newViewModel.isLoading == true) {
-          _continueButtonController.setLoading();
-        }
-
-        if (newViewModel.errorType == OnboardingIdentityVerificationErrorType.invalidTan) {
+        if (previousViewModel?.errorType == null &&
+            newViewModel.errorType == OnboardingIdentityVerificationErrorType.invalidTan) {
           showBottomModal(
             context: context,
             showCloseButton: false,
@@ -100,9 +115,13 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
                 PrimaryButton(
                   text: "Try again with new TAN",
                   onPressed: () {
-                    StoreProvider.of<AppState>(context).dispatch(AuthorizeIdentificationSigningCommandAction());
+                    _tanController.clear();
+                    setState(() {
+                      _countdownTimer = const Duration(seconds: 59);
+                    });
+                    Navigator.pop(context);
 
-                    Navigator.pushReplacementNamed(context, OnboardingSignWithTanScreen.routeName);
+                    StoreProvider.of<AppState>(context).dispatch(AuthorizeIdentificationSigningCommandAction());
                   },
                 ),
                 const SizedBox(height: 16),
@@ -143,11 +162,13 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
                             width: 70,
                             height: 70,
                             child: CircularCountdownProgress(
-                              duration: _stepTime,
+                              key: key,
+                              duration: _countdownProgress,
                               onCompleted: () {
                                 showBottomModal(
                                   context: context,
                                   showCloseButton: false,
+                                  isDismissible: false,
                                   title: 'Time has expired',
                                   textWidget: Text(
                                     'Please try again. After tapping the button below, we will send you a new code.',
@@ -159,11 +180,17 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
                                       PrimaryButton(
                                         text: "Try again with new TAN",
                                         onPressed: () {
+                                          _tanController.clear();
+                                          setState(() {
+                                            _countdownTimer = const Duration(seconds: 59);
+                                          });
+
+                                          _restartCountdownProgress();
+
+                                          Navigator.pop(context);
+
                                           StoreProvider.of<AppState>(context)
                                               .dispatch(AuthorizeIdentificationSigningCommandAction());
-
-                                          Navigator.pushReplacementNamed(
-                                              context, OnboardingSignWithTanScreen.routeName);
                                         },
                                       ),
                                       const SizedBox(height: 16),
@@ -222,7 +249,9 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
                                     _tanController.clear();
-                                    _countdownTimer = const Duration(seconds: 59);
+                                    setState(() {
+                                      _countdownTimer = const Duration(seconds: 59);
+                                    });
                                     _startTimer();
 
                                     StoreProvider.of<AppState>(context)
@@ -234,7 +263,7 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
                         listenable: _continueButtonController,
                         builder: (context, child) => PrimaryButton(
                             text: 'Confirm and sign',
-                            isLoading: _continueButtonController.isLoading,
+                            isLoading: viewModel.isLoading,
                             onPressed: _continueButtonController.isEnabled
                                 ? () {
                                     StoreProvider.of<AppState>(context)

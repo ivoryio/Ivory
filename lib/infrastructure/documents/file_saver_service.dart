@@ -7,8 +7,10 @@ import 'package:share_plus/share_plus.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
 
 class FileSaverService {
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
   Future<void> saveFile({required String name, String? ext, required Uint8List bytes, String? mimeType}) async {
-    if (Platform.isIOS) {
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
       // Open the share sheet. This has option to save to files
       final xFile = XFile.fromData(bytes, name: name, mimeType: mimeType);
       Share.shareXFiles([xFile]);
@@ -16,7 +18,7 @@ class FileSaverService {
       try {
         await _writeLocalFile(name: name, extension: ext!, bytes: bytes);
 
-        FlutterLocalNotificationsPlugin().show(
+        flutterLocalNotificationsPlugin.show(
           name.hashCode,
           'File downloaded',
           'File is in your Downloads folder',
@@ -28,7 +30,24 @@ class FileSaverService {
           ),
         );
       } catch (error) {
-        FlutterLocalNotificationsPlugin().show(
+        if (error is FileAlreadyExistsException) {
+          log("File already exists");
+
+          flutterLocalNotificationsPlugin.show(
+            name.hashCode,
+            'File download failed',
+            'File already exists',
+            const NotificationDetails(
+              android: AndroidNotificationDetails(
+                highImportanceChannelId,
+                highImportanceChannelId,
+              ),
+            ),
+          );
+          return;
+        }
+
+        flutterLocalNotificationsPlugin.show(
           name.hashCode,
           'File download failed',
           'Please try again',
@@ -53,10 +72,19 @@ Future<void> _writeLocalFile({required String name, required String extension, r
   final path = downloadDirectory.path;
   final fileObject = File('$path/$name.$extension');
 
+  if (await fileObject.exists()) {
+    log("File already exists");
+    throw FileAlreadyExistsException();
+  }
+
   final file = await fileObject.writeAsBytes(bytes);
 
   if (!(await file.exists())) {
     log("File not saved");
-    throw Exception('File not saved');
+    throw FileNotSavedException();
   }
 }
+
+class FileAlreadyExistsException implements Exception {}
+
+class FileNotSavedException implements Exception {}
