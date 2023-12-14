@@ -30,11 +30,11 @@ class OnboardingCardConfigurationService extends ApiService {
     this.user = user;
     try {
       final response = await get("/account/cards");
-      final cardData =  (response.data as List).first["representation"];
+      final cardData = (response as List).first["representation"];
       return GetCardInfoSuccessResponse(
-          cardholderName: cardData["line_1"],
-          maskedPAN: cardData["masked_pan"],
-          expiryDate: cardData["formatted_expiration_date"],
+        cardholderName: cardData["line_1"],
+        maskedPAN: cardData["masked_pan"],
+        expiryDate: cardData["formatted_expiration_date"],
       );
     } catch (e) {
       return OnboardingCardConfigurationErrorResponse();
@@ -68,8 +68,9 @@ class GetCardInfoSuccessResponse extends OnboardingCardConfigurationResponse {
   });
 
   @override
-  List<Object?> get props => [cardholderName,maskedPAN,expiryDate];
+  List<Object?> get props => [cardholderName, maskedPAN, expiryDate];
 }
 
 class OnboardingCardConfigurationSuccessResponse extends OnboardingCardConfigurationResponse {}
+
 class OnboardingCardConfigurationErrorResponse extends OnboardingCardConfigurationResponse {}
