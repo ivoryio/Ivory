@@ -37,22 +37,22 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
   final IvorySelectOptionController _selectCityController = IvorySelectOptionController(enabled: false);
   final IvorySelectOptionController _selectNationalityController = IvorySelectOptionController(loading: true);
   final ContinueButtonController _continueButtonController = ContinueButtonController();
-  DateTime _maxDate = DateTime.now().subtract(const Duration(days: 365 * 18));
-  late int _leapYears;
+  late DateTime _maxDate;
 
   final _debouncer = Debouncer(seconds: 1);
 
   @override
   void initState() {
     super.initState();
-    _leapYears = _calculatePastLeapYears(DateTime.now().year);
-    _maxDate = _maxDate.subtract(Duration(days: _leapYears));
+    _maxDate = _getAdultBirthDate();
 
     _loadCountries();
   }
 
-  int _calculatePastLeapYears(int currentYear, {int yearsAgo = 18}) {
+  DateTime _getAdultBirthDate() {
     int leapYears = 0;
+    int yearsAgo = 18;
+    int currentYear = DateTime.now().year;
     int endYear = currentYear - yearsAgo;
 
     for (int year = endYear; year <= currentYear; year++) {
@@ -61,7 +61,7 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
       }
     }
 
-    return leapYears;
+    return DateTime.now().subtract(Duration(days: 365 * yearsAgo + leapYears));
   }
 
   void onChanged() {
