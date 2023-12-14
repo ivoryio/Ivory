@@ -245,6 +245,7 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
                     ),
                     IvoryTextField(
                       label: "Password",
+                      placeholder: 'Password',
                       controller: _passwordInputController,
                       onChanged: (inputValue) {},
                       keyboardType: TextInputType.visiblePassword,
@@ -433,6 +434,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                     ),
                     IvoryTextField(
                       label: 'Email address',
+                      placeholder: 'Email address',
                       controller: _emailInputController,
                       focusNode: _emailFocusNode,
                       inputType: TextFieldInputType.email,
@@ -443,6 +445,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                     const SizedBox(height: 8),
                     IvoryTextField(
                       label: 'Password',
+                      placeholder: 'Password',
                       controller: _passwordInputController,
                       focusNode: _passwordFocusNode,
                     ),
