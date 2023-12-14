@@ -153,6 +153,19 @@ void main() {
         ),
       );
     });
+
+    test("When onboarding step is <repaymentConfigured> it should return the redirect view model", () {
+      // given
+      final onboardingProgressState = OnboardingProgressFetchedState(step: OnboardingStep.repaymentConfigured);
+
+      // when
+      final viewModel = OnboardingProgressPresenter.presentOnboardingProgress(
+        onboardingProgressState: onboardingProgressState,
+      );
+
+      // then
+      expect(viewModel, RedirectToCongratulationsViewModel());
+    });
   });
 
   group("Onboarding finalize", () {

@@ -22,15 +22,17 @@ class OnboardingProgressPresenter {
     required OnboardingProgressState onboardingProgressState,
     AuthState? authState,
   }) {
+    final redirectViewModels = {
+      OnboardingStep.scoringSuccessful: RedirectToScoringSuccessViewModel(),
+      OnboardingStep.scoringFailed: RedirectToScoringFailedViewModel(),
+      OnboardingStep.repaymentConfigured: RedirectToCongratulationsViewModel(),
+    };
+
     if (onboardingProgressState is OnboardingProgressFetchedState) {
-      if (onboardingProgressState.step == OnboardingStep.scoringSuccessful) {
-        return RedirectToScoringSuccessViewModel();
-      } else if (onboardingProgressState.step == OnboardingStep.scoringFailed) {
-        return RedirectToScoringFailedViewModel();
-      }
-      return OnboardingProgressFetchedViewModel(
-        progress: _onboardingProgressMapper(onboardingProgressState.step),
-      );
+      return redirectViewModels[onboardingProgressState.step] ??
+          OnboardingProgressFetchedViewModel(
+            progress: _onboardingProgressMapper(onboardingProgressState.step),
+          );
     } else if (onboardingProgressState is OnboardingFinalizedState && authState is AuthenticatedState) {
       return RedirectToHomeViewModel();
     } else if (onboardingProgressState is OnboardingProgressErrorState || authState is AuthErrorState) {
@@ -60,6 +62,8 @@ class OnboardingProgressFetchedViewModel extends OnboardingProgressViewModel {
 class RedirectToScoringSuccessViewModel extends OnboardingProgressViewModel {}
 
 class RedirectToScoringFailedViewModel extends OnboardingProgressViewModel {}
+
+class RedirectToCongratulationsViewModel extends OnboardingProgressViewModel {}
 
 class RedirectToHomeViewModel extends OnboardingProgressViewModel {}
 
