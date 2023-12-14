@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 import 'package:solarisdemo/infrastructure/documents/documents_service.dart';
 import 'package:solarisdemo/models/auth/auth_type.dart';
 import 'package:solarisdemo/models/documents/document.dart';
@@ -66,6 +67,68 @@ void main() {
 
       // then
       expect((await appState).documentsState, isA<DocumentsErrorState>());
+    });
+
+    test("When documents are fetched but the list is empty it should retry", () async {
+      // given
+      int getDocumentsAttempts = 0;
+      final documentsService = MockDocumentsService();
+
+      final store = createTestStore(
+        documentsService: documentsService,
+        initialState: createAppState(
+          authState: authentionInitializedState,
+          documentsState: DocumentsInitialLoadingState(),
+        ),
+      );
+      final appState = store.onChange.firstWhere((element) => element.documentsState is DocumentsFetchedState);
+
+      when(documentsService.getPostboxDocuments(user: anyNamed('user'))).thenAnswer(
+        (_) async {
+          getDocumentsAttempts++;
+          if (getDocumentsAttempts == 1) {
+            return GetDocumentsSuccessResponse(documents: const []);
+          } else {
+            return GetDocumentsSuccessResponse(documents: const [document1, document2]);
+          }
+        },
+      );
+
+      // when
+      store.dispatch(GetDocumentsCommandAction());
+
+      // then
+      expect((await appState).documentsState, isA<DocumentsFetchedState>());
+      expect(getDocumentsAttempts, 2);
+    });
+
+    test("When documents are fetched but the list is empty it should retry and fail", () async {
+      // given
+      int getDocumentsAttempts = 0;
+      final documentsService = MockDocumentsService();
+
+      final store = createTestStore(
+        documentsService: documentsService,
+        initialState: createAppState(
+          authState: authentionInitializedState,
+          documentsState: DocumentsInitialLoadingState(),
+        ),
+      );
+      final appState = store.onChange.firstWhere((element) => element.documentsState is DocumentsErrorState);
+
+      when(documentsService.getPostboxDocuments(user: anyNamed('user'))).thenAnswer(
+        (_) async {
+          getDocumentsAttempts++;
+          return GetDocumentsSuccessResponse(documents: const []);
+        },
+      );
+
+      // when
+      store.dispatch(GetDocumentsCommandAction());
+
+      // then
+      expect((await appState).documentsState, isA<DocumentsErrorState>());
+      expect(getDocumentsAttempts, 11);
     });
   });
 

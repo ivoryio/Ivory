@@ -1,10 +1,22 @@
 import 'dart:typed_data';
 
+import 'package:mockito/mockito.dart';
 import 'package:solarisdemo/infrastructure/documents/documents_service.dart';
 import 'package:solarisdemo/infrastructure/documents/file_saver_service.dart';
 import 'package:solarisdemo/models/documents/document.dart';
 import 'package:solarisdemo/models/documents/documents_error_type.dart';
 import 'package:solarisdemo/models/user.dart';
+
+class MockDocumentsService extends Mock implements DocumentsService {
+  @override
+  Future<DocumentsServiceResponse> getPostboxDocuments({required User? user}) async {
+    return super.noSuchMethod(
+      Invocation.method(#getPostboxDocuments, [], {#user: user}),
+      returnValue: Future.value(GetDocumentsSuccessResponse(documents: const [])),
+      returnValueForMissingStub: Future.value(GetDocumentsSuccessResponse(documents: const [])),
+    );
+  }
+}
 
 class FakeDocumentsService extends DocumentsService {
   @override
