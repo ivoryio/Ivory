@@ -42,7 +42,7 @@ class OnboardingCongratulationsScreen extends StatelessWidget {
           builder: (context, viewModel) => Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const AppToolbar(),
+              const AppToolbar(actions: [AppbarLogo()]),
               const ScreenTitle("Congratulations!"),
               const SizedBox(height: 16),
               Text(
