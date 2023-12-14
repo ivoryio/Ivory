@@ -25,11 +25,18 @@ class OnboardingScoringWaitingScreen extends StatelessWidget {
         notificationState: store.state.notificationState,
       ),
       onWillChange: (previousViewModel, newViewModel) {
-        if (newViewModel.isScoringSuccessful == true) {
+        if (previousViewModel?.isScoringSuccessful == null && newViewModel.isScoringSuccessful == true) {
           Navigator.pushNamedAndRemoveUntil(
-              context, OnboardingCreditLimitCongratulationsScreen.routeName, (route) => false);
-        } else if (newViewModel.isScoringSuccessful == false) {
-          Navigator.pushNamedAndRemoveUntil(context, OnboardingScoringRejectedScreen.routeName, (route) => false);
+            context,
+            OnboardingCreditLimitCongratulationsScreen.routeName,
+            (route) => false,
+          );
+        } else if (previousViewModel?.isScoringSuccessful == null && newViewModel.isScoringSuccessful == false) {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            OnboardingScoringRejectedScreen.routeName,
+            (route) => false,
+          );
         }
       },
       distinct: true,
