@@ -51,11 +51,13 @@ class OnboardingCongratulationsScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Expanded(
-                child: SvgPicture(
-                  SvgAssetLoader(
-                    'assets/images/congratulations_illustration.svg',
-                    colorMapper: IvoryColorMapper(
-                      baseColor: ClientConfig.getColorScheme().secondary,
+                child: Center(
+                  child: SvgPicture(
+                    SvgAssetLoader(
+                      'assets/images/congratulations_illustration.svg',
+                      colorMapper: IvoryColorMapper(
+                        baseColor: ClientConfig.getColorScheme().secondary,
+                      ),
                     ),
                   ),
                 ),
