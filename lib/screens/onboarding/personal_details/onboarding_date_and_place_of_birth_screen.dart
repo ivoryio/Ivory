@@ -117,6 +117,7 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
           Expanded(
             child: ScrollableScreenContainer(
               padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+              physics: const ClampingScrollPhysics(),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

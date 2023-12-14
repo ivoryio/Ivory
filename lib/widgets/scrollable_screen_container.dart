@@ -4,14 +4,14 @@ class ScrollableScreenContainer extends StatelessWidget {
   final ScrollController? scrollController;
   final EdgeInsetsGeometry? padding;
   final Widget child;
-  final bool clampingScroll;
+  final ScrollPhysics? physics;
 
   const ScrollableScreenContainer({
     super.key,
     this.scrollController,
     this.padding,
     required this.child,
-    this.clampingScroll = true,
+    this.physics,
   });
 
   @override
@@ -20,7 +20,7 @@ class ScrollableScreenContainer extends StatelessWidget {
       builder: (context, constraints) {
         return SingleChildScrollView(
           controller: scrollController,
-          physics: clampingScroll ? const ClampingScrollPhysics() : null,
+          physics: physics,
           padding: padding,
           child: ConstrainedBox(
             constraints: BoxConstraints(minHeight: constraints.maxHeight),

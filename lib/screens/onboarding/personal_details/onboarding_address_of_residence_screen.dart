@@ -112,6 +112,7 @@ class _OnboardingAddressOfResidenceScreenState extends State<OnboardingAddressOf
               Expanded(
                 child: ScrollableScreenContainer(
                   padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  physics: const ClampingScrollPhysics(),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
