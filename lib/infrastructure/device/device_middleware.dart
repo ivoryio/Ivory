@@ -39,7 +39,7 @@ class DeviceBindingMiddleware extends MiddlewareClass<AppState> {
 
       int? devicePairingTriedAt = await _deviceService.getDevicePairingTriedAt();
       final alreadyTriedInLast5Minutes = devicePairingTriedAt != null &&
-          DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(devicePairingTriedAt)).inMinutes <= 5;
+          DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(devicePairingTriedAt)).inMinutes < 5;
 
       if (alreadyTriedInLast5Minutes) {
         store.dispatch(
