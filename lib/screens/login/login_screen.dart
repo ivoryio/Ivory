@@ -69,7 +69,6 @@ class LoginScreen extends StatelessWidget {
               Expanded(
                 child: ScrollableScreenContainer(
                   padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-                  physics: const ClampingScrollPhysics(),
                   scrollController: scrollController,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

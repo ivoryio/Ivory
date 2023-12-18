@@ -29,7 +29,6 @@ class OnboardingNationalityNotSupportedScreen extends StatelessWidget {
           Expanded(
             child: ScrollableScreenContainer(
               padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-              physics: const ClampingScrollPhysics(),
               child: Column(
                 children: [
                   Align(

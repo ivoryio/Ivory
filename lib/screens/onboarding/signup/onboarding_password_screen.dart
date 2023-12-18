@@ -70,7 +70,6 @@ class _OnboardingPasswordScreenState extends State<OnboardingPasswordScreen> {
               Expanded(
                 child: ScrollableScreenContainer(
                   padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-                  physics: const ClampingScrollPhysics(),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

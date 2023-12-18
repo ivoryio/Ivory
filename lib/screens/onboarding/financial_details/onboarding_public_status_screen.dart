@@ -67,7 +67,6 @@ class _OnboardingPublicStatusScreenState extends State<OnboardingPublicStatusScr
           Expanded(
             child: ScrollableScreenContainer(
               padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-              physics: const ClampingScrollPhysics(),
               child: Column(
                 children: [
                   const SizedBox(height: 16),

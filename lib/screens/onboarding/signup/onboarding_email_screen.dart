@@ -65,7 +65,6 @@ class _OnboardingEmailScreenState extends State<OnboardingEmailScreen> {
           Expanded(
             child: ScrollableScreenContainer(
               padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-              physics: const ClampingScrollPhysics(),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

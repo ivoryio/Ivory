@@ -47,7 +47,6 @@ class SettingsDevicePairingScreen extends StatelessWidget {
           Expanded(
             child: ScrollableScreenContainer(
               scrollController: scrollController,
-              physics: const ClampingScrollPhysics(),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
