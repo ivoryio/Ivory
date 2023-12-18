@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/onboarding/identity_verification/onboarding_identity_verification_presenter.dart';
+import 'package:solarisdemo/models/onboarding/onboarding_identity_verification_error_type.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/onboarding/identity_verification/onboarding_identity_verification_action.dart';
 import 'package:solarisdemo/screens/onboarding/onboarding_stepper_screen.dart';
@@ -45,7 +46,10 @@ class _OnboardingCreditLimitCongratulationsScreenState extends State<OnboardingC
         if (newViewModel.isIdentificationSuccessful == true) {
           Navigator.pushNamedAndRemoveUntil(context, OnboardingStepperScreen.routeName, (route) => false);
         } else if (newViewModel.errorType != null) {
-          _showServerErrorBottomSheet(context);
+          _showServerErrorBottomSheet(
+            context,
+            errorType: newViewModel.errorType!,
+          );
         }
       },
       distinct: true,
@@ -169,7 +173,10 @@ class _OnboardingCreditLimitCongratulationsScreenState extends State<OnboardingC
     );
   }
 
-  void _showServerErrorBottomSheet(BuildContext context) {
+  void _showServerErrorBottomSheet(
+    BuildContext context, {
+    required OnboardingIdentityVerificationErrorType errorType,
+  }) {
     showBottomModal(
       context: context,
       showCloseButton: false,
@@ -207,7 +214,12 @@ class _OnboardingCreditLimitCongratulationsScreenState extends State<OnboardingC
             text: "Try again",
             onPressed: () {
               Navigator.pop(context);
-              StoreProvider.of<AppState>(context).dispatch(FinalizeIdentificationCommandAction());
+
+              if (errorType == OnboardingIdentityVerificationErrorType.fetchCreditLimitFailed) {
+                StoreProvider.of<AppState>(context).dispatch(GetCreditLimitCommandAction());
+              } else if (errorType == OnboardingIdentityVerificationErrorType.finalizeIdentificationFailed) {
+                StoreProvider.of<AppState>(context).dispatch(FinalizeIdentificationCommandAction());
+              }
             },
           ),
           const SizedBox(height: 16),

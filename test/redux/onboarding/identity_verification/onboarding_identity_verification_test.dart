@@ -400,6 +400,31 @@ void main() {
       expect(creditLimitState.isLoading, false);
       expect(creditLimitState.creditLimit, mockCreditLimit ~/ 100);
     });
+
+    test("when fetch credit limit has failed it should update with error", () async {
+      //given
+      final store = createTestStore(
+        onboardingIdentityVerificationService: FakeFailingOnbordingIdentityVerificationService(),
+        initialState: createAppState(
+          authState: authInitializedState,
+          onboardingIdentityVerificationState: const OnboardingIdentityVerificationState(
+            isLoading: false,
+            creditLimit: null,
+          ),
+        ),
+      );
+
+      final appState =
+          store.onChange.firstWhere((state) => state.onboardingIdentityVerificationState.errorType != null);
+      //when
+      store.dispatch(GetCreditLimitCommandAction());
+      //then
+      final creditLimitState = (await appState).onboardingIdentityVerificationState;
+
+      expect(creditLimitState.isLoading, false);
+      expect(creditLimitState.errorType, OnboardingIdentityVerificationErrorType.fetchCreditLimitFailed);
+      expect(creditLimitState.creditLimit, null);
+    });
   });
 
   group("finalize identification", () {
@@ -490,7 +515,7 @@ void main() {
       final creditLimitState = (await appState).onboardingIdentityVerificationState;
 
       expect(creditLimitState.isLoading, false);
-      expect(creditLimitState.errorType, OnboardingIdentityVerificationErrorType.unknown);
+      expect(creditLimitState.errorType, OnboardingIdentityVerificationErrorType.finalizeIdentificationFailed);
       expect(creditLimitState.creditLimit, mockCreditLimit);
       expect(creditLimitState.isIdentificationSuccessful, false);
     });

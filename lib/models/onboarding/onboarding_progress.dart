@@ -11,6 +11,7 @@ enum OnboardingStep {
   scoringSuccessful,
   scoringFailed,
   identificationFinished,
+  repaymentConfigured,
   unknown,
 }
 
@@ -29,6 +30,7 @@ extension OnboardingStepExtension on OnboardingStep {
       "scoringSuccessful": OnboardingStep.scoringSuccessful,
       "scoringFailed": OnboardingStep.scoringFailed,
       "identificationFinished": OnboardingStep.identificationFinished,
+      "repaymentConfigured": OnboardingStep.repaymentConfigured,
     };
 
     return map[value] ?? OnboardingStep.unknown;

@@ -583,7 +583,9 @@ class _FixedRepaymentState extends State<FixedRepayment> {
               ),
               child: Text(
                 '€',
-                style: ClientConfig.getTextStyleScheme().heading2.copyWith(color: ClientConfig.getCustomColors().neutral500),
+                style: ClientConfig.getTextStyleScheme()
+                    .heading2
+                    .copyWith(color: ClientConfig.getCustomColors().neutral700),
               ),
             ),
             Expanded(

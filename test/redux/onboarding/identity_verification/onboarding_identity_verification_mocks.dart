@@ -95,13 +95,17 @@ class FakeFailingOnbordingIdentityVerificationService extends OnbordingIdentityV
   Future<IdentityVerificationServiceResponse> getCreditLimit({
     required User user,
   }) async {
-    return const GetCreditLimitSuccessResponse(creditLimit: 1000);
+    return const IdentityVerificationServiceErrorResponse(
+      errorType: OnboardingIdentityVerificationErrorType.fetchCreditLimitFailed,
+    );
   }
 
   @override
   Future<IdentityVerificationServiceResponse> finalizeIdentification({
     required User user,
   }) async {
-    return const IdentityVerificationServiceErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
+    return const IdentityVerificationServiceErrorResponse(
+      errorType: OnboardingIdentityVerificationErrorType.finalizeIdentificationFailed,
+    );
   }
 }

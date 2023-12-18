@@ -1,6 +1,7 @@
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:solarisdemo/screens/onboarding/card_configuration/onboarding_repayment_option_screen.dart';
 import 'package:solarisdemo/widgets/ivory_asset_with_badge.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
@@ -69,7 +70,13 @@ class _OnboardingConfigureCardScreenState extends State<OnboardingConfigureCardS
               onInit: (store) {
                 store.dispatch(GetOnboardingCardInfoCommandAction());
               },
-              onDidChange: (oldViewModel, newViewModel) {
+            onWillChange: (oldViewModel, newViewModel) {
+              if (oldViewModel is OnboardingGetCreditCardApplicationLoadingViewModel &&
+                  newViewModel is OnboardingCreditCardApplicationFetchedViewModel) {
+                Navigator.of(context).pushNamed(
+                  OnboardingRepaymentOptionScreen.routeName,
+                );
+              }
               },
               converter: (store) => OnboardingCardConfigurationPresenter.presentCardConfiguration(
                 cardConfigurationState: store.state.onboardingCardConfigurationState,
@@ -109,8 +116,11 @@ class _OnboardingConfigureCardScreenState extends State<OnboardingConfigureCardS
               const Spacer(),
               PrimaryButton(
                 text: "Configure my card",
+                isLoading: viewModel is OnboardingGetCreditCardApplicationLoadingViewModel,
                 onPressed: () {
-                  
+                  StoreProvider.of<AppState>(context).dispatch(
+                    OnboardingGetCreditCardApplicationCommandAction(),
+                  );
                 },
               ),
               const SizedBox(height: 16,),

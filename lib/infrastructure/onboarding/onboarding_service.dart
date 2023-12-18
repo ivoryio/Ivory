@@ -23,6 +23,17 @@ class OnboardingService extends ApiService {
       return OnboardingProgressErrorResponse();
     }
   }
+
+  Future<OnboardingServiceResponse> finalizeOnboarding({required User user}) async {
+    this.user = user;
+
+    try {
+      await patch('signup/finalize');
+      return OnboardingFinalizeSuccessResponse();
+    } catch (error) {
+      return OnboardingProgressErrorResponse();
+    }
+  }
 }
 
 abstract class OnboardingServiceResponse extends Equatable {
@@ -44,6 +55,8 @@ class OnboardingProgressSuccessResponse extends OnboardingServiceResponse {
   @override
   List<Object?> get props => [step, mobileNumber, creditCardApplicationId];
 }
+
+class OnboardingFinalizeSuccessResponse extends OnboardingServiceResponse {}
 
 class OnboardingProgressErrorResponse extends OnboardingServiceResponse {
   final OnboardingServiceErrorType errorType;
