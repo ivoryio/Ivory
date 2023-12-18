@@ -74,6 +74,7 @@ class _OnboardingBasicInfoScreenState extends State<OnboardingBasicInfoScreen> {
                   const SizedBox(height: 24),
                   IvorySelectOption(
                     label: "Preferred title",
+                    placeholder: 'Select preferred title',
                     bottomSheetTitle: "Select your preferred title",
                     controller: _selectTitleController,
                     onBottomSheetOpened: () => FocusScope.of(context).unfocus(),
