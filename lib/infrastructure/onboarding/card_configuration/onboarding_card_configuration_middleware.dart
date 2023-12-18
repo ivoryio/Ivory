@@ -3,12 +3,17 @@ import 'package:redux/redux.dart';
 import '../../../redux/app_state.dart';
 import '../../../redux/auth/auth_state.dart';
 import '../../../redux/onboarding/card_configuration/onboarding_card_configuration_action.dart';
+import '../../repayments/change_repayment/change_repayment_service.dart';
 import 'onboarding_card_configuration_service.dart';
 
 class OnboardingCardConfigurationMiddleware extends  MiddlewareClass<AppState> {
   final OnboardingCardConfigurationService _cardConfigurationService;
+  final CardApplicationService _cardApplicationService;
 
-  OnboardingCardConfigurationMiddleware(this._cardConfigurationService);
+  OnboardingCardConfigurationMiddleware(
+    this._cardConfigurationService,
+    this._cardApplicationService,
+  );
 
   @override
   call(Store<AppState> store, action, NextDispatcher next) async {
@@ -52,6 +57,17 @@ class OnboardingCardConfigurationMiddleware extends  MiddlewareClass<AppState> {
         );
       } else {
         store.dispatch(OnboardingCardConfigurationFailedEventAction());
+      }
+    }
+
+    if (action is OnboardingGetCreditCardApplicationCommandAction) {
+      final response = await _cardApplicationService.getCardApplication(user: user);
+      if (response is GetCardApplicationSuccessResponse) {
+        store.dispatch(OnboardingGetCreditCardApplicationSuccessEventAction(
+          creditCardApplication: response.creditCardApplication,
+        ));
+      } else {
+        store.dispatch(OnboardingGetCreditCardApplicationFailedEventAction());
       }
     }
   }

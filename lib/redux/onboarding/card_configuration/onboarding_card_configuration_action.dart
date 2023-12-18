@@ -1,9 +1,15 @@
+import '../../../models/transfer/credit_card_application.dart';
+
 class GetCardPersonNameCommandAction {}
+
 class OnboardingCreateCardCommandAction {}
+
 class GetOnboardingCardInfoCommandAction {}
 
 class OnboardingCreateCardLoadingEventAction {}
+
 class OnboardingCardConfigurationFailedEventAction {}
+
 class OnboardingCardConfigurationGenericSuccessEventAction {}
 
 class WithCardholderNameEventAction {
@@ -22,4 +28,24 @@ class WithCardInfoEventAction {
     required this.maskedPAN,
     required this.expiryDate,
   });
+}
+
+class OnboardingGetCreditCardApplicationCommandAction {}
+
+class OnboardingGetCreditCardApplicationFailedEventAction {}
+
+class OnboardingGetCreditCardApplicationSuccessEventAction {
+  final CreditCardApplication creditCardApplication;
+
+  OnboardingGetCreditCardApplicationSuccessEventAction({required this.creditCardApplication});
+}
+
+class OnboardingUpdateCreditCardApplicationCommandAction {}
+
+class OnboardingUpdateCreditCardApplicationFailedEventAction {}
+
+class OnboardingUpdateCreditCardApplicationSuccessEventAction {
+  final CreditCardApplication creditCardApplication;
+
+  OnboardingUpdateCreditCardApplicationSuccessEventAction({required this.creditCardApplication});
 }

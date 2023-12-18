@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../../../models/transfer/credit_card_application.dart';
+
 abstract class OnboardingCardConfigurationState extends Equatable {
   @override
   List<Object?> get props => [];
@@ -35,4 +37,15 @@ class WithCardInfoState extends OnboardingCardConfigurationState {
 
   @override
   List<Object?> get props => [cardholderName, maskedPAN, expiryDate];
+}
+
+class WithCardApplicationState extends OnboardingCardConfigurationState {
+  final CreditCardApplication cardApplication;
+
+  WithCardApplicationState({
+    required this.cardApplication,
+  });
+
+  @override
+  List<Object?> get props => [cardApplication];
 }

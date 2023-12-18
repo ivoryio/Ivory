@@ -18,6 +18,10 @@ OnboardingCardConfigurationState onboardingCardConfigurationReducer(
         maskedPAN: action.maskedPAN,
         expiryDate: action.expiryDate,
     );
+  } else if (action is OnboardingGetCreditCardApplicationSuccessEventAction) {
+    return WithCardApplicationState(
+      cardApplication: action.creditCardApplication,
+    );
   }
   return currentState;
 }

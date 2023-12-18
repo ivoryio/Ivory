@@ -1,27 +1,31 @@
 import 'package:equatable/equatable.dart';
 
+import '../../../models/transfer/credit_card_application.dart';
 import '../../../redux/onboarding/card_configuration/onboarding_card_configuration_state.dart';
 
 class OnboardingCardConfigurationPresenter {
-  static OnboardingCardConfigurationViewModel presentCardConfiguration({
-    required OnboardingCardConfigurationState cardConfigurationState
-  }) {
-   if (cardConfigurationState is OnboardingCardConfigurationGenericErrorState) {
+  static OnboardingCardConfigurationViewModel presentCardConfiguration(
+      {required OnboardingCardConfigurationState cardConfigurationState}) {
+    if (cardConfigurationState is OnboardingCardConfigurationGenericErrorState) {
       return OnboardingCardConfigurationGenericErrorViewModel();
     } else if (cardConfigurationState is OnboardingCardConfigurationGenericSuccessState) {
       return OnboardingCardConfigurationGenericSuccessViewModel();
     } else if (cardConfigurationState is WithCardholderNameState) {
       return WithCardholderNameViewModel(
-          cardholderName: cardConfigurationState.cardholderName,
-          isLoading: cardConfigurationState.isLoading,
+        cardholderName: cardConfigurationState.cardholderName,
+        isLoading: cardConfigurationState.isLoading,
       );
     } else if (cardConfigurationState is WithCardInfoState) {
-     return WithCardInfoViewModel(
-         cardholderName: cardConfigurationState.cardholderName,
-         maskedPAN: cardConfigurationState.maskedPAN,
-         expiryDate: cardConfigurationState.expiryDate,
-     );
-   }
+      return WithCardInfoViewModel(
+        cardholderName: cardConfigurationState.cardholderName,
+        maskedPAN: cardConfigurationState.maskedPAN,
+        expiryDate: cardConfigurationState.expiryDate,
+      );
+    } else if (cardConfigurationState is WithCardApplicationState) {
+      return WithCardApplicationViewModel(
+        cardApplication: cardConfigurationState.cardApplication,
+      );
+    }
 
     return OnboardingCardConfigurationInitialViewModel();
   }
@@ -33,7 +37,9 @@ abstract class OnboardingCardConfigurationViewModel extends Equatable {
 }
 
 class OnboardingCardConfigurationInitialViewModel extends OnboardingCardConfigurationViewModel {}
+
 class OnboardingCardConfigurationGenericErrorViewModel extends OnboardingCardConfigurationViewModel {}
+
 class OnboardingCardConfigurationGenericSuccessViewModel extends OnboardingCardConfigurationViewModel {}
 
 class WithCardholderNameViewModel extends OnboardingCardConfigurationViewModel {
@@ -62,4 +68,15 @@ class WithCardInfoViewModel extends OnboardingCardConfigurationViewModel {
 
   @override
   List<Object?> get props => [cardholderName, maskedPAN, expiryDate];
+}
+
+class WithCardApplicationViewModel extends OnboardingCardConfigurationViewModel {
+  final CreditCardApplication cardApplication;
+
+  WithCardApplicationViewModel({
+    required this.cardApplication,
+  });
+
+  @override
+  List<Object?> get props => [cardApplication];
 }
