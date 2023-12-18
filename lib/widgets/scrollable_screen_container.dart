@@ -11,7 +11,7 @@ class ScrollableScreenContainer extends StatelessWidget {
     this.scrollController,
     this.padding,
     required this.child,
-    this.physics,
+    this.physics = const ClampingScrollPhysics(),
   });
 
   @override
