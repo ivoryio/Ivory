@@ -3,10 +3,10 @@ import 'package:solarisdemo/models/documents/document.dart';
 import 'package:solarisdemo/models/documents/documents_error_type.dart';
 
 class GetDocumentsCommandAction {
-  final bool retryWhenEmpty;
-  final int retryCount;
+  final int retryWhenBelowDocumentCount;
+  final int maxRetryCount;
 
-  GetDocumentsCommandAction({this.retryCount = 10, this.retryWhenEmpty = true});
+  GetDocumentsCommandAction({this.maxRetryCount = 10, this.retryWhenBelowDocumentCount = 2});
 }
 
 class DocumentsLoadingEventAction {}

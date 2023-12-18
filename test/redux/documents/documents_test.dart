@@ -3,6 +3,7 @@ import 'package:mockito/mockito.dart';
 import 'package:solarisdemo/infrastructure/documents/documents_service.dart';
 import 'package:solarisdemo/models/auth/auth_type.dart';
 import 'package:solarisdemo/models/documents/document.dart';
+import 'package:solarisdemo/models/documents/documents_error_type.dart';
 import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/documents/confirm/confirm_documents_state.dart';
 import 'package:solarisdemo/redux/documents/documents_action.dart';
@@ -128,7 +129,43 @@ void main() {
 
       // then
       expect((await appState).documentsState, isA<DocumentsErrorState>());
+      expect(((await appState).documentsState as DocumentsErrorState).errorType, DocumentsErrorType.emptyList);
       expect(getDocumentsAttempts, 11);
+    });
+
+    test("When less than two documents are fetched, retry until two or more are fetched", () async {
+      // given
+      int getDocumentsAttempts = 0;
+      final documentsService = MockDocumentsService();
+
+      final store = createTestStore(
+        documentsService: documentsService,
+        initialState: createAppState(
+          authState: authentionInitializedState,
+          documentsState: DocumentsInitialLoadingState(),
+        ),
+      );
+      final appState = store.onChange.firstWhere((element) => element.documentsState is DocumentsFetchedState);
+
+      when(documentsService.getPostboxDocuments(user: anyNamed('user'))).thenAnswer(
+        (_) async {
+          getDocumentsAttempts++;
+          if (getDocumentsAttempts == 1) {
+            return GetDocumentsSuccessResponse(documents: const []);
+          } else if (getDocumentsAttempts == 2) {
+            return GetDocumentsSuccessResponse(documents: const [document1]);
+          } else {
+            return GetDocumentsSuccessResponse(documents: const [document1, document2]);
+          }
+        },
+      );
+
+      // when
+      store.dispatch(GetDocumentsCommandAction());
+
+      // then
+      expect((await appState).documentsState, isA<DocumentsFetchedState>());
+      expect(getDocumentsAttempts, 3);
     });
   });
 

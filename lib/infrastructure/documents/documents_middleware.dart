@@ -29,16 +29,19 @@ class DocumentsMiddleware extends MiddlewareClass<AppState> {
       final response = await retry(
         () async => _documentsService.getPostboxDocuments(user: authState.cognitoUser),
         retryIf: (response) =>
-            action.retryWhenEmpty && response is GetDocumentsSuccessResponse && response.documents.isEmpty,
-        maxAttempts: action.retryCount,
+            action.retryWhenBelowDocumentCount > 0 &&
+            response is GetDocumentsSuccessResponse &&
+            response.documents.length < action.retryWhenBelowDocumentCount,
+        maxAttempts: action.maxRetryCount,
         delay: const Duration(seconds: 1),
       );
 
       if (response is GetDocumentsSuccessResponse) {
-        if (action.retryWhenEmpty && response.documents.isEmpty) {
+        if (action.retryWhenBelowDocumentCount > 0 && response.documents.length < action.retryWhenBelowDocumentCount) {
           store.dispatch(GetDocumentsFailedEventAction(errorType: DocumentsErrorType.emptyList));
           return;
         }
+
         store.dispatch(DocumentsFetchedEventAction(documents: response.documents));
       } else if (response is DocumentsServiceErrorResponse) {
         store.dispatch(GetDocumentsFailedEventAction(errorType: response.errorType));

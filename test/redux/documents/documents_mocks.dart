@@ -21,14 +21,22 @@ class MockDocumentsService extends Mock implements DocumentsService {
 class FakeDocumentsService extends DocumentsService {
   @override
   Future<DocumentsServiceResponse> getPostboxDocuments({required User user}) async {
-    return GetDocumentsSuccessResponse(documents: const [
-      Document(
-        id: "documentId",
-        documentType: DocumentType.creditCardContract,
-        fileType: "PDF",
-        fileSize: 12345,
-      )
-    ]);
+    return GetDocumentsSuccessResponse(
+      documents: const [
+        Document(
+          id: "documentId",
+          documentType: DocumentType.creditCardContract,
+          fileType: "PDF",
+          fileSize: 12345,
+        ),
+        Document(
+          id: "documentId2",
+          documentType: DocumentType.creditCardSecci,
+          fileType: "PDF",
+          fileSize: 2048,
+        ),
+      ],
+    );
   }
 
   @override

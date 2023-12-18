@@ -42,7 +42,8 @@ class ApiService<T> {
       final decodedData = utf8.decode(response.bodyBytes);
       return jsonDecode(decodedData);
     } catch (e, s) {
-      debugPrintStack(stackTrace: s);
+      debugPrint(e.toString());
+      debugPrintStack(stackTrace: s, label: "get $path $queryParameters");
       rethrow;
     }
   }
@@ -74,8 +75,9 @@ class ApiService<T> {
       }
 
       return jsonDecode(response.body);
-    } catch (e) {
-      log(e.toString());
+    } catch (e, s) {
+      debugPrint(e.toString());
+      debugPrintStack(stackTrace: s, label: "post $path $queryParameters");
       rethrow;
     }
   }
@@ -107,8 +109,9 @@ class ApiService<T> {
       }
 
       return jsonDecode(response.body);
-    } catch (e) {
-      log(e.toString());
+    } catch (e, s) {
+      debugPrint(e.toString());
+      debugPrintStack(stackTrace: s, label: "patch $path $queryParameters");
       rethrow;
     }
   }
@@ -140,9 +143,10 @@ class ApiService<T> {
       }
 
       return response.body.isNotEmpty ? jsonDecode(response.body) : {};
-    } catch (e) {
-      log(e.toString());
-      throw Exception("DELETE request failed");
+    } catch (e, s) {
+      debugPrint(e.toString());
+      debugPrintStack(stackTrace: s, label: "delete $path $queryParameters");
+      rethrow;
     }
   }
 
@@ -171,7 +175,8 @@ class ApiService<T> {
 
       return response.bodyBytes;
     } catch (e, s) {
-      debugPrintStack(stackTrace: s);
+      debugPrint(e.toString());
+      debugPrintStack(stackTrace: s, label: "downloadFile $path $queryParameters");
       rethrow;
     }
   }

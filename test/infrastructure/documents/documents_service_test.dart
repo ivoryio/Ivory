@@ -112,14 +112,14 @@ void main() {
       );
     });
 
-    test("When the request is thworing an error it should return error", () async {
+    test("When the request is throwing an error it should return error", () async {
       // given
       final documentsService = DocumentsService();
       final httpClient = MockHttpClient();
 
       documentsService.client = httpClient;
 
-      when(httpClient.get(any, headers: anyNamed("headers"))).thenThrow(Exception());
+      when(httpClient.get(any, headers: anyNamed("headers"))).thenThrow(Exception("error"));
 
       // when
       final response = await documentsService.getPostboxDocuments(user: mockUser);
