@@ -69,7 +69,13 @@ class _OnboardingConfigureCardScreenState extends State<OnboardingConfigureCardS
               onInit: (store) {
                 store.dispatch(GetOnboardingCardInfoCommandAction());
               },
-              onDidChange: (oldViewModel, newViewModel) {
+            onWillChange: (oldViewModel, newViewModel) {
+              if (oldViewModel is OnboardingGetCreditCardApplicationLoadingViewModel &&
+                  newViewModel is OnboardingCreditCardApplicationFetchedViewModel) {
+                Navigator.of(context).pushNamed(
+                  OnboardingRepaymentOptionScreen.routeName,
+                );
+              }
               },
               converter: (store) => OnboardingCardConfigurationPresenter.presentCardConfiguration(
                 cardConfigurationState: store.state.onboardingCardConfigurationState,
@@ -109,8 +115,11 @@ class _OnboardingConfigureCardScreenState extends State<OnboardingConfigureCardS
               const Spacer(),
               PrimaryButton(
                 text: "Configure my card",
+                isLoading: viewModel is OnboardingGetCreditCardApplicationLoadingViewModel,
                 onPressed: () {
-                  
+                  StoreProvider.of<AppState>(context).dispatch(
+                    OnboardingGetCreditCardApplicationCommandAction(),
+                  );
                 },
               ),
               const SizedBox(height: 16,),

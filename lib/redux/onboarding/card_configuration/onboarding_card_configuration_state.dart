@@ -39,10 +39,27 @@ class WithCardInfoState extends OnboardingCardConfigurationState {
   List<Object?> get props => [cardholderName, maskedPAN, expiryDate];
 }
 
-class WithCardApplicationState extends OnboardingCardConfigurationState {
+class OnboardingGetCreditCardApplicationLoadingState extends OnboardingCardConfigurationState {}
+
+class OnboardingCreditCardApplicationFetchedState extends OnboardingCardConfigurationState {
+  final CreditCardApplication cardApplication;
+  final bool isLoading;
+
+  OnboardingCreditCardApplicationFetchedState({
+    required this.cardApplication,
+    this.isLoading = false,
+  });
+
+  @override
+  List<Object?> get props => [cardApplication, isLoading];
+}
+
+class OnboardingUpdateCreditCardApplicationLoadingState extends OnboardingCardConfigurationState {}
+
+class OnboardingCreditCardApplicationUpdatedState extends OnboardingCardConfigurationState {
   final CreditCardApplication cardApplication;
 
-  WithCardApplicationState({
+  OnboardingCreditCardApplicationUpdatedState({
     required this.cardApplication,
   });
 

@@ -19,7 +19,18 @@ OnboardingCardConfigurationState onboardingCardConfigurationReducer(
         expiryDate: action.expiryDate,
     );
   } else if (action is OnboardingGetCreditCardApplicationSuccessEventAction) {
-    return WithCardApplicationState(
+    return OnboardingCreditCardApplicationFetchedState(
+      cardApplication: action.creditCardApplication,
+    );
+  } else if (action is OnboardingGetCreditCardApplicationLoadingEventAction) {
+    return OnboardingGetCreditCardApplicationLoadingState();
+  } else if (action is OnboardingUpdateCreditCardApplicationLoadingEventAction && currentState is OnboardingCreditCardApplicationFetchedState) {
+    return OnboardingCreditCardApplicationFetchedState(
+      cardApplication: currentState.cardApplication,
+      isLoading: true,
+    );
+  } else if (action is OnboardingUpdateCreditCardApplicationSuccessEventAction) {
+    return OnboardingCreditCardApplicationUpdatedState(
       cardApplication: action.creditCardApplication,
     );
   }

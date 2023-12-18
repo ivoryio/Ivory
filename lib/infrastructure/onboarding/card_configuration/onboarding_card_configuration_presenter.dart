@@ -21,8 +21,15 @@ class OnboardingCardConfigurationPresenter {
         maskedPAN: cardConfigurationState.maskedPAN,
         expiryDate: cardConfigurationState.expiryDate,
       );
-    } else if (cardConfigurationState is WithCardApplicationState) {
-      return WithCardApplicationViewModel(
+    } else if (cardConfigurationState is OnboardingCreditCardApplicationFetchedState) {
+      return OnboardingCreditCardApplicationFetchedViewModel(
+        cardApplication: cardConfigurationState.cardApplication,
+        isLoading: cardConfigurationState.isLoading,
+      );
+    } else if (cardConfigurationState is OnboardingGetCreditCardApplicationLoadingState) {
+      return OnboardingGetCreditCardApplicationLoadingViewModel();
+    } else if (cardConfigurationState is OnboardingCreditCardApplicationUpdatedState) {
+      return OnboardingCreditCardApplicationUpdatedViewModel(
         cardApplication: cardConfigurationState.cardApplication,
       );
     }
@@ -70,10 +77,25 @@ class WithCardInfoViewModel extends OnboardingCardConfigurationViewModel {
   List<Object?> get props => [cardholderName, maskedPAN, expiryDate];
 }
 
-class WithCardApplicationViewModel extends OnboardingCardConfigurationViewModel {
+class OnboardingCreditCardApplicationFetchedViewModel extends OnboardingCardConfigurationViewModel {
+  final CreditCardApplication cardApplication;
+  final bool isLoading;
+
+  OnboardingCreditCardApplicationFetchedViewModel({
+    required this.cardApplication,
+    this.isLoading = false,
+  });
+
+  @override
+  List<Object?> get props => [cardApplication, isLoading];
+}
+
+class OnboardingGetCreditCardApplicationLoadingViewModel extends OnboardingCardConfigurationViewModel {}
+
+class OnboardingCreditCardApplicationUpdatedViewModel extends OnboardingCardConfigurationViewModel {
   final CreditCardApplication cardApplication;
 
-  WithCardApplicationViewModel({
+  OnboardingCreditCardApplicationUpdatedViewModel({
     required this.cardApplication,
   });
 

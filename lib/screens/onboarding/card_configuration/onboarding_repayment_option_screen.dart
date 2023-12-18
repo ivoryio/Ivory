@@ -25,99 +25,109 @@ class _OnboardingRepaymentOptionScreenState extends State<OnboardingRepaymentOpt
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, OnboardingCardConfigurationViewModel>(
-      onInit: (store) {
-        store.dispatch(OnboardingGetCreditCardApplicationCommandAction());
+      onWillChange: (previousViewModel, newViewModel) {
+        if (previousViewModel is OnboardingCreditCardApplicationFetchedViewModel &&
+            previousViewModel.isLoading == true &&
+            newViewModel is OnboardingCreditCardApplicationUpdatedViewModel) {
+          //remove this and add final navigation here
+          Navigator.popAndPushNamed(context, HomeScreen.routeName);
+        }
       },
       converter: (store) => OnboardingCardConfigurationPresenter.presentCardConfiguration(
         cardConfigurationState: store.state.onboardingCardConfigurationState,
       ),
       builder: (context, viewModel) {
-        if (viewModel is WithCardApplicationViewModel) {
-          return ScreenScaffold(
-            body: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                AppToolbar(
-                  onBackButtonPressed: () => Navigator.popAndPushNamed(context, HomeScreen.routeName),
-                  richTextTitle: StepRichTextTitle(step: 3, totalSteps: 3),
-                  actions: const [AppbarLogo()],
-                  padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                ),
-                AnimatedLinearProgressIndicator.step(
-                  current: 3,
-                  totalSteps: 3,
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                Expanded(
-                  child: ScrollableScreenContainer(
-                    padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-                    child: Column(
-                      children: [
-                        Text(
-                          "Choose the repayment option that suits you",
-                          style: ClientConfig.getTextStyleScheme().heading2,
-                        ),
-                        Column(
-                          children: [
-                            Text(
-                              'You can decide whether you prefer the flexibility of a percentage rate repayment or the predictability of fixed repayments.',
-                              style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 24,
-                        ),
-                        Container(
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: ClientConfig.getCustomColors().neutral200),
-                            borderRadius: const BorderRadius.all(Radius.circular(8)),
-                            color: ClientConfig.getCustomColors().neutral100,
-                          ),
-                          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                            Row(
-                              children: [
-                                const Icon(Icons.info_outline),
-                                const SizedBox(width: 8),
-                                Text(
-                                  '5% interest rate',
-                                  style: ClientConfig.getTextStyleScheme().heading4,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Our fixed interest rate of 5% remains the same, no matter the repayment type or rate you select. It will accrue based on your outstanding balance after the repayment has been deducted.',
-                              style: ClientConfig.getTextStyleScheme().bodySmallRegular,
-                            ),
-                          ]),
-                        ),
-                        const SizedBox(
-                          height: 16,
-                        ),
-                        OnboardingRepaymentOptionPageContent(
-                          viewModel: viewModel,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
+        if (viewModel is OnboardingCreditCardApplicationFetchedViewModel) {
+          return _buildOnboardingRepaymentOptionScreen(viewModel);
         }
-
-        return const Text('asd');
+        return const Center(
+          child: Text('Error'),
+        );
       },
+    );
+  }
+
+  Widget _buildOnboardingRepaymentOptionScreen(OnboardingCreditCardApplicationFetchedViewModel viewModel) {
+    return ScreenScaffold(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AppToolbar(
+            backButtonEnabled: false,
+            richTextTitle: StepRichTextTitle(step: 3, totalSteps: 3),
+            actions: const [AppbarLogo()],
+            padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+          ),
+          AnimatedLinearProgressIndicator.step(
+            current: 3,
+            totalSteps: 3,
+          ),
+          const SizedBox(
+            height: 16,
+          ),
+          Expanded(
+            child: ScrollableScreenContainer(
+              padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
+              child: Column(
+                children: [
+                  Text(
+                    "Choose the repayment option that suits you",
+                    style: ClientConfig.getTextStyleScheme().heading2,
+                  ),
+                  Column(
+                    children: [
+                      Text(
+                        'You can decide whether you prefer the flexibility of a percentage rate repayment or the predictability of fixed repayments.',
+                        style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 24,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: ClientConfig.getCustomColors().neutral200),
+                      borderRadius: const BorderRadius.all(Radius.circular(8)),
+                      color: ClientConfig.getCustomColors().neutral100,
+                    ),
+                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      Row(
+                        children: [
+                          const Icon(Icons.info_outline),
+                          const SizedBox(width: 8),
+                          Text(
+                            '5% interest rate',
+                            style: ClientConfig.getTextStyleScheme().heading4,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Our fixed interest rate of 5% remains the same, no matter the repayment type or rate you select. It will accrue based on your outstanding balance after the repayment has been deducted.',
+                        style: ClientConfig.getTextStyleScheme().bodySmallRegular,
+                      ),
+                    ]),
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  OnboardingRepaymentOptionPageContent(
+                    viewModel: viewModel,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
 
 class OnboardingRepaymentOptionPageContent extends StatefulWidget {
-  final WithCardApplicationViewModel viewModel;
+  final OnboardingCreditCardApplicationFetchedViewModel viewModel;
 
   const OnboardingRepaymentOptionPageContent({
     super.key,
@@ -143,7 +153,6 @@ class _OnboardingRepaymentOptionPageContentState extends State<OnboardingRepayme
     setState(() {
       chosenPercentageRate = value;
       canContinue = value >= 10;
-      // widget.acceptToContinue(canContinue);
     });
   }
 
@@ -164,28 +173,28 @@ class _OnboardingRepaymentOptionPageContentState extends State<OnboardingRepayme
     }
 
     inputFixedRateController.addListener(() {
-      if (double.parse(inputFixedRateController.text) >= minFixedRate &&
-          double.parse(inputFixedRateController.text) <= maxFixedRate) {
-        setState(() {
-          canContinue = true;
-          // widget.acceptToContinue(canContinue);
-        });
-      } else {
-        setState(() {
-          canContinue = false;
-          // widget.acceptToContinue(canContinue);
-        });
-      }
+      if (inputFixedRateController.text.isNotEmpty) {
+        if (double.parse(inputFixedRateController.text) >= minFixedRate &&
+            double.parse(inputFixedRateController.text) <= maxFixedRate) {
+          setState(() {
+            canContinue = true;
+          });
+        } else {
+          setState(() {
+            canContinue = false;
+          });
+        }
 
-      if (double.parse(inputFixedRateController.text) < minFixedRate && chosenPercentageRate < 10) {
-        chosenFixedRate = minFixedRate;
-      } else if (double.parse(inputFixedRateController.text) >= minFixedRate && chosenPercentageRate < 10) {
-        chosenFixedRate = double.parse(inputFixedRateController.text);
-      } else if (double.parse(inputFixedRateController.text) >= minFixedRate && chosenPercentageRate >= 10) {
-        chosenFixedRate = double.parse(inputFixedRateController.text);
-        chosenPercentageRate = 3;
-      } else {
-        chosenFixedRate = 49;
+        if (double.parse(inputFixedRateController.text) < minFixedRate && chosenPercentageRate < 10) {
+          chosenFixedRate = minFixedRate;
+        } else if (double.parse(inputFixedRateController.text) >= minFixedRate && chosenPercentageRate < 10) {
+          chosenFixedRate = double.parse(inputFixedRateController.text);
+        } else if (double.parse(inputFixedRateController.text) >= minFixedRate && chosenPercentageRate >= 10) {
+          chosenFixedRate = double.parse(inputFixedRateController.text);
+          chosenPercentageRate = 3;
+        } else {
+          chosenFixedRate = 49;
+        }
       }
     });
   }
@@ -209,34 +218,26 @@ class _OnboardingRepaymentOptionPageContentState extends State<OnboardingRepayme
             inputFixedRateController: inputFixedRateController,
           ),
           const Spacer(),
-          SizedBox(
-            width: double.infinity,
-            child: PrimaryButton(
-              text: "Order my Card",
-              onPressed: canContinue
-                  ? () {
-                      if (chosenPercentageRate >= 10) {
-                        chosenFixedRate = 49;
-                      } else {
-                        chosenPercentageRate = 3;
-                      }
-
-                      // StoreProvider.of<AppState>(context).dispatch(
-                      //   UpdateCardApplicationCommandAction(
-                      //     fixedRate: chosenFixedRate,
-                      //     percentageRate: chosenPercentageRate,
-                      //     id: widget.viewModel.cardApplication!.id,
-                      //   ),
-                      // );
-
-                      // Navigator.pushNamed(context, RepaymentSuccessfullyChangedScreen.routeName,
-                      //     arguments: RepaymentSuccessfullyScreenParams(
-                      //       fixedRate: chosenFixedRate,
-                      //       interestRate: chosenPercentageRate,
-                      //     ));
+          PrimaryButton(
+            isLoading: widget.viewModel.isLoading,
+            text: "Confirm & finish",
+            onPressed: canContinue
+                ? () {
+                    if (chosenPercentageRate >= 10) {
+                      chosenFixedRate = 49;
+                    } else {
+                      chosenPercentageRate = 3;
                     }
-                  : null,
-            ),
+
+                    StoreProvider.of<AppState>(context).dispatch(
+                      OnboardingUpdateCreditCardApplicationCommandAction(
+                        fixedRate: chosenFixedRate,
+                        percentageRate: chosenPercentageRate,
+                        id: widget.viewModel.cardApplication.id,
+                      ),
+                    );
+                  }
+                : null,
           ),
           const SizedBox(height: 8),
         ],

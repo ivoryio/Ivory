@@ -6,7 +6,7 @@ import '../../../redux/onboarding/card_configuration/onboarding_card_configurati
 import '../../repayments/change_repayment/change_repayment_service.dart';
 import 'onboarding_card_configuration_service.dart';
 
-class OnboardingCardConfigurationMiddleware extends  MiddlewareClass<AppState> {
+class OnboardingCardConfigurationMiddleware extends MiddlewareClass<AppState> {
   final OnboardingCardConfigurationService _cardConfigurationService;
   final CardApplicationService _cardApplicationService;
 
@@ -25,42 +25,43 @@ class OnboardingCardConfigurationMiddleware extends  MiddlewareClass<AppState> {
     }
 
     final user = authState.cognitoUser;
-    
-    if(action is GetCardPersonNameCommandAction) {
+
+
+    if (action is GetCardPersonNameCommandAction) {
       final response = await _cardConfigurationService.getCardholderName(user: user);
-      if(response is GetCardholderNameSuccessResponse) {
+      if (response is GetCardholderNameSuccessResponse) {
         store.dispatch(WithCardholderNameEventAction(cardholderName: response.cardholderName));
       } else {
         store.dispatch(OnboardingCardConfigurationFailedEventAction());
       }
     }
 
-    if(action is OnboardingCreateCardCommandAction) {
+    if (action is OnboardingCreateCardCommandAction) {
       store.dispatch(OnboardingCreateCardLoadingEventAction());
       final response = await _cardConfigurationService.onboardingCreateCard(user: user);
-      if(response is OnboardingCardConfigurationSuccessResponse) {
+      if (response is OnboardingCardConfigurationSuccessResponse) {
         store.dispatch(OnboardingCardConfigurationGenericSuccessEventAction());
       } else {
         store.dispatch(OnboardingCardConfigurationFailedEventAction());
       }
     }
 
-    if(action is GetOnboardingCardInfoCommandAction) {
+    if (action is GetOnboardingCardInfoCommandAction) {
       final response = await _cardConfigurationService.onboardingGetCardInfo(user: user);
-      if(response is GetCardInfoSuccessResponse) {
-        store.dispatch(
-            WithCardInfoEventAction(
-              cardholderName: response.cardholderName,
-              maskedPAN: response.maskedPAN,
-              expiryDate: response.expiryDate,
-            )
-        );
+      if (response is GetCardInfoSuccessResponse) {
+        store.dispatch(WithCardInfoEventAction(
+          cardholderName: response.cardholderName,
+          maskedPAN: response.maskedPAN,
+          expiryDate: response.expiryDate,
+        ));
       } else {
         store.dispatch(OnboardingCardConfigurationFailedEventAction());
       }
     }
 
     if (action is OnboardingGetCreditCardApplicationCommandAction) {
+      store.dispatch(OnboardingGetCreditCardApplicationLoadingEventAction());
+
       final response = await _cardApplicationService.getCardApplication(user: user);
       if (response is GetCardApplicationSuccessResponse) {
         store.dispatch(OnboardingGetCreditCardApplicationSuccessEventAction(
@@ -68,6 +69,25 @@ class OnboardingCardConfigurationMiddleware extends  MiddlewareClass<AppState> {
         ));
       } else {
         store.dispatch(OnboardingGetCreditCardApplicationFailedEventAction());
+      }
+    }
+
+    if (action is OnboardingUpdateCreditCardApplicationCommandAction) {
+      store.dispatch(OnboardingUpdateCreditCardApplicationLoadingEventAction());
+
+      final response = await _cardApplicationService.updateChangeRepayment(
+        user: user,
+        fixedRate: action.fixedRate,
+        percentageRate: action.percentageRate,
+        id: action.id,
+      );
+
+      if (response is UpdateCardApplicationSuccessResponse) {
+        store.dispatch(OnboardingUpdateCreditCardApplicationSuccessEventAction(
+          creditCardApplication: response.creditCardApplication,
+        ));
+      } else {
+        store.dispatch(OnboardingUpdateCreditCardApplicationFailedEventAction());
       }
     }
   }

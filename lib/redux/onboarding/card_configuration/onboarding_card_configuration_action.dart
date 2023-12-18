@@ -32,6 +32,8 @@ class WithCardInfoEventAction {
 
 class OnboardingGetCreditCardApplicationCommandAction {}
 
+class OnboardingGetCreditCardApplicationLoadingEventAction {}
+
 class OnboardingGetCreditCardApplicationFailedEventAction {}
 
 class OnboardingGetCreditCardApplicationSuccessEventAction {
@@ -40,7 +42,19 @@ class OnboardingGetCreditCardApplicationSuccessEventAction {
   OnboardingGetCreditCardApplicationSuccessEventAction({required this.creditCardApplication});
 }
 
-class OnboardingUpdateCreditCardApplicationCommandAction {}
+class OnboardingUpdateCreditCardApplicationCommandAction {
+  final double fixedRate;
+  final int percentageRate;
+  final String id;
+
+  OnboardingUpdateCreditCardApplicationCommandAction({
+    required this.fixedRate,
+    required this.percentageRate,
+    required this.id,
+  });
+}
+
+class OnboardingUpdateCreditCardApplicationLoadingEventAction {}
 
 class OnboardingUpdateCreditCardApplicationFailedEventAction {}
 
