@@ -4,7 +4,7 @@ import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/onboarding/card_configuration/onboarding_card_configuration_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/onboarding/card_configuration/onboarding_card_configuration_action.dart';
-import 'package:solarisdemo/screens/home/home_screen.dart';
+import 'package:solarisdemo/screens/onboarding/card_configuration/onboarding_congratulations_screen.dart';
 import 'package:solarisdemo/screens/repayments/change_repayment_rate.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -29,8 +29,7 @@ class _OnboardingRepaymentOptionScreenState extends State<OnboardingRepaymentOpt
         if (previousViewModel is OnboardingCreditCardApplicationFetchedViewModel &&
             previousViewModel.isLoading == true &&
             newViewModel is OnboardingCreditCardApplicationUpdatedViewModel) {
-          //remove this and add final navigation here
-          Navigator.popAndPushNamed(context, HomeScreen.routeName);
+          Navigator.pushNamedAndRemoveUntil(context, OnboardingCongratulationsScreen.routeName, (_) => false);
         }
       },
       converter: (store) => OnboardingCardConfigurationPresenter.presentCardConfiguration(

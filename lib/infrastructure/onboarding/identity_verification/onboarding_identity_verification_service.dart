@@ -115,7 +115,9 @@ class OnbordingIdentityVerificationService extends ApiService {
 
       return GetCreditLimitSuccessResponse(creditLimit: valueApprovedLimit);
     } catch (err) {
-      return const IdentityVerificationServiceErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
+      return const IdentityVerificationServiceErrorResponse(
+        errorType: OnboardingIdentityVerificationErrorType.fetchCreditLimitFailed,
+      );
     }
   }
 
@@ -132,7 +134,9 @@ class OnbordingIdentityVerificationService extends ApiService {
 
       return FinalizeIdentificationSuccessResponse();
     } catch (err) {
-      return const IdentityVerificationServiceErrorResponse(errorType: OnboardingIdentityVerificationErrorType.unknown);
+      return const IdentityVerificationServiceErrorResponse(
+        errorType: OnboardingIdentityVerificationErrorType.finalizeIdentificationFailed,
+      );
     }
   }
 }

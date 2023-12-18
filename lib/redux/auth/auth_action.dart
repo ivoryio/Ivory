@@ -18,12 +18,12 @@ class LogoutUserCommandAction {}
 
 class AuthenticateUserCommandAction {
   final AuthType authType;
-  final String tan;
+  final String? tan;
   final User cognitoUser;
   final void Function() onSuccess;
   AuthenticateUserCommandAction({
     required this.authType,
-    required this.tan,
+    this.tan,
     required this.onSuccess,
     required this.cognitoUser,
   });

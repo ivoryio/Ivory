@@ -5,6 +5,7 @@ import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/onboarding/onboarding_progress_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/onboarding/onboarding_progress_action.dart';
+import 'package:solarisdemo/screens/onboarding/card_configuration/onboarding_congratulations_screen.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_credit_limit_congratulations_screen.dart';
 import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_scoring_rejected_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -38,6 +39,8 @@ class _OnboardingStepperScreenState extends State<OnboardingStepperScreen> {
                 context, OnboardingCreditLimitCongratulationsScreen.routeName, (route) => false);
           } else if (newViewModel is RedirectToScoringFailedViewModel) {
             Navigator.pushNamedAndRemoveUntil(context, OnboardingScoringRejectedScreen.routeName, (route) => false);
+          } else if (newViewModel is RedirectToCongratulationsViewModel) {
+            Navigator.pushNamedAndRemoveUntil(context, OnboardingCongratulationsScreen.routeName, (route) => false);
           }
         },
         builder: (context, viewModel) {

@@ -1,1 +1,8 @@
-enum OnboardingIdentityVerificationErrorType { unknown, invalidIban, pendingIdentification, invalidTan }
+enum OnboardingIdentityVerificationErrorType {
+  unknown,
+  invalidIban,
+  pendingIdentification,
+  invalidTan,
+  fetchCreditLimitFailed,
+  finalizeIdentificationFailed,
+}

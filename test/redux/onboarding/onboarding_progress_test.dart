@@ -123,4 +123,74 @@ void main() {
     // then
     expect((await appState).onboardingPersonalDetailsState.attributes.mobileNumber, '123456');
   });
+
+  group("Finalizing onboarding", () {
+    test("When finalizing onboarding is in progress, the state should change to loading", () async {
+      // given
+      final store = createTestStore(
+        onboardingService: FakeOnboardingService(),
+        initialState: createAppState(
+          authState: authentionInitializedState,
+          onboardingProgressState: OnboardingProgressFetchedState(step: OnboardingStep.creditCardApplicationCreated),
+        ),
+      );
+
+      final appState = store.onChange.firstWhere(
+        (element) => element.onboardingProgressState is OnboardingProgressInitialLoadingState,
+      );
+
+      // when
+      store.dispatch(FinalizeOnboardingCommandAction());
+
+      // then
+      expect((await appState).onboardingProgressState, isA<OnboardingProgressInitialLoadingState>());
+    });
+
+    test("When finalize onboarding has failed, the state should change to error", () async {
+      // given
+      final store = createTestStore(
+        onboardingService: FakeFailingOnboardingService(),
+        initialState: createAppState(
+          authState: authentionInitializedState,
+          onboardingProgressState: OnboardingProgressInitialLoadingState(),
+        ),
+      );
+
+      final appState =
+          store.onChange.firstWhere((element) => element.onboardingProgressState is OnboardingProgressErrorState);
+
+      // when
+      store.dispatch(FinalizeOnboardingCommandAction());
+
+      // then
+      expect((await appState).onboardingProgressState, isA<OnboardingProgressErrorState>());
+    });
+
+    test("When finalize onboarding is successful, onboardingProgressState and authState should be success", () async {
+      // given
+      final store = createTestStore(
+        onboardingService: FakeOnboardingService(),
+        deviceService: FakeDeviceService(),
+        authService: FakeAuthService(),
+        personService: FakePersonService(),
+        initialState: createAppState(
+          authState: authentionInitializedState,
+          onboardingProgressState: OnboardingProgressFetchedState(step: OnboardingStep.creditCardApplicationCreated),
+        ),
+      );
+      final appState = store.onChange.firstWhere(
+        (element) => element.onboardingProgressState is OnboardingFinalizedState,
+      );
+      final authState = store.onChange.firstWhere(
+        (element) => element.authState is AuthenticatedState,
+      );
+
+      // when
+      store.dispatch(FinalizeOnboardingCommandAction());
+
+      // then
+      expect((await appState).onboardingProgressState, isA<OnboardingFinalizedState>());
+      expect((await authState).authState, isA<AuthenticatedState>());
+    });
+  });
 }
