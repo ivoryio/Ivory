@@ -123,7 +123,7 @@ Store<AppState> createStore({
       OnboardingFinancialDetailsMiddleware(onboardingFinancialDetailsService),
       DocumentsMiddleware(documentsService, fileSaverService),
       OnboardingIdentityVerificationMiddleware(onboardingIdentityVerificationService),
-      OnboardingCardConfigurationMiddleware(onboardingCardConfigurationService),
+      OnboardingCardConfigurationMiddleware(onboardingCardConfigurationService, cardApplicationService),
     ],
   );
 }

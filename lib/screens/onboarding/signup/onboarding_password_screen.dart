@@ -84,6 +84,7 @@ class _OnboardingPasswordScreenState extends State<OnboardingPasswordScreen> {
                       const SizedBox(height: 24),
                       IvoryTextField(
                         label: 'Password',
+                        placeholder: 'Type password',
                         controller: passwordController,
                         focusNode: passwordFocusNode,
                         inputType: TextFieldInputType.password,
@@ -113,6 +114,7 @@ class _OnboardingPasswordScreenState extends State<OnboardingPasswordScreen> {
                       const SizedBox(height: 24),
                       IvoryTextField(
                         label: 'Repeat password',
+                        placeholder: 'Repeat password',
                         controller: confirmPasswordController,
                         focusNode: confirmPasswordFocusNode,
                         inputType: TextFieldInputType.password,
