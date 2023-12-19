@@ -33,7 +33,7 @@ class DocumentsMiddleware extends MiddlewareClass<AppState> {
             response is GetDocumentsSuccessResponse &&
             response.documents.length < action.retryWhenBelowDocumentCount,
         maxAttempts: action.maxRetryCount,
-        delay: const Duration(seconds: 1),
+        delay: const Duration(seconds: 2),
       );
 
       if (response is GetDocumentsSuccessResponse) {
