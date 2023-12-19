@@ -10,8 +10,13 @@ import '../models/user.dart';
 
 class ApiService<T> {
   User? user;
+  http.Client _client = http.Client();
 
   ApiService({required this.user});
+
+  set client(http.Client client) {
+    _client = client;
+  }
 
   Future<T> get(
     String path, {
@@ -25,7 +30,7 @@ class ApiService<T> {
         accessToken = await this.getAccessToken();
       }
 
-      final response = await http.get(
+      final response = await _client.get(
         ApiService.url(path, queryParameters: queryParameters),
         headers: authNeeded && accessToken != null ? {"Authorization": "Bearer $accessToken"} : {},
       );
@@ -37,7 +42,8 @@ class ApiService<T> {
       final decodedData = utf8.decode(response.bodyBytes);
       return jsonDecode(decodedData);
     } catch (e, s) {
-      debugPrintStack(stackTrace: s);
+      debugPrint(e.toString());
+      debugPrintStack(stackTrace: s, label: "get $path $queryParameters");
       rethrow;
     }
   }
@@ -57,7 +63,7 @@ class ApiService<T> {
       }
 
       log(requestBody, name: "POST $path $queryParameters REQUEST");
-      final response = await http.post(
+      final response = await _client.post(
         ApiService.url(path, queryParameters: queryParameters),
         headers: authNeeded && accessToken != null ? {"Authorization": "Bearer $accessToken"} : {},
         body: requestBody,
@@ -69,8 +75,9 @@ class ApiService<T> {
       }
 
       return jsonDecode(response.body);
-    } catch (e) {
-      log(e.toString());
+    } catch (e, s) {
+      debugPrint(e.toString());
+      debugPrintStack(stackTrace: s, label: "post $path $queryParameters");
       rethrow;
     }
   }
@@ -90,7 +97,7 @@ class ApiService<T> {
       }
 
       log(requestBody, name: "PATCH $path $queryParameters REQUEST");
-      final response = await http.patch(
+      final response = await _client.patch(
         ApiService.url(path, queryParameters: queryParameters),
         headers: authNeeded && accessToken != null ? {"Authorization": "Bearer $accessToken"} : {},
         body: requestBody,
@@ -102,8 +109,9 @@ class ApiService<T> {
       }
 
       return jsonDecode(response.body);
-    } catch (e) {
-      log(e.toString());
+    } catch (e, s) {
+      debugPrint(e.toString());
+      debugPrintStack(stackTrace: s, label: "patch $path $queryParameters");
       rethrow;
     }
   }
@@ -123,7 +131,7 @@ class ApiService<T> {
       }
 
       log(requestBody, name: "DELETE $path $queryParameters REQUEST");
-      final response = await http.delete(
+      final response = await _client.delete(
         ApiService.url(path, queryParameters: queryParameters),
         headers: authNeeded && accessToken != null ? {"Authorization": "Bearer $accessToken"} : {},
         body: requestBody,
@@ -135,9 +143,10 @@ class ApiService<T> {
       }
 
       return response.body.isNotEmpty ? jsonDecode(response.body) : {};
-    } catch (e) {
-      log(e.toString());
-      throw Exception("DELETE request failed");
+    } catch (e, s) {
+      debugPrint(e.toString());
+      debugPrintStack(stackTrace: s, label: "delete $path $queryParameters");
+      rethrow;
     }
   }
 
@@ -153,7 +162,7 @@ class ApiService<T> {
         accessToken = await this.getAccessToken();
       }
 
-      final response = await http.get(
+      final response = await _client.get(
         ApiService.url(path, queryParameters: queryParameters),
         headers: authNeeded && accessToken != null ? {"Authorization": "Bearer $accessToken"} : {},
       );
@@ -166,7 +175,8 @@ class ApiService<T> {
 
       return response.bodyBytes;
     } catch (e, s) {
-      debugPrintStack(stackTrace: s);
+      debugPrint(e.toString());
+      debugPrintStack(stackTrace: s, label: "downloadFile $path $queryParameters");
       rethrow;
     }
   }

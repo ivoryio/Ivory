@@ -9,9 +9,9 @@ import '../redux/auth/auth_mocks.dart';
 class AuthStatePlaceholder {
   static AuthState loggedInState() {
     final user = User(
-      session: MockUserSession(),
+      session: FakeUserSession(),
       attributes: [],
-      cognitoUser: MockCognitoUser(),
+      cognitoUser: FakeCognitoUser(),
       personId: "personID",
     );
     final person = Person();
@@ -23,9 +23,9 @@ class AuthStatePlaceholder {
 
   static AuthState inOnboardingState() {
     final user = User(
-      session: MockUserSession(),
+      session: FakeUserSession(),
       attributes: [],
-      cognitoUser: MockCognitoUser(),
+      cognitoUser: FakeCognitoUser(),
       personId: "personID",
     );
 

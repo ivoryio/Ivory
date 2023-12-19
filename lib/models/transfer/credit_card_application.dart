@@ -1,4 +1,3 @@
-
 class CreditCardApplication {
   String id;
   String externalCustomerId;
@@ -125,10 +124,10 @@ class ApprovedLimit {
     required this.currency,
   });
 
-  factory ApprovedLimit.fromJson(Map<String, dynamic> json) => ApprovedLimit(
-        value: json["value"] ?? 0,
-        unit: unitValues.map[json["unit"]] ?? Unit.CENTS,
-        currency: currencyValues.map[json["currency"]] ?? Currency.EUR,
+  factory ApprovedLimit.fromJson(Map<String, dynamic>? json) => ApprovedLimit(
+        value: json?["value"] ?? 0,
+        unit: unitValues.map[json?["unit"]] ?? Unit.CENTS,
+        currency: currencyValues.map[json?["currency"]] ?? Currency.EUR,
       );
 
   Map<String, dynamic> toJson() => {
