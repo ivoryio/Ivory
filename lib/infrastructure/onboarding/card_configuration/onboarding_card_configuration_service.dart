@@ -32,9 +32,9 @@ class OnboardingCardConfigurationService extends ApiService {
       final response = await get("/account/cards");
       final cardData = (response as List).first["representation"];
       return GetCardInfoSuccessResponse(
-        cardholderName: cardData["line_1"],
-        maskedPAN: cardData["masked_pan"],
-        expiryDate: cardData["formatted_expiration_date"],
+        cardholderName: cardData["line_1"] ?? "",
+        maskedPAN: cardData["masked_pan"] ?? "",
+        expiryDate: cardData["formatted_expiration_date"] ?? "",
       );
     } catch (e) {
       return OnboardingCardConfigurationErrorResponse();
