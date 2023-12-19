@@ -29,13 +29,18 @@ Future<dynamic> showBottomModal({
     ),
     builder: (context) {
       if (!useScrollableChild) {
-        return _BottomModalSheetContent(
-          content: content,
-          title: title,
-          textWidget: textWidget,
-          showCloseButton: showCloseButton,
-          isScrollControlled: isScrollControlled,
-          addContentPadding: addContentPadding,
+        return SizedBox(
+          height: useSafeArea
+              ? MediaQuery.of(context).size.height - MediaQuery.of(context).viewPadding.top
+              : double.infinity,
+          child: _BottomModalSheetContent(
+            content: content,
+            title: title,
+            textWidget: textWidget,
+            showCloseButton: showCloseButton,
+            isScrollControlled: isScrollControlled,
+            addContentPadding: addContentPadding,
+          ),
         );
       }
 
