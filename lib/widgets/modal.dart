@@ -13,6 +13,7 @@ Future<dynamic> showBottomModal({
   bool useSafeArea = false,
   bool useScrollableChild = true,
   bool isDismissible = true,
+  bool statusbarVisibilityForTallModal = false,
 }) async {
   return showModalBottomSheet(
     context: context,
@@ -30,9 +31,9 @@ Future<dynamic> showBottomModal({
     builder: (context) {
       if (!useScrollableChild) {
         return SizedBox(
-          height: useSafeArea
+          height: (useSafeArea && statusbarVisibilityForTallModal)
               ? MediaQuery.of(context).size.height - MediaQuery.of(context).viewPadding.top
-              : double.infinity,
+              : null,
           child: _BottomModalSheetContent(
             content: content,
             title: title,
@@ -44,20 +45,25 @@ Future<dynamic> showBottomModal({
         );
       }
 
-      return SingleChildScrollView(
-        padding: EdgeInsets.fromLTRB(
-          addContentPadding ? 24 : 0,
-          0,
-          addContentPadding ? 24 : 0,
-          MediaQuery.of(context).padding.bottom + MediaQuery.of(context).viewInsets.bottom + 16,
-        ),
-        child: _BottomModalSheetContent(
-          content: content,
-          title: title,
-          textWidget: textWidget,
-          showCloseButton: showCloseButton,
-          isScrollControlled: isScrollControlled,
-          addContentPadding: addContentPadding,
+      return SizedBox(
+        height: (useSafeArea && statusbarVisibilityForTallModal)
+            ? MediaQuery.of(context).size.height - MediaQuery.of(context).viewPadding.top
+            : null,
+        child: SingleChildScrollView(
+          padding: EdgeInsets.fromLTRB(
+            addContentPadding ? 24 : 0,
+            0,
+            addContentPadding ? 24 : 0,
+            MediaQuery.of(context).padding.bottom + MediaQuery.of(context).viewInsets.bottom + 16,
+          ),
+          child: _BottomModalSheetContent(
+            content: content,
+            title: title,
+            textWidget: textWidget,
+            showCloseButton: showCloseButton,
+            isScrollControlled: isScrollControlled,
+            addContentPadding: addContentPadding,
+          ),
         ),
       );
     },

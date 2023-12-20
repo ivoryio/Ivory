@@ -21,6 +21,7 @@ class IvorySelectOption extends StatefulWidget {
   final bool bottomSheetExpanded;
   final Widget Function(BuildContext, SelectOption)? optionSeparatorBuilder;
   final String searchFieldInitialText;
+  final bool statusbarVisibilityForTallModal;
 
   const IvorySelectOption({
     super.key,
@@ -38,6 +39,7 @@ class IvorySelectOption extends StatefulWidget {
     this.filterOptions = true,
     this.bottomSheetExpanded = false,
     this.optionSeparatorBuilder,
+    this.statusbarVisibilityForTallModal = false,
   });
 
   @override
@@ -155,6 +157,7 @@ class _IvorySelectOptionState extends State<IvorySelectOption> {
       title: widget.bottomSheetTitle,
       addContentPadding: false,
       useSafeArea: true,
+      statusbarVisibilityForTallModal: widget.statusbarVisibilityForTallModal,
       useScrollableChild: false,
       content: IvoryOptionPicker(
         controller: _controller,

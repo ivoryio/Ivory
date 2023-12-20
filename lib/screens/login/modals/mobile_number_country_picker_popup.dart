@@ -63,7 +63,7 @@ class _CountryPrefixPickerState extends State<CountryPrefixPicker> {
           ),
           const SizedBox(height: 16),
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.65,
+            height: MediaQuery.of(context).size.height,
             child: ListView.builder(
               itemCount: _filteredCountries.length,
               itemBuilder: (context, index) {
@@ -91,25 +91,47 @@ class _CountryPrefixPickerState extends State<CountryPrefixPicker> {
                         widget.onCountrySelected(country);
                         Navigator.of(context).pop();
                       },
-                      child: Row(
-                        children: [
-                          Text(
-                            country.flag,
-                            style: const TextStyle(fontSize: 20, height: 24 / 20),
-                          ),
-                          const SizedBox(width: 16),
-                          Text(
-                            '${country.phoneCode} (${country.name})',
+                      child: LayoutBuilder(
+                        builder: (BuildContext context, BoxConstraints constraints) {
+                          final text = TextSpan(
+                            text: '${country.phoneCode} (${country.name})',
                             style: ClientConfig.getTextStyleScheme().heading4,
-                          ),
-                          const SizedBox(width: 16),
-                          const Spacer(),
-                          if (isSelected)
-                            Icon(
-                              Icons.check,
-                              color: ClientConfig.getCustomColors().success,
-                            ),
-                        ],
+                          );
+
+                          final textPainter = TextPainter(
+                            text: text,
+                            textDirection: TextDirection.ltr,
+                            maxLines: 1,
+                          );
+
+                          textPainter.layout(maxWidth: constraints.maxWidth);
+
+                          final isOverflowing = textPainter.didExceedMaxLines;
+
+                          return Row(
+                            children: [
+                              Text(
+                                country.flag,
+                                style: const TextStyle(fontSize: 20, height: 24 / 20),
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Text(
+                                  '${country.phoneCode} (${country.name})',
+                                  style: ClientConfig.getTextStyleScheme().heading4,
+                                  overflow: isOverflowing ? TextOverflow.visible : TextOverflow.clip,
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              const Spacer(),
+                              if (isSelected)
+                                Icon(
+                                  Icons.check,
+                                  color: ClientConfig.getCustomColors().success,
+                                ),
+                            ],
+                          );
+                        },
                       ),
                     ),
                   ),
