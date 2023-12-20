@@ -5,13 +5,18 @@ OnboardingCardConfigurationState onboardingCardConfigurationReducer(
     OnboardingCardConfigurationState currentState,
     dynamic action ) {
   if(action is OnboardingCreateCardLoadingEventAction && currentState is WithCardholderNameState) {
-    return WithCardholderNameState(cardholderName: currentState.cardholderName, isLoading: true);
+    return WithCardholderNameState(
+      cardholderName: currentState.cardholderName,
+      isLoading: true,
+    );
   } else if (action is OnboardingCardConfigurationFailedEventAction) {
     return OnboardingCardConfigurationGenericErrorState();
   } else if (action is OnboardingCardConfigurationGenericSuccessEventAction) {
     return OnboardingCardConfigurationGenericSuccessState();
   } else if (action is WithCardholderNameEventAction) {
-    return WithCardholderNameState(cardholderName: action.cardholderName);
+    return WithCardholderNameState(
+      cardholderName: action.cardholderName,
+    );
   } else if (action is WithCardInfoEventAction) {
     return WithCardInfoState(
         cardholderName: action.cardholderName,
@@ -22,8 +27,13 @@ OnboardingCardConfigurationState onboardingCardConfigurationReducer(
     return OnboardingCreditCardApplicationFetchedState(
       cardApplication: action.creditCardApplication,
     );
-  } else if (action is OnboardingGetCreditCardApplicationLoadingEventAction) {
-    return OnboardingGetCreditCardApplicationLoadingState();
+  } else if (action is OnboardingGetCreditCardApplicationLoadingEventAction && currentState is WithCardInfoState) {
+    return WithCardInfoState(
+      cardholderName: currentState.cardholderName,
+      maskedPAN: currentState.maskedPAN,
+      expiryDate: currentState.expiryDate,
+      isLoading: true,
+    );
   } else if (action is OnboardingUpdateCreditCardApplicationLoadingEventAction && currentState is OnboardingCreditCardApplicationFetchedState) {
     return OnboardingCreditCardApplicationFetchedState(
       cardApplication: currentState.cardApplication,

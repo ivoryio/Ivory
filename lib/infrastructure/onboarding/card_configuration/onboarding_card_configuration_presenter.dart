@@ -20,6 +20,7 @@ class OnboardingCardConfigurationPresenter {
         cardholderName: cardConfigurationState.cardholderName,
         maskedPAN: cardConfigurationState.maskedPAN,
         expiryDate: cardConfigurationState.expiryDate,
+        isLoading: cardConfigurationState.isLoading,
       );
     } else if (cardConfigurationState is OnboardingCreditCardApplicationFetchedState) {
       return OnboardingCreditCardApplicationFetchedViewModel(
@@ -66,15 +67,17 @@ class WithCardInfoViewModel extends OnboardingCardConfigurationViewModel {
   final String cardholderName;
   final String maskedPAN;
   final String expiryDate;
+  final bool isLoading;
 
   WithCardInfoViewModel({
     required this.cardholderName,
     required this.maskedPAN,
     required this.expiryDate,
+    this.isLoading = false,
   });
 
   @override
-  List<Object?> get props => [cardholderName, maskedPAN, expiryDate];
+  List<Object?> get props => [cardholderName, maskedPAN, expiryDate, isLoading];
 }
 
 class OnboardingCreditCardApplicationFetchedViewModel extends OnboardingCardConfigurationViewModel {
