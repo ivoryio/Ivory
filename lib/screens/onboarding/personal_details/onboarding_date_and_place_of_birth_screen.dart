@@ -144,6 +144,7 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
                     bottomSheetTitle: "Select your country of birth",
                     searchFieldPlaceholder: "Search country...",
                     controller: _selectCountryController,
+                    statusbarVisibilityForTallModal: true,
                     optionSeparatorBuilder: (context, option) => option.value == "DE"
                         ? Divider(height: 2, color: ClientConfig.getCustomColors().neutral200)
                         : const SizedBox(),
@@ -249,6 +250,7 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
                       bottomSheetTitle: "Select your city of birth",
                       searchFieldPlaceholder: "Search city...",
                       controller: _selectCityController,
+                      statusbarVisibilityForTallModal: true,
                       enabledSearch: true,
                       filterOptions: false,
                       bottomSheetExpanded: true,
@@ -282,6 +284,7 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
                     bottomSheetTitle: "Select your nationality",
                     searchFieldPlaceholder: "Search nationality...",
                     controller: _selectNationalityController,
+                    statusbarVisibilityForTallModal: true,
                     optionSeparatorBuilder: (context, option) => option.value == "DE"
                         ? Divider(height: 2, color: ClientConfig.getCustomColors().neutral200)
                         : const SizedBox(),
