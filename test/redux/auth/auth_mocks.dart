@@ -14,13 +14,39 @@ import 'package:solarisdemo/utilities/device_info/device_info.dart';
 
 import '../bank_card/bank_card_mocks.dart';
 
-class MockUserSession extends Mock implements CognitoUserSession {}
+class FakeCognitoAccessToken extends Fake implements CognitoAccessToken {
+  FakeCognitoAccessToken() : super();
+
+  @override
+  String? get jwtToken => "jwtToken";
+}
+
+class FakeUserSession extends Fake implements CognitoUserSession {
+  @override
+  bool isValid() {
+    return true;
+  }
+
+  @override
+  CognitoAccessToken getAccessToken() {
+    return FakeCognitoAccessToken();
+  }
+}
 
 class MockUserAttribute extends Mock implements CognitoUserAttribute {}
 
-class MockCognitoUser extends Mock implements CognitoUser {}
+class FakeCognitoUser extends Fake implements CognitoUser {}
 
-class MockUser extends Mock implements User {}
+class MockUser extends Mock implements User {
+  @override
+  CognitoUser get cognitoUser => FakeCognitoUser();
+
+  @override
+  CognitoUserSession get session => FakeUserSession();
+
+  @override
+  List<CognitoUserAttribute> get attributes => [];
+}
 
 class FakeAuthService extends AuthService {
   @override

@@ -2,7 +2,12 @@ import 'package:solarisdemo/infrastructure/documents/documents_service.dart';
 import 'package:solarisdemo/models/documents/document.dart';
 import 'package:solarisdemo/models/documents/documents_error_type.dart';
 
-class GetDocumentsCommandAction {}
+class GetDocumentsCommandAction {
+  final int retryWhenBelowDocumentCount;
+  final int maxRetryCount;
+
+  GetDocumentsCommandAction({this.maxRetryCount = 10, this.retryWhenBelowDocumentCount = 2});
+}
 
 class DocumentsLoadingEventAction {}
 

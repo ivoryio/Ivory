@@ -128,6 +128,8 @@ class _OnboardingMobileNumberScreenState extends State<OnboardingMobileNumberScr
                                   addContentPadding: false,
                                   context: context,
                                   title: "Select mobile number prefix",
+                                  useSafeArea: true,
+                                  statusbarVisibilityForTallModal: true,
                                   content: CountryPrefixPicker(
                                     onCountrySelected: (country) {
                                       _selectedCountryNotifier.value = country;
@@ -161,7 +163,6 @@ class _OnboardingMobileNumberScreenState extends State<OnboardingMobileNumberScr
                                             ? ClientConfig.getCustomColors().neutral900
                                             : ClientConfig.getCustomColors().neutral400,
                                         thickness: 1,
-                                        
                                       ),
                                     ),
                                   ],

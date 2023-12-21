@@ -71,7 +71,8 @@ class _OnboardingConfigureCardScreenState extends State<OnboardingConfigureCardS
                 store.dispatch(GetOnboardingCardInfoCommandAction());
               },
             onWillChange: (oldViewModel, newViewModel) {
-              if (oldViewModel is OnboardingGetCreditCardApplicationLoadingViewModel &&
+              if (oldViewModel is WithCardInfoViewModel &&
+                  oldViewModel.isLoading &&
                   newViewModel is OnboardingCreditCardApplicationFetchedViewModel) {
                 Navigator.of(context).pushNamed(
                   OnboardingRepaymentOptionScreen.routeName,
@@ -116,7 +117,7 @@ class _OnboardingConfigureCardScreenState extends State<OnboardingConfigureCardS
               const Spacer(),
               PrimaryButton(
                 text: "Configure my card",
-                isLoading: viewModel is OnboardingGetCreditCardApplicationLoadingViewModel,
+                isLoading: viewModel.isLoading,
                 onPressed: () {
                   StoreProvider.of<AppState>(context).dispatch(
                     OnboardingGetCreditCardApplicationCommandAction(),

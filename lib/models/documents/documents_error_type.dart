@@ -1,1 +1,1 @@
-enum DocumentsErrorType { unknown }
+enum DocumentsErrorType { unknown, emptyList }
