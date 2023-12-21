@@ -82,6 +82,7 @@ class HomePageContent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const HomePageHeader(),
+          const SizedBox(height: 32),
           Column(
             children: [
               Padding(
@@ -97,8 +98,9 @@ class HomePageContent extends StatelessWidget {
                     forceReloadTransactions: false,
                   ),
                 ),
-                converter: (store) =>
-                    TransactionPresenter.presentTransactions(transactionsState: store.state.homePageTransactionsState),
+                converter: (store) => TransactionPresenter.presentTransactions(
+                  transactionsState: store.state.homePageTransactionsState,
+                ),
                 builder: (context, viewModel) {
                   if (viewModel is TransactionsErrorViewModel) {
                     return const Center(
@@ -107,33 +109,49 @@ class HomePageContent extends StatelessWidget {
                   }
 
                   if (viewModel is TransactionsFetchedViewModel) {
+                    final transactions = viewModel.transactions ?? [];
+
                     return Column(
                       children: [
-                        for (var transaction in viewModel.transactions!)
-                          TransactionListItem(
-                            transaction: transaction,
+                        if (transactions.isEmpty)
+                          Padding(
+                            padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+                            child: Text(
+                              "No transactions yet. When you make payments & transactions, they will be displayed here.",
+                              style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                            ),
                           ),
+                        for (var transaction in transactions) TransactionListItem(transaction: transaction),
+                        const SizedBox(height: 32),
                         Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 24,
-                            horizontal: 24,
-                          ),
+                          padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
                           child: Analytics(
                             transactions: viewModel.transactions!,
                           ),
                         ),
+                        const SizedBox(height: 32),
+                        Padding(
+                          padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+                          child: const Rewards(),
+                        )
                       ],
                     );
                   }
 
-                  return const Center(child: CircularProgressIndicator());
+                  return SkeletonContainer(
+                    child: Padding(
+                      padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+                      child: Column(
+                        children: [
+                          for (var i = 0; i < _defaultCountTransactionsDisplayed; i++)
+                            TransactionListItem.loadingSkeleton()
+                        ],
+                      ),
+                    ),
+                  );
                 },
               ),
             ],
-          ),
-          Padding(
-            padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-            child: const Rewards(),
           ),
         ],
       ),
@@ -209,6 +227,7 @@ class AccountSummary extends StatelessWidget {
 
   static Widget loadingSkeleton() {
     return const SkeletonContainer(
+      colorTheme: SkeletonColorTheme.light,
       child: Column(
         children: [
           SizedBox(height: 12),
