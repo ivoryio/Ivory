@@ -36,91 +36,83 @@ class _OnboardingRepaymentOptionScreenState extends State<OnboardingRepaymentOpt
         cardConfigurationState: store.state.onboardingCardConfigurationState,
       ),
       builder: (context, viewModel) {
-        if (viewModel is OnboardingCreditCardApplicationFetchedViewModel) {
-          return _buildOnboardingRepaymentOptionScreen(viewModel);
-        }
-        return const Center(
-          child: Text('Error'),
-        );
-      },
-    );
-  }
-
-  Widget _buildOnboardingRepaymentOptionScreen(OnboardingCreditCardApplicationFetchedViewModel viewModel) {
-    return ScreenScaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          AppToolbar(
-            backButtonEnabled: false,
-            richTextTitle: StepRichTextTitle(step: 3, totalSteps: 3),
-            actions: const [AppbarLogo()],
-            padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-          ),
-          AnimatedLinearProgressIndicator.step(
-            current: 3,
-            totalSteps: 3,
-          ),
-          const SizedBox(
-            height: 16,
-          ),
-          Expanded(
-            child: ScrollableScreenContainer(
-              padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-              child: Column(
-                children: [
-                  Text(
-                    "Choose the repayment option that suits you",
-                    style: ClientConfig.getTextStyleScheme().heading2,
-                  ),
-                  Column(
+        return ScreenScaffold(
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AppToolbar(
+                backButtonEnabled: false,
+                richTextTitle: StepRichTextTitle(step: 3, totalSteps: 3),
+                actions: const [AppbarLogo()],
+                padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+              ),
+              AnimatedLinearProgressIndicator.step(
+                current: 3,
+                totalSteps: 3,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              Expanded(
+                child: ScrollableScreenContainer(
+                  padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
+                  child: Column(
                     children: [
                       Text(
-                        'You can decide whether you prefer the flexibility of a percentage rate repayment or the predictability of fixed repayments.',
-                        style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                        "Choose the repayment option that suits you",
+                        style: ClientConfig.getTextStyleScheme().heading2,
                       ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 24,
-                  ),
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: ClientConfig.getCustomColors().neutral200),
-                      borderRadius: const BorderRadius.all(Radius.circular(8)),
-                      color: ClientConfig.getCustomColors().neutral100,
-                    ),
-                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      Row(
+                      Column(
                         children: [
-                          const Icon(Icons.info_outline),
-                          const SizedBox(width: 8),
                           Text(
-                            '5% interest rate',
-                            style: ClientConfig.getTextStyleScheme().heading4,
+                            'You can decide whether you prefer the flexibility of a percentage rate repayment or the predictability of fixed repayments.',
+                            style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
                           ),
                         ],
                       ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Our fixed interest rate of 5% remains the same, no matter the repayment type or rate you select. It will accrue based on your outstanding balance after the repayment has been deducted.',
-                        style: ClientConfig.getTextStyleScheme().bodySmallRegular,
+                      const SizedBox(
+                        height: 24,
                       ),
-                    ]),
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: ClientConfig.getCustomColors().neutral200),
+                          borderRadius: const BorderRadius.all(Radius.circular(8)),
+                          color: ClientConfig.getCustomColors().neutral100,
+                        ),
+                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                          Row(
+                            children: [
+                              const Icon(Icons.info_outline),
+                              const SizedBox(width: 8),
+                              Text(
+                                '5% interest rate',
+                                style: ClientConfig.getTextStyleScheme().heading4,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Our fixed interest rate of 5% remains the same, no matter the repayment type or rate you select. It will accrue based on your outstanding balance after the repayment has been deducted.',
+                            style: ClientConfig.getTextStyleScheme().bodySmallRegular,
+                          ),
+                        ]),
+                      ),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      if (viewModel is OnboardingCreditCardApplicationFetchedViewModel)
+                        OnboardingRepaymentOptionPageContent(
+                          viewModel: viewModel,
+                        ),
+                    ],
                   ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  OnboardingRepaymentOptionPageContent(
-                    viewModel: viewModel,
-                  ),
-                ],
+                ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
