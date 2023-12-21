@@ -10,6 +10,7 @@ import 'package:solarisdemo/screens/transactions/transactions_screen.dart';
 import 'package:solarisdemo/screens/transfer/transfer_screen.dart';
 import 'package:solarisdemo/widgets/rewards.dart';
 import 'package:solarisdemo/widgets/screen.dart';
+import 'package:solarisdemo/widgets/skeleton.dart';
 
 import '../../config.dart';
 import '../../infrastructure/transactions/transaction_presenter.dart';
@@ -154,42 +155,31 @@ class HomePageHeader extends StatelessWidget {
       converter: (store) =>
           AccountSummaryPresenter.presentAccountSummary(accountSummaryState: store.state.accountSummaryState),
       builder: (context, viewModel) {
-        if (viewModel is AccountSummaryFetchedViewModel || viewModel is AccountSummaryLoadingViewModel) {
-          return Container(
-            padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(30),
-                bottomRight: Radius.circular(30),
+        return Container(
+          padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.only(
+              bottomLeft: Radius.circular(30),
+              bottomRight: Radius.circular(30),
+            ),
+            color: ClientConfig.getColorScheme().primary,
+          ),
+          child: Column(
+            children: [
+              viewModel is AccountSummaryFetchedViewModel
+                  ? AccountSummary(
+                      viewModel: viewModel,
+                    )
+                  : Center(child: AccountSummary.loadingSkeleton()),
+              Divider(
+                color: ClientConfig.getCustomColors().neutral100.withOpacity(0.15),
+                thickness: 1,
               ),
-              color: ClientConfig.getColorScheme().primary,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (viewModel is AccountSummaryFetchedViewModel)
-                  AccountSummary(
-                    viewModel: viewModel,
-                  )
-                else
-                  const Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(20.0),
-                      child: CircularProgressIndicator(color: Colors.white),
-                    ),
-                  ),
-                const Divider(
-                  color: Colors.white,
-                  thickness: 0.5,
-                ),
-                const AccountOptions(),
-              ],
-            ),
-          );
-        }
-
-        return const Text("Could not load account summary");
+              const AccountOptions(),
+            ],
+          ),
+        );
       },
     );
   }
@@ -216,6 +206,38 @@ class AccountSummary extends StatelessWidget {
       ],
     );
   }
+
+  static Widget loadingSkeleton() {
+    return const SkeletonContainer(
+      child: Column(
+        children: [
+          SizedBox(height: 12),
+          Skeleton(height: 16, width: 136),
+          SizedBox(height: 12),
+          Skeleton(height: 40, width: 192),
+          SizedBox(height: 12),
+          Skeleton(height: 8),
+          SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Skeleton(height: 10, width: 64),
+              Skeleton(height: 10, width: 64),
+            ],
+          ),
+          SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Skeleton(height: 16, width: 88),
+              Skeleton(height: 16, width: 88),
+            ],
+          ),
+          SizedBox(height: 20),
+        ],
+      ),
+    );
+  }
 }
 
 class AccountBalance extends StatelessWidget {
@@ -240,15 +262,17 @@ class AccountBalance extends StatelessWidget {
               "Available Balance",
               style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: Colors.white),
             ),
-            IconButton(
-              icon: const Icon(
+            const SizedBox(width: 4),
+            InkWell(
+              child: const Icon(
                 Icons.info_outline,
                 color: Colors.white,
+                size: 24,
               ),
-              onPressed: () {
+              onTap: () {
                 Navigator.of(context).pushNamed(AvailableBalanceScreen.routeName, arguments: viewModel);
               },
-            ),
+            )
           ],
         ),
         Padding(
@@ -260,6 +284,7 @@ class AccountBalance extends StatelessWidget {
           ),
         ),
         LinearPercentIndicator(
+          padding: EdgeInsets.zero,
           lineHeight: 8,
           barRadius: const Radius.circular(40),
           percent: creditLimitPercent.isNaN ? 0 : creditLimitPercent,
@@ -283,7 +308,7 @@ class AccountStats extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 16),
+      padding: const EdgeInsets.only(top: 8, bottom: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
