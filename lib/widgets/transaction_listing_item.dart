@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:solarisdemo/screens/transactions/transaction_detail_screen.dart';
+import 'package:solarisdemo/widgets/skeleton.dart';
 
 import '../config.dart';
 import '../models/transactions/transaction_model.dart';
@@ -64,6 +65,34 @@ class TransactionListItem extends StatelessWidget {
     }
 
     return maxNameLength;
+  }
+
+  static Widget loadingSkeleton() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: Row(
+        children: [
+          Skeleton(height: 24, width: 24, borderRadius: BorderRadius.circular(100)),
+          const SizedBox(width: 16),
+          const Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Skeleton(height: 16, width: 128),
+                    Spacer(),
+                    Skeleton(height: 16, width: 64),
+                  ],
+                ),
+                SizedBox(height: 8),
+                Skeleton(height: 10, width: 64),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
