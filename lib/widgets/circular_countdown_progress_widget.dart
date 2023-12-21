@@ -58,13 +58,14 @@ class CountdownTimerController extends ValueNotifier<Duration> {
   final Duration stepDuration;
 
   CountdownTimerController({
-    this.duration = const Duration(seconds: 60),
+    this.duration = const Duration(minutes: 1),
     this.stepDuration = const Duration(seconds: 1),
   }) : super(duration);
 
   Timer? _timer;
   VoidCallback? onCompletedTimer;
 
+  Duration get remainingDuration => value;
   int get remainingSeconds => value.inSeconds % 60;
   int get remainingMinutes => value.inMinutes;
   double get remainingPercent => value.inSeconds / duration.inSeconds;
