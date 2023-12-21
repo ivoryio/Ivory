@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -28,26 +26,22 @@ class OnboardingSignWithTanScreen extends StatefulWidget {
 }
 
 class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScreen> {
-  final GlobalKey<TanInputState> _tanInputKey = GlobalKey<TanInputState>();
+  // final GlobalKey<TanInputState> _tanInputKey = GlobalKey<TanInputState>();
   final TextEditingController _tanController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
   final ContinueButtonController _continueButtonController = ContinueButtonController();
   final CountdownTimerController _countdownTimerController =
       CountdownTimerController(duration: const Duration(minutes: 5));
-  final Duration _newCodeTimeoutDuration = const Duration(seconds: 59);
-  late Duration _countdownTimerNewCode;
-
-  Timer? _timer;
-  Key key = UniqueKey();
+  final CountdownTimerController _newCodeCountdownController =
+      CountdownTimerController(duration: const Duration(minutes: 1));
 
   @override
   void initState() {
     super.initState();
     _continueButtonController.setDisabled();
-    _countdownTimerNewCode = _newCodeTimeoutDuration;
 
     _countdownTimerController.start();
-    _startTimerNewCode();
+    _newCodeCountdownController.start();
 
     _tanController.addListener(_validToContinue);
   }
@@ -60,35 +54,12 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
     }
   }
 
-  void _startTimerNewCode() {
-    const oneSec = Duration(seconds: 1);
-
-    if (_timer != null) {
-      _stopTimerNewCode();
-      _timer = null;
-    }
-
-    _timer = Timer.periodic(oneSec, (Timer timer) {
-      if (_countdownTimerNewCode.inSeconds == 0) {
-        _stopTimerNewCode();
-      } else {
-        setState(() {
-          _countdownTimerNewCode = _countdownTimerNewCode - oneSec;
-        });
-      }
-    });
-  }
-
-  void _stopTimerNewCode() {
-    _timer?.cancel();
-  }
-
   @override
   void dispose() {
     _tanController.dispose();
     _focusNode.dispose();
-    _stopTimerNewCode();
     _countdownTimerController.dispose();
+    _newCodeCountdownController.dispose();
     super.dispose();
   }
 
@@ -116,8 +87,7 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
                   text: "Try again with new TAN",
                   onPressed: () {
                     _tanController.clear();
-                    setState(() => _countdownTimerNewCode = _newCodeTimeoutDuration);
-                    _startTimerNewCode();
+                    _newCodeCountdownController.restart();
                     Navigator.pop(context);
 
                     StoreProvider.of<AppState>(context).dispatch(AuthorizeIdentificationSigningCommandAction());
@@ -179,9 +149,8 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
                                         text: "Try again with new TAN",
                                         onPressed: () {
                                           _tanController.clear();
-                                          setState(() => _countdownTimerNewCode = _newCodeTimeoutDuration);
-                                          _startTimerNewCode();
                                           _countdownTimerController.restart();
+                                          _newCodeCountdownController.restart();
                                           Navigator.pop(context);
 
                                           StoreProvider.of<AppState>(context)
@@ -219,7 +188,7 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
                       ),
                       const SizedBox(height: 24),
                       TanInput(
-                        key: _tanInputKey,
+                        // key: _tanInputKey,
                         length: 6,
                         controller: _tanController,
                         focusNode: _focusNode,
@@ -227,30 +196,31 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
                         onChanged: (tan) {},
                       ),
                       const Spacer(),
-                      Container(
-                        width: double.infinity,
-                        height: 48,
-                        alignment: Alignment.center,
-                        child: (_countdownTimerNewCode.inSeconds > 0)
-                            ? Text(
-                                'Request new code in 0:${_countdownTimerNewCode.inSeconds.toString().padLeft(2, '0')}',
-                                style: ClientConfig.getTextStyleScheme()
-                                    .labelMedium
-                                    .copyWith(color: ClientConfig.getCustomColors().neutral500))
-                            : Text.rich(TextSpan(
-                                text: 'Request new code',
-                                style: ClientConfig.getTextStyleScheme()
-                                    .labelMedium
-                                    .copyWith(color: ClientConfig.getColorScheme().secondary),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    _tanController.clear();
-                                    setState(() => _countdownTimerNewCode = _newCodeTimeoutDuration);
-                                    _startTimerNewCode();
+                      ListenableBuilder(
+                        listenable: _newCodeCountdownController,
+                        builder: (context, child) => Container(
+                          width: double.infinity,
+                          height: 48,
+                          alignment: Alignment.center,
+                          child: (_newCodeCountdownController.remainingDuration.inSeconds > 0)
+                              ? Text('Request new code in 0:${_newCodeCountdownController.formattedRemainingSeconds}',
+                                  style: ClientConfig.getTextStyleScheme()
+                                      .labelMedium
+                                      .copyWith(color: ClientConfig.getCustomColors().neutral500))
+                              : Text.rich(TextSpan(
+                                  text: 'Request new code',
+                                  style: ClientConfig.getTextStyleScheme()
+                                      .labelMedium
+                                      .copyWith(color: ClientConfig.getColorScheme().secondary),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      _tanController.clear();
+                                      _newCodeCountdownController.restart();
 
-                                    StoreProvider.of<AppState>(context)
-                                        .dispatch(AuthorizeIdentificationSigningCommandAction());
-                                  })),
+                                      StoreProvider.of<AppState>(context)
+                                          .dispatch(AuthorizeIdentificationSigningCommandAction());
+                                    })),
+                        ),
                       ),
                       const SizedBox(height: 16),
                       ListenableBuilder(
