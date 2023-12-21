@@ -144,7 +144,7 @@ class TransactionApprovalPendingScreen extends StatelessWidget {
                 height: 70,
                 width: 70,
                 child: CircularCountdownProgress(
-                  duration: const Duration(minutes: 4),
+                  controller: CountdownTimerController(duration: const Duration(minutes: 4)),
                   onCompleted: () async {
                     final bottomSheet = await showBottomModal(
                       context: context,
