@@ -67,7 +67,7 @@ class TransactionListItem extends StatelessWidget {
     return maxNameLength;
   }
 
-  static Widget loadingSkeleton({int count = 1}) {
+  static Widget loadingSkeleton() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16),
       child: Row(
