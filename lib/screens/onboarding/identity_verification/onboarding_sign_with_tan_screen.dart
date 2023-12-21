@@ -229,7 +229,11 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
                         controller: _tanController,
                         focusNode: _focusNode,
                         isLoading: _continueButtonController.isLoading,
-                        onChanged: (tan) {},
+                        onChanged: (tan) {
+                          if (tan.length == 6) {
+                            _focusNode.unfocus();
+                          }
+                        },
                       ),
                       const Spacer(),
                       Container(
