@@ -26,7 +26,6 @@ class OnboardingSignWithTanScreen extends StatefulWidget {
 }
 
 class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScreen> {
-  // final GlobalKey<TanInputState> _tanInputKey = GlobalKey<TanInputState>();
   final TextEditingController _tanController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
   final ContinueButtonController _continueButtonController = ContinueButtonController();
@@ -188,7 +187,6 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
                       ),
                       const SizedBox(height: 24),
                       TanInput(
-                        // key: _tanInputKey,
                         length: 6,
                         controller: _tanController,
                         focusNode: _focusNode,
