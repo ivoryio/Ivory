@@ -22,7 +22,7 @@ class SkeletonContainer extends StatelessWidget {
 
   const SkeletonContainer({
     super.key,
-    this.colorTheme = SkeletonColorTheme.light,
+    this.colorTheme = SkeletonColorTheme.dark,
     this.animationDuration,
     this.animationEnabled = true,
     required this.child,
