@@ -93,21 +93,6 @@ class _CountryPrefixPickerState extends State<CountryPrefixPicker> {
                       },
                       child: LayoutBuilder(
                         builder: (BuildContext context, BoxConstraints constraints) {
-                          final text = TextSpan(
-                            text: '${country.phoneCode} (${country.name})',
-                            style: ClientConfig.getTextStyleScheme().heading4,
-                          );
-
-                          final textPainter = TextPainter(
-                            text: text,
-                            textDirection: TextDirection.ltr,
-                            maxLines: 1,
-                          );
-
-                          textPainter.layout(maxWidth: constraints.maxWidth);
-
-                          final isOverflowing = textPainter.didExceedMaxLines;
-
                           return Row(
                             children: [
                               Text(
@@ -119,11 +104,10 @@ class _CountryPrefixPickerState extends State<CountryPrefixPicker> {
                                 child: Text(
                                   '${country.phoneCode} (${country.name})',
                                   style: ClientConfig.getTextStyleScheme().heading4,
-                                  overflow: isOverflowing ? TextOverflow.visible : TextOverflow.clip,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                               const SizedBox(width: 16),
-                              const Spacer(),
                               if (isSelected)
                                 Icon(
                                   Icons.check,

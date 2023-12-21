@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -28,21 +26,21 @@ class OnboardingSignWithTanScreen extends StatefulWidget {
 }
 
 class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScreen> {
-  final GlobalKey<TanInputState> _tanInputKey = GlobalKey<TanInputState>();
   final TextEditingController _tanController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
   final ContinueButtonController _continueButtonController = ContinueButtonController();
-  final Duration _countdownProgress = const Duration(minutes: 4, seconds: 59);
-  Duration _countdownTimer = const Duration(seconds: 59);
-  Timer? _timer;
-  Key key = UniqueKey();
+  final CountdownTimerController _countdownTimerController =
+      CountdownTimerController(duration: const Duration(minutes: 5));
+  final CountdownTimerController _newCodeCountdownController =
+      CountdownTimerController(duration: const Duration(minutes: 1));
 
   @override
   void initState() {
     super.initState();
     _continueButtonController.setDisabled();
 
-    _startTimer();
+    _countdownTimerController.start();
+    _newCodeCountdownController.start();
 
     _tanController.addListener(_validToContinue);
   }
@@ -55,40 +53,12 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
     }
   }
 
-  void _restartCountdownProgress() {
-    setState(() {
-      key = UniqueKey();
-    });
-  }
-
-  void _startTimer() {
-    const oneSec = Duration(seconds: 1);
-
-    if (_timer != null) {
-      _stopTimer();
-      _timer = null;
-    }
-
-    _timer = Timer.periodic(oneSec, (Timer timer) {
-      if (_countdownTimer.inSeconds == 0) {
-        _stopTimer();
-      } else {
-        setState(() {
-          _countdownTimer = _countdownTimer - oneSec;
-        });
-      }
-    });
-  }
-
-  void _stopTimer() {
-    _timer?.cancel();
-  }
-
   @override
   void dispose() {
     _tanController.dispose();
     _focusNode.dispose();
-    _timer?.cancel();
+    _countdownTimerController.dispose();
+    _newCodeCountdownController.dispose();
     super.dispose();
   }
 
@@ -116,9 +86,7 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
                   text: "Try again with new TAN",
                   onPressed: () {
                     _tanController.clear();
-                    setState(() {
-                      _countdownTimer = const Duration(seconds: 59);
-                    });
+                    _newCodeCountdownController.restart();
                     Navigator.pop(context);
 
                     StoreProvider.of<AppState>(context).dispatch(AuthorizeIdentificationSigningCommandAction());
@@ -162,8 +130,7 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
                             width: 70,
                             height: 70,
                             child: CircularCountdownProgress(
-                              key: key,
-                              duration: _countdownProgress,
+                              controller: _countdownTimerController,
                               onCompleted: () {
                                 showBottomModal(
                                   context: context,
@@ -181,12 +148,8 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
                                         text: "Try again with new TAN",
                                         onPressed: () {
                                           _tanController.clear();
-                                          setState(() {
-                                            _countdownTimer = const Duration(seconds: 59);
-                                          });
-
-                                          _restartCountdownProgress();
-
+                                          _countdownTimerController.restart();
+                                          _newCodeCountdownController.restart();
                                           Navigator.pop(context);
 
                                           StoreProvider.of<AppState>(context)
@@ -224,7 +187,6 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
                       ),
                       const SizedBox(height: 24),
                       TanInput(
-                        key: _tanInputKey,
                         length: 6,
                         controller: _tanController,
                         focusNode: _focusNode,
@@ -236,31 +198,31 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
                         },
                       ),
                       const Spacer(),
-                      Container(
-                        width: double.infinity,
-                        height: 48,
-                        alignment: Alignment.center,
-                        child: (_countdownTimer.inSeconds > 0)
-                            ? Text('Request new code in 0:${_countdownTimer.inSeconds.toString().padLeft(2, '0')}',
-                                style: ClientConfig.getTextStyleScheme()
-                                    .labelMedium
-                                    .copyWith(color: ClientConfig.getCustomColors().neutral500))
-                            : Text.rich(TextSpan(
-                                text: 'Request new code',
-                                style: ClientConfig.getTextStyleScheme()
-                                    .labelMedium
-                                    .copyWith(color: ClientConfig.getColorScheme().secondary),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    _tanController.clear();
-                                    setState(() {
-                                      _countdownTimer = const Duration(seconds: 59);
-                                    });
-                                    _startTimer();
+                      ListenableBuilder(
+                        listenable: _newCodeCountdownController,
+                        builder: (context, child) => Container(
+                          width: double.infinity,
+                          height: 48,
+                          alignment: Alignment.center,
+                          child: (_newCodeCountdownController.remainingDuration.inSeconds > 0)
+                              ? Text('Request new code in 0:${_newCodeCountdownController.formattedRemainingSeconds}',
+                                  style: ClientConfig.getTextStyleScheme()
+                                      .labelMedium
+                                      .copyWith(color: ClientConfig.getCustomColors().neutral500))
+                              : Text.rich(TextSpan(
+                                  text: 'Request new code',
+                                  style: ClientConfig.getTextStyleScheme()
+                                      .labelMedium
+                                      .copyWith(color: ClientConfig.getColorScheme().secondary),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      _tanController.clear();
+                                      _newCodeCountdownController.restart();
 
-                                    StoreProvider.of<AppState>(context)
-                                        .dispatch(AuthorizeIdentificationSigningCommandAction());
-                                  })),
+                                      StoreProvider.of<AppState>(context)
+                                          .dispatch(AuthorizeIdentificationSigningCommandAction());
+                                    })),
+                        ),
                       ),
                       const SizedBox(height: 16),
                       ListenableBuilder(

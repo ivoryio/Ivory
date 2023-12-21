@@ -26,12 +26,14 @@ class BankCardDetailsScreen extends StatelessWidget {
   final CardScreenParams params;
   static const routeName = '/cardDetailsScreen';
 
-  const BankCardDetailsScreen({super.key, required this.params});
+  const BankCardDetailsScreen({
+    super.key,
+    required this.params,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final user =
-        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
+    final user = (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
 
     return ScreenScaffold(
       body: Padding(
@@ -118,6 +120,7 @@ class BankCardDetailsScreen extends StatelessWidget {
                               alignment: Alignment.center,
                               padding: const EdgeInsets.all(0.0),
                               child: CircularCountdownProgress(
+                                controller: CountdownTimerController(duration: const Duration(seconds: 60)),
                                 onCompleted: () {
                                   Navigator.pop(context);
                                   StoreProvider.of<AppState>(context).dispatch(
