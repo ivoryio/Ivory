@@ -117,7 +117,7 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
         store.dispatch(BankCardFailedEventAction());
         return null;
       }
-      final consentId = await _deviceService.getConsentId();
+      final consentId = await _deviceService.getConsentId(authState.authenticatedUser.cognito.personId!);
       final deviceFingerprint = await _deviceFingerprintService.getDeviceFingerprint(consentId);
       if (deviceFingerprint == null) {
         store.dispatch(BankCardFailedEventAction());
@@ -227,7 +227,7 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
         return null;
       }
 
-      String? consentId = await _deviceService.getConsentId();
+      String? consentId = await _deviceService.getConsentId(authState.authenticatedUser.cognito.personId!);
 
       if (consentId == null) {
         store.dispatch(BankCardFailedEventAction());

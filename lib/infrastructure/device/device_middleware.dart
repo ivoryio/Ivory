@@ -72,7 +72,7 @@ class DeviceBindingMiddleware extends MiddlewareClass<AppState> {
 
       store.dispatch(DeviceBindingLoadingEventAction());
 
-      String? consentId = await _deviceService.getConsentId();
+      String? consentId = await _deviceService.getConsentId(authState.authenticatedUser.cognito.personId!);
 
       if (consentId == null) {
         store.dispatch(DeviceBindingFailedEventAction());
@@ -125,7 +125,7 @@ class DeviceBindingMiddleware extends MiddlewareClass<AppState> {
       store.dispatch(DeviceBindingLoadingEventAction());
 
       final deviceId = await _deviceService.getDeviceId();
-      String? consentId = await _deviceService.getConsentId();
+      String? consentId = await _deviceService.getConsentId(authState.authenticatedUser.cognito.personId!);
 
       if (consentId == null) {
         store.dispatch(DeviceBindingFailedEventAction());

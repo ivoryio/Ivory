@@ -13,25 +13,32 @@ import 'package:solarisdemo/utilities/crypto/crypto_utils.dart';
 MethodChannel _platform = const MethodChannel('com.thinslices.solarisdemo/native');
 
 const deviceIdKey = 'device_id';
-const deviceConsentIdKey = 'device_consent_id';
+const consentIdsKey = 'consents';
 const encryptPinMethod = 'encryptPin';
 
 class DeviceService {
   DeviceService();
 
-  Future<String?> getConsentId() async {
+  Future<String?> getConsentId(String personId) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? consentsJson = prefs.getString('consents');
 
-      return prefs.getString(deviceConsentIdKey);
+      if (consentsJson == null) return null;
+      Map<String, String> consents = Map<String, String>.from(json.decode(consentsJson));
+
+      return consents[personId];
     } catch (e) {
       return null;
     }
   }
 
-  Future<void> saveConsentIdInCache(String consentId) async {
+  Future<void> saveConsentIdInCache(String consentId, String personId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('device_consent_id', consentId);
+    Map<String, String> consents = Map<String, String>.from(json.decode(prefs.getString(consentIdsKey) ?? '{}'));
+
+    consents[personId] = consentId;
+    await prefs.setString(consentIdsKey, json.encode(consents));
   }
 
   Future<String?> getDeviceId() async {

@@ -92,7 +92,7 @@ class AuthMiddleware extends MiddlewareClass<AppState> {
         return;
       }
 
-      String? consentId = await _deviceService.getConsentId();
+      String? consentId = await _deviceService.getConsentId(user.personId!);
 
       if (consentId == null) {
         final newConsentResponse = await _deviceFingerprintService.createDeviceConsent(user: user);
@@ -103,7 +103,7 @@ class AuthMiddleware extends MiddlewareClass<AppState> {
         }
 
         consentId = (newConsentResponse).consentId;
-        await _deviceService.saveConsentIdInCache(consentId);
+        await _deviceService.saveConsentIdInCache(consentId, user.personId!);
 
         final deviceFingerprint = await _deviceFingerprintService.getDeviceFingerprint(consentId);
         if (deviceFingerprint == null) {
