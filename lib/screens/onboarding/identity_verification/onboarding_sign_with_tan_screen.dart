@@ -32,8 +32,11 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
   final TextEditingController _tanController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
   final ContinueButtonController _continueButtonController = ContinueButtonController();
-  final Duration _countdownProgress = const Duration(minutes: 4, seconds: 59);
-  Duration _countdownTimer = const Duration(seconds: 59);
+  final CountdownTimerController _countdownTimerController =
+      CountdownTimerController(duration: const Duration(minutes: 5));
+  final Duration _newCodeTimeoutDuration = const Duration(seconds: 59);
+  late Duration _countdownTimerNewCode;
+
   Timer? _timer;
   Key key = UniqueKey();
 
@@ -41,8 +44,10 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
   void initState() {
     super.initState();
     _continueButtonController.setDisabled();
+    _countdownTimerNewCode = _newCodeTimeoutDuration;
 
-    _startTimer();
+    _countdownTimerController.start();
+    _startTimerNewCode();
 
     _tanController.addListener(_validToContinue);
   }
@@ -55,32 +60,26 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
     }
   }
 
-  void _restartCountdownProgress() {
-    setState(() {
-      key = UniqueKey();
-    });
-  }
-
-  void _startTimer() {
+  void _startTimerNewCode() {
     const oneSec = Duration(seconds: 1);
 
     if (_timer != null) {
-      _stopTimer();
+      _stopTimerNewCode();
       _timer = null;
     }
 
     _timer = Timer.periodic(oneSec, (Timer timer) {
-      if (_countdownTimer.inSeconds == 0) {
-        _stopTimer();
+      if (_countdownTimerNewCode.inSeconds == 0) {
+        _stopTimerNewCode();
       } else {
         setState(() {
-          _countdownTimer = _countdownTimer - oneSec;
+          _countdownTimerNewCode = _countdownTimerNewCode - oneSec;
         });
       }
     });
   }
 
-  void _stopTimer() {
+  void _stopTimerNewCode() {
     _timer?.cancel();
   }
 
@@ -88,7 +87,8 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
   void dispose() {
     _tanController.dispose();
     _focusNode.dispose();
-    _timer?.cancel();
+    _stopTimerNewCode();
+    _countdownTimerController.dispose();
     super.dispose();
   }
 
@@ -116,9 +116,8 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
                   text: "Try again with new TAN",
                   onPressed: () {
                     _tanController.clear();
-                    setState(() {
-                      _countdownTimer = const Duration(seconds: 59);
-                    });
+                    setState(() => _countdownTimerNewCode = _newCodeTimeoutDuration);
+                    _startTimerNewCode();
                     Navigator.pop(context);
 
                     StoreProvider.of<AppState>(context).dispatch(AuthorizeIdentificationSigningCommandAction());
@@ -162,8 +161,7 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
                             width: 70,
                             height: 70,
                             child: CircularCountdownProgress(
-                              key: key,
-                              duration: _countdownProgress,
+                              controller: _countdownTimerController,
                               onCompleted: () {
                                 showBottomModal(
                                   context: context,
@@ -181,12 +179,9 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
                                         text: "Try again with new TAN",
                                         onPressed: () {
                                           _tanController.clear();
-                                          setState(() {
-                                            _countdownTimer = const Duration(seconds: 59);
-                                          });
-
-                                          _restartCountdownProgress();
-
+                                          setState(() => _countdownTimerNewCode = _newCodeTimeoutDuration);
+                                          _startTimerNewCode();
+                                          _countdownTimerController.restart();
                                           Navigator.pop(context);
 
                                           StoreProvider.of<AppState>(context)
@@ -236,8 +231,9 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
                         width: double.infinity,
                         height: 48,
                         alignment: Alignment.center,
-                        child: (_countdownTimer.inSeconds > 0)
-                            ? Text('Request new code in 0:${_countdownTimer.inSeconds.toString().padLeft(2, '0')}',
+                        child: (_countdownTimerNewCode.inSeconds > 0)
+                            ? Text(
+                                'Request new code in 0:${_countdownTimerNewCode.inSeconds.toString().padLeft(2, '0')}',
                                 style: ClientConfig.getTextStyleScheme()
                                     .labelMedium
                                     .copyWith(color: ClientConfig.getCustomColors().neutral500))
@@ -249,10 +245,8 @@ class _OnboardingSignWithTanScreenState extends State<OnboardingSignWithTanScree
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
                                     _tanController.clear();
-                                    setState(() {
-                                      _countdownTimer = const Duration(seconds: 59);
-                                    });
-                                    _startTimer();
+                                    setState(() => _countdownTimerNewCode = _newCodeTimeoutDuration);
+                                    _startTimerNewCode();
 
                                     StoreProvider.of<AppState>(context)
                                         .dispatch(AuthorizeIdentificationSigningCommandAction());
