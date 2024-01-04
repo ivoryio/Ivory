@@ -10,6 +10,7 @@ import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/ivory_error_widget.dart';
 import 'package:solarisdemo/widgets/ivory_text_field.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
+import 'package:solarisdemo/widgets/skeleton.dart';
 
 import 'bill_detail_screen.dart';
 
@@ -48,11 +49,8 @@ class BillsScreen extends StatelessWidget {
             distinct: true,
             builder: (context, viewModel) {
               if (viewModel is BillsLoadingViewModel || viewModel is BillsInitialViewModel) {
-                return Container(
-                  alignment: Alignment.center,
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(16),
-                  child: const CircularProgressIndicator(),
+                return Expanded(
+                  child: _BillsScrollView.loadingSkeleton(),
                 );
               } else if (viewModel is BillsErrorViewModel) {
                 return Container(
@@ -135,6 +133,23 @@ class _BillsScrollView extends StatelessWidget {
       },
     );
   }
+
+  static Widget loadingSkeleton() {
+    return SkeletonContainer(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+            child: const Skeleton(height: 18, width: 160),
+          ),
+          const SizedBox(height: 8),
+          ...List.generate(9, (index) => _BillItem.loadingSkeleton()),
+          const SizedBox(height: 16),
+        ],
+      ),
+    );
+  }
 }
 
 class _BillItem extends StatelessWidget {
@@ -167,6 +182,19 @@ class _BillItem extends StatelessWidget {
       onTap: () => Navigator.of(context).pushNamed(
         BillDetailScreen.routeName,
         arguments: bill.id,
+      ),
+    );
+  }
+
+  static Widget loadingSkeleton() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      child: Row(
+        children: [
+          Skeleton(height: 24, width: 24, borderRadius: BorderRadius.circular(100)),
+          const SizedBox(width: 16),
+          const Skeleton(height: 16, width: 128),
+        ],
       ),
     );
   }
