@@ -125,12 +125,12 @@ void main() {
       );
 
       // when
-      store.dispatch(GetDocumentsCommandAction());
+      store.dispatch(GetDocumentsCommandAction(retryDelay: const Duration(milliseconds: 1)));
 
       // then
       expect((await appState).documentsState, isA<DocumentsErrorState>());
       expect(((await appState).documentsState as DocumentsErrorState).errorType, DocumentsErrorType.emptyList);
-      expect(getDocumentsAttempts, 11);
+      expect(getDocumentsAttempts, 51);
     });
 
     test("When less than two documents are fetched, retry until two or more are fetched", () async {
