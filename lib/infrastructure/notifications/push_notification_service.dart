@@ -46,6 +46,8 @@ abstract class PushNotificationService extends ApiService {
   Future<String?> getToken();
 
   void handleTokenRefresh({required User user});
+
+  bool get isInitialized;
 }
 
 class FirebasePushNotificationService extends PushNotificationService {
@@ -56,11 +58,14 @@ class FirebasePushNotificationService extends PushNotificationService {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   GlobalKey<NavigatorState> navigatorKey = navigator.navigatorKey;
 
-  bool isInitialized = false;
+  bool _isInitialized = false;
 
   FirebasePushNotificationService({super.user, required this.storageService}) {
     handleAndroidLocalNotifications();
   }
+
+  @override
+  bool get isInitialized => _isInitialized;
 
   @override
   Future<void> init(Store<AppState> store) async {
@@ -111,7 +116,7 @@ class FirebasePushNotificationService extends PushNotificationService {
     FirebaseMessaging.instance.getInitialMessage().then(_onMessage); // App was terminated and notification clicked
     FirebaseMessaging.onMessage.listen(_pushNotificationReceived);
 
-    isInitialized = true;
+    _isInitialized = true;
   }
 
   @override
@@ -190,6 +195,7 @@ class FirebasePushNotificationService extends PushNotificationService {
     if (store == null) return;
 
     debugPrint("Redirect from notification");
+    navigatorKey;
     final context = navigatorKey.currentContext as BuildContext;
     final notificationType = RemoteMessageUtils.getNotificationType(message.data["type"] as String);
 
@@ -212,6 +218,10 @@ class FirebasePushNotificationService extends PushNotificationService {
 
   @override
   Future<void> handleSavedNotification() async {
+    if (!isInitialized || store == null) {
+      return;
+    }
+
     final message = await storageService.find();
     if (message == null) return;
 

@@ -156,6 +156,9 @@ class NotImplementedPushNotificationService extends PushNotificationService {
   void handleTokenRefresh({User? user}) {
     throw UnimplementedError();
   }
+
+  @override
+  bool get isInitialized => throw UnimplementedError();
 }
 
 class NotImplementedTransactionService extends TransactionService {

@@ -87,6 +87,22 @@ void main() {
         // then
         expect(pushNotificationService.isInitialized, true);
       });
+
+      test('When the user granted the permission from android platform, isInitialized should be true', () async {
+        // given
+        setPlatformOverride(TargetPlatform.android);
+
+        when(mockMessagingPlatform.requestPermission()).thenAnswer((_) async => authorizedNotificationSettings);
+
+        final pushNotificationService = FirebasePushNotificationService(storageService: storageService);
+        final store = createTestStore(initialState: createAppState());
+
+        // when
+        await pushNotificationService.init(store);
+
+        // then
+        expect(pushNotificationService.isInitialized, true);
+      });
     });
 
     group("handleSavedNotification", () {
@@ -101,6 +117,21 @@ void main() {
 
         // then
         verifyNever(storageService.delete());
+        verifyNever(mockStore.dispatch(any));
+      });
+
+      test('When the service is not initialized, nothing should happen', () async {
+        // given
+        when(storageService.find()).thenAnswer((_) async => jsonEncode(MockRemoteMessages.scoringSuccessfulMessage));
+
+        final pushNotificationService = FirebasePushNotificationService(storageService: storageService);
+
+        // when
+        await pushNotificationService.handleSavedNotification();
+
+        // then
+        verifyNever(storageService.delete());
+        verifyNever(mockStore.dispatch(any));
       });
 
       testWidgets("When the notification type is unknown, it should only delete it", (tester) async {
@@ -110,20 +141,17 @@ void main() {
         final navigatorKey = GlobalKey<NavigatorState>();
         final navigationObserver = NavigationGeneralObserver();
 
-        pushNotificationService.store = mockStore;
+        pushNotificationService.user = MockUser();
         pushNotificationService.navigatorKey = navigatorKey;
         pushNotificationService.flutterLocalNotificationsPlugin = flutterLocalNotificationsPlugin;
 
-        when(storageService.find()).thenAnswer(
-          (_) async => jsonEncode(MockRemoteMessages.unknownMessageType.toMap()),
-        );
+        when(mockMessagingPlatform.requestPermission()).thenAnswer((_) async => authorizedNotificationSettings);
+        when(storageService.find()).thenAnswer((_) async => jsonEncode(MockRemoteMessages.unknownMessageType.toMap()));
+
+        await pushNotificationService.init(mockStore);
 
         await tester.pumpWidget(
-          MaterialApp(
-            navigatorObservers: [navigationObserver],
-            navigatorKey: navigatorKey,
-            home: Container(),
-          ),
+          MaterialApp(navigatorObservers: [navigationObserver], navigatorKey: navigatorKey, home: Container()),
         );
 
         // when
@@ -133,8 +161,8 @@ void main() {
         verify(storageService.delete()).called(1);
         verifyNever(mockStore.dispatch(any));
 
-        expect(navigationObserver.routeStack.last, "/");
-      });
+        expect(navigationObserver.routeStack.lastOrNull, "/");
+      }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 
       testWidgets(
           "When NotificationType.scaChallenge is saved, the store should dispatch the correct action and redirect to the correct screen",
@@ -146,24 +174,22 @@ void main() {
         final navigationObserver = NavigationGeneralObserver();
 
         pushNotificationService.user = MockUser();
-        pushNotificationService.store = mockStore;
         pushNotificationService.navigatorKey = navigatorKey;
         pushNotificationService.flutterLocalNotificationsPlugin = flutterLocalNotificationsPlugin;
 
-        when(storageService.find()).thenAnswer(
-          (_) async => jsonEncode(MockRemoteMessages.scaChallengeMessage.toMap()),
-        );
+        when(mockMessagingPlatform.requestPermission()).thenAnswer((_) async => authorizedNotificationSettings);
+        when(storageService.find()).thenAnswer((_) async => jsonEncode(MockRemoteMessages.scaChallengeMessage.toMap()));
 
-        await tester.pumpWidget(
-          MaterialApp(
-            navigatorObservers: [navigationObserver],
-            navigatorKey: navigatorKey,
-            home: Container(),
-            routes: {
-              TransactionApprovalPendingScreen.routeName: (context) => Container(),
-            },
-          ),
-        );
+        await pushNotificationService.init(mockStore);
+
+        await tester.pumpWidget(MaterialApp(
+          navigatorObservers: [navigationObserver],
+          navigatorKey: navigatorKey,
+          home: Container(),
+          routes: {
+            TransactionApprovalPendingScreen.routeName: (context) => Container(),
+          },
+        ));
 
         // when
         await pushNotificationService.handleSavedNotification();
@@ -174,7 +200,7 @@ void main() {
         verify(storageService.delete()).called(1);
 
         expect(dispatch.single, isA<ReceivedTransactionApprovalNotificationEventAction>());
-        expect(navigationObserver.routeStack.last, TransactionApprovalPendingScreen.routeName);
+        expect(navigationObserver.routeStack.lastOrNull, TransactionApprovalPendingScreen.routeName);
       });
 
       testWidgets("When NotificationType.scoringSuccessful is saved, the store should dispatch the correct action",
@@ -186,7 +212,6 @@ void main() {
         final navigationObserver = NavigationGeneralObserver();
 
         pushNotificationService.user = MockUser();
-        pushNotificationService.store = mockStore;
         pushNotificationService.navigatorKey = navigatorKey;
         pushNotificationService.flutterLocalNotificationsPlugin = flutterLocalNotificationsPlugin;
 
@@ -194,12 +219,13 @@ void main() {
           (_) async => jsonEncode(MockRemoteMessages.scoringSuccessfulMessage.toMap()),
         );
 
+        await pushNotificationService.init(mockStore);
+
         await tester.pumpWidget(
           MaterialApp(
             navigatorObservers: [navigationObserver],
             navigatorKey: navigatorKey,
             home: Container(),
-            routes: const {},
           ),
         );
 
@@ -222,7 +248,6 @@ void main() {
         final navigationObserver = NavigationGeneralObserver();
 
         pushNotificationService.user = MockUser();
-        pushNotificationService.store = mockStore;
         pushNotificationService.navigatorKey = navigatorKey;
         pushNotificationService.flutterLocalNotificationsPlugin = flutterLocalNotificationsPlugin;
 
@@ -230,12 +255,13 @@ void main() {
           (_) async => jsonEncode(MockRemoteMessages.scoringFailedMessage.toMap()),
         );
 
+        await pushNotificationService.init(mockStore);
+
         await tester.pumpWidget(
           MaterialApp(
             navigatorObservers: [navigationObserver],
             navigatorKey: navigatorKey,
             home: Container(),
-            routes: const {},
           ),
         );
 
@@ -258,7 +284,6 @@ void main() {
         final navigationObserver = NavigationGeneralObserver();
 
         pushNotificationService.user = MockUser();
-        pushNotificationService.store = mockStore;
         pushNotificationService.navigatorKey = navigatorKey;
         pushNotificationService.flutterLocalNotificationsPlugin = flutterLocalNotificationsPlugin;
 
@@ -266,12 +291,13 @@ void main() {
           (_) async => jsonEncode(MockRemoteMessages.scoringInProgressMessage.toMap()),
         );
 
+        await pushNotificationService.init(mockStore);
+
         await tester.pumpWidget(
           MaterialApp(
             navigatorObservers: [navigationObserver],
             navigatorKey: navigatorKey,
             home: Container(),
-            routes: const {},
           ),
         );
 

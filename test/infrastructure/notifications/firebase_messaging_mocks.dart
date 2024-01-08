@@ -64,8 +64,11 @@ class MockFirebaseMessaging extends Mock with MockPlatformInterfaceMixin impleme
 
   @override
   Future<RemoteMessage?> getInitialMessage() {
-    return super.noSuchMethod(Invocation.method(#getInitialMessage, []),
-        returnValue: neverEndingFuture<RemoteMessage>(), returnValueForMissingStub: neverEndingFuture<RemoteMessage>());
+    return super.noSuchMethod(
+      Invocation.method(#getInitialMessage, []),
+      returnValue: Future.value(null),
+      returnValueForMissingStub: Future.value(null),
+    );
   }
 
   @override
@@ -112,17 +115,17 @@ class MockFirebaseMessaging extends Mock with MockPlatformInterfaceMixin impleme
     bool? sound = true,
   }) {
     return super.noSuchMethod(
-        Invocation.method(#requestPermission, [], {
-          #alert: alert,
-          #announcement: announcement,
-          #badge: badge,
-          #carPlay: carPlay,
-          #criticalAlert: criticalAlert,
-          #provisional: provisional,
-          #sound: sound
-        }),
-        returnValue: neverEndingFuture<NotificationSettings>(),
-        returnValueForMissingStub: neverEndingFuture<NotificationSettings>());
+      Invocation.method(#requestPermission, [], {
+        #alert: alert,
+        #announcement: announcement,
+        #badge: badge,
+        #carPlay: carPlay,
+        #criticalAlert: criticalAlert,
+        #provisional: provisional,
+        #sound: sound
+      }),
+      returnValue: Future.value(deniedNotificationSettings),
+    );
   }
 
   @override
