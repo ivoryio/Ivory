@@ -132,9 +132,9 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
     if (state == AppLifecycleState.hidden) {
       final store = widget.store;
 
-      forceReloadAppStates(store);
-    } else if (state == AppLifecycleState.resumed) {
-      PushNotificationServiceProvider.instance.service.handleSavedNotification();
+      PushNotificationServiceProvider.instance.service
+          .handleSavedNotification()
+          .then((_) => forceReloadAppStates(store));
     }
   }
 
