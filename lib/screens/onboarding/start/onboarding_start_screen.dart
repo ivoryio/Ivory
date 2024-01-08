@@ -49,6 +49,24 @@ class OnboardingStartScreen extends StatelessWidget {
                   Text.rich(
                     TextSpan(
                       children: [
+                        const TextSpan(text: "Please make sure your information is "),
+                        TextSpan(
+                          text: "accurate, ",
+                          style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
+                        ),
+                        const TextSpan(text: "as you "),
+                        TextSpan(
+                          text: "won't be able to modify it later.",
+                          style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
+                        ),
+                      ],
+                      style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text.rich(
+                    TextSpan(
+                      children: [
                         const TextSpan(text: "First we'll ask you "),
                         TextSpan(
                           text: "two quick questions ",
