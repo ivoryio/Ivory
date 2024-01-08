@@ -59,7 +59,10 @@ class _OnboardingBankVerificationScreenState extends State<OnboardingBankVerific
         },
         builder: (context, viewModel) => viewModel.urlForIntegration == null
             ? const Center(child: CircularLoadingIndicator(width: 128))
-            : WebViewWidget(controller: controller),
+            : GestureDetector(
+                onVerticalDragUpdate: (dragUpdateDetails) {},
+                child: WebViewWidget(controller: controller),
+              ),
       ),
     );
   }
