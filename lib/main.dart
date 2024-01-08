@@ -17,6 +17,7 @@ import 'package:solarisdemo/infrastructure/documents/documents_service.dart';
 import 'package:solarisdemo/infrastructure/documents/file_saver_service.dart';
 import 'package:solarisdemo/infrastructure/mobile_number/mobile_number_service.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service.dart';
+import 'package:solarisdemo/infrastructure/notifications/push_notification_service_provider.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_storage_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/card_configuration/onboarding_card_configuration_service.dart';
 import 'package:solarisdemo/infrastructure/onboarding/financial_details/onboarding_financial_details_service.dart';
@@ -53,7 +54,13 @@ Future<void> main() async {
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
-  final store = _buildStore();
+  PushNotificationServiceProvider.init(FirebasePushNotificationService(
+    storageService: PushNotificationSharedPreferencesStorageService(),
+  ));
+
+  final pushNotificationService = PushNotificationServiceProvider.instance.service;
+
+  final store = _buildStore(pushNotificationService);
 
   runApp(IvoryApp(
     clientConfig: clientConfig,
@@ -61,12 +68,10 @@ Future<void> main() async {
   ));
 }
 
-Store<AppState> _buildStore() {
+Store<AppState> _buildStore(PushNotificationService pushNotificationService) {
   final store = createStore(
     initialState: AppState.initialState(),
-    pushNotificationService: FirebasePushNotificationService(
-      storageService: PushNotificationSharedPreferencesStorageService(),
-    ),
+    pushNotificationService: pushNotificationService,
     transactionService: TransactionService(),
     creditLineService: CreditLineService(),
     repaymentReminderService: RepaymentReminderService(),
