@@ -19,7 +19,8 @@ void main() {
       'deviceId': 'deviceId',
       'email': 'email',
       'password': 'password',
-      'consentId:': 'consentId',
+      'consents':
+          '{"65511707812e1584dffb74e836979e64cper":"87f95560750da154915773f9c5cf10a1dcon","d6aecc5590eae1d5bf4611b028363aeecper":"d5f8d15f0851efb54c31ae61a4d35491dcon"}',
     };
     SharedPreferences.setMockInitialValues(values);
 
@@ -86,7 +87,8 @@ void main() {
         'deviceId': '',
         'email': 'email',
         'password': 'password',
-        'consentId:': 'consentId',
+        'consents':
+            '{"65511707812e1584dffb74e836979e64cper":"87f95560750da154915773f9c5cf10a1dcon","d6aecc5590eae1d5bf4611b028363aeecper":"d5f8d15f0851efb54c31ae61a4d35491dcon"}',
       };
       SharedPreferences.setMockInitialValues(values);
       TestWidgetsFlutterBinding.ensureInitialized();
@@ -123,7 +125,8 @@ void main() {
         'deviceId': 'deviceId',
         'email': 'email',
         'password': 'password',
-        'consentId:': 'consentId',
+        'consents':
+            '{"65511707812e1584dffb74e836979e64cper":"87f95560750da154915773f9c5cf10a1dcon","d6aecc5590eae1d5bf4611b028363aeecper":"d5f8d15f0851efb54c31ae61a4d35491dcon"}',
       };
       SharedPreferences.setMockInitialValues(values);
       TestWidgetsFlutterBinding.ensureInitialized();

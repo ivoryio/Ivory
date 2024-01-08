@@ -32,7 +32,7 @@ class TransactionApprovalMiddleware extends MiddlewareClass<AppState> {
     }
 
     if (action is AuthorizeTransactionCommandAction) {
-      final consentId = await _deviceService.getConsentId();
+      final consentId = await _deviceService.getConsentId(authState.authenticatedUser.cognito.personId!);
       final deviceId = await _deviceService.getDeviceId();
       final deviceData = await _deviceFingerprintService.getDeviceFingerprint(consentId);
 
@@ -116,7 +116,7 @@ class TransactionApprovalMiddleware extends MiddlewareClass<AppState> {
     required String deviceData,
     required String deviceId,
   }) async {
-    String? consentId = await _deviceService.getConsentId();
+    String? consentId = await _deviceService.getConsentId(user.personId!);
 
     final isBiometricsAuthenticated =
         await _biometricsService.authenticateWithBiometrics(message: "Please use biometric authentication.");

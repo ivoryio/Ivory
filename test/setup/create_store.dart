@@ -354,7 +354,7 @@ class NotImplementedDeviceBindingService extends DeviceBindingService {
 
 class NotImplementedDeviceService extends DeviceService {
   @override
-  Future<String?> getConsentId() async {
+  Future<String?> getConsentId(String personId) async {
     throw UnimplementedError();
   }
 

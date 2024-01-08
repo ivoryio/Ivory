@@ -245,7 +245,7 @@ class FakeFailingBankCardService extends BankCardService {
 
 class FakeDeviceService extends DeviceService {
   @override
-  Future<String?> getConsentId() async {
+  Future<String?> getConsentId(String personId) async {
     return "consentId";
   }
 
@@ -293,7 +293,7 @@ class FakeDeviceService extends DeviceService {
   }
 
   @override
-  Future<void> saveConsentIdInCache(String consentId) async {
+  Future<void> saveConsentIdInCache(String consentId, String personId) async {
     return;
   }
 }
