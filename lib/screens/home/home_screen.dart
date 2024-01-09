@@ -41,7 +41,7 @@ class HomeScreen extends StatelessWidget {
     final user = (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
 
     return Screen(
-      title: 'Welcome ${user.cognito.firstName}!',
+      title: 'Welcome ${user.person.firstName}!',
       hideBackButton: true,
       appBarColor: ClientConfig.getColorScheme().primary,
       trailingActions: [

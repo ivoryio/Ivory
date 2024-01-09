@@ -16,4 +16,6 @@ class MercedesTheme {
     cardType: CardType.mastercard,
     welcomeVideoPath: "assets/videos/mercedes_welcome_video.mp4",
   );
+
+  static ClientFeatureFlags featureFlags = DefaultTheme.featureFlags.copyWith();
 }

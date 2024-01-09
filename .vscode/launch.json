@@ -20,6 +20,12 @@
       "request": "launch",
       "type": "dart",
       "args": ["--dart-define=CLIENT=mercedes"]
+    },
+    {
+      "name": "IvoryApp (enfuce)",
+      "request": "launch",
+      "type": "dart",
+      "args": ["--dart-define=CLIENT=enfuce"]
     }
   ]
 }

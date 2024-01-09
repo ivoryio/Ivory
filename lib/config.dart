@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:path/path.dart';
+import 'package:solarisdemo/themes/enfuce_theme.dart';
 import 'package:solarisdemo/themes/mercedes_theme.dart';
 
 import 'themes/default_theme.dart';
@@ -23,13 +24,30 @@ class ClientConfig {
       String client = const String.fromEnvironment('CLIENT');
       switch (client) {
         case 'porsche':
-          _clientConfigData = ClientConfigData(uiSettings: PorscheTheme.clientUiSettings);
+          _clientConfigData = ClientConfigData(
+            uiSettings: PorscheTheme.clientUiSettings,
+            featureFlags: PorscheTheme.featureFlags,
+          );
         case 'solaris':
-          _clientConfigData = ClientConfigData(uiSettings: SolarisTheme.clientUiSettings);
+          _clientConfigData = ClientConfigData(
+            uiSettings: SolarisTheme.clientUiSettings,
+            featureFlags: SolarisTheme.featureFlags,
+          );
         case 'mercedes':
-          _clientConfigData = ClientConfigData(uiSettings: MercedesTheme.clientUiSettings);
+          _clientConfigData = ClientConfigData(
+            uiSettings: MercedesTheme.clientUiSettings,
+            featureFlags: MercedesTheme.featureFlags,
+          );
+        case 'enfuce':
+          _clientConfigData = ClientConfigData(
+            uiSettings: EnfuceTheme.clientUiSettings,
+            featureFlags: EnfuceTheme.featureFlags,
+          );
         default:
-          _clientConfigData = ClientConfigData(uiSettings: DefaultTheme.clientUiSettings);
+          _clientConfigData = ClientConfigData(
+            uiSettings: DefaultTheme.clientUiSettings,
+            featureFlags: DefaultTheme.featureFlags,
+          );
       }
     }
 
@@ -50,6 +68,10 @@ class ClientConfig {
 
   static TextStyleScheme getTextStyleScheme() {
     return getClientConfig().uiSettings.labelTextStyle;
+  }
+
+  static ClientFeatureFlags getFeatureFlags() {
+    return getClientConfig().featureFlags;
   }
 
   static String getClientImagePath() {
@@ -87,7 +109,8 @@ class ClientConfig {
 
 class ClientConfigData {
   final ClientUiSettings uiSettings;
+  final ClientFeatureFlags featureFlags;
   //add backend accesss data
 
-  const ClientConfigData({required this.uiSettings});
+  const ClientConfigData({required this.uiSettings, required this.featureFlags});
 }

@@ -1,4 +1,5 @@
 import 'package:redux/redux.dart';
+import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/auth/auth_service.dart';
 import 'package:solarisdemo/infrastructure/device/biometrics_service.dart';
 import 'package:solarisdemo/infrastructure/device/device_binding_service.dart';
@@ -78,6 +79,19 @@ class AuthMiddleware extends MiddlewareClass<AppState> {
         action.email,
         action.password,
       );
+
+      if (ClientConfig.getFeatureFlags().simplifiedLogin) {
+        store.dispatch(AuthenticationInitializedEventAction(
+          cognitoUser: user,
+          authType: AuthType.withTan,
+          thisDevice: Device(
+            deviceId: '',
+            deviceName: await _deviceInfoService.getDeviceName(),
+          ),
+          boundDevices: [],
+        ));
+        return;
+      }
 
       if (loginResponse.user.userGroup == CognitoUserGroup.registering) {
         store.dispatch(AuthenticationInitializedEventAction(
@@ -169,9 +183,7 @@ class AuthMiddleware extends MiddlewareClass<AppState> {
     }
 
     if (action is AuthenticateUserCommandAction) {
-      store.dispatch(
-        AuthLoadingEventAction(),
-      );
+      store.dispatch(AuthLoadingEventAction());
 
       if (action.authType == AuthType.withBiometrics) {
         final biometricAuth =

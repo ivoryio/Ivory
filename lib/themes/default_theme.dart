@@ -159,6 +159,8 @@ class DefaultTheme {
       ),
     ),
   );
+
+  static ClientFeatureFlags featureFlags = const ClientFeatureFlags(simplifiedLogin: false);
 }
 
 class PorscheTheme {
@@ -176,6 +178,8 @@ class PorscheTheme {
     cardType: CardType.mastercard,
     welcomeVideoPath: "assets/videos/porsche_welcome_video.mp4",
   );
+
+  static ClientFeatureFlags featureFlags = DefaultTheme.featureFlags.copyWith();
 }
 
 class SolarisTheme {
@@ -189,6 +193,8 @@ class SolarisTheme {
   );
 
   static ClientUiSettings clientUiSettings = DefaultTheme.clientUiSettings.copyWith(colorscheme: colorScheme);
+
+  static ClientFeatureFlags featureFlags = DefaultTheme.featureFlags.copyWith();
 }
 
 class CustomColors {
@@ -377,4 +383,20 @@ class CustomClientUiSettings {
     required this.defaultScreenVerticalPadding,
     required this.defaultScreenPadding,
   });
+}
+
+class ClientFeatureFlags {
+  final bool simplifiedLogin;
+
+  const ClientFeatureFlags({
+    required this.simplifiedLogin,
+  });
+
+  ClientFeatureFlags copyWith({
+    bool? simplifiedLogin,
+  }) {
+    return ClientFeatureFlags(
+      simplifiedLogin: simplifiedLogin ?? this.simplifiedLogin,
+    );
+  }
 }
