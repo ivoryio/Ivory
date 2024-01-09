@@ -33,6 +33,9 @@ class FakeNotificationService extends PushNotificationService {
   Future<bool> hasPermission() {
     return Future.value(true);
   }
+
+  @override
+  bool get isInitialized => true;
 }
 
 class FakeNotificationServiceWithNoPermission extends PushNotificationService {
@@ -65,4 +68,7 @@ class FakeNotificationServiceWithNoPermission extends PushNotificationService {
   Future<bool> hasPermission() {
     return Future.value(false);
   }
+
+  @override
+  bool get isInitialized => false;
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/infrastructure/notifications/push_notification_service_provider.dart';
 import 'package:solarisdemo/navigator_observers/general_navigation_observer.dart';
 import 'package:solarisdemo/navigator_observers/navigation_logging_observer.dart';
 import 'package:solarisdemo/models/home/main_navigation_screens.dart';
@@ -131,7 +132,9 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
     if (state == AppLifecycleState.hidden) {
       final store = widget.store;
 
-      forceReloadAppStates(store);
+      PushNotificationServiceProvider.instance.service
+          .handleSavedNotification()
+          .then((_) => forceReloadAppStates(store));
     }
   }
 
