@@ -195,7 +195,6 @@ class FirebasePushNotificationService extends PushNotificationService {
     if (store == null) return;
 
     debugPrint("Redirect from notification");
-    navigatorKey;
     final context = navigatorKey.currentContext as BuildContext;
     final notificationType = RemoteMessageUtils.getNotificationType(message.data["type"] as String);
 
