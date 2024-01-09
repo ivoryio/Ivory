@@ -125,7 +125,8 @@ void main() {
     setUp(() async {
       SharedPreferences.setMockInitialValues(
         {
-          'device_consent_id': '081b61238d922568fa94dd685688a9e1dcon',
+          'consents':
+              '{"65511707812e1584dffb74e836979e64cper":"87f95560750da154915773f9c5cf10a1dcon","d6aecc5590eae1d5bf4611b028363aeecper":"d5f8d15f0851efb54c31ae61a4d35491dcon"}',
           'unrestrictedKeyPair':
               '{"publicKey":"0440796c6f7921fb8c4c4604f87c7f93e424eec8d97b82611d211566d7f6c27c7f457d5bff4e44280525d9aa321a9aebf0e886845a98aa5ef91d8ccc92eb370e73","privateKey":"8da5191565a42676508fc1bfa6bd9b8c7790944bf15be915de3c19bc241b64c1"}',
           'restrictedKeyPair':
@@ -230,7 +231,8 @@ void main() {
       setUp(() async {
         SharedPreferences.setMockInitialValues(
           {
-            'device_consent_id': '081b61238d922568fa94dd685688a9e1dcon',
+            'consents':
+                '{"65511707812e1584dffb74e836979e64cper":"87f95560750da154915773f9c5cf10a1dcon","d6aecc5590eae1d5bf4611b028363aeecper":"d5f8d15f0851efb54c31ae61a4d35491dcon"}',
             'unrestrictedKeyPair':
                 '{"publicKey":"0440796c6f7921fb8c4c4604f87c7f93e424eec8d97b82611d211566d7f6c27c7f457d5bff4e44280525d9aa321a9aebf0e886845a98aa5ef91d8ccc92eb370e73","privateKey":"8da5191565a42676508fc1bfa6bd9b8c7790944bf15be915de3c19bc241b64c1"}',
             'restrictedKeyPair':

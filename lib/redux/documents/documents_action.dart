@@ -5,8 +5,13 @@ import 'package:solarisdemo/models/documents/documents_error_type.dart';
 class GetDocumentsCommandAction {
   final int retryWhenBelowDocumentCount;
   final int maxRetryCount;
+  final Duration retryDelay;
 
-  GetDocumentsCommandAction({this.maxRetryCount = 10, this.retryWhenBelowDocumentCount = 2});
+  GetDocumentsCommandAction({
+    this.maxRetryCount = 50,
+    this.retryWhenBelowDocumentCount = 2,
+    this.retryDelay = const Duration(seconds: 2),
+  });
 }
 
 class DocumentsLoadingEventAction {}

@@ -82,6 +82,7 @@ class _OnboardingTermConditionsScreenState extends State<OnboardingTermCondition
               Expanded(
                 child: SingleChildScrollView(
                   controller: _scrollController,
+                  physics: const ClampingScrollPhysics(),
                   padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
                   child: Column(
                     children: [

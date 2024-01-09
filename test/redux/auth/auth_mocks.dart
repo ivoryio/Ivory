@@ -46,6 +46,9 @@ class MockUser extends Mock implements User {
 
   @override
   List<CognitoUserAttribute> get attributes => [];
+
+  @override
+  String? get personId => 'defaultPersonId';
 }
 
 class FakeAuthService extends AuthService {

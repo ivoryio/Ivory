@@ -6,6 +6,7 @@ import 'package:solarisdemo/redux/transactions/transactions_action.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/ivory_tab.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
+import 'package:solarisdemo/widgets/skeleton.dart';
 
 import '../../config.dart';
 import '../../models/amount_value.dart';
@@ -148,7 +149,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     );
 
     if (viewModel is TransactionsLoadingViewModel) {
-      return const Center(child: CircularProgressIndicator());
+      return Center(child: _buildLoadingSkeleton());
     }
 
     if (viewModel is TransactionsErrorViewModel) {
@@ -541,6 +542,33 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         spacing: 8,
         runSpacing: 4,
         children: widgetList,
+      ),
+    );
+  }
+
+  Widget _buildLoadingSkeleton() {
+    return SkeletonContainer(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Skeleton(
+                  height: 18,
+                  width: 160,
+                ),
+                Skeleton(
+                  height: 16,
+                  width: 72,
+                ),
+              ],
+            ),
+            for (var i = 0; i < 6; i++) TransactionListItem.loadingSkeleton(),
+          ],
+        ),
       ),
     );
   }
