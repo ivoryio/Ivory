@@ -39,7 +39,7 @@ class CreditLine {
         interestRate: json['interest_rate'],
         fixedRate: AmountValue.fromJson(json['fixed_repayment_rate']),
         referenceAccount: AccountData.fromJson(json['reference_account']),
-        repaymentPercentageRate: json['repayment_percentage_rate'],
+        repaymentPercentageRate: json['repayment_percentage_rate'] ?? 0.0,
       );
 
   factory CreditLine.empty() => CreditLine(
