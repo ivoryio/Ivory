@@ -44,8 +44,8 @@ class MockPushNotificationStorageService extends Mock implements PushNotificatio
   Future<String?> find() {
     return super.noSuchMethod(
       Invocation.method(#find, []),
-      returnValue: Future<String>.value(''),
-      returnValueForMissingStub: Future<String>.value(''),
+      returnValue: Future<String>.value('{}'),
+      returnValueForMissingStub: Future<String>.value('{}'),
     );
   }
 }

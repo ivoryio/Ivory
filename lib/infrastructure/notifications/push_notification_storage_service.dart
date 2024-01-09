@@ -26,7 +26,7 @@ class PushNotificationSharedPreferencesStorageService extends PushNotificationSt
   @override
   Future<String?> find() async {
     final sharedPreferences = await _sharedPreferences;
-    sharedPreferences.reload();
+    await sharedPreferences.reload();
 
     return (sharedPreferences).getString(_key);
   }
