@@ -113,7 +113,7 @@ class BankCardService extends ApiService {
                 '${data['expiration']['month']} / ${data['expiration']['year'].toString().substring(2)}}',
             line1: '${data['embossing']['firstName']} ${data['embossing']['lastName']}',
             line2: '${data['embossing']['firstName']} ${data['embossing']['lastName']}',
-            maskedPan: data['maskedCardNumber'],
+            maskedPan: data['maskedCardNumber'].replaceAll('_', '*'),
           ),
         ),
       );
@@ -168,7 +168,7 @@ class BankCardService extends ApiService {
                 representation: BankCardRepresentation(
                   line1: '${e['embossing']['firstName']} ${e['embossing']['lastName']}',
                   line2: '${e['embossing']['firstName']} ${e['embossing']['lastName']}',
-                  maskedPan: e['maskedCardNumber'],
+                  maskedPan: e['maskedCardNumber'].replaceAll('_', '*'),
                   formattedExpirationDate: '11/24',
                 ),
               ),
