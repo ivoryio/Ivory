@@ -31,10 +31,91 @@ class BankCardService extends ApiService {
     this.user = user;
 
     try {
-      final data = await get('/account/cards/$cardId');
+      // final data = await get('/account/cards/$cardId');
+
+      final data = {
+        "customerId": "293216012",
+        "id": "792523412",
+        "template": "VISA_VIRTUAL",
+        "accountId": "792522812",
+        "cardRole": "MAIN",
+        "status": "CARD_OK",
+        "maskedCardNumber": "111111______8139",
+        "statusDate": "2024-01-09T13:28:52",
+        "embossing": {
+          "additionalField1": null,
+          "additionalField2": null,
+          "additionalField3": null,
+          "additionalField4": null,
+          "additionalField5": null,
+          "companyName": null,
+          "externalLayoutCode": null,
+          "firstName": "GYOZO",
+          "lastName": "SZASZ",
+          "manufacturer": null,
+          "physical": null
+        },
+        "productCode": "VISA_VIRTUAL",
+        "expiration": {"year": 2028, "month": 1},
+        "regionAndEcommBlocking": {
+          "ecomm": false,
+          "africa": false,
+          "asia": false,
+          "europe": false,
+          "home": false,
+          "northAmerica": false,
+          "oceania": false,
+          "southAmerica": false
+        },
+        "reason": "Contract renewal",
+        "pinStatus": "D",
+        "digitalLayoutCode": "default",
+        "segment": null,
+        "referenceNumber": "1111110999723837",
+        "scheduledClosing": null,
+        "usageLimits": [
+          {
+            "code": "WEEKLY",
+            "values": [
+              {"code": "ALL", "reset": null, "singleAmount": null, "count": 9999999, "sumAmount": null},
+              {"code": "ATM", "reset": null, "singleAmount": null, "count": 9999999, "sumAmount": null},
+              {"code": "RETAIL", "reset": null, "singleAmount": null, "count": 9999999, "sumAmount": null}
+            ]
+          },
+          {"code": "DAILY", "values": null},
+          {
+            "code": "24H",
+            "values": [
+              {"code": "ALL", "reset": null, "singleAmount": null, "count": 9999999, "sumAmount": null},
+              {"code": "ATM", "reset": null, "singleAmount": null, "count": 9999999, "sumAmount": null},
+              {"code": "RETAIL", "reset": null, "singleAmount": null, "count": 9999999, "sumAmount": null}
+            ]
+          },
+          {
+            "code": "MONTHLY",
+            "values": [
+              {"code": "ALL", "reset": null, "singleAmount": null, "count": 9999999, "sumAmount": null},
+              {"code": "ATM", "reset": null, "singleAmount": null, "count": 10, "sumAmount": 1000},
+              {"code": "RETAIL", "reset": null, "singleAmount": null, "count": 9999999, "sumAmount": null}
+            ]
+          }
+        ]
+      } as dynamic;
 
       return GetBankCardSuccessResponse(
-        bankCard: BankCard.fromJson(data),
+        bankCard: BankCard(
+          accountId: data['accountId'],
+          id: data['id'],
+          status: BankCardStatus.ACTIVE,
+          type: BankCardType.VIRTUAL_VISA_BUSINESS_DEBIT,
+          representation: BankCardRepresentation(
+            formattedExpirationDate:
+                '${data['expiration']['month']} / ${data['expiration']['year'].toString().substring(2)}}',
+            line1: '${data['embossing']['firstName']} ${data['embossing']['lastName']}',
+            line2: '${data['embossing']['firstName']} ${data['embossing']['lastName']}',
+            maskedPan: data['maskedCardNumber'],
+          ),
+        ),
       );
     } catch (e) {
       return BankCardErrorResponse();
@@ -47,10 +128,52 @@ class BankCardService extends ApiService {
     this.user = user;
 
     try {
-      final data = await get('/account/cards');
+      // final data = await get('/account/cards');
+
+      final data = [
+        {
+          "customerId": "293216012",
+          "id": "792523412",
+          "template": "VISA_VIRTUAL",
+          "accountId": "792522812",
+          "cardRole": "MAIN",
+          "status": "CARD_OK",
+          "maskedCardNumber": "111111______8139",
+          "statusDate": "2024-01-09T13:28:52",
+          "embossing": {"companyName": null, "firstName": "GYOZO", "lastName": "SZASZ"},
+          "productCode": "VISA_VIRTUAL"
+        },
+        {
+          "customerId": "293216012",
+          "id": "792526012",
+          "template": "MC_VIRTUAL",
+          "accountId": "792522812",
+          "cardRole": "SUPPLEMENTARY",
+          "status": "CARD_OK",
+          "maskedCardNumber": "111111______1731",
+          "statusDate": "2024-01-09T13:48:01",
+          "embossing": {"companyName": null, "firstName": "GYOZO", "lastName": "SZASZ"},
+          "productCode": "MC_VIRTUAL"
+        }
+      ] as dynamic;
 
       return GetBankCardsServiceResponse(
-        bankCards: (data as List).map((e) => BankCard.fromJson(e)).toList(),
+        bankCards: (data as List)
+            .map(
+              (e) => BankCard(
+                id: e['id'] as String,
+                accountId: e['accountId'] as String,
+                status: BankCardStatus.ACTIVE,
+                type: BankCardType.VIRTUAL_VISA_BUSINESS_DEBIT,
+                representation: BankCardRepresentation(
+                  line1: '${e['embossing']['firstName']} ${e['embossing']['lastName']}',
+                  line2: '${e['embossing']['firstName']} ${e['embossing']['lastName']}',
+                  maskedPan: e['maskedCardNumber'],
+                  formattedExpirationDate: '11/24',
+                ),
+              ),
+            )
+            .toList(),
       );
     } catch (e) {
       return BankCardErrorResponse();
