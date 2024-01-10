@@ -12,7 +12,7 @@ class User {
   late String? firstName;
   late String? accountId;
   late CognitoUserGroup? userGroup;
-  String? accessToken;
+  String? apiKey;
 
   final CognitoUser cognitoUser;
   late CognitoUserSession session;

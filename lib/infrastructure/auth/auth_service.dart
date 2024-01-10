@@ -41,12 +41,12 @@ class AuthService extends ApiService {
         //   'password': Config.apiPassword,
         // });
         final data = {'token': 'accessToken'};
-        final token = data['token'];
+        final token = data['token'] as String;
 
-        user.accessToken = token;
+        user.apiKey = token;
 
         // debug only
-        log('user.accessToken: ${user.accessToken}');
+        log('user.apiKey: ${user.apiKey}');
       }
 
       return LoginSuccessResponse(user: user);
