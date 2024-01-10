@@ -7,13 +7,14 @@ class DefaultTheme {
     primary: Color(0xFF071034),
     secondary: Color(0xFF2575FC),
     tertiary: Color(0xFF2575FC), // USE THIS FOR BUTTON BACKGROUNDS
-    surface: Colors.white, // USE THIS FOR BUTTON TEXTS
+    surface: Colors.white,
     surfaceVariant: Color(0xFF1D26A7), //USED TO CALCULATE GRADIENT,
     outline: Color(0xFF6300BB), //ALSO USED TO CALCULATE GRADIENT,
     background: Colors.white,
     error: Color(0xFFE61F27),
     onPrimary: Colors.black,
     onSecondary: Colors.black,
+    onTertiary: Colors.white, // USE THIS FOR BUTTON TEXTS
     onSurface: Colors.black,
     onBackground: Colors.black,
     onError: Colors.white,
@@ -187,9 +188,10 @@ class SolarisTheme {
     primary: const Color(0xFF1D2637),
     secondary: const Color(0xFFFF6432),
     tertiary: const Color(0xFFFF6432), // USE THIS FOR BUTTON BACKGROUNDS
-    surface: Colors.white, // USE THIS FOR BUTTON TEXTS
+    surface: Colors.white,
     surfaceVariant: const Color(0xFFF8623A), //USED TO CALCULATE GRADIENT,
     outline: const Color(0xFF9D2801), //ALSO USED TO CALCULATE GRADIENT,
+    onTertiary: Colors.white, // USE THIS FOR BUTTON TEXTS
   );
 
   static ClientUiSettings clientUiSettings = DefaultTheme.clientUiSettings.copyWith(colorscheme: colorScheme);

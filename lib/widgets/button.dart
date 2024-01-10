@@ -53,7 +53,7 @@ class Button extends StatelessWidget {
         Text(
           text,
           textAlign: TextAlign.center,
-          style: textStyle != null ? defaultTextStyle.merge(textStyle) : defaultTextStyle,
+          style: textStyle != null ? defaultTextStyle : defaultTextStyle,
         ),
         ...(isLoading
             ? [
@@ -117,6 +117,7 @@ class PrimaryButton extends StatelessWidget {
       onPressed: onPressed,
       isLoading: isLoading,
       color: ClientConfig.getColorScheme().tertiary,
+      textColor: ClientConfig.getColorScheme().onTertiary,
     );
   }
 }

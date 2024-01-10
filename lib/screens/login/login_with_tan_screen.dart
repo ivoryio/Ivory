@@ -33,7 +33,7 @@ class _LoginWithTanScreenState extends State<LoginWithTanScreen> {
       _isInputComplete = isComplete;
     });
   }
-  
+
   void onTanChanged(String tan) {
     setState(() {
       if (_tanInputController.text.length == 6) {
@@ -107,11 +107,8 @@ class _LoginWithTanScreenState extends State<LoginWithTanScreen> {
                       SizedBox(
                         width: double.infinity,
                         height: 48,
-                        child: Button(
+                        child: PrimaryButton(
                           text: 'Confirm',
-                          disabledColor: const Color(0xFFDFE2E6),
-                          color: ClientConfig.getColorScheme().tertiary,
-                          textColor: ClientConfig.getColorScheme().surface,
                           isLoading: viewModel is AuthLoadingViewModel,
                           onPressed: _isInputComplete
                               ? () {

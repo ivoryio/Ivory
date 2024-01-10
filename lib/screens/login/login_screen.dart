@@ -492,12 +492,8 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                       child: ListenableBuilder(
                         listenable: _continueButtonController,
                         builder: (context, child) {
-                          return Button(
+                          return PrimaryButton(
                             text: 'Continue',
-                            disabledColor: ClientConfig.getCustomColors().neutral300,
-                            color: ClientConfig.getColorScheme().tertiary,
-                            textColor: ClientConfig.getColorScheme().surface,
-                            isLoading: viewModel is AuthLoadingViewModel,
                             onPressed: _continueButtonController.isEnabled
                                 ? () async {
                                     _continueButtonController.setDisabled();

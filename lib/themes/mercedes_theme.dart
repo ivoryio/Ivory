@@ -6,9 +6,10 @@ class MercedesTheme {
     primary: Colors.black,
     secondary: const Color(0xFF00ADEF),
     tertiary: const Color(0xFF00ADEF), // USE THIS FOR BUTTON BACKGROUNDS
-    surface: Colors.white, // USE THIS FOR BUTTON TEXTS
+    surface: Colors.white,
     surfaceVariant: const Color(0xFF363636), //USED TO CALCULATE GRADIENT,
     outline: Colors.black, //ALSO USED TO CALCULATE GRADIENT,
+    onTertiary: Colors.white, // USE THIS FOR BUTTON TEXTS
   );
 
   static ClientUiSettings clientUiSettings = DefaultTheme.clientUiSettings.copyWith(
