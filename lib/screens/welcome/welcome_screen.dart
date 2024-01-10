@@ -33,11 +33,7 @@ class WelcomeScreen extends StatelessWidget {
       body: ScrollableScreenContainer(
         child: StoreConnector<AppState, AuthViewModel>(
           onInit: (store) {
-            if (!ClientConfig.getFeatureFlags().simplifiedLogin) {
-              store.dispatch(
-                LoadCredentialsCommandAction(),
-              );
-            }
+            store.dispatch(LoadCredentialsCommandAction());
           },
           onWillChange: (previousViewModel, newViewModel) {
             if (previousViewModel is AuthLoadingViewModel &&
