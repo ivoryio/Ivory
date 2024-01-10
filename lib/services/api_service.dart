@@ -12,7 +12,7 @@ class ApiService<T> {
   User? user;
   http.Client _client = http.Client();
 
-  ApiService({required this.user});
+  ApiService({this.user});
 
   set client(http.Client client) {
     _client = client;
@@ -190,6 +190,10 @@ class ApiService<T> {
   }
 
   Future<String> getAccessToken() async {
+    if (ClientConfig.getFeatureFlags().simplifiedLogin) {
+      return user!.accessToken!;
+    }
+
     if (!user!.session.isValid()) {
       CognitoUserSession? session = await user!.cognitoUser.getSession();
       user!.session = session!;

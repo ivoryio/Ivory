@@ -5,9 +5,10 @@ import 'package:equatable/equatable.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/models/auth/auth_error_type.dart';
 import 'package:solarisdemo/models/user.dart';
+import 'package:solarisdemo/services/api_service.dart';
 
-class AuthService {
-  AuthService();
+class AuthService extends ApiService {
+  AuthService({super.user});
 
   Future<AuthServiceResponse> login(String username, String passcode) async {
     try {
@@ -33,6 +34,20 @@ class AuthService {
         attributes: attributes!,
         cognitoUser: cognitoUser,
       );
+
+      if (ClientConfig.getFeatureFlags().simplifiedLogin) {
+        // final data = await post('/login', authNeeded: false, body: {
+        //   'email': Config.apiUser,
+        //   'password': Config.apiPassword,
+        // });
+        final data = {'token': 'accessToken'};
+        final token = data['token'];
+
+        user.accessToken = token;
+
+        // debug only
+        log('user.accessToken: ${user.accessToken}');
+      }
 
       return LoginSuccessResponse(user: user);
     } catch (e) {

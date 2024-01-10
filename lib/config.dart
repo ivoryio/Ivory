@@ -14,6 +14,9 @@ class Config {
   static String geonamesUsername = dotenv.env['GEONAMES_USERNAME'] ?? 'NO_GEONAMES_USERNAME';
 
   static String apiBaseUrl = dotenv.env['API_BASE_URL'] ?? 'NO_API_BASE_URL';
+
+  static String apiUser = dotenv.env['API_USER'] ?? 'NO_API_USER';
+  static String apiPassword = dotenv.env['API_PASSWORD'] ?? 'NO_API_PASSWORD';
 }
 
 class ClientConfig {
