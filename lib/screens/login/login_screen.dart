@@ -494,6 +494,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                         builder: (context, child) {
                           return PrimaryButton(
                             text: 'Continue',
+                            isLoading: viewModel is AuthLoadingViewModel,
                             onPressed: _continueButtonController.isEnabled
                                 ? () async {
                                     _continueButtonController.setDisabled();
