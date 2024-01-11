@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:solarisdemo/config.dart';
@@ -37,13 +38,13 @@ class WelcomeScreen extends StatelessWidget {
               LoadCredentialsCommandAction(),
             );
           },
+          converter: (store) => AuthPresenter.presentAuth(authState: store.state.authState),
           onWillChange: (previousViewModel, newViewModel) {
             if (previousViewModel is AuthLoadingViewModel &&
                 newViewModel is AuthCredentialsLoadedViewModel &&
                 newViewModel.email!.isNotEmpty &&
                 newViewModel.password!.isNotEmpty &&
                 newViewModel.deviceId!.isEmpty) {
-              print('1');
               Navigator.pushNamed(context, LoginScreen.routeName);
             }
             if (previousViewModel is AuthLoadingViewModel &&
@@ -51,7 +52,6 @@ class WelcomeScreen extends StatelessWidget {
                 newViewModel.email!.isNotEmpty &&
                 newViewModel.password!.isNotEmpty &&
                 newViewModel.deviceId!.isNotEmpty) {
-              print('2');
               StoreProvider.of<AppState>(context).dispatch(
                 InitUserAuthenticationCommandAction(
                   email: newViewModel.email!,
@@ -79,7 +79,6 @@ class WelcomeScreen extends StatelessWidget {
               ],
             );
           },
-          converter: (store) => AuthPresenter.presentAuth(authState: store.state.authState),
         ),
       ),
     );
@@ -108,6 +107,9 @@ class _HeroVideoState extends State<HeroVideo> with WidgetsBindingObserver, Rout
         VideoPlayerController.asset(videoPath, videoPlayerOptions: VideoPlayerOptions(allowBackgroundPlayback: false));
 
     _initializeVideoPlayerFuture = _controller.initialize().then((_) {
+      // Remove splash screen after video is loaded
+      FlutterNativeSplash.remove();
+
       if (IvoryApp.generalRouteObserver.routeStack.last == WelcomeScreen.routeName) {
         _controller.play();
         log("Playing video", name: "initState");
