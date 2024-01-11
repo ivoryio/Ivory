@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:redux/redux.dart';
 import 'package:solarisdemo/infrastructure/auth/auth_service.dart';
 import 'package:solarisdemo/infrastructure/bank_card/bank_card_service.dart';
@@ -47,7 +48,9 @@ Future<void> main() async {
   await dotenv.load();
   ClientConfigData clientConfig = ClientConfig.getClientConfig();
 
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
