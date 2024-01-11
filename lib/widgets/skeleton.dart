@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:solarisdemo/config.dart';
 
-enum SkeletonColorTheme { light, dark }
+enum SkeletonColorTheme { light, dark, darkReverse }
 
 class SkeletonTheme {
   final Color baseColor;
@@ -49,6 +49,10 @@ class SkeletonContainer extends StatelessWidget {
         baseColor: ClientConfig.getCustomColors().neutral900.withOpacity(0.15),
         highlightColor: ClientConfig.getCustomColors().neutral900.withOpacity(0.05),
       ),
+      SkeletonColorTheme.darkReverse: SkeletonTheme(
+        baseColor: ClientConfig.getCustomColors().neutral900,
+        highlightColor: ClientConfig.getCustomColors().neutral100.withOpacity(0.15),
+      ),
     };
 
     return map[colorTheme]!;
@@ -62,6 +66,7 @@ class Skeleton extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final Widget? child;
   final bool transparent;
+  final Color color;
 
   const Skeleton({
     super.key,
@@ -71,6 +76,7 @@ class Skeleton extends StatelessWidget {
     this.child,
     this.transparent = false,
     this.borderRadius = const BorderRadius.all(Radius.circular(100)),
+    this.color = Colors.white,
   });
 
   @override
@@ -81,7 +87,7 @@ class Skeleton extends StatelessWidget {
       padding: padding,
       decoration: BoxDecoration(
         borderRadius: borderRadius,
-        color: Colors.white,
+        color: color,
         backgroundBlendMode: transparent ? BlendMode.clear : null,
       ),
       clipBehavior: Clip.none,
