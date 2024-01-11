@@ -88,61 +88,63 @@ class RepaymentsScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 24),
-              SkeletonContainer(
-                colorTheme: SkeletonColorTheme.darkReverse,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: ClientConfig.getCustomColors().neutral100.withOpacity(0.15),
+              Container(
+                decoration: BoxDecoration(
+                  color: ClientConfig.getCustomColors().neutral100,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: SkeletonContainer(
+                  child: Skeleton(
                     borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 16),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Skeleton(height: 16, width: 136, transparent: true),
-                            SizedBox(height: 12),
-                            Skeleton(height: 32, width: 192, transparent: true),
-                          ],
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 16),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Skeleton(height: 16, width: 136, transparent: true),
+                              SizedBox(height: 12),
+                              Skeleton(height: 32, width: 192, transparent: true),
+                            ],
+                          ),
                         ),
-                      ),
-                      Divider(height: 24, color: Colors.transparent.withOpacity(0)),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Skeleton(height: 16, width: 136, transparent: true),
-                            SizedBox(height: 12),
-                            Skeleton(height: 32, width: 192, transparent: true),
-                          ],
+                        Divider(height: 24, color: Colors.transparent.withOpacity(0)),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Skeleton(height: 16, width: 136, transparent: true),
+                              SizedBox(height: 12),
+                              Skeleton(height: 32, width: 192, transparent: true),
+                            ],
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 12),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16),
-                        child: Skeleton(height: 10, width: 64, transparent: true),
-                      ),
-                      const SizedBox(height: 12),
-                      Divider(height: 1, color: Colors.transparent.withOpacity(0)),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16),
-                        child: Column(
-                          children: [
-                            SizedBox(height: 18),
-                            Center(
-                              child: Skeleton(height: 18, width: 160, transparent: true),
-                            ),
-                            SizedBox(height: 19),
-                          ],
+                        const SizedBox(height: 12),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          child: Skeleton(height: 10, width: 64, transparent: true),
                         ),
-                      ),
-                      const SizedBox(height: 10),
-                    ],
+                        const SizedBox(height: 12),
+                        Divider(height: 1, color: Colors.transparent.withOpacity(0)),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          child: Column(
+                            children: [
+                              SizedBox(height: 18),
+                              Center(
+                                child: Skeleton(height: 18, width: 160, transparent: true),
+                              ),
+                              SizedBox(height: 19),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -242,10 +244,6 @@ class RepaymentsScreen extends StatelessWidget {
                 : Navigator.pushNamed(context, MoreCreditWaitlistScreen.routeName);
           },
         ),
-
-        //     if (viewModel is MoreCreditErrorViewModel) {
-        //       return const Text('Error loading more credit details');
-        //     }
       ],
     );
   }
