@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/infrastructure/credit_line/credit_line_presenter.dart';
-import 'package:solarisdemo/infrastructure/repayments/more_credit/more_credit_presenter.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/credit_line/credit_line_action.dart';
@@ -20,6 +19,7 @@ import 'package:solarisdemo/widgets/ivory_list_title.dart';
 import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/screen_title.dart';
+import 'package:solarisdemo/widgets/skeleton.dart';
 import 'package:solarisdemo/widgets/spaced_column.dart';
 
 import '../../config.dart';
@@ -33,8 +33,7 @@ class RepaymentsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user =
-        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
+    final user = (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
     final ScrollController scrollController = ScrollController();
 
     return ScreenScaffold(
@@ -49,135 +48,205 @@ class RepaymentsScreen extends StatelessWidget {
             child: SingleChildScrollView(
               controller: scrollController,
               physics: const ClampingScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const ScreenTitle("Repayments"),
-                        const SizedBox(height: 24),
-                        Material(
-                          clipBehavior: Clip.none,
-                          color: ClientConfig.getCustomColors().neutral100,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(16),
-                            ),
-                          ),
-                          child: StoreConnector<AppState, CreditLineViewModel>(
-                            onInit: (store) {
-                              store.dispatch(GetCreditLineCommandAction());
-                            },
-                            converter: (store) => CreditLinePresenter.presentCreditLine(
-                              creditLineState: store.state.creditLineState,
-                              user: user,
-                            ),
-                            distinct: true,
-                            builder: (context, viewModel) {
-                              if (viewModel is CreditLineLoadingViewModel) {
-                                return Container(
-                                  alignment: Alignment.center,
-                                  width: double.infinity,
-                                  padding: const EdgeInsets.all(16),
-                                  child: const CircularProgressIndicator(),
-                                );
-                              } else if (viewModel is CreditLineErrorViewModel) {
-                                return Container(
-                                  alignment: Alignment.center,
-                                  width: double.infinity,
-                                  padding: const EdgeInsets.all(16),
-                                  child: const IvoryErrorWidget('Error loading credit line details'),
-                                );
-                              }
+              child: StoreConnector<AppState, CreditLineViewModel>(
+                onInit: (store) {
+                  store.dispatch(GetCreditLineCommandAction());
+                  store.dispatch(GetMoreCreditCommandAction());
+                },
+                converter: (store) => RepaymentsPresenter.presentCreditLine(
+                  creditLineState: store.state.creditLineState,
+                  moreCreditState: store.state.moreCreditState,
+                  user: user,
+                ),
+                distinct: true,
+                builder: (context, viewModel) {
+                  if (viewModel is CreditLineLoadingViewModel) {
+                    return _buildLoadingSkeleton();
+                  }
 
-                              return _DetailsContent(viewModel: viewModel as CreditLineFetchedViewModel);
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                      ],
-                    ),
-                  ),
-                  const IvoryListTitle(title: 'Actions'),
-                  IvoryListTile(
-                    leftIcon: Icons.sync,
-                    title: 'Change repayment rate',
-                    subtitle: 'And choose between percentage or fixed',
-                    onTap: () {
-                      Navigator.pushNamed(context, ChangeRepaymentRateScreen.routeName);
-                    },
-                  ),
-                  IvoryListTile(
-                    leftIcon: Icons.notifications_active_outlined,
-                    title: 'Set repayment reminder',
-                    subtitle: 'Before we debit your reference account',
-                    onTap: () {
-                      Navigator.pushNamed(context, RepaymentReminderScreen.routeName);
-                    },
-                  ),
-                  IvoryListTile(
-                    leftIcon: Icons.content_paste_search_rounded,
-                    title: 'View bills',
-                    subtitle: 'View all your repayment bills',
-                    onTap: () {
-                      Navigator.pushNamed(context, BillsScreen.routeName);
-                    },
-                  ),
-                  IvoryListTile(
-                    leftIcon: Icons.analytics_outlined,
-                    title: 'Repayments analytics',
-                    subtitle: 'Check your repayment analytics',
-                    onTap: () {
-                      log('Repayments analytics');
-                    },
-                  ),
-                  StoreConnector<AppState, MoreCreditViewModel>(
-                    converter: (store) => MoreCreditPresenter.presentMoreCredit(
-                      moreCreditState: store.state.moreCreditState,
-                    ),
-                    distinct: true,
-                    builder: (context, viewModel) {
-                      if (viewModel is MoreCreditInitialViewModel) {
-                        StoreProvider.of<AppState>(context).dispatch(
-                          GetMoreCreditCommandAction(),
-                        );
-                      }
-
-                      if (viewModel is MoreCreditLoadingViewModel) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-
-                      if (viewModel is MoreCreditErrorViewModel) {
-                        return const Text('Error loading more credit details');
-                      }
-
-                      return IvoryListTile(
-                        leftIcon: Icons.back_hand_outlined,
-                        title: 'Need more credit?',
-                        subtitle: (viewModel is MoreCreditFetchedViewModel) && (viewModel.waitlist == false)
-                            ? ('Sign up for our waitlist')
-                            : ('You\'re on our waitlist'),
-                        onTap: () {
-                          (viewModel is MoreCreditFetchedViewModel)
-                              ? (viewModel.waitlist == false)
-                                  ? Navigator.pushNamed(context, MoreCreditScreen.routeName)
-                                  : Navigator.pushNamed(context, MoreCreditWaitlistScreen.routeName)
-                              : Navigator.pushNamed(context, MoreCreditWaitlistScreen.routeName);
-                        },
-                      );
-                    },
-                  ),
-                ],
+                  return _buildRepaymentsContent(context, viewModel);
+                },
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildLoadingSkeleton() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ScreenTitle(
+          "Repayments",
+          padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+        ),
+        Padding(
+          padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 24),
+              SkeletonContainer(
+                colorTheme: SkeletonColorTheme.darkReverse,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: ClientConfig.getCustomColors().neutral100.withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 16),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Skeleton(height: 16, width: 136, transparent: true),
+                            SizedBox(height: 12),
+                            Skeleton(height: 32, width: 192, transparent: true),
+                          ],
+                        ),
+                      ),
+                      Divider(height: 24, color: Colors.transparent.withOpacity(0)),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Skeleton(height: 16, width: 136, transparent: true),
+                            SizedBox(height: 12),
+                            Skeleton(height: 32, width: 192, transparent: true),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        child: Skeleton(height: 10, width: 64, transparent: true),
+                      ),
+                      const SizedBox(height: 12),
+                      Divider(height: 1, color: Colors.transparent.withOpacity(0)),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        child: Column(
+                          children: [
+                            SizedBox(height: 18),
+                            Center(
+                              child: Skeleton(height: 18, width: 160, transparent: true),
+                            ),
+                            SizedBox(height: 19),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 20),
+        const IvoryListTitle(title: 'Actions'),
+        Padding(
+          padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+          child: SkeletonContainer(
+            child: Column(
+              children: [
+                for (var i = 0; i < 5; i++) const ActionSkeleton(),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRepaymentsContent(context, CreditLineViewModel viewModel) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const ScreenTitle("Repayments"),
+              const SizedBox(height: 24),
+              Material(
+                clipBehavior: Clip.none,
+                color: ClientConfig.getCustomColors().neutral100,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(16),
+                  ),
+                ),
+                child: viewModel is CreditLineErrorViewModel
+                    ? Container(
+                        alignment: Alignment.center,
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(16),
+                        child: const IvoryErrorWidget('Error loading credit line details'),
+                      )
+                    : _DetailsContent(viewModel: viewModel as CreditLineFetchedViewModel),
+              ),
+              const SizedBox(height: 20),
+            ],
+          ),
+        ),
+        const IvoryListTitle(title: 'Actions'),
+        IvoryListTile(
+          leftIcon: Icons.sync,
+          title: 'Change repayment rate',
+          subtitle: 'And choose between percentage or fixed',
+          onTap: () {
+            Navigator.pushNamed(context, ChangeRepaymentRateScreen.routeName);
+          },
+        ),
+        IvoryListTile(
+          leftIcon: Icons.notifications_active_outlined,
+          title: 'Set repayment reminder',
+          subtitle: 'Before we debit your reference account',
+          onTap: () {
+            Navigator.pushNamed(context, RepaymentReminderScreen.routeName);
+          },
+        ),
+        IvoryListTile(
+          leftIcon: Icons.content_paste_search_rounded,
+          title: 'View bills',
+          subtitle: 'View all your repayment bills',
+          onTap: () {
+            Navigator.pushNamed(context, BillsScreen.routeName);
+          },
+        ),
+        IvoryListTile(
+          leftIcon: Icons.analytics_outlined,
+          title: 'Repayments analytics',
+          subtitle: 'Check your repayment analytics',
+          onTap: () {
+            log('Repayments analytics');
+          },
+        ),
+        IvoryListTile(
+          leftIcon: Icons.back_hand_outlined,
+          title: 'Need more credit?',
+          subtitle: (viewModel is CreditLineFetchedViewModel && viewModel.waitlist == false)
+              ? ('Sign up for our waitlist')
+              : ('You\'re on our waitlist'),
+          onTap: () {
+            (viewModel is CreditLineFetchedViewModel && viewModel.waitlist == false)
+                ? Navigator.pushNamed(context, MoreCreditScreen.routeName)
+                : Navigator.pushNamed(context, MoreCreditWaitlistScreen.routeName);
+          },
+        ),
+
+        //     if (viewModel is MoreCreditErrorViewModel) {
+        //       return const Text('Error loading more credit details');
+        //     }
+      ],
     );
   }
 }
@@ -238,7 +307,9 @@ class _DetailsContentState extends State<_DetailsContent> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
               'Due on ${Format.date(widget.viewModel.creditLine.dueDate, pattern: 'MMM dd')}',
-              style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: ClientConfig.getCustomColors().neutral900),
+              style: ClientConfig.getTextStyleScheme()
+                  .labelSmall
+                  .copyWith(color: ClientConfig.getCustomColors().neutral900),
             ),
           ),
           const SizedBox(height: 12),
@@ -439,6 +510,36 @@ class _ExpandedDetails extends StatelessWidget {
             ],
           ),
         ),
+      ],
+    );
+  }
+}
+
+class ActionSkeleton extends StatelessWidget {
+  const ActionSkeleton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            Skeleton(height: 24, width: 24, borderRadius: BorderRadius.circular(100)),
+            const SizedBox(width: 16),
+            const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 4),
+                Skeleton(height: 16, width: 128),
+                SizedBox(height: 8),
+                Skeleton(height: 10, width: 200),
+                SizedBox(height: 4),
+              ],
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
       ],
     );
   }
