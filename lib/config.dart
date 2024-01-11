@@ -98,6 +98,8 @@ class ClientConfig {
         return 'assets/icons/porsche';
       case 'mercedes':
         return 'assets/icons/mercedes';
+      case 'enfuce':
+        return 'assets/icons/enfuce';
       default:
         return 'assets/icons/default';
     }
