@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:solarisdemo/config.dart';
 
-enum SkeletonColorTheme { light, dark, darkReverse }
+enum SkeletonColorTheme { light, dark }
 
 class SkeletonTheme {
   final Color baseColor;
@@ -48,10 +48,6 @@ class SkeletonContainer extends StatelessWidget {
       SkeletonColorTheme.dark: SkeletonTheme(
         baseColor: ClientConfig.getCustomColors().neutral900.withOpacity(0.15),
         highlightColor: ClientConfig.getCustomColors().neutral900.withOpacity(0.05),
-      ),
-      SkeletonColorTheme.darkReverse: SkeletonTheme(
-        baseColor: ClientConfig.getCustomColors().neutral900,
-        highlightColor: ClientConfig.getCustomColors().neutral100.withOpacity(0.15),
       ),
     };
 
