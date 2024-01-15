@@ -84,7 +84,7 @@ class OnboardingUsaTaxPayerScreen extends StatelessWidget {
                     width: double.infinity,
                     child: SecondaryButton(
                       borderWidth: 2,
-                      text: "Yes, I am a USA tax payer",
+                      text: "Yes, I am a USA taxpayer",
                       onPressed: () => Navigator.pushNamed(context, OnboardingUsaTaxPayerErrorScreen.routeName),
                     ),
                   ),
