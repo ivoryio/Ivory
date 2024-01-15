@@ -23,6 +23,7 @@ class Validator {
     int maxDay = 31,
     int minMonth = 1,
     int maxMonth = 12,
+    DateTime? maxDate,
     bool allowFuture = false,
   }) {
     final currentDate = DateTime.now();
@@ -30,6 +31,10 @@ class Validator {
     final dateTime = Format.tryParseDate(date, pattern: pattern);
 
     if (dateTime == null) {
+      return false;
+    }
+
+    if (maxDate != null && dateTime.isAfter(maxDate)) {
       return false;
     }
 

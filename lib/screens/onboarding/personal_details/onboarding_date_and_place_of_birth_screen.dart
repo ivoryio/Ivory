@@ -85,9 +85,7 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
     return Validator.isValidDate(
       _dateOfBirthController.text,
       pattern: textFieldDatePattern,
-      maxYear: _maxDate.year,
-      maxMonth: _maxDate.month,
-      maxDay: _maxDate.day,
+      maxDate: _maxDate,
     );
   }
 
