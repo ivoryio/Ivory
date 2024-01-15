@@ -149,25 +149,6 @@ class GenericErrorScreen extends StatelessWidget {
   }
 }
 
-class GenericLoadingScreenBody extends StatelessWidget {
-  const GenericLoadingScreenBody({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        AppToolbar(
-          padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-          actions: const [AppbarLogo()],
-        ),
-        const Expanded(
-          child: Center(child: CircularProgressIndicator()),
-        ),
-      ],
-    );
-  }
-}
-
 class GenericErrorScreenBody extends StatelessWidget {
   final bool isLoading;
   final VoidCallback onTryAgainPressed;
