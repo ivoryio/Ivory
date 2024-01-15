@@ -17,6 +17,7 @@ class OnboardingBankVerificationScreen extends StatefulWidget {
 
 class _OnboardingBankVerificationScreenState extends State<OnboardingBankVerificationScreen> {
   late WebViewController controller;
+  bool pageLoaded = false;
 
   @override
   void initState() {
@@ -26,7 +27,9 @@ class _OnboardingBankVerificationScreenState extends State<OnboardingBankVerific
         NavigationDelegate(
           onProgress: (int progress) {},
           onPageStarted: (String url) {},
-          onPageFinished: (String url) {},
+          onPageFinished: (String url) {
+            setState(() => pageLoaded = true);
+          },
           onWebResourceError: (WebResourceError error) {},
           onNavigationRequest: (NavigationRequest request) {
             return NavigationDecision.navigate;
@@ -48,6 +51,7 @@ class _OnboardingBankVerificationScreenState extends State<OnboardingBankVerific
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: StoreConnector<AppState, OnboardingIdentityVerificationViewModel>(
         converter: (store) => OnboardingIdentityVerificationPresenter.present(
           identityVerificationState: store.state.onboardingIdentityVerificationState,
@@ -57,12 +61,12 @@ class _OnboardingBankVerificationScreenState extends State<OnboardingBankVerific
             controller.loadRequest(Uri.parse(viewModel.urlForIntegration!));
           }
         },
-        builder: (context, viewModel) => viewModel.urlForIntegration == null
-            ? const Center(child: CircularLoadingIndicator(width: 128))
-            : GestureDetector(
+        builder: (context, viewModel) => pageLoaded && viewModel.urlForIntegration != null
+            ? GestureDetector(
                 onVerticalDragUpdate: (dragUpdateDetails) {},
                 child: WebViewWidget(controller: controller),
-              ),
+              )
+            : const Center(child: CircularLoadingIndicator(width: 128)),
       ),
     );
   }
