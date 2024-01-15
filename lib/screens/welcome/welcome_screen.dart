@@ -35,6 +35,7 @@ class WelcomeScreen extends StatelessWidget {
           onInit: (store) {
             store.dispatch(LoadCredentialsCommandAction());
           },
+          distinct: true,
           converter: (store) => AuthPresenter.presentAuth(authState: store.state.authState),
           onWillChange: (previousViewModel, newViewModel) {
             if (previousViewModel is AuthLoadingViewModel &&
@@ -42,8 +43,8 @@ class WelcomeScreen extends StatelessWidget {
                 newViewModel.email!.isNotEmpty &&
                 newViewModel.password!.isNotEmpty &&
                 newViewModel.deviceId!.isEmpty) {
-              FlutterNativeSplash.remove();
               Navigator.pushNamed(context, LoginScreen.routeName);
+              FlutterNativeSplash.remove();
             }
             if (previousViewModel is AuthLoadingViewModel &&
                 newViewModel is AuthCredentialsLoadedViewModel &&
@@ -60,13 +61,15 @@ class WelcomeScreen extends StatelessWidget {
             if (previousViewModel is AuthLoadingViewModel &&
                 newViewModel is AuthInitializedViewModel &&
                 newViewModel.authType == AuthType.withBiometrics) {
-              FlutterNativeSplash.remove();
               Navigator.pushNamedAndRemoveUntil(context, LoginWithBiometricsScreen.routeName, (route) => false);
+              FlutterNativeSplash.remove();
             }
           },
           builder: (context, viewModel) {
             if (viewModel is AuthLoadingViewModel) {
               return const Center(child: CircularProgressIndicator());
+            } else if (viewModel is AuthInitializedViewModel && viewModel.authType == AuthType.withBiometrics) {
+              return const SizedBox();
             }
 
             return const Column(
