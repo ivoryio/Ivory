@@ -34,9 +34,7 @@ class WelcomeScreen extends StatelessWidget {
       body: ScrollableScreenContainer(
         child: StoreConnector<AppState, AuthViewModel>(
           onInit: (store) {
-            store.dispatch(
-              LoadCredentialsCommandAction(),
-            );
+            store.dispatch(LoadCredentialsCommandAction());
           },
           converter: (store) => AuthPresenter.presentAuth(authState: store.state.authState),
           onWillChange: (previousViewModel, newViewModel) {
@@ -45,6 +43,7 @@ class WelcomeScreen extends StatelessWidget {
                 newViewModel.email!.isNotEmpty &&
                 newViewModel.password!.isNotEmpty &&
                 newViewModel.deviceId!.isEmpty) {
+              FlutterNativeSplash.remove();
               Navigator.pushNamed(context, LoginScreen.routeName);
             }
             if (previousViewModel is AuthLoadingViewModel &&
@@ -62,9 +61,8 @@ class WelcomeScreen extends StatelessWidget {
             if (previousViewModel is AuthLoadingViewModel &&
                 newViewModel is AuthInitializedViewModel &&
                 newViewModel.authType == AuthType.withBiometrics) {
-              Navigator.of(
-                navigatorKey.currentContext as BuildContext,
-              ).pushNamedAndRemoveUntil(LoginWithBiometricsScreen.routeName, (route) => false);
+              FlutterNativeSplash.remove();
+              Navigator.pushNamedAndRemoveUntil(context, LoginWithBiometricsScreen.routeName, (route) => false);
             }
           },
           builder: (context, viewModel) {
