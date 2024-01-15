@@ -13,6 +13,7 @@ import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/circular_percent_indicator.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/screen_title.dart';
+import 'package:solarisdemo/widgets/skeleton.dart';
 
 class OnboardingStepperScreen extends StatefulWidget {
   static const routeName = "/onboardingStepperScreen";
@@ -53,7 +54,7 @@ class _OnboardingStepperScreenState extends State<OnboardingStepperScreen> {
                         StoreProvider.of<AppState>(context).dispatch(GetOnboardingProgressCommandAction());
                       },
                     )
-                  : const GenericLoadingScreenBody();
+                  : _buildLoadingSkeleton();
         },
       ),
     );
@@ -116,6 +117,52 @@ class _OnboardingStepperScreenState extends State<OnboardingStepperScreen> {
             ),
           ),
         ),
+      ],
+    );
+  }
+
+  Widget _buildLoadingSkeleton() {
+    return Column(
+      children: [
+        AppToolbar(
+          padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+          actions: const [AppbarLogo()],
+          backButtonEnabled: false,
+        ),
+        SkeletonContainer(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 16),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 15),
+                  const Skeleton(height: 40, width: 192),
+                  const SizedBox(height: 15),
+                  const SizedBox(height: 8),
+                  for (int i = 0; i < 3; i++) ...[
+                    _buildItemSkeleton(),
+                    const SizedBox(height: 16),
+                  ],
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildItemSkeleton() {
+    return const Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 4),
+        Skeleton(height: 16, width: 327),
+        SizedBox(height: 8),
+        Skeleton(height: 16, width: 200),
+        SizedBox(height: 4),
       ],
     );
   }
