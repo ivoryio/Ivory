@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
@@ -25,10 +27,10 @@ class TransactionListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var recipientName = removeUnrelatedWords(transaction.recipientName);
+    var recipientName = removeUnrelatedWords(transaction.recipientName ?? 'recipient name');
 
     final date = transaction.recordedAt!.toIso8601String();
-    final description = transaction.description!;
+    final description = transaction.description ?? 'description';
     final amount = transaction.amount?.value ?? 0;
 
     final DateFormat dateFormatter = DateFormat('MMM d, HH:mm ');
@@ -195,7 +197,7 @@ class TransactionCard extends StatelessWidget {
           Row(
             children: [
               Icon(
-                categoryIcon,
+                getRandomMerchantIcon(),
                 size: 20,
                 color: ClientConfig.getColorScheme().secondary,
               ),
@@ -223,5 +225,26 @@ class TransactionCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  IconData getRandomMerchantIcon() {
+    List<IconData> icons = [
+      Icons.local_taxi_outlined,
+      Icons.fastfood_outlined,
+      Icons.shopping_bag_outlined,
+      Icons.local_gas_station_outlined,
+      Icons.health_and_safety_outlined,
+      Icons.devices_outlined,
+      Icons.live_tv_outlined,
+      Icons.house_outlined,
+      Icons.receipt_long_outlined,
+      Icons.school_outlined,
+      Icons.account_balance_outlined,
+      Icons.local_offer_outlined,
+      Icons.currency_exchange,
+      Icons.euro,
+    ];
+
+    return icons[Random().nextInt(icons.length)];
   }
 }

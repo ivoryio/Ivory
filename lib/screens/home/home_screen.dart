@@ -121,7 +121,11 @@ class HomePageContent extends StatelessWidget {
                               style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
                             ),
                           ),
-                        for (var transaction in transactions) TransactionListItem(transaction: transaction),
+                        for (var transaction in transactions)
+                          TransactionListItem(
+                            transaction: transaction,
+                            isClickable: false,
+                          ),
                         const SizedBox(height: 32),
                         Padding(
                           padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,

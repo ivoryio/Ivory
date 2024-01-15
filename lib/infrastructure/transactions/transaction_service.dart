@@ -16,12 +16,162 @@ class TransactionService extends ApiService {
     this.user = user;
 
     try {
-      var data = await get(
-        '/transactions',
-        queryParameters: filter?.toMap() ?? {},
-      );
+      // var data = await get(
+      //   '/transactions',
+      //   queryParameters: filter?.toMap() ?? {},
+      // );
 
-      List<Transaction> transactions = (data as List).map((transaction) => Transaction.fromJson(transaction)).toList();
+      // List<Transaction> transactions = (data as List).map((transaction) => Transaction.fromJson(transaction)).toList();
+
+      final data = [
+        {
+          "id": "178929812",
+          "linkId": "178929712",
+          "transactionDate": "2024-01-15T13:18:36",
+          "postingDate": "2024-01-15T00:00:00",
+          "postingStatus": "POSTED",
+          "responseCode": "0",
+          "transactionType": {"authorizationType": "FINANCIAL", "code": "A2AD"},
+          "transactionConditionCode": null,
+          "retrievalReferenceNumber": null,
+          "authorizationCode": null,
+          "acquiringInstitutionIdentificationCode": null,
+          "cardAcceptorIdentificationCode": null,
+          "settlementAmount": {"amount": "-445.00", "currency": "EUR"},
+          "transactionAmount": {"amount": "-445.00", "currency": "EUR"},
+          "feeAmount": {"amount": "0.00", "currency": null},
+          "merchant": {"country": null, "city": null, "name": "Amazon.com, Inc.", "mcc": null},
+          "text": "im another text",
+          "createdAt": "2024-01-15T13:18:36",
+          "cardId": null
+        },
+        {
+          "id": "178929712",
+          "linkId": "178929712",
+          "transactionDate": "2024-01-15T13:18:35",
+          "postingDate": "2024-01-15T00:00:00",
+          "postingStatus": "CLOSED",
+          "responseCode": "0",
+          "transactionType": {"authorizationType": "AUTH", "code": "A2AD"},
+          "transactionConditionCode": null,
+          "retrievalReferenceNumber": null,
+          "authorizationCode": "440514",
+          "acquiringInstitutionIdentificationCode": null,
+          "cardAcceptorIdentificationCode": null,
+          "settlementAmount": {"amount": "-445.00", "currency": "EUR"},
+          "transactionAmount": {"amount": "-445.00", "currency": "EUR"},
+          "feeAmount": {"amount": "0.00", "currency": null},
+          "merchant": {"country": null, "city": null, "name": "Amazon.com, Inc.", "mcc": null},
+          "text": null,
+          "createdAt": "2024-01-15T13:18:35",
+          "cardId": null
+        },
+        {
+          "id": "178324512",
+          "linkId": "178324412",
+          "transactionDate": "2024-01-11T13:37:16",
+          "postingDate": "2024-01-11T00:00:00",
+          "postingStatus": "POSTED",
+          "responseCode": "0",
+          "transactionType": {"authorizationType": "FINANCIAL", "code": "A2AD"},
+          "transactionConditionCode": null,
+          "retrievalReferenceNumber": null,
+          "authorizationCode": null,
+          "acquiringInstitutionIdentificationCode": null,
+          "cardAcceptorIdentificationCode": null,
+          "settlementAmount": {"amount": "-321.00", "currency": "EUR"},
+          "transactionAmount": {"amount": "-321.00", "currency": "EUR"},
+          "feeAmount": {"amount": "0.00", "currency": null},
+          "merchant": {"country": null, "city": null, "name": "Uber", "mcc": null},
+          "text": "test",
+          "createdAt": "2024-01-11T13:37:16",
+          "cardId": null
+        },
+        {
+          "id": "178324412",
+          "linkId": "178324412",
+          "transactionDate": "2024-01-11T13:37:16",
+          "postingDate": "2024-01-11T00:00:00",
+          "postingStatus": "CLOSED",
+          "responseCode": "0",
+          "transactionType": {"authorizationType": "AUTH", "code": "A2AD"},
+          "transactionConditionCode": null,
+          "retrievalReferenceNumber": null,
+          "authorizationCode": "440513",
+          "acquiringInstitutionIdentificationCode": null,
+          "cardAcceptorIdentificationCode": null,
+          "settlementAmount": {"amount": "-321.00", "currency": "EUR"},
+          "transactionAmount": {"amount": "-321.00", "currency": "EUR"},
+          "feeAmount": {"amount": "0.00", "currency": null},
+          "merchant": {"country": null, "city": null, "name": "Uber", "mcc": null},
+          "text": null,
+          "createdAt": "2024-01-11T13:37:16",
+          "cardId": null
+        },
+        {
+          "id": "178322712",
+          "linkId": "178322612",
+          "transactionDate": "2024-01-11T13:17:43",
+          "postingDate": "2024-01-11T00:00:00",
+          "postingStatus": "POSTED",
+          "responseCode": "0",
+          "transactionType": {"authorizationType": "FINANCIAL", "code": "C2CC"},
+          "transactionConditionCode": null,
+          "retrievalReferenceNumber": null,
+          "authorizationCode": null,
+          "acquiringInstitutionIdentificationCode": null,
+          "cardAcceptorIdentificationCode": null,
+          "settlementAmount": {"amount": "120.00", "currency": "EUR"},
+          "transactionAmount": {"amount": "120.00", "currency": "EUR"},
+          "feeAmount": {"amount": "0.00", "currency": null},
+          "merchant": {"country": null, "city": null, "name": "Peter Petty", "mcc": null},
+          "text": null,
+          "createdAt": "2024-01-11T13:17:43",
+          "cardId": null
+        },
+        {
+          "id": "178322612",
+          "linkId": "178322612",
+          "transactionDate": "2024-01-11T13:17:42",
+          "postingDate": "2024-01-11T00:00:00",
+          "postingStatus": "CLOSED",
+          "responseCode": "0",
+          "transactionType": {"authorizationType": "AUTH", "code": "C2CC"},
+          "transactionConditionCode": null,
+          "retrievalReferenceNumber": null,
+          "authorizationCode": "440512",
+          "acquiringInstitutionIdentificationCode": null,
+          "cardAcceptorIdentificationCode": null,
+          "settlementAmount": {"amount": "120.00", "currency": "EUR"},
+          "transactionAmount": {"amount": "120.00", "currency": "EUR"},
+          "feeAmount": {"amount": "0.00", "currency": null},
+          "merchant": {"country": null, "city": null, "name": "Peter Petty", "mcc": null},
+          "text": null,
+          "createdAt": "2024-01-11T13:17:42",
+          "cardId": null
+        }
+      ] as dynamic;
+
+      List<Transaction> transactions = (data as List)
+          .where((transaction) => transaction['postingStatus'] == 'POSTED')
+          .map(
+            (transaction) => Transaction(
+              id: transaction['id'],
+              bookingType: 'asd',
+              amount: AmountValue(
+                value: double.parse(transaction['transactionAmount']['amount']),
+                unit: "cents",
+                currency: "EUR",
+              ),
+              description: transaction['text'],
+              bookingDate: transaction['postingDate'],
+              recordedAt: DateTime.parse(
+                transaction['createdAt'],
+              ),
+              recipientName: transaction['merchant']['name'],
+            ),
+          )
+          .toList();
 
       return GetTransactionsSuccessResponse(transactions: transactions);
     } catch (e) {

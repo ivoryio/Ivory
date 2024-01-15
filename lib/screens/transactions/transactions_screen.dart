@@ -347,6 +347,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
               ),
               itemBuilder: (context, index) => TransactionListItem(
                 transaction: transactions[index],
+                isClickable: false,
               ),
             ),
             const SizedBox(height: 24)
