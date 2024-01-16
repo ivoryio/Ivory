@@ -14,28 +14,81 @@ class AccountSummaryService extends ApiService {
     this.user = user;
     try {
       String path =
-          ClientConfig.getFeatureFlags().simplifiedLogin ? 'account/v4/customer/${user.accountId}' : 'account/summary';
+          ClientConfig.getFeatureFlags().simplifiedLogin ? 'account/v4/${user.accountId}' : 'account/summary';
 
       // var data = await get(path);
       final data = {
-        "available": 1000,
-        "balance": 1000,
+        "available": 29354,
+        "balance": -646,
         "currency": "EUR",
-        "customerId": 55667788990,
-        "iban": {"iban": "FI7165429021331431"},
-        "id": 1234567890,
-        "name": "My example account name",
-        "number": 123456789,
-        "parentId": 9876543210,
-        "paymentReference": {"number": 1234567897, "type": "MOD10"},
-        "status": "ACCOUNT_BLOCKED",
-        "template": "string"
+        "customerId": "293986012",
+        "id": "793440512",
+        "name": "gytozo gyozo",
+        "number": "111111745036161",
+        "parentId": null,
+        "status": "ACCOUNT_OK",
+        "paymentReference": {"number": "1111117450361619", "type": "MOD10"},
+        "template": "CREDIT",
+        "segment": null,
+        "closureReason": null,
+        "address": {
+          "address1": "test 12 3",
+          "address2": null,
+          "address3": null,
+          "address4": null,
+          "city": "m ciuc",
+          "country": "DEU",
+          "region": null,
+          "zipCode": "562125"
+        },
+        "creditLimit": 30000,
+        "productCode": "CREDIT",
+        "eInvoice": {"address": null, "operator": null, "paymentInstruction": null},
+        "interestPostingEnabled": null,
+        "invoiceDayOfMonth": 1,
+        "invoiceDeliveryMethod": "REGULAR_MAIL",
+        "minimumToPay": {"amount": 50, "percentage": 20},
+        "reason": "Contract renewal",
+        "usageLimits": [
+          {
+            "code": "WEEKLY",
+            "values": [
+              {"code": "ALL", "reset": null, "singleAmount": null, "count": 9999999, "sumAmount": null},
+              {"code": "ATM", "reset": null, "singleAmount": null, "count": 9999999, "sumAmount": null},
+              {"code": "RETAIL", "reset": null, "singleAmount": null, "count": 9999999, "sumAmount": null}
+            ]
+          },
+          {
+            "code": "DAILY",
+            "values": [
+              {"code": "ALL", "reset": null, "singleAmount": null, "count": 9999999, "sumAmount": null},
+              {"code": "ATM", "reset": null, "singleAmount": null, "count": 9999999, "sumAmount": null}
+            ]
+          },
+          {
+            "code": "24H",
+            "values": [
+              {"code": "ALL", "reset": null, "singleAmount": null, "count": 9999999, "sumAmount": null},
+              {"code": "ATM", "reset": null, "singleAmount": null, "count": 9999999, "sumAmount": null},
+              {"code": "RETAIL", "reset": null, "singleAmount": null, "count": 9999999, "sumAmount": null}
+            ]
+          },
+          {
+            "code": "MONTHLY",
+            "values": [
+              {"code": "ALL", "reset": null, "singleAmount": null, "count": 9999999, "sumAmount": null},
+              {"code": "ATM", "reset": null, "singleAmount": null, "count": 9999999, "sumAmount": null},
+              {"code": "RETAIL", "reset": null, "singleAmount": null, "count": 9999999, "sumAmount": null}
+            ]
+          }
+        ],
+        "paymentTerms": null,
+        "InvoicePaymentMethod": null
       } as dynamic;
 
       final accountSummary = ClientConfig.getFeatureFlags().simplifiedLogin
           ? PersonAccountSummary(
               id: (data['id']).toString(),
-              iban: data['iban']['iban'],
               availableBalance: Balance(
                 currency: data['currency'],
                 value: data['available'],
@@ -44,6 +97,8 @@ class AccountSummaryService extends ApiService {
                 currency: data['currency'],
                 value: data['balance'],
               ),
+              outstandingAmount: 30000.00,
+              creditLimit: data['creditLimit'].toDouble(),
             )
           : PersonAccountSummary.fromJson(data);
       return GetAccountSummarySuccessResponse(accountSummary: accountSummary);

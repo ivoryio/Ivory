@@ -310,7 +310,7 @@ class AccountBalance extends StatelessWidget {
           padding: EdgeInsets.zero,
           lineHeight: 8,
           barRadius: const Radius.circular(40),
-          percent: creditLimitPercent.isNaN ? 0 : creditLimitPercent,
+          percent: creditLimitPercent.isNaN || creditLimitPercent.isNegative ? 0 : creditLimitPercent,
           backgroundColor: const Color(0x26F8F9FA),
           progressColor: ClientConfig.getColorScheme().secondary,
           curve: Curves.fastOutSlowIn,
