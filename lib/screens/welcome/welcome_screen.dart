@@ -8,7 +8,6 @@ import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/auth/auth_presenter.dart';
 import 'package:solarisdemo/ivory_app.dart';
 import 'package:solarisdemo/models/auth/auth_type.dart';
-import 'package:solarisdemo/navigator.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/auth/auth_action.dart';
 import 'package:solarisdemo/screens/login/login_screen.dart';
@@ -34,10 +33,9 @@ class WelcomeScreen extends StatelessWidget {
       body: ScrollableScreenContainer(
         child: StoreConnector<AppState, AuthViewModel>(
           onInit: (store) {
-            store.dispatch(
-              LoadCredentialsCommandAction(),
-            );
+            store.dispatch(LoadCredentialsCommandAction());
           },
+          distinct: true,
           converter: (store) => AuthPresenter.presentAuth(authState: store.state.authState),
           onWillChange: (previousViewModel, newViewModel) {
             if (previousViewModel is AuthLoadingViewModel &&
@@ -46,6 +44,7 @@ class WelcomeScreen extends StatelessWidget {
                 newViewModel.password!.isNotEmpty &&
                 newViewModel.deviceId!.isEmpty) {
               Navigator.pushNamed(context, LoginScreen.routeName);
+              FlutterNativeSplash.remove();
             }
             if (previousViewModel is AuthLoadingViewModel &&
                 newViewModel is AuthCredentialsLoadedViewModel &&
@@ -62,14 +61,15 @@ class WelcomeScreen extends StatelessWidget {
             if (previousViewModel is AuthLoadingViewModel &&
                 newViewModel is AuthInitializedViewModel &&
                 newViewModel.authType == AuthType.withBiometrics) {
-              Navigator.of(
-                navigatorKey.currentContext as BuildContext,
-              ).pushNamedAndRemoveUntil(LoginWithBiometricsScreen.routeName, (route) => false);
+              Navigator.pushNamedAndRemoveUntil(context, LoginWithBiometricsScreen.routeName, (route) => false);
+              FlutterNativeSplash.remove();
             }
           },
           builder: (context, viewModel) {
             if (viewModel is AuthLoadingViewModel) {
               return const Center(child: CircularProgressIndicator());
+            } else if (viewModel is AuthInitializedViewModel && viewModel.authType == AuthType.withBiometrics) {
+              return const SizedBox();
             }
 
             return const Column(
