@@ -76,7 +76,7 @@ class SettingsScreen extends StatelessWidget {
                     rightIcon: Icons.arrow_forward_ios,
                   ),
                   const Spacer(),
-                  const Center(child: Text('App version 1.0')),
+                  const Center(child: Text('App version 2.1.0')),
                   const SizedBox(height: 8),
                 ],
               ),
