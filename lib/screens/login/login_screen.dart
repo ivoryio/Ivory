@@ -137,7 +137,7 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
     _phoneInputController.addListener(onChangedPhoneNumber);
     _passwordInputController.addListener(onChangedPassword);
 
-    _selectCountryController = IvorySelectOptionController();
+    _selectCountryController = IvorySelectOptionController(loading: true);
     _phoneNumberFormatter = InputFormatter.createPhoneNumberFormatter("");
 
     _loadOptions();
@@ -222,15 +222,17 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
                                   onSearchChanged: (value) {},
                                   expanded: true,
                                   onOptionSelected: (option) {
-                                    final phoneCode = option.data?["phoneCode"] ?? "";
-                                    final phoneNumberFormat = option.data?["phoneNumberFormat"] ?? "";
+                                    final phoneCode = option.getPhoneCode() ?? "";
+                                    final phoneNumberFormat = option.getPhoneNumberFormat() ?? "";
 
                                     _phoneInputController.text = phoneCode;
+
                                     setState(() {
                                       _phoneNumberFormatter = InputFormatter.createPhoneNumberFormatter(
                                         phoneNumberFormat,
                                       );
                                     });
+
                                     onChangedPhoneNumber();
                                   },
                                 ),
@@ -338,8 +340,8 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
     final options = await loadCountryPickerOptions(addPhoneCode: true);
 
     final preselectedOption = options.first;
-    final phoneCode = preselectedOption.data?["phoneCode"] ?? "";
-    final phoneNumberFormat = preselectedOption.data?["phoneNumberFormat"] ?? "";
+    final phoneCode = preselectedOption.getPhoneCode() ?? "";
+    final phoneNumberFormat = preselectedOption.getPhoneNumberFormat() ?? "";
 
     _selectCountryController.setOptions(options);
     _selectCountryController.toggleOptionSelection(preselectedOption, 0);

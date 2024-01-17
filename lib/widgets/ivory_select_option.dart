@@ -200,6 +200,8 @@ class IvorySelectOptionController extends ChangeNotifier {
     _options.addAll(options);
     _initialOptions.addAll(options);
 
+    setLoading(false);
+
     notifyListeners();
   }
 
@@ -287,5 +289,6 @@ class IvorySelectOptionController extends ChangeNotifier {
   bool get enabled => _enabled;
   String get searchText => _searchText;
   List<SelectOption> get options => _options;
+  SelectOption? get firstSelectedOption => _selectedOptions.firstOrNull;
   List<SelectOption> get selectedOptions => _selectedOptions;
 }

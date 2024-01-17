@@ -32,6 +32,9 @@ class SelectOption extends Equatable {
     );
   }
 
+  String? getPhoneCode() => data != null ? data!['phoneCode'] : null;
+  String? getPhoneNumberFormat() => data != null ? data!['phoneNumberFormat'] : null;
+
   @override
   List<Object?> get props => [value, textLabel, selected, prefix, data];
 }
