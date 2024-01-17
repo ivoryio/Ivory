@@ -32,13 +32,13 @@ class AvailableBalanceScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              "You can transfer additional funds from your reference account to your Ivory account, enabling you to make purchases that exceed your credit limit.",
+              "You can transfer additional funds from your reference account to your Enfuce account, enabling you to make purchases that exceed your credit limit.",
               style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
             ),
             const SizedBox(height: 16),
             InkWell(
               child: Text(
-                "How to top up your Ivory account?",
+                "How to top up your Enfuce account?",
                 style:  ClientConfig.getTextStyleScheme().bodyLargeRegularBold.copyWith(
                     color: ClientConfig.getColorScheme().secondary,
                 ),
@@ -46,7 +46,7 @@ class AvailableBalanceScreen extends StatelessWidget {
               onTap: () {
                 showBottomModal(
                   context: context,
-                  title: "How to top up your Ivory account?",
+                  title: "How to top up your Enfuce account?",
                   content: TopUpBottomSheetContent(iban: viewModel.accountSummary?.iban ?? ""),
                 );
               },
