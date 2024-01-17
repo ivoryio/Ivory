@@ -10,9 +10,9 @@ import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
-import 'package:solarisdemo/widgets/circular_loading_indicator.dart';
 import 'package:solarisdemo/widgets/documents_list_view.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
+import 'package:solarisdemo/widgets/skeleton.dart';
 
 class OnboardingContractsConfirmScreen extends StatefulWidget {
   static const routeName = "/onboardingContractsConfirmScreen";
@@ -83,13 +83,43 @@ class _OnboardingContractsConfirmScreenState extends State<OnboardingContractsCo
               "Please bear with us a couple of seconds while we create your contracts...",
               style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
             ),
-            const Expanded(
+            Expanded(
               child: Center(
-                child: CircularLoadingIndicator(),
+                child: _buildLoadingSkeleton(),
               ),
             )
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildLoadingSkeleton() {
+    return SkeletonContainer(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 24),
+          for (var i = 0; i < 2; i++) ...[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Skeleton(width: 24, height: 24, borderRadius: BorderRadius.circular(100)),
+                const SizedBox(width: 16),
+                const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 20),
+                    Skeleton(width: 128, height: 16),
+                    SizedBox(height: 8),
+                    Skeleton(width: 200, height: 10),
+                    SizedBox(height: 20),
+                  ],
+                ),
+              ],
+            ),
+          ]
+        ],
       ),
     );
   }

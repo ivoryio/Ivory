@@ -12,9 +12,9 @@ import 'package:solarisdemo/screens/onboarding/identity_verification/onboarding_
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
-import 'package:solarisdemo/widgets/circular_loading_indicator.dart';
 import 'package:solarisdemo/widgets/documents_list_view.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
+import 'package:solarisdemo/widgets/skeleton.dart';
 
 class OnboardingReviewUpdatedContractsScreen extends StatelessWidget {
   static const routeName = "/onboardingReviewUpdatedContractsScreen";
@@ -69,19 +69,49 @@ class OnboardingReviewUpdatedContractsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Read & confirm contracts", style: ClientConfig.getTextStyleScheme().heading2),
+            Text("Review updated contract", style: ClientConfig.getTextStyleScheme().heading2),
             const SizedBox(height: 24),
             Text(
               "Please bear with us a couple of seconds while we update your contract...",
               style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
             ),
-            const Expanded(
+            Expanded(
               child: Center(
-                child: CircularLoadingIndicator(width: 128),
+                child: _buildLoadingSkeleton(),
               ),
             )
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildLoadingSkeleton() {
+    return SkeletonContainer(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 24),
+          for (var i = 0; i < 2; i++) ...[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Skeleton(width: 24, height: 24, borderRadius: BorderRadius.circular(100)),
+                const SizedBox(width: 16),
+                const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 20),
+                    Skeleton(width: 128, height: 16),
+                    SizedBox(height: 8),
+                    Skeleton(width: 200, height: 10),
+                    SizedBox(height: 20),
+                  ],
+                ),
+              ],
+            ),
+          ]
+        ],
       ),
     );
   }

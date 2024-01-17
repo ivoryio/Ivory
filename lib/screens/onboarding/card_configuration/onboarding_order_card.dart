@@ -3,8 +3,8 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/screens/onboarding/card_configuration/onboarding_configure_card.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/card_widget.dart';
-import 'package:solarisdemo/widgets/circular_loading_indicator.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
+import 'package:solarisdemo/widgets/skeleton.dart';
 
 import '../../../config.dart';
 import '../../../infrastructure/onboarding/card_configuration/onboarding_card_configuration_presenter.dart';
@@ -26,68 +26,73 @@ class OnboardingOrderCardScreen extends StatefulWidget {
 class _OnboardingOrderCardScreenState extends State<OnboardingOrderCardScreen> {
   @override
   Widget build(BuildContext context) {
-    return ScreenScaffold(body:
-    Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-       AppToolbar(
-         richTextTitle: StepRichTextTitle(step: 1, totalSteps: 3),
-         actions: const [AppbarLogo()],
-         padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
-       ),
-       AnimatedLinearProgressIndicator.step(current: 1, totalSteps: 3),
-       const SizedBox(height: 16,),
-       Padding(
-         padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
-         child: Text(
-           "Order your Ivory credit card",
-           style: ClientConfig.getTextStyleScheme().heading2,
-         ),
-       ),
-        StoreConnector<AppState, OnboardingCardConfigurationViewModel>(
-          onInit: (store) {
-            store.dispatch(GetCardPersonNameCommandAction());
-          },
-          onDidChange: (oldViewModel, newViewModel) {
-            if (newViewModel is OnboardingCardConfigurationGenericSuccessViewModel && ModalRoute.of(context)?.isCurrent == true) {
-              Navigator.of(context).pushNamedAndRemoveUntil(OnboardingConfigureCardScreen.routeName, (route) => false);
-            }
-          },
-          converter: (store) => OnboardingCardConfigurationPresenter.presentCardConfiguration(
-              cardConfigurationState: store.state.onboardingCardConfigurationState,
+    return ScreenScaffold(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AppToolbar(
+            richTextTitle: StepRichTextTitle(step: 1, totalSteps: 3),
+            actions: const [AppbarLogo()],
+            padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
           ),
-          builder: (context, viewModel) {
-            return _buildFrom(viewModel, context);
-          },
-        ),
-     ],),
+          AnimatedLinearProgressIndicator.step(current: 1, totalSteps: 3),
+          const SizedBox(
+            height: 16,
+          ),
+          Padding(
+            padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
+            child: Text(
+              "Order your Ivory credit card",
+              style: ClientConfig.getTextStyleScheme().heading2,
+            ),
+          ),
+          StoreConnector<AppState, OnboardingCardConfigurationViewModel>(
+            onInit: (store) {
+              store.dispatch(GetCardPersonNameCommandAction());
+            },
+            onDidChange: (oldViewModel, newViewModel) {
+              if (newViewModel is OnboardingCardConfigurationGenericSuccessViewModel &&
+                  ModalRoute.of(context)?.isCurrent == true) {
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil(OnboardingConfigureCardScreen.routeName, (route) => false);
+              }
+            },
+            converter: (store) => OnboardingCardConfigurationPresenter.presentCardConfiguration(
+              cardConfigurationState: store.state.onboardingCardConfigurationState,
+            ),
+            builder: (context, viewModel) {
+              return _buildFrom(viewModel, context);
+            },
+          ),
+        ],
+      ),
     );
   }
 }
 
 Widget _buildFrom(OnboardingCardConfigurationViewModel viewModel, BuildContext context) {
-  if(viewModel is WithCardholderNameViewModel) {
+  if (viewModel is WithCardholderNameViewModel) {
     return Expanded(
       child: Padding(
-        padding:ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+        padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
         child: Column(
           children: [
             Text.rich(
+              TextSpan(children: [
                 TextSpan(
-                    children: [
-                      TextSpan(
-                        text: "You should receive it at your residential address in",
-                        style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                      ),
-                      TextSpan(
-                        text: " 2-5 working days. ",
-                        style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
-                      ),
-                      TextSpan(
-                        text: "You’ll have to activate it in the app once it arrives. Then you'll be ready to start using it.",
-                        style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
-                      ),]
+                  text: "You should receive it at your residential address in",
+                  style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
                 ),
+                TextSpan(
+                  text: " 2-5 working days. ",
+                  style: ClientConfig.getTextStyleScheme().bodyLargeRegularBold,
+                ),
+                TextSpan(
+                  text:
+                      "You’ll have to activate it in the app once it arrives. Then you'll be ready to start using it.",
+                  style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                ),
+              ]),
             ),
             const Spacer(),
             Padding(
@@ -108,8 +113,71 @@ Widget _buildFrom(OnboardingCardConfigurationViewModel viewModel, BuildContext c
               },
               isLoading: viewModel.isLoading,
             ),
-            const SizedBox(height: 16,),
+            const SizedBox(
+              height: 16,
+            ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLoadingSkeleton() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Container(
+        decoration: BoxDecoration(
+          color: ClientConfig.getCustomColors().neutral100.withOpacity(.15),
+        ),
+        child: SkeletonContainer(
+          colorTheme: SkeletonColorTheme.dark,
+          child: Skeleton(
+            width: 343,
+            height: 202,
+            borderRadius: BorderRadius.circular(8),
+            child: const Padding(
+              padding: EdgeInsets.fromLTRB(16, 16, 16, 26),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 5),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Skeleton(width: 64, height: 24, transparent: true),
+                      Skeleton(width: 64, height: 24, transparent: true),
+                    ],
+                  ),
+                  SizedBox(height: 33),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Skeleton(width: 48, height: 24, transparent: true),
+                      Skeleton(width: 48, height: 24, transparent: true),
+                      Skeleton(width: 48, height: 24, transparent: true),
+                      Skeleton(width: 48, height: 24, transparent: true),
+                    ],
+                  ),
+                  SizedBox(height: 23),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Skeleton(width: 64, height: 10, transparent: true),
+                      Skeleton(width: 64, height: 10, transparent: true),
+                    ],
+                  ),
+                  SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Skeleton(width: 88, height: 16, transparent: true),
+                      Skeleton(width: 88, height: 16, transparent: true),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       ),
     );
@@ -125,10 +193,12 @@ Widget _buildFrom(OnboardingCardConfigurationViewModel viewModel, BuildContext c
             style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
           ),
           const Spacer(),
-          const CircularLoadingIndicator(),
+          _buildLoadingSkeleton(),
           const Spacer(),
           const PrimaryButton(text: "Order my card"),
-          const SizedBox(height: 16,),
+          const SizedBox(
+            height: 16,
+          ),
         ],
       ),
     ),
