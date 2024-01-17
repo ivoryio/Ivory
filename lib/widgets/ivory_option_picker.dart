@@ -9,7 +9,7 @@ import 'package:solarisdemo/widgets/ivory_text_field.dart';
 class IvoryOptionPicker extends StatefulWidget {
   final IvorySelectOptionController controller;
   final String searchFieldPlaceholder;
-  final void Function(SelectOption) onOptionSelected;
+  final void Function(SelectOption)? onOptionSelected;
   final void Function(String)? onSearchChanged;
   final bool enabledSearch;
   final bool filterOptions;
@@ -19,10 +19,10 @@ class IvoryOptionPicker extends StatefulWidget {
   const IvoryOptionPicker({
     super.key,
     required this.controller,
-    required this.onOptionSelected,
-    required this.enabledSearch,
-    required this.searchFieldPlaceholder,
-    required this.filterOptions,
+    this.onOptionSelected,
+    this.enabledSearch = true,
+    this.filterOptions = true,
+    this.searchFieldPlaceholder = "Search",
     this.onSearchChanged,
     this.expanded = false,
     this.searchFieldInitialText = "",
@@ -128,7 +128,7 @@ class _IvoryOptionPickerState extends State<IvoryOptionPicker> {
             multiselect: widget.controller.multiselect,
             onTap: () {
               widget.controller.toggleOptionSelection(option, index);
-              widget.onOptionSelected(option);
+              widget.onOptionSelected?.call(option);
             },
             prefix: option.prefix,
           );
