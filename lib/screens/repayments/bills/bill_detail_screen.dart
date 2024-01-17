@@ -9,6 +9,7 @@ import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/expanded_details_row.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
+import 'package:solarisdemo/widgets/skeleton.dart';
 import 'package:solarisdemo/widgets/spaced_column.dart';
 
 class BillDetailScreen extends StatelessWidget {
@@ -85,10 +86,13 @@ class BillDetailScreen extends StatelessWidget {
                                       ),
                                     )
                                   ] else
-                                    const Center(
-                                      child: SizedBox.square(
-                                        dimension: 24,
-                                        child: CircularProgressIndicator(strokeWidth: 2),
+                                    const SkeletonContainer(
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Skeleton(width: 128, height: 16),
+                                          Skeleton(width: 72, height: 16),
+                                        ],
                                       ),
                                     ),
                                   ExpandedDetailsRow(
