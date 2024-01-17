@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/auth/auth_presenter.dart';
 import 'package:solarisdemo/models/auth/auth_error_type.dart';
@@ -7,11 +8,14 @@ import 'package:solarisdemo/models/auth/auth_type.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/auth/auth_action.dart';
 import 'package:solarisdemo/screens/login/login_with_tan_screen.dart';
-import 'package:solarisdemo/screens/login/modals/mobile_number_country_picker_popup.dart';
 import 'package:solarisdemo/screens/onboarding/onboarding_stepper_screen.dart';
+import 'package:solarisdemo/utilities/format.dart';
+import 'package:solarisdemo/utilities/load_countries.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/checkbox.dart';
 import 'package:solarisdemo/widgets/continue_button_controller.dart';
+import 'package:solarisdemo/widgets/ivory_option_picker.dart';
+import 'package:solarisdemo/widgets/ivory_select_option.dart';
 import 'package:solarisdemo/widgets/ivory_text_field.dart';
 import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
@@ -119,7 +123,8 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
   late FocusNode _phoneInputFocusNode;
   late IvoryTextFieldController _passwordInputController;
   late ContinueButtonController _continueButtonController;
-  late ValueNotifier<CountryPrefixItem> _selectedCountryNotifier;
+  late IvorySelectOptionController _selectCountryController;
+  late MaskTextInputFormatter _phoneNumberFormatter;
 
   @override
   void initState() {
@@ -128,12 +133,14 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
     _phoneInputFocusNode = FocusNode();
     _passwordInputController = IvoryTextFieldController(obscureText: true);
     _continueButtonController = ContinueButtonController();
+
     _phoneInputController.addListener(onChangedPhoneNumber);
     _passwordInputController.addListener(onChangedPassword);
-    _selectedCountryNotifier = ValueNotifier<CountryPrefixItem>(
-      CountryPrefixItem.defaultCountryPrefix,
-    );
-    _phoneInputController.text = _selectedCountryNotifier.value.phoneCode;
+
+    _selectCountryController = IvorySelectOptionController();
+    _phoneNumberFormatter = InputFormatter.createPhoneNumberFormatter("");
+
+    _loadOptions();
   }
 
   void onChangedPhoneNumber() {
@@ -189,26 +196,43 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ValueListenableBuilder<CountryPrefixItem>(
-                      valueListenable: _selectedCountryNotifier,
-                      builder: (context, selectedCountry, child) {
+                    ListenableBuilder(
+                      listenable: _selectCountryController,
+                      builder: (context, child) {
                         return IvoryTextField(
                           label: 'Mobile number',
                           keyboardType: TextInputType.phone,
                           controller: _phoneInputController,
                           focusNode: _phoneInputFocusNode,
+                          inputFormatters: [_phoneNumberFormatter],
                           prefix: GestureDetector(
                             onTap: () {
                               showBottomModal(
-                                addContentPadding: false,
                                 context: context,
                                 title: "Select mobile number prefix",
-                                content: CountryPrefixPicker(
-                                  onCountrySelected: (country) {
-                                    _selectedCountryNotifier.value = country;
-                                    _phoneInputController.text = country.phoneCode;
+                                addContentPadding: false,
+                                useSafeArea: true,
+                                statusbarVisibilityForTallModal: true,
+                                useScrollableChild: false,
+                                content: IvoryOptionPicker(
+                                  controller: _selectCountryController,
+                                  filterOptions: true,
+                                  enabledSearch: true,
+                                  searchFieldPlaceholder: 'Search prefix or country...',
+                                  onSearchChanged: (value) {},
+                                  expanded: true,
+                                  onOptionSelected: (option) {
+                                    final phoneCode = option.data?["phoneCode"] ?? "";
+                                    final phoneNumberFormat = option.data?["phoneNumberFormat"] ?? "";
+
+                                    _phoneInputController.text = phoneCode;
+                                    setState(() {
+                                      _phoneNumberFormatter = InputFormatter.createPhoneNumberFormatter(
+                                        phoneNumberFormat,
+                                      );
+                                    });
+                                    onChangedPhoneNumber();
                                   },
-                                  selectedCountry: _selectedCountryNotifier.value,
                                 ),
                               );
                             },
@@ -217,10 +241,9 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
                               width: 80,
                               child: Row(
                                 children: [
-                                  Text(
-                                    selectedCountry.flag,
-                                    style: const TextStyle(fontSize: 20, height: 24 / 20),
-                                  ),
+                                  _selectCountryController.selectedOptions.isNotEmpty
+                                      ? _selectCountryController.selectedOptions.first.prefix!
+                                      : const SizedBox(),
                                   const SizedBox(width: 4),
                                   Icon(
                                     Icons.expand_more,
@@ -309,6 +332,19 @@ class _PhoneNumberLoginFormState extends State<PhoneNumberLoginForm> {
         );
       },
     );
+  }
+
+  Future<void> _loadOptions() async {
+    final options = await loadCountryPickerOptions(addPhoneCode: true);
+
+    final preselectedOption = options.first;
+    final phoneCode = preselectedOption.data?["phoneCode"] ?? "";
+    final phoneNumberFormat = preselectedOption.data?["phoneNumberFormat"] ?? "";
+
+    _selectCountryController.setOptions(options);
+    _selectCountryController.toggleOptionSelection(preselectedOption, 0);
+    _phoneInputController.text = phoneCode;
+    _phoneNumberFormatter = InputFormatter.createPhoneNumberFormatter(phoneNumberFormat);
   }
 }
 
@@ -614,4 +650,11 @@ class AuthErrorContainer extends StatelessWidget {
       ),
     );
   }
+}
+
+class CountryData {
+  final String phoneCode;
+  final String phoneNumberFormat;
+
+  CountryData({required this.phoneNumberFormat, required this.phoneCode});
 }
