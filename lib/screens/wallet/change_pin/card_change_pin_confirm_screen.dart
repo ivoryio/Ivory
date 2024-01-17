@@ -8,6 +8,7 @@ import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/redux/bank_card/bank_card_action.dart';
 import 'package:solarisdemo/screens/wallet/change_pin/card_change_pin_success_screen.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
+import 'package:solarisdemo/widgets/circular_loading_indicator.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 class BankCardConfirmPinConfirmScreen extends StatelessWidget {
@@ -17,8 +18,7 @@ class BankCardConfirmPinConfirmScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user =
-        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
+    final user = (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
     final GlobalKey<_ConfirmPinBodyState> confirmPinBodyKey = GlobalKey<_ConfirmPinBodyState>();
 
     ValueNotifier<bool> matchingPinErrorNotifier = ValueNotifier<bool>(false);
@@ -63,7 +63,9 @@ class BankCardConfirmPinConfirmScreen extends StatelessWidget {
                           ),
                           TextSpan(
                             text: " out of 2",
-                            style: ClientConfig.getTextStyleScheme().heading4.copyWith(color: ClientConfig.getCustomColors().neutral700),
+                            style: ClientConfig.getTextStyleScheme()
+                                .heading4
+                                .copyWith(color: ClientConfig.getCustomColors().neutral700),
                           ),
                         ],
                       ),
@@ -92,12 +94,70 @@ class BankCardConfirmPinConfirmScreen extends StatelessWidget {
             ),
           );
         }
-        return const ScreenScaffold(
+        // return const ScreenScaffold(
+        //   body: Column(
+        //     children: [
+        //       Expanded(
+        //         child: Center(
+        //           child: CircularProgressIndicator(),
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // );
+        return ScreenScaffold(
           body: Column(
             children: [
-              Expanded(
-                child: Center(
-                  child: CircularProgressIndicator(),
+              AppToolbar(
+                padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+                backButtonAppearanceDisabled: true,
+                richTextTitle: RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Step 2',
+                        style: ClientConfig.getTextStyleScheme().heading4,
+                      ),
+                      TextSpan(
+                        text: " out of 2",
+                        style: ClientConfig.getTextStyleScheme()
+                            .heading4
+                            .copyWith(color: ClientConfig.getCustomColors().neutral700),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              LinearProgressIndicator(
+                value: 2 / 2,
+                color: ClientConfig.getColorScheme().secondary,
+                backgroundColor: ClientConfig.getCustomColors().neutral200,
+              ),
+              Padding(
+                padding:
+                    EdgeInsets.symmetric(horizontal: ClientConfig.getCustomClientUiSettings().defaultScreenLeftPadding),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 24),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Confirm PIN',
+                        style: ClientConfig.getTextStyleScheme().heading2,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Please bear with us until we save your PIN...',
+                      style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
+                    ),
+                    const SizedBox(height: 24),
+                    const Center(
+                      child: CircularLoadingIndicator(width: 40, strokeWidth: 5),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -292,7 +352,9 @@ class ConfirmPinChecks extends StatelessWidget {
                     Icon(
                       Icons.check,
                       size: 24,
-                      color: matchingPinErrorNotifier.value ? const Color(0xffE61F27) : ClientConfig.getCustomColors().neutral700,
+                      color: matchingPinErrorNotifier.value
+                          ? const Color(0xffE61F27)
+                          : ClientConfig.getCustomColors().neutral700,
                     ),
                     const SizedBox(
                       width: 4,
@@ -300,7 +362,9 @@ class ConfirmPinChecks extends StatelessWidget {
                     Text(
                       "Your PIN should match",
                       style: ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(
-                          color: matchingPinErrorNotifier.value ? const Color(0xffE61F27) : ClientConfig.getCustomColors().neutral700),
+                          color: matchingPinErrorNotifier.value
+                              ? const Color(0xffE61F27)
+                              : ClientConfig.getCustomColors().neutral700),
                     ),
                   ],
                 );
