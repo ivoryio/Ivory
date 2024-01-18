@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:solarisdemo/config.dart';
@@ -21,6 +20,7 @@ import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 
 const minFormatterLength = 3;
+const defaultPhoneNumberFormat = "+##############";
 
 class OnboardingMobileNumberScreen extends StatefulWidget {
   static const routeName = '/onboardingMobileNumberScreen';
@@ -32,22 +32,15 @@ class OnboardingMobileNumberScreen extends StatefulWidget {
 }
 
 class _OnboardingMobileNumberScreenState extends State<OnboardingMobileNumberScreen> {
-  late IvoryTextFieldController _mobileNumberController;
-  late FocusNode _mobileNumberFocusNode;
-  late ContinueButtonController _continueButtonController;
-  late MaskTextInputFormatter _phoneNumberFormatter;
-  late IvorySelectOptionController _countrySelectOptionController;
+  final IvoryTextFieldController _mobileNumberController = IvoryTextFieldController();
+  final FocusNode _mobileNumberFocusNode = FocusNode();
+  final ContinueButtonController _continueButtonController = ContinueButtonController();
+  final IvorySelectOptionController _countrySelectOptionController = IvorySelectOptionController(loading: true);
+  MaskTextInputFormatter _phoneNumberFormatter = InputFormatter.createPhoneNumberFormatter(defaultPhoneNumberFormat);
 
   @override
   void initState() {
-    FlutterNativeSplash.remove();
-    _mobileNumberController = IvoryTextFieldController();
     _mobileNumberController.addListener(onChanged);
-    _mobileNumberFocusNode = FocusNode();
-    _continueButtonController = ContinueButtonController();
-    _countrySelectOptionController = IvorySelectOptionController(loading: true);
-    _phoneNumberFormatter = InputFormatter.createPhoneNumberFormatter("");
-
     _loadCountryOptions();
 
     super.initState();
@@ -133,12 +126,7 @@ class _OnboardingMobileNumberScreenState extends State<OnboardingMobileNumberScr
                           return IvoryTextField(
                             label: 'Mobile number',
                             keyboardType: TextInputType.phone,
-                            inputFormatters: _countrySelectOptionController.selectedOptions.firstOrNull != null &&
-                                    _countrySelectOptionController.selectedOptions.first.getPhoneNumberFormat() != null
-                                ? [
-                                    _phoneNumberFormatter,
-                                  ]
-                                : null,
+                            inputFormatters: [_phoneNumberFormatter],
                             inputType: TextFieldInputType.number,
                             controller: _mobileNumberController,
                             focusNode: _mobileNumberFocusNode,
@@ -167,7 +155,9 @@ class _OnboardingMobileNumberScreenState extends State<OnboardingMobileNumberScr
 
                                       setState(() {
                                         _phoneNumberFormatter = InputFormatter.createPhoneNumberFormatter(
-                                          phoneNumberFormat,
+                                          phoneNumberFormat.length > minFormatterLength
+                                              ? phoneNumberFormat
+                                              : defaultPhoneNumberFormat,
                                         );
                                       });
 
