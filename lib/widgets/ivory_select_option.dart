@@ -236,8 +236,14 @@ class IvorySelectOptionController extends ChangeNotifier {
       final option = _initialOptions[optionIndex];
       final isSelected = selectedOptions.any((element) => element.value == option.value);
 
-      if (option.textLabel.toLowerCase().contains(searchText.toLowerCase())) {
-        filtered.add(option.copyWith(selected: isSelected));
+      if (!option.textLabel.toLowerCase().contains(searchText.toLowerCase())) {
+        continue;
+      }
+
+      if (isSelected) {
+        filtered.insert(0, option.copyWith(selected: true));
+      } else {
+        filtered.add(option);
       }
     }
 
