@@ -117,6 +117,7 @@ class _IvoryOptionPickerState extends State<IvoryOptionPicker> {
         return child!;
       },
       child: ListView.builder(
+        shrinkWrap: true,
         itemCount: options.length,
         itemBuilder: (context, index) {
           SelectOption option = options[index];
