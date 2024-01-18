@@ -3,18 +3,24 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/onboarding/personal_details/onboarding_personal_details_presenter.dart';
+import 'package:solarisdemo/models/select_option.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/onboarding/personal_details/onboarding_personal_details_action.dart';
-import 'package:solarisdemo/screens/login/modals/mobile_number_country_picker_popup.dart';
 import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_verify_mobile_number_screen.dart';
 import 'package:solarisdemo/utilities/format.dart';
+import 'package:solarisdemo/utilities/load_countries.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/continue_button_controller.dart';
+import 'package:solarisdemo/widgets/ivory_option_picker.dart';
+import 'package:solarisdemo/widgets/ivory_select_option.dart';
 import 'package:solarisdemo/widgets/ivory_text_field.dart';
 import 'package:solarisdemo/widgets/modal.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
+
+const minFormatterLength = 3;
+const defaultPhoneNumberFormat = "+##############";
 
 class OnboardingMobileNumberScreen extends StatefulWidget {
   static const routeName = '/onboardingMobileNumberScreen';
@@ -26,35 +32,42 @@ class OnboardingMobileNumberScreen extends StatefulWidget {
 }
 
 class _OnboardingMobileNumberScreenState extends State<OnboardingMobileNumberScreen> {
-  late IvoryTextFieldController _mobileNumberController;
-  late FocusNode _mobileNumberFocusNode;
-  late ValueNotifier<CountryPrefixItem> _selectedCountryNotifier;
-  late ContinueButtonController _continueButtonController;
-  late MaskTextInputFormatter _phoneNumberFormatter;
+  final IvoryTextFieldController _mobileNumberController = IvoryTextFieldController();
+  final FocusNode _mobileNumberFocusNode = FocusNode();
+  final ContinueButtonController _continueButtonController = ContinueButtonController();
+  final IvorySelectOptionController _countrySelectOptionController = IvorySelectOptionController(loading: true);
+  MaskTextInputFormatter _phoneNumberFormatter = InputFormatter.createPhoneNumberFormatter(defaultPhoneNumberFormat);
 
   @override
   void initState() {
-    _mobileNumberController = IvoryTextFieldController(text: CountryPrefixItem.defaultCountryPrefix.phoneCode);
     _mobileNumberController.addListener(onChanged);
-    _mobileNumberFocusNode = FocusNode();
-    _continueButtonController = ContinueButtonController();
-    _selectedCountryNotifier = ValueNotifier<CountryPrefixItem>(CountryPrefixItem.defaultCountryPrefix);
+    _loadCountryOptions();
 
-    _phoneNumberFormatter = InputFormatter.createPhoneNumberFormatter(
-      _selectedCountryNotifier.value.phoneNumberFormat!,
-    );
     super.initState();
   }
 
+  Future<void> _loadCountryOptions() async {
+    final List<SelectOption> options = await loadCountryPickerOptions(addPhoneCode: true);
+
+    final preselectedOption = options.first;
+    final phoneCode = preselectedOption.getPhoneCode() ?? "";
+    final phoneNumberFormat = preselectedOption.getPhoneNumberFormat() ?? "";
+
+    _countrySelectOptionController.setOptions(options);
+    _countrySelectOptionController.toggleOptionSelection(preselectedOption, 0);
+    _mobileNumberController.text = phoneCode;
+    _phoneNumberFormatter = InputFormatter.createPhoneNumberFormatter(phoneNumberFormat);
+  }
+
   void onChanged() {
-    if (_selectedCountryNotifier.value.phoneNumberFormat == null) {
+    final phoneNumberFormat = _countrySelectOptionController.firstSelectedOption?.getPhoneNumberFormat() ?? "";
+    if (phoneNumberFormat.length < minFormatterLength) {
       _continueButtonController.setEnabled();
       return;
     }
-    final formattedText = _phoneNumberFormatter.getUnmaskedText();
 
-    if (formattedText.length ==
-        _selectedCountryNotifier.value.phoneNumberFormat!.split('').where((char) => char == '#').length) {
+    final formattedText = _phoneNumberFormatter.getUnmaskedText();
+    if (formattedText.length == phoneNumberFormat.split('').where((char) => char == '#').length) {
       _continueButtonController.setEnabled();
     } else {
       _continueButtonController.setDisabled();
@@ -107,17 +120,13 @@ class _OnboardingMobileNumberScreenState extends State<OnboardingMobileNumberScr
                         style: ClientConfig.getTextStyleScheme().bodyLargeRegular,
                       ),
                       const SizedBox(height: 24),
-                      ValueListenableBuilder<CountryPrefixItem>(
-                        valueListenable: _selectedCountryNotifier,
-                        builder: (context, selectedCountry, child) {
+                      ListenableBuilder(
+                        listenable: _countrySelectOptionController,
+                        builder: (context, child) {
                           return IvoryTextField(
                             label: 'Mobile number',
                             keyboardType: TextInputType.phone,
-                            inputFormatters: selectedCountry.phoneNumberFormat != null
-                                ? [
-                                    _phoneNumberFormatter,
-                                  ]
-                                : null,
+                            inputFormatters: [_phoneNumberFormatter],
                             inputType: TextFieldInputType.number,
                             controller: _mobileNumberController,
                             focusNode: _mobileNumberFocusNode,
@@ -125,20 +134,35 @@ class _OnboardingMobileNumberScreenState extends State<OnboardingMobileNumberScr
                               onTap: () {
                                 _mobileNumberFocusNode.unfocus();
                                 showBottomModal(
-                                  addContentPadding: false,
                                   context: context,
                                   title: "Select mobile number prefix",
+                                  addContentPadding: false,
                                   useSafeArea: true,
                                   statusbarVisibilityForTallModal: true,
-                                  content: CountryPrefixPicker(
-                                    onCountrySelected: (country) {
-                                      _selectedCountryNotifier.value = country;
-                                      _mobileNumberController.text = country.phoneCode;
-                                      _phoneNumberFormatter = InputFormatter.createPhoneNumberFormatter(
-                                        country.phoneNumberFormat!,
-                                      );
+                                  useScrollableChild: false,
+                                  content: IvoryOptionPicker(
+                                    controller: _countrySelectOptionController,
+                                    filterOptions: true,
+                                    enabledSearch: true,
+                                    searchFieldPlaceholder: 'Search prefix or country...',
+                                    onSearchChanged: (value) {},
+                                    expanded: true,
+                                    onOptionSelected: (option) {
+                                      final phoneCode = option.getPhoneCode() ?? "";
+                                      final phoneNumberFormat = option.getPhoneNumberFormat() ?? "";
+
+                                      _mobileNumberController.text = phoneCode;
+
+                                      setState(() {
+                                        _phoneNumberFormatter = InputFormatter.createPhoneNumberFormatter(
+                                          phoneNumberFormat.length > minFormatterLength
+                                              ? phoneNumberFormat
+                                              : defaultPhoneNumberFormat,
+                                        );
+                                      });
+
+                                      onChanged();
                                     },
-                                    selectedCountry: _selectedCountryNotifier.value,
                                   ),
                                 );
                               },
@@ -147,10 +171,7 @@ class _OnboardingMobileNumberScreenState extends State<OnboardingMobileNumberScr
                                 width: 65,
                                 child: Row(
                                   children: [
-                                    Text(
-                                      selectedCountry.flag,
-                                      style: const TextStyle(fontSize: 24, height: 24 / 20),
-                                    ),
+                                    _countrySelectOptionController.firstSelectedOption?.prefix ?? const SizedBox(),
                                     const SizedBox(width: 4),
                                     Icon(
                                       Icons.expand_more,
@@ -184,13 +205,15 @@ class _OnboardingMobileNumberScreenState extends State<OnboardingMobileNumberScr
                               isLoading: _continueButtonController.isLoading,
                               onPressed: _continueButtonController.isEnabled
                                   ? () {
+                                      final mobileNumber =
+                                          '${_countrySelectOptionController.firstSelectedOption?.getPhoneCode() ?? ""}${_phoneNumberFormatter.getUnmaskedText()}';
+
                                       _mobileNumberFocusNode.unfocus();
                                       _continueButtonController.setLoading();
+                                      print("Mobile number: $mobileNumber");
+
                                       StoreProvider.of<AppState>(context).dispatch(
-                                        CreateMobileNumberCommandAction(
-                                          mobileNumber: _selectedCountryNotifier.value.phoneCode +
-                                              _phoneNumberFormatter.getUnmaskedText(),
-                                        ),
+                                        CreateMobileNumberCommandAction(mobileNumber: mobileNumber),
                                       );
                                     }
                                   : null,

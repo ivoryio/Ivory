@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/models/onboarding/onboarding_financial_details_attributes.dart';
+import 'package:solarisdemo/models/select_option.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/onboarding/financial_details/onboarding_financial_details_action.dart';
 import 'package:solarisdemo/screens/onboarding/financial_details/onboarding_monthly_income_screen.dart';
@@ -129,9 +130,9 @@ class _OnboardingOccupationalStatusScreenState extends State<OnboardingOccupatio
                                     _dateOfEmploymentController.text,
                                     pattern: textFieldDatePattern,
                                   )) {
-                                  _dateOfEmploymentController.setErrorText("Invalid date of employment");
-                                  _continueButtonController.setDisabled();
-                                  return;
+                                    _dateOfEmploymentController.setErrorText("Invalid date of employment");
+                                    _continueButtonController.setDisabled();
+                                    return;
                                   }
                                   StoreProvider.of<AppState>(context)
                                       .dispatch(CreateEmployedOccupationalStatusCommandAction(

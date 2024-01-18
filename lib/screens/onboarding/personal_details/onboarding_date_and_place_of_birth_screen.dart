@@ -1,16 +1,15 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/suggestions/city/city_suggestions_presenter.dart';
+import 'package:solarisdemo/models/select_option.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/onboarding/personal_details/onboarding_personal_details_action.dart';
 import 'package:solarisdemo/redux/suggestions/city/city_suggestions_action.dart';
 import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_address_of_residence_screen.dart';
 import 'package:solarisdemo/screens/onboarding/personal_details/onboarding_nationality_not_supported_screen.dart';
 import 'package:solarisdemo/utilities/debouncer.dart';
+import 'package:solarisdemo/utilities/load_countries.dart';
 import 'package:solarisdemo/utilities/validator.dart';
 import 'package:solarisdemo/widgets/animated_linear_progress_indicator.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
@@ -143,9 +142,6 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
                     searchFieldPlaceholder: "Search country...",
                     controller: _selectCountryController,
                     statusbarVisibilityForTallModal: true,
-                    optionSeparatorBuilder: (context, option) => option.value == "DE"
-                        ? Divider(height: 2, color: ClientConfig.getCustomColors().neutral200)
-                        : const SizedBox(),
                     enabledSearch: true,
                     bottomSheetExpanded: true,
                     onBottomSheetOpened: () => FocusScope.of(context).unfocus(),
@@ -283,9 +279,6 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
                     searchFieldPlaceholder: "Search nationality...",
                     controller: _selectNationalityController,
                     statusbarVisibilityForTallModal: true,
-                    optionSeparatorBuilder: (context, option) => option.value == "DE"
-                        ? Divider(height: 2, color: ClientConfig.getCustomColors().neutral200)
-                        : const SizedBox(),
                     enabledSearch: true,
                     bottomSheetExpanded: true,
                     onBottomSheetOpened: () => FocusScope.of(context).unfocus(),
@@ -344,25 +337,10 @@ class _OnboardingDateAndPlaceOfBirthScreenState extends State<OnboardingDateAndP
   }
 
   Future<void> _loadCountries() async {
-    final countriesJson = await rootBundle.loadString('assets/data/countries.json');
-    final countries = jsonDecode(countriesJson);
-    final List<SelectOption> options = List.empty(growable: true);
+    final List<SelectOption> options = await loadCountryPickerOptions(addPhoneCode: false);
 
-    for (final country in countries) {
-      options.add(
-        SelectOption(
-          textLabel: country['name'],
-          value: country['isoCode'],
-          prefix: Text(
-            "${country['flag']} ",
-            style: const TextStyle(fontSize: 20, height: 24 / 20),
-          ),
-        ),
-      );
-    }
     _selectCountryController.setOptions(options);
     _selectNationalityController.setOptions(options);
-    print("Countries loaded");
     _selectCountryController.setLoading(false);
     _selectNationalityController.setLoading(false);
   }
