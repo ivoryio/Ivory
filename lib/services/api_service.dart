@@ -24,15 +24,9 @@ class ApiService<T> {
     bool authNeeded = true,
   }) async {
     try {
-      String? accessToken;
-
-      if (authNeeded) {
-        accessToken = await this.getAccessToken();
-      }
-
       final response = await _client.get(
         ApiService.url(path, queryParameters: queryParameters),
-        headers: authNeeded && accessToken != null ? {"Authorization": "Bearer $accessToken"} : {},
+        headers: await this.getHeaders(authNeeded: authNeeded),
       );
 
       log(response.body, name: "GET $path $queryParameters RESPONSE");
@@ -56,16 +50,11 @@ class ApiService<T> {
   }) async {
     try {
       final requestBody = jsonEncode(body);
-      String? accessToken;
-
-      if (authNeeded) {
-        accessToken = await this.getAccessToken();
-      }
 
       log(requestBody, name: "POST $path $queryParameters REQUEST");
       final response = await _client.post(
         ApiService.url(path, queryParameters: queryParameters),
-        headers: authNeeded && accessToken != null ? {"Authorization": "Bearer $accessToken"} : {},
+        headers: await this.getHeaders(authNeeded: authNeeded),
         body: requestBody,
       );
 
@@ -90,16 +79,11 @@ class ApiService<T> {
   }) async {
     try {
       final requestBody = jsonEncode(body);
-      String? accessToken;
-
-      if (authNeeded) {
-        accessToken = await this.getAccessToken();
-      }
 
       log(requestBody, name: "PATCH $path $queryParameters REQUEST");
       final response = await _client.patch(
         ApiService.url(path, queryParameters: queryParameters),
-        headers: authNeeded && accessToken != null ? {"Authorization": "Bearer $accessToken"} : {},
+        headers: await this.getHeaders(authNeeded: authNeeded),
         body: requestBody,
       );
 
@@ -124,16 +108,11 @@ class ApiService<T> {
   }) async {
     try {
       final requestBody = jsonEncode(body);
-      String? accessToken;
-
-      if (authNeeded) {
-        accessToken = await this.getAccessToken();
-      }
 
       log(requestBody, name: "DELETE $path $queryParameters REQUEST");
       final response = await _client.delete(
         ApiService.url(path, queryParameters: queryParameters),
-        headers: authNeeded && accessToken != null ? {"Authorization": "Bearer $accessToken"} : {},
+        headers: await this.getHeaders(authNeeded: authNeeded),
         body: requestBody,
       );
 
@@ -156,15 +135,9 @@ class ApiService<T> {
     bool authNeeded = true,
   }) async {
     try {
-      String? accessToken;
-
-      if (authNeeded) {
-        accessToken = await this.getAccessToken();
-      }
-
       final response = await _client.get(
         ApiService.url(path, queryParameters: queryParameters),
-        headers: authNeeded && accessToken != null ? {"Authorization": "Bearer $accessToken"} : {},
+        headers: await this.getHeaders(authNeeded: authNeeded),
       );
 
       log("BODY BYTES", name: "GET $path $queryParameters RESPONSE");
@@ -187,6 +160,17 @@ class ApiService<T> {
       path,
       queryParameters,
     );
+  }
+
+  Future<Map<String, String>> getHeaders({required bool authNeeded}) async {
+    final provider = ClientConfig.getClientConfig().bankProvider.name;
+
+    return authNeeded
+        ? {
+            "Authorization": "Bearer ${await this.getAccessToken()}",
+            "provider": provider,
+          }
+        : {"provider": provider};
   }
 
   Future<String> getAccessToken() async {
