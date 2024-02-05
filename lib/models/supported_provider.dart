@@ -1,1 +1,1 @@
-enum SupportedBankProvider { solaris }
+enum SupportedBankProvider { solaris, paymentology }
