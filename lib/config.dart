@@ -35,7 +35,7 @@ class ClientConfig {
           );
         case 'paymentology':
           _clientConfigData = ClientConfigData(
-            uiSettings: SolarisTheme.clientUiSettings,
+            uiSettings: DefaultTheme.clientUiSettings,
             bankProvider: SupportedBankProvider.paymentology,
           );
         case 'mercedes':

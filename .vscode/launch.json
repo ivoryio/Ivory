@@ -20,6 +20,12 @@
       "request": "launch",
       "type": "dart",
       "args": ["--dart-define=CLIENT=mercedes"]
+    },
+    {
+      "name": "SolarisDemoApp (paymentology)",
+      "request": "launch",
+      "type": "dart",
+      "args": ["--dart-define=CLIENT=paymentology"]
     }
   ]
 }
