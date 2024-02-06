@@ -36,7 +36,7 @@ class PersonAccountSummary {
         iban: json["iban"] ?? emptyStringValue,
         bic: json["bic"] ?? emptyStringValue,
         balance: json["balance"] == null ? null : Balance.fromJson(json["balance"]),
-        availableBalance: json["available_balance"] == null ? null : Balance.fromJson(json["available_balance"]),
+        availableBalance: json["availableBalance"] == null ? null : Balance.fromJson(json["availableBalance"]),
         creditLimit: json["credit_limit"]?.toDouble() ?? zeroValue,
         outstandingAmount: json["outstanding_amount"]?.toDouble() ?? zeroValue,
       );
