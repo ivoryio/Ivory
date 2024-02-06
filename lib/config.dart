@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:path/path.dart';
+import 'package:solarisdemo/models/supported_provider.dart';
 import 'package:solarisdemo/themes/mercedes_theme.dart';
 
 import 'themes/default_theme.dart';
@@ -23,13 +24,30 @@ class ClientConfig {
       String client = const String.fromEnvironment('CLIENT');
       switch (client) {
         case 'porsche':
-          _clientConfigData = ClientConfigData(uiSettings: PorscheTheme.clientUiSettings);
+          _clientConfigData = ClientConfigData(
+            uiSettings: PorscheTheme.clientUiSettings,
+            bankProvider: SupportedBankProvider.solaris,
+          );
         case 'solaris':
-          _clientConfigData = ClientConfigData(uiSettings: SolarisTheme.clientUiSettings);
+          _clientConfigData = ClientConfigData(
+            uiSettings: SolarisTheme.clientUiSettings,
+            bankProvider: SupportedBankProvider.solaris,
+          );
+        case 'paymentology':
+          _clientConfigData = ClientConfigData(
+            uiSettings: DefaultTheme.clientUiSettings,
+            bankProvider: SupportedBankProvider.paymentology,
+          );
         case 'mercedes':
-          _clientConfigData = ClientConfigData(uiSettings: MercedesTheme.clientUiSettings);
+          _clientConfigData = ClientConfigData(
+            uiSettings: MercedesTheme.clientUiSettings,
+            bankProvider: SupportedBankProvider.solaris,
+          );
         default:
-          _clientConfigData = ClientConfigData(uiSettings: DefaultTheme.clientUiSettings);
+          _clientConfigData = ClientConfigData(
+            uiSettings: DefaultTheme.clientUiSettings,
+            bankProvider: SupportedBankProvider.solaris,
+          );
       }
     }
 
@@ -87,7 +105,7 @@ class ClientConfig {
 
 class ClientConfigData {
   final ClientUiSettings uiSettings;
-  //add backend accesss data
+  final SupportedBankProvider bankProvider;
 
-  const ClientConfigData({required this.uiSettings});
+  const ClientConfigData({required this.uiSettings, required this.bankProvider});
 }

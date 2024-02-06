@@ -35,7 +35,7 @@ class OnboardingPersonalDetailsService extends ApiService {
         'nationality': nationality,
       });
 
-      return OnboardingCreatePersonSuccessResponse(personId: response['person_id'] as String);
+      return OnboardingCreatePersonSuccessResponse(personId: response['id'] as String);
     } catch (error) {
       return OnboardingPersonalDetailsServiceErrorResponse(errorType: OnboardingPersonalDetailsErrorType.unknown);
     }
