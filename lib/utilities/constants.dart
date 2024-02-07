@@ -1,4 +1,4 @@
-const num zeroValue = 0;
+const num zeroValue = 0.0;
 const String emptyStringValue = "";
 const String emptySpaceString = " ";
 const String defaultCurrency = "EUR";
