@@ -46,6 +46,9 @@ enum BankCardType {
   VIRTUAL_VISA_CREDIT,
   VISA_CREDIT,
   VISA_DEBIT,
+
+  VIRTUAL,
+  PHYSICAL
 }
 
 class BankCard {
@@ -63,8 +66,7 @@ class BankCard {
   final BankCardType type;
   final BankCardRepresentation? representation;
 
-  factory BankCard.fromRawJson(String str) =>
-      BankCard.fromJson(json.decode(str));
+  factory BankCard.fromRawJson(String str) => BankCard.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
@@ -72,11 +74,8 @@ class BankCard {
         id: json["id"],
         accountId: json["account_id"] ?? '',
         status: getCardStatus(json["status"] ?? BankCardStatus.INACTIVE.name),
-        type:
-            getCardType(json["type"] ?? BankCardType.VIRTUAL_VISA_CREDIT.name),
-        representation: json["representation"] == null
-            ? null
-            : BankCardRepresentation.fromJson(json["representation"]),
+        type: getCardType(json["type"] ?? BankCardType.VIRTUAL_VISA_CREDIT.name),
+        representation: json["representation"] == null ? null : BankCardRepresentation.fromJson(json["representation"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -161,13 +160,11 @@ class BankCardRepresentation {
   final String? maskedPan;
   final String? formattedExpirationDate;
 
-  factory BankCardRepresentation.fromRawJson(String str) =>
-      BankCardRepresentation.fromJson(json.decode(str));
+  factory BankCardRepresentation.fromRawJson(String str) => BankCardRepresentation.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory BankCardRepresentation.fromJson(Map<String, dynamic> json) =>
-      BankCardRepresentation(
+  factory BankCardRepresentation.fromJson(Map<String, dynamic> json) => BankCardRepresentation(
         line1: json["line_1"],
         line2: json["line_2"],
         maskedPan: json["masked_pan"],
@@ -228,8 +225,7 @@ class CreateBankCardReqBody {
       };
 }
 
-String getCardDetailsRequestToJson(GetCardDetailsRequestBody data) =>
-    json.encode(data.toJson());
+String getCardDetailsRequestToJson(GetCardDetailsRequestBody data) => json.encode(data.toJson());
 
 class GetCardDetailsRequestBody {
   String deviceId;
@@ -255,8 +251,7 @@ class GetCardDetailsRequestBody {
       };
 }
 
-GetCardDetailsResponse getCardDetailsResponseFromJson(String str) =>
-    GetCardDetailsResponse.fromJson(json.decode(str));
+GetCardDetailsResponse getCardDetailsResponseFromJson(String str) => GetCardDetailsResponse.fromJson(json.decode(str));
 
 class GetCardDetailsResponse {
   String data;
@@ -265,8 +260,7 @@ class GetCardDetailsResponse {
     required this.data,
   });
 
-  factory GetCardDetailsResponse.fromJson(Map<String, dynamic> json) =>
-      GetCardDetailsResponse(
+  factory GetCardDetailsResponse.fromJson(Map<String, dynamic> json) => GetCardDetailsResponse(
         data: json["data"],
       );
 }
@@ -274,25 +268,25 @@ class GetCardDetailsResponse {
 String changePinRequestBodyToJson(ChangePinRequestBody data) => json.encode(data.toJson());
 
 class ChangePinRequestBody {
-    String encryptedPin;
-    String keyId;
-    String deviceId;
-    String deviceData;
-    String signature;
+  String encryptedPin;
+  String keyId;
+  String deviceId;
+  String deviceData;
+  String signature;
 
-    ChangePinRequestBody({
-        required this.encryptedPin,
-        required this.keyId,
-        required this.deviceId,
-        required this.deviceData,
-        required this.signature,
-    });
+  ChangePinRequestBody({
+    required this.encryptedPin,
+    required this.keyId,
+    required this.deviceId,
+    required this.deviceData,
+    required this.signature,
+  });
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "encrypted_pin": encryptedPin,
         "key_id": keyId,
         "device_id": deviceId,
         "device_data": deviceData,
         "signature": signature,
-    };
+      };
 }

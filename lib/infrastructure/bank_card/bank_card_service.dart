@@ -31,10 +31,10 @@ class BankCardService extends ApiService {
     this.user = user;
 
     try {
-      final data = await get('/account/cards/$cardId');
+      final data = await get('/cards/$cardId');
 
       return GetBankCardSuccessResponse(
-        bankCard: BankCard.fromJson(data),
+        bankCard: _mapBankCard(data),
       );
     } catch (e) {
       return BankCardErrorResponse();
@@ -47,10 +47,10 @@ class BankCardService extends ApiService {
     this.user = user;
 
     try {
-      final data = await get('/account/cards');
+      final data = await get('/account/${user.accountId}/cards');
 
       return GetBankCardsServiceResponse(
-        bankCards: (data as List).map((e) => BankCard.fromJson(e)).toList(),
+        bankCards: (data as List).map(_mapBankCard).toList(),
       );
     } catch (e) {
       return BankCardErrorResponse();
@@ -166,6 +166,49 @@ class BankCardService extends ApiService {
     } catch (e) {
       return BankCardErrorResponse();
     }
+  }
+
+  BankCard _mapBankCard(dynamic card) {
+    return BankCard(
+      id: card["id"],
+      type: _mapCardType(card["type"]),
+      accountId: card["accountId"],
+      status: _mapCardStatus(card["status"]),
+      representation: BankCardRepresentation(
+        line1: card["representation"]["name"],
+        line2: card["representation"]["name"],
+        formattedExpirationDate: card["representation"]["expirationDate"],
+        maskedPan: card["representation"]["cardNumber"],
+      ),
+    );
+  }
+
+  BankCardType _mapCardType(String? cardType) {
+    final cardTypeMap = {
+      "VIRTUAL": BankCardType.VIRTUAL,
+      "PHYSICAL": BankCardType.PHYSICAL,
+    };
+
+    if (cardTypeMap[cardType] == null) {
+      throw Exception("card type $cardType not supported");
+    }
+
+    return cardTypeMap[cardType]!;
+  }
+
+  BankCardStatus _mapCardStatus(String? status) {
+    final cardStatusMap = {
+      "ACTIVE": BankCardStatus.ACTIVE,
+      "INACTIVE": BankCardStatus.INACTIVE,
+      "BLOCKED": BankCardStatus.BLOCKED,
+      "PROCESSING": BankCardStatus.PROCESSING,
+    };
+
+    if (cardStatusMap[status] == null) {
+      throw Exception("card status $status not supported");
+    }
+
+    return cardStatusMap[status]!;
   }
 }
 
