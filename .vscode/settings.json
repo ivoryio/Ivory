@@ -1,6 +1,7 @@
 {
   "[dart]": {
-    "editor.defaultFormatter": "Dart-Code.dart-code"
+    "editor.defaultFormatter": "Dart-Code.dart-code",
+    "editor.rulers": [],
   },
   "dart.lineLength": 120
 }
