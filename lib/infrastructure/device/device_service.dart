@@ -1,9 +1,12 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:jose/jose.dart';
 import 'package:pointycastle/pointycastle.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:solarisdemo/models/bank_card.dart';
 import 'package:solarisdemo/models/crypto/jwk.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/utilities/crypto/crypto_key_generator.dart';
@@ -181,6 +184,37 @@ class DeviceService {
       return CryptoUtils.convertRSAPublicKeyToJWK(rsaPublicKey: rsaPublicKey);
     } catch (e) {
       return null;
+    }
+  }
+
+  Future<BankCardFetchedDetails> decryptCardDetails({
+    required String encodedJwe,
+    required RSAPrivateKey privateKey,
+    required RSAPublicKey publicKey,
+  }) async {
+    try {
+      final jwe = JsonWebEncryption.fromCompactSerialization(encodedJwe);
+      final jwk = JsonWebKey.rsa(
+        modulus: privateKey.modulus!,
+        exponent: publicKey.exponent!,
+        privateExponent: privateKey.privateExponent!,
+        firstPrimeFactor: privateKey.p,
+        secondPrimeFactor: privateKey.q,
+      );
+      final keyStore = JsonWebKeyStore()..addKey(jwk);
+      final payload = await jwe.getPayload(keyStore);
+      final payloadString = utf8.decode(payload.data);
+      final json = jsonDecode(payloadString);
+
+      return BankCardFetchedDetails(
+        cardHolder: json?['line_1'] ?? "",
+        cardExpiry: json?['expires_at'] ?? "",
+        cvv: json?["cvc"] ?? "",
+        cardNumber: json?["pan"] ?? "",
+      );
+    } catch (error) {
+      print("decryptJwe error: $error");
+      rethrow;
     }
   }
 }

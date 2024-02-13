@@ -1,4 +1,3 @@
-
 class Jwe {
   String alg;
   String enc;
@@ -28,7 +27,5 @@ class Jwe {
       };
 }
 
-
-// You can define your default values here
-String _defaultJWEalg = "RSA1_5";
+String _defaultJWEalg = "RSA_OAEP_256";
 String _defaultJWEenc = "A256GCM";

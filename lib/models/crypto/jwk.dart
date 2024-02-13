@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class Jwk {
   String n;
   String e;
@@ -45,14 +43,10 @@ class Jwk {
       'e': e,
     };
 
-    var sortedMap = Map.fromEntries(jwkMap.entries.toList()..sort((e1, e2) => e1.key.compareTo(e2.key)));
+    final sortedMap = Map.fromEntries(jwkMap.entries.toList()..sort((e1, e2) => e1.key.compareTo(e2.key)));
+    final compactString = sortedMap.entries.map((entry) => "${entry.key}:${entry.value}").join(";");
 
-    var jsonString = jsonEncode(sortedMap);
-
-    // Remove whitespace characters from the JSON string
-    var compactJsonString = jsonString.replaceAll(RegExp(r'\s+'), '');
-
-    return compactJsonString;
+    return compactString;
   }
 }
 
