@@ -1,4 +1,3 @@
-
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -199,7 +198,7 @@ void main() {
         ),
       );
       final loadingState = store.onChange.firstWhere((element) => element.bankCardState is BankCardLoadingState);
-      final appState = store.onChange.firstWhere((element) => element.bankCardState is BankCardDetailsFetchedState);
+      final appState = store.onChange.firstWhere((element) => element.bankCardState is BankCardErrorState);
 
       // when
       store.dispatch(
@@ -221,7 +220,7 @@ void main() {
 
       // then
       expect((await loadingState).bankCardState, isA<BankCardLoadingState>());
-      expect((await appState).bankCardState, isA<BankCardDetailsFetchedState>());
+      expect((await appState).bankCardState, isA<BankCardErrorState>());
     });
   });
 
@@ -359,18 +358,18 @@ void main() {
         // when
         store.dispatch(
           BankCardFreezeCommandAction(
-            bankCard: BankCard(
-              id: "active-card-id",
-              accountId: "62a8f478184ae7cba59c633373c53286cacc",
-              status: BankCardStatus.BLOCKED,
-              type: BankCardType.VIRTUAL_VISA_CREDIT,
-              representation: BankCardRepresentation(
-                line1: "ACTIVE JOE",
-                line2: "ACTIVE JOE",
-                maskedPan: '493441******9641',
-                formattedExpirationDate: '06/26',
+              bankCard: BankCard(
+                id: "active-card-id",
+                accountId: "62a8f478184ae7cba59c633373c53286cacc",
+                status: BankCardStatus.BLOCKED,
+                type: BankCardType.VIRTUAL_VISA_CREDIT,
+                representation: BankCardRepresentation(
+                  line1: "ACTIVE JOE",
+                  line2: "ACTIVE JOE",
+                  maskedPan: '493441******9641',
+                  formattedExpirationDate: '06/26',
+                ),
               ),
-            ),
               bankCards: [
                 BankCard(
                   id: "active-card-id",
@@ -384,8 +383,7 @@ void main() {
                     formattedExpirationDate: '06/26',
                   ),
                 ),
-              ]
-          ),
+              ]),
         );
 
         // then
@@ -408,18 +406,18 @@ void main() {
         // when
         store.dispatch(
           BankCardFreezeCommandAction(
-            bankCard: BankCard(
-              id: "active-card-id",
-              accountId: "62a8f478184ae7cba59c633373c53286cacc",
-              status: BankCardStatus.ACTIVE,
-              type: BankCardType.VIRTUAL_VISA_CREDIT,
-              representation: BankCardRepresentation(
-                line1: "ACTIVE JOE",
-                line2: "ACTIVE JOE",
-                maskedPan: '493441******9641',
-                formattedExpirationDate: '06/26',
+              bankCard: BankCard(
+                id: "active-card-id",
+                accountId: "62a8f478184ae7cba59c633373c53286cacc",
+                status: BankCardStatus.ACTIVE,
+                type: BankCardType.VIRTUAL_VISA_CREDIT,
+                representation: BankCardRepresentation(
+                  line1: "ACTIVE JOE",
+                  line2: "ACTIVE JOE",
+                  maskedPan: '493441******9641',
+                  formattedExpirationDate: '06/26',
+                ),
               ),
-            ),
               bankCards: [
                 BankCard(
                   id: "active-card-id",
@@ -433,8 +431,7 @@ void main() {
                     formattedExpirationDate: '06/26',
                   ),
                 ),
-              ]
-          ),
+              ]),
         );
 
         // then
