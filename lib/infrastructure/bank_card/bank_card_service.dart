@@ -82,20 +82,13 @@ class BankCardService extends ApiService {
     this.user = user;
 
     try {
-      //Uncomment this after and remove the row below after final implementation
-      // final data = await post(
-      //   '/account/cards/$cardId/details',
-      //   body: reqBody.toJson(),
-      // );
-      //TODO: Decode the data string and return the card details, for now, we will just return a dummy data
+      final data = await post(
+        '/account/cards/$cardId/details',
+        body: reqBody.toJson(),
+      );
 
       return GetCardDetailsSuccessResponse(
-        cardDetails: BankCardFetchedDetails(
-          cardHolder: 'John Doe',
-          cardExpiry: '11/24',
-          cvv: '8315',
-          cardNumber: '4526 1612 3862 1856',
-        ),
+        encodedCardDetails: data['data'],
       );
     } catch (e) {
       return BankCardErrorResponse();
@@ -251,12 +244,12 @@ class ActivateBankCardSuccessResponse extends BankCardServiceResponse {
 }
 
 class GetCardDetailsSuccessResponse extends BankCardServiceResponse {
-  final BankCardFetchedDetails cardDetails;
+  final String encodedCardDetails;
 
-  GetCardDetailsSuccessResponse({required this.cardDetails});
+  GetCardDetailsSuccessResponse({required this.encodedCardDetails});
 
   @override
-  List<Object?> get props => [cardDetails];
+  List<Object?> get props => [encodedCardDetails];
 }
 
 class GetLatestPinKeySuccessResponse extends BankCardServiceResponse {

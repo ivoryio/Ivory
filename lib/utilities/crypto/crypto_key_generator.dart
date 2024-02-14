@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:pointycastle/export.dart';
 
 class CryptoKeyGenerator {
-
   static CryptoKeyPair generateECKeyPair() {
     var keyPair = _createECKeyGenerator().generateKeyPair();
     var publicKeyUncompressedForm = _toUncompressedForm(keyPair.publicKey as ECPublicKey);

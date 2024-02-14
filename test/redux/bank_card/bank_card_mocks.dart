@@ -67,12 +67,7 @@ class FakeBankCardService extends BankCardService {
     required GetCardDetailsRequestBody reqBody,
   }) async {
     return GetCardDetailsSuccessResponse(
-      cardDetails: BankCardFetchedDetails(
-        cardHolder: 'John Doe',
-        cardExpiry: '11/24',
-        cvv: '8315',
-        cardNumber: '4526 1612 3862 1856',
-      ),
+      encodedCardDetails: "encodedCardDetails",
     );
   }
 
@@ -190,15 +185,7 @@ class FakeFailingBankCardService extends BankCardService {
     required User? user,
     required GetCardDetailsRequestBody reqBody,
   }) async {
-    return GetCardDetailsSuccessResponse(
-      cardDetails: BankCardFetchedDetails(
-        cardHolder: 'John Doe',
-        cardExpiry: '11/24',
-        cvv: '8315',
-        cardNumber: '4526 1612 3862 1856',
-      ),
-    );
-    // return BankCardErrorResponse();
+    return BankCardErrorResponse();
   }
 
   @override
@@ -295,6 +282,20 @@ class FakeDeviceService extends DeviceService {
   @override
   Future<void> saveConsentIdInCache(String consentId, String personId) async {
     return;
+  }
+
+  @override
+  Future<BankCardFetchedDetails> decryptCardDetails({
+    required String encodedJwe,
+    required RSAPrivateKey privateKey,
+    required RSAPublicKey publicKey,
+  }) async {
+    return BankCardFetchedDetails(
+      cardHolder: "INACTIVE JOE",
+      cardExpiry: '06/26',
+      cvv: "000",
+      cardNumber: "4934410000009641",
+    );
   }
 }
 

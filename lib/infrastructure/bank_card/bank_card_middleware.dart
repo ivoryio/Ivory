@@ -25,7 +25,7 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
     next(action);
 
     final authState = store.state.authState;
-    if(authState is! AuthenticatedState) {
+    if (authState is! AuthenticatedState) {
       return;
     }
 
@@ -52,9 +52,9 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
     }
 
     if (action is GetBankCardCommandAction) {
-      if(store.state.bankCardState is BankCardFetchedState) {
+      if (store.state.bankCardState is BankCardFetchedState) {
         final BankCardFetchedState state = store.state.bankCardState as BankCardFetchedState;
-        if((state.bankCard.id == action.cardId) && (action.forceReloadCardData == false)) {
+        if ((state.bankCard.id == action.cardId) && (action.forceReloadCardData == false)) {
           return;
         }
       }
@@ -76,7 +76,7 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
     }
 
     if (action is GetBankCardsCommandAction) {
-      if((store.state.bankCardsState is BankCardsFetchedState) && (action.forceCardsReload == false)) {
+      if ((store.state.bankCardsState is BankCardsFetchedState) && (action.forceCardsReload == false)) {
         return;
       }
       store.dispatch(BankCardsLoadingEventAction());
@@ -107,7 +107,8 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
     }
 
     if (action is BankCardChoosePinCommandAction) {
-      store.dispatch(BankCardPinChoosenEventAction(pin: action.pin, user: authState.authenticatedUser, bankcard: action.bankCard));
+      store.dispatch(
+          BankCardPinChoosenEventAction(pin: action.pin, user: authState.authenticatedUser, bankcard: action.bankCard));
     }
 
     if (action is BankCardConfirmPinCommandAction) {
@@ -178,7 +179,8 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
         return null;
       }
 
-      store.dispatch(BankCardPinConfirmedEventAction(pin: action.pin, user: authState.authenticatedUser, bankcard: action.bankCard));
+      store.dispatch(BankCardPinConfirmedEventAction(
+          pin: action.pin, user: authState.authenticatedUser, bankcard: action.bankCard));
     }
 
     if (action is BankCardActivateCommandAction) {
@@ -216,6 +218,7 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
       }
 
       final rsaKeyPair = _deviceService.generateRSAKey();
+
       if (rsaKeyPair == null) {
         store.dispatch(BankCardFailedEventAction());
         return null;
@@ -241,9 +244,9 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
         return null;
       }
 
-      final existingRestrictedKeyPair = await _deviceService.getDeviceKeyPairs(restricted: true);
+      final existingUnrestrictedKeyPair = await _deviceService.getDeviceKeyPairs(restricted: false);
 
-      if (existingRestrictedKeyPair == null) {
+      if (existingUnrestrictedKeyPair == null) {
         store.dispatch(BankCardFailedEventAction());
         return null;
       }
@@ -251,7 +254,9 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
       String alphabeticJWK = jwk.toAlphabeticJson();
 
       final signature = _deviceService.generateSignature(
-          privateKey: existingRestrictedKeyPair.privateKey, stringToSign: alphabeticJWK);
+        privateKey: existingUnrestrictedKeyPair.privateKey,
+        stringToSign: alphabeticJWK,
+      );
 
       if (signature == null) {
         store.dispatch(BankCardFailedEventAction());
@@ -273,9 +278,14 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
       );
 
       if (response is GetCardDetailsSuccessResponse) {
-        //TODO: Decode the data string and pass the card details to the event
+        final cardDetails = await _deviceService.decryptCardDetails(
+          encodedJwe: response.encodedCardDetails,
+          privateKey: rsaKeyPair.privateKey,
+          publicKey: rsaKeyPair.publicKey,
+        );
+
         store.dispatch(BankCardDetailsFetchedEventAction(
-          cardDetails: response.cardDetails,
+          cardDetails: cardDetails,
           bankCard: action.bankCard,
         ));
       } else {
