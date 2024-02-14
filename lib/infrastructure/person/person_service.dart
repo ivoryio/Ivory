@@ -18,7 +18,28 @@ class PersonService extends ApiService {
       final data = await get('person');
 
       return GetPersonSuccessResponse(
-        person: Person.fromJson(data),
+        person: Person(
+          id: data['id'] ?? '',
+          firstName: data['firstName'] ?? '',
+          lastName: data['lastName'] ?? '',
+          title: data['title'] ?? '',
+          email: data['email'] ?? '',
+          city: data['city'] ?? '',
+          country: data['country'] ?? '',
+          address: PersonAddress(
+            line1: data['address']['line1'] ?? '',
+            line2: data['address']['line2'] ?? '',
+            postalCode: data['address']['postalCode'] ?? '',
+            city: data['address']['city'] ?? '',
+            country: data['address']['country'] ?? '',
+          ),
+          birthCity: data['birthCity'] ?? '',
+          birthCountry: data['birthCountry'] ?? '',
+          birthDate: DateTime.parse(data['birthDate'] ?? ''),
+          mobileNumber: data['mobileNumber'] ?? '',
+          nationality: data['nationality'] ?? '',
+          occupation: data['occupation'] ?? '',
+        ),
       );
     } catch (e) {
       return PersonServiceErrorResponse();

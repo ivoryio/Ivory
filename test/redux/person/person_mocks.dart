@@ -4,11 +4,34 @@ import 'package:solarisdemo/models/person_account.dart';
 import 'package:solarisdemo/models/person_model.dart';
 import 'package:solarisdemo/models/user.dart';
 
+final mockPerson = Person(
+  id: 'person-id',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  title: 'title',
+  email: 'email',
+  city: 'city',
+  country: 'country',
+  address: const PersonAddress(
+    line1: 'line1',
+    line2: 'line2',
+    postalCode: 'postalCode',
+    city: 'city',
+    country: 'country',
+  ),
+  birthCity: 'birthCity',
+  birthCountry: 'birthCountry',
+  birthDate: DateTime.now(),
+  mobileNumber: 'mobileNumber',
+  nationality: "nationality",
+  occupation: "occupation",
+);
+
 class FakePersonService extends PersonService {
   @override
   Future<PersonServiceResponse> getPerson({User? user}) async {
     return GetPersonSuccessResponse(
-      person: Person(id: 'person-id', firstName: 'firstName', lastName: 'lastName'),
+      person: mockPerson,
     );
   }
 
