@@ -18,7 +18,7 @@ class RepaymentsPresenter {
       return CreditLineFetchedViewModel(
         creditLine: creditLineState.creditLine,
         waitlist: moreCreditState.waitlist,
-        ownerName: user.person.firstName!,
+        ownerName: user.person.firstName,
         iban: user.personAccount.iban ?? '',
       );
     }
