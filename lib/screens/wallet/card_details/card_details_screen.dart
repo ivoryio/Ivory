@@ -3,6 +3,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/bank_card/bank_card_presenter.dart';
 import 'package:solarisdemo/models/bank_card.dart';
+import 'package:solarisdemo/models/supported_provider.dart';
 import 'package:solarisdemo/models/user.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/redux/auth/auth_state.dart';
@@ -65,12 +66,12 @@ class BankCardDetailsScreen extends StatelessWidget {
                     user: user,
                   ),
               },
-              onInit: (store) => {
-                store.dispatch(
-                  BankCardFetchDetailsCommandAction(
-                    bankCard: params.card,
-                  ),
-                ),
+              onInit: (store) {
+                if (ClientConfig.getBankProvider() == SupportedBankProvider.solaris) {
+                  store.dispatch(FetchEncodedBankCardDetailsCommandAction(bankCard: params.card));
+                }
+
+                store.dispatch(FetchBankCardDetailsCommandAction(bankCard: params.card));
               },
               builder: (context, viewModel) {
                 if (viewModel is BankCardLoadingViewModel) {

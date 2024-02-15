@@ -74,7 +74,7 @@ class BankCardService extends ApiService {
     }
   }
 
-  Future<BankCardServiceResponse> getCardDetails({
+  Future<BankCardServiceResponse> getEncodedBankCardDetails({
     required String cardId,
     required User user,
     required GetCardDetailsRequestBody reqBody,
@@ -83,12 +83,34 @@ class BankCardService extends ApiService {
 
     try {
       final data = await post(
-        '/account/cards/$cardId/details',
+        '/cards/$cardId/details',
         body: reqBody.toJson(),
       );
 
-      return GetCardDetailsSuccessResponse(
+      return GetEncodedCardDetailsSuccessResponse(
         encodedCardDetails: data['data'],
+      );
+    } catch (e) {
+      return BankCardErrorResponse();
+    }
+  }
+
+  Future<BankCardServiceResponse> getBankCardDetails({
+    required User user,
+    required String cardId,
+  }) async {
+    try {
+      final data = await post(
+        '/cards/$cardId/details',
+      );
+
+      return GetCardDetailsSuccessResponse(
+        bankCard: BankCardFetchedDetails(
+          cardHolder: data["representation"]["name"] ?? "",
+          cardNumber: data["representation"]["cardNumber"] ?? "",
+          cardExpiry: data["representation"]["expirationDate"] ?? "",
+          cvv: data["representation"]["cvv"] ?? "",
+        ),
       );
     } catch (e) {
       return BankCardErrorResponse();
@@ -243,13 +265,22 @@ class ActivateBankCardSuccessResponse extends BankCardServiceResponse {
   List<Object?> get props => [bankCard];
 }
 
-class GetCardDetailsSuccessResponse extends BankCardServiceResponse {
+class GetEncodedCardDetailsSuccessResponse extends BankCardServiceResponse {
   final String encodedCardDetails;
 
-  GetCardDetailsSuccessResponse({required this.encodedCardDetails});
+  GetEncodedCardDetailsSuccessResponse({required this.encodedCardDetails});
 
   @override
   List<Object?> get props => [encodedCardDetails];
+}
+
+class GetCardDetailsSuccessResponse extends BankCardServiceResponse {
+  final BankCardFetchedDetails bankCard;
+
+  GetCardDetailsSuccessResponse({required this.bankCard});
+
+  @override
+  List<Object?> get props => [bankCard];
 }
 
 class GetLatestPinKeySuccessResponse extends BankCardServiceResponse {

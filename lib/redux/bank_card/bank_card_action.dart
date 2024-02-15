@@ -53,10 +53,16 @@ class BankCardActivateCommandAction {
   BankCardActivateCommandAction({required this.cardId});
 }
 
-class BankCardFetchDetailsCommandAction {
+class FetchEncodedBankCardDetailsCommandAction {
   final BankCard bankCard;
 
-  BankCardFetchDetailsCommandAction({required this.bankCard});
+  FetchEncodedBankCardDetailsCommandAction({required this.bankCard});
+}
+
+class FetchBankCardDetailsCommandAction {
+  final BankCard bankCard;
+
+  FetchBankCardDetailsCommandAction({required this.bankCard});
 }
 
 class BankCardFreezeCommandAction {
