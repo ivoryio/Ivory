@@ -101,6 +101,10 @@ class ClientConfig {
   static String getAssetIconPath(String filename) {
     return join(getClientIconPath(), filename);
   }
+
+  static SupportedBankProvider getBankProvider() {
+    return getClientConfig().bankProvider;
+  }
 }
 
 class ClientConfigData {

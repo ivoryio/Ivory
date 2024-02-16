@@ -61,13 +61,28 @@ class FakeBankCardService extends BankCardService {
   }
 
   @override
-  Future<BankCardServiceResponse> getCardDetails({
+  Future<BankCardServiceResponse> getEncodedBankCardDetails({
     required String cardId,
     required User? user,
     required GetCardDetailsRequestBody reqBody,
   }) async {
-    return GetCardDetailsSuccessResponse(
+    return GetEncodedCardDetailsSuccessResponse(
       encodedCardDetails: "encodedCardDetails",
+    );
+  }
+
+  @override
+  Future<BankCardServiceResponse> getBankCardDetails({
+    required User user,
+    required String cardId,
+  }) async {
+    return GetCardDetailsSuccessResponse(
+      bankCard: BankCardFetchedDetails(
+        cardHolder: 'INACTIVE JOE',
+        cardNumber: '4934410000009641',
+        cardExpiry: '06/26',
+        cvv: '000',
+      ),
     );
   }
 
@@ -180,10 +195,18 @@ class FakeFailingBankCardService extends BankCardService {
   }
 
   @override
-  Future<BankCardServiceResponse> getCardDetails({
+  Future<BankCardServiceResponse> getEncodedBankCardDetails({
     required String cardId,
     required User? user,
     required GetCardDetailsRequestBody reqBody,
+  }) async {
+    return BankCardErrorResponse();
+  }
+
+  @override
+  Future<BankCardServiceResponse> getBankCardDetails({
+    required User user,
+    required String cardId,
   }) async {
     return BankCardErrorResponse();
   }

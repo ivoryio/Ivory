@@ -338,7 +338,7 @@ class SettingsDevicePairingScreen extends StatelessWidget {
     if (IvoryApp.generalRouteObserver.isRouteInStackButNotCurrent(BankCardDetailsScreen.routeName)) {
       Navigator.popUntil(context, ModalRoute.withName(BankCardDetailsScreen.routeName));
       StoreProvider.of<AppState>(context).dispatch(
-        BankCardFetchDetailsCommandAction(
+        FetchEncodedBankCardDetailsCommandAction(
           bankCard: (StoreProvider.of<AppState>(context).state.bankCardState as BankCardNoBoundedDevicesState).bankCard,
         ),
       );

@@ -23,8 +23,7 @@ class BankCardChangePinChooseScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user =
-        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
+    final user = (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
     final GlobalKey<_ChangePinBodyState> changePinBodyKey = GlobalKey<_ChangePinBodyState>();
     ValueNotifier<bool> birthdayErrorNotifier = ValueNotifier<bool>(false);
     ValueNotifier<bool> postalCodeErrorNotifier = ValueNotifier<bool>(false);
@@ -91,7 +90,9 @@ class BankCardChangePinChooseScreen extends StatelessWidget {
                         ),
                         TextSpan(
                           text: " out of 2",
-                          style: ClientConfig.getTextStyleScheme().heading4.copyWith(color: ClientConfig.getCustomColors().neutral700),
+                          style: ClientConfig.getTextStyleScheme()
+                              .heading4
+                              .copyWith(color: ClientConfig.getCustomColors().neutral700),
                         ),
                       ],
                     ),
@@ -313,8 +314,7 @@ class _ChangePinBodyState extends State<ChangePinBody> {
 
   @override
   Widget build(BuildContext context) {
-    final user =
-        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
+    final user = (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
 
     return Padding(
       padding: const EdgeInsets.all(24.0),
@@ -390,9 +390,9 @@ class _ChangePinBodyState extends State<ChangePinBody> {
                     () {
                       _newPIN = text;
                       hasError = !hasConsecutiveDigits(_newPIN) ||
-                          !containsPostalCode(_newPIN, user.person.address?.postalCode ?? 'postalCode') ||
+                          !containsPostalCode(_newPIN, user.person.address.postalCode) ||
                           !hasRepeatingDigits(_newPIN) ||
-                          !containsBirthDate(_newPIN, user.person.birthDate ?? DateTime.now());
+                          !containsBirthDate(_newPIN, user.person.birthDate);
 
                       if (hasError && text.length == 4) {
                         Future.delayed(
@@ -462,7 +462,9 @@ class ChangePinChecks extends StatelessWidget {
                     Icon(
                       Icons.close,
                       size: 24,
-                      color: birthdayErrorNotifier.value ? const Color(0xffE61F27) : ClientConfig.getCustomColors().neutral700,
+                      color: birthdayErrorNotifier.value
+                          ? const Color(0xffE61F27)
+                          : ClientConfig.getCustomColors().neutral700,
                     ),
                     const SizedBox(
                       width: 4,
@@ -470,7 +472,9 @@ class ChangePinChecks extends StatelessWidget {
                     Text(
                       "Your date of birth",
                       style: ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(
-                          color: birthdayErrorNotifier.value ? const Color(0xffE61F27) : ClientConfig.getCustomColors().neutral700),
+                          color: birthdayErrorNotifier.value
+                              ? const Color(0xffE61F27)
+                              : ClientConfig.getCustomColors().neutral700),
                     ),
                   ],
                 );
@@ -483,7 +487,9 @@ class ChangePinChecks extends StatelessWidget {
                     Icon(
                       Icons.close,
                       size: 24,
-                      color: postalCodeErrorNotifier.value ? const Color(0xffE61F27) : ClientConfig.getCustomColors().neutral700,
+                      color: postalCodeErrorNotifier.value
+                          ? const Color(0xffE61F27)
+                          : ClientConfig.getCustomColors().neutral700,
                     ),
                     const SizedBox(
                       width: 4,
@@ -491,7 +497,9 @@ class ChangePinChecks extends StatelessWidget {
                     Text(
                       "Your postal code",
                       style: ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(
-                          color: postalCodeErrorNotifier.value ? const Color(0xffE61F27) : ClientConfig.getCustomColors().neutral700),
+                          color: postalCodeErrorNotifier.value
+                              ? const Color(0xffE61F27)
+                              : ClientConfig.getCustomColors().neutral700),
                     ),
                   ],
                 );
@@ -504,7 +512,9 @@ class ChangePinChecks extends StatelessWidget {
                     Icon(
                       Icons.close,
                       size: 24,
-                      color: sequenceErrorNotifier.value ? const Color(0xffE61F27) : ClientConfig.getCustomColors().neutral700,
+                      color: sequenceErrorNotifier.value
+                          ? const Color(0xffE61F27)
+                          : ClientConfig.getCustomColors().neutral700,
                     ),
                     const SizedBox(
                       width: 4,
@@ -512,7 +522,9 @@ class ChangePinChecks extends StatelessWidget {
                     Text(
                       "Number sequences, e.g. 1234",
                       style: ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(
-                          color: sequenceErrorNotifier.value ? const Color(0xffE61F27) : ClientConfig.getCustomColors().neutral700),
+                          color: sequenceErrorNotifier.value
+                              ? const Color(0xffE61F27)
+                              : ClientConfig.getCustomColors().neutral700),
                     ),
                   ],
                 );
@@ -525,7 +537,9 @@ class ChangePinChecks extends StatelessWidget {
                     Icon(
                       Icons.close,
                       size: 24,
-                      color: repeatingErrorNotifier.value ? const Color(0xffE61F27) : ClientConfig.getCustomColors().neutral700,
+                      color: repeatingErrorNotifier.value
+                          ? const Color(0xffE61F27)
+                          : ClientConfig.getCustomColors().neutral700,
                     ),
                     const SizedBox(
                       width: 4,
@@ -533,7 +547,9 @@ class ChangePinChecks extends StatelessWidget {
                     Text(
                       "More than two digits repeating",
                       style: ClientConfig.getTextStyleScheme().bodyLargeRegular.copyWith(
-                          color: repeatingErrorNotifier.value ? const Color(0xffE61F27) : ClientConfig.getCustomColors().neutral700),
+                          color: repeatingErrorNotifier.value
+                              ? const Color(0xffE61F27)
+                              : ClientConfig.getCustomColors().neutral700),
                     ),
                   ],
                 );

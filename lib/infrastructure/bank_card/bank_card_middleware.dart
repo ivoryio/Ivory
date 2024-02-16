@@ -200,7 +200,39 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
       }
     }
 
-    if (action is BankCardFetchDetailsCommandAction) {
+    if (action is FetchBankCardDetailsCommandAction) {
+      store.dispatch(BankCardLoadingEventAction());
+
+      final deviceId = await _deviceService.getDeviceId();
+      if (deviceId == '') {
+        store.dispatch(BankCardNoBoundedDevicesEventAction(bankCard: action.bankCard));
+        return null;
+      }
+
+      final isBiometricsAuthenticated = await _biometricsService.authenticateWithBiometrics(
+          message: "'Please use biometric authentication to view card details.'");
+
+      if (!isBiometricsAuthenticated) {
+        store.dispatch(BankCardFailedEventAction());
+        return null;
+      }
+
+      final response = await _bankCardService.getBankCardDetails(
+        user: authState.authenticatedUser.cognito,
+        cardId: action.bankCard.id,
+      );
+
+      if (response is GetCardDetailsSuccessResponse) {
+        store.dispatch(BankCardDetailsFetchedEventAction(
+          cardDetails: response.bankCard,
+          bankCard: action.bankCard,
+        ));
+      } else {
+        store.dispatch(BankCardFailedEventAction());
+      }
+    }
+
+    if (action is FetchEncodedBankCardDetailsCommandAction) {
       store.dispatch(BankCardLoadingEventAction());
 
       final deviceId = await _deviceService.getDeviceId();
@@ -271,13 +303,13 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
         jwe: Jwe.defaultValues(),
       );
 
-      final response = await _bankCardService.getCardDetails(
+      final response = await _bankCardService.getEncodedBankCardDetails(
         user: authState.authenticatedUser.cognito,
         cardId: action.bankCard.id,
         reqBody: reqBody,
       );
 
-      if (response is GetCardDetailsSuccessResponse) {
+      if (response is GetEncodedCardDetailsSuccessResponse) {
         final cardDetails = await _deviceService.decryptCardDetails(
           encodedJwe: response.encodedCardDetails,
           privateKey: rsaKeyPair.privateKey,
@@ -334,5 +366,12 @@ class BankCardMiddleware extends MiddlewareClass<AppState> {
         store.dispatch(BankCardFailedEventAction());
       }
     }
+  }
+
+  Future<GetCardDetailsRequestBody?> createGetCardDetailsRequestBody(
+    Store<AppState> store, {
+    required bool useEncryption,
+  }) async {
+    return null;
   }
 }

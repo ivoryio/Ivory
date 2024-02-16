@@ -24,8 +24,7 @@ class BankCardsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user =
-        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
+    final user = (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
     ScrollController scrollController = ScrollController();
 
     return StoreConnector<AppState, BankCardsViewModel>(
@@ -198,12 +197,11 @@ class _OrderCardButton extends StatelessWidget {
 }
 
 void addNewCard(BuildContext context) {
-  final user =
-      (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
+  final user = (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
   StoreProvider.of<AppState>(context).dispatch(
     CreateCardCommandAction(
-      firstName: user.person.firstName!,
-      lastName: user.person.lastName!,
+      firstName: user.person.firstName,
+      lastName: user.person.lastName,
       type: BankCardType.VIRTUAL_VISA_CREDIT,
       businessId: user.personAccount.businessId ?? '',
     ),

@@ -31,8 +31,7 @@ class _BankCardDetailsChoosePinScreenState extends State<BankCardDetailsChoosePi
 
   @override
   Widget build(BuildContext context) {
-    final user =
-        (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
+    final user = (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
 
     return StoreConnector<AppState, BankCardViewModel>(
       converter: (store) => BankCardPresenter.presentBankCard(
@@ -93,8 +92,8 @@ class _BankCardDetailsChoosePinScreenState extends State<BankCardDetailsChoosePi
                           key: fourDigitPinKey,
                           onCompleted: (pin) {
                             if (isPinValid(
-                              viewModel.user!.person.address!.postalCode!,
-                              viewModel.user!.person.birthDate!,
+                              viewModel.user!.person.address.postalCode,
+                              viewModel.user!.person.birthDate,
                               pin,
                             )) {
                               pageCleanupAndNavigate(
@@ -179,8 +178,8 @@ class _BankCardDetailsChoosePinScreenState extends State<BankCardDetailsChoosePi
   ) {
     // Highlight reasons for an invalid pin
     highlightReasonsForInvalidPin(
-      user.person.address!.postalCode!,
-      user.person.birthDate!,
+      user.person.address.postalCode,
+      user.person.birthDate,
       pin,
     );
 
