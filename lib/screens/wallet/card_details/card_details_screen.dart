@@ -69,6 +69,7 @@ class BankCardDetailsScreen extends StatelessWidget {
               onInit: (store) {
                 if (ClientConfig.getBankProvider() == SupportedBankProvider.solaris) {
                   store.dispatch(FetchEncodedBankCardDetailsCommandAction(bankCard: params.card));
+                  return;
                 }
 
                 store.dispatch(FetchBankCardDetailsCommandAction(bankCard: params.card));
