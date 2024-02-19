@@ -6,8 +6,6 @@ import 'package:solarisdemo/redux/person/account_summary/account_summay_state.da
 void main() {
   final accountSummary = PersonAccountSummary(
     id: "id-123445",
-    income: 123.45,
-    spending: 678.9,
     iban: "DE60110101014274796688",
     bic: "SOBKDEB2XXX",
     balance: Balance(

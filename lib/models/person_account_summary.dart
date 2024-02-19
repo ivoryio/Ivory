@@ -5,8 +5,6 @@ import 'package:solarisdemo/utilities/constants.dart';
 class PersonAccountSummary {
   PersonAccountSummary({
     this.id,
-    this.income,
-    this.spending,
     this.iban,
     this.bic,
     this.balance,
@@ -31,8 +29,6 @@ class PersonAccountSummary {
 
   factory PersonAccountSummary.fromJson(Map<String, dynamic> json) => PersonAccountSummary(
         id: json["id"] ?? emptyStringValue,
-        income: json["income"]?.toDouble() ?? zeroValue,
-        spending: json["spending"]?.toDouble() ?? zeroValue,
         iban: json["iban"] ?? emptyStringValue,
         bic: json["bic"] ?? emptyStringValue,
         balance: json["balance"] == null ? null : Balance.fromJson(json["balance"]),
