@@ -90,11 +90,12 @@ void onChange() {
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return ScreenScaffold(
-      body: Padding(
-        padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
+ @override
+Widget build(BuildContext context) {
+  return ScreenScaffold(
+    body: Padding(
+      padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
+      child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -115,7 +116,7 @@ void onChange() {
               cardHolderName: cardHolderName,
               expiryDate: expiryDate,
             ),
-            const Spacer(),
+            const SizedBox(height: 16),
             CreditCardForm( 
               nameOnCardController: _nameOnCardController,
               cardNumberController: _cardNumberController,
@@ -124,22 +125,22 @@ void onChange() {
               cvvController: _cvvController,
             ),
             SizedBox(
-            width: double.infinity,
-            child: ListenableBuilder(
-              listenable: _continueButtonController,
-              builder: (context, _) => PrimaryButton(
-                text: "Add card",
-                onPressed: _continueButtonController.isEnabled ? () {
-                  StoreProvider.of<AppState>(context).dispatch(
-                    SubmitCardInformationCommandAction(
-                      cardHolder: _nameOnCardController.text,
-                      cardNumber: _cardNumberController.text,
-                      month: _monthCardNumberController.text,
-                      year: _yearCardNumberController.text,
-                      cvv: _cvvController.text,
-                    ),
-                  );
-                  Navigator.pushNamed(context, AddMoneyScreen.routeName);
+              width: double.infinity,
+              child: ListenableBuilder(
+                listenable: _continueButtonController,
+                builder: (context, _) => PrimaryButton(
+                  text: "Add card",
+                  onPressed: _continueButtonController.isEnabled ? () {
+                    StoreProvider.of<AppState>(context).dispatch(
+                      SubmitCardInformationCommandAction(
+                        cardHolder: _nameOnCardController.text,
+                        cardNumber: _cardNumberController.text,
+                        month: _monthCardNumberController.text,
+                        year: _yearCardNumberController.text,
+                        cvv: _cvvController.text,
+                      ),
+                    );
+                    Navigator.pushNamed(context, AddMoneyScreen.routeName);
                   } : null,
                 ),
               ),
@@ -148,7 +149,8 @@ void onChange() {
           ],
         ),
       ),
-    );
+    ),
+  );
   }
 }
 
@@ -195,7 +197,7 @@ class VisaCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Image.asset(
-                'assets/images/card_logo.png', // Replace 'your_image.png' with the actual image path in your assets
+                'assets/images/card_logo.png', 
                 width: 60,
                 height: 40,
               ),
@@ -284,6 +286,7 @@ class CreditCardForm extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const SizedBox(height: 24),
         SizedBox(
           width: double.infinity,
           child: IvoryTextField(
