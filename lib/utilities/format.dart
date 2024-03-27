@@ -85,6 +85,8 @@ class Format {
         return "\$";
       case "GBP":
         return "£";
+      case 'RON':
+        return "RON";  
       default:
         throw Exception("currency not supported: $currency");
     }
@@ -164,4 +166,12 @@ class InputFormatter {
           "#": RegExp(r"[0-9]"),
         },
       );
+
+  static MaskTextInputFormatter cardNumber(String initialText) => MaskTextInputFormatter(
+      initialText: initialText,
+      mask: "0000 0000 0000 0000",
+      filter: {
+        "0": RegExp(r"[0-9]"),
+      },
+  );
 }
