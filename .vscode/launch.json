@@ -16,6 +16,12 @@
       "type": "dart"
     },
     {
+      "name": "IuliusGroupDemoApp (default)",
+      "request": "launch",
+      "type": "dart",
+      "args": ["--dart-define=CLIENT=iuliusGroup"]
+    },
+    {
       "name": "SolarisDemoApp (mercedes)",
       "request": "launch",
       "type": "dart",
