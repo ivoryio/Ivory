@@ -8,16 +8,20 @@ class ButtonWithIcon extends StatelessWidget {
   final VoidCallback? onPressed;
   final Color? buttonColor;
   final BorderRadiusGeometry borderRadius;
+  final double horizontalPadding;
+  final double verticalPadding;
 
   const ButtonWithIcon({
-    super.key,
+    Key? key,
     required this.iconWidget,
     required this.text,
     this.textStyle,
     this.onPressed,
     this.buttonColor,
     this.borderRadius = const BorderRadius.all(Radius.circular(8.0)),
-  });
+    this.horizontalPadding = 24.0,
+    this.verticalPadding = 8.0,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +34,9 @@ class ButtonWithIcon extends StatelessWidget {
       ),
       onPressed: onPressed,
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 24.0,
-          vertical: 8.0,
+        padding: EdgeInsets.symmetric(
+          horizontal: horizontalPadding,
+          vertical: verticalPadding,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
