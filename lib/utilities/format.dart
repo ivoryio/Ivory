@@ -24,6 +24,32 @@ class Format {
     return formatter.format(number);
   }
 
+static String currencyWithSymbol(
+  num number, {
+  int digits = 2,
+  int maxDigits = 2,
+}) {
+  NumberFormat formatter = NumberFormat.currency(
+    locale: 'eu',
+    symbol: 'RON',
+    decimalDigits: digits,
+  );
+
+  if (digits == 0 && number.toInt() == 0 && number < 0) {
+    return "-${formatter.format(number.abs())}";
+  }
+
+  if (digits == 0 && number > 0) {
+    return formatter.format(number.toInt());
+  }
+
+  if (digits == 0 && maxDigits > 0 && number % 1 != 0) {
+    return currency(number, digits: maxDigits);
+  }
+
+  return formatter.format(number);
+}
+
   static String euro(
     num value, {
     int digits = 0,

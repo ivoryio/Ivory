@@ -23,33 +23,33 @@ class ButtonWithIcon extends StatelessWidget {
     this.verticalPadding = 8.0,
   }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: buttonColor,
-        shape: RoundedRectangleBorder(
-          borderRadius: borderRadius,
-        ),
+@override
+Widget build(BuildContext context) {
+  return TextButton(
+    style: ElevatedButton.styleFrom(
+      backgroundColor: buttonColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: borderRadius,
       ),
-      onPressed: onPressed,
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: horizontalPadding,
-          vertical: verticalPadding,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            iconWidget,
-            const SizedBox(width: 8.0),
-            Text(
-              text,
-              style: textStyle,
-            ),
-          ],
-        ),
+    ),
+    onPressed: onPressed,
+    child: Padding(
+      padding: EdgeInsets.symmetric(
+        vertical: verticalPadding,
+        horizontal: horizontalPadding, // Adjust the horizontal padding here
       ),
-    );
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          iconWidget,
+          const SizedBox(width: 6.0),
+          Text(
+            text,
+            style: textStyle,
+          ),
+        ],
+      ),
+    ),
+  );
   }
 }

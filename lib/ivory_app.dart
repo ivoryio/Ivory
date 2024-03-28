@@ -58,6 +58,7 @@ import 'package:solarisdemo/screens/top_up/add_card_screen.dart';
 import 'package:solarisdemo/screens/top_up/add_money_screen.dart';
 import 'package:solarisdemo/screens/top_up/choose_method_screen.dart';
 import 'package:solarisdemo/screens/top_up/sign_cofirm_screen.dart';
+import 'package:solarisdemo/screens/top_up/top_up_success_screen.dart';
 import 'package:solarisdemo/screens/wallet/card_activation/card_activation_apple_wallet.dart';
 import 'package:solarisdemo/screens/wallet/card_activation/card_activation_choose_pin.dart';
 import 'package:solarisdemo/screens/wallet/card_activation/card_activation_confirm_pin_screen.dart';
@@ -206,6 +207,7 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
             AddCardScreen.routeName: (context) => const AddCardScreen(),
             AddMoneyScreen.routeName: (context) => const AddMoneyScreen(),
             SignAndConfirmScreen.routeName: (context) => const SignAndConfirmScreen(),
+            TopUpSuccessfulScreen.routeName: (context) => const TopUpSuccessfulScreen(),
 
             //transactions
             TransactionsScreen.routeName: (context) {

@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/screen.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/widgets/rewards.dart';
@@ -11,7 +12,6 @@ import 'package:solarisdemo/infrastructure/person/account_summary/account_summar
 
 import '../../config.dart';
 import '../../redux/app_state.dart';
-import '../../widgets/account_balance_text.dart';
 import '../../redux/person/account_summary/account_summay_action.dart';
 
 
@@ -137,10 +137,22 @@ class AccountSummary extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 12),
-          Skeleton(height: 16, width: 136),
-          SizedBox(height: 12),
-          Skeleton(height: 40, width: 192),
+          Row(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 12),
+                  Skeleton(height: 16, width: 136),
+                  SizedBox(height: 12),
+                  Skeleton(height: 40, width: 192),
+                ],
+              ),
+              SizedBox(width: 40), 
+              SizedBox(height: 12),
+              Skeleton(height: 40, width: 104),
+            ],
+          ),
           SizedBox(height: 12),
           Skeleton(height: 8),
           SizedBox(height: 12),
@@ -158,7 +170,7 @@ class AccountSummary extends StatelessWidget {
             ],
           ),
           SizedBox(height: 28),
-        ],
+          ],
       ),
     );
   }
@@ -186,13 +198,18 @@ class AccountBalance extends StatelessWidget {
             children: [
               Text(
                 "Available Balance",
-                style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: Colors.white),
+                style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: ClientConfig.getCustomColors().neutral400),
               ),
               const SizedBox(height: 8), 
-              AccountBalanceText(
-                value: viewModel.accountSummary?.availableBalance?.value ?? 0,
-                numberStyle: ClientConfig.getTextStyleScheme().display.copyWith(color: Colors.white),
-                centsStyle: const TextStyle(color: Colors.white, fontSize: 24),
+              Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: Format.currencyWithSymbol(viewModel.accountSummary?.availableBalance?.value ?? 0),
+                      style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: Colors.white, fontSize: 32),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -228,10 +245,16 @@ class AccountStats extends StatelessWidget {
                 style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: Colors.grey),
               ),
               const SizedBox(width: 5),
-              AccountBalanceText(
-                value: viewModel.accountSummary?.outstandingAmount ?? 0,
-                numberStyle: ClientConfig.getTextStyleScheme().labelLarge.copyWith(color: Colors.white),
-                centsStyle: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: Colors.white),
+              const SizedBox(height: 4),
+              Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: Format.currencyWithSymbol(viewModel.accountSummary?.outstandingAmount ?? 0),
+                      style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: ClientConfig.getCustomColors().neutral400, fontSize: 18),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -255,7 +278,7 @@ class AccountOptions extends StatelessWidget {
               fontSize: 14,
               fontWeight: FontWeight.w400,
               color: Colors.white,
-            ),
+            ),        
             borderRadius: BorderRadius.circular(5),
             onPressed: () => Navigator.pushNamed(context, ChooseMethodScreen.routeName),
             iconWidget: const Icon(
@@ -263,53 +286,11 @@ class AccountOptions extends StatelessWidget {
               color: Colors.white,
             ),
             buttonColor: Colors.deepOrange,
-            horizontalPadding: 0.0,
-            verticalPadding: 4.0,
+            horizontalPadding: 0,
+            verticalPadding: 0,
           ),
         ],
       ),
-    );
-  }
-}
-
-
-class AccountOptionsButton extends StatelessWidget {
-  final String textLabel;
-  final Widget icon;
-  final Function onPressed;
-
-  const AccountOptionsButton({super.key, required this.textLabel, required this.icon, required this.onPressed});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ElevatedButton(
-          onPressed: () => onPressed(),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFFFFFFFF),
-            fixedSize: const Size(50, 50),
-            shape: const CircleBorder(),
-            splashFactory: NoSplash.splashFactory,
-          ),
-          child: Center(
-            child: IconButton(
-              icon: icon,
-              splashColor: Colors.transparent,
-              color: Colors.black,
-              onPressed: () => onPressed(),
-              iconSize: 24,
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 10),
-          child: Text(
-            textLabel,
-            style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: Colors.white),
-          ),
-        )
-      ],
     );
   }
 }

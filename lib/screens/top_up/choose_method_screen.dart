@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/screens/top_up/add_card_screen.dart';
 import 'package:solarisdemo/screens/top_up/add_money_screen.dart';
+import 'package:solarisdemo/screens/top_up/top_up_success_screen.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
@@ -22,7 +23,7 @@ class _ChooseMethodScreenState extends State<ChooseMethodScreen> {
 
   void navigateToNextScreen() {
     if (firstBoxSelected) {
-      Navigator.pushNamed(context, AddMoneyScreen.routeName);
+      Navigator.pushNamed(context, TopUpSuccessfulScreen.routeName);
     } else if (secondBoxSelected) {
       Navigator.pushNamed(context, AddCardScreen.routeName);
     }

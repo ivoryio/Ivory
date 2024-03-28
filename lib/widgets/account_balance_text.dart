@@ -6,7 +6,6 @@ import '../utilities/format.dart';
 class AccountBalanceText extends StatelessWidget {
   final TextStyle? numberStyle;
   final TextStyle? centsStyle;
-
   final num value;
 
   final TextStyle defaultNumberStyle =  ClientConfig.getTextStyleScheme().heading4;

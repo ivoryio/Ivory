@@ -319,7 +319,9 @@ class CreditCardForm extends StatelessWidget {
                 keyboardType: TextInputType.number,
                 controller: monthCardNumberController,
                 inputFormatters: [
-                LengthLimitingTextInputFormatter(2)
+                FilteringTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(2),
+                MonthInputFormatter()
               ],
               ),
             ),
@@ -332,8 +334,9 @@ class CreditCardForm extends StatelessWidget {
                 keyboardType: TextInputType.number,
                 controller: yearCardNumberController,
                 inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,  
                 LengthLimitingTextInputFormatter(2)
-              ]
+                ],
               ),
             ),
           ],
@@ -348,7 +351,8 @@ class CreditCardForm extends StatelessWidget {
             keyboardType: TextInputType.number,
             controller: cvvController,
             inputFormatters: [
-                ExactLengthInputFormatter(3)
+                FilteringTextInputFormatter.digitsOnly, 
+                LengthLimitingTextInputFormatter(3)
               ]
           ),
         ),
@@ -369,5 +373,20 @@ class ExactLengthInputFormatter extends TextInputFormatter {
       return newValue;
     }
     return oldValue;
+  }
+}
+
+class MonthInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    final newText = newValue.text;
+    if (newText.isEmpty) return newValue;
+
+    final int month = int.tryParse(newText) ?? 0;
+    if (month < 1 || month > 12) {
+      return oldValue;
+    }
+
+    return newValue;
   }
 }
