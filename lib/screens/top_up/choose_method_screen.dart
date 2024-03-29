@@ -18,21 +18,12 @@ class ChooseMethodScreen extends StatefulWidget {
 
 class _ChooseMethodScreenState extends State<ChooseMethodScreen> {
   bool firstBoxSelected = false;
-  bool secondBoxSelected = false;
   bool isButtonEnabled = false;
 
   void navigateToNextScreen() {
     if (firstBoxSelected) {
-      Navigator.pushNamed(context, TopUpSuccessfulScreen.routeName);
-    } else if (secondBoxSelected) {
       Navigator.pushNamed(context, AddCardScreen.routeName);
     }
-  }
-
-  void updateButtonState() {
-    setState(() {
-      isButtonEnabled = firstBoxSelected || secondBoxSelected;
-    });
   }
 
   @override
@@ -62,35 +53,36 @@ class _ChooseMethodScreenState extends State<ChooseMethodScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 16),
-            CustomBox(
-              title: 'Bank transfer',
-              subtitle: 'Secure transfers from card',
-              icon: Icons.account_balance,
-              isSelected: firstBoxSelected,
-              onTap: () {
-                setState(() {
-                  firstBoxSelected = !firstBoxSelected;
-                  secondBoxSelected = false;
-                  updateButtonState();
-                });
-              },
-            ),
+            const SizedBox(height: 8),
             CustomBox(
               title: 'Add card',
               subtitle: 'Securely link your card',
               icon: Icons.payment,
-              isSelected: secondBoxSelected,
+              isSelected: firstBoxSelected,
               onTap: () {
                 setState(() {
-                  secondBoxSelected = !secondBoxSelected;
-                  firstBoxSelected = false;
-                  updateButtonState();
+                  firstBoxSelected = !firstBoxSelected;
+                  isButtonEnabled = firstBoxSelected;
                 });
               },
             ),
+            const SizedBox(height: 8),
+            const Text(
+              'Other methods',
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            CustomBox(
+              title: 'Apple Pay',
+              subtitle: 'Use Apple Pay to add money',
+              icon: Icons.apple,
+              isSelected: false, // Always false
+              onTap: () {}, // No action
+            ),
             const Spacer(),
-            SizedBox( 
+            SizedBox(
               width: double.infinity,
               height: 48,
               child: Button(
@@ -109,7 +101,6 @@ class _ChooseMethodScreenState extends State<ChooseMethodScreen> {
   }
 }
 
-
 class CustomBox extends StatelessWidget {
   final String title;
   final String subtitle;
@@ -120,7 +111,7 @@ class CustomBox extends StatelessWidget {
   const CustomBox({
     required this.title,
     required this.subtitle,
-    required this.icon, 
+    required this.icon,
     required this.isSelected,
     required this.onTap,
   });
@@ -131,7 +122,6 @@ class CustomBox extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
-
         child: Container(
           decoration: BoxDecoration(
             boxShadow: [
@@ -143,7 +133,7 @@ class CustomBox extends StatelessWidget {
               ),
             ],
             borderRadius: BorderRadius.circular(8.0),
-            border: Border.all(color: isSelected ? Colors.orange : Colors.transparent,  width: 2), // Add border color when selected
+            border: Border.all(color: isSelected ? Colors.orange : Colors.transparent, width: 2),
           ),
           child: Container(
             decoration: BoxDecoration(
@@ -153,7 +143,7 @@ class CustomBox extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: Row(
               children: [
-                Icon(icon, color: Colors.orange),
+                Icon(icon, color: icon == Icons.apple ? Colors.black : Colors.orange),
                 const SizedBox(width: 16.0),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
