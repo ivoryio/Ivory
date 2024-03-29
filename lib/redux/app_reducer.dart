@@ -22,6 +22,7 @@ import 'package:solarisdemo/redux/repayments/more_credit/more_credit_reducer.dar
 import 'package:solarisdemo/redux/repayments/reminder/repayment_reminder_reducer.dart';
 import 'package:solarisdemo/redux/suggestions/address/address_suggestions_reducer.dart';
 import 'package:solarisdemo/redux/suggestions/city/city_suggestions_reducer.dart';
+import 'package:solarisdemo/redux/top_up/add_card_reducer.dart';
 import 'package:solarisdemo/redux/transactions/approval/transaction_approval_reducer.dart';
 import 'package:solarisdemo/redux/transactions/transactions_reducer.dart';
 import 'package:solarisdemo/redux/transfer/transfer_reducer.dart';
@@ -41,6 +42,7 @@ AppState appReducer(AppState currentState, dynamic action) {
     categoriesState: categoriesReducer(currentState.categoriesState, action),
     referenceAccountState: referenceAccountReducer(currentState.referenceAccountState, action),
     personAccountState: personAccountReducer(currentState.personAccountState, action),
+    addCardInfoState: addCardInfoReducer(currentState.addCardInfoState, action),
     transferState: transferReducer(currentState.transferState, action),
     deviceBindingState: deviceBindingState(currentState.deviceBindingState, action),
     notificationState: notificationReducer(currentState.notificationState, action),

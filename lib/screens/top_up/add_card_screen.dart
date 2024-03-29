@@ -296,7 +296,7 @@ class CreditCardForm extends StatelessWidget {
             controller: nameOnCardController,
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 12),
         SizedBox(
           width: double.infinity,
           child: IvoryTextField(
@@ -308,11 +308,13 @@ class CreditCardForm extends StatelessWidget {
             controller: cardNumberController,
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 12),
         Row(
           children: [
-            Expanded(
-              child: IvoryTextField(
+             SizedBox(
+                height: 80, 
+                width: MediaQuery.of(context).size.width / 2.5,
+                child:  IvoryTextField(
                 label: 'Month',
                 placeholder: '00',
                 inputType: TextFieldInputType.number,
@@ -320,30 +322,48 @@ class CreditCardForm extends StatelessWidget {
                 controller: monthCardNumberController,
                 inputFormatters: [
                 FilteringTextInputFormatter.digitsOnly,
-                LengthLimitingTextInputFormatter(2),
-                MonthInputFormatter()
-              ],
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: IvoryTextField(
-                label: 'Year',
-                placeholder: '00',
-                inputType: TextFieldInputType.number,
-                keyboardType: TextInputType.number,
-                controller: yearCardNumberController,
-                inputFormatters: [
-                FilteringTextInputFormatter.digitsOnly,  
-                LengthLimitingTextInputFormatter(2)
-                ],
+                LengthLimitingTextInputFormatter(2),],
+                onChanged: (value) {
+                  final validMonthPattern = RegExp(r'^0[1-9]|1[0-2]$');
+                  if (!validMonthPattern.hasMatch(value)) {
+                    monthCardNumberController.setError(true);
+                  } else {
+                    monthCardNumberController.setError(false);
+                  }
+                },
+                ),
+              ), 
+            Spacer(),
+            SizedBox(
+                height: 80, 
+                width: MediaQuery.of(context).size.width / 2.5,
+                child:  IvoryTextField(
+                  label: 'Year',
+                  placeholder: '00',
+                  inputType: TextFieldInputType.number,
+                  keyboardType: TextInputType.number,
+                  controller: yearCardNumberController,
+                  inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,  
+                  LengthLimitingTextInputFormatter(2)
+                  ],
+                  onChanged: (value) {
+                    final currentYear = DateTime.now().year;
+                    final lastTwoDigitsOfCurrentYear = currentYear % 100;
+                    final enteredYear = int.tryParse(value) ?? 0;
+                    if (enteredYear < lastTwoDigitsOfCurrentYear) {
+                      monthCardNumberController.setError(true);
+                    } else {
+                      monthCardNumberController.setError(false);
+                    }
+                },
               ),
             ),
           ],
         ),
         const SizedBox(height: 8),
         SizedBox(
-          width: MediaQuery.of(context).size.width / 2,
+          width: MediaQuery.of(context).size.width / 2.5,
           child: IvoryTextField(
             label: 'CVV',
             placeholder: 'CVV',
@@ -362,31 +382,4 @@ class CreditCardForm extends StatelessWidget {
   }
 }
 
-class ExactLengthInputFormatter extends TextInputFormatter {
-  final int length;
 
-  ExactLengthInputFormatter(this.length);
-
-  @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-    if (newValue.text.length <= length) {
-      return newValue;
-    }
-    return oldValue;
-  }
-}
-
-class MonthInputFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-    final newText = newValue.text;
-    if (newText.isEmpty) return newValue;
-
-    final int month = int.tryParse(newText) ?? 0;
-    if (month < 1 || month > 12) {
-      return oldValue;
-    }
-
-    return newValue;
-  }
-}

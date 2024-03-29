@@ -16,10 +16,10 @@
       "type": "dart"
     },
     {
-      "name": "IuliusGroupDemoApp (default)",
+      "name": "IuliusDemoApp (default)",
       "request": "launch",
       "type": "dart",
-      "args": ["--dart-define=CLIENT=iuliusGroup"]
+      "args": ["--dart-define=CLIENT=iulius"]
     },
     {
       "name": "SolarisDemoApp (mercedes)",

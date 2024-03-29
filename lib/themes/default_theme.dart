@@ -191,7 +191,7 @@ class SolarisTheme {
   static ClientUiSettings clientUiSettings = DefaultTheme.clientUiSettings.copyWith(colorscheme: colorScheme);
 }
 
-class IuliusGroupTheme {
+class IuliusTheme {
   static ColorScheme colorScheme = DefaultTheme.colorScheme.copyWith(
     primary: const Color(0xFF1D2637),
     secondary: const Color(0xFFFF6432),

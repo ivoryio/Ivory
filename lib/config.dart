@@ -26,8 +26,8 @@ class ClientConfig {
           _clientConfigData = ClientConfigData(uiSettings: PorscheTheme.clientUiSettings);
         case 'solaris':
           _clientConfigData = ClientConfigData(uiSettings: SolarisTheme.clientUiSettings);
-        case 'iuliusGroup':
-          _clientConfigData = ClientConfigData(uiSettings: IuliusGroupTheme.clientUiSettings);
+        case 'iulius':
+          _clientConfigData = ClientConfigData(uiSettings: IuliusTheme.clientUiSettings);
         case 'mercedes':
           _clientConfigData = ClientConfigData(uiSettings: MercedesTheme.clientUiSettings);
         default:

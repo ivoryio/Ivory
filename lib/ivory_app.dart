@@ -172,7 +172,7 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
             HomeScreen.routeName: (context) {
                 String client = const String.fromEnvironment('CLIENT');
                 switch(client){
-                  case 'iuliusGroup':
+                  case 'iulius':
                     return const IuliusNavigationScreen(initialScreen: IuliusNavigationScreens.homeScreen);
                   default: 
                     return const MainNavigationScreen(initialScreen: MainNavigationScreens.homeScreen);
