@@ -76,7 +76,7 @@ class ClientConfig {
       case 'mercedes':
         return 'assets/icons/mercedes';
       case 'iulius':
-        return 'assets/icons/iulius';
+        return 'assets/icons/default';
       default:
         return 'assets/icons/default';
     }

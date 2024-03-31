@@ -1,32 +1,26 @@
 import 'package:badges/badges.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/config.dart';
-import 'package:solarisdemo/infrastructure/transfer/transfer_presenter.dart';
-import 'package:solarisdemo/redux/app_state.dart';
-import 'package:solarisdemo/screens/home/home_screen.dart';
-import 'package:solarisdemo/screens/transactions/transactions_screen.dart';
-import 'package:solarisdemo/utilities/format.dart';
-import 'package:solarisdemo/utilities/ivory_color_mapper.dart';
-import 'package:solarisdemo/widgets/app_toolbar.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:solarisdemo/widgets/button.dart';
-import 'package:solarisdemo/widgets/ivory_asset_with_badge.dart';
-import 'package:solarisdemo/widgets/screen_scaffold.dart';
+import 'package:solarisdemo/utilities/format.dart';
+import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/screen_title.dart';
+import 'package:solarisdemo/widgets/screen_scaffold.dart';
+import 'package:solarisdemo/screens/home/home_screen.dart';
+import 'package:solarisdemo/utilities/ivory_color_mapper.dart';
+import 'package:solarisdemo/widgets/ivory_asset_with_badge.dart';
 import 'package:solarisdemo/widgets/scrollable_screen_container.dart';
-
-
+import 'package:solarisdemo/screens/transactions/transactions_screen.dart';
 
 class TopUpSuccessfulScreen extends StatelessWidget {
   static const routeName = "/topUpSuccessfulScreen";
 
-  const TopUpSuccessfulScreen({super.key});
+  const TopUpSuccessfulScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-
     return ScreenScaffold(
       shouldPop: false,
       body: Column(
@@ -44,29 +38,24 @@ class TopUpSuccessfulScreen extends StatelessWidget {
                   children: [
                     const ScreenTitle("Money successfully added"),
                     const SizedBox(height: 16),
-                    StoreConnector<AppState, TransferViewModel>(
-                      converter: (store) => TransferPresenter.presentTransfer(
-                        transferState: store.state.transferState,
-                        personAccountState: store.state.personAccountState,
-                        referenceAccountState: store.state.referenceAccountState,
+                    RichText(
+                      text: TextSpan(
+                        text: "You have successfully transferred ",
+                        style: TextStyle(color: ClientConfig.getCustomColors().neutral900),
+                        children: [
+                          TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: Format.currencyWithSymbol(1000.000),
+                                  style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: ClientConfig.getCustomColors().neutral800, fontSize: 14 ),
+                                ),
+                                TextSpan(
+                                  text: " to your Iulius bank account.",
+                                ),
+                              ],
+                            ),
+                        ],
                       ),
-                      builder: (context, viewModel) => viewModel is TransferConfirmedViewModel
-                          ? RichText(
-                              text: TextSpan(
-                                text: "You have successfully transferred ",
-                                style: TextStyle(color: ClientConfig.getCustomColors().neutral900),
-                                children: [
-                                  TextSpan(
-                                    text: Format.euro(viewModel.amount, digits: 2),
-                                    style: TextStyle(color: ClientConfig.getCustomColors().neutral900),
-                                  ),
-                                  TextSpan(
-                                    text: "to your Iulius bank account.",
-                                  ),
-                                ],
-                              ),
-                            )
-                          : Container(),
                     ),
                     const SizedBox(height: 16),
                     RichText(

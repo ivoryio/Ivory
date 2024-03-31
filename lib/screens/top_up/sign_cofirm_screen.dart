@@ -3,6 +3,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:solarisdemo/config.dart';
+import 'package:solarisdemo/screens/top_up/top_up_success_screen.dart';
+import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
@@ -17,10 +19,12 @@ class SignAndConfirmScreen extends StatefulWidget {
 }
 
 class _SignAndCofirmState extends State<SignAndConfirmScreen> {  
+  bool _canContinue = true;
+
 
   @override
   Widget build(BuildContext context) {
-    return ScreenScaffold(
+  return ScreenScaffold(
       body: Padding(
         padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
         child: Column(
@@ -38,10 +42,8 @@ class _SignAndCofirmState extends State<SignAndConfirmScreen> {
               ),
             ),
             const SizedBox(height: 16),
-        Container(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
 
-        child: Container(
+            Container(
             decoration: BoxDecoration(
               color: ClientConfig.getCustomColors().neutral100,
               borderRadius: BorderRadius.circular(8.0),
@@ -61,12 +63,14 @@ class _SignAndCofirmState extends State<SignAndConfirmScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Text(
-                      '1000.000',
-                      style: TextStyle(
-                        color: ClientConfig.getCustomColors().neutral900,
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w600,
+                    Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: Format.currencyWithSymbol(1000.000),
+                            style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: ClientConfig.getCustomColors().neutral800, fontSize: 16),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -74,52 +78,56 @@ class _SignAndCofirmState extends State<SignAndConfirmScreen> {
               ],
             ),
           ),
-        ),
-        Container(
-            decoration: BoxDecoration(
-              color: ClientConfig.getCustomColors().neutral100,
-              borderRadius: BorderRadius.circular(8.0),
+          SizedBox(height: 16.0),
+          Container(
+              decoration: BoxDecoration(
+                color: ClientConfig.getCustomColors().neutral100,
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                children: [
+                  const SizedBox(width: 8.0),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'From',
+                        style: TextStyle(
+                          color: ClientConfig.getCustomColors().neutral700,
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 4.0),
+                      Text(
+                        'ING BANK',
+                        style: TextStyle(
+                          color: ClientConfig.getCustomColors().neutral900,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      SizedBox(height: 4.0),
+                      Text(
+                        'Visa *9842',
+                        style: TextStyle(
+                          color: ClientConfig.getCustomColors().neutral700,
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ],
+                  ),                
+                ],
+              ),
             ),
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: [
-                const SizedBox(width: 8.0),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'From',
-                      style: TextStyle(
-                        color: ClientConfig.getCustomColors().neutral700,
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 8.0),
-                    Text(
-                      'ING BANK',
-                      style: TextStyle(
-                        color: ClientConfig.getCustomColors().neutral900,
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    SizedBox(height: 8.0),
-                    Text(
-                      'Visa *9842',
-                      style: TextStyle(
-                        color: ClientConfig.getCustomColors().neutral700,
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ],
-                ),                
-              ],
-            ),
-          ),
-          const SizedBox(height: 16.0),
-            SizedBox( 
+
+            SizedBox(height: 24.0),
+            ScheduleContainer(),
+
+            Spacer(),
+            SizedBox(
               width: double.infinity,
               height: 48,
               child: Button(
@@ -127,13 +135,78 @@ class _SignAndCofirmState extends State<SignAndConfirmScreen> {
                 disabledColor: ClientConfig.getCustomColors().neutral300,
                 color: ClientConfig.getColorScheme().tertiary,
                 textColor: ClientConfig.getColorScheme().surface,
-                onPressed: () {},
+                onPressed: () {
+                   Navigator.pushNamed(
+                              context,
+                              TopUpSuccessfulScreen.routeName,
+                              
+                  );
+                },
               ),
             ),
             const SizedBox(height: 16),
           ],
         ),
       ),
+    );
+  }
+}
+
+class ScheduleContainer extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          const Icon(
+            Icons.calendar_month_outlined,
+            color: Colors.orange,
+            size: 24,
+          ),
+          const SizedBox(width: 8),
+          const Text('Schedule later',
+           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+           ),
+          const Spacer(),
+
+          ToggleSwitch(),
+        ],
+      ),
+    );
+  }
+}
+
+class ToggleSwitch extends StatefulWidget {
+  @override
+  _ToggleSwitchState createState() => _ToggleSwitchState();
+}
+
+class _ToggleSwitchState extends State<ToggleSwitch> {
+  bool isSwitched = false;
+
+  void _toggleSwitch(bool value) {
+    setState(() {
+      isSwitched = value;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+  return Switch( 
+          value: isSwitched,
+          onChanged: _toggleSwitch,
+          activeTrackColor: Colors.orange,
+          activeColor: Colors.white,
+          inactiveTrackColor: Colors.grey[400],
+          inactiveThumbColor: Colors.white,
+          splashRadius: 50.0, 
+          trackOutlineColor: MaterialStateColor.resolveWith((states) => Colors.transparent), 
     );
   }
 }

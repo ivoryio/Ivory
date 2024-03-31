@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:solarisdemo/config.dart';
-
 import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/ivory_amount_field.dart';
-import 'package:solarisdemo/widgets/account_balance_text.dart';
-import 'package:solarisdemo/screens/transfer/transfer_review_screen.dart';
+import 'package:solarisdemo/screens/top_up/sign_cofirm_screen.dart';
 
 class AddMoneyScreen extends StatefulWidget {
   static const routeName = "/addMoneyScreen";
@@ -18,20 +16,26 @@ class AddMoneyScreen extends StatefulWidget {
 }
 
 class _AddMoneyScreenState extends State<AddMoneyScreen> {
-  String? _errorText;
-  bool _canContinue = false;
+  bool _canContinue = false; 
   final amountController = TextEditingController();
 
   @override
-  void dispose() {
-    amountController.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    amountController.addListener(_updateContinueStatus);
+    _updateContinueStatus(); 
+  }
+
+  void _updateContinueStatus() {
+    setState(() {
+      _canContinue = amountController.text.isNotEmpty;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return ScreenScaffold(
-        body: Padding(
+        return ScreenScaffold(
+          body: Padding(
             padding: ClientConfig.getCustomClientUiSettings().defaultScreenPadding,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,38 +51,37 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 16),
                 Center(
-                    child: CustomContainer(),
-                  ),
+                  child: CustomContainer(),
+                ),
                 AmountTransfer(amountController: amountController),
                 const Spacer(),
                 SizedBox(
                   width: double.infinity,
                   height: 48,
-                  child: Button(
+                  child: PrimaryButton(
                     text: "Next",
                     onPressed: _canContinue
-                      ? () {
-                          FocusScope.of(context).unfocus();
-                          Navigator.pushNamed(
-                            context,
-                            TransferReviewScreen.routeName,
-                            arguments: TransferReviewScreenParams(
-                              transferAmountValue: double.parse(amountController.text),
-                            ),
-                          );
-                        }
-                      : null,
+                        ? () {
+                            FocusScope.of(context).unfocus();
+                            Navigator.pushNamed(
+                              context,
+                              SignAndConfirmScreen.routeName,
+                            );
+                          }
+                        : null,
                   ),
                 ),
                 const SizedBox(height: 16),
               ],
             ),
-        ),
-      );
-    }
-  }
+          ),
+        );
+      }
+}
+
+
 
 class CustomContainer extends StatelessWidget {
   @override
@@ -92,7 +95,7 @@ class CustomContainer extends StatelessWidget {
         ),
         padding: const EdgeInsets.all(16.0),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween, // Align items with space between them
+          mainAxisAlignment: MainAxisAlignment.spaceBetween, 
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Column(
@@ -110,7 +113,7 @@ class CustomContainer extends StatelessWidget {
                       ),
                       child: Icon(Icons.credit_card),
                     ),
-                    SizedBox(width: 8.0),
+                    const SizedBox(width: 8.0),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children:[
@@ -135,7 +138,7 @@ class CustomContainer extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(width: 8.0), // Add space between the container and the button
+            const SizedBox(width: 8.0),
             OutlinedButton(
               onPressed: () {
                  Navigator.pop(context);
@@ -175,38 +178,13 @@ class AmountTransfer extends StatelessWidget {
             "Enter amount",
             style: TextStyle(
               color: ClientConfig.getCustomColors().neutral700,
-              fontSize: 14, 
-              // Add your text styles here
+              fontSize: 14,
             ),
           ),
           IvoryAmountField(
             controller: amountController,
             unfocusedBorderColor: ClientConfig.getCustomColors().neutral400,
             hintColor: ClientConfig.getCustomColors().neutral400,
-            // Add your IvoryAmountField properties here
-          ),
-          const SizedBox(height: 8),
-          Align(
-            alignment: Alignment.center,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Current balance:",
-                  style: TextStyle(
-                    color: ClientConfig.getCustomColors().neutral700,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                AccountBalanceText(
-                  value: 10.00,
-                  numberStyle: ClientConfig.getTextStyleScheme().display.copyWith(color: ClientConfig.getCustomColors().neutral700, fontSize: 16, fontWeight: FontWeight.w600),
-                  centsStyle: const TextStyle(color: Colors.white, fontSize: 10),
-                ),
-              ],
-            ),
           ),
         ],
       ),

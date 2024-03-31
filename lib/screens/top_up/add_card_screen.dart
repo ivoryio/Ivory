@@ -352,9 +352,9 @@ class CreditCardForm extends StatelessWidget {
                     final lastTwoDigitsOfCurrentYear = currentYear % 100;
                     final enteredYear = int.tryParse(value) ?? 0;
                     if (enteredYear < lastTwoDigitsOfCurrentYear) {
-                      monthCardNumberController.setError(true);
+                      yearCardNumberController.setError(true);
                     } else {
-                      monthCardNumberController.setError(false);
+                      yearCardNumberController.setError(false);
                     }
                 },
               ),
