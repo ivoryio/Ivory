@@ -61,6 +61,8 @@ class ClientConfig {
         return 'assets/images/porsche';
       case 'mercedes':
         return 'assets/images/mercedes';
+      case 'iulius':
+        return 'assets/images/iulius';
       default:
         return 'assets/images/default';
     }
@@ -73,6 +75,8 @@ class ClientConfig {
         return 'assets/icons/porsche';
       case 'mercedes':
         return 'assets/icons/mercedes';
+      case 'iulius':
+        return 'assets/icons/iulius';
       default:
         return 'assets/icons/default';
     }
