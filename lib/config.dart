@@ -61,8 +61,6 @@ class ClientConfig {
         return 'assets/images/porsche';
       case 'mercedes':
         return 'assets/images/mercedes';
-      case 'iulius':
-        return 'assets/images/iulius';
       default:
         return 'assets/images/default';
     }
@@ -75,8 +73,6 @@ class ClientConfig {
         return 'assets/icons/porsche';
       case 'mercedes':
         return 'assets/icons/mercedes';
-      case 'iulius':
-        return 'assets/icons/default';
       default:
         return 'assets/icons/default';
     }
@@ -93,7 +89,7 @@ class ClientConfig {
 
 class ClientConfigData {
   final ClientUiSettings uiSettings;
-  //add backend accesss data
+  //add backend access data
 
   const ClientConfigData({required this.uiSettings});
 }

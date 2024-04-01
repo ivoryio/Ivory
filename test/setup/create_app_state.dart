@@ -23,6 +23,7 @@ import 'package:solarisdemo/redux/repayments/more_credit/more_credit_state.dart'
 import 'package:solarisdemo/redux/repayments/reminder/repayment_reminder_state.dart';
 import 'package:solarisdemo/redux/suggestions/address/address_suggestions_state.dart';
 import 'package:solarisdemo/redux/suggestions/city/city_suggestions_state.dart';
+import 'package:solarisdemo/redux/top_up/add_card_state.dart';
 import 'package:solarisdemo/redux/transactions/approval/transaction_approval_state.dart';
 import 'package:solarisdemo/redux/transactions/transactions_state.dart';
 import 'package:solarisdemo/redux/transfer/transfer_state.dart';
@@ -46,6 +47,7 @@ AppState createAppState({
   AccountSummaryState? accountSummaryState,
   AuthState? authState,
   TransactionsState? homePageTransactionsState,
+  AddCardInfoState? addCardInfoState,
   OnboardingProgressState? onboardingProgressState,
   OnboardingSignupState? onboardingSignupState,
   OnboardingPersonalDetailsState? onboardingPersonalDetailsState,
@@ -74,6 +76,7 @@ AppState createAppState({
     deviceBindingState: deviceBindingState ?? DeviceBindingInitialState(),
     notificationState: notificationState ?? NotificationInitialState(),
     transactionApprovalState: transactionApprovalState ?? TransactionApprovalInitialState(),
+    addCardInfoState: addCardInfoState ?? AddCardInfoInitialState(),
     accountSummaryState: accountSummaryState ?? AccountSummaryInitialState(),
     authState: authState ?? AuthInitialState(),
     homePageTransactionsState: homePageTransactionsState ?? TransactionsInitialState(),

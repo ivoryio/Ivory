@@ -27,10 +27,10 @@ class IuliusNavigationScreen extends StatefulWidget {
   });
 
   @override
-  State<IuliusNavigationScreen> createState() => _IuliusNavigationScreennState();
+  State<IuliusNavigationScreen> createState() => _IuliusNavigationScreenState();
 }
 
-class _IuliusNavigationScreennState extends State<IuliusNavigationScreen> {
+class _IuliusNavigationScreenState extends State<IuliusNavigationScreen> {
   late int currentPageIndex;
 
   @override
@@ -51,7 +51,7 @@ class _IuliusNavigationScreennState extends State<IuliusNavigationScreen> {
   }
 
   Widget _getBody() {
-    switch (widget.initialScreen) {
+    switch (iuliusNavigationScreens[currentPageIndex]) {
       case IuliusNavigationScreens.homeScreen:
         return const IuliusHomeScreen();
       case IuliusNavigationScreens.cardsScreen:
