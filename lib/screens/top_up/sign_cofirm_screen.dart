@@ -3,11 +3,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:solarisdemo/config.dart';
-import 'package:solarisdemo/screens/top_up/top_up_success_screen.dart';
+import 'package:solarisdemo/widgets/button.dart';
 import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/app_toolbar.dart';
-import 'package:solarisdemo/widgets/button.dart';
+import 'package:solarisdemo/widgets/ivory_switch.dart';
 import 'package:solarisdemo/widgets/screen_scaffold.dart';
+import 'package:solarisdemo/screens/top_up/top_up_success_screen.dart';
 
 class SignAndConfirmScreen extends StatefulWidget {
   static const routeName = "/signAndCofirmScreen";
@@ -137,9 +138,8 @@ class _SignAndCofirmState extends State<SignAndConfirmScreen> {
                 textColor: ClientConfig.getColorScheme().surface,
                 onPressed: () {
                    Navigator.pushNamed(
-                              context,
-                              TopUpSuccessfulScreen.routeName,
-                              
+                      context,
+                      TopUpSuccessfulScreen.routeName,   
                   );
                 },
               ),
@@ -162,51 +162,21 @@ class ScheduleContainer extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Row(
+      child: const Row(
         children: [
-          const Icon(
+          Icon(
             Icons.calendar_month_outlined,
             color: Colors.orange,
             size: 24,
           ),
-          const SizedBox(width: 8),
-          const Text('Schedule later',
+          SizedBox(width: 8),
+          Text('Schedule later',
            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
            ),
-          const Spacer(),
-
-          ToggleSwitch(),
+           Spacer(),
+           IvorySwitch(),
         ],
       ),
-    );
-  }
-}
-
-class ToggleSwitch extends StatefulWidget {
-  @override
-  _ToggleSwitchState createState() => _ToggleSwitchState();
-}
-
-class _ToggleSwitchState extends State<ToggleSwitch> {
-  bool isSwitched = false;
-
-  void _toggleSwitch(bool value) {
-    setState(() {
-      isSwitched = value;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-  return Switch( 
-          value: isSwitched,
-          onChanged: _toggleSwitch,
-          activeTrackColor: Colors.orange,
-          activeColor: Colors.white,
-          inactiveTrackColor: Colors.grey[400],
-          inactiveThumbColor: Colors.white,
-          splashRadius: 50.0, 
-          trackOutlineColor: MaterialStateColor.resolveWith((states) => Colors.transparent), 
     );
   }
 }

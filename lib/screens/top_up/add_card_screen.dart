@@ -58,26 +58,28 @@ void updateExpiryDate() {
 
 void onChange() {
   setState(() {
-    cardNumber = _cardNumberController.text.isNotEmpty
-        ? _cardNumberController.text
-        : defaultCardNumberFormat;
-    cardHolderName = _nameOnCardController.text.isNotEmpty
-        ? _nameOnCardController.text
-        : defaultCardHolderFormat;
-  });
+    String nameOnCard = _nameOnCardController.text;
+    String cardNumber = _cardNumberController.text;
+    String month = _monthCardNumberController.text;
+    String year = _yearCardNumberController.text;
+    String cvv = _cvvController.text;
 
-  updateExpiryDate();
+    bool isNameValid = nameOnCard.isNotEmpty;
+    bool isCardNumberValid = cardNumber.isNotEmpty;
+    bool isMonthValid = month.isNotEmpty && RegExp(r'^0[1-9]|1[0-2]$').hasMatch(month);
+    bool isYearValid = year.isNotEmpty && RegExp(r'^\d{2}$').hasMatch(year);
+    bool isCvvValid = cvv.isNotEmpty && RegExp(r'^\d{3}$').hasMatch(cvv);
 
-  if (_nameOnCardController.text.isEmpty ||
-      _cardNumberController.text.isEmpty ||
-      _monthCardNumberController.text.isEmpty ||
-      _yearCardNumberController.text.isEmpty ||
-      _cvvController.text.isEmpty) {
-    _continueButtonController.setDisabled();
-  } else {
-    _continueButtonController.setEnabled();
-  }
-}
+    if (isNameValid && isCardNumberValid && isMonthValid && isYearValid && isCvvValid) {
+      _continueButtonController.setEnabled();
+    } else {
+      _continueButtonController.setDisabled();
+    }
+
+    this.cardNumber = isCardNumberValid ? cardNumber : defaultCardNumberFormat;
+    this.cardHolderName = isNameValid ? nameOnCard : defaultCardHolderFormat;
+    this.expiryDate = (isMonthValid && isYearValid) ? '$month/$year' : defaultExpiryDateFormat;
+});}
 
   @override
   void dispose() {

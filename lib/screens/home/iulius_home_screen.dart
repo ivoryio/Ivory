@@ -1,10 +1,10 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/widgets/screen.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/widgets/rewards.dart';
 import 'package:solarisdemo/widgets/skeleton.dart';
+import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/redux/auth/auth_state.dart';
 import 'package:solarisdemo/widgets/button_with_icon.dart';
 import 'package:solarisdemo/screens/top_up/choose_method_screen.dart';

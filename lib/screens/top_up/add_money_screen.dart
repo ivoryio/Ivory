@@ -28,7 +28,12 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
 
   void _updateContinueStatus() {
     setState(() {
-      _canContinue = amountController.text.isNotEmpty;
+      final value = double.tryParse(amountController.text) ?? 0;
+      if(value > 0){
+        _canContinue = true;
+      }else{
+        _canContinue = false;
+      }
     });
   }
 
@@ -80,8 +85,6 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
         );
       }
 }
-
-
 
 class CustomContainer extends StatelessWidget {
   @override
