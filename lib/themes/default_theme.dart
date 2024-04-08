@@ -191,6 +191,19 @@ class SolarisTheme {
   static ClientUiSettings clientUiSettings = DefaultTheme.clientUiSettings.copyWith(colorscheme: colorScheme);
 }
 
+class IuliusTheme {
+  static ColorScheme colorScheme = DefaultTheme.colorScheme.copyWith(
+    primary: const Color(0xFF1D2637),
+    secondary: const Color(0xFFFF6432),
+    tertiary: const Color(0xFFFF6432), // USE THIS FOR BUTTON BACKGROUNDS
+    surface: Colors.white, // USE THIS FOR BUTTON TEXTS
+    surfaceVariant: const Color(0xFFF8623A), //USED TO CALCULATE GRADIENT,
+    outline: const Color(0xFF9D2801), //ALSO USED TO CALCULATE GRADIENT,
+  );
+
+  static ClientUiSettings clientUiSettings = DefaultTheme.clientUiSettings.copyWith(colorscheme: colorScheme);
+}
+
 class CustomColors {
   final Color neutral100;
   final Color neutral200;

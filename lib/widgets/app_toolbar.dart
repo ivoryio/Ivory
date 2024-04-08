@@ -103,6 +103,7 @@ class _AppToolbarState extends State<AppToolbar> {
         mainAxisSize: MainAxisSize.min,
         children: [
           AppBar(
+            scrolledUnderElevation: 0,
             actions: widget.actions,
             automaticallyImplyLeading: false,
             backgroundColor: widget.backgroundColor,

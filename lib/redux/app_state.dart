@@ -23,6 +23,7 @@ import 'package:solarisdemo/redux/repayments/more_credit/more_credit_state.dart'
 import 'package:solarisdemo/redux/repayments/reminder/repayment_reminder_state.dart';
 import 'package:solarisdemo/redux/suggestions/address/address_suggestions_state.dart';
 import 'package:solarisdemo/redux/suggestions/city/city_suggestions_state.dart';
+import 'package:solarisdemo/redux/top_up/add_card_state.dart';
 import 'package:solarisdemo/redux/transactions/approval/transaction_approval_state.dart';
 import 'package:solarisdemo/redux/transactions/transactions_state.dart';
 import 'package:solarisdemo/redux/transfer/transfer_state.dart';
@@ -39,6 +40,7 @@ class AppState extends Equatable {
   final CategoriesState categoriesState;
   final ReferenceAccountState referenceAccountState;
   final PersonAccountState personAccountState;
+  final AddCardInfoState addCardInfoState;
   final TransferState transferState;
   final DeviceBindingState deviceBindingState;
   final NotificationState notificationState;
@@ -70,6 +72,7 @@ class AppState extends Equatable {
     required this.categoriesState,
     required this.referenceAccountState,
     required this.personAccountState,
+    required this.addCardInfoState,
     required this.transferState,
     required this.deviceBindingState,
     required this.notificationState,
@@ -103,6 +106,7 @@ class AppState extends Equatable {
       categoriesState: CategoriesInitialState(),
       referenceAccountState: ReferenceAccountInitialState(),
       personAccountState: PersonAccountInitialState(),
+      addCardInfoState: AddCardInfoInitialState(),
       transferState: TransferInitialState(),
       deviceBindingState: DeviceBindingInitialState(),
       notificationState: NotificationInitialState(),
@@ -137,6 +141,7 @@ class AppState extends Equatable {
         categoriesState,
         referenceAccountState,
         personAccountState,
+        addCardInfoState,
         transferState,
         deviceBindingState,
         notificationState,

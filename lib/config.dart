@@ -26,6 +26,8 @@ class ClientConfig {
           _clientConfigData = ClientConfigData(uiSettings: PorscheTheme.clientUiSettings);
         case 'solaris':
           _clientConfigData = ClientConfigData(uiSettings: SolarisTheme.clientUiSettings);
+        case 'iulius':
+          _clientConfigData = ClientConfigData(uiSettings: IuliusTheme.clientUiSettings);
         case 'mercedes':
           _clientConfigData = ClientConfigData(uiSettings: MercedesTheme.clientUiSettings);
         default:
@@ -59,6 +61,8 @@ class ClientConfig {
         return 'assets/images/porsche';
       case 'mercedes':
         return 'assets/images/mercedes';
+      case 'iulius':
+        return 'assets/images/iulius';
       default:
         return 'assets/images/default';
     }
@@ -71,6 +75,8 @@ class ClientConfig {
         return 'assets/icons/porsche';
       case 'mercedes':
         return 'assets/icons/mercedes';
+      case 'iulius':
+        return 'assets/icons/iulius';
       default:
         return 'assets/icons/default';
     }
@@ -87,7 +93,7 @@ class ClientConfig {
 
 class ClientConfigData {
   final ClientUiSettings uiSettings;
-  //add backend accesss data
+  //add backend access data
 
   const ClientConfigData({required this.uiSettings});
 }

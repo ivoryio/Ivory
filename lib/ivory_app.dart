@@ -3,6 +3,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:solarisdemo/config.dart';
 import 'package:solarisdemo/infrastructure/notifications/push_notification_service_provider.dart';
+import 'package:solarisdemo/models/home/iulius_navigation_screens.dart';
 import 'package:solarisdemo/navigator_observers/general_navigation_observer.dart';
 import 'package:solarisdemo/navigator_observers/navigation_logging_observer.dart';
 import 'package:solarisdemo/models/home/main_navigation_screens.dart';
@@ -11,6 +12,7 @@ import 'package:solarisdemo/navigator.dart';
 import 'package:solarisdemo/redux/app_state.dart';
 import 'package:solarisdemo/screens/account/account_details_screen.dart';
 import 'package:solarisdemo/screens/available_balance/available_balance_screen.dart';
+import 'package:solarisdemo/screens/home/iulius_navigation_screen.dart';
 import 'package:solarisdemo/screens/login/login_with_biometrics_screen.dart';
 import 'package:solarisdemo/screens/login/login_with_tan_screen.dart';
 import 'package:solarisdemo/screens/onboarding/card_configuration/onboarding_repayment_option_screen.dart';
@@ -52,6 +54,11 @@ import 'package:solarisdemo/screens/settings/app_settings/biometric_enabled_scre
 import 'package:solarisdemo/screens/settings/app_settings/biometric_needed_screen.dart';
 import 'package:solarisdemo/screens/onboarding/onboarding_stepper_screen.dart';
 import 'package:solarisdemo/screens/settings/device_pairing/settings_device_pairing_temporary_restriction_screen.dart';
+import 'package:solarisdemo/screens/top_up/add_card_screen.dart';
+import 'package:solarisdemo/screens/top_up/add_money_screen.dart';
+import 'package:solarisdemo/screens/top_up/choose_method_screen.dart';
+import 'package:solarisdemo/screens/top_up/sign_cofirm_screen.dart';
+import 'package:solarisdemo/screens/top_up/top_up_success_screen.dart';
 import 'package:solarisdemo/screens/wallet/card_activation/card_activation_apple_wallet.dart';
 import 'package:solarisdemo/screens/wallet/card_activation/card_activation_choose_pin.dart';
 import 'package:solarisdemo/screens/wallet/card_activation/card_activation_confirm_pin_screen.dart';
@@ -162,8 +169,15 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
             LoginWithTanScreen.routeName: (context) => const LoginWithTanScreen(),
             LoginWithBiometricsScreen.routeName: (context) => const LoginWithBiometricsScreen(),
             // home
-            HomeScreen.routeName: (context) =>
-                const MainNavigationScreen(initialScreen: MainNavigationScreens.homeScreen),
+            HomeScreen.routeName: (context) {
+                String client = const String.fromEnvironment('CLIENT');
+                switch(client){
+                  case 'iulius':
+                    return const IuliusNavigationScreen(initialScreen: IuliusNavigationScreens.homeScreen);
+                  default: 
+                    return const MainNavigationScreen(initialScreen: MainNavigationScreens.homeScreen);
+              }
+            },
             AvailableBalanceScreen.routeName: (context) => const AvailableBalanceScreen(),
             // settings - security
             SettingsScreen.routeName: (context) =>
@@ -187,6 +201,13 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
             //settings - app settings
             AppSettingsBiometricNeededScreen.routeName: (context) => const AppSettingsBiometricNeededScreen(),
             AppSettingsBiometricEnabledScreen.routeName: (context) => const AppSettingsBiometricEnabledScreen(),
+
+            //Top-up
+            ChooseMethodScreen.routeName: (context) => const ChooseMethodScreen(),
+            AddCardScreen.routeName: (context) => const AddCardScreen(),
+            AddMoneyScreen.routeName: (context) => const AddMoneyScreen(),
+            SignAndConfirmScreen.routeName: (context) => const SignAndConfirmScreen(),
+            TopUpSuccessfulScreen.routeName: (context) => const TopUpSuccessfulScreen(),
 
             //transactions
             TransactionsScreen.routeName: (context) {
@@ -226,7 +247,7 @@ class _IvoryAppState extends State<IvoryApp> with WidgetsBindingObserver {
             BankCardChangePinChooseScreen.routeName: (context) => const BankCardChangePinChooseScreen(),
             BankCardConfirmPinConfirmScreen.routeName: (context) => const BankCardConfirmPinConfirmScreen(),
             BankCardChangePinSuccessScreen.routeName: (context) => const BankCardChangePinSuccessScreen(),
-
+            
             // repayments
             RepaymentsScreen.routeName: (context) => const RepaymentsScreen(),
             ChangeRepaymentRateScreen.routeName: (context) => const ChangeRepaymentRateScreen(),
