@@ -326,6 +326,7 @@ class CardOptionsButton extends StatelessWidget {
             backgroundColor: ClientConfig.getCustomColors().neutral900,
             fixedSize: const Size(48, 48),
             shape: const CircleBorder(),
+            padding: EdgeInsets.zero,
             splashFactory: NoSplash.splashFactory,
           ),
           child: Icon(
