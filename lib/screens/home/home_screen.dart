@@ -430,12 +430,12 @@ class AccountOptionsButton extends StatelessWidget {
             splashFactory: NoSplash.splashFactory,
           ),
           child: Center(
-            child: IconButton(
-              icon: icon,
-              splashColor: Colors.transparent,
-              color: Colors.black,
-              onPressed: () => onPressed(),
-              iconSize: 24,
+            child: IconTheme(
+              data: const IconThemeData(
+                size: 24,
+                color: Colors.black,
+              ),
+              child: icon,
             ),
           ),
         ),
