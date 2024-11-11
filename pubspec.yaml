@@ -37,27 +37,27 @@ dependencies:
   redux: ^5.0.0
   flutter_redux: ^0.10.0
   flutter_bloc: ^8.1.2
-  firebase_core: ^2.15.0
-  firebase_messaging: ^14.6.5
-  flutter_local_notifications: ^15.1.0+1
+  firebase_core: ^3.7.0
+  firebase_messaging: ^15.1.4
+  flutter_local_notifications: ^18.0.1
   equatable: ^2.0.5
   http: ^1.1.0
   bloc: ^8.1.1
-  flutter_platform_widgets: ^6.0.0
-  intl: ^0.18.0
-  fl_chart: ^0.63.0
+  flutter_platform_widgets: ^7.0.1
+  intl: ^0.19.0
+  fl_chart: ^0.69.0
   dotted_border: ^2.0.0+3
   amazon_cognito_identity_dart_2: ^3.3.0
   flutter_dotenv: ^5.1.0
   flutter_svg: ^2.0.7
-  syncfusion_flutter_datepicker: ^22.2.8
+  syncfusion_flutter_datepicker: ^27.1.58
   mask_text_input_formatter: ^2.5.0
   ffi: ^2.0.1
   shared_preferences: ^2.2.0
-  http_mock_adapter: ^0.4.4
+  http_mock_adapter: ^0.6.1
   mockito: ^5.4.0
   flutter_switch: ^0.3.2
-  uuid: ^3.0.7
+  uuid: ^4.5.1
   path: ^1.8.3
   asn1lib: ^1.5.0
   pointycastle: ^3.7.3
@@ -65,9 +65,9 @@ dependencies:
   percent_indicator: ^4.2.2
   convert: ^3.1.1
   jose: ^0.3.4
-  share_plus: ^7.1.0
-  permission_handler: ^10.4.3
-  device_info_plus: ^9.0.3
+  share_plus: ^10.1.2
+  permission_handler: ^11.3.1
+  device_info_plus: ^11.1.1
   url_launcher: ^6.1.12
   smooth_page_indicator: ^1.1.0
   badges: ^3.1.2
@@ -89,7 +89,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.0
+  flutter_lints: ^5.0.0
   test: ^1.22.0
 
 # For information on the generic Dart part of this file, see the

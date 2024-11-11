@@ -103,6 +103,7 @@ class MockSharePlatform extends Mock with MockPlatformInterfaceMixin implements 
   @override
   Future<ShareResult> shareXFiles(
     List<XFile?>? files, {
+    List<String>? fileNameOverrides,
     String? subject,
     String? text,
     Rect? sharePositionOrigin,

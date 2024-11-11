@@ -143,12 +143,7 @@ void main() {
 
         // then
         final xfiles = verify(
-          mockShare.shareXFiles(
-            captureAny,
-            subject: anyNamed("subject"),
-            text: anyNamed("text"),
-            sharePositionOrigin: anyNamed("sharePositionOrigin"),
-          ),
+          mockShare.shareXFiles(captureAny),
         ).captured.first as List<XFile>;
 
         expect(await xfiles.firstOrNull?.readAsBytes(), equals(bytes));

@@ -5,7 +5,7 @@ import Foundation
 import CryptoKit
 import JOSESwift
 
-@UIApplicationMain
+@main
 @objc class AppDelegate: FlutterAppDelegate {
   private let channelName = "com.thinslices.solarisdemo/native"
     
