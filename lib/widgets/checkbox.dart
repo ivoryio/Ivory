@@ -46,9 +46,9 @@ class _CheckboxWidgetState extends State<CheckboxWidget> {
             visualDensity: const VisualDensity(
               horizontal: VisualDensity.minimumDensity,
             ),
-            fillColor: MaterialStateColor.resolveWith((states) {
-              if (states.contains((MaterialState.selected))) {
-                if (states.contains((MaterialState.disabled))) {
+            fillColor: WidgetStateColor.resolveWith((states) {
+              if (states.contains((WidgetState.selected))) {
+                if (states.contains((WidgetState.disabled))) {
                   return ClientConfig.getCustomColors().neutral500;
                 }
                 return ClientConfig.getColorScheme().secondary;
@@ -56,13 +56,13 @@ class _CheckboxWidgetState extends State<CheckboxWidget> {
                 return ClientConfig.getColorScheme().surface;
               }
             }),
-            activeColor: ClientConfig.getColorScheme().secondary,
-            side: MaterialStateBorderSide.resolveWith((states) {
-              if (states.contains(MaterialState.disabled)) {
+            checkColor: Colors.white,
+            side: WidgetStateBorderSide.resolveWith((states) {
+              if (states.contains(WidgetState.disabled)) {
                 return BorderSide(width: 1, color: ClientConfig.getCustomColors().neutral500);
               }
 
-              if (states.contains((MaterialState.selected))) {
+              if (states.contains((WidgetState.selected))) {
                 return BorderSide(width: 1, color: ClientConfig.getColorScheme().secondary);
               }
 
