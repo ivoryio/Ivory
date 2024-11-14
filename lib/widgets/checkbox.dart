@@ -35,6 +35,7 @@ class _CheckboxWidgetState extends State<CheckboxWidget> {
     final scale = 1 + (1 - checkboxSize / widget.size);
 
     return Material(
+      color: Colors.transparent,
       child: SizedBox(
         width: widget.size,
         height: widget.size,
