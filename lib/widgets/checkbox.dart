@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import '../config.dart';
 
 class CheckboxWidget extends StatefulWidget {
+  final double size;
   final bool isChecked;
-
   final bool isDisabled;
   final Null Function(bool)? onChanged;
 
   const CheckboxWidget({
     super.key,
+    this.size = 24,
     required this.isChecked,
     required this.onChanged,
     this.isDisabled = false,
@@ -30,49 +31,55 @@ class _CheckboxWidgetState extends State<CheckboxWidget> {
 
   @override
   Widget build(BuildContext context) {
+    const checkboxSize = 20;
+    final scale = 1 + (1 - checkboxSize / widget.size);
+
     return Material(
       child: SizedBox(
-        width: 24,
-        height: 24,
-        child: Checkbox(
-          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          visualDensity: const VisualDensity(
-            horizontal: VisualDensity.minimumDensity,
-          ),
-          fillColor: MaterialStateColor.resolveWith((states) {
-            if (states.contains((MaterialState.selected))) {
-              if (states.contains((MaterialState.disabled))) {
-                return ClientConfig.getCustomColors().neutral500;
+        width: widget.size,
+        height: widget.size,
+        child: Transform.scale(
+          scale: scale,
+          child: Checkbox(
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            visualDensity: const VisualDensity(
+              horizontal: VisualDensity.minimumDensity,
+            ),
+            fillColor: MaterialStateColor.resolveWith((states) {
+              if (states.contains((MaterialState.selected))) {
+                if (states.contains((MaterialState.disabled))) {
+                  return ClientConfig.getCustomColors().neutral500;
+                }
+                return ClientConfig.getColorScheme().secondary;
+              } else {
+                return ClientConfig.getColorScheme().surface;
               }
-              return ClientConfig.getColorScheme().secondary;
-            } else {
-              return ClientConfig.getColorScheme().surface;
-            }
-          }),
-          activeColor: ClientConfig.getColorScheme().secondary,
-          side: MaterialStateBorderSide.resolveWith((states) {
-            if (states.contains(MaterialState.disabled)) {
-              return BorderSide(width: 1, color: ClientConfig.getCustomColors().neutral500);
-            }
+            }),
+            activeColor: ClientConfig.getColorScheme().secondary,
+            side: MaterialStateBorderSide.resolveWith((states) {
+              if (states.contains(MaterialState.disabled)) {
+                return BorderSide(width: 1, color: ClientConfig.getCustomColors().neutral500);
+              }
 
-            if (states.contains((MaterialState.selected))) {
-              return BorderSide(width: 1, color: ClientConfig.getColorScheme().secondary);
-            }
+              if (states.contains((MaterialState.selected))) {
+                return BorderSide(width: 1, color: ClientConfig.getColorScheme().secondary);
+              }
 
-            return BorderSide(width: 1, color: ClientConfig.getCustomColors().neutral600);
-          }),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(2.0),
+              return BorderSide(width: 1, color: ClientConfig.getCustomColors().neutral600);
+            }),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(2.0),
+            ),
+            value: _isChecked,
+            onChanged: widget.isDisabled
+                ? null
+                : (checked) {
+                    setState(() {
+                      _isChecked = checked!;
+                    });
+                    widget.onChanged?.call(checked!);
+                  },
           ),
-          value: _isChecked,
-          onChanged: widget.isDisabled
-              ? null
-              : (checked) {
-                  setState(() {
-                    _isChecked = checked!;
-                  });
-                  widget.onChanged?.call(checked!);
-                },
         ),
       ),
     );
