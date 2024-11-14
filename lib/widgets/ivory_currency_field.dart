@@ -84,25 +84,25 @@ class _InputCurrencyFieldState extends State<InputCurrencyField> {
                                   const BorderRadius.only(topLeft: Radius.circular(8), bottomLeft: Radius.circular(8)),
                               border: Border(
                                 top: BorderSide(
-                                  width: _focusNode.hasFocus ? 1 : 0,
+                                  width: 1,
                                   color: _focusNode.hasFocus
                                       ? ClientConfig.getColorScheme().primary
                                       : const Color(0x00FFFFFF),
                                 ),
                                 right: BorderSide(
-                                  width: _focusNode.hasFocus ? 0 : 1,
+                                  width: 1,
                                   color: _focusNode.hasFocus
                                       ? ClientConfig.getColorScheme().primary
                                       : const Color(0x00FFFFFF),
                                 ),
                                 bottom: BorderSide(
-                                  width: _focusNode.hasFocus ? 1 : 0,
+                                  width: 1,
                                   color: _focusNode.hasFocus
                                       ? ClientConfig.getColorScheme().primary
                                       : const Color(0x00FFFFFF),
                                 ),
                                 left: BorderSide(
-                                  width: _focusNode.hasFocus ? 1 : 0,
+                                  width: 1,
                                   color: _focusNode.hasFocus
                                       ? ClientConfig.getColorScheme().primary
                                       : const Color(0x00FFFFFF),
