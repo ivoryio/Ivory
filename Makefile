@@ -1,5 +1,5 @@
 # Variables
-APPVERSION=$(shell python3 -c "import yaml;print(yaml.safe_load(open('pubspec.yaml'))['version'].split('+')[0])")
+APPVERSION=$(shell cat pubspec.yaml | grep 'version: ' | sed 's/version: //g' | sed 's/ //g' | sed 's/+.*//')
 
 # Helpers
 version:
