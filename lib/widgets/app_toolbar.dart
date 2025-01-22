@@ -13,6 +13,7 @@ class AppToolbar extends StatefulWidget {
   final List<Widget> actions;
   final Color backgroundColor;
   final double? toolbarHeight;
+  final bool? centerTitle;
   final bool backButtonEnabled;
   final bool backButtonAppearanceDisabled;
   final RichText? richTextTitle;
@@ -29,6 +30,7 @@ class AppToolbar extends StatefulWidget {
     this.richTextTitle,
     this.toolbarHeight,
     this.actions = const [],
+    this.centerTitle = true,
     this.onBackButtonPressed,
     this.backButtonEnabled = true,
     this.backButtonAppearanceDisabled = false,
@@ -107,7 +109,7 @@ class _AppToolbarState extends State<AppToolbar> {
             actions: widget.actions,
             automaticallyImplyLeading: false,
             backgroundColor: widget.backgroundColor,
-            centerTitle: true,
+            centerTitle: widget.centerTitle,
             toolbarHeight: widget.toolbarHeight,
             elevation: 0,
             leadingWidth: 25,

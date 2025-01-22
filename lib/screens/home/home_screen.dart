@@ -8,8 +8,9 @@ import 'package:solarisdemo/screens/available_balance/available_balance_screen.d
 import 'package:solarisdemo/screens/repayments/repayments_screen.dart';
 import 'package:solarisdemo/screens/transactions/transactions_screen.dart';
 import 'package:solarisdemo/screens/transfer/transfer_screen.dart';
+import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:solarisdemo/widgets/rewards.dart';
-import 'package:solarisdemo/widgets/screen.dart';
+import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/skeleton.dart';
 
 import '../../config.dart';
@@ -40,31 +41,46 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
 
-    return Screen(
-      title: 'Welcome ${user.cognito.firstName}!',
-      hideBackButton: true,
-      appBarColor: ClientConfig.getColorScheme().primary,
-      trailingActions: [
-        IconButton(
-          padding: EdgeInsets.zero,
-          icon: const Icon(
-            Icons.remove_red_eye_outlined,
-            color: Colors.white,
+    return ScreenScaffold(
+      body: Column(
+        children: [
+          AppToolbar(
+            richTextTitle: RichText(
+              text: TextSpan(
+                style: ClientConfig.getTextStyleScheme().heading3.copyWith(color: Colors.white, fontSize: 18),
+                children: [TextSpan(text: 'Welcome ${user.cognito.firstName}!')],
+              ),
+            ),
+            centerTitle: false,
+            backgroundColor: ClientConfig.getColorScheme().primary,
+            padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+            actions: [
+              IconButton(
+                padding: EdgeInsets.zero,
+                icon: const Icon(
+                  Icons.remove_red_eye_outlined,
+                  color: Colors.white,
+                ),
+                onPressed: () {},
+              ),
+              IconButton(
+                padding: EdgeInsets.zero,
+                icon: const Icon(
+                  Icons.notifications_none,
+                  color: Colors.white,
+                ),
+                onPressed: () {},
+              )
+            ],
           ),
-          onPressed: () {},
-        ),
-        IconButton(
-          padding: EdgeInsets.zero,
-          icon: const Icon(
-            Icons.notifications_none,
-            color: Colors.white,
-          ),
-          onPressed: () {},
-        )
-      ],
-      titleTextStyle: ClientConfig.getTextStyleScheme().heading3.copyWith(color: Colors.white),
-      centerTitle: false,
-      child: const HomePageContent(),
+          Expanded(
+            child: SingleChildScrollView(
+              physics: ClampingScrollPhysics(),
+              child: const HomePageContent(),
+            ),
+          )
+        ],
+      ),
     );
   }
 }

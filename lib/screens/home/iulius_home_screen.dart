@@ -1,8 +1,8 @@
-import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:solarisdemo/widgets/screen.dart';
+import 'package:solarisdemo/widgets/app_toolbar.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:solarisdemo/widgets/rewards.dart';
+import 'package:solarisdemo/widgets/screen_scaffold.dart';
 import 'package:solarisdemo/widgets/skeleton.dart';
 import 'package:solarisdemo/utilities/format.dart';
 import 'package:solarisdemo/redux/auth/auth_state.dart';
@@ -14,7 +14,6 @@ import '../../config.dart';
 import '../../redux/app_state.dart';
 import '../../redux/person/account_summary/account_summay_action.dart';
 
-
 class IuliusHomeScreen extends StatelessWidget {
   static const routeName = "/homeScreen";
 
@@ -24,22 +23,46 @@ class IuliusHomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = (StoreProvider.of<AppState>(context).state.authState as AuthenticatedState).authenticatedUser;
 
-    return Screen(
-      title: 'Welcome ${user.cognito.firstName}!',
-      hideBackButton: true,
-      appBarColor: ClientConfig.getColorScheme().primary,
-      trailingActions: [
-        IconButton(
-          icon: const Icon(
-            Icons.savings_outlined,
-            color: Colors.white,
+    return ScreenScaffold(
+      body: Column(
+        children: [
+          AppToolbar(
+            richTextTitle: RichText(
+              text: TextSpan(
+                style: ClientConfig.getTextStyleScheme().heading3.copyWith(color: Colors.white, fontSize: 18),
+                children: [TextSpan(text: 'Welcome ${user.cognito.firstName}!')],
+              ),
+            ),
+            centerTitle: false,
+            backgroundColor: ClientConfig.getColorScheme().primary,
+            padding: ClientConfig.getCustomClientUiSettings().defaultScreenHorizontalPadding,
+            actions: [
+              IconButton(
+                padding: EdgeInsets.zero,
+                icon: const Icon(
+                  Icons.remove_red_eye_outlined,
+                  color: Colors.white,
+                ),
+                onPressed: () {},
+              ),
+              IconButton(
+                padding: EdgeInsets.zero,
+                icon: const Icon(
+                  Icons.notifications_none,
+                  color: Colors.white,
+                ),
+                onPressed: () {},
+              )
+            ],
           ),
-          onPressed: () {},
-        )
-      ],
-      titleTextStyle: ClientConfig.getTextStyleScheme().heading3.copyWith(color: Colors.white),
-      centerTitle: false,
-      child: const HomePageContent(),
+          Expanded(
+            child: SingleChildScrollView(
+              physics: ClampingScrollPhysics(),
+              child: const HomePageContent(),
+            ),
+          )
+        ],
+      ),
     );
   }
 }
@@ -92,15 +115,15 @@ class HomePageHeader extends StatelessWidget {
             ),
             color: ClientConfig.getColorScheme().primary,
           ),
-            child: Row(
-              children: [
-                viewModel is AccountSummaryFetchedViewModel
-                    ? AccountSummary(
-                        viewModel: viewModel,
-                      )
-                    : Center(child: AccountSummary.loadingSkeleton()),
-                const SizedBox(height: 8),
-              ],
+          child: Row(
+            children: [
+              viewModel is AccountSummaryFetchedViewModel
+                  ? AccountSummary(
+                      viewModel: viewModel,
+                    )
+                  : Center(child: AccountSummary.loadingSkeleton()),
+              const SizedBox(height: 8),
+            ],
           ),
         );
       },
@@ -148,7 +171,7 @@ class AccountSummary extends StatelessWidget {
                   Skeleton(height: 40, width: 192),
                 ],
               ),
-              SizedBox(width: 40), 
+              SizedBox(width: 40),
               SizedBox(height: 12),
               Skeleton(height: 40, width: 104),
             ],
@@ -170,7 +193,7 @@ class AccountSummary extends StatelessWidget {
             ],
           ),
           SizedBox(height: 28),
-          ],
+        ],
       ),
     );
   }
@@ -180,15 +203,12 @@ class AccountBalance extends StatelessWidget {
   final AccountSummaryFetchedViewModel viewModel;
 
   const AccountBalance({
-    Key? key, 
+    Key? key,
     required this.viewModel,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final creditLimitPercent =
-        ((viewModel.accountSummary?.outstandingAmount ?? 0) / (viewModel.accountSummary?.creditLimit ?? 0.01));
-
     return Padding(
       padding: const EdgeInsets.only(top: 16, bottom: 16),
       child: Row(
@@ -198,9 +218,11 @@ class AccountBalance extends StatelessWidget {
             children: [
               Text(
                 "Available Balance",
-                style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: ClientConfig.getCustomColors().neutral400),
+                style: ClientConfig.getTextStyleScheme()
+                    .labelSmall
+                    .copyWith(color: ClientConfig.getCustomColors().neutral400),
               ),
-              const SizedBox(height: 8), 
+              const SizedBox(height: 8),
               Text.rich(
                 TextSpan(
                   children: [
@@ -213,14 +235,13 @@ class AccountBalance extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(width: 40), 
-          const AccountOptions(), 
+          const SizedBox(width: 40),
+          const AccountOptions(),
         ],
       ),
     );
   }
 }
-
 
 class AccountStats extends StatelessWidget {
   final AccountSummaryFetchedViewModel viewModel;
@@ -251,7 +272,9 @@ class AccountStats extends StatelessWidget {
                   children: [
                     TextSpan(
                       text: Format.currencyWithSymbol(viewModel.accountSummary?.outstandingAmount ?? 0),
-                      style: ClientConfig.getTextStyleScheme().labelSmall.copyWith(color: ClientConfig.getCustomColors().neutral400, fontSize: 18),
+                      style: ClientConfig.getTextStyleScheme()
+                          .labelSmall
+                          .copyWith(color: ClientConfig.getCustomColors().neutral400, fontSize: 18),
                     ),
                   ],
                 ),
@@ -278,7 +301,7 @@ class AccountOptions extends StatelessWidget {
               fontSize: 14,
               fontWeight: FontWeight.w400,
               color: Colors.white,
-            ),        
+            ),
             borderRadius: BorderRadius.circular(5),
             onPressed: () => Navigator.pushNamed(context, ChooseMethodScreen.routeName),
             iconWidget: const Icon(
@@ -294,4 +317,3 @@ class AccountOptions extends StatelessWidget {
     );
   }
 }
-
