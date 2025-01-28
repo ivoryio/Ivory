@@ -72,13 +72,13 @@ dependencies:
   smooth_page_indicator: ^1.1.0
   badges: ^3.1.2
   app_settings: ^5.1.1
-  video_player: ^2.7.2
   jwt_decoder: ^2.0.1
   webview_flutter: ^4.4.2
   pin_input_text_field: ^4.5.1
   plugin_platform_interface: ^2.1.7
   shimmer: ^3.0.0
   flutter_native_splash: ^2.3.7
+  video_player: ^2.9.2
 
 dev_dependencies:
   flutter_test:
